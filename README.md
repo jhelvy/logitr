@@ -13,12 +13,12 @@ Overview
 models, the program can handle only normal and log-normal heterogeneity
 distributions (for now) and only under the assumption of uncorrelated
 heterogeneity covariances (i.e. a diagonal heterogeneity covariance matrix).
-The program can also weight the results by individual choice situation if
-desired. A unique feature is that logitr can estimate models in the preference
+A unique feature is that logitr can estimate models in the preference
 space or willingness-to-pay (WTP) space. The program can also be configured to
 run a multistart loop with different starting points to search for a global
 solution (recommended for WTP space models, which have nonlinear-in-parameters
-utility functions that may result in multiple local maxima).
+utility functions that may result in multiple local maxima). The program can also 
+weight the results by individual choice situation if desired.
 
 The algorithms used are based those in Kenneth Train's book "Discrete Choice
 Methods with Simulation, 2nd Edition (New York: Cambridge University Press,
@@ -43,7 +43,7 @@ results. The main results of interest are explained below, but "model" also
 contains many other values, including the original data and settings assigned
 in the "modelSetup.R" file. All values can be accessed by using the "$" symbol.
 
-MAIN VALUES:
+# MAIN VALUES:
 
 model$bestModel     = The original "model" list obect that optim or optimx
                       produces after the optimization has converged to a
@@ -86,7 +86,8 @@ model$logLMat       = A matrix of the log-likelihood function evaluated at the
                       best parameters found for each run of the optim
                       algorithm (for multistarts).
 
-OTHER VALUES OF INTEREST:
+# OTHER VALUES OF INTEREST:
+
 model$covariateSetup = A data frame that summarizes the covariates used in the
                        model and their distributional assumptions (0=fixed,
                        1=normal, 2=log-normal).
