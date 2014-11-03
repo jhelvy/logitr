@@ -86,7 +86,8 @@ model$logLMat       = A matrix of the log-likelihood function evaluated at the
                       best parameters found for each run of the optim
                       algorithm (for multistarts).
 
-# OTHER VALUES OF INTEREST:
+OTHER VALUES OF INTEREST:
+-------------------------
 
 model$covariateSetup = A data frame that summarizes the covariates used in the
                        model and their distributional assumptions (0=fixed,
