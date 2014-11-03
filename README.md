@@ -1,7 +1,7 @@
 logitr
 ======
 
-Author: *John Paul Helveston*
+Author: *John Paul Helveston* - www.jhelvy.com
 
 Date First Written: *Sunday, September 28, 2014*
 
