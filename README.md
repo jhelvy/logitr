@@ -195,22 +195,19 @@ user to explore the results.
 FILE HIERARCHY
 ==============
 
-The "modelSetup.R" file calls "launch.R," which begins the program and
-controls the sequence of the program steps. "launch.R" first loads all the
-functions needed for the program by calling the "helperFunctions.R" and
-"logitFunctions.R" files. Once these functions are loaded, "launch.R" then
-calls the "checkModelInputs.R" file which runs a series of checks on whether
-the user-provided information in "modelSetup.R" is correct. If all is good,
-then "launch.R" loads the choice data. "launch.R" then calls
-"createDataObject.R" which creates the main "d" object for storing all data
-and settings. Once the "d" object is created, "launch.R" calls
-"setLikelihoodFunctions.R" to set the correct log-likelihood functions to use
-in model estimation. "launch.R" then calls "setupVariables.R" to create the
+The *modelSetup.R* file loads the choice data and calls *launch.R* which begins 
+the program and controls the sequence of the program steps. *launch.R* first loads 
+all the functions needed for the program by calling the *helperFunctions.R* and
+*logitFunctions.R* files. Once these functions are loaded, then *checkModelInputs.R*
+is called which runs a series of checks on whether the user-provided information in 
+*modelSetup.R* is correct. *createDataObject.R* is then called to create the main 
+"d" object for storing all data and settings. Once the "d" object is created, 
+*setLikelihoodFunctions.R* is called to set the correct log-likelihood functions to 
+use in model estimation. Then *setupVariables.R* is called to create the
 necessary variables for model estimation based on the user-provided settings
-and choice data. "launch.R" then calls "makeStartPoints.R" which simply
-creates all the starting points to be used in model estimation. "launch.R"
-then starts the main optimization loop by calling the "optimizor.R" file.
-After running the optimization loops, "optimizor.R" then calls
-"summarizeResults.R" to summarize the results. Finally, "launch.R" calls
-"saveResults.R" to save the results as a .Rds file.
+and choice data. Then *makeStartPoints.R* is called which simply creates all the 
+starting points to be used in model estimation. Then *optimizor.R* is called to 
+start the main optimization loop. After running the optimization loops, 
+*summarizeResults.R* is called to summarize the results and then finally 
+*saveResults.R* is called to save the results as a .Rds file.
 
