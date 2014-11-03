@@ -12,7 +12,7 @@ Overview
 *logitr* estimates multinomial and mixed logit models in R. For mixed logit models, the program can handle only normal and log-normal heterogeneity distributions (for now) and only under the assumption of uncorrelated heterogeneity covariances (i.e. a diagonal heterogeneity covariance matrix). A unique feature is that logitr can estimate models in the preference
 space or willingness-to-pay (WTP) space. The program can also be configured to run a multistart loop with different starting points to search for a global solution (recommended for WTP space models, which have nonlinear-in-parameters utility functions that may result in multiple local maxima). The program can also weight the results by individual choice situation if desired.
 
-The algorithms used are based those in Kenneth Train's book *Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009).* Mixed logit models are estimated through maximum simulated likelihood. The main optimization loop uses the optim function to minimize the negative log-likelihood function, but optimx can also be used if desired.
+The algorithms used are based those in [Kenneth Train's](http://eml.berkeley.edu/~train/) book *Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009).* Mixed logit models are estimated through maximum simulated likelihood. The main optimization loop uses the optim function to minimize the negative log-likelihood function, but optimx can also be used if desired.
 
 Basic Usage
 ===========
