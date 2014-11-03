@@ -39,7 +39,7 @@ The program produces a single list object called *model* that stores all the res
 Main Values
 -----------
 
-- model$bestModel     = The original "model" list obect that optim or optimx produces after the optimization has converged to a solution.
+- model$bestModel     = The original "model" list obect that *optim* or *optimx* produces after the optimization has converged to a solution.
 - model$pars          = The best set of parameters found.
 - model$hessian       = A symmetric matrix giving an estimate of the Hessian at the solution found.
 - model$sds           = The standard error of the best set of parameters found.
