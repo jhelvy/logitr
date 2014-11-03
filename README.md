@@ -121,24 +121,16 @@ from a choice occasion faced by an individual. The choice occasions do not
 have to be symmetric in that they could each have a different number of
 alternatives. The columns can be in any order, but the file MUST have a column
 for each of the following variables:
-1. A variable that identifies each individual choice maker. This must be a
-   sequence of numbers that changes by choice maker and repeats for the same
-   choice maker. This is used for the "respondentID" variable in the
-   modelSetup.R file.
-2. A variable that identifies each individual choice occasion. This must be a
-   sequence of numbers that changes by choice occasion and repeats for the
-   same choice occasion. This is used for the "observationID" variable in the
-   modelSetup.R file.
-3. A variable that identifies which alternative was chosen for each choice
-   occasion, using 1 and 0 for chosen and not-chosen. This is used for the
-   "choice" variable in the modelSetup.R file.
-4. A variable that identifies the price of each alternative. This is strictly
-   required for a WTP space model, but is otherwise optional.
+
+1. A variable that identifies each individual choice maker. This must be a sequence of numbers that changes by choice maker and repeats for the same choice maker. This is used for the *respondentID* variable in the *modelSetup.R* file.
+2. A variable that identifies each individual choice occasion. This must be a sequence of numbers that changes by choice occasion and repeats for the same choice occasion. This is used for the *observationID* variable in the *modelSetup.R* file.
+3. A variable that identifies which alternative was chosen for each choice occasion, using 1 and 0 for chosen and not-chosen. This is used for the *choice* variable in the *modelSetup.R* file.
+4. A variable that identifies the price of each alternative. This is strictly required for a WTP space model, but is otherwise optional.
 5. All other columns can be any attributes to be used as model covariates.
 
 Optional weighting variable:
 A variable for weighting the data by individual or by choice occasion. The
-"weight" of each choice situation will be effectively multiplied by these
+*weight* of each choice situation will be effectively multiplied by these
 numbers. For example, a value of 0.1 for a particular choice occasion would
 reduce it's weight by a factor of 10, and a value of 10 would increase it's
 weight by a factor of 10.
@@ -152,7 +144,7 @@ program and is the ONLY file that needs to be run by the user.
 
 createDataObject.R:
 This file takes the user-provided model data and settings and puts them all
-into a list called "d" (for "data") which stores all of the data, settings,
+into a list called *d* (for *data*) which stores all of the data, settings,
 variables, and model output throughout the entire model estimation. Keeping a
 single object that contains all of the data protects against the accidental
 use of global variables and makes passing information and data between
@@ -186,10 +178,10 @@ which log-likelihood and gradient functions to use for estimating the model.
 
 setupVariables:
 Prepares all the necessary variables and re-formats the data according to the
-model type and space. Stores everything in the "d" list of objects.
+model type and space. Stores everything in the *d* list of objects.
 
 summarizeResults.R:
-Summarizes all model results and renames the "d" object as "model" for the
+Summarizes all model results and renames the *d* object as *model* for the
 user to explore the results.
 
 File Hierarchy
@@ -201,7 +193,7 @@ all the functions needed for the program by calling the *helperFunctions.R* and
 *logitFunctions.R* files. Once these functions are loaded, then *checkModelInputs.R*
 is called which runs a series of checks on whether the user-provided information in 
 *modelSetup.R* is correct. *createDataObject.R* is then called to create the main 
-"d" object for storing all data and settings. Once the "d" object is created, 
+*d* object for storing all data and settings. Once the *d* object is created, 
 *setLikelihoodFunctions.R* is called to set the correct log-likelihood functions to 
 use in model estimation. Then *setupVariables.R* is called to create the
 necessary variables for model estimation based on the user-provided settings
