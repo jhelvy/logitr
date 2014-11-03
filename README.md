@@ -2,7 +2,9 @@ logitr
 ======
 
 Author:             John Paul Helveston
+
 Date First Written: Sunday, September 28, 2014
+
 Most Recent Update: Sunday, November 02, 2014
 
 Overview
