@@ -10,12 +10,13 @@ Most Recent Update: *Sunday, November 02, 2014*
 Overview
 ========
 
-*logitr* estimates both multinomial (MNL) and mixed logit (MXL) models in the preference and willingness to pay spaces. To make a fast code, I also derived the analytic gradients for the log-likelihood functions in each space so that the optimization loop in the program can do a faster search (see *logit_in_preference_and_wtp_spaces.pdf*). 
+*logitr* estimates both multinomial (MNL) and mixed logit (MXL) models in the preference and willingness to pay (WTP) spaces. For faster estimation, I included the analytic gradients for the log-likelihood functions in each space (see *logit_in_preference_and_wtp_spaces.pdf*). 
 
 The current version includes support for:
-- MNL and MXL models
-- Preference space and WTP space models
-- Weighted regressions
+- MNL and MXL models.
+- Preference space and WTP space models.
+- Analytic gradients in both preference and WTP spaces.
+- Weighted regressions.
 - Multi-starts for searching for a global solution from multiple different starting points (for non-linear utility functions, such as those for the WTP space models).
 
 As of the current version, the program can only handle normal and log-normal heterogeneity distributions and only under the assumption of uncorrelated heterogeneity covariances (i.e. a diagonal heterogeneity covariance matrix). The main estimation algorithms are based those in [Kenneth Train's](http://eml.berkeley.edu/~train/) book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009).*](http://eml.berkeley.edu/books/choice2.html) The mixed logit models are estimated through maximum simulated likelihood. The main optimization loop uses the *optim* function by default to minimize the negative log-likelihood function, but *optimx* can also be used if desired.
