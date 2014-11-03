@@ -1,12 +1,12 @@
-Program Name:       logitr
-Author:             John Paul Helveston
-Date First Written: Sunday, September 28, 2014
-Most Recent Update: Sunday, November 02, 2014
-============================================================================
+## logitr
 
-============================================================================
-OVERVIEW
-============================================================================
+Author:             John Paul Helveston
+
+Date First Written: Sunday, September 28, 2014
+
+Most Recent Update: Sunday, November 02, 2014
+
+# OVERVIEW
 
 logitr estimates multinomial and mixed logit models in R. For mixed logit
 models, the program can handle only normal and log-normal heterogeneity
