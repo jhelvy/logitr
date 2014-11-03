@@ -35,7 +35,7 @@ model inputs and control options using the 'modelSetup.R' file in the main
 working directory. Once the modelSetup.R file is complete setup, begin the
 model estimation by running the entire modelSetup.R file in R.
 
-MODEL OUTPUT
+Model Output
 ============
 
 The program produces a single list object called "model" that stores all the
@@ -43,7 +43,7 @@ results. The main results of interest are explained below, but "model" also
 contains many other values, including the original data and settings assigned
 in the "modelSetup.R" file. All values can be accessed by using the "$" symbol.
 
-MAIN VALUES:
+Main Values:
 ------------
 
 model$bestModel     = The original "model" list obect that optim or optimx
@@ -87,7 +87,7 @@ model$logLMat       = A matrix of the log-likelihood function evaluated at the
                       best parameters found for each run of the optim
                       algorithm (for multistarts).
 
-OTHER VALUES OF INTEREST:
+Other Values of Interest:
 -------------------------
 
 model$covariateSetup = A data frame that summarizes the covariates used in the
@@ -114,8 +114,8 @@ model$scaleFactors   = A vector of scaling factors used to scale the data (all
 model$standardDraws  = A matrix of standard normal draws used during the model
                        simulation.
 
-CHOICE DATA FILE SETUP
-======================
+Choice Data File Setup:
+=======================
 The choice data file must be in a csv file format. Each row is an alternative
 from a choice occasion faced by an individual. The choice occasions do not
 have to be symmetric in that they could each have a different number of
@@ -143,8 +143,8 @@ numbers. For example, a value of 0.1 for a particular choice occasion would
 reduce it's weight by a factor of 10, and a value of 10 would increase it's
 weight by a factor of 10.
 
-PROGRAM FILES
-=============
+Program Files:
+==============
 
 modelSetup.R:
 Main file for setting up the model. Running this file begins the entire
@@ -192,8 +192,8 @@ summarizeResults.R:
 Summarizes all model results and renames the "d" object as "model" for the
 user to explore the results.
 
-FILE HIERARCHY
-==============
+File Hierarchy:
+===============
 
 The *modelSetup.R* file loads the choice data and calls *launch.R* which begins 
 the program and controls the sequence of the program steps. *launch.R* first loads 
