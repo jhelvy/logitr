@@ -9,10 +9,22 @@ Most Recent Update: *Sunday, November 02, 2014*
 
 Overview
 ========
-*logitr* estimates multinomial and mixed logit models in R. For mixed logit models, the program can handle only normal and log-normal heterogeneity distributions (for now) and only under the assumption of uncorrelated heterogeneity covariances (i.e. a diagonal heterogeneity covariance matrix). A unique feature is that logitr can estimate models in the preference
-space or willingness-to-pay (WTP) space. The program can also be configured to run a multistart loop with different starting points to search for a global solution (recommended for WTP space models, which have nonlinear-in-parameters utility functions that may result in multiple local maxima). The program can also weight the results by individual choice situation if desired.
 
-The algorithms used are based those in [Kenneth Train's](http://eml.berkeley.edu/~train/) book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009).*](http://eml.berkeley.edu/books/choice2.html) The mixed logit models are estimated through maximum simulated likelihood. The main optimization loop uses the optim function to minimize the negative log-likelihood function, but optimx can also be used if desired.
+*logitr* estimates both multinomial (MNL) and mixed logit (MXL) models in the preference and willingness to pay spaces. To make a fast code, I also derived the analytic gradients for the log-likelihood functions in each space so that the optimization loop in the program can do a faster search (see *logit_in_preference_and_wtp_spaces.pdf*). 
+
+The current version includes support for:
+- MNL and MXL models
+- Preference space and WTP space models
+- Weighted regressions
+- Multi-starts for searching for a global solution from multiple different starting points (for non-linear utility functions, such as those for the WTP space models).
+
+As of the current version, the program can only handle normal and log-normal heterogeneity distributions and only under the assumption of uncorrelated heterogeneity covariances (i.e. a diagonal heterogeneity covariance matrix). The main estimation algorithms are based those in [Kenneth Train's](http://eml.berkeley.edu/~train/) book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009).*](http://eml.berkeley.edu/books/choice2.html) The mixed logit models are estimated through maximum simulated likelihood. The main optimization loop uses the *optim* function by default to minimize the negative log-likelihood function, but *optimx* can also be used if desired.
+
+Required Libraries
+==================
+The following libraries are required to run *logitr*:
+- randtoolbox
+- optimx (if you choose to use *optimx* instead of the default *optim* for the optimization loop)
 
 Basic Usage
 ===========
@@ -26,54 +38,33 @@ The program produces a single list object called *model* that stores all the res
 Main Values
 -----------
 
-model$bestModel     = The original "model" list obect that optim or optimx produces after the optimization has converged to a solution.
-                      
-model$pars          = The best set of parameters found.
-
-model$hessian       = A symmetric matrix giving an estimate of the Hessian at the solution found.
-                      
-model$sds           = The standard error of the best set of parameters found.
-
-model$scaledPars    = The best set of parameters found scaled by the scale factors (same as model$pars if scaledParams = FALSE).
-                      
-model$scaledHessian = A symmetric matrix giving an estimate of the Hessian at the solution found scaled by the scale factors (same as model$pars if scaledParams = FALSE).
-                      
-model$scaledSDs     = The standard error of the best set of parameters found scaled by the scale factors (same as model$pars if scaledParams = FALSE).
-                      
-model$logL          = The log-likelihood function evaluated at the best set of parameters found.
-                      
-model$nullLogL      = The log-likelihood function evaluated with all parameters set to 0.
-                      
-model$summary       = A summary table including the parameters, standard errors, t-statistics, and significance codes.
-                      
-model$startPoints   = A matrix of the different starting points used for each run of the optim algorithm (for multistarts).
-                      
-model$parMat        = A matrix of the best set of parameters found for each run of the optim algorithm (for multistarts).
-                      
-model$logLMat       = A matrix of the log-likelihood function evaluated at the best parameters found for each run of the optim algorithm (for multistarts).
+- model$bestModel     = The original "model" list obect that optim or optimx produces after the optimization has converged to a solution.
+- model$pars          = The best set of parameters found.
+- model$hessian       = A symmetric matrix giving an estimate of the Hessian at the solution found.
+- model$sds           = The standard error of the best set of parameters found.
+- model$scaledPars    = The best set of parameters found scaled by the scale factors (same as model$pars if scaledParams = FALSE).
+- model$scaledHessian = A symmetric matrix giving an estimate of the Hessian at the solution found scaled by the scale factors (same as model$pars if scaledParams = FALSE).
+- model$scaledSDs     = The standard error of the best set of parameters found scaled by the scale factors (same as model$pars if scaledParams = FALSE).
+- model$logL          = The log-likelihood function evaluated at the best set of parameters found.
+- model$nullLogL      = The log-likelihood function evaluated with all parameters set to 0.
+- model$summary       = A summary table including the parameters, standard errors, t-statistics, and significance codes.
+- model$startPoints   = A matrix of the different starting points used for each run of the optim algorithm (for multistarts).
+- model$parMat        = A matrix of the best set of parameters found for each run of the optim algorithm (for multistarts).
+- model$logLMat       = A matrix of the log-likelihood function evaluated at the best parameters found for each run of the optim algorithm (for multistarts).
 
 Other Values of Interest
 ------------------------
 
-model$covariateSetup = A data frame that summarizes the covariates used in the model and their distributional assumptions (0=fixed, 1=normal, 2=log-normal).
-                       
+- model$covariateSetup = A data frame that summarizes the covariates used in the model and their distributional assumptions (0=fixed, 1=normal, 2=log-normal).
 model$numRandom      = The number of randomly distributed covariates.
-
-model$numFixed       = The number of fixed (non-random) covariates.
-
-model$numObs         = The total number of observations.
-
-model$betaNames      = The names of the model covariates (fixed and random).
-
-model$allParNames    = The names of all the model parameters.
-
-model$numBetas       = The number of model covariates (fixed and random).
-
-model$numParams      = The number of model parameters.
-
-model$scaleFactors   = A vector of scaling factors used to scale the data (all ones if scaledParams = FALSE).
-
-model$standardDraws  = A matrix of standard normal draws used during the model simulation.
+- model$numFixed       = The number of fixed (non-random) covariates.
+- model$numObs         = The total number of observations.
+- model$betaNames      = The names of the model covariates (fixed and random).
+- model$allParNames    = The names of all the model parameters.
+- model$numBetas       = The number of model covariates (fixed and random).
+- model$numParams      = The number of model parameters.
+- model$scaleFactors   = A vector of scaling factors used to scale the data (all ones if scaledParams = FALSE).
+- model$standardDraws  = A matrix of standard normal draws used during the model simulation.
 
 Choice Data File Setup
 ======================
@@ -91,38 +82,17 @@ A variable for weighting the data by individual or by choice occasion. The *weig
 Program Files
 =============
 
-modelSetup.R:
-Main file for setting up the model. Running this file begins the entire program and is the ONLY file that needs to be run by the user.
-
-createDataObject.R: 
-This file takes the user-provided model data and settings and puts them all into a list called *d* (for *data*) which stores all of the data, settings, variables, and model output throughout the entire model estimation. Keeping a single object that contains all of the data protects against the accidental use of global variables and makes passing information and data between functions much easier.
-
-helperFunctions.R: 
-Contains a series of helper functions for various purposes, including scaling the model inputs, making start points, printing headers and model output, running the main optimization loop, and summarizing the model output.
-
-launch.R:
-The main file that runs the entire program in the correct sequence.
-
-logitFunctions.R:
-Contains all of the log-likelihood and gradient of the log-likelihood functions for different model types (MNL vs. MXL) and model spaces (preference vs. WTP).
-
-makeStartPoints.R:
-Makes all the start points for running the model estimation optimization.
-
-optimizor.R:
-Runs the main optimization loop.
-
-saveResults.R:
-Saves the results (duh!)
-
-setLikelihoodFunctions.R:
-Given the user provided settings on the model type and space, this file sets which log-likelihood and gradient functions to use for estimating the model.
-
-setupVariables:
-Prepares all the necessary variables and re-formats the data according to the model type and space. Stores everything in the *d* list of objects.
-
-summarizeResults.R:
-Summarizes all model results and renames the *d* object as *model* for the user to explore the results.
+- *modelSetup.R*: Main file for setting up the model. Running this file begins the entire program and is the ONLY file that needs to be run by the user.
+- *createDataObject.R*: This file takes the user-provided model data and settings and puts them all into a list called *d* (for *data*) which stores all of the data, settings, variables, and model output throughout the entire model estimation. Keeping a single object that contains all of the data protects against the accidental use of global variables and makes passing information and data between functions much easier.
+- *helperFunctions.R*: Contains a series of helper functions for various purposes, including scaling the model inputs, making start points, printing headers and model output, running the main optimization loop, and summarizing the model output.
+- *launch.R*: The main file that runs the entire program in the correct sequence.
+- *logitFunctions.R*: Contains all of the log-likelihood and gradient of the log-likelihood functions for different model types (MNL vs. MXL) and model spaces (preference vs. WTP).
+- *makeStartPoints.R*: Makes all the start points for running the model estimation optimization.
+- *optimizor.R*: Runs the main optimization loop.
+- *saveResults.R*: Saves the results (duh!)
+- *setLikelihoodFunctions.R*: Given the user provided settings on the model type and space, this file sets which log-likelihood and gradient functions to use for estimating the model.
+- *setupVariables*: Prepares all the necessary variables and re-formats the data according to the model type and space. Stores everything in the *d* list of objects.
+- *summarizeResults.R*: Summarizes all model results and renames the *d* object as *model* for the user to explore the results.
 
 File Hierarchy
 ==============
