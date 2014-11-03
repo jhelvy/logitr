@@ -1,7 +1,7 @@
 logitr
 ======
 
-Author:             John Paul Helveston
+Author: John Paul Helveston
 
 Date First Written: Sunday, September 28, 2014
 
@@ -26,7 +26,7 @@ Methods with Simulation, 2nd Edition (New York: Cambridge University Press,
 The main optimization loop uses the optim function to minimize the negative
 log-likelihood function, but optimx can also be used if desired.
 
-BASIC USAGE
+Basic Usage
 ===========
 Put all the files from logitr_v0.1.zip into a directory and use that directory 
 as your working directory. Before using logitr, make sure your choice data file
@@ -43,8 +43,8 @@ results. The main results of interest are explained below, but "model" also
 contains many other values, including the original data and settings assigned
 in the "modelSetup.R" file. All values can be accessed by using the "$" symbol.
 
-Main Values:
-------------
+Main Values
+-----------
 
 model$bestModel     = The original "model" list obect that optim or optimx
                       produces after the optimization has converged to a
@@ -87,8 +87,8 @@ model$logLMat       = A matrix of the log-likelihood function evaluated at the
                       best parameters found for each run of the optim
                       algorithm (for multistarts).
 
-Other Values of Interest:
--------------------------
+Other Values of Interest
+------------------------
 
 model$covariateSetup = A data frame that summarizes the covariates used in the
                        model and their distributional assumptions (0=fixed,
@@ -114,8 +114,8 @@ model$scaleFactors   = A vector of scaling factors used to scale the data (all
 model$standardDraws  = A matrix of standard normal draws used during the model
                        simulation.
 
-Choice Data File Setup:
-=======================
+Choice Data File Setup
+======================
 The choice data file must be in a csv file format. Each row is an alternative
 from a choice occasion faced by an individual. The choice occasions do not
 have to be symmetric in that they could each have a different number of
@@ -143,8 +143,8 @@ numbers. For example, a value of 0.1 for a particular choice occasion would
 reduce it's weight by a factor of 10, and a value of 10 would increase it's
 weight by a factor of 10.
 
-Program Files:
-==============
+Program Files
+=============
 
 modelSetup.R:
 Main file for setting up the model. Running this file begins the entire
@@ -192,8 +192,8 @@ summarizeResults.R:
 Summarizes all model results and renames the "d" object as "model" for the
 user to explore the results.
 
-File Hierarchy:
-===============
+File Hierarchy
+==============
 
 The *modelSetup.R* file loads the choice data and calls *launch.R* which begins 
 the program and controls the sequence of the program steps. *launch.R* first loads 
