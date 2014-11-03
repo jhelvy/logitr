@@ -31,9 +31,9 @@ Basic Usage
 Put all the files from *logitr.zip* into a directory and use that directory 
 as your working directory. Before using logitr, make sure your choice data file
 is a properly setup csv file (see *Choice Data File Setup* below). Set all the 
-model inputs and control options using the 'modelSetup.R' file in the main
-working directory. Once the modelSetup.R file is complete setup, begin the
-model estimation by running the entire modelSetup.R file in R.
+model inputs and control options using the *modelSetup.R* file in the main
+working directory. Once the *modelSetup.R* file is complete setup, begin the
+model estimation by running the entire *modelSetup.R* file in R.
 
 Model Output
 ============
