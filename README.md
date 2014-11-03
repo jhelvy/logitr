@@ -20,9 +20,9 @@ solution (recommended for WTP space models, which have nonlinear-in-parameters
 utility functions that may result in multiple local maxima). The program can also 
 weight the results by individual choice situation if desired.
 
-The algorithms used are based those in Kenneth Train's book "Discrete Choice
+The algorithms used are based those in Kenneth Train's book *Discrete Choice
 Methods with Simulation, 2nd Edition (New York: Cambridge University Press,
-2009)." Mixed logit models are estimated through maximum simulated likelihood.
+2009).* Mixed logit models are estimated through maximum simulated likelihood.
 The main optimization loop uses the optim function to minimize the negative
 log-likelihood function, but optimx can also be used if desired.
 
@@ -38,10 +38,10 @@ model estimation by running the entire *modelSetup.R* file in R.
 Model Output
 ============
 
-The program produces a single list object called "model" that stores all the
-results. The main results of interest are explained below, but "model" also
+The program produces a single list object called *model* that stores all the
+results. The main results of interest are explained below, but *model* also
 contains many other values, including the original data and settings assigned
-in the "modelSetup.R" file. All values can be accessed by using the "$" symbol.
+in the *modelSetup.R* file. All values can be accessed by using the "$" symbol.
 
 Main Values
 -----------
