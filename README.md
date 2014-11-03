@@ -9,7 +9,7 @@ Most Recent Update: Sunday, November 02, 2014
 
 Overview
 ========
-logitr estimates multinomial and mixed logit models in R. For mixed logit
+*logitr* estimates multinomial and mixed logit models in R. For mixed logit
 models, the program can handle only normal and log-normal heterogeneity
 distributions (for now) and only under the assumption of uncorrelated
 heterogeneity covariances (i.e. a diagonal heterogeneity covariance matrix).
