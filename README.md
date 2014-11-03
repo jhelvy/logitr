@@ -43,7 +43,7 @@ results. The main results of interest are explained below, but "model" also
 contains many other values, including the original data and settings assigned
 in the "modelSetup.R" file. All values can be accessed by using the "$" symbol.
 
-# MAIN VALUES:
+MAIN VALUES:
 
 model$bestModel     = The original "model" list obect that optim or optimx
                       produces after the optimization has converged to a
