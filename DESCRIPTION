@@ -1,0 +1,14 @@
+Package: logitr
+Title: Estimates both multinomial (MNL) and mixed logit (MXL) models in the preference and willingness to pay (WTP) spaces
+Version: 0.5.0
+Authors@R: person("John", "Helveston", email="john.helveston@gmail.com", role=c("aut", "cre", "cph"))
+Description: logitr estimates multinomial (MNL) and mixed logit (MXL) models in R with options to estimate in the preference space or willingness-to-pay (WTP) spaces. The program includes an option to run a multistart optimization loop with random starting points to search for a global solution, which should be done for WTP space models as well as mixed logit models since they have nonlinear-in-parameters utility functions that may result in multiple local maxima. The main optimization loop uses the nloptr function to minimize the negative log-likelihood function.
+Depends:
+    R (>= 3.3.1),
+    data.table,
+    randtoolbox,
+    nloptr
+License: GPL-3. A copy of the GNU General Public License, version 3, is available at https://www.r-project.org/Licenses/GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1

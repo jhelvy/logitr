@@ -1,101 +1,42 @@
-logitr
-======
-
-Author: *John Paul Helveston* - www.jhelvy.com/logitr
-
-Date First Written: *Sunday, September 28, 2014*
-
-Most Recent Update: *Sunday, November 02, 2014*
-
-Overview
-========
-
-*logitr* estimates both multinomial (MNL) and mixed logit (MXL) models in the preference and willingness to pay (WTP) spaces. For faster estimation, I included the analytic gradients for the log-likelihood functions in each space (see *logit_in_preference_and_wtp_spaces.pdf*). 
+# logitr
+*logitr* estimates both multinomial (MNL) and mixed logit (MXL) models in the preference and willingness to pay (WTP) spaces. The main optimization loop uses the nloptr function to minimize the negative log-likelihood function.
 
 The current version includes support for:
-- MNL and MXL models.
+- Homogeneous multinomial logit (MNL) models
+- Heterogeneous mixed logit (MXL) models (support for normal and log-normal parameter distributions).
 - Preference space and WTP space models.
-- Analytic gradients in both preference and WTP spaces.
-- Weighted regressions.
-- Multi-starts for searching for a global solution from multiple different starting points (for non-linear utility functions, such as those for the WTP space models).
+- A multi-start option for searching the solution space from multiple random different starting points (primarily useful for non-convex problems, such as those for the WTP space models).
 
-As of the current version, the program can only handle normal and log-normal heterogeneity distributions and only under the assumption of uncorrelated heterogeneity covariances (i.e. a diagonal heterogeneity covariance matrix). The main estimation algorithms are based those in [Kenneth Train's](http://eml.berkeley.edu/~train/) book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009).*](http://eml.berkeley.edu/books/choice2.html) The mixed logit models are estimated through maximum simulated likelihood. The main optimization loop uses the *optim* function by default to minimize the negative log-likelihood function, but *optimx* can also be used if desired.
+The MXL models assume uncorrelated heterogeneity covariances. The main estimation algorithms are based those in [Kenneth Train's](http://eml.berkeley.edu/~train/) book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009).*](http://eml.berkeley.edu/books/choice2.html) The mixed logit models are estimated through maximum simulated likelihood. The main optimization loop uses the *optim* function by default to minimize the negative log-likelihood function, but *optimx* can also be used if desired.
 
-Required Libraries
-==================
+# Author and License Information
+Author: *John Paul Helveston* - www.jhelvy.com/logitr
+Date First Written: *Sunday, September 28, 2014*
+Most Recent Update: *Monday, February 26, 2018*
+License: GPL-3.
+
+# Installation
+First, make sure you have the `devtools` library installed:
+
+`install.packages('devtools')`
+
+Then run these commands to install and load the `logitr` package:
+
+```
+library('devtools')
+install_github('logitr','jhelvy')
+library('logitr')
+```
+
+# Required Libraries
 The following libraries are required to run *logitr*:
-- randtoolbox
-- optimx (if you choose to use *optimx* instead of the default *optim* for the optimization loop)
+- data.table (for logit computations)
+- randtoolbox (for taking Halton draws in MXL models)
+- nloptr (for the main optimization)
 
-Basic Usage
-===========
-Put all the files from *logitr.zip* into a directory and use that directory as your working directory. Before using logitr, make sure your choice data file is a properly setup csv file (see *Choice Data File Setup* below). Set all the model inputs and control options using the *modelSetup.R* file in the main working directory. Once the *modelSetup.R* file is completely setup, begin the model estimation by running the entire *modelSetup.R* file in R.
+# Contents
+This package contains the following functions:
 
-Model Output
-============
-
-The program produces a single list object called *model* that stores all the results. The main results of interest are explained below, but *model* also contains many other values, including the original data and settings assigned in the *modelSetup.R* file. All values can be accessed by using the "$" symbol.
-
-Main Values
------------
-
-- model$bestModel     = The original "model" list obect that *optim* or *optimx* produces after the optimization has converged to a solution.
-- model$pars          = The best set of parameters found.
-- model$hessian       = A symmetric matrix giving an estimate of the Hessian at the solution found.
-- model$sds           = The standard error of the best set of parameters found.
-- model$scaledPars    = The best set of parameters found scaled by the scale factors (same as model$pars if scaledParams = FALSE).
-- model$scaledHessian = A symmetric matrix giving an estimate of the Hessian at the solution found scaled by the scale factors (same as model$pars if scaledParams = FALSE).
-- model$scaledSDs     = The standard error of the best set of parameters found scaled by the scale factors (same as model$pars if scaledParams = FALSE).
-- model$logL          = The log-likelihood function evaluated at the best set of parameters found.
-- model$nullLogL      = The log-likelihood function evaluated with all parameters set to 0.
-- model$summary       = A summary table including the parameters, standard errors, t-statistics, and significance codes.
-- model$startPoints   = A matrix of the different starting points used for each run of the optim algorithm (for multistarts).
-- model$parMat        = A matrix of the best set of parameters found for each run of the optim algorithm (for multistarts).
-- model$logLMat       = A matrix of the log-likelihood function evaluated at the best parameters found for each run of the optim algorithm (for multistarts).
-
-Other Values of Interest
-------------------------
-
-- model$covariateSetup = A data frame that summarizes the covariates used in the model and their distributional assumptions (0=fixed, 1=normal, 2=log-normal).
-model$numRandom      = The number of randomly distributed covariates.
-- model$numFixed       = The number of fixed (non-random) covariates.
-- model$numObs         = The total number of observations.
-- model$betaNames      = The names of the model covariates (fixed and random).
-- model$allParNames    = The names of all the model parameters.
-- model$numBetas       = The number of model covariates (fixed and random).
-- model$numParams      = The number of model parameters.
-- model$scaleFactors   = A vector of scaling factors used to scale the data (all ones if scaledParams = FALSE).
-- model$standardDraws  = A matrix of standard normal draws used during the model simulation.
-
-Choice Data File Setup
-======================
-The choice data file must be in a csv file format. Each row is an alternative from a choice occasion faced by an individual. The choice occasions do not have to be symmetric in that they could each have a different number of alternatives. The columns can be in any order, but the file MUST have a column for each of the following variables:
-
-1. A variable that identifies each individual choice maker. This must be a sequence of numbers that changes by choice maker and repeats for the same choice maker. This is used for the *respondentID* variable in the *modelSetup.R* file.
-2. A variable that identifies each individual choice occasion. This must be a sequence of numbers that changes by choice occasion and repeats for the same choice occasion. This is used for the *observationID* variable in the *modelSetup.R* file.
-3. A variable that identifies which alternative was chosen for each choice occasion, using 1 and 0 for chosen and not-chosen. This is used for the *choice* variable in the *modelSetup.R* file.
-4. A variable that identifies the price of each alternative. This is strictly required for a WTP space model, but is otherwise optional.
-5. All other columns can be any attributes to be used as model covariates.
-
-Optional weighting variable:
-A variable for weighting the data by individual or by choice occasion. The *weight* of each choice situation will be effectively multiplied by these numbers. For example, a value of 0.1 for a particular choice occasion would reduce it's weight by a factor of 10, and a value of 10 would increase it's weight by a factor of 10.
-
-Program Files
-=============
-
-- *modelSetup.R*: Main file for setting up the model. Running this file begins the entire program and is the ONLY file that needs to be run by the user.
-- *createDataObject.R*: This file takes the user-provided model data and settings and puts them all into a list called *d* (for *data*) which stores all of the data, settings, variables, and model output throughout the entire model estimation. Keeping a single object that contains all of the data protects against the accidental use of global variables and makes passing information and data between functions much easier.
-- *helperFunctions.R*: Contains a series of helper functions for various purposes, including scaling the model inputs, making start points, printing headers and model output, running the main optimization loop, and summarizing the model output.
-- *launch.R*: The main file that runs the entire program in the correct sequence.
-- *logitFunctions.R*: Contains all of the log-likelihood and gradient of the log-likelihood functions for different model types (MNL vs. MXL) and model spaces (preference vs. WTP).
-- *makeStartPoints.R*: Makes all the start points for running the model estimation optimization.
-- *optimizor.R*: Runs the main optimization loop.
-- *saveResults.R*: Saves the results (duh!)
-- *setLikelihoodFunctions.R*: Given the user provided settings on the model type and space, this file sets which log-likelihood and gradient functions to use for estimating the model.
-- *setupVariables*: Prepares all the necessary variables and re-formats the data according to the model type and space. Stores everything in the *d* list of objects.
-- *summarizeResults.R*: Summarizes all model results and renames the *d* object as *model* for the user to explore the results.
-
-File Hierarchy
-==============
-
-The *modelSetup.R* file loads the choice data and calls *launch.R* which begins the program and controls the sequence of the program steps. *launch.R* first loads all the functions needed for the program by calling the *helperFunctions.R* and *logitFunctions.R* files. Once these functions are loaded, then *checkModelInputs.R* is called which runs a series of checks on whether the user-provided information in *modelSetup.R* is correct. *createDataObject.R* is then called to create the main *d* object for storing all data and settings. Once the *d* object is created, *setLikelihoodFunctions.R* is called to set the correct log-likelihood functions to use in model estimation. Then *setupVariables.R* is called to create the necessary variables for model estimation based on the user-provided settings and choice data. Then *makeStartPoints.R* is called which simply creates all the starting points to be used in model estimation. Then *optimizor.R* is called to start the main optimization loop. After the optimization loop converges, *summarizeResults.R* is called to summarize the results and then finally *saveResults.R* is called to save the results as a .Rds file.
+* `logitr()`: The main function for running the logitr program.
+* `logitr.summary()`: Install over 300 frequently-used packages (see myPackageList.csv for list of libraries).
+* `logitr.statusCodes()`: Prints a summary of an estimated model using the logitr package.
