@@ -24,7 +24,7 @@ Then run these commands to install and load the `logitr` package:
 
 ```
 library('devtools')
-install_github('logitr','jhelvy')
+install_github('jhelvy/logitr')
 library('logitr')
 ```
 
