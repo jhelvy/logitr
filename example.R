@@ -1,11 +1,12 @@
 # Install from github
-library('devtools')
-install_github('jhelvy/logitr')
+# library('devtools')
+# install_github('jhelvy/logitr')
 library('logitr')
 
 # Import the choice data. Example data is the 'Yogurt' data set from the
 # mlogit package, reformatted for usage with the logitr package
-choiceData = read.csv(getURL('https://raw.githubusercontent.com/jhelvy/logitr/master/yogurt.csv'), header=T)
+choiceData = read.csv('https://raw.github.com/jhelvy/logitr/master/yogurt.csv', header=T)
+
 
 # ============================================================================
 # Homogeneous MNL models
