@@ -4,12 +4,9 @@
 \alias{logitr}
 \title{The main function for running the logitr program}
 \usage{
-logitr(data, choiceName, obsIDName, betaNames, betaDist = NULL,
-  priceName = NULL, priceDist = NULL, prefSpaceModel = NULL,
-  standardDraws = NULL, options = list(wtpSpace = F, numMultiStarts = 1,
-  keepAllRuns = F, useAnalyticGrad = T, scaleInputs = F, numDraws = 200,
-  drawType = "halton", printLevel = 0, xtol_rel = 1e-09, xtol_abs = 1e-09,
-  ftol_rel = 1e-09, ftol_abs = 1e-09, maxeval = 1000))
+logitr(data, choiceName, obsIDName, betaNames, priceName = NULL,
+  betaDist = NULL, priceDist = NULL, prefSpaceModel = NULL,
+  standardDraws = NULL, options = list())
 }
 \description{
 logitr estimates multinomial (MNL) and mixed logit (MXL) models in R with
