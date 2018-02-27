@@ -1,9 +1,5 @@
 - Add support for MXL models that also have fixed parameters
-- Consider going back to using optim rather than nloptr (automatically gets
-  hessian at solution, plus it's in base R). Might be slightly slower.
-
 - Add infinite loop stopper in multistart run
-- Consider removing the requirement for using the data.table package (use rowsums?).
 - Add support for adding weights to model.
 - Make plot of search space with all multistarts
 - The current MXL analytic gradients are not very efficient (they have loops).
