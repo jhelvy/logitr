@@ -19,8 +19,6 @@
 logitr = function(data, choiceName, obsIDName, betaNames, priceName=NULL,
                   betaDist=NULL, priceDist=NULL, prefSpaceModel=NULL,
                   standardDraws=NULL, options=list()) {
-    require(data.table)  # Required for fast computation in the
-                         # function getMnlLogit()
     require(randtoolbox) # Required for taking Halton draws
     require(nloptr)      # Required for optimization
     options = runOptionsChecks(options)
@@ -685,13 +683,24 @@ printModelSummary = function(model) {
 # MNL logit and log-likelihood functions
 # ============================================================================
 
+# # Logit fraction using data.table package (faster)
+# # Returns the logit fraction for mnl (homogeneous) models
+# getMnlLogit = function(V, obsID) {
+#     data = data.table(V=V, obsID=obsID)
+#     data[, expV:=exp(V.V1)]
+#     data[, sumExpV:=sum(expV), by=obsID]
+#     data[, logit:=expV/sumExpV]
+#     return(data$logit)
+# }
+
 # Returns the logit fraction for mnl (homogeneous) models
 getMnlLogit = function(V, obsID) {
-    data = data.table(V=V, obsID=obsID)
-    data[, expV:=exp(V.V1)]
-    data[, sumExpV:=sum(expV), by=obsID]
-    data[, logit:=expV/sumExpV]
-    return(data$logit)
+    expV       = exp(V)
+    sumExpV    = rowsum(expV, group=obsID)
+    repTimes   = as.numeric(table(obsID))
+    sumExpVMat = matrix(rep(sumExpV, times=repTimes), ncol=1)
+    logit      = expV / sumExpVMat
+    return(logit)
 }
 
 mnlNegLL = function(choice, logit) {

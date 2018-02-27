@@ -6,77 +6,89 @@ source('./R/functions.R')
 choiceData = read.csv(file='./yogurt.csv', header=T)
 
 # ============================================================================
-# Homogeneous MNL models
 
-# Multistart MNL model in the Preference Space:
-mnl.pref = logitr(
+model = logitr(
     data       = choiceData,
     choiceName = 'choice',
     obsIDName  = 'obsID',
     betaNames  = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
     options = list(
-        numMultiStarts = 5,
-        keepAllRuns    = TRUE))
-
-# Multistart MNL model in the WTP Space:
-mnl.wtp = logitr(
-    data       = choiceData,
-    choiceName = 'choice',
-    obsIDName  = 'obsID',
-    betaNames  = c('feat', 'dannon', 'hiland', 'yoplait'),
-    priceName  = 'price',
-    prefSpaceModel = mnl.pref$bestModel,
-    options = list(
-        wtpSpace       = TRUE,
-        numMultiStarts = 5,
-        keepAllRuns    = TRUE))
-
-# View model summaries
-logitr.summary(mnl.pref)
-logitr.summary(mnl.wtp)
-
-# NOTE:
-# To be check whether you have reached a global solution in WTP space models,
-# try running the equivalent model in the preference space and compare the
-# log-likelihood values at the solution as well as the computed mean WTP
-# values with those from the WTP space model. If they do not agree, then the
-# WTP space model might have reached a local minimum (the solution for the
-# preference space mnl model should be global since the log-likelihood in the
-# preference space is convex). Increase numMultiStarts and run the model again
-# to search the solution space for the global solution.
-
-# ============================================================================
-# Heterogeneous MXL models
-
-# Multistart MXL model in the Preference Space:
-mxl.pref = logitr(
-    data       = choiceData,
-    choiceName = 'choice',
-    obsIDName  = 'obsID',
-    betaNames  = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
-    betaDist   = c(1, 1, 1, 1, 1),
-    options    = list(
-        numMultiStarts = 1,
-        keepAllRuns    = TRUE,
-        numDraws       = 300))
-
-# Multistart MXL model in the WTP Space:
-mxl.wtp = logitr(
-    data       = logitr.data,
-    choiceName = 'choice',
-    obsIDName  = 'obsID',
-    betaNames  = c('feat', 'dannon', 'hiland', 'yoplait'),
-    priceName  = 'price',
-    betaDist   = c(1, 1, 1, 1),
-    priceDist  = 1,
-    prefSpaceModel = mxl.pref$bestModel,
-    options = list(
-        wtpSpace        = TRUE,
+        wtpSpace        = F,
         numMultiStarts  = 1,
-        keepAllRuns     = TRUE,
-        numDraws        = 300))
+        useAnalyticGrad = T,
+        keepAllRuns     = T,
+        scaleInputs     = F))
 
-# Compare model summaries
-logitr.summary(mxl.pref)
-logitr.summary(mxl.wtp)
 
+
+data       = choiceData
+choiceName = 'choice'
+obsIDName  = 'obsID'
+betaNames  = c('price', 'feat', 'dannon', 'hiland', 'yoplait')
+options = list(
+    wtpSpace        = F,
+    numMultiStarts  = 1,
+    useAnalyticGrad = T,
+    keepAllRuns     = T,
+    scaleInputs     = F,
+    printLevel      = 1)
+
+
+
+betaDist = NULL
+priceDist = NULL
+priceName = NULL
+standardDraws = NULL
+prefSpaceModel = NULL
+
+
+
+options = runOptionsChecks(options)
+# Prepare the modelInputs list
+modelInputs = getModelInputs(data, choiceName, obsIDName, betaNames,
+    betaDist, priceName, priceDist, prefSpaceModel, standardDraws, options)
+
+startPars = getRandomStartPars(modelInputs)
+
+model  = runModel(modelInputs, startPars)
+model = appendModelInfo(model, modelInputs)
+
+
+my.pars = model$coef
+mxl.pars = as.numeric(M.mxl$coefficients)
+
+negLL     = modelInputs$evalFuncs$negLL(my.pars, modelInputs)
+negGradLL = modelInputs$evalFuncs$negGradLL(my.pars, modelInputs)
+negGradLL
+negLL
+negLL     = modelInputs$evalFuncs$negLL(mxl.pars, modelInputs)
+negGradLL = modelInputs$evalFuncs$negGradLL(mxl.pars, modelInputs)
+negGradLL
+negLL
+
+# hessLL = modelInputs$evalFuncs$hessLL(pars, modelInputs)
+# negGradLL %*% solve(hessLL) %*% t(negGradLL)
+
+
+pars = pars + 0.1*negGradLL %*% solve(-1*hessLL)
+
+model = appendModelInfo(model, modelInputs)
+logitr.summary(model)
+
+
+# mxlNegGradLL.pref(X, parSetup, obsID, choice, standardDraws,
+#     betaDraws, VDraws, logitDraws, pHat)
+
+
+
+
+
+
+
+    logitFuncs = modelInputs$logitFuncs
+    obsID      = modelInputs$obsID
+    choice     = modelInputs$choice
+    betaDraws  = makeBetaDraws(pars, modelInputs)
+    VDraws     = logitFuncs$getMxlV(betaDraws, modelInputs)
+    logitDraws = logitFuncs$getMxlLogit(VDraws, obsID)
+    pHat       = rowMeans(logitDraws)

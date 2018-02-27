@@ -1,8 +1,6 @@
 - Add support for MXL models that also have fixed parameters
 - Consider going back to using optim rather than nloptr (automatically gets
   hessian at solution, plus it's in base R). Might be slightly slower.
-- Get rid of data.table usage, and consider avoiding dplyr (test speed
-  difference).
 
 - Add infinite loop stopper in multistart run
 - Consider removing the requirement for using the data.table package (use rowsums?).
