@@ -1,5 +1,15 @@
 setwd('/Users/jhelvy/Documents/github/logitr/')
-source('./R/functions.R')
+source('./R/additionalInfo.R')
+source('./R/logit.R')
+source('./R/main.R')
+source('./R/modelInputs.R')
+source('./R/optimLoop.R')
+source('./R/other.R')
+source('./R/printFunctions.R')
+source('./R/simulation.R')
+
+library('nloptr')
+library('randtoolbox')
 
 # Import the choice data. Example data is the 'Yogurt' data set from the
 # mlogit package, reformatted for usage with the logitr package
@@ -20,11 +30,11 @@ model = logitr(
         scaleInputs     = F))
 
 
-
 data       = choiceData
 choiceName = 'choice'
 obsIDName  = 'obsID'
 betaNames  = c('price', 'feat', 'dannon', 'hiland', 'yoplait')
+betaDist   = c(1,1,0,0,0)
 options = list(
     wtpSpace        = F,
     numMultiStarts  = 1,
@@ -35,7 +45,7 @@ options = list(
 
 
 
-betaDist = NULL
+# betaDist = NULL
 priceDist = NULL
 priceName = NULL
 standardDraws = NULL
@@ -52,43 +62,11 @@ startPars = getRandomStartPars(modelInputs)
 
 model  = runModel(modelInputs, startPars)
 model = appendModelInfo(model, modelInputs)
-
-
-my.pars = model$coef
-mxl.pars = as.numeric(M.mxl$coefficients)
-
-negLL     = modelInputs$evalFuncs$negLL(my.pars, modelInputs)
-negGradLL = modelInputs$evalFuncs$negGradLL(my.pars, modelInputs)
-negGradLL
-negLL
-negLL     = modelInputs$evalFuncs$negLL(mxl.pars, modelInputs)
-negGradLL = modelInputs$evalFuncs$negGradLL(mxl.pars, modelInputs)
-negGradLL
-negLL
-
-# hessLL = modelInputs$evalFuncs$hessLL(pars, modelInputs)
-# negGradLL %*% solve(hessLL) %*% t(negGradLL)
-
-
-pars = pars + 0.1*negGradLL %*% solve(-1*hessLL)
-
-model = appendModelInfo(model, modelInputs)
 logitr.summary(model)
 
-
-# mxlNegGradLL.pref(X, parSetup, obsID, choice, standardDraws,
-#     betaDraws, VDraws, logitDraws, pHat)
-
-
-
-
-
-
-
-    logitFuncs = modelInputs$logitFuncs
-    obsID      = modelInputs$obsID
-    choice     = modelInputs$choice
-    betaDraws  = makeBetaDraws(pars, modelInputs)
-    VDraws     = logitFuncs$getMxlV(betaDraws, modelInputs)
-    logitDraws = logitFuncs$getMxlLogit(VDraws, obsID)
-    pHat       = rowMeans(logitDraws)
+negLL     = modelInputs$evalFuncs$negLL(model$coef, modelInputs)
+negGradLL = modelInputs$evalFuncs$negGradLL(model$coef, modelInputs)
+negGradLL
+negLL
+# hessLL = modelInputs$evalFuncs$hessLL(model$coef, modelInputs)
+# negGradLL %*% solve(hessLL) %*% t(negGradLL)
