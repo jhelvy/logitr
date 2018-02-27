@@ -62,7 +62,7 @@ mxl.pref = logitr(
     options    = list(
         numMultiStarts = 1,
         keepAllRuns    = TRUE,
-        numDraws       = 300))
+        numDraws       = 200))
 
 # Multistart MXL model in the WTP Space:
 mxl.wtp = logitr(
@@ -78,7 +78,7 @@ mxl.wtp = logitr(
         wtpSpace        = TRUE,
         numMultiStarts  = 1,
         keepAllRuns     = TRUE,
-        numDraws        = 300))
+        numDraws        = 200))
 
 # Compare model summaries
 logitr.summary(mxl.pref)
