@@ -897,6 +897,7 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
     numDraws   = nrow(standardDraws)
     numBetas   = ncol(standardDraws)
     logNormIDs = which(parSetup$dist == 2)
+    repTimes   = rep(as.numeric(table(obsID)), each=2*numBetas)
     # Compute the gradient of V for all parameters
     grad = matrix(0, nrow=nrow(X), ncol=2*numBetas)
     for (i in 1:numDraws) {
@@ -914,8 +915,9 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
         partial.mu    = Xtemp
         partial.sigma = Xtemp*drawsMat
         partial       = cbind(partial.mu, partial.sigma)
-        tempMat       = matrix(rep(rowsum(logitMat*partial,
-                        group=obsID), each=3), ncol=ncol(partial), byrow=F)
+        temp          = rowsum(logitMat*partial, group=obsID)
+        tempMat       = matrix(rep(temp, times=repTimes), ncol=ncol(partial),
+                        byrow=F)
         grad = grad + logitMat*(partial - tempMat)
     }
     grad           = grad / numDraws

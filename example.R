@@ -5,8 +5,9 @@ library('logitr')
 
 # Import the choice data. Example data is the 'Yogurt' data set from the
 # mlogit package, reformatted for usage with the logitr package
-choiceData = read.csv('https://raw.github.com/jhelvy/logitr/master/yogurt.csv', header=T)
-
+choiceData = read.csv(
+    file   = 'https://raw.github.com/jhelvy/logitr/master/yogurt.csv',
+    header = TRUE)
 
 # ============================================================================
 # Homogeneous MNL models
@@ -19,7 +20,7 @@ mnl.pref = logitr(
     betaNames  = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
     options = list(
         numMultiStarts = 5,
-        keepAllRuns    = T))
+        keepAllRuns    = TRUE))
 
 # Multistart MNL model in the WTP Space:
 mnl.wtp = logitr(
@@ -30,9 +31,9 @@ mnl.wtp = logitr(
     priceName  = 'price',
     prefSpaceModel = mnl.pref$bestModel,
     options = list(
-        wtpSpace        = T,
-        numMultiStarts  = 5,
-        keepAllRuns     = T))
+        wtpSpace       = TRUE,
+        numMultiStarts = 5,
+        keepAllRuns    = TRUE))
 
 # View model summaries
 logitr.summary(mnl.pref)
@@ -60,33 +61,26 @@ mxl.pref = logitr(
     betaDist   = c(1, 1, 1, 1, 1),
     options    = list(
         numMultiStarts = 1,
-        keepAllRuns    = T,
-        numDraws       = 300,
-        scaleInputs    = T,
-        drawType       = 'halton'))
+        keepAllRuns    = TRUE,
+        numDraws       = 300))
 
 # Multistart MXL model in the WTP Space:
-modelWtpMxl = logitr(
+mxl.wtp = logitr(
     data       = logitr.data,
     choiceName = 'choice',
     obsIDName  = 'obsID',
-    betaNames  = c('emissions', 'diesel', 'naturalGas', 'ethanol',
-                   'national', 'imported'),
+    betaNames  = c('feat', 'dannon', 'hiland', 'yoplait'),
     priceName  = 'price',
-    betaDist   = c(1, 1, 1, 1, 1, 1),
+    betaDist   = c(1, 1, 1, 1),
     priceDist  = 1,
-    prefSpaceModel = modelPrefMxl$bestModel,
+    prefSpaceModel = mxl.pref$bestModel,
     options = list(
-        wtpSpace        = T,
+        wtpSpace        = TRUE,
         numMultiStarts  = 1,
-        keepAllRuns     = T,
-        useAnalyticGrad = F,
-        scaleInputs     = T,
-        numDraws        = 300,
-        drawType        = 'halton',
-        printLevel      = 1))
+        keepAllRuns     = TRUE,
+        numDraws        = 300))
 
 # Compare model summaries
-logitr.summary(modelPrefMxl)
-logitr.summary(modelWtpMxl)
+logitr.summary(mxl.pref)
+logitr.summary(mxl.wtp)
 
