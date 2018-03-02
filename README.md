@@ -31,16 +31,38 @@ The main optimization loop uses the `nloptr` function to minimize the negative l
 # Contents
 This package contains the following functions:
 
-* `logitr()`: The main function for running the logitr program.
-* `logitr.summary()`: Prints a summary of an estimated model using the logitr package.
-* `logitr.statusCodes()`: Prints the status codes from the nloptr optimization routine.
+- `logitr()`: The main function for running the logitr program.
+- `logitr.summary()`: Prints a summary of an estimated model using the logitr package.
+- `logitr.statusCodes()`: Prints the status codes from the nloptr optimization routine.
 
 # Usage
-Details of how to use the *logitr* package are provided in the manual.pdf.
-An example in the 'example' folder also provides some help with syntax.
+(See the 'example' folder for an example)
 
-# Author and License Information
+The main function is the `logitr` function:
+
+```
+logitr(data, choiceName, obsIDName, betaNames, priceName=NULL,
+       betaDist=NULL, priceDist=NULL, prefSpaceModel=NULL, standardDraws=NULL,
+       options=list(...))
+```
+
+##Arguments:
+
+##Options:
+
+##Values:
+
+# Data File Setup
+The data must be arranged such that each row is an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. they could each have a different number of alternatives). The columns must include all variables that will be used as model covariates. In addition, the data must include each of the following variables:
+
+`obsID`: A sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the \emph{obsID} variable would be 1,1,2,2,3,3.
+`choice`: A dummy variable that identifies which alternative was chosen (1=chosen, 0 = not chosen).
+
+For WTP space models, you must include a `price` variable (entries should be the price value).
+
+# Author, Version, and License Information
 - Author: *John Paul Helveston* (www.jhelvy.com/logitr)
 - Date First Written: *Sunday, September 28, 2014*
 - Most Recent Update: *Friday, March 2, 2018*
 - License: GPL-3
+- Latest Version: 0.5.0
