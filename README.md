@@ -37,6 +37,7 @@ This package contains the following functions:
 
 # Usage
 Details of how to use the *logitr* package are provided in the manual.pdf.
+An example in the 'example' folder also provides some help with syntax.
 
 # Author and License Information
 - Author: *John Paul Helveston* (www.jhelvy.com/logitr)

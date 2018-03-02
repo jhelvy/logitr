@@ -6,7 +6,7 @@ library('logitr')
 # Import the choice data. Example data is the 'Yogurt' data set from the
 # mlogit package, reformatted for usage with the logitr package
 choiceData = read.csv(
-    file   = 'https://raw.github.com/jhelvy/logitr/master/yogurt.csv',
+    file   = 'https://raw.github.com/jhelvy/logitr/master/example/yogurt.csv',
     header = TRUE)
 
 # ============================================================================
