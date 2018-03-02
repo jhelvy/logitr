@@ -1,3 +1,5 @@
+- Add support for Hmisc Cs() function
+- Add timer supper
 - Add support for MXL models that also have fixed parameters
 - Add infinite loop stopper in multistart run
 - Add support for adding weights to model.
