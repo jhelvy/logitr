@@ -1,3 +1,4 @@
+- Write basic usage in README
 - Add support for Hmisc Cs() function
 - Add timer supper
 - Add support for MXL models that also have fixed parameters
