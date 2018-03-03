@@ -79,8 +79,8 @@ The function returns a list of values, so be sure to assign the model output to 
 ## Options
 |    Argument    |    Description    |
 |:---------------|:------------------|
-|`wtpSpace`: Set to `TRUE` for WTP space models. Defaults to `FALSE` (i.e. a preference space model).|
-|`numMultiStarts`: Number of times to run the optimization loop, each time starting from a different random starting point for each parameter between (-1, 1). Recommended for non-convex models, such as WTP space models and MXL models. Defaults to 1.|
+|`wtpSpace`|Set to `TRUE` for WTP space models. Defaults to `FALSE` (i.e. a preference space model).|
+|`numMultiStarts`|Number of times to run the optimization loop, each time starting from a different random starting point for each parameter between (-1, 1). Recommended for non-convex models, such as WTP space models and MXL models. Defaults to 1.|
 |`keepAllRuns`|Set to `TRUE` to keep all the model information for each multistart run. If `TRUE`, the `logitr()` function will return a list with three values: `models` (a list of each model), `multistartSummary` (a summary of all the multistart runs), and `bestModel` (as determined by the largest log-likelihood value). Defaults to `FALSE`.|
 |`useAnalyticGrad`|Set to `TRUE` to use the analytic (instead of numerically approximated) gradient during estimation. Currently only works for MNL models (MXL models will ignore this option and always use numeric gradients). Defaults to `TRUE`.|
 |`scaleInputs`|Set to `TRUE` to scale each variable in `data` to be between 0 and 1. This is sometimes helpful for the optimization routine is some of the variables have very large or very small values (e.g. > 10^3 or < 10^-3). Defaults to `FALSE`.|
