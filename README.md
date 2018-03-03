@@ -10,7 +10,7 @@
 - [Data File Setup](#data-file-setup)
 - [Other Functions](#other-functions)
 - [Author, Version, and License Information](#author,-version,-and-license-information)
-
+- [Citation Information](#citation-information)
 # Overview
 *logitr* estimates multinomial (MNL) and mixed logit (MXL) models and allows for models in the "preference space" or "willingness to pay (WTP) space." The current version includes support for:
 - Homogeneous multinomial logit (MNL) models
@@ -58,6 +58,8 @@ model = logitr(data, choiceName, obsIDName, betaNames, priceName=NULL,
                betaDist=NULL, priceDist=NULL, prefSpaceModel=NULL,
                standardDraws=NULL, options=list(...))
 ```
+
+The function returns a list of values, so be sure to assign the model output to a variable, like "model".
 
 ## Arguments:
 - `data`: The choice data, formatted as a data.frame object (see the [Data File Setup](#data-file-setup) Section for details).
@@ -131,3 +133,8 @@ To understand the status code of any model, use the `logitr.statusCodes()` funct
 - Most Recent Update: *Friday, March 2, 2018*
 - License: GPL-3
 - Latest Version: 0.5.0
+
+# Citation Information
+If you use this package for in a publication, I would greatly appreciate it if you cited it. You can get the citation information by typing this into R:
+
+`citation('logitr')`
