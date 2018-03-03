@@ -55,9 +55,9 @@ This package contains the following functions:
 The main function is the `logitr` function:
 
 ```
-model = logitr(data, choiceName, obsIDName, betaNames, priceName=NULL,
-               betaDist=NULL, priceDist=NULL, prefSpaceModel=NULL,
-               standardDraws=NULL, options=list(...))
+model = logitr(data, choiceName, obsIDName, parNames, priceName=NULL,
+               parDist=NULL, priceDist=NULL, modelSpace='pref',
+               prefSpaceModel=NULL, standardDraws=NULL, options=list(...))
 ```
 
 The function returns a list of values, so be sure to assign the model output to a variable, like "model".
