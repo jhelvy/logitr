@@ -1,6 +1,13 @@
 # Table of Contents
 - [Overview](#overview)
 - [Installation](#installation)
+  - [Required Libraries](#required-libraries)
+- [Contents](#contents)
+- [Usage](#usage)
+  - [Arguments](#arguments)
+  - [Options](#options)
+  - [Values](#values)
+- [Data File Setup](#data-file-setup)
 
 # Overview
 *logitr* estimates multinomial (MNL) and mixed logit (MXL) models and allows for models in the "preference space" or "willingness to pay (WTP) space." The current version includes support for:
@@ -25,7 +32,7 @@ install_github('jhelvy/logitr')
 library('logitr')
 ```
 
-## Required Libraries
+### Required Libraries
 *logitr* requires the following libraries:
 - `nloptr` (for doing the optimization)
 - `randtoolbox` (for taking Halton draws in MXL models)
