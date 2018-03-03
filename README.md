@@ -68,9 +68,9 @@ The function returns a list of values, so be sure to assign the model output to 
 |`data`|The choice data, formatted as a data.frame object (see the [Data File Setup](#data-file-setup) Section for details).|
 |`choiceName`|The name of the column that identifies the `choice` variable.|
 |`obsIDName`|The name of the column that identifies the `obsID` variable.|
-|`betaNames`|The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in betaNames.|
+|`parNames`|The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in parNames.|
 |`priceName`|The name of the column that identifies the price variable. Only required for WTP space models. Defaults to `NULL` if left unspecified.|
-|`betaDist`|A vector describing the distributional assumptions on each parameter. 0=fixed, 1=normal, 2=log-normal. Only required for MXL models. Defaults to `NULL` if left unspecified.|
+|`parDist`|A vector describing the distributional assumptions on each parameter. 0=fixed, 1=normal, 2=log-normal. Only required for MXL models. Defaults to `NULL` if left unspecified.|
 |`priceDist`|A number describing the distributional assumptions on the price parameter. 0=fixed, 1=normal, 2=log-normal. Only required for WTP space MXL models. Defaults to `NULL` if left unspecified.|
 |`modelSpace`|Set to `'wtp'` for WTP space models. Defaults to `'pref'` (a preference space model).|
 |`prefSpaceModel`|The user can provide an estimated preference space model as an input to a WTP space model. If included, the model will use the computed WTP from the preference space model as the starting parameter values for the first multistart run of the WTP space model. Also, a comparison of the computed WTP from the preference space model with the estimated WTP space model results will be provided. Defaults to `NULL` if left unspecified.|
