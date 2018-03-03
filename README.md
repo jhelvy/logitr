@@ -96,22 +96,22 @@ The function returns a list of values, so be sure to assign the model output to 
 ## Values
 |    Value    |    Description    |
 |:------------|:------------------|
-|`summaryTable`||
-|`coef`||
-|`standErrs`||
-|`logLik`||
-|`nullLogLik`||
-|`gradient`||
-|`hessian`||
-|`startPars`||
-|`iterations`||
-|`message`||
-|`status`||
-|`multistartNumber`||
-|`standardDraws`||
-|`randParSummary`||
-|`wtpComparison`||
-|`options`||
+|`summaryTable`|A summary table of the model coefficients and fit statistics.|
+|`coef`|The model coefficients at convergence.|
+|`standErrs`|The standard errors of the model coefficients at convergence.|
+|`logLik`|The log-likelihood value at convergence.|
+|`nullLogLik`|The null log-likelihood value (if all coefficients are 0).|
+|`gradient`|The gradient of the log-likelihood at convergence.|
+|`hessian`|The hessian of the log-likelihood at convergence.|
+|`startPars`|The starting values used.|
+|`iterations`|The number of iterations until convergence.|
+|`message`|A more informative message with the status of the optimization result.|
+|`status`|An integer value with the status of the optimization (positive values are successes). Type `logitr.statusCodes()` for a detailed description.|
+|`multistartNumber`|The multistart run number for this model.|
+|`standardDraws`|The draws used during maximum simulated likelihood (for MXL models).|
+|`randParSummary`|A summary of any random parameters (for MXL models).|
+|`wtpComparison`|A comparison of the WTP between a preference space and WTP space model (only reported for WTP space models that also included a preference space model in the `prefSpaceModel` argument.|
+|`options`|A list of all the model options.|
 
 # Data File Setup
 The data must be arranged such that each row is an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. they could each have a different number of alternatives). The columns must include all variables that will be used as model covariates. In addition, the data must include each of the following variables:
