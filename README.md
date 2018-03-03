@@ -69,18 +69,18 @@ The function returns a list of values, so be sure to assign the model output to 
 |`choiceName`|The name of the column that identifies the `choice` variable.|
 |`obsIDName`|The name of the column that identifies the `obsID` variable.|
 |`betaNames`|The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in betaNames.|
-|`priceName`|The name of the column that identifies the price variable. Only required for WTP space models. Defaults to NULL if left unspecified.|
-|`betaDist`|A vector describing the distributional assumptions on each parameter. 0=fixed, 1=normal, 2=log-normal. Only required for MXL models. Defaults to NULL if left unspecified.|
-|`priceDist`|A number describing the distributional assumptions on the price parameter. 0=fixed, 1=normal, 2=log-normal. Only required for WTP space MXL models. Defaults to NULL if left unspecified.|
-|`prefSpaceModel`|The user can provide an estimated preference space model as an input to a WTP space model. If included, the model will use the computed WTP from the preference space model as the starting parameter values for the first multistart run of the WTP space model. Also, a comparison of the computed WTP from the preference space model with the estimated WTP space model results will be provided. Defaults to NULL if left unspecified.|
-|`standardDraws`|The user can provide a matrix of standard draws to be used for MXL models. Defaults to NULL if left unspecified.|
+|`priceName`|The name of the column that identifies the price variable. Only required for WTP space models. Defaults to `NULL` if left unspecified.|
+|`betaDist`|A vector describing the distributional assumptions on each parameter. 0=fixed, 1=normal, 2=log-normal. Only required for MXL models. Defaults to `NULL` if left unspecified.|
+|`priceDist`|A number describing the distributional assumptions on the price parameter. 0=fixed, 1=normal, 2=log-normal. Only required for WTP space MXL models. Defaults to `NULL` if left unspecified.|
+|`prefSpaceModel`|The user can provide an estimated preference space model as an input to a WTP space model. If included, the model will use the computed WTP from the preference space model as the starting parameter values for the first multistart run of the WTP space model. Also, a comparison of the computed WTP from the preference space model with the estimated WTP space model results will be provided. Defaults to `NULL` if left unspecified.|
+|`standardDraws`|The user can provide a matrix of standard draws to be used for MXL models. Defaults to `NULL` if left unspecified.|
 |`options`|A list of options (see the [Options](#options) Section for details).|
 
 ## Options
 |    Argument    |    Description    |
 |:---------------|:------------------|
 |`wtpSpace`|Set to `TRUE` for WTP space models. Defaults to `FALSE` (i.e. a preference space model).|
-|`numMultiStarts`|Number of times to run the optimization loop, each time starting from a different random starting point for each parameter between (-1, 1). Recommended for non-convex models, such as WTP space models and MXL models. Defaults to 1.|
+|`numMultiStarts`|Number of times to run the optimization loop, each time starting from a different random starting point for each parameter between (-1, 1). Recommended for non-convex models, such as WTP space models and MXL models. Defaults to `1`.|
 |`keepAllRuns`|Set to `TRUE` to keep all the model information for each multistart run. If `TRUE`, the `logitr()` function will return a list with three values: `models` (a list of each model), `multistartSummary` (a summary of all the multistart runs), and `bestModel` (as determined by the largest log-likelihood value). Defaults to `FALSE`.|
 |`useAnalyticGrad`|Set to `TRUE` to use the analytic (instead of numerically approximated) gradient during estimation. Currently only works for MNL models (MXL models will ignore this option and always use numeric gradients). Defaults to `TRUE`.|
 |`scaleInputs`|Set to `TRUE` to scale each variable in `data` to be between 0 and 1. This is sometimes helpful for the optimization routine is some of the variables have very large or very small values (e.g. > 10^3 or < 10^-3). Defaults to `FALSE`.|
