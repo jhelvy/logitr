@@ -56,7 +56,7 @@ logitr(data, choiceName, obsIDName, betaNames, priceName=NULL,
 - `priceDist`: A number describing the distributional assumptions on the price parameter. 0=fixed, 1=normal, 2=log-normal. Only required for WTP space MXL models. Defaults to NULL if left unspecified.
 - `prefSpaceModel`: The user can provide an estimated preference space model as an input to a WTP space model. If included, the model will use the computed WTP from the preference space model as the starting parameter values for the first multistart run of the WTP space model. Also, a comparison of the computed WTP from the preference space model with the estimated WTP space model results will be provided. Defaults to NULL if left unspecified.
 - `standardDraws`: The user can provide a matrix of standard draws to be used for MXL models. Defaults to NULL if left unspecified.
-- `options`: A list of options (see the [Options](## Options) Section for details).
+- `options`: A list of options (see the [Options](##Options) Section for details).
 
 ## Options:
 
