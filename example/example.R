@@ -43,8 +43,12 @@ mnl.wtp = logitr(
                                # will be used from the mnl.pref multistart
     options = list(
         wtpSpace       = TRUE,
-        numMultiStarts = 5,
-        keepAllRuns    = TRUE))
+        numMultiStarts = 10,
+        keepAllRuns    = TRUE,
+        scaleInputs    = TRUE)) # Here I scale the inputs because everything
+                                # will be divided by price for WTP, and price
+                                # is in currently between 0 < 20. Scaling
+                                # helps with stability in this case.
 
 # Print a summary of all multistart runs and a summary of the best model:
 # Note that because the prefSpaceModel argument was included, the summary

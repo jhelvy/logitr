@@ -19,7 +19,7 @@ choiceData = read.csv(
 
 # ============================================================================
 
-model = logitr(
+mnl.pref = logitr(
     data       = choiceData,
     choiceName = 'choice',
     obsIDName  = 'obsID',
@@ -28,30 +28,44 @@ model = logitr(
         wtpSpace        = F,
         numMultiStarts  = 1,
         useAnalyticGrad = T,
-        keepAllRuns     = T,
+        keepAllRuns     = F,
+        scaleInputs     = F))
+
+mnl.wtp = logitr(
+    data           = choiceData,
+    choiceName     = 'choice',
+    obsIDName      = 'obsID',
+    parNames       = c('feat', 'dannon', 'hiland', 'yoplait'),
+    priceName      = 'price',
+    prefSpaceModel = mnl.pref,
+    options        = list(
+        wtpSpace        = T,
+        numMultiStarts  = 1,
+        useAnalyticGrad = T,
+        keepAllRuns     = F,
         scaleInputs     = F))
 
 
 data       = choiceData
 choiceName = 'choice'
 obsIDName  = 'obsID'
-parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait')
-parDist    = c(1,1,0,0,0)
+parNames   = c('feat', 'dannon', 'hiland', 'yoplait')
+priceName  = 'price'
+prefSpaceModel = mnl.pref
 options    = list(
-    wtpSpace        = F,
+    wtpSpace        = T,
     numMultiStarts  = 1,
     useAnalyticGrad = T,
     keepAllRuns     = T,
-    scaleInputs     = F,
+    scaleInputs     = T,
     printLevel      = 1)
 
 
-
-# parDist        = NULL
+parDist        = NULL
 priceDist      = NULL
-priceName      = NULL
+# priceName      = NULL
 standardDraws  = NULL
-prefSpaceModel = NULL
+# prefSpaceModel = NULL
 
 
 
@@ -63,12 +77,15 @@ modelInputs = getModelInputs(data, choiceName, obsIDName, parNames,
 startPars = getRandomStartPars(modelInputs)
 
 model  = runModel(modelInputs, startPars)
+model$status
+model$logLik
+
 model = appendModelInfo(model, modelInputs)
 logitr.summary(model)
 
-negLL     = modelInputs$evalFuncs$negLL(model$coef, modelInputs)
-negGradLL = modelInputs$evalFuncs$negGradLL(model$coef, modelInputs)
-negGradLL
-negLL
+# negLL     = modelInputs$evalFuncs$negLL(model$coef, modelInputs)
+# negGradLL = modelInputs$evalFuncs$negGradLL(model$coef, modelInputs)
+# negGradLL
+# negLL
 # hessLL = modelInputs$evalFuncs$hessLL(model$coef, modelInputs)
 # negGradLL %*% solve(hessLL) %*% t(negGradLL)

@@ -101,7 +101,7 @@ printModelSummary = function(model) {
         cat('Random Coefficients:', '\n')
         print(model$randParSummary)
     }
-    if (model$options$wtpSpace & is.na(model$wtpComparison)==F) {
+    if (model$options$wtpSpace & sum(is.na(model$wtpComparison))==0) {
         cat('\n')
         cat('Comparison of WTP Between Preference and WTP Space Models:', '\n')
         print(format(model$wtpComparison, scientific=F))
