@@ -20,7 +20,7 @@ logitr.summary = function(model) {
         cat('---', '\n', sep='')
         cat('To view meaning of status codes, use logitr.statusCodes()', '\n')
         cat('\n', sep='')
-        cat('Summary of BEST model below (as determined by the largest',
+        cat('Summary of BEST model below (run with largest',
             'log-likelihood value)', sep=' ')
         cat('\n', sep='')
         printModelSummary(model$bestModel)
@@ -101,7 +101,7 @@ printModelSummary = function(model) {
         cat('Random Coefficients:', '\n')
         print(model$randParSummary)
     }
-    if (model$options$wtpSpace) {
+    if (model$options$wtpSpace & is.na(model$wtpComparison)==F) {
         cat('\n')
         cat('Comparison of WTP Between Preference and WTP Space Models:', '\n')
         print(format(model$wtpComparison, scientific=F))

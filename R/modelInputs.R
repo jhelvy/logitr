@@ -178,6 +178,11 @@ setEvalFunctions = function(modelInputs) {
 }
 
 getPrefSpaceModelWtp = function(model, modelInputs) {
+    if ('multistartSummary' %in% names(model)) {
+        # This is a list of all models from a multistart, so just use the
+        # results from the best model:
+        model = model$bestModel
+    }
     priceName           = modelInputs$priceName
     prefCoefs           = model$coef
     prefPriceIndex      = which(grepl(priceName, names(prefCoefs)))[1]

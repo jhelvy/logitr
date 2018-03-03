@@ -1,6 +1,8 @@
-# Install from github
-# library('devtools')
-# install_github('jhelvy/logitr')
+# Install logitr package from github
+library('devtools')
+install_github('jhelvy/logitr')
+
+# Load logitr package
 library('logitr')
 
 # Import the choice data. Example data is the 'Yogurt' data set from the
@@ -20,7 +22,15 @@ mnl.pref = logitr(
     betaNames  = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
     options = list(
         numMultiStarts = 5,
-        keepAllRuns    = T))
+        keepAllRuns    = TRUE)) # By keeping all the runs, you can review the
+                                # results of each multistart run
+
+# Print a summary of all multistart runs and a summary of the best model:
+logitr.summary(mnl.pref)
+# Print a summary of the third model run:
+logitr.summary(mnl.pref$models[[3]])
+# Print a summary of the best model:
+logitr.summary(mnl.pref$bestModel)
 
 # Multistart MNL model in the WTP Space:
 mnl.wtp = logitr(
@@ -29,15 +39,18 @@ mnl.wtp = logitr(
     obsIDName  = 'obsID',
     betaNames  = c('feat', 'dannon', 'hiland', 'yoplait'),
     priceName  = 'price',
-    prefSpaceModel = mnl.pref$bestModel,
+    prefSpaceModel = mnl.pref, # By default the best preference space model
+                               # will be used from the mnl.pref multistart
     options = list(
         wtpSpace       = TRUE,
         numMultiStarts = 5,
         keepAllRuns    = TRUE))
 
-# View model summaries
-logitr.summary(mnl.pref)
+# Print a summary of all multistart runs and a summary of the best model:
+# Note that because the prefSpaceModel argument was included, the summary
+# also prints a comparison of the WTP between the two spaces.
 logitr.summary(mnl.wtp)
+
 
 # NOTE:
 # To be check whether you have reached a global solution in WTP space models,
@@ -60,6 +73,8 @@ mxl.pref = logitr(
     betaNames  = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
     betaDist   = c(1, 1, 1, 1, 1),
     options    = list(
+    # You should run a multistart for MXL models since they are non-convex,
+    # but it can take a long time.
         numMultiStarts = 1,
         keepAllRuns    = TRUE,
         numDraws       = 200))
