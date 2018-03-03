@@ -114,13 +114,14 @@ For WTP space models, you must include a `price` variable (entries should be the
 
 # Other Functions
 The *logitr* package also includes a summary function:
+
 `logitr.summary(model)`
 
 where `model` is a model estimated using the `logitr()` function.
 
 For a single model run, it prints some summary information, including the model space, log-likelihood value at the solution, and a summary table of the model. For MXL models, it also prints a summary of the random parameters. For WTP space models, if the `prefSpaceModel` argument was included it also prints a summary of the WTP comparison between the two models spaces.
 
-If the `keepAllRuns` option is set to `TRUE`, the logitr.summary() function will print a summary of all the multistart runs followed by a summary of the best model (as determined by the largest log-likelihood value).
+If the `keepAllRuns` option is set to `TRUE`, the `logitr.summary()` function will print a summary of all the multistart runs followed by a summary of the best model (as determined by the largest log-likelihood value).
 
 To understand the status code of any model, use the `logitr.statusCodes()` function, which prints a summary of the status codes from the `nloptr` optimization routine.
 
