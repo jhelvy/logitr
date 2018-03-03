@@ -20,7 +20,7 @@ mnl.pref = logitr(
     betaNames  = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
     options = list(
         numMultiStarts = 5,
-        keepAllRuns    = TRUE))
+        keepAllRuns    = T))
 
 # Multistart MNL model in the WTP Space:
 mnl.wtp = logitr(

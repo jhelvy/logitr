@@ -8,6 +8,8 @@
   - [Options](#options)
   - [Values](#values)
 - [Data File Setup](#data-file-setup)
+- [Other Functions](#other-functions)
+- [Author, Version, and License Information](#author,-version,-and-license-information)
 
 # Overview
 *logitr* estimates multinomial (MNL) and mixed logit (MXL) models and allows for models in the "preference space" or "willingness to pay (WTP) space." The current version includes support for:
@@ -52,9 +54,9 @@ This package contains the following functions:
 The main function is the `logitr` function:
 
 ```
-logitr(data, choiceName, obsIDName, betaNames, priceName=NULL,
-       betaDist=NULL, priceDist=NULL, prefSpaceModel=NULL, standardDraws=NULL,
-       options=list(...))
+model = logitr(data, choiceName, obsIDName, betaNames, priceName=NULL,
+               betaDist=NULL, priceDist=NULL, prefSpaceModel=NULL,
+               standardDraws=NULL, options=list(...))
 ```
 
 ## Arguments:
@@ -70,16 +72,57 @@ logitr(data, choiceName, obsIDName, betaNames, priceName=NULL,
 - `options`: A list of options (see the [Options](#options) Section for details).
 
 ## Options:
+- `wtpSpace`: Set to `TRUE` for WTP space models. Defaults to `FALSE` (i.e. a preference space model).
+- `numMultiStarts`: Number of times to run the optimization loop, each time starting from a different random starting point for each parameter between (-1, 1). Recommended for non-convex models, such as WTP space models and MXL models.
+- `keepAllRuns`:
+- `useAnalyticGrad`:
+- `scaleInputs`:
+- `numDraws`:
+- `drawType`:
+- `printLevel`:
+- `xtol_rel`:
+- `xtol_abs`:
+- `ftol_rel`:
+- `ftol_abs`:
+- `maxeval`:
 
 ## Values:
+- `summaryTable`:
+- `coef`:
+- `standErrs`:
+- `logLik`:
+- `nullLogLik`:
+- `gradient`:
+- `hessian`:
+- `startPars`:
+- `iterations`:
+- `message`:
+- `status`:
+- `multistartNumber`:
+- `standardDraws`:
+- `randParSummary`:
+- `wtpComparison`:
+- `options`:
 
 # Data File Setup
 The data must be arranged such that each row is an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. they could each have a different number of alternatives). The columns must include all variables that will be used as model covariates. In addition, the data must include each of the following variables:
 
-`obsID`: A sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the \emph{obsID} variable would be 1,1,2,2,3,3.
-`choice`: A dummy variable that identifies which alternative was chosen (1=chosen, 0 = not chosen).
+- `obsID`: A sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the \emph{obsID} variable would be 1,1,2,2,3,3.
+- `choice`: A dummy variable that identifies which alternative was chosen (1=chosen, 0 = not chosen).
 
 For WTP space models, you must include a `price` variable (entries should be the price value).
+
+# Other Functions
+The *logitr* package also includes a summary function:
+`logitr.summary(model)`
+
+where `model` is a model estimated using the `logitr()` function.
+
+For a single model run, it prints some summary information, including the model space, log-likelihood value at the solution, and a summary table of the model. For MXL models, it also prints a summary of the random parameters. For WTP space models, if the `prefSpaceModel` argument was included it also prints a summary of the WTP comparison between the two models spaces.
+
+If the `keepAllRuns` option is set to `TRUE`, the logitr.summary() function will print a summary of all the multistart runs followed by a summary of the best model (as determined by the largest log-likelihood value).
+
+To understand the status code of any model, use the `logitr.statusCodes()` function, which prints a summary of the status codes from the `nloptr` optimization routine.
 
 # Author, Version, and License Information
 - Author: *John Paul Helveston* (www.jhelvy.com/logitr)

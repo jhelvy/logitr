@@ -19,6 +19,10 @@ logitr.summary = function(model) {
         print(model$multistartSummary)
         cat('---', '\n', sep='')
         cat('To view meaning of status codes, use logitr.statusCodes()', '\n')
+        cat('\n', sep='')
+        cat('Summary of BEST model below (as determined by the largest',
+            'log-likelihood value)', sep=' ')
+        cat('\n', sep='')
         printModelSummary(model$bestModel)
     } else {
         printModelSummary(model)
@@ -63,10 +67,12 @@ printModelSummary = function(model) {
     # Get the basic summary information of the best model
     modelSpace = 'Preference'
     if (model$options$wtpSpace) {modelSpace = 'Willingness-to-Pay'}
+    modelRun = paste(model$multistartNumber, 'of',
+                     model$options$numMultiStarts, sep=' ')
     bestModelSummary = data.frame(c(modelSpace,
-        model$multistartNumber, round(model$logLik, 3), model$iterations))
+        modelRun, round(model$logLik, 3), model$iterations))
     colnames(bestModelSummary) = ''
-    row.names(bestModelSummary) = c('Model Space:', 'Best Model Run:',
+    row.names(bestModelSummary) = c('Model Space:', 'Model Run:',
         'Log-Likelihood:', 'Number of Iterations:')
     # Get the coef and stats tables
     summaryTable = model$summaryTable
@@ -79,7 +85,7 @@ printModelSummary = function(model) {
     row.names(statTable) = row.names(summaryTable)[statIDs]
     # Print the summary
     printLine()
-    cat('SUMMARY OF BEST MODEL:', '\n')
+    cat('MODEL SUMMARY:', '\n')
     print(bestModelSummary)
     cat('\n')
     cat('Model Coefficients:', '\n')
