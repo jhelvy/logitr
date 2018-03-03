@@ -1,4 +1,4 @@
-# logitr
+# Overview
 *logitr* estimates multinomial (MNL) and mixed logit (MXL) models and allows for models in the "preference space" or "willingness to pay (WTP) space." The current version includes support for:
 - Homogeneous multinomial logit (MNL) models
 - Heterogeneous mixed logit (MXL) models (support for normal and log-normal parameter distributions).
@@ -46,21 +46,21 @@ logitr(data, choiceName, obsIDName, betaNames, priceName=NULL,
        options=list(...))
 ```
 
-##Arguments:
-`data`: The choice data, formatted as a data.frame object (see the [Data File Setup](# Data File Setup) Section for details).
-`choiceName`: The name of the column that identifies the `choice` variable.
-`obsIDName`: The name of the column that identifies the `obsID` variable.
-`betaNames`: The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in betaNames.
-`priceName`: The name of the column that identifies the price variable. Only required for WTP space models. Defaults to NULL if left unspecified.
-`betaDist`: A vector describing the distributional assumptions on each parameter. 0=fixed, 1=normal, 2=log-normal. Only required for MXL models. Defaults to NULL if left unspecified.
-`priceDist`: A number describing the distributional assumptions on the price parameter. 0=fixed, 1=normal, 2=log-normal. Only required for WTP space MXL models. Defaults to NULL if left unspecified.
-`prefSpaceModel`: The user can provide an estimated preference space model as an input to a WTP space model. If included, the model will use the computed WTP from the preference space model as the starting parameter values for the first multistart run of the WTP space model. Also, a comparison of the computed WTP from the preference space model with the estimated WTP space model results will be provided. Defaults to NULL if left unspecified.
-`standardDraws`: The user can provide a matrix of standard draws to be used for MXL models. Defaults to NULL if left unspecified.
-`options`: A list of options (see the [Options](##Options) Section for details).
+## Arguments:
+- `data`: The choice data, formatted as a data.frame object (see the [Data File Setup](#Data File Setup) Section for details).
+- `choiceName`: The name of the column that identifies the `choice` variable.
+- `obsIDName`: The name of the column that identifies the `obsID` variable.
+- `betaNames`: The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in betaNames.
+- `priceName`: The name of the column that identifies the price variable. Only required for WTP space models. Defaults to NULL if left unspecified.
+- `betaDist`: A vector describing the distributional assumptions on each parameter. 0=fixed, 1=normal, 2=log-normal. Only required for MXL models. Defaults to NULL if left unspecified.
+- `priceDist`: A number describing the distributional assumptions on the price parameter. 0=fixed, 1=normal, 2=log-normal. Only required for WTP space MXL models. Defaults to NULL if left unspecified.
+- `prefSpaceModel`: The user can provide an estimated preference space model as an input to a WTP space model. If included, the model will use the computed WTP from the preference space model as the starting parameter values for the first multistart run of the WTP space model. Also, a comparison of the computed WTP from the preference space model with the estimated WTP space model results will be provided. Defaults to NULL if left unspecified.
+- `standardDraws`: The user can provide a matrix of standard draws to be used for MXL models. Defaults to NULL if left unspecified.
+- `options`: A list of options (see the [Options](## Options) Section for details).
 
-##Options:
+## Options:
 
-##Values:
+## Values:
 
 # Data File Setup
 The data must be arranged such that each row is an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. they could each have a different number of alternatives). The columns must include all variables that will be used as model covariates. In addition, the data must include each of the following variables:
