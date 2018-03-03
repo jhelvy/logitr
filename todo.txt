@@ -1,10 +1,8 @@
-- Write basic usage in README
-- Add support for Hmisc Cs() function
+- Update MXL parameter inputs (currently numbers, change to mlogit format)
 - Add timer supper
-- Add support for MXL models that also have fixed parameters
 - Add infinite loop stopper in multistart run
 - Add support for adding weights to model.
-- Make plot of search space with all multistarts
+- Make plot of search space with all multistarts?
 - The current MXL analytic gradients are not very efficient (they have loops).
   Need to revise them for efficiency.
 - The gradient for WTP space is still incorrect (the 'mxlNegGradLL' function).
