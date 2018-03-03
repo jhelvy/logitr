@@ -4,19 +4,19 @@
 # ============================================================================
 
 # Creates a list of the data and other information needed for running the model
-getModelInputs = function(data, choiceName, obsIDName, betaNames, betaDist,
+getModelInputs = function(data, choiceName, obsIDName, parNames, parDist,
                          priceName, priceDist, prefSpaceModel, standardDraws,
                          options) {
     modelSpace = 'pref'
     if (options$wtpSpace) {modelSpace = 'wtp'}
     # Setup pars
-    parSetup = getParSetup(betaNames, betaDist, priceDist, modelSpace)
-    parNames = getParNames(parSetup)
+    parSetup = getParSetup(parNames, parDist, priceDist, modelSpace)
+    parNameList = getParNameList(parSetup)
     numBetas = nrow(parSetup)
     # Separate data elements
-    data   = removeNAs(data, choiceName, obsIDName, betaNames, priceName,
+    data   = removeNAs(data, choiceName, obsIDName, parNames, priceName,
              modelSpace)
-    X      = as.matrix(data[betaNames])
+    X      = as.matrix(data[parNames])
     obsID  = data[,which(names(data)==obsIDName)]
     choice = data[,which(names(data)==choiceName)]
     price  = NA
@@ -24,7 +24,7 @@ getModelInputs = function(data, choiceName, obsIDName, betaNames, betaDist,
     # Create the modelInputs list
     modelInputs = list(
         price=price, X=X, choice=choice, obsID=obsID, priceName=priceName,
-        parNames=parNames, parSetup=parSetup, scaleFactors=NA,
+        parNameList=parNameList, parSetup=parSetup, scaleFactors=NA,
         numBetas=numBetas, modelSpace=modelSpace, modelType='mnl',
         options=options)
     if (options$scaleInputs) {modelInputs = scaleInputs(modelInputs)}
@@ -46,9 +46,9 @@ getModelInputs = function(data, choiceName, obsIDName, betaNames, betaDist,
     return(modelInputs)
 }
 
-removeNAs = function(data, choiceName, obsIDName, betaNames, priceName,
+removeNAs = function(data, choiceName, obsIDName, parNames, priceName,
                      modelSpace) {
-    colsToSelect = c(choiceName, obsIDName, betaNames)
+    colsToSelect = c(choiceName, obsIDName, parNames)
     if (modelSpace == 'wtp') {colsToSelect = c(colsToSelect, priceName)}
     return(na.omit(data[colsToSelect]))
 }
@@ -101,31 +101,28 @@ scaleVar = function(var, scalingFactor) {
     return(list(scaledVar=scaledVar, scalingFactor=scalingFactor))
 }
 
-getParSetup = function(betaNames, betaDist, priceDist, modelSpace) {
-    if (is.null(betaDist)) {betaDist = rep(0, length(betaNames))}
+getParSetup = function(parNames, parDist, priceDist, modelSpace) {
+    if (is.null(parDist)) {parDist = rep(0, length(parNames))}
     if (is.null(priceDist)) {priceDist = 0}
-    parNames = betaNames
-    parDist  = betaDist
     if (modelSpace == 'wtp') {
         parNames = c('lambda', parNames)
-        parDist  = c(priceDist, betaDist)
+        parDist  = c(priceDist, parDist)
     }
     parSetup = data.frame(par=parNames, dist=parDist)
     return(parSetup)
 }
 
-getParNames = function(parSetup) {
+getParNameList = function(parSetup) {
     # For mxl models, need both '.mu' and '.sigma' parameters
-    fixedParIDs = which(parSetup$dist == 0)
-    randParIDs  = which(parSetup$dist != 0)
-    parNames    = as.character(parSetup$par)
-    parNames.mu = parNames
-    parNames.sigma = parNames[randParIDs]
-    parNames.mu[randParIDs] = paste(parNames[randParIDs], 'mu', sep='.')
+    randParIDs        = which(parSetup$dist != 0)
+    parNameList       = as.character(parSetup$par)
+    parNameList.mu    = parNameList
+    parNameList.sigma = parNameList[randParIDs]
     if (length(randParIDs) > 0) {
-        parNames.sigma = paste(parNames.sigma, 'sigma', sep='.')
+        parNameList.mu[randParIDs] =paste(parNameList[randParIDs],'mu',sep='.')
+        parNameList.sigma = paste(parNameList.sigma, 'sigma', sep='.')
     }
-    return(list(mu=parNames.mu, sigma=parNames.sigma))
+    return(list(mu=parNameList.mu, sigma=parNameList.sigma))
 }
 
 setLogitFunctions = function(modelInputs) {

@@ -37,7 +37,7 @@ appendModelInfo = function(model, modelInputs) {
 
 getModelPars= function(model, modelInputs) {
     pars = model$solution
-    names(pars) = c(modelInputs$parNames$mu, modelInputs$parNames$sigma)
+    names(pars) = c(modelInputs$parNameList$mu, modelInputs$parNameList$sigma)
     if (modelInputs$options$scaleInputs) {
         scaleFactors = getModelScaleFactors(model, modelInputs)
         pars = pars / scaleFactors
@@ -64,7 +64,7 @@ getModelHessian = function(model, modelInputs) {
             hessian[,1]      = hessian[,1]*priceScaleFactor
         }
     }
-    parNames = c(modelInputs$parNames$mu, modelInputs$parNames$sigma)
+    parNames = c(modelInputs$parNameList$mu, modelInputs$parNameList$sigma)
     colnames(hessian)  = parNames
     row.names(hessian) = parNames
     return(hessian)
@@ -74,7 +74,7 @@ getModelScaleFactors = function(model, modelInputs) {
     if (modelInputs$modelType == 'mnl') {
         return(modelInputs$scaleFactors)
     } else {
-        parNames = c(modelInputs$parNames$mu, modelInputs$parNames$sigma)
+        parNames = c(modelInputs$parNameList$mu, modelInputs$parNameList$sigma)
         scaleFactors = modelInputs$scaleFactors
         mxlScaleFactors = rep(0, length(parNames))
         for (i in 1:length(scaleFactors)) {

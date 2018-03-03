@@ -4,8 +4,8 @@
 \alias{logitr}
 \title{The main function for running the logitr program}
 \usage{
-logitr(data, choiceName, obsIDName, betaNames, priceName = NULL,
-  betaDist = NULL, priceDist = NULL, prefSpaceModel = NULL,
+logitr(data, choiceName, obsIDName, parNames, priceName = NULL,
+  parDist = NULL, priceDist = NULL, prefSpaceModel = NULL,
   standardDraws = NULL, options = list())
 }
 \description{

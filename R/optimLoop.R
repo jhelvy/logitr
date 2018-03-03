@@ -38,16 +38,12 @@ runMultistart = function(modelInputs) {
 # Returns randomly drawn starting parameters from a uniform distribution
 # between -1 and 1
 getRandomStartPars = function(modelInputs) {
-    parNames = modelInputs$parNames
+    parNameList = modelInputs$parNameList
     # For mxl models, need both '.mu' and '.sigma' parameters
-    pars.mu    = runif(length(parNames$mu), -1, 1)
-    pars.sigma = runif(length(parNames$sigma), -1, 1)
-    # if (modelInputs$options$wtpSpace) {
-    #     # This is a WTP space model, so lambda must be positive
-    #     pars.mu[1] = runif(1, 0, 1)
-    # }
+    pars.mu          = runif(length(parNameList$mu), -1, 1)
+    pars.sigma       = runif(length(parNameList$sigma), -1, 1)
     startPars        = c(pars.mu, pars.sigma)
-    names(startPars) = c(parNames$mu, parNames$sigma)
+    names(startPars) = c(parNameList$mu, parNameList$sigma)
     return(startPars)
 }
 

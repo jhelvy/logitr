@@ -16,15 +16,15 @@
 #' @export
 #' @examples
 #' # Put example code here
-logitr = function(data, choiceName, obsIDName, betaNames, priceName=NULL,
-                  betaDist=NULL, priceDist=NULL, prefSpaceModel=NULL,
+logitr = function(data, choiceName, obsIDName, parNames, priceName=NULL,
+                  parDist=NULL, priceDist=NULL, prefSpaceModel=NULL,
                   standardDraws=NULL, options=list()) {
     require(randtoolbox) # Required for taking Halton draws
     require(nloptr)      # Required for optimization
     options = runOptionsChecks(options)
     # Prepare the modelInputs list
-    modelInputs = getModelInputs(data, choiceName, obsIDName, betaNames,
-        betaDist, priceName, priceDist, prefSpaceModel, standardDraws, options)
+    modelInputs = getModelInputs(data, choiceName, obsIDName, parNames,
+        parDist, priceName, priceDist, prefSpaceModel, standardDraws, options)
     # Run the models
     allModels = runMultistart(modelInputs)
     if (options$keepAllRuns) {

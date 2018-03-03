@@ -19,8 +19,8 @@ mnl.pref = logitr(
     data       = choiceData,
     choiceName = 'choice',
     obsIDName  = 'obsID',
-    betaNames  = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
-    options = list(
+    parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
+    options    = list(
         numMultiStarts = 5,
         keepAllRuns    = TRUE)) # By keeping all the runs, you can review the
                                 # results of each multistart run
@@ -37,7 +37,7 @@ mnl.wtp = logitr(
     data       = choiceData,
     choiceName = 'choice',
     obsIDName  = 'obsID',
-    betaNames  = c('feat', 'dannon', 'hiland', 'yoplait'),
+    parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
     priceName  = 'price',
     prefSpaceModel = mnl.pref, # By default the best preference space model
                                # will be used from the mnl.pref multistart
@@ -70,8 +70,8 @@ mxl.pref = logitr(
     data       = choiceData,
     choiceName = 'choice',
     obsIDName  = 'obsID',
-    betaNames  = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
-    betaDist   = c(1, 1, 1, 1, 1),
+    parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
+    parDist    = c(1, 1, 1, 1, 1),
     options    = list(
     # You should run a multistart for MXL models since they are non-convex,
     # but it can take a long time.
@@ -84,9 +84,9 @@ mxl.wtp = logitr(
     data       = logitr.data,
     choiceName = 'choice',
     obsIDName  = 'obsID',
-    betaNames  = c('feat', 'dannon', 'hiland', 'yoplait'),
+    parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
     priceName  = 'price',
-    betaDist   = c(1, 1, 1, 1),
+    parDist    = c(1, 1, 1, 1),
     priceDist  = 1,
     prefSpaceModel = mxl.pref$bestModel,
     options = list(
