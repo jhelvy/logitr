@@ -1,3 +1,7 @@
+# Table of Contents
+- [Overview](#overview)
+- [Installation](#installation)
+
 # Overview
 *logitr* estimates multinomial (MNL) and mixed logit (MXL) models and allows for models in the "preference space" or "willingness to pay (WTP) space." The current version includes support for:
 - Homogeneous multinomial logit (MNL) models
@@ -47,7 +51,7 @@ logitr(data, choiceName, obsIDName, betaNames, priceName=NULL,
 ```
 
 ## Arguments:
-- `data`: The choice data, formatted as a data.frame object (see the [Data File Setup](#Data File Setup) Section for details).
+- `data`: The choice data, formatted as a data.frame object (see the [Data File Setup](#data-file-setup) Section for details).
 - `choiceName`: The name of the column that identifies the `choice` variable.
 - `obsIDName`: The name of the column that identifies the `obsID` variable.
 - `betaNames`: The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in betaNames.
@@ -56,7 +60,7 @@ logitr(data, choiceName, obsIDName, betaNames, priceName=NULL,
 - `priceDist`: A number describing the distributional assumptions on the price parameter. 0=fixed, 1=normal, 2=log-normal. Only required for WTP space MXL models. Defaults to NULL if left unspecified.
 - `prefSpaceModel`: The user can provide an estimated preference space model as an input to a WTP space model. If included, the model will use the computed WTP from the preference space model as the starting parameter values for the first multistart run of the WTP space model. Also, a comparison of the computed WTP from the preference space model with the estimated WTP space model results will be provided. Defaults to NULL if left unspecified.
 - `standardDraws`: The user can provide a matrix of standard draws to be used for MXL models. Defaults to NULL if left unspecified.
-- `options`: A list of options (see the [Options](##Options) Section for details).
+- `options`: A list of options (see the [Options](#options) Section for details).
 
 ## Options:
 
