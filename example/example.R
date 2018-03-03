@@ -39,8 +39,8 @@ mnl.wtp = logitr(
     obsIDName  = 'obsID',
     parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
     priceName  = 'price',
-    prefSpaceModel = mnl.pref, # By default the best preference space model
-                               # will be used from the mnl.pref multistart
+    prefSpaceModel = mnl.pref, # By default the best model from the mnl.pref
+                               # multistart will be used for comparison of WTP
     options = list(
         wtpSpace       = TRUE,
         numMultiStarts = 10,
@@ -55,16 +55,17 @@ mnl.wtp = logitr(
 # also prints a comparison of the WTP between the two spaces.
 logitr.summary(mnl.wtp)
 
-
-# NOTE:
-# To be check whether you have reached a global solution in WTP space models,
+# CAUTION ON LOCAL MINIMA:
+# To check whether you have reached a global solution in WTP space models,
 # try running the equivalent model in the preference space and compare the
 # log-likelihood values at the solution as well as the computed mean WTP
 # values with those from the WTP space model. If they do not agree, then the
 # WTP space model might have reached a local minimum (the solution for the
 # preference space mnl model should be global since the log-likelihood in the
 # preference space is convex). Increase numMultiStarts and run the model again
-# to search the solution space for the global solution.
+# to search the solution space for the global solution. By including the
+# prefSpaceModel argument in a WTP space model, this comparison is
+# automatically done for you.
 
 # ============================================================================
 # Heterogeneous MXL models
@@ -92,7 +93,7 @@ mxl.wtp = logitr(
     priceName  = 'price',
     parDist    = c(1, 1, 1, 1),
     priceDist  = 1,
-    prefSpaceModel = mxl.pref$bestModel,
+    prefSpaceModel = mxl.pref,
     options = list(
         wtpSpace        = TRUE,
         numMultiStarts  = 1,
