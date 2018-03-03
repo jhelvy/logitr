@@ -5,14 +5,12 @@
 
 # Creates a list of the data and other information needed for running the model
 getModelInputs = function(data, choiceName, obsIDName, parNames, parDist,
-                         priceName, priceDist, prefSpaceModel, standardDraws,
-                         options) {
-    modelSpace = 'pref'
-    if (options$wtpSpace) {modelSpace = 'wtp'}
+                          priceName, priceDist, modelSpace, prefSpaceModel,
+                          standardDraws, options) {
     # Setup pars
-    parSetup = getParSetup(parNames, parDist, priceDist, modelSpace)
+    parSetup    = getParSetup(parNames, parDist, priceDist, modelSpace)
     parNameList = getParNameList(parSetup)
-    numBetas = nrow(parSetup)
+    numBetas    = nrow(parSetup)
     # Separate data elements
     data   = removeNAs(data, choiceName, obsIDName, parNames, priceName,
              modelSpace)

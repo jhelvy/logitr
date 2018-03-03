@@ -20,7 +20,8 @@ appendModelInfo = function(model, modelInputs) {
         nullLogLik=nullLogLik, gradient=gradient, hessian=hessian,
         startPars=model$startPars, iterations=model$iterations,
         message=model$message, status=model$status,
-        multistartNumber=model$multistartNumber, standardDraws=NA,
+        multistartNumber=model$multistartNumber,
+        modelSpace=modelInputs$modelSpace, standardDraws=NA,
         randParSummary=NA, wtpComparison=NA, options=options)
     # If MXL model, attached draws and summary of parameter distributions
     if (modelInputs$modelType =='mxl') {
@@ -41,7 +42,7 @@ getModelPars= function(model, modelInputs) {
     if (modelInputs$options$scaleInputs) {
         scaleFactors = getModelScaleFactors(model, modelInputs)
         pars = pars / scaleFactors
-        if (modelInputs$options$wtpSpace) {
+        if (modelInputs$modelSpace == 'wtp') {
             priceScaleFactor = scaleFactors[1]
             pars             = pars*priceScaleFactor
             pars[1]          = pars[1]/priceScaleFactor
@@ -57,7 +58,7 @@ getModelHessian = function(model, modelInputs) {
         sf           = matrix(scaleFactors, ncol=1)
         sfMat        = sf %*% t(sf)
         hessian      = hessian*sfMat
-        if (modelInputs$options$wtpSpace) {
+        if (modelInputs$modelSpace == 'wtp') {
             priceScaleFactor = scaleFactors[1]
             hessian          = hessian/priceScaleFactor^2
             hessian[1,]      = hessian[1,]*priceScaleFactor

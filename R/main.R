@@ -17,14 +17,15 @@
 #' @examples
 #' # Put example code here
 logitr = function(data, choiceName, obsIDName, parNames, priceName=NULL,
-                  parDist=NULL, priceDist=NULL, prefSpaceModel=NULL,
-                  standardDraws=NULL, options=list()) {
+                  parDist=NULL, priceDist=NULL, modelSpace='pref',
+                  prefSpaceModel=NULL, standardDraws=NULL, options=list()) {
     require(randtoolbox) # Required for taking Halton draws
     require(nloptr)      # Required for optimization
     options = runOptionsChecks(options)
     # Prepare the modelInputs list
     modelInputs = getModelInputs(data, choiceName, obsIDName, parNames,
-        parDist, priceName, priceDist, prefSpaceModel, standardDraws, options)
+        parDist, priceName, priceDist, modelSpace, prefSpaceModel,
+        standardDraws, options)
     # Run the models
     allModels = runMultistart(modelInputs)
     if (options$keepAllRuns) {
@@ -40,7 +41,6 @@ logitr = function(data, choiceName, obsIDName, parNames, priceName=NULL,
 
 runOptionsChecks = function(options) {
     # Run checks for all inputs
-    if(is.null(options$wtpSpace))        {options$wtpSpace        = F}
     if(is.null(options$numMultiStarts))  {options$numMultiStarts  = 1}
     if(options$numMultiStarts < 1)       {options$numMultiStarts  = 1}
     if(is.null(options$keepAllRuns))     {options$keepAllRuns     = F}

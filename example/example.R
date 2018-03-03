@@ -39,10 +39,10 @@ mnl.wtp = logitr(
     obsIDName  = 'obsID',
     parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
     priceName  = 'price',
+    modelSpace = 'wtp',
     prefSpaceModel = mnl.pref, # By default the best model from the mnl.pref
                                # multistart will be used for comparison of WTP
     options = list(
-        wtpSpace       = TRUE,
         numMultiStarts = 10,
         keepAllRuns    = TRUE,
         scaleInputs    = TRUE)) # Here I scale the inputs because everything
@@ -84,6 +84,9 @@ mxl.pref = logitr(
         keepAllRuns    = TRUE,
         numDraws       = 200))
 
+# View summary of model:
+logitr.summary(mxl.pref)
+
 # Multistart MXL model in the WTP Space:
 mxl.wtp = logitr(
     data       = logitr.data,
@@ -93,14 +96,13 @@ mxl.wtp = logitr(
     priceName  = 'price',
     parDist    = c(1, 1, 1, 1),
     priceDist  = 1,
+    modelSpace = 'wtp',
     prefSpaceModel = mxl.pref,
     options = list(
-        wtpSpace        = TRUE,
-        numMultiStarts  = 1,
-        keepAllRuns     = TRUE,
-        numDraws        = 200))
+        numMultiStarts = 1,
+        keepAllRuns    = TRUE,
+        numDraws       = 200))
 
-# Compare model summaries
-logitr.summary(mxl.pref)
+# View summary of model:
 logitr.summary(mxl.wtp)
 
