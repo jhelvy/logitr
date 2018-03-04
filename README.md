@@ -115,12 +115,12 @@ The function returns a list of values, so be sure to assign the model output to 
 |`options`|A list of all the model options.|
 
 ## Data File Setup
-The data must be arranged such that each row is an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. they could each have a different number of alternatives). The columns must include all variables that will be used as model covariates. In addition, the data must include each of the following variables:
+The data must be a `data.frame` object and arranged such that each row is an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. they could each have a different number of alternatives). The columns must include all variables that will be used as model covariates. Each of the following variables must be included:
 
 - `obsID`: A sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the \emph{obsID} variable would be 1,1,2,2,3,3.
 - `choice`: A dummy variable that identifies which alternative was chosen (1=chosen, 0 = not chosen).
 
-For WTP space models, you must include a `price` variable (entries should be the price value).
+For WTP space models, you must include a `price` variable (entries should be the price values).
 
 # Using `logitr.summary()`
 The *logitr* package also includes a summary function:
