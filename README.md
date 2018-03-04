@@ -3,7 +3,7 @@
 - [Installation](#installation)
   - [Required Libraries](#required-libraries)
 - [Contents](#contents)
-- [The `logitr()` Function](#the-logitr()-function)
+- [Using `logitr()`](#using-`logitr()`)
   - [Arguments](#arguments)
   - [Options](#options)
   - [Values](#values)
@@ -49,7 +49,7 @@ This package contains the following functions:
 - `logitr.summary()`: Prints a summary of an estimated model using the logitr package.
 - `logitr.statusCodes()`: Prints the status codes from the nloptr optimization routine.
 
-# The `logitr()` Function
+# Using `logitr()`
 (See the 'example' folder for an example)
 
 The main function is the `logitr` function:
