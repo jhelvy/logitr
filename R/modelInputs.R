@@ -30,6 +30,7 @@ getModelInputs = function(data, choiceName, obsIDName, parNames, parDist,
         modelInputs$standardDraws = options$standardDraws
         if (is.null(options$standardDraws)) {
             modelInputs$standardDraws = getStandardDraws(parSetup, options)
+        }
     }
     modelInputs$logitFuncs = setLogitFunctions(modelInputs)
     modelInputs$evalFuncs  = setEvalFunctions(modelInputs)
