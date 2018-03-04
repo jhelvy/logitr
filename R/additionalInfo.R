@@ -28,10 +28,11 @@ appendModelInfo = function(model, modelInputs) {
         result$standardDraws  = modelInputs$standardDraws
         result$randParSummary = getRandParSummary(coef, modelInputs)
     }
-    # If prefSpaceModel exists, attach comparison of WTP between the two spaces
-    prefSpaceModel = modelInputs$prefSpaceModel
-    if (is.null(prefSpaceModel)==F & modelInputs$modelSpace=='wtp') {
-        result$wtpComparison = getWtpComparison(coef, logLik, prefSpaceModel)
+    # If prefSpaceModel was included in the options, attach comparison of WTP
+    # between the two spaces
+    if ((is.null(modelInputs$prefSpace.wtp)==F) &
+        (modelInputs$modelSpace=='wtp')) {
+        result$wtpComparison = getWtpComparison(coef, logLik, modelInputs)
     }
     return(result)
 }
@@ -42,7 +43,7 @@ getModelPars= function(model, modelInputs) {
     if (modelInputs$options$scaleInputs) {
         scaleFactors = getModelScaleFactors(model, modelInputs)
         pars = pars / scaleFactors
-        if (modelInputs$modelSpace == 'wtp') {
+        if (modelInputs$modelSpace=='wtp') {
             priceScaleFactor = scaleFactors[1]
             pars             = pars*priceScaleFactor
             pars[1]          = pars[1]/priceScaleFactor
@@ -58,7 +59,7 @@ getModelHessian = function(model, modelInputs) {
         sf           = matrix(scaleFactors, ncol=1)
         sfMat        = sf %*% t(sf)
         hessian      = hessian*sfMat
-        if (modelInputs$modelSpace == 'wtp') {
+        if (modelInputs$modelSpace=='wtp') {
             priceScaleFactor = scaleFactors[1]
             hessian          = hessian/priceScaleFactor^2
             hessian[1,]      = hessian[1,]*priceScaleFactor
@@ -72,7 +73,7 @@ getModelHessian = function(model, modelInputs) {
 }
 
 getModelScaleFactors = function(model, modelInputs) {
-    if (modelInputs$modelType == 'mnl') {
+    if (modelInputs$modelType=='mnl') {
         return(modelInputs$scaleFactors)
     } else {
         parNames = c(modelInputs$parNameList$mu, modelInputs$parNameList$sigma)
@@ -109,7 +110,7 @@ getCoefMat = function(coef, se, numObs, numParams) {
     tStat  = rep(NA, length(coef))
     pVal   = rep(NA, length(coef))
     signif = rep('', length(coef))
-    if (sum(is.na(se)) == 0) {
+    if (sum(is.na(se))==0) {
         tStat  = as.numeric(coef / se)
         dof    = numObs - numParams
         pVal   = 2*(1-pt(abs(tStat), dof))
@@ -149,8 +150,8 @@ getRandParSummary = function(coef, modelInputs) {
     temp       = modelInputs
     parSetup   = modelInputs$parSetup
     randParIDs = which(parSetup$dist != 0)
-    normIDs    = which(parSetup$dist == 1)
-    logNormIDs = which(parSetup$dist == 2)
+    normIDs    = which(parSetup$dist==1)
+    logNormIDs = which(parSetup$dist==2)
     temp$options$numDraws = 10^4
     temp$standardDraws    = getStandardDraws(parSetup, temp$options)
     betaDraws             = makeBetaDraws(coef, temp)
@@ -163,15 +164,15 @@ getRandParSummary = function(coef, modelInputs) {
     return(as.data.frame(randParSummary))
 }
 
-getWtpComparison = function(coef, logLik, prefSpaceModel) {
+getWtpComparison = function(wtpSpace.coef, wtpSpace.logLik, modelInputs) {
     wtpComparison = data.frame(
-        prefSpace.wtp = prefSpaceModel$wtp,
-        wtpSpace.wtp  = coef)
+        prefSpace = modelInputs$prefSpace.wtp,
+        wtpSpace  = wtpSpace.coef)
     # Add logLik values
-    logLikCompare     = c(prefSpaceModel$logLik, logLik)
+    logLikCompare     = c(modelInputs$prefSpace.logLik, wtpSpace.logLik)
     wtpComparison = rbind(wtpComparison, logLikCompare)
     row.names(wtpComparison)[nrow(wtpComparison)] = 'logLik'
-    wtpComparison$difference = round(wtpComparison$wtpSpace.wtp -
-        wtpComparison$prefSpace.wtp, 8)
+    wtpComparison$difference = round(wtpComparison$wtpSpace -
+        wtpComparison$prefSpace, 8)
     return(wtpComparison)
 }

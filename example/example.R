@@ -16,14 +16,14 @@ choiceData = read.csv(
 
 # Multistart MNL model in the Preference Space:
 mnl.pref = logitr(
-    data       = choiceData,
-    choiceName = 'choice',
-    obsIDName  = 'obsID',
-    parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
-    options    = list(
-        numMultiStarts = 5,
-        keepAllRuns    = TRUE)) # By keeping all the runs, you can review the
-                                # results of each multistart run
+  data       = choiceData,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
+  options    = list(
+    numMultiStarts = 5,
+    keepAllRuns    = TRUE)) # By keeping all the runs, you can review the
+                            # results of each multistart run
 
 # Print a summary of all multistart runs and a summary of the best model:
 logitr.summary(mnl.pref)
@@ -34,25 +34,24 @@ logitr.summary(mnl.pref$bestModel)
 
 # Multistart MNL model in the WTP Space:
 mnl.wtp = logitr(
-    data       = choiceData,
-    choiceName = 'choice',
-    obsIDName  = 'obsID',
-    parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
-    priceName  = 'price',
-    modelSpace = 'wtp',
-    prefSpaceModel = mnl.pref, # By default the best model from the mnl.pref
-                               # multistart will be used for comparison of WTP
-    options = list(
-        numMultiStarts = 10,
-        keepAllRuns    = TRUE,
-        scaleInputs    = TRUE)) # Here I scale the inputs because everything
-                                # will be divided by price for WTP, and price
-                                # is in currently between 0 < 20. Scaling
-                                # helps with stability in this case.
+  data       = choiceData,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
+  priceName  = 'price',
+  modelSpace = 'wtp',
+  options = list(
+    numMultiStarts = 10,
+    keepAllRuns    = TRUE,
+    prefSpaceModel = mnl.pref, # If keepAllRuns=T for the prefSpaceModel,
+                               # the best model from the multistart
+                               # will be used for comparison.
+    scaleInputs    = TRUE)) # Here I scale the inputs because it helps with
+                            # stability in this case.
 
 # Print a summary of all multistart runs and a summary of the best model:
-# Note that because the prefSpaceModel argument was included, the summary
-# also prints a comparison of the WTP between the two spaces.
+# Note that because the prefSpaceModel argument was included in the options
+# the summary will also print a comparison of the WTP between the two spaces.
 logitr.summary(mnl.wtp)
 
 # CAUTION ON LOCAL MINIMA:
@@ -72,36 +71,36 @@ logitr.summary(mnl.wtp)
 
 # Multistart MXL model in the Preference Space:
 mxl.pref = logitr(
-    data       = choiceData,
-    choiceName = 'choice',
-    obsIDName  = 'obsID',
-    parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
-    parDist    = c(1, 1, 1, 1, 1),
-    options    = list(
-    # You should run a multistart for MXL models since they are non-convex,
-    # but it can take a long time.
-        numMultiStarts = 1,
-        keepAllRuns    = TRUE,
-        numDraws       = 200))
+  data       = choiceData,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
+  parDist    = c(1, 1, 1, 1, 1),
+  options    = list(
+  # You should run a multistart for MXL models since they are non-convex,
+  # but it can take a long time.
+      numMultiStarts = 1,
+      keepAllRuns    = TRUE,
+      numDraws       = 200))
 
 # View summary of model:
 logitr.summary(mxl.pref)
 
 # Multistart MXL model in the WTP Space:
 mxl.wtp = logitr(
-    data       = logitr.data,
-    choiceName = 'choice',
-    obsIDName  = 'obsID',
-    parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
-    priceName  = 'price',
-    parDist    = c(1, 1, 1, 1),
-    priceDist  = 1,
-    modelSpace = 'wtp',
+  data       = logitr.data,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
+  priceName  = 'price',
+  parDist    = c(1, 1, 1, 1),
+  priceDist  = 1,
+  modelSpace = 'wtp',
+  options = list(
+    numMultiStarts = 1,
+    keepAllRuns    = TRUE,
     prefSpaceModel = mxl.pref,
-    options = list(
-        numMultiStarts = 1,
-        keepAllRuns    = TRUE,
-        numDraws       = 200))
+    numDraws       = 200))
 
 # View summary of model:
 logitr.summary(mxl.wtp)

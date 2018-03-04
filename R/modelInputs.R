@@ -5,8 +5,8 @@
 
 # Creates a list of the data and other information needed for running the model
 getModelInputs = function(data, choiceName, obsIDName, parNames, parDist,
-                          priceName, priceDist, modelSpace, prefSpaceModel,
-                          standardDraws, options) {
+                          priceName, priceDist, modelSpace, standardDraws,
+                          options) {
     # Setup pars
     parSetup    = getParSetup(parNames, parDist, priceDist, modelSpace)
     parNameList = getParNameList(parSetup)
@@ -18,7 +18,7 @@ getModelInputs = function(data, choiceName, obsIDName, parNames, parDist,
     obsID  = data[,which(names(data)==obsIDName)]
     choice = data[,which(names(data)==choiceName)]
     price  = NA
-    if (modelSpace == 'wtp') {price = -1*data[,which(names(data)==priceName)]}
+    if (modelSpace=='wtp') {price = -1*data[,which(names(data)==priceName)]}
     # Create the modelInputs list
     modelInputs = list(
         price=price, X=X, choice=choice, obsID=obsID, priceName=priceName,
@@ -36,10 +36,9 @@ getModelInputs = function(data, choiceName, obsIDName, parNames, parDist,
     }
     modelInputs$logitFuncs = setLogitFunctions(modelInputs)
     modelInputs$evalFuncs  = setEvalFunctions(modelInputs)
-    if (is.null(prefSpaceModel)==F) {
-        prefSpaceModel$wtp = getPrefSpaceModelWtp(prefSpaceModel, modelInputs)
-        modelInputs$prefSpaceModel = prefSpaceModel
-
+    if (is.null(options$prefSpaceModel)==F) {
+        modelInputs$prefSpace.wtp    = getPrefSpaceWtp(options, modelInputs)
+        modelInputs$prefSpace.logLik = options$prefSpaceModel$logLik
     }
     return(modelInputs)
 }
@@ -47,7 +46,7 @@ getModelInputs = function(data, choiceName, obsIDName, parNames, parDist,
 removeNAs = function(data, choiceName, obsIDName, parNames, priceName,
                      modelSpace) {
     colsToSelect = c(choiceName, obsIDName, parNames)
-    if (modelSpace == 'wtp') {colsToSelect = c(colsToSelect, priceName)}
+    if (modelSpace=='wtp') {colsToSelect = c(colsToSelect, priceName)}
     return(na.omit(data[colsToSelect]))
 }
 
@@ -67,7 +66,7 @@ scaleInputs = function(modelInputs) {
     scaleFactors = scaleFactorsX
     names(scaleFactors) = colnames(scaledX)
     # Scale price if WTP space model
-    if (modelInputs$modelSpace == 'wtp') {
+    if (modelInputs$modelSpace=='wtp') {
         scalingResultsPrice = scaleVar(price, scalingFactor=1)
         scaledPrice         = scalingResultsPrice$scaledVar
         scaleFactorPrice    = scalingResultsPrice$scalingFactor
@@ -102,7 +101,7 @@ scaleVar = function(var, scalingFactor) {
 getParSetup = function(parNames, parDist, priceDist, modelSpace) {
     if (is.null(parDist)) {parDist = rep(0, length(parNames))}
     if (is.null(priceDist)) {priceDist = 0}
-    if (modelSpace == 'wtp') {
+    if (modelSpace=='wtp') {
         parNames = c('lambda', parNames)
         parDist  = c(priceDist, parDist)
     }
@@ -134,7 +133,7 @@ setLogitFunctions = function(modelInputs) {
         mxlNegLL     = mxlNegLL,
         getMxlV      = getMxlV.pref,
         mxlNegGradLL = mxlNegGradLL.pref)
-    if (modelInputs$modelSpace == 'wtp') {
+    if (modelInputs$modelSpace=='wtp') {
         logitFuncs$getMnlV      = getMnlV.wtp
         logitFuncs$mnlNegGradLL = mnlNegGradLL.wtp
         logitFuncs$mnlHessLL    = mnlHessLL.wtp
@@ -155,7 +154,7 @@ setEvalFunctions = function(modelInputs) {
         evalFuncs$negGradLL = getMnlNegGradLL
         evalFuncs$hessLL    = getMnlHessLL
     }
-    if (modelInputs$modelType == 'mxl') {
+    if (modelInputs$modelType=='mxl') {
         evalFuncs$objective = mxlNegLLAndNumericGradLL
         evalFuncs$negLL     = getMxlNegLL
         evalFuncs$negGradLL = getNumericNegGradLL
@@ -164,7 +163,7 @@ setEvalFunctions = function(modelInputs) {
         # so still running numeric approximations for now regardless of
         # settings for MXL WTP space models
         if (modelInputs$options$useAnalyticGrad &
-            modelInputs$modelSpace == 'pref') {
+            modelInputs$modelSpace=='pref') {
             evalFuncs$objective = mxlNegLLAndGradLL
             evalFuncs$negGradLL = getMxlNegGradLL
         }
@@ -172,7 +171,8 @@ setEvalFunctions = function(modelInputs) {
     return(evalFuncs)
 }
 
-getPrefSpaceModelWtp = function(model, modelInputs) {
+getPrefSpaceWtp = function(options, modelInputs) {
+    model = options$prefSpaceModel
     if ('multistartSummary' %in% names(model)) {
         # This is a list of all models from a multistart, so just use the
         # results from the best model:

@@ -66,7 +66,7 @@ logitr.statusCodes = function() {
 printModelSummary = function(model) {
     # Get the basic summary information of the best model
     modelSpace = 'Preference'
-    if (model$modelSpace == 'wtp') {modelSpace = 'Willingness-to-Pay'}
+    if (model$modelSpace=='wtp') {modelSpace = 'Willingness-to-Pay'}
     modelRun = paste(model$multistartNumber, 'of',
                      model$options$numMultiStarts, sep=' ')
     bestModelSummary = data.frame(c(modelSpace,
@@ -101,7 +101,7 @@ printModelSummary = function(model) {
         cat('Random Coefficients:', '\n')
         print(model$randParSummary)
     }
-    if ((model$modelSpace == 'wtp') & (sum(is.na(model$wtpComparison))==0)) {
+    if ((model$modelSpace=='wtp') & (sum(is.na(model$wtpComparison))==0)) {
         cat('\n')
         cat('Comparison of WTP Between Preference and WTP Space Models:', '\n')
         print(format(model$wtpComparison, scientific=F))

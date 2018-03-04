@@ -18,14 +18,13 @@
 #' # Put example code here
 logitr = function(data, choiceName, obsIDName, parNames, priceName=NULL,
                   parDist=NULL, priceDist=NULL, modelSpace='pref',
-                  prefSpaceModel=NULL, standardDraws=NULL, options=list()) {
+                  standardDraws=NULL, options=list()) {
     require(randtoolbox) # Required for taking Halton draws
     require(nloptr)      # Required for optimization
     options = runOptionsChecks(options)
     # Prepare the modelInputs list
     modelInputs = getModelInputs(data, choiceName, obsIDName, parNames,
-        parDist, priceName, priceDist, modelSpace, prefSpaceModel,
-        standardDraws, options)
+        parDist, priceName, priceDist, modelSpace, standardDraws, options)
     # Run the models
     allModels = runMultistart(modelInputs)
     if (options$keepAllRuns) {
@@ -46,6 +45,7 @@ runOptionsChecks = function(options) {
     if(is.null(options$keepAllRuns))     {options$keepAllRuns     = F}
     if(is.null(options$useAnalyticGrad)) {options$useAnalyticGrad = T}
     if(is.null(options$scaleInputs))     {options$scaleInputs     = F}
+    if(is.null(options$prefSpaceModel))  {options$prefSpaceModel  = NULL}
     if(is.null(options$numDraws))        {options$numDraws        = 200}
     if(is.null(options$drawType))        {options$drawType        = 'halton'}
     if(is.null(options$printLevel))      {options$printLevel      = 0}

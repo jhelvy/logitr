@@ -7,18 +7,20 @@ runMultistart = function(modelInputs) {
     numMultiStarts = modelInputs$options$numMultiStarts
     models = list()
     for (i in 1:numMultiStarts) {
-        cat('Running Multistart', i, 'of', numMultiStarts, '\n', sep=' ')
+        if (numMultiStarts > 1) {
+            cat('Running Multistart', i, 'of', numMultiStarts, '\n', sep=' ')
+        }
         logLik        = NA
         noFirstRunErr = TRUE
         # Keep trying until a solution is reached for each multistart iteration
         while (is.na(logLik)) {
         tryCatch({
             startPars = getRandomStartPars(modelInputs)
-            if (is.null(modelInputs$prefSpaceModel)==F & i==1 &
+            if ((is.null(modelInputs$prefSpace.wtp)==F) & i==1 &
                 noFirstRunErr & modelInputs$modelSpace=='wtp') {
                 cat('**Using Preference Space Model WTP Results as Starting ',
                     'Point For This Run**', '\n', sep='')
-                startPars = modelInputs$prefSpaceModel$wtp
+                startPars = modelInputs$prefSpace.wtp
             }
             model  = runModel(modelInputs, startPars)
             logLik = model$logLik

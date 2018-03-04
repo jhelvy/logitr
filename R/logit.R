@@ -230,7 +230,7 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
     randParIDs = which(parSetup$dist != 0)
     numDraws   = nrow(standardDraws)
     numBetas   = ncol(standardDraws)
-    logNormIDs = which(parSetup$dist == 2)
+    logNormIDs = which(parSetup$dist==2)
     repTimes   = rep(as.numeric(table(obsID)), each=2*numBetas)
     # Compute the gradient of V for all parameters
     grad = matrix(0, nrow=nrow(X), ncol=2*numBetas)
@@ -346,7 +346,7 @@ mxlNegGradLL.wtp = function(X, parSetup, obsID, choice, standardDraws,
     numDraws       = nrow(standardDraws)
     numBetas       = ncol(standardDraws)
     numRandom      = length(randParIDs)
-    logNormIDs     = which(parSetup$dist == 2)
+    logNormIDs     = which(parSetup$dist==2)
     lambdaDraws    = betaDraws[,1]
     lambdaDrawsMat = matrix(rep(lambdaDraws, nrow(X)), ncol=numDraws,byrow=T)
     gammaDraws     = matrix(betaDraws[,2:ncol(betaDraws)], nrow=numDraws)
@@ -402,7 +402,7 @@ getGradLambda.wtp = function(lambda, V, logit, obsID) {
 getGradGamma.wtp = function(X, lambda, logNormIDs, gammaMat, drawsMat,
     logitMat, obsID, id) {
     partial = lambda*X
-    if (id == 'sigma') {partial = partial*drawsMat[,2:ncol(drawsMat)]}
+    if (id=='sigma') {partial = partial*drawsMat[,2:ncol(drawsMat)]}
     if (length(logNormIDs) > 0) {
         partial[,logNormIDs] =
         partial[,logNormIDs]*gammaMat[,logNormIDs]
