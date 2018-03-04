@@ -5,8 +5,7 @@
 
 # Creates a list of the data and other information needed for running the model
 getModelInputs = function(data, choiceName, obsIDName, parNames, parDist,
-                          priceName, priceDist, modelSpace, standardDraws,
-                          options) {
+                          priceName, priceDist, modelSpace, options) {
     # Setup pars
     parSetup    = getParSetup(parNames, parDist, priceDist, modelSpace)
     parNameList = getParNameList(parSetup)
@@ -27,12 +26,10 @@ getModelInputs = function(data, choiceName, obsIDName, parNames, parDist,
         options=options)
     if (options$scaleInputs) {modelInputs = scaleInputs(modelInputs)}
     if (sum(parSetup$dist != 0)) {
-        modelInputs$modelType = 'mxl'
-        if (is.null(standardDraws)) {
+        modelInputs$modelType     = 'mxl'
+        modelInputs$standardDraws = options$standardDraws
+        if (is.null(options$standardDraws)) {
             modelInputs$standardDraws = getStandardDraws(parSetup, options)
-        } else {
-            modelInputs$standardDraws = standardDraws
-        }
     }
     modelInputs$logitFuncs = setLogitFunctions(modelInputs)
     modelInputs$evalFuncs  = setEvalFunctions(modelInputs)

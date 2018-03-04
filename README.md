@@ -57,7 +57,7 @@ The main model estimation function is the `logitr()` function:
 ```
 model = logitr(data, choiceName, obsIDName, parNames, priceName=NULL,
                parDist=NULL, priceDist=NULL, modelSpace='pref',
-               standardDraws=NULL, options=list(...))
+               options=list(...))
 ```
 
 The function returns a list of values, so be sure to assign the model output to a variable, like "model".
@@ -73,7 +73,6 @@ The function returns a list of values, so be sure to assign the model output to 
 |`parDist`|A vector describing the distributional assumptions on each parameter. 0=fixed, 1=normal, 2=log-normal. Only required for MXL models. Defaults to `NULL` if left unspecified.|
 |`priceDist`|A number describing the distributional assumptions on the price parameter. 0=fixed, 1=normal, 2=log-normal. Only required for WTP space MXL models. Defaults to `NULL` if left unspecified.|
 |`modelSpace`|Set to `'wtp'` for WTP space models. Defaults to `'pref'` (a preference space model).|
-|`standardDraws`|The user can provide a matrix of standard draws to be used for MXL models. Defaults to `NULL` if left unspecified.|
 |`options`|A list of options (see the [Options](#options) Section for details).|
 
 ## Options
@@ -84,6 +83,7 @@ The function returns a list of values, so be sure to assign the model output to 
 |`useAnalyticGrad`|Set to `TRUE` to use the analytic (instead of numerically approximated) gradient during estimation. Currently only works for MNL models (MXL models will ignore this option and always use numeric gradients). Defaults to `TRUE`.|
 |`scaleInputs`|Set to `TRUE` to scale each variable in `data` to be between 0 and 1. This is sometimes helpful for the optimization routine is some of the variables have very large or very small values (e.g. > 10^3 or < 10^-3). Defaults to `FALSE`.|
 |`prefSpaceModel`|For WTP space models, you can provide an estimated preference space model which will do two things: 1) The WTP space model will use the computed WTP from the preference space model as the starting parameters for the first multistart run, and 2) a comparison of the computed WTP from the preference space model with the estimated WTP space model results will be provided. Obviously, for this to be useful the prefSpaceModel should have the same parameters as the WTP space model being estimated, except for the price parameter. Defaults to `NULL` if left unspecified.|
+|`standardDraws`|The user can provide a matrix of standard draws to be used for MXL models. Defaults to `NULL` if left unspecified.|
 |`numDraws`|The number of draws to use for MXL models for the maximum simulated likelihood. Defaults to `200`.|
 |`drawType`|The type of draw to use for MXL models for the maximum simulated likelihood. Set to `'normal'` to use random normal draws, `'halton'` for Halton draws, or `'sobol'` for Sobol draws. Defaults to `'halton'`.|
 |`printLevel`|The print level of the `nloptr` optimization loop. Type `nloptr.print.options()` for more details. Defaults to `0`.|
