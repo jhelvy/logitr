@@ -13,12 +13,12 @@
 - [Citation Information](#citation-information)
 
 # Overview
-*logitr* estimates multinomial (MNL) and mixed logit (MXL) models and allows for models in the "preference space" or "willingness to pay (WTP) space." The current version includes support for:
+*logitr* estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated in the "Preference Space" or "Willingness-to-pay (WTP)" space. The program includes many options, and the current version includes support for:
 - Homogeneous multinomial logit (MNL) models
 - Heterogeneous mixed logit (MXL) models (support for normal and log-normal parameter distributions).
 - Preference space models
 - WTP space models.
-- A multi-start option for searching the solution space from multiple random different starting points (useful for non-convex problems, such as those for WTP space models or MXL models).
+- A multistart optimization loop with random starting points in each iteration to search for a global solution, which is useful for non-convex problems like WTP space models or MXL models.
 
 The MXL models assume uncorrelated heterogeneity covariances. The MXL models are estimated using maximum simulated likelihood based on [Kenneth Train's](http://eml.berkeley.edu/~train/) book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)*](http://eml.berkeley.edu/books/choice2.html).
 

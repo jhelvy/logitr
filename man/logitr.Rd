@@ -6,17 +6,17 @@
 \usage{
 logitr(data, choiceName, obsIDName, parNames, priceName = NULL,
   parDist = NULL, priceDist = NULL, modelSpace = "pref",
-  prefSpaceModel = NULL, standardDraws = NULL, options = list())
+  options = list())
 }
 \description{
-logitr estimates multinomial (MNL) and mixed logit (MXL) models in R with
-options to estimate in the preference space or willingness-to-pay (WTP)
-spaces. The program includes an option to run a multistart optimization
-loop with random starting points to search for a global solution, which
-should be done for WTP space models as well as mixed logit models since
-they have nonlinear-in-parameters utility functions that may result in
-multiple local maxima. The main optimization loop uses the nloptr function
-to minimize the negative log-likelihood function.
+logitr estimates multinomial (MNL) and mixed logit (MXL) models in R.
+Models can be estimated in the "Preference Space" or
+"Willingness-to-pay (WTP)" space. The program includes many options,
+including the option to run a multistart optimization loop with random
+starting points in each iteration to search for a global solution, which is
+useful for non-convex problems like WTP space models or MXL models.
+The main optimization loop uses the nloptr function to minimize the
+negative log-likelihood function.
 }
 \examples{
 # Put example code here
