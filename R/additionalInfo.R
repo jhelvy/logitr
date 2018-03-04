@@ -18,11 +18,10 @@ appendModelInfo = function(model, modelInputs) {
     result = list(
         summaryTable=summaryTable, coef=coef, standErrs=se, logLik=logLik,
         nullLogLik=nullLogLik, gradient=gradient, hessian=hessian,
-        startPars=model$startPars, iterations=model$iterations,
-        message=model$message, status=model$status,
-        multistartNumber=model$multistartNumber,
-        modelSpace=modelInputs$modelSpace, standardDraws=NA,
-        randParSummary=NA, wtpComparison=NA, options=options)
+        startPars=model$startPars, multistartNumber=model$multistartNumber,
+        time = model$time, iterations=model$iterations, message=model$message,
+        status=model$status, modelSpace=modelInputs$modelSpace,
+        standardDraws=NA, randParSummary=NA, wtpComparison=NA, options=options)
     # If MXL model, attached draws and summary of parameter distributions
     if (modelInputs$modelType =='mxl') {
         result$standardDraws  = modelInputs$standardDraws

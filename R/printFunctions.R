@@ -69,11 +69,13 @@ printModelSummary = function(model) {
     if (model$modelSpace=='wtp') {modelSpace = 'Willingness-to-Pay'}
     modelRun = paste(model$multistartNumber, 'of',
                      model$options$numMultiStarts, sep=' ')
+    modelTime = paste(model$time['elapsed'], 'sec', sep=' ')
     bestModelSummary = data.frame(c(modelSpace,
-        modelRun, round(model$logLik, 3), model$iterations))
+        modelRun, round(model$logLik, 3), model$iterations,
+        modelTime))
     colnames(bestModelSummary) = ''
     row.names(bestModelSummary) = c('Model Space:', 'Model Run:',
-        'Log-Likelihood:', 'Number of Iterations:')
+        'Log-Likelihood:', 'Number of Iterations:', 'Elapsed Time:')
     # Get the coef and stats tables
     summaryTable = model$summaryTable
     llRowID = which(row.names(summaryTable)=='Log-Likelihood at Convergence:')

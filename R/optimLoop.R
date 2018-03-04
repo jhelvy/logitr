@@ -53,6 +53,7 @@ getRandomStartPars = function(modelInputs) {
 
 # Runs the MNL model
 runModel = function(modelInputs, startPars) {
+    startTime = proc.time()
     model = nloptr(
         x0          = startPars,
         eval_f      = modelInputs$evalFuncs$objective,
@@ -65,6 +66,7 @@ runModel = function(modelInputs, startPars) {
             'ftol_abs'  = modelInputs$options$ftol_abs,
             print_level = modelInputs$options$printLevel,
             maxeval     = modelInputs$options$maxeval))
+    model$time      = proc.time() - startTime
     model$startPars = startPars
     model$logLik    = -1*model$objective
     return(model)
