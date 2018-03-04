@@ -1,4 +1,4 @@
-- Add infinite loop stopper in multistart run
+- Make the logitr.simulate() function for simulating choice data
 - Add support for adding weights to model.
 - Make plot of search space with all multistarts?
 - The current MXL analytic gradients are not very efficient (they have loops).
