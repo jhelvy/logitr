@@ -62,7 +62,8 @@ model = logitr(data, choiceName, obsIDName, parNames, priceName=NULL,
 
 The function returns a list of values, so assign the model output to a variable (like "model") to access the output values.
 
-A note about the `parNames` argument:
+**A note about the `parNames` argument:**
+
 The model assumes that the deterministic part of the utility function is linear in parameters (*v* = *beta* ' *x*). Accordingly, each parameter in the `parNames` argument is an additive part of *v*. For example, for the utility model *u* = *beta1* * *price* + *beta2* * *brand* + *error*, then the `parNames` argument should be `c('price', 'brand')`. If you wanted to add a third parameter, say *price^2*, then you should create a separate variable in the data called something like `'priceSquared'` and your `parNames` argument would be `c('price', 'priceSquared', 'brand')`.
 
 ## Arguments
