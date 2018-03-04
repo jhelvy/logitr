@@ -57,7 +57,7 @@ The main function is the `logitr` function:
 ```
 model = logitr(data, choiceName, obsIDName, parNames, priceName=NULL,
                parDist=NULL, priceDist=NULL, modelSpace='pref',
-               prefSpaceModel=NULL, standardDraws=NULL, options=list(...))
+               standardDraws=NULL, options=list(...))
 ```
 
 The function returns a list of values, so be sure to assign the model output to a variable, like "model".
@@ -73,7 +73,6 @@ The function returns a list of values, so be sure to assign the model output to 
 |`parDist`|A vector describing the distributional assumptions on each parameter. 0=fixed, 1=normal, 2=log-normal. Only required for MXL models. Defaults to `NULL` if left unspecified.|
 |`priceDist`|A number describing the distributional assumptions on the price parameter. 0=fixed, 1=normal, 2=log-normal. Only required for WTP space MXL models. Defaults to `NULL` if left unspecified.|
 |`modelSpace`|Set to `'wtp'` for WTP space models. Defaults to `'pref'` (a preference space model).|
-|`prefSpaceModel`|The user can provide an estimated preference space model as an input to a WTP space model. If included, the model will use the computed WTP from the preference space model as the starting parameter values for the first multistart run of the WTP space model. Also, a comparison of the computed WTP from the preference space model with the estimated WTP space model results will be provided. Defaults to `NULL` if left unspecified.|
 |`standardDraws`|The user can provide a matrix of standard draws to be used for MXL models. Defaults to `NULL` if left unspecified.|
 |`options`|A list of options (see the [Options](#options) Section for details).|
 
@@ -84,6 +83,7 @@ The function returns a list of values, so be sure to assign the model output to 
 |`keepAllRuns`|Set to `TRUE` to keep all the model information for each multistart run. If `TRUE`, the `logitr()` function will return a list with three values: `models` (a list of each model), `multistartSummary` (a summary of all the multistart runs), and `bestModel` (as determined by the largest log-likelihood value). Defaults to `FALSE`.|
 |`useAnalyticGrad`|Set to `TRUE` to use the analytic (instead of numerically approximated) gradient during estimation. Currently only works for MNL models (MXL models will ignore this option and always use numeric gradients). Defaults to `TRUE`.|
 |`scaleInputs`|Set to `TRUE` to scale each variable in `data` to be between 0 and 1. This is sometimes helpful for the optimization routine is some of the variables have very large or very small values (e.g. > 10^3 or < 10^-3). Defaults to `FALSE`.|
+|`prefSpaceModel`|For WTP space models, you can provide an estimated preference space model which will do two things: 1) The WTP space model will use the computed WTP from the preference space model as the starting parameters for the first multistart run, and 2) a comparison of the computed WTP from the preference space model with the estimated WTP space model results will be provided. Obviously, for this to be useful the prefSpaceModel should have the same parameters as the WTP space model being estimated, except for the price parameter. Defaults to `NULL` if left unspecified.|
 |`numDraws`|The number of draws to use for MXL models for the maximum simulated likelihood. Defaults to `200`.|
 |`drawType`|The type of draw to use for MXL models for the maximum simulated likelihood. Set to `'normal'` to use random normal draws, `'halton'` for Halton draws, or `'sobol'` for Sobol draws. Defaults to `'halton'`.|
 |`printLevel`|The print level of the `nloptr` optimization loop. Type `nloptr.print.options()` for more details. Defaults to `0`.|
@@ -111,7 +111,7 @@ The function returns a list of values, so be sure to assign the model output to 
 |`modelSpace`|The same as the `modelSpace` argument.|
 |`standardDraws`|The draws used during maximum simulated likelihood (for MXL models).|
 |`randParSummary`|A summary of any random parameters (for MXL models).|
-|`wtpComparison`|A comparison of the WTP between a preference space and WTP space model (only reported for WTP space models that also included a preference space model in the `prefSpaceModel` argument.|
+|`wtpComparison`|A comparison of the WTP between a preference space and WTP space model (only reported for WTP space models that also included the `prefSpaceModel` argument in the options.|
 |`options`|A list of all the model options.|
 
 # Data File Setup
@@ -129,7 +129,7 @@ The *logitr* package also includes a summary function:
 
 where `model` is a model estimated using the `logitr()` function.
 
-For a single model run, it prints some summary information, including the model space, log-likelihood value at the solution, and a summary table of the model. For MXL models, it also prints a summary of the random parameters. For WTP space models, if the `prefSpaceModel` argument was included it also prints a summary of the WTP comparison between the two models spaces.
+For a single model run, it prints some summary information, including the model space, log-likelihood value at the solution, and a summary table of the model. For MXL models, it also prints a summary of the random parameters. For WTP space models, if the `prefSpaceModel` argument was included in the options it also prints a summary of the WTP comparison between the two models spaces.
 
 If the `keepAllRuns` option is set to `TRUE`, the `logitr.summary()` function will print a summary of all the multistart runs followed by a summary of the best model (as determined by the largest log-likelihood value).
 
