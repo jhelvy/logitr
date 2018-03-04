@@ -72,26 +72,26 @@ The function returns a list of values, so be sure to assign the model output to 
 |`priceName`|The name of the column that identifies the price variable. Only required for WTP space models.|`NULL`|
 |`randPars`|A named vector whose names are the random parameters and values the destribution: 'n' for normal or 'ln' for log-normal.|`NULL`|
 |`randPrice`|The random distribution for the price parameter: 'n' for normal or 'ln' for log-normal. Only used for WTP space MXL models.|`NULL`|
-|`modelSpace`|Set to `'wtp'` for WTP space models.|`pref`|
+|`modelSpace`|Set to `'wtp'` for WTP space models.|`'pref'`|
 |`options`|A list of options (see the [Options](#options) Section for details).| -- |
 
 ## Options
-|    Argument    |    Description    |
-|:---------------|:------------------|
-|`numMultiStarts`|Number of times to run the optimization loop, each time starting from a different random starting point for each parameter between (-1, 1). Recommended for non-convex models, such as WTP space models and MXL models. Defaults to `1`.|
-|`keepAllRuns`|Set to `TRUE` to keep all the model information for each multistart run. If `TRUE`, the `logitr()` function will return a list with three values: `models` (a list of each model), `multistartSummary` (a summary of all the multistart runs), and `bestModel` (as determined by the largest log-likelihood value). Defaults to `FALSE`.|
-|`useAnalyticGrad`|Set to `FALSE` to use numerically approximated gradients instead of analytic gradients during estimation. Currently the analytic gradient for WTP space MXL models is incorrect, so in those cases this setting is ignored and graduents are always numerically approximated. Defaults to `TRUE`.|
-|`scaleInputs`|Set to `TRUE` to scale each variable in `data` to be between 0 and 1. This is sometimes helpful for the optimization routine is some of the variables have very large or very small values (e.g. > 10^3 or < 10^-3). Defaults to `FALSE`.|
-|`prefSpaceModel`|For WTP space models, you can provide an estimated preference space model which will do two things: 1) The WTP space model will use the computed WTP from the preference space model as the starting parameters for the first multistart run, and 2) a comparison of the computed WTP from the preference space model with the estimated WTP space model results will be provided. Obviously, for this to be useful the prefSpaceModel should have the same parameters as the WTP space model being estimated, except for the price parameter. Defaults to `NULL` if left unspecified.|
-|`standardDraws`|The user can provide a matrix of standard draws to be used for MXL models. Defaults to `NULL` if left unspecified.|
-|`numDraws`|The number of draws to use for MXL models for the maximum simulated likelihood. Defaults to `200`.|
-|`drawType`|The type of draw to use for MXL models for the maximum simulated likelihood. Set to `'normal'` to use random normal draws, `'halton'` for Halton draws, or `'sobol'` for Sobol draws. Defaults to `'halton'`.|
-|`printLevel`|The print level of the `nloptr` optimization loop. Type `nloptr.print.options()` for more details. Defaults to `0`.|
-|`xtol_rel`|The relative `x` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details. Defaults to `1.0e-9`.|
-|`xtol_abs`|The absolute `x` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details. Defaults to `1.0e-9`.|
-|`ftol_rel`|The relative `f` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details. Defaults to `1.0e-9`.|
-|`ftol_abs`|The absolute `f` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details. Defaults to `1.0e-9`.|
-|`maxeval`|The maximum number of function evaluations for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details. Defaults to `1000`.|
+|    Argument    |    Description    |    Default    |
+|:---------------|:------------------|:--------------|
+|`numMultiStarts`|Number of times to run the optimization loop, each time starting from a different random starting point for each parameter between (-1, 1). Recommended for non-convex models, such as WTP space models and MXL models.|`1`|
+|`keepAllRuns`|Set to `TRUE` to keep all the model information for each multistart run. If `TRUE`, the `logitr()` function will return a list with three values: `models` (a list of each model), `multistartSummary` (a summary of all the multistart runs), and `bestModel` (as determined by the largest log-likelihood value).|`FALSE`|
+|`useAnalyticGrad`|Set to `FALSE` to use numerically approximated gradients instead of analytic gradients during estimation. Currently the analytic gradient for WTP space MXL models is incorrect, so in those cases this setting is ignored and graduents are always numerically approximated.|`TRUE`|
+|`scaleInputs`|Set to `TRUE` to scale each variable in `data` to be between 0 and 1. This is sometimes helpful for the optimization routine is some of the variables have very large or very small values (e.g. > 10^3 or < 10^-3).|`FALSE`|
+|`prefSpaceModel`|For WTP space models, you can provide an estimated preference space model which will do two things: 1) The WTP space model will use the computed WTP from the preference space model as the starting parameters for the first multistart run, and 2) a comparison of the computed WTP from the preference space model with the estimated WTP space model results will be provided. Obviously, for this to be useful the prefSpaceModel should have the same parameters as the WTP space model being estimated, except for the price parameter.|`NULL`|
+|`standardDraws`|The user can provide a matrix of standard draws to be used for MXL models.|`NULL`|
+|`numDraws`|The number of draws to use for MXL models for the maximum simulated likelihood.|`200`|
+|`drawType`|The type of draw to use for MXL models for the maximum simulated likelihood. Set to `'normal'` to use random normal draws, `'halton'` for Halton draws, or `'sobol'` for Sobol draws.|`'halton'`|
+|`printLevel`|The print level of the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`0`|
+|`xtol_rel`|The relative `x` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1.0e-8`|
+|`xtol_abs`|The absolute `x` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1.0e-8`|
+|`ftol_rel`|The relative `f` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1.0e-8`|
+|`ftol_abs`|The absolute `f` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1.0e-8`|
+|`maxeval`|The maximum number of function evaluations for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1000`|
 
 ## Values
 |    Value    |    Description    |

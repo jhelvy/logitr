@@ -50,10 +50,10 @@ runOptionsChecks = function(options) {
     if(is.null(options$numDraws))        {options$numDraws        = 200}
     if(is.null(options$drawType))        {options$drawType        = 'halton'}
     if(is.null(options$printLevel))      {options$printLevel      = 0}
-    if(is.null(options$xtol_rel))        {options$xtol_rel        = 1.0e-9}
-    if(is.null(options$xtol_abs))        {options$xtol_abs        = 1.0e-9}
-    if(is.null(options$ftol_rel))        {options$ftol_rel        = 1.0e-9}
-    if(is.null(options$ftol_abs))        {options$ftol_abs        = 1.0e-9}
+    if(is.null(options$xtol_rel))        {options$xtol_rel        = 1.0e-8}
+    if(is.null(options$xtol_abs))        {options$xtol_abs        = 1.0e-8}
+    if(is.null(options$ftol_rel))        {options$ftol_rel        = 1.0e-8}
+    if(is.null(options$ftol_abs))        {options$ftol_abs        = 1.0e-8}
     if(is.null(options$maxeval))         {options$maxeval         = 1000}
     return(options)
 }
