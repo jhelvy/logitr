@@ -15,7 +15,7 @@
 #' @keywords logitr, mnl, mxl
 #' @export
 #' @examples
-#' # Put example code here
+#' # For an example go to: https://github.com/jhelvy/logitr/tree/master/example
 logitr = function(data, choiceName, obsIDName, parNames, priceName=NULL,
                   randPars=NULL, randPrice=NULL, modelSpace='pref',
                   options=list()) {

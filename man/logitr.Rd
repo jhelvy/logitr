@@ -5,7 +5,7 @@
 \title{The main function for running the logitr program}
 \usage{
 logitr(data, choiceName, obsIDName, parNames, priceName = NULL,
-  parDist = NULL, priceDist = NULL, modelSpace = "pref",
+  randPars = NULL, randPrice = NULL, modelSpace = "pref",
   options = list())
 }
 \description{
@@ -19,7 +19,7 @@ The main optimization loop uses the nloptr function to minimize the
 negative log-likelihood function.
 }
 \examples{
-# Put example code here
+# For an example go to: https://github.com/jhelvy/logitr/tree/master/example
 }
 \keyword{logitr,}
 \keyword{mnl,}
