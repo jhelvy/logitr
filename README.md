@@ -19,7 +19,7 @@
 - Heterogeneous mixed logit (MXL) models (support for normal and log-normal parameter distributions).
 - Preference space models
 - WTP space models.
-- A multistart optimization loop with random starting points in each iteration to search for a global solution, which is useful for non-convex problems like WTP space models or MXL models.
+- A multistart optimization loop with random starting points in each iteration, which is useful for non-convex problems like WTP space models or MXL models.
 
 The MXL models assume uncorrelated heterogeneity covariances. The MXL models are estimated using maximum simulated likelihood based on [Kenneth Train's](http://eml.berkeley.edu/~train/) book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)*](http://eml.berkeley.edu/books/choice2.html).
 
