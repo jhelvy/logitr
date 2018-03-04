@@ -69,7 +69,7 @@ The function returns a list of values, so assign the model output to a variable 
 |`data`|The choice data, formatted as a data.frame object (see the [Data File Setup](#data-file-setup) Section for details).| -- |
 |`choiceName`|The name of the column that identifies the `choice` variable.| -- |
 |`obsIDName`|The name of the column that identifies the `obsID` variable.| -- |
-|`parNames`|The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in parNames. See the [Details About `parNames` Argument](#details-about-parnames-argument) Section for more details.| -- |
+|`parNames`|The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in `parNames`. See the [Details About `parNames` Argument](#details-about-parnames-argument) Section for more details.| -- |
 |`priceName`|The name of the column that identifies the price variable. Only required for WTP space models.|`NULL`|
 |`randPars`|A named vector whose names are the random parameters and values the destribution: 'n' for normal or 'ln' for log-normal.|`NULL`|
 |`randPrice`|The random distribution for the price parameter: 'n' for normal or 'ln' for log-normal. Only used for WTP space MXL models.|`NULL`|
