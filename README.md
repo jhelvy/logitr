@@ -3,7 +3,7 @@
 - [Installation](#installation)
   - [Required Libraries](#required-libraries)
 - [Contents](#contents)
-- [Usage](#usage)
+- [The `logitr()` Function](#the-logitr()-function)
   - [Arguments](#arguments)
   - [Options](#options)
   - [Values](#values)
@@ -49,7 +49,7 @@ This package contains the following functions:
 - `logitr.summary()`: Prints a summary of an estimated model using the logitr package.
 - `logitr.statusCodes()`: Prints the status codes from the nloptr optimization routine.
 
-# Usage
+# The `logitr()` Function
 (See the 'example' folder for an example)
 
 The main function is the `logitr` function:
@@ -114,7 +114,7 @@ The function returns a list of values, so be sure to assign the model output to 
 |`wtpComparison`|A comparison of the WTP between a preference space and WTP space model (only reported for WTP space models that also included the `prefSpaceModel` argument in the options.|
 |`options`|A list of all the model options.|
 
-# Data File Setup
+## Data File Setup
 The data must be arranged such that each row is an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. they could each have a different number of alternatives). The columns must include all variables that will be used as model covariates. In addition, the data must include each of the following variables:
 
 - `obsID`: A sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the \emph{obsID} variable would be 1,1,2,2,3,3.
