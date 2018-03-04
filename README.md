@@ -41,7 +41,7 @@ library('logitr')
 - `nloptr` (for doing the optimization)
 - `randtoolbox` (for taking Halton draws in MXL models)
 
-The main optimization loop uses the `nloptr` function to minimize the negative log-likelihood function. `nloptr` is used instead of the Base R `optim` because it allows for both the objective and gradient functions to be included in one function. This speeds things up because both the objective and gradient functions share many of the same calculations.
+The main optimization loop uses the `nloptr` function to minimize the negative log-likelihood function. `nloptr` is used instead of the Base R `optim` because it allows for both the objective and gradient functions to be included in one function. This speeds things up considerably because both the objective and gradient functions require many of the same calculations, such as computing the probabilities.
 
 # Contents
 This package contains the following functions:
@@ -81,9 +81,9 @@ The function returns a list of values, so assign the model output to a variable 
 |:---------------|:------------------|:--------------|
 |`numMultiStarts`|Number of times to run the optimization loop, each time starting from a different random starting point for each parameter between (-1, 1). Recommended for non-convex models, such as WTP space models and MXL models.|`1`|
 |`keepAllRuns`|Set to `TRUE` to keep all the model information for each multistart run. If `TRUE`, the `logitr()` function will return a list with three values: `models` (a list of each model), `multistartSummary` (a summary of all the multistart runs), and `bestModel` (as determined by the largest log-likelihood value).|`FALSE`|
-|`useAnalyticGrad`|Set to `FALSE` to use numerically approximated gradients instead of analytic gradients during estimation. Currently the analytic gradient for WTP space MXL models is incorrect, so in those cases this setting is ignored and graduents are always numerically approximated.|`TRUE`|
-|`scaleInputs`|Set to `TRUE` to scale each variable in `data` to be between 0 and 1. This is sometimes helpful for the optimization routine is some of the variables have very large or very small values (e.g. > 10^3 or < 10^-3).|`FALSE`|
-|`prefSpaceModel`|For WTP space models, you can provide an estimated preference space model which will do two things: 1) The WTP space model will use the computed WTP from the preference space model as the starting parameters for the first multistart run, and 2) a comparison of the computed WTP from the preference space model with the estimated WTP space model results will be provided. Obviously, for this to be useful the prefSpaceModel should have the same parameters as the WTP space model being estimated, except for the price parameter.|`NULL`|
+|`useAnalyticGrad`|Set to `FALSE` to use numerically approximated gradients instead of analytic gradients during estimation. Note: currently the analytic gradient for WTP space MXL models is broken, so in those cases this setting is ignored and gradients are always numerically approximated.|`TRUE`|
+|`scaleInputs`|Set to `TRUE` to scale each variable in `data` to be between 0 and 1. This is sometimes helpful for the optimization routine if some of the variables have very large or very small values (e.g. > 10^3 or < 10^-3).|`FALSE`|
+|`prefSpaceModel`|For WTP space models, you can provide an estimated preference space model which will do two things: 1) The WTP space model will use the computed WTP from the preference space model as the starting parameters for the first multistart run, and 2) a comparison of the computed WTP from the preference space model with the estimated WTP space model results will be provided. Obviously, for this to be useful the `prefSpaceModel` should have the same parameters as the WTP space model being estimated (except for the price parameter).|`NULL`|
 |`standardDraws`|The user can provide a matrix of standard draws to be used for MXL models.|`NULL`|
 |`numDraws`|The number of draws to use for MXL models for the maximum simulated likelihood.|`200`|
 |`drawType`|The type of draw to use for MXL models for the maximum simulated likelihood. Set to `'normal'` to use random normal draws, `'halton'` for Halton draws, or `'sobol'` for Sobol draws.|`'halton'`|
