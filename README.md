@@ -147,9 +147,9 @@ To understand the status code of any model, type `logitr.statusCodes()`, which p
 # Author, Version, and License Information
 - Author: *John Paul Helveston* (www.jhelvy.com/logitr)
 - Date First Written: *Sunday, September 28, 2014*
-- Most Recent Update: *Friday, March 3, 2018*
+- Most Recent Update: *Sunday, March 4, 2018*
 - License: GPL-3
-- Latest Version: 0.5.0
+- Latest Version: 1.0
 
 # Citation Information
 If you use this package for in a publication, I would greatly appreciate it if you cited it. You can get the citation information by typing this into R:
