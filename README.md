@@ -3,12 +3,12 @@
 - [Installation](#installation)
   - [Required Libraries](#required-libraries)
 - [Contents](#contents)
-- [Using `logitr()`](#using-`logitr()`)
+- [Using `logitr()`](#using-logitr)
   - [Arguments](#arguments)
   - [Options](#options)
   - [Values](#values)
-- [Data File Setup](#data-file-setup)
-- [Other Functions](#other-functions)
+  - [Data File Setup](#data-file-setup)
+- [Using `logitr.summary()`](#using-logitr.summary)
 - [Author, Version, and License Information](#author,-version,-and-license-information)
 - [Citation Information](#citation-information)
 
@@ -52,7 +52,7 @@ This package contains the following functions:
 # Using `logitr()`
 (See the 'example' folder for an example)
 
-The main function is the `logitr` function:
+The main model estimation function is the `logitr()` function:
 
 ```
 model = logitr(data, choiceName, obsIDName, parNames, priceName=NULL,
@@ -122,18 +122,20 @@ The data must be arranged such that each row is an alternative from a choice obs
 
 For WTP space models, you must include a `price` variable (entries should be the price value).
 
-# Other Functions
+# Using `logitr.summary()`
 The *logitr* package also includes a summary function:
 
 `logitr.summary(model)`
 
 where `model` is a model estimated using the `logitr()` function.
 
-For a single model run, it prints some summary information, including the model space, log-likelihood value at the solution, and a summary table of the model. For MXL models, it also prints a summary of the random parameters. For WTP space models, if the `prefSpaceModel` argument was included in the options it also prints a summary of the WTP comparison between the two models spaces.
+Variations:
+- For a single model run, it prints some summary information, including the model space, log-likelihood value at the solution, and a summary table of the model.
+- For MXL models, the function also prints a summary of the random parameters.
+- For WTP space models, if a `prefSpaceModel` was included in the options argument, the function also prints a summary of the WTP comparison between the two models spaces.
+- If the `keepAllRuns` option is set to `TRUE`, the function will print a summary of all the multistart runs followed by a summary of the best model (as determined by the largest log-likelihood value).
 
-If the `keepAllRuns` option is set to `TRUE`, the `logitr.summary()` function will print a summary of all the multistart runs followed by a summary of the best model (as determined by the largest log-likelihood value).
-
-To understand the status code of any model, use the `logitr.statusCodes()` function, which prints a summary of the status codes from the `nloptr` optimization routine.
+To understand the status code of any model, type `logitr.statusCodes()`, which prints a summary of the status codes from the `nloptr` optimization routine.
 
 # Author, Version, and License Information
 - Author: *John Paul Helveston* (www.jhelvy.com/logitr)
