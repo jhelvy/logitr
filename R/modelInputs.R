@@ -97,13 +97,26 @@ scaleVar = function(var, scalingFactor) {
 }
 
 getParSetup = function(parNames, randPars, randPrice, modelSpace) {
-    if (is.null(randPars)) {randPars = rep(0, length(parNames))}
-    if (is.null(randPrice)) {randPrice = 0}
+    parDist   = rep(0, length(parNames))
+    priceDist = 0
+    if (is.null(randPars)==F) {
+        normParNames  = names(which(randPars=='n'))
+        lnormParNames = names(which(randPars=='ln'))
+        parDist[which(parNames %in% normParNames)]  = 1
+        parDist[which(parNames %in% lnormParNames)] = 2
+    }
+    if (is.null(randPrice)==F) {
+        if (randPrice=='n') {
+            priceDist = 1
+        } else if (randPrice=='ln') {
+            priceDist = 2
+        }
+    }
     if (modelSpace=='wtp') {
         parNames = c('lambda', parNames)
-        randPars  = c(randPrice, randPars)
+        parDist  = c(priceDist, parDist)
     }
-    parSetup = data.frame(par=parNames, dist=randPars)
+    parSetup = data.frame(par=parNames, dist=parDist)
     return(parSetup)
 }
 

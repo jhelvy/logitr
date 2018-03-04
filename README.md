@@ -70,8 +70,8 @@ The function returns a list of values, so be sure to assign the model output to 
 |`obsIDName`|The name of the column that identifies the `obsID` variable.|
 |`parNames`|The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in parNames.|
 |`priceName`|The name of the column that identifies the price variable. Only required for WTP space models. Defaults to `NULL` if left unspecified.|
-|`randPars`|A vector describing the distributional assumptions on each parameter. 0=fixed, 1=normal, 2=log-normal. Only required for MXL models. Defaults to `NULL` if left unspecified.|
-|`randPrice`|A number describing the distributional assumptions on the price parameter. 0=fixed, 1=normal, 2=log-normal. Only required for WTP space MXL models. Defaults to `NULL` if left unspecified.|
+|`randPars`|A named vector whose names are the random parameters and values the destribution: 'n' for normal or 'ln' for log-normal. Defaults to `NULL` if left unspecified.|
+|`randPrice`|The random distribution for the price parameter: 'n' for normal or 'ln' for log-normal. Only used for WTP space MXL models. Defaults to `NULL` if left unspecified.|
 |`modelSpace`|Set to `'wtp'` for WTP space models. Defaults to `'pref'` (a preference space model).|
 |`options`|A list of options (see the [Options](#options) Section for details).|
 

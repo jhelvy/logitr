@@ -7,7 +7,9 @@ runMultistart = function(modelInputs) {
     numMultiStarts = modelInputs$options$numMultiStarts
     models = list()
     for (i in 1:numMultiStarts) {
-        if (numMultiStarts > 1) {
+        if (numMultiStarts==1) {
+            cat('Running Model', '\n', sep='')
+        } else {
             cat('Running Multistart', i, 'of', numMultiStarts, '\n', sep=' ')
         }
         logLik        = NA

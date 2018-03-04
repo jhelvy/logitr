@@ -1,4 +1,3 @@
-- Update MXL parameter inputs (currently numbers, change to mlogit format)
 - Add timer supper
 - Add infinite loop stopper in multistart run
 - Add support for adding weights to model.

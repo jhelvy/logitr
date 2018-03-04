@@ -75,7 +75,7 @@ mxl.pref = logitr(
   choiceName = 'choice',
   obsIDName  = 'obsID',
   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
-  randPars   = c(1, 1, 1, 1, 1),
+  randPars   = c(price='ln', feat='n'),
   options    = list(
   # You should run a multistart for MXL models since they are non-convex,
   # but it can take a long time.
@@ -93,8 +93,8 @@ mxl.wtp = logitr(
   obsIDName  = 'obsID',
   parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
   priceName  = 'price',
-  randPars   = c(1, 1, 1, 1),
-  randPrice  = 1,
+  randPars   = c(feat='n'),
+  randPrice  = 'ln',
   modelSpace = 'wtp',
   options = list(
     numMultiStarts = 1,
