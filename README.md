@@ -62,19 +62,13 @@ model = logitr(data, choiceName, obsIDName, parNames, priceName=NULL,
 
 The function returns a list of values, so assign the model output to a variable (like "model") to access the output values.
 
-## A note about the `parNames` argument:
-
-The model assumes that the deterministic part of the utility function is linear in parameters (*v* = *beta* ' *x*). Accordingly, each parameter in the `parNames` argument is an additive part of *v*. For example, for the utility model *u* = *beta1* * *price* + *beta2* * *brand* + *error*, then the `parNames` argument should be `c('price', 'brand')`. If you wanted to add a third parameter, say *price^2*, then you should create a separate variable in the data called something like `'priceSquared'` and your `parNames` argument would be `c('price', 'brand', 'priceSquared')`.
-
-For WTP space models, the `parNames` should be the WTP parameters, and the `price` parameter is denoted by the separate argument `priceName`.
-
 ## Arguments
 |    Argument    |    Description    |    Default    |
 |:---------------|:------------------|:--------------|
 |`data`|The choice data, formatted as a data.frame object (see the [Data File Setup](#data-file-setup) Section for details).| -- |
 |`choiceName`|The name of the column that identifies the `choice` variable.| -- |
 |`obsIDName`|The name of the column that identifies the `obsID` variable.| -- |
-|`parNames`|The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in parNames. See the [note about `parNames`](#a-note-about-the-parNames-argument) for more details.| -- |
+|`parNames`|The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in parNames. See the [Details About `parNames` Argument](#details-about-parNames-argument) Section for more details.| -- |
 |`priceName`|The name of the column that identifies the price variable. Only required for WTP space models.|`NULL`|
 |`randPars`|A named vector whose names are the random parameters and values the destribution: 'n' for normal or 'ln' for log-normal.|`NULL`|
 |`randPrice`|The random distribution for the price parameter: 'n' for normal or 'ln' for log-normal. Only used for WTP space MXL models.|`NULL`|
@@ -128,6 +122,11 @@ The data must be a `data.frame` object and arranged such that each row is an alt
 - `choice`: A dummy variable that identifies which alternative was chosen (1=chosen, 0 = not chosen).
 
 For WTP space models, you must include a `price` variable (entries should be the price values).
+
+## Details About `parNames` Argument:
+The model assumes that the deterministic part of the utility function is linear in parameters (*v* = *beta* ' *x*). Accordingly, each parameter in the `parNames` argument is an additive part of *v*. For example, for the utility model *u* = *beta1* * *price* + *beta2* * *brand* + *error*, then the `parNames` argument should be `c('price', 'brand')`. If you wanted to add a third parameter, say *price^2*, then you should create a separate variable in the data called something like `'priceSquared'` and your `parNames` argument would be `c('price', 'brand', 'priceSquared')`.
+
+For WTP space models, the `parNames` should be the WTP parameters, and the `price` parameter is denoted by the separate argument `priceName`.
 
 # Using `logitr.summary()`
 The *logitr* package also includes a summary function:
