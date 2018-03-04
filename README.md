@@ -9,8 +9,8 @@
   - [Values](#values)
   - [Data File Setup](#data-file-setup)
   - [Details About `parNames` Argument](#details-about-parnames-argument)
-- [Using `logitr.summary()`](#using-logitr.summary)
-- [Author, Version, and License Information](#author,-version,-and-license-information)
+- [Using `logitr.summary()`](#using-logitrsummary)
+- [Author, Version, and License Information](#author-version-and-license-information)
 - [Citation Information](#citation-information)
 
 # Overview
