@@ -104,11 +104,12 @@ The function returns a list of values, so be sure to assign the model output to 
 |`gradient`|The gradient of the log-likelihood at convergence.|
 |`hessian`|The hessian of the log-likelihood at convergence.|
 |`startPars`|The starting values used.|
+|`multistartNumber`|The multistart run number for this model.|
+|`time`|The user, system, and elapsed time to run the optimization.|
 |`iterations`|The number of iterations until convergence.|
 |`message`|A more informative message with the status of the optimization result.|
 |`status`|An integer value with the status of the optimization (positive values are successes). Type `logitr.statusCodes()` for a detailed description.|
-|`multistartNumber`|The multistart run number for this model.|
-|`modelSpace`|The same as the `modelSpace` argument.|
+|`modelSpace`|The model space (`'pref'` or `'wtp'`).|
 |`standardDraws`|The draws used during maximum simulated likelihood (for MXL models).|
 |`randParSummary`|A summary of any random parameters (for MXL models).|
 |`wtpComparison`|A comparison of the WTP between a preference space and WTP space model (only reported for WTP space models that also included the `prefSpaceModel` argument in the options.|
