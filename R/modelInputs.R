@@ -4,10 +4,10 @@
 # ============================================================================
 
 # Creates a list of the data and other information needed for running the model
-getModelInputs = function(data, choiceName, obsIDName, parNames, parDist,
-                          priceName, priceDist, modelSpace, options) {
+getModelInputs = function(data, choiceName, obsIDName, parNames, randPars,
+                          priceName, randPrice, modelSpace, options) {
     # Setup pars
-    parSetup    = getParSetup(parNames, parDist, priceDist, modelSpace)
+    parSetup    = getParSetup(parNames, randPars, randPrice, modelSpace)
     parNameList = getParNameList(parSetup)
     numBetas    = nrow(parSetup)
     # Separate data elements
@@ -96,14 +96,14 @@ scaleVar = function(var, scalingFactor) {
     return(list(scaledVar=scaledVar, scalingFactor=scalingFactor))
 }
 
-getParSetup = function(parNames, parDist, priceDist, modelSpace) {
-    if (is.null(parDist)) {parDist = rep(0, length(parNames))}
-    if (is.null(priceDist)) {priceDist = 0}
+getParSetup = function(parNames, randPars, randPrice, modelSpace) {
+    if (is.null(randPars)) {randPars = rep(0, length(parNames))}
+    if (is.null(randPrice)) {randPrice = 0}
     if (modelSpace=='wtp') {
         parNames = c('lambda', parNames)
-        parDist  = c(priceDist, parDist)
+        randPars  = c(randPrice, randPars)
     }
-    parSetup = data.frame(par=parNames, dist=parDist)
+    parSetup = data.frame(par=parNames, dist=randPars)
     return(parSetup)
 }
 
