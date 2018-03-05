@@ -24,11 +24,11 @@
 The MXL models assume uncorrelated heterogeneity covariances. The MXL models are estimated using maximum simulated likelihood based on [Kenneth Train's](http://eml.berkeley.edu/~train/) book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)*](http://eml.berkeley.edu/books/choice2.html).
 
 # Installation
-First, make sure you have the `devtools` library installed:
+1. Make sure you have the `devtools` library installed:
 
 `install.packages('devtools')`
 
-Then run these commands to install and load the `logitr` package:
+2. Load the `devtools` library and install the `logitr` package:
 
 ```
 library('devtools')
