@@ -69,7 +69,7 @@ printModelSummary = function(model) {
     if (model$modelSpace=='wtp') {modelSpace = 'Willingness-to-Pay'}
     modelRun = paste(model$multistartNumber, 'of',
                      model$options$numMultiStarts, sep=' ')
-    modelTime = paste(model$time['elapsed'], 'sec', sep=' ')
+    modelTime = paste(round(model$time['elapsed'], 3), 'sec', sep=' ')
     bestModelSummary = data.frame(c(modelSpace,
         modelRun, round(model$logLik, 3), model$iterations,
         modelTime))
@@ -100,7 +100,7 @@ printModelSummary = function(model) {
     print(statTable)
     if (sum(grepl('.sigma', names(model$coef))) > 0) {
         cat('\n')
-        cat('Random Coefficients:', '\n')
+        cat('Summary of 10k Draws for Random Coefficients:', '\n')
         print(model$randParSummary)
     }
     if ((model$modelSpace=='wtp') & (sum(is.na(model$wtpComparison))==0)) {

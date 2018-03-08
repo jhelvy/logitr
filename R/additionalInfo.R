@@ -37,8 +37,10 @@ appendModelInfo = function(model, modelInputs) {
 }
 
 getModelPars= function(model, modelInputs) {
-    pars = model$solution
-    names(pars) = c(modelInputs$parNameList$mu, modelInputs$parNameList$sigma)
+    pars        = model$solution
+    muNames     = modelInputs$parNameList$mu
+    sigmaNames  = modelInputs$parNameList$sigma
+    names(pars) = c(muNames, sigmaNames)
     if (modelInputs$options$scaleInputs) {
         scaleFactors = getModelScaleFactors(model, modelInputs)
         pars = pars / scaleFactors
@@ -48,6 +50,8 @@ getModelPars= function(model, modelInputs) {
             pars[1]          = pars[1]/priceScaleFactor
         }
     }
+    # Make sigmas positive
+    pars[sigmaNames] = abs(pars[sigmaNames])
     return(pars)
 }
 
@@ -155,11 +159,8 @@ getRandParSummary = function(coef, modelInputs) {
     temp$standardDraws    = getStandardDraws(parSetup, temp$options)
     betaDraws             = makeBetaDraws(coef, temp)
     randParSummary        = apply(betaDraws, 2, summary)
-    colnames(randParSummary)      = as.character(parSetup$par)
-    randParSummary                = t(randParSummary[,randParIDs])
-    randParSummary[normIDs, 1]    = -Inf
-    randParSummary[normIDs, 6]    = Inf
-    randParSummary[logNormIDs, 6] = Inf
+    colnames(randParSummary) = as.character(parSetup$par)
+    randParSummary           = t(randParSummary[,randParIDs])
     return(as.data.frame(randParSummary))
 }
 
