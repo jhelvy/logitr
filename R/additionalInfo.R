@@ -159,7 +159,13 @@ getRandParSummary = function(coef, modelInputs) {
     temp$standardDraws    = getStandardDraws(parSetup, temp$options)
     betaDraws             = makeBetaDraws(coef, temp)
     randParSummary        = apply(betaDraws, 2, summary)
-    colnames(randParSummary) = as.character(parSetup$par)
+    # Add names to summary
+    distName             = rep('', nrow(parSetup))
+    distName[normIDs]    = 'normal'
+    distName[logNormIDs] = 'log-normal'
+    parSetup$distName    = distName
+    summaryNames = paste(parSetup$par, ' (', parSetup$distName, ')', sep='')
+    colnames(randParSummary) = summaryNames
     randParSummary           = t(randParSummary[,randParIDs])
     return(as.data.frame(randParSummary))
 }
