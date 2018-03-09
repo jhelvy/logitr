@@ -145,7 +145,7 @@ Variations:
 To understand the status code of any model, type `logitr.statusCodes()`, which prints a summary of the status codes from the `nloptr` optimization routine.
 
 # Author, Version, and License Information
-- Author: *John Paul Helveston* (www.jhelvy.com/logitr)
+- Author: *John Paul Helveston* (www.jhelvy.com)
 - Date First Written: *Sunday, September 28, 2014*
 - Most Recent Update: *Sunday, March 4, 2018*
 - License: GPL-3
