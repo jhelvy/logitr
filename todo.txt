@@ -2,8 +2,5 @@
 - Add support for adding weights to model.
 - Make plot of search space with all multistarts?
 - The current MXL analytic gradients are not very efficient (they have loops).
-  Need to revise them for efficiency.
-- The gradient for WTP space is still incorrect (the 'mxlNegGradLL' function).
-  As a result, the option for 'useAnalyticGrad' is overridden in this version
-  when estimating a WTP space MXL model. Gradients are instead numerically
-  approximated.
+  Maybe I can revise them for efficiency by using matrix operations?
+- Consider adding support for latent class models
