@@ -236,14 +236,14 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
     grad = matrix(0, nrow=nrow(X), ncol=2*numBetas)
     for (i in 1:numDraws) {
         Xtemp    = X
-        beta     = betaDraws[i,]
         draws    = standardDraws[i,]
         logit    = logitDraws[,i]
-        betaMat  = matrix(rep(beta, nrow(X)), ncol=numBetas, byrow=T)
         drawsMat = matrix(rep(draws, nrow(X)), ncol=numBetas, byrow=T)
         logitMat = matrix(rep(logit, numBetas), ncol=numBetas, byrow=F)
         logitMat = cbind(logitMat, logitMat)
         if (length(logNormIDs) > 0) {
+            beta     = betaDraws[i,]
+            betaMat  = matrix(rep(beta, nrow(X)), ncol=numBetas, byrow=T)
             Xtemp[,logNormIDs] = Xtemp[,logNormIDs]*betaMat[,logNormIDs]
         }
         partial.mu    = Xtemp
@@ -261,7 +261,6 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
     negGradLL = -1*grad[c(1:numBetas, numBetas + randParIDs)]
     return(negGradLL)
 }
-
 
 # ============================================================================
 # WTP Space Logit Functions - MNL models
@@ -336,80 +335,56 @@ getMxlV.wtp = function(betaDraws, modelInputs) {
     return(lambdaDraws*(pMat + X%*%t(gammaDraws)))
 }
 
-# ************************************************************************
-# This function is still broken! Need to re-derive the gradient for WTP
-# space MXL models
-# Computes the gradient of the negative likelihood for a mixed logit model.
 mxlNegGradLL.wtp = function(X, parSetup, obsID, choice, standardDraws,
     betaDraws, VDraws, logitDraws, pHat) {
-    randParIDs     = which(parSetup$dist != 0)
-    numDraws       = nrow(standardDraws)
-    numBetas       = ncol(standardDraws)
-    numRandom      = length(randParIDs)
-    logNormIDs     = which(parSetup$dist==2)
-    lambdaDraws    = betaDraws[,1]
-    lambdaDrawsMat = matrix(rep(lambdaDraws, nrow(X)), ncol=numDraws,byrow=T)
-    gammaDraws     = matrix(betaDraws[,2:ncol(betaDraws)], nrow=numDraws)
-    # Compute the inner gradient summation across the draws for all
-    # parameters
-    gradLambda      = matrix(0, nrow=nrow(X), ncol=1)
-    gradMuGamma    = matrix(0, nrow=nrow(X), ncol=numBetas-1)
-    gradSigmaGamma = gradMuGamma
+    stdDraws.lambda = standardDraws[,1]
+    stdDraws.gamma  = standardDraws[,2:ncol(standardDraws)]
+    randParIDs      = which(parSetup$dist!=0)
+    numDraws        = nrow(standardDraws)
+    numBetas        = ncol(X)
+    numPars         = numBetas + 1 # +1 for lambda par
+    xParSetup       = parSetup[which(parSetup$par!='lambda'),]
+    xLogNormIDs     = which(xParSetup$dist==2)
+    lambdaDist      = parSetup[which(parSetup$par=='lambda'),]$dist
+    repTimes        = rep(as.numeric(table(obsID)), each=2*numPars)
+    lambdaDraws     = matrix(rep(betaDraws[,1], nrow(X)),ncol=numDraws,byrow=T)
+    gammaDraws      = matrix(betaDraws[,2:ncol(betaDraws)], nrow=numDraws)
+    # Compute the gradient of V for all parameters
+    grad = matrix(0, nrow=nrow(X), ncol=2*numPars)
     for (i in 1:numDraws) {
-        V         = VDraws[,i]
-        lambda    = lambdaDraws[i]
-        gamma     = gammaDraws[i,]
-        draws     = standardDraws[i,]
-        logit     = logitDraws[,i]
-        lambdaMat = lambdaDrawsMat[,i]
-        gammaMat  = matrix(rep(gamma, nrow(X)), ncol=ncol(X), byrow=T)
-        drawsMat  = matrix(rep(draws, nrow(X)), ncol=numBetas,byrow=T)
-        logitMat  = matrix(rep(logit, ncol(X)), ncol=ncol(X), byrow=F)
-        # get the inner gradient partial derivatives for lambda, muGamma, and sigmaGamma
-        gradLambda     = gradLambda +
-                         getGradLambda.wtp(lambda, V, logit, obsID)
-        gradMuGamma    = gradMuGamma +
-                         getGradGamma.wtp(X, lambda, logNormIDs, gammaMat,
-                         drawsMat, logitMat, obsID, 'mu')
-        gradSigmaGamma = gradSigmaGamma +
-                         getGradGamma.wtp(X, lambda, logNormIDs, gammaMat,
-                         drawsMat, logitMat, obsID, 'sigma')
+        Xtemp        = X
+        lambda       = lambdaDraws[,i]
+        v            = VDraws[,i]
+        draws.lambda = stdDraws.lambda[i]
+        draws.gamma  = stdDraws.gamma[i,]
+        logit        = logitDraws[,i]
+        lambdaMat       = matrix(rep(lambda, numBetas), ncol=numBetas, byrow=T)
+        drawsMat.lambda = matrix(rep(draws.lambda, nrow(X)), ncol=1, byrow=T)
+        drawsMat.gamma = matrix(rep(draws.gamma,nrow(X)),ncol=numBetas,byrow=T)
+        logitMat        = matrix(rep(logit, numPars), ncol=numPars, byrow=F)
+        logitMat        = cbind(logitMat, logitMat)
+        if (length(xLogNormIDs) > 0) {
+            gamma    = gammaDraws[i,]
+            gammaMat = matrix(rep(gamma, nrow(X)), ncol=numBetas, byrow=T)
+            Xtemp[,xLogNormIDs] = Xtemp[,xLogNormIDs]*gammaMat[,xLogNormIDs]
+        }
+        gamma.partial.mu    = lambdaMat*Xtemp
+        gamma.partial.sigma = gamma.partial.mu*drawsMat.gamma
+        lambda.partial.mu   = v / lambda
+        if (lambdaDist==2) {lambda.partial.mu = v}
+        lambda.partial.sigma = lambda.partial.mu*drawsMat.lambda
+        partial.mu    = cbind(lambda.partial.mu, gamma.partial.mu)
+        partial.sigma = cbind(lambda.partial.sigma, gamma.partial.sigma)
+        partial       = cbind(partial.mu, partial.sigma)
+        temp          = rowsum(logitMat*partial, group=obsID)
+        tempMat       = matrix(rep(temp, times=repTimes), ncol=ncol(partial),
+                        byrow=F)
+        grad = grad + logitMat*(partial - tempMat)
     }
-    gradLambda          = gradLambda / numDraws
-    gradMuGamma        = gradMuGamma / numDraws
-    gradMu             = c(gradLambda, gradMuGamma)
-    gradSigmaGamma     = gradSigmaGamma / numDraws
-    gradSigma          = gradSigmaGamma
-    pHatInvChosenMu    = matrix(rep(choice*(1/pHat), numBetas),
-                                ncol=numBetas,byrow=F)
-    pHatInvChosenSigma = matrix(rep(choice*(1/pHat), numRandom),
-                                ncol=numRandom, byrow=F)
-    gradMu             = colSums(pHatInvChosenMu*gradMu)
-    gradSigma          = colSums(pHatInvChosenSigma*gradSigma)
-    negGradLL          = -1*c(gradMu, gradSigma)
-    names(negGradLL)   = names(pars)
+    grad           = grad / numDraws
+    pHatInvChosen  = matrix(rep(choice*(1/pHat), 2*numPars), ncol=2*numPars,
+                            byrow=F)
+    grad      = colSums(pHatInvChosen*grad)
+    negGradLL = -1*grad[c(1:numPars, numPars + randParIDs)]
     return(negGradLL)
 }
-
-getGradLambda.wtp = function(lambda, V, logit, obsID) {
-    partial = V / lambda
-    temp = matrix(rep(rowsum(logit*partial, group=obsID), each=3),
-                     ncol=1, byrow=F)
-    innerGrad = logit*(partial - temp)
-    return(innerGrad)
-}
-
-getGradGamma.wtp = function(X, lambda, logNormIDs, gammaMat, drawsMat,
-    logitMat, obsID, id) {
-    partial = lambda*X
-    if (id=='sigma') {partial = partial*drawsMat[,2:ncol(drawsMat)]}
-    if (length(logNormIDs) > 0) {
-        partial[,logNormIDs] =
-        partial[,logNormIDs]*gammaMat[,logNormIDs]
-    }
-    tempMat = matrix(rep(rowsum(logitMat*partial, group=obsID), each=3),
-                     ncol=ncol(partial), byrow=F)
-    innerGrad = logitMat*(partial - tempMat)
-    return(innerGrad)
-}
-# ************************************************************************

@@ -170,11 +170,7 @@ setEvalFunctions = function(modelInputs) {
         evalFuncs$negLL     = getMxlNegLL
         evalFuncs$negGradLL = getNumericNegGradLL
         evalFuncs$hessLL    = getNumericHessLL
-        # mxlNegGradLL is still not yet correct for WTP space models,
-        # so still running numeric approximations for now regardless of
-        # settings for MXL WTP space models
-        if (modelInputs$options$useAnalyticGrad &
-            modelInputs$modelSpace=='pref') {
+        if (modelInputs$options$useAnalyticGrad) {
             evalFuncs$objective = mxlNegLLAndGradLL
             evalFuncs$negGradLL = getMxlNegGradLL
         }
