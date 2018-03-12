@@ -1,5 +1,14 @@
+# logitr
+*logitr* estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using "Preference" space or "Willingness-to-pay (WTP)" space utility parameterizations. The current version includes support for:
+- Homogeneous multinomial logit (MNL) models
+- Heterogeneous mixed logit (MXL) models (support for normal and log-normal parameter distributions).
+- Preference space utility parameterization.
+- WTP space utility parameterization.
+- A multistart optimization loop with random starting points in each iteration (useful for non-convex problems like MXL models or models with WTP space utility parameterizations).
+
+MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in [Kenneth Train's](http://eml.berkeley.edu/~train/) book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)*](http://eml.berkeley.edu/books/choice2.html).
+
 # Table of Contents
-- [Overview](#overview)
 - [Installation](#installation)
   - [Required Libraries](#required-libraries)
 - [Contents](#contents)
@@ -12,16 +21,6 @@
 - [Using `logitr.summary()`](#using-logitrsummary)
 - [Author, Version, and License Information](#author-version-and-license-information)
 - [Citation Information](#citation-information)
-
-# Overview
-*logitr* estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using "Preference" space or "Willingness-to-pay (WTP)" space utility parameterizations. The current version includes support for:
-- Homogeneous multinomial logit (MNL) models
-- Heterogeneous mixed logit (MXL) models (support for normal and log-normal parameter distributions).
-- Preference space utility parameterization.
-- WTP space utility parameterization.
-- A multistart optimization loop with random starting points in each iteration (useful for non-convex problems like MXL models or models with WTP space utility parameterizations).
-
-MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in [Kenneth Train's](http://eml.berkeley.edu/~train/) book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)*](http://eml.berkeley.edu/books/choice2.html).
 
 # Installation
 1. Make sure you have the `devtools` library installed:
