@@ -14,12 +14,12 @@
 - [Citation Information](#citation-information)
 
 # Overview
-*logitr* estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated in the "Preference Space" or "Willingness-to-pay (WTP)" space. The program includes many options, and the current version includes support for:
+*logitr* estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated in the "Preference" space or "Willingness-to-pay (WTP)" space utility parameterization. The current version includes support for:
 - Homogeneous multinomial logit (MNL) models
 - Heterogeneous mixed logit (MXL) models (support for normal and log-normal parameter distributions).
 - Preference space utility parameterization.
 - WTP space utility parameterization.
-- A multistart optimization loop with random starting points in each iteration (useful for non-convex problems like MXL models or WTP space utility parameterizations).
+- A multistart optimization loop with random starting points in each iteration (useful for non-convex problems like MXL models or models with WTP space utility parameterizations).
 
 MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in [Kenneth Train's](http://eml.berkeley.edu/~train/) book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)*](http://eml.berkeley.edu/books/choice2.html).
 
@@ -41,17 +41,17 @@ library('logitr')
 - `nloptr` (for doing the optimization)
 - `randtoolbox` (for taking Halton draws in MXL models)
 
-The main optimization loop uses the `nloptr` function to minimize the negative log-likelihood function. `nloptr` is used instead of the Base R `optim` because it allows for both the objective and gradient functions to be included in one function. This speeds things up considerably because both the objective and gradient functions require many of the same calculations, such as computing the probabilities.
+The main optimization loop uses the `nloptr` function to minimize the negative log-likelihood function. `nloptr` is used instead of the Base R `optim` because it allows for both the objective and gradient functions to be included in one function. This speeds up computation time considerably because both the objective and gradient functions require many of the same calculations (e.g. computing the probabilities), which only have to be computed once in `nloptr` (`optim` requires separate objective and gradient functions, so many calculations are repeated within each iteration of the optimization loop).
 
 # Contents
 This package contains the following functions:
 
 - `logitr()`: The main function for running the logitr program.
-- `logitr.summary()`: Prints a summary of an estimated model using the logitr package.
-- `logitr.statusCodes()`: Prints the status codes from the nloptr optimization routine.
+- `logitr.summary()`: Prints a summary of an estimated model using the `logitr()` function.
+- `logitr.statusCodes()`: Prints a description of each status code from the `nloptr` optimization routine.
 
 # Using `logitr()`
-(See the 'example' folder for an example)
+(See the './example' folder for an example)
 
 The main model estimation function is the `logitr()` function:
 
@@ -61,7 +61,7 @@ model = logitr(data, choiceName, obsIDName, parNames, priceName=NULL,
                options=list(...))
 ```
 
-The function returns a list of values, so assign the model output to a variable (like "model") to access the output values.
+The function returns a list of values, so assign the model output to a variable (e.g. "model") to store the output values.
 
 ## Arguments
 |    Argument    |    Description    |    Default    |
@@ -117,17 +117,19 @@ The function returns a list of values, so assign the model output to a variable 
 |`options`|A list of all the model options.|
 
 ## Data File Setup
-The data must be a `data.frame` object and arranged such that each row is an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. they could each have a different number of alternatives). The columns must include all variables that will be used as model covariates. Each of the following variables must be included:
+The data must be a `data.frame` object and arranged such that each row is an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. they could each have a different number of alternatives). The columns must include all variables that will be used as model covariates. In addition, the following variables must be included:
 
-- `obsID`: A sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the \emph{obsID} variable would be 1,1,2,2,3,3.
-- `choice`: A dummy variable that identifies which alternative was chosen (1=chosen, 0 = not chosen).
+- `obsID`: A sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the `obsID` variable would be `1,1,2,2,3,3`.
+- `choice`: A dummy variable that identifies which alternative was chosen (`1`=chosen, `0`=not chosen).
 
-For WTP space models, you must include a `price` variable (entries should be the price values).
+**WTP space models**:
+You must include a `price` variable (entries should be the price values).
 
 ## Details About `parNames` Argument:
-The model assumes that the deterministic part of the utility function is linear in parameters (*v* = *beta* ' *x*). Accordingly, each parameter in the `parNames` argument is an additive part of *v*. For example, for the utility model *u* = *beta1* * *price* + *beta2* * *brand* + *error*, then the `parNames` argument should be `c('price', 'brand')`. If you wanted to add a third parameter, say *price^2*, then you should create a separate variable in the data called something like `'priceSquared'` and your `parNames` argument would be `c('price', 'brand', 'priceSquared')`.
+The model assumes that the deterministic part of the utility function is linear in parameters (*v* = *beta* ' *x*). Accordingly, each parameter in the `parNames` argument is an additive part of *v*. For example, for the utility model *u* = *beta1* * *price* + *beta2* * *brand* + *error*, then the `parNames` argument should be `c('price', 'brand')`. If you wanted to add a third parameter, say *price^2*, then you should create a separate variable in the data.frame called something like `'priceSquared'` and your `parNames` argument would be `c('price', 'brand', 'priceSquared')`.
 
-For WTP space models, the `parNames` should be the WTP parameters, and the `price` parameter is denoted by the separate argument `priceName`.
+**WTP space models**:
+The `parNames` should be the WTP parameters, and the `price` parameter is denoted by the separate argument `priceName`. For example, for the utility model *u* = *lambda*(*beta1* * *brand* - *price*) + *error*, then the `parNames` argument should be `c('brand')` and the `priceName` argument should be `price`, assuming the column names of the data frame are `brand` and `price`.
 
 # Using `logitr.summary()`
 The *logitr* package also includes a summary function:
@@ -137,17 +139,17 @@ The *logitr* package also includes a summary function:
 where `model` is a model estimated using the `logitr()` function.
 
 Variations:
-- For a single model run, it prints some summary information, including the model space, log-likelihood value at the solution, and a summary table of the model.
+- For a single model run, it prints some summary information, including the model space, log-likelihood value at the solution, and a summary table of the model coefficients.
 - For MXL models, the function also prints a summary of the random parameters.
 - For WTP space models, if a `prefSpaceModel` was included in the options argument, the function also prints a summary of the WTP comparison between the two models spaces.
 - If the `keepAllRuns` option is set to `TRUE`, the function will print a summary of all the multistart runs followed by a summary of the best model (as determined by the largest log-likelihood value).
 
-To understand the status code of any model, type `logitr.statusCodes()`, which prints a summary of the status codes from the `nloptr` optimization routine.
+To understand the status code of any model, type `logitr.statusCodes()`, which prints a description of each status code from the `nloptr` optimization routine.
 
 # Author, Version, and License Information
 - Author: *John Paul Helveston* (www.jhelvy.com)
 - Date First Written: *Sunday, September 28, 2014*
-- Most Recent Update: *Sunday, March 4, 2018*
+- Most Recent Update: *Sunday, March 12, 2018*
 - License: GPL-3
 - Latest Version: 1.0
 
