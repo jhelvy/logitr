@@ -14,7 +14,7 @@
 - [Citation Information](#citation-information)
 
 # Overview
-*logitr* estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated in the "Preference" space or "Willingness-to-pay (WTP)" space utility parameterization. The current version includes support for:
+*logitr* estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using "Preference" space or "Willingness-to-pay (WTP)" space utility parameterizations. The current version includes support for:
 - Homogeneous multinomial logit (MNL) models
 - Heterogeneous mixed logit (MXL) models (support for normal and log-normal parameter distributions).
 - Preference space utility parameterization.

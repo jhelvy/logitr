@@ -5,13 +5,14 @@
 #' The main function for running the logitr program
 #'
 #' logitr estimates multinomial (MNL) and mixed logit (MXL) models in R.
-#' Models can be estimated in "Preference" or "Willingness-to-pay (WTP)" space
-#' utility specifications. The program includes an option to run a multistart
-#' optimization loop with random starting points in each iteration, which is
-#' useful for non-convex problems like MXL models or models with WTP space
-#' utility parameterizations. The main optimization loop uses the nloptr
-#' function to minimize the negative log-likelihood function.
-#' @keywords logitr, mnl, mxl
+#' Models can be estimated using "Preference" space or "Willingness-to-pay
+#' (WTP)" space utility parameterizations The program includes an option to
+#' run a multistart optimization loop with random starting points in each
+#' iteration, which is useful for non-convex problems like MXL models or
+#' models with WTP space utility parameterizations. The main optimization loop
+#' uses the nloptr function to minimize the negative log-likelihood function.
+#' @keywords logitr, mnl, mxl, wtp, willingness-to-pay, mixed logit, logit
+#'
 #' @export
 #' @examples
 #' # For an example go to: https://github.com/jhelvy/logitr/tree/master/example
