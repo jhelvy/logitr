@@ -70,19 +70,18 @@ printModelSummary = function(model) {
     modelRun = paste(model$multistartNumber, 'of',
                      model$options$numMultiStarts, sep=' ')
     modelTime = paste(round(model$time['elapsed'], 3), 'sec', sep=' ')
-    bestModelSummary = data.frame(c(modelSpace,
-        modelRun, round(model$logLik, 3), model$iterations,
+    bestModelSummary = data.frame(c(modelSpace, modelRun, model$iterations,
         modelTime))
     colnames(bestModelSummary) = ''
     row.names(bestModelSummary) = c('Model Space:', 'Model Run:',
-        'Log-Likelihood:', 'Number of Iterations:', 'Elapsed Time:')
+        'Iterations:', 'Elapsed Time:')
     # Get the coef and stats tables
     summaryTable = model$summaryTable
-    llRowID = which(row.names(summaryTable)=='Log-Likelihood at Convergence:')
+    llRowID = which(row.names(summaryTable)=='Log-Likelihood:')
     coefIDs = (1:(llRowID-1))
     statIDs = (llRowID:nrow(summaryTable))
     coefTable = summaryTable[coefIDs,]
-    statTable = data.frame(round(summaryTable[statIDs,1], 4))
+    statTable = data.frame(round(summaryTable[statIDs,1], 8))
     colnames(statTable) = ''
     row.names(statTable) = row.names(summaryTable)[statIDs]
     # Print the summary

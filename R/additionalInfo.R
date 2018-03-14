@@ -143,7 +143,7 @@ getStatMat = function(numObs, numParams, logLik, nullLogLik) {
         tStat  = rep('', length(results)),
         pVal   = rep('', length(results)),
         signif = rep('', length(results)))
-    row.names(statMat) = c('Log-Likelihood at Convergence:',
+    row.names(statMat) = c('Log-Likelihood:',
         'Null Log-Likelihood:', 'AIC:', 'BIC:', 'McFadden R2:',
         'Adj. McFadden R2', 'Number of Observations:')
     return(statMat)

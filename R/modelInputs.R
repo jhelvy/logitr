@@ -35,8 +35,10 @@ getModelInputs = function(data, choiceName, obsIDName, parNames, randPars,
     modelInputs$logitFuncs = setLogitFunctions(modelInputs)
     modelInputs$evalFuncs  = setEvalFunctions(modelInputs)
     if (is.null(options$prefSpaceModel)==F) {
-        modelInputs$prefSpace.wtp    = getPrefSpaceWtp(options, modelInputs)
-        modelInputs$prefSpace.logLik = options$prefSpaceModel$logLik
+        prefSpaceModel            = getPrefSpaceModel(options)
+        modelInputs$prefSpace.wtp = getPrefSpaceWtp(prefSpaceModel,
+                                    modelInputs$priceName)
+        modelInputs$prefSpace.logLik = prefSpaceModel$logLik
     }
     return(modelInputs)
 }
@@ -178,14 +180,17 @@ setEvalFunctions = function(modelInputs) {
     return(evalFuncs)
 }
 
-getPrefSpaceWtp = function(options, modelInputs) {
+getPrefSpaceModel = function(options) {
     model = options$prefSpaceModel
     if ('multistartSummary' %in% names(model)) {
         # This is a list of all models from a multistart, so just use the
         # results from the best model:
         model = model$bestModel
     }
-    priceName           = modelInputs$priceName
+    return(model)
+}
+
+getPrefSpaceWtp = function(model, priceName) {
     prefCoefs           = model$coef
     prefPriceIndex      = which(grepl(priceName, names(prefCoefs)))[1]
     prefPriceCoef       = prefCoefs[prefPriceIndex]
