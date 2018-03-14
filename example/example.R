@@ -21,14 +21,17 @@ mnl.pref = logitr(
   obsIDName  = 'obsID',
   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
   options    = list(
-    numMultiStarts = 5,
+    numMultiStarts = 5,     # Since the log-likelihood is convex for this model
+                            # a multistart isn't really necessary
     keepAllRuns    = TRUE)) # By keeping all the runs, you can review the
                             # results of each multistart run
 
 # Print a summary of all multistart runs and a summary of the best model:
 summary(mnl.pref)
+
 # Print a summary of the third model run:
 summary(mnl.pref$models[[3]])
+
 # Print a summary of the best model:
 summary(mnl.pref$bestModel)
 
@@ -41,6 +44,7 @@ mnl.wtp = logitr(
   priceName  = 'price',
   modelSpace = 'wtp',
   options = list(
+    # You should run a multistart for WTP models since they are non-convex,
     numMultiStarts = 10,
     keepAllRuns    = TRUE,
     prefSpaceModel = mnl.pref, # If keepAllRuns=T for the prefSpaceModel,
@@ -75,7 +79,7 @@ mxl.pref = logitr(
   choiceName = 'choice',
   obsIDName  = 'obsID',
   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
-  randPars   = c(price='ln', feat='n'),
+  randPars   = c(price='n', feat='n'),
   options    = list(
   # You should run a multistart for MXL models since they are non-convex,
   # but it can take a long time.
@@ -94,7 +98,7 @@ mxl.wtp = logitr(
   parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
   priceName  = 'price',
   randPars   = c(feat='n'),
-  randPrice  = 'ln',
+  randPrice  = 'n',
   modelSpace = 'wtp',
   options = list(
     numMultiStarts = 1,
