@@ -92,7 +92,7 @@ summary(mxl.pref)
 
 # Multistart MXL model in the WTP Space:
 mxl.wtp = logitr(
-  data       = logitr.data,
+  data       = choiceData,
   choiceName = 'choice',
   obsIDName  = 'obsID',
   parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
@@ -101,6 +101,8 @@ mxl.wtp = logitr(
   randPrice  = 'n',
   modelSpace = 'wtp',
   options = list(
+  # You should run a multistart for MXL models since they are non-convex,
+  # but it can take a long time.
     numMultiStarts = 1,
     keepAllRuns    = TRUE,
     prefSpaceModel = mxl.pref,
