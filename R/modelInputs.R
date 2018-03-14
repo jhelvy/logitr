@@ -81,18 +81,15 @@ scaleInputs = function(modelInputs) {
 
 scaleVar = function(var, scalingFactor) {
     scaledVar = var/scalingFactor
-    test = abs(mean(scaledVar[which(scaledVar!=0)]))
-    if (test > 1) {
-        while (test > 1) {
+    if (abs(max(scaledVar)) > 1) {
+        while (abs(max(scaledVar)) > 1) {
             scalingFactor = scalingFactor*10
-            scaledVar = var/scalingFactor
-            test = abs(mean(scaledVar[which(scaledVar!=0)]))
+            scaledVar     = var/scalingFactor
         }
-    } else if (test < 0.1) {
-        while (test < 0.1) {
+    } else if (abs(max(scaledVar)) < 0.1) {
+        while (abs(max(scaledVar)) < 0.1) {
             scalingFactor = scalingFactor/10
-            scaledVar = var/scalingFactor
-            test = abs(mean(scaledVar[which(scaledVar!=0)]))
+            scaledVar     = var/scalingFactor
         }
     }
     return(list(scaledVar=scaledVar, scalingFactor=scalingFactor))
