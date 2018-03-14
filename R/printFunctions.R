@@ -5,12 +5,12 @@
 #' Prints a summary of an estimated model using the logitr package.
 #'
 #' Prints a summary of an estimated model using the logitr package.
-#' @keywords logitr, nloptr, status codes
+#' @keywords logitr, summary
 #' @export
 #' @examples
 #' # View a summary of an estimate model:
-#' logitr.summary(model)
-logitr.summary = function(model) {
+#' summary(model)
+summary.logitr = function(model) {
     if ('multistartSummary' %in% names(model)) {
         # This is a list of all models from a multistart, so print the
         # multistart summary first and then print the summary of the best model

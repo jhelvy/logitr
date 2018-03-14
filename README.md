@@ -11,14 +11,13 @@ MXL models assume uncorrelated heterogeneity covariances and are estimated using
 # Table of Contents
 - [Installation](#installation)
   - [Required Libraries](#required-libraries)
-- [Contents](#contents)
 - [Using `logitr()`](#using-logitr)
   - [Arguments](#arguments)
   - [Options](#options)
   - [Values](#values)
   - [Data File Setup](#data-file-setup)
   - [Details About `parNames` Argument](#details-about-parnames-argument)
-- [Using `logitr.summary()`](#using-logitrsummary)
+  - [Using `summary()` with `logitr`](#using-summary-with-logitr)
 - [Author, Version, and License Information](#author-version-and-license-information)
 - [Citation Information](#citation-information)
 
@@ -41,13 +40,6 @@ library('logitr')
 - `randtoolbox` (for taking Halton draws in MXL models)
 
 The main optimization loop uses the `nloptr` function to minimize the negative log-likelihood function. `nloptr` is used instead of the Base R `optim` because it allows for both the objective and gradient functions to be included in one function. This speeds up computation time considerably because both the objective and gradient functions require many of the same calculations (e.g. computing the probabilities), which only have to be computed once in `nloptr` (`optim` requires separate objective and gradient functions, so many calculations are repeated within each iteration of the optimization loop).
-
-# Contents
-This package contains the following functions:
-
-- `logitr()`: The main function for running the logitr program.
-- `logitr.summary()`: Prints a summary of an estimated model using the `logitr()` function.
-- `logitr.statusCodes()`: Prints a description of each status code from the `nloptr` optimization routine.
 
 # Using `logitr()`
 (See the './example' folder for an example)
@@ -130,14 +122,8 @@ The model assumes that the deterministic part of the utility function is linear 
 **WTP space models**:
 The `parNames` should be the WTP parameters, and the `price` parameter is denoted by the separate argument `priceName`. For example, for the utility model *u* = *lambda*(*beta1* * *brand* - *price*) + *error*, then the `parNames` argument should be `c('brand')` and the `priceName` argument should be `price`, assuming the column names of the data frame are `brand` and `price`.
 
-# Using `logitr.summary()`
-The *logitr* package also includes a summary function:
-
-`logitr.summary(model)`
-
-where `model` is a model estimated using the `logitr()` function.
-
-Variations:
+## Using `summary()` with `logitr`
+The *logitr* package also includes a custom summary function that has several variations:
 - For a single model run, it prints some summary information, including the model space, log-likelihood value at the solution, and a summary table of the model coefficients.
 - For MXL models, the function also prints a summary of the random parameters.
 - For WTP space models, if a `prefSpaceModel` was included in the options argument, the function also prints a summary of the WTP comparison between the two models spaces.

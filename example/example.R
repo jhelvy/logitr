@@ -26,11 +26,11 @@ mnl.pref = logitr(
                             # results of each multistart run
 
 # Print a summary of all multistart runs and a summary of the best model:
-logitr.summary(mnl.pref)
+summary(mnl.pref)
 # Print a summary of the third model run:
-logitr.summary(mnl.pref$models[[3]])
+summary(mnl.pref$models[[3]])
 # Print a summary of the best model:
-logitr.summary(mnl.pref$bestModel)
+summary(mnl.pref$bestModel)
 
 # Multistart MNL model in the WTP Space:
 mnl.wtp = logitr(
@@ -52,7 +52,7 @@ mnl.wtp = logitr(
 # Print a summary of all multistart runs and a summary of the best model:
 # Note that because the prefSpaceModel argument was included in the options
 # the summary will also print a comparison of the WTP between the two spaces.
-logitr.summary(mnl.wtp)
+summary(mnl.wtp)
 
 # CAUTION ON LOCAL MINIMA:
 # To check whether you have reached a global solution in WTP space models,
@@ -84,7 +84,7 @@ mxl.pref = logitr(
       numDraws       = 200))
 
 # View summary of model:
-logitr.summary(mxl.pref)
+summary(mxl.pref)
 
 # Multistart MXL model in the WTP Space:
 mxl.wtp = logitr(
@@ -103,5 +103,5 @@ mxl.wtp = logitr(
     numDraws       = 200))
 
 # View summary of model:
-logitr.summary(mxl.wtp)
+summary(mxl.wtp)
 

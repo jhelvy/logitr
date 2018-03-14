@@ -33,6 +33,7 @@ appendModelInfo = function(model, modelInputs) {
         (modelInputs$modelSpace=='wtp')) {
         result$wtpComparison = getWtpComparison(coef, logLik, modelInputs)
     }
+    class(result) = 'logitr'
     return(result)
 }
 

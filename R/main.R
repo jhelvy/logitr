@@ -29,7 +29,7 @@ logitr = function(data, choiceName, obsIDName, parNames, priceName=NULL,
     allModels = runMultistart(modelInputs)
     if (options$keepAllRuns) {
         models = appendAllModelsInfo(allModels, modelInputs)
-        logitr.summary(models)
+        summary(models)
         return(models)
     } else {
         model = getBestModel(allModels, modelInputs)
@@ -74,6 +74,7 @@ appendAllModelsInfo = function(allModels, modelInputs) {
     }
     result$multistartSummary = getMulitstartSummary(allModels)
     result$bestModel         = getBestModel(allModels, modelInputs)
+    class(result) = 'logitr'
     return(result)
 }
 
