@@ -262,8 +262,8 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
     return(negGradLL)
 }
 
-## Gets rid of the loop, but it's slower:
-# mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
+# # Gets rid of the loop, but it's slower:
+# mxlNegGradLL.pref2 = function(X, parSetup, obsID, choice, standardDraws,
 #     betaDraws, VDraws, logitDraws, pHat) {
 #     randParIDs = which(parSetup$dist != 0)
 #     numDraws   = nrow(standardDraws)
@@ -287,14 +287,11 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
 #     obsIDtimesMat = rep(obsIDtimes, each=2*numBetas)
 #     tempMat       = matrix(rep(temp, times=obsIDtimesMat), ncol=2*numBetas,
 #                     byrow=F)
+
 #     gradGroup     = rep(seq(nrow(X)), numDraws)
 #     grad          = rowsum(logitMat*(partial - tempMat), group=gradGroup)
-#     grad          = grad / numDraws
-#     pHatInvChosen = matrix(rep(choice*(1/pHat), 2*numBetas), ncol=2*numBetas,
-#                     byrow=F)
-#     grad          = colSums(pHatInvChosen*grad)
-#     negGradLL     = -1*grad[c(1:numBetas, numBetas + randParIDs)]
-#     return(negGradLL)
+#     negGradLL     = -1*((choice / pHat) %*% (grad / numDraws))
+#     return(negGradLL[c(1:numBetas, numBetas + randParIDs)])
 # }
 
 # ============================================================================
