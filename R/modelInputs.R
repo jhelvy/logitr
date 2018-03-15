@@ -162,7 +162,7 @@ setEvalFunctions = function(modelInputs) {
     if (modelInputs$options$useAnalyticGrad) {
         evalFuncs$objective = mnlNegLLAndGradLL
         evalFuncs$negGradLL = getMnlNegGradLL
-        evalFuncs$hessLL    = getMnlHessLL
+        # evalFuncs$hessLL    = getMnlHessLL # Numeric approx is faster
     }
     if (modelInputs$modelType=='mxl') {
         evalFuncs$objective = mxlNegLLAndNumericGradLL
