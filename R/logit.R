@@ -262,6 +262,41 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
     return(negGradLL)
 }
 
+## Gets rid of the loop, but it's slower:
+# mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
+#     betaDraws, VDraws, logitDraws, pHat) {
+#     randParIDs = which(parSetup$dist != 0)
+#     numDraws   = nrow(standardDraws)
+#     numBetas   = ncol(standardDraws)
+#     logNormIDs = which(parSetup$dist==2)
+#     # Get the partial matrices
+#     Xmat    = repmatRow(X, numDraws)
+#     if (length(logNormIDs) > 0) {
+#         betaMat           = repmatRowEach(betaDraws, nrow(X))
+#         Xmat[,logNormIDs] = Xmat[,logNormIDs]*betaMat[,logNormIDs]
+#     }
+#     drawsMat      = repmatRowEach(standardDraws, nrow(X))
+#     partial.mu    = Xmat
+#     partial.sigma = Xmat*drawsMat
+#     partial       = cbind(partial.mu, partial.sigma)
+#     # Compute the inner gradient
+#     logitMat      = repmatCol(matrix(logitDraws, ncol=1), 2*numBetas)
+#     obsIDtimes    = rep(table(obsID), numDraws)
+#     obsIDgroup    = rep(seq(length(unique(obsID))*numDraws), times=obsIDtimes)
+#     temp          = rowsum(logitMat*partial, group=obsIDgroup)
+#     obsIDtimesMat = rep(obsIDtimes, each=2*numBetas)
+#     tempMat       = matrix(rep(temp, times=obsIDtimesMat), ncol=2*numBetas,
+#                     byrow=F)
+#     gradGroup     = rep(seq(nrow(X)), numDraws)
+#     grad          = rowsum(logitMat*(partial - tempMat), group=gradGroup)
+#     grad          = grad / numDraws
+#     pHatInvChosen = matrix(rep(choice*(1/pHat), 2*numBetas), ncol=2*numBetas,
+#                     byrow=F)
+#     grad          = colSums(pHatInvChosen*grad)
+#     negGradLL     = -1*grad[c(1:numBetas, numBetas + randParIDs)]
+#     return(negGradLL)
+# }
+
 # ============================================================================
 # WTP Space Logit Functions - MNL models
 # ============================================================================
