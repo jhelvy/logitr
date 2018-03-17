@@ -19,21 +19,10 @@ mnl.pref = logitr(
   data       = choiceData,
   choiceName = 'choice',
   obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
-  options    = list(
-    numMultiStarts = 5,     # Since the log-likelihood is convex for this model
-                            # a multistart isn't really necessary
-    keepAllRuns    = TRUE)) # By keeping all the runs, you can review the
-                            # results of each multistart run
+  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
 
-# Print a summary of all multistart runs and a summary of the best model:
+# Print a summary of the results:
 summary(mnl.pref)
-
-# Print a summary of the third model run:
-summary(mnl.pref$models[[3]])
-
-# Print a summary of the best model:
-summary(mnl.pref$bestModel)
 
 # Multistart MNL model in the WTP Space:
 mnl.wtp = logitr(
@@ -44,19 +33,23 @@ mnl.wtp = logitr(
   priceName  = 'price',
   modelSpace = 'wtp',
   options = list(
-    # You should run a multistart for WTP models since they are non-convex,
+    # You should run a multistart for WTP models since they are non-convex
     numMultiStarts = 10,
+    # You can review the results of each multistart run with keepAllRuns=T
     keepAllRuns    = TRUE,
-    prefSpaceModel = mnl.pref, # If keepAllRuns=T for the prefSpaceModel,
-                               # the best model from the multistart
-                               # will be used for comparison.
-    scaleInputs    = TRUE)) # Here I scale the inputs because it helps with
-                            # stability in this case.
+    # Include the preference space model as an input to 1) use the computed
+    # WTP as the starting parameters for the first multistart run, and
+    # 2) compare the WTP between the two spaces.
+    prefSpaceModel = mnl.pref))
 
 # Print a summary of all multistart runs and a summary of the best model:
-# Note that because the prefSpaceModel argument was included in the options
-# the summary will also print a comparison of the WTP between the two spaces.
 summary(mnl.wtp)
+
+# Print a summary of only the third model run:
+summary(mnl.wtp$models[[3]])
+
+# Print a summary of the best model:
+summary(mnl.wtp$bestModel)
 
 # CAUTION ON LOCAL MINIMA:
 # To check whether you have reached a global solution in WTP space models,
