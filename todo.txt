@@ -1,4 +1,3 @@
-- Add startPar bounds as an argument in options
 - Make the logitr.simulate() function for simulating choice data
 - Add support for adding weights to model.
 - Make plot of search space with all multistarts?

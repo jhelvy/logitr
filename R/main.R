@@ -45,6 +45,7 @@ runOptionsChecks = function(options) {
     if(is.null(options$keepAllRuns))     {options$keepAllRuns     = F}
     if(is.null(options$useAnalyticGrad)) {options$useAnalyticGrad = T}
     if(is.null(options$scaleInputs))     {options$scaleInputs     = T}
+    if(is.null(options$startParBounds))  {options$startParBounds  = c(-1, 1)}
     if(is.null(options$prefSpaceModel))  {options$prefSpaceModel  = NULL}
     if(is.null(options$standardDraws))   {options$standardDraws   = NULL}
     if(is.null(options$numDraws))        {options$numDraws        = 200}

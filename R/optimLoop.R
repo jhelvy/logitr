@@ -43,10 +43,13 @@ runMultistart = function(modelInputs) {
 # between -1 and 1
 getRandomStartPars = function(modelInputs) {
     parNameList = modelInputs$parNameList
+    bounds      = modelInputs$options$startParBounds
+    lower       = bounds[1]
+    upper       = bounds[2]
     # For mxl models, need both '.mu' and '.sigma' parameters
-    pars.mu          = runif(length(parNameList$mu), -1, 1)
-    pars.sigma       = runif(length(parNameList$sigma), -1, 1)
-    startPars        = c(pars.mu, pars.sigma)
+    pars.mu    = runif(length(parNameList$mu), lower, upper)
+    pars.sigma = runif(length(parNameList$sigma), lower, upper)
+    startPars  = c(pars.mu, pars.sigma)
     names(startPars) = c(parNameList$mu, parNameList$sigma)
     return(startPars)
 }
