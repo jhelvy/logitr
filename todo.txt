@@ -1,3 +1,4 @@
+- Update print level options to include printing of multistarts
 - Make the logitr.simulate() function for simulating choice data
 - Add support for adding weights to model.
 - Make plot of search space with all multistarts?
