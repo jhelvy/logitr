@@ -3,8 +3,8 @@ author:
   - name: John Paul Helveston
     affiliation: George Washington University
     address: >
-      Science & Engineering Hall
-      800 22nd St NW
+      Science & Engineering Hall\hfill\break
+      800 22nd St NW\hfill\break
       Washington, DC 20052
     email: \email{john.helveston@gmail.com}
     url: http://jhelvy.com
