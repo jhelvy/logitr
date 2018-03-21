@@ -1,0 +1,73 @@
+---
+author:
+  - name: John Paul Helveston
+    affiliation: George Washington University
+    address: >
+      Science & Engineering Hall
+      800 22nd St NW
+      Washington, DC 20052
+    email: \email{john.helveston@gmail.com}
+    url: http://jhelvy.com
+title:
+  formatted: "Multinomial Logit Models with Preference Space and Willingness-to-Pay Space Utility Specifications in R: The \\pkg{logitr} Package"
+  # If you use tex in the formatted title, also supply version without
+  plain:     "Multinomial Logit Models with Preference Space and Willingness-to-Pay Space Utility Specifications in R: The logitr Package"
+  # For running headers, if needed
+  short:     "\\pkg{logitr}: Preference and WTP Space Multinomial Logit Models"
+abstract: >
+  The abstract of the article.
+keywords:
+  # at least one keyword must be supplied
+  formatted: [multinomial logit, preference space, willingness-to-pay space, discrete choice, "\\proglang{R}"]
+  plain:     [multinomial logit, preference space, willingness-to-pay space, discrete choice, R]
+preamble: >
+  \usepackage{amsmath}
+  \usepackage{upgreek}
+bibliography: library.bib
+output: rticles::jss_article
+---
+
+\newcommand{\betaVec}{\boldsymbol\upbeta}
+\newcommand{\omegaVec}{\boldsymbol\upomega}
+\newcommand{\zetaVec}{\boldsymbol\upzeta}
+\newcommand{\deltaVec}{\boldsymbol\updelta}
+\newcommand{\gammaVec}{\boldsymbol\upgamma}
+\newcommand{\epsilonVec}{\boldsymbol\upepsilon}
+\newcommand{\xVec}{\mathrm{\mathbf{x}}}
+\newcommand{\XVec}{\mathrm{\mathbf{X}}}
+
+# Introduction
+In many applications of discrete choice models, modelers are interested in estimating consumer's marginal "willingness-to-pay" (WTP) for different attributes (cites). 
+<!-- Revelt, D. and K. Train (1998), ‘Mixed logit with repeated choices’, Review of Economics and Statistics 80, 647–657. -->
+<!-- Goett, A., K. Hudson and K. Train (2000), ‘Consumers’ choice among retail energy suppliers: The willingnes-to-pay for service attributes’, The Energy Journal 21, 1–28 -->
+<!-- Hensher, D., N. Shore and K. Train (2004), ‘Households’ willingness to pay for water service attributes’, Working Paper, School of Business, The University of Sydney, and Department of Economics, University of California, Berkeley -->
+<!-- Layton and Brown, 2000; Scarpa et al., 2002 -->
+
+
+# The Random Utility Model
+
+The random utility model is a well-established framework in many fields for estimating consumer preferences from observed consumer choices [@Louviere2000, @Train2009]. Random utility models assume that consumers choose the alternative $j$ a set of alternatives that has the greatest utility $u_{j}$. Utility is a random variable that is modeled as $u_{j} = v_{j} + \varepsilon_{j}$, where $v_{j}$ is the "observed utility" (a function of the observed attributes such that $v_{j} = f(\xVec_{j})$) and $\varepsilon_{j}$ is a random variable representing the portion of utility unobservable to the modeler.
+
+Consider the following utility model:
+
+\input{./eqns/utility.Rmd}
+
+where $\betaVec^{*}$ is the vector of coefficients for non-price attributes $\xVec_{j}$, $\alpha^{*}$ is the coefficient for price $p_{j}$, and the error term, $\varepsilon^{*}_{j}$, is an IID random variable with a Gumbel extreme value distribution of mean zero and variance $\sigma^2(\pi^2/6)$. This model is not identified since there exists an infinite set of combinations of values for $\betaVec^{*}$, $\alpha^{*}$, and $\sigma$ that produce the same choice probabilities. In order to specify an identifiable model, the modeler must normalize equation (\ref{eq:utility}). One approach is to normalize the scale of the error term by dividing equation (\ref{eq:utility}) by $\sigma$, producing the "preference space" utility specification [@Train2005]: 
+
+\input{./eqns/utilityPreferenceScaled.Rmd}
+
+The typical preference space parameterization of the multinomial logit (MNL) model can then be written by rewriting equation (\ref{eq:utilityPreferenceScaled}) with $u_j = (u^*_j / \sigma)$, $\betaVec = (\betaVec^{*} / \sigma)$, $\alpha = (\alpha^{*} / \sigma)$, and $\varepsilon_{j} = (\varepsilon^{*}_{j} / \sigma)$:
+
+\input{./eqns/utilityPreference.Rmd}
+
+The vector $\betaVec$ represents the marginal utility for changes in each non-price attribute, and $\alpha$ represents the marginal utility obtained from price reductions. In addition, the coefficients $\betaVec$ and $\alpha$ are measured in units of *utility*, which only has relative rather than absolute meaning.
+
+The alternative normalization approach is to normalize equation (\ref{eq:utility}) by $\alpha^*$ instead of $\sigma$, producing the "willingness-to-pay (WTP) space" utility specification [@Train2005]:
+
+\input{./eqns/utilityWtpScaled.Rmd}
+
+Since the error term in equation is scaled by $\lambda^2 = \sigma^2/(\alpha^{*})^2$, we can rewrite equation (\ref{eq:utilityWtpScaled}) by multiplying both sides by $\lambda= (\alpha^{*} / \sigma$) and renaming $u_j = (\lambda u^*_j / \alpha^*)$, $\omegaVec = (\betaVec^{*} / \alpha^{*}$), and $\varepsilon_j = (\lambda \varepsilon^*_j / \alpha^*)$: 
+
+\input{./eqns/utilityWtp.Rmd}
+
+Here $\omegaVec$ represents the marginal WTP for changes in each non-price attribute, and $\lambda$ represents the scale of the deterministic portion of utility relative to the standardized scale of the random error term. 

@@ -1,0 +1,21 @@
+\vspace{-10pt}
+\begin{equation}
+    P_{jc} =
+        \frac{
+            \mathrm{exp}
+            \left(
+                \betaVec' \xVec_{j} -
+        		\alpha p_{j}
+            \right)
+        }
+        {
+            \sum\limits_{k \in \mathcal{J}_c}\mathrm{exp}
+            \left(
+                \betaVec' \xVec_{k} -
+        		\alpha p_{k}
+            \right)
+        },
+        \quad\quad
+        \forall c \in \left \{1,2,3,\dots C \right \}, \quad j \in \mathcal{J}_c,
+    \label{eq:logitProbability}
+\end{equation}

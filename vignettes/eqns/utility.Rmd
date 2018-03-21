@@ -1,0 +1,9 @@
+\begin{equation}
+    u^*_{j} =
+        \betaVec^{*'} \xVec_{j} - 
+        \alpha^{*} p_{j} +
+        \varepsilon^{*}_{j},
+        \quad\quad
+        \varepsilon^{*}_{j} \sim \textrm{Gumbel}\left(0, \sigma^2\frac{\pi^2}{6}\right)
+\label{eq:utility}
+\end{equation}

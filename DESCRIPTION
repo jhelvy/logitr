@@ -12,3 +12,6 @@ License: GPL-3. A copy of the GNU General Public License, version 3, is availabl
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1.9000
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
