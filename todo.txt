@@ -1,5 +1,9 @@
-- Update print level options to include printing of multistarts
-- Make the logitr.simulate() function for simulating choice data
+- Update print level options to include printing of multistarts (default to 0, which is no printing)
+- Add option to include a starting point for first run
+- Make a logitr.wtp() function that computes wtp from a prefSpaceModel
+- Remove the prefSpaceModel option and add a logitr.wtpComp(prefModel, wtpModel) function
+- Update printing functions according to above changes
+- Update summary function to do the summary calculations rather than do them during estimation
 - Add support for adding weights to model.
 - Make plot of search space with all multistarts?
 - The current MXL analytic gradients are not very efficient (they have loops).
