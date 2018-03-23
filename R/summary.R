@@ -49,8 +49,8 @@ getMulitstartSummary = function(model) {
 
 printModelSummary = function(model) {
     basicInfoSummary = getBasicInfoTable(model)
-    coefTable        = getCoefTable(model)
-    statTable        = getStatTable(model)
+    coefTable        = logitr.coefTable(model)
+    statTable        = logitr.statTable(model)
     printLine()
     cat('MODEL SUMMARY:', '\n')
     print(basicInfoSummary)
@@ -84,7 +84,17 @@ getBasicInfoTable = function(model) {
     return(basicInfoSummary)
 }
 
-getCoefTable = function(model) {
+#' Returns the summary coefficient table of an estimated model of the
+#' 'logitr' class.
+#'
+#' Returns the summary coefficient table of an estimated model of the
+#' 'logitr' class.
+#' @keywords logitr, coefTable
+#' @export
+#' @examples
+#' # Get the coefficients table of an estimated model:
+#' logitr.coefTable(model)
+logitr.coefTable = function(model) {
     coef      = model$coef
     se        = model$standErrs
     numObs    = model$numObs
@@ -109,7 +119,17 @@ getCoefTable = function(model) {
     return(coefTable)
 }
 
-getStatTable = function(model) {
+#' Returns the summary statistics table of an estimated model of the
+#' 'logitr' class.
+#'
+#' Returns the summary statistics table of an estimated model of the
+#' 'logitr' class.
+#' @keywords logitr, statTable
+#' @export
+#' @examples
+#' # Get the statistics table of an estimated model:
+#' logitr.statTable(model)
+logitr.statTable = function(model) {
     numObs     = model$numObs
     numParams  = model$numParams
     logLik     = model$logLik
@@ -128,26 +148,6 @@ getStatTable = function(model) {
     return(result)
 }
 
-getSummaryTable = function(model) {
-    coefMat      = getCoefTable(model)
-    statMat      = getStatTable(model)
-    summaryTable = rbind(coefMat, statMat)
-    return(summaryTable)
-}
-
-getWtpComparison = function(wtpSpace.coef, wtpSpace.logLik, modelInputs) {
-    wtpComparison = data.frame(
-        prefSpace = modelInputs$prefSpace.wtp,
-        wtpSpace  = wtpSpace.coef)
-    # Add logLik values
-    logLikCompare     = c(modelInputs$prefSpace.logLik, wtpSpace.logLik)
-    wtpComparison = rbind(wtpComparison, logLikCompare)
-    row.names(wtpComparison)[nrow(wtpComparison)] = 'logLik'
-    wtpComparison$difference = round(wtpComparison$wtpSpace -
-        wtpComparison$prefSpace, 8)
-    return(wtpComparison)
-}
-
 #' Returns the coefficients of an estimated model of the 'logitr' class.
 #'
 #' Returns the coefficients of an estimated model of the 'logitr' class.
@@ -159,3 +159,4 @@ getWtpComparison = function(wtpSpace.coef, wtpSpace.logLik, modelInputs) {
 coef.logitr = function(model) {
     return(model$coef)
 }
+
