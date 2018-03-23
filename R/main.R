@@ -21,20 +21,19 @@ logitr = function(data, choiceName, obsIDName, parNames, priceName=NULL,
                   options=list()) {
     require(randtoolbox) # Required for taking Halton draws
     require(nloptr)      # Required for optimization
-    options = runOptionsChecks(options)
-    # Prepare the modelInputs list
+    options     = runOptionsChecks(options)
     modelInputs = getModelInputs(data, choiceName, obsIDName, parNames,
-        randPars, priceName, randPrice, modelSpace, options)
-    # Run the models
-    allModels = runMultistart(modelInputs)
+                  randPars, priceName, randPrice, modelSpace, options)
+    allModels   = runMultistart(modelInputs)
     if (options$keepAllRuns) {
         models = appendAllModelsInfo(allModels, modelInputs)
-        summary(models)
+        cat('Done!', '\n', sep='')
         return(models)
     } else {
-        model = getBestModel(allModels, modelInputs)
-        printModelSummary(model)
-        return(model)
+        bestModel = getBestModel(allModels)
+        bestModel = appendModelInfo(bestModel, modelInputs)
+        cat('Done!', '\n', sep='')
+        return(bestModel)
     }
 }
 
@@ -59,34 +58,28 @@ runOptionsChecks = function(options) {
     return(options)
 }
 
-getBestModel = function(allModels, modelInputs) {
-    logLikVals     = getMulitstartSummary(allModels)$logLik
-    bestModelIndex = which(logLikVals==max(logLikVals))[1]
-    bestModel      = allModels[[bestModelIndex]]
-    bestModel      = appendModelInfo(bestModel, modelInputs)
-    return(bestModel)
-}
-
 appendAllModelsInfo = function(allModels, modelInputs) {
-    result = list()
-    result$models = list()
+    models = list()
     for (i in 1:length(allModels)) {
-        result$models[[i]] = appendModelInfo(allModels[[i]], modelInputs)
+        models[[i]] = appendModelInfo(allModels[[i]], modelInputs)
     }
-    result$multistartSummary = getMulitstartSummary(allModels)
-    result$bestModel         = getBestModel(allModels, modelInputs)
-    class(result) = 'logitr'
+    bestModel = getBestModel(allModels)
+    bestModel = appendModelInfo(bestModel, modelInputs)
+    result    = structure(list(models=models, bestModel=bestModel),
+                class='logitr')
     return(result)
 }
 
-getMulitstartSummary = function(allModels) {
-    summary = as.data.frame(matrix(0, ncol=4, nrow=length(allModels)))
-    colnames(summary) = c('run', 'logLik', 'iterations', 'status')
-    for (i in 1:length(allModels)) {
-        summary[i, 1] = i
-        summary[i, 2] = round(allModels[[i]]$logLik, 5)
-        summary[i, 3] = allModels[[i]]$iterations
-        summary[i, 4] = allModels[[i]]$status
+getBestModel = function(models) {
+    logLikVals = getLogLikVals(models)
+    bestModel  = models[[which(logLikVals==max(logLikVals))[1]]]
+    return(bestModel)
+}
+
+getLogLikVals = function(models) {
+    logLikVals = matrix(0)
+    for (i in 1:length(models)) {
+        logLikVals[i] = models[[i]]$logLik
     }
-    return(summary)
+    return(logLikVals)
 }

@@ -35,7 +35,6 @@ runMultistart = function(modelInputs) {
         }
         models[[i]] = model
     }
-    # printLine()
     return(models)
 }
 

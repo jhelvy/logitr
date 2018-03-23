@@ -89,13 +89,14 @@ The function returns a list of values, so assign the model output to a variable 
 ## Values
 |    Value    |    Description    |
 |:------------|:------------------|
-|`summaryTable`|A summary table of the model coefficients and fit statistics.|
 |`coef`|The model coefficients at convergence.|
 |`standErrs`|The standard errors of the model coefficients at convergence.|
 |`logLik`|The log-likelihood value at convergence.|
 |`nullLogLik`|The null log-likelihood value (if all coefficients are 0).|
 |`gradient`|The gradient of the log-likelihood at convergence.|
 |`hessian`|The hessian of the log-likelihood at convergence.|
+|`numObs`|The number of observations.|
+|`numParams`|The number of model parameters.|
 |`startPars`|The starting values used.|
 |`multistartNumber`|The multistart run number for this model.|
 |`time`|The user, system, and elapsed time to run the optimization.|
@@ -105,7 +106,6 @@ The function returns a list of values, so assign the model output to a variable 
 |`modelSpace`|The model space (`'pref'` or `'wtp'`).|
 |`standardDraws`|The draws used during maximum simulated likelihood (for MXL models).|
 |`randParSummary`|A summary of any random parameters (for MXL models).|
-|`wtpComparison`|A comparison of the WTP between a preference space and WTP space model (only reported for WTP space models that also included the `prefSpaceModel` argument in the options.|
 |`options`|A list of all the model options.|
 
 ## Data File Setup

@@ -14,7 +14,7 @@ choiceData = read.csv(
 # ============================================================================
 # Homogeneous MNL models
 
-# Multistart MNL model in the Preference Space:
+# Run a MNL model in the Preference Space:
 mnl.pref = logitr(
   data       = choiceData,
   choiceName = 'choice',
@@ -23,8 +23,10 @@ mnl.pref = logitr(
 
 # Print a summary of the results:
 summary(mnl.pref)
+# Get the coefficients from the model:
+coef(mnl.pref)
 
-# Multistart MNL model in the WTP Space:
+# Run a MNL model in the WTP Space using a multistart:
 mnl.wtp = logitr(
   data       = choiceData,
   choiceName = 'choice',
@@ -36,7 +38,7 @@ mnl.wtp = logitr(
     # You should run a multistart for WTP models since they are non-convex
     numMultiStarts = 10,
     # You can review the results of each multistart run with keepAllRuns=T
-    keepAllRuns    = TRUE,
+    keepAllRuns = TRUE,
     # Include the preference space model as an input to 1) use the computed
     # WTP as the starting parameters for the first multistart run, and
     # 2) compare the WTP between the two spaces.
@@ -50,6 +52,8 @@ summary(mnl.wtp$models[[3]])
 
 # Print a summary of the best model:
 summary(mnl.wtp$bestModel)
+# Get the coefficients from the best model:
+coef(mnl.wtp$bestModel)
 
 # CAUTION ON LOCAL MINIMA:
 # To check whether you have reached a global solution in WTP space models,

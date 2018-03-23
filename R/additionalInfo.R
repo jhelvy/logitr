@@ -4,36 +4,28 @@
 
 appendModelInfo = function(model, modelInputs) {
     # Compute variables
-    coef         = getModelPars(model, modelInputs)
-    gradient     = -1*modelInputs$evalFuncs$negGradLL(coef, modelInputs)
-    hessian      = getModelHessian(model, modelInputs)
-    se           = getModelStandErrs(coef, hessian)
-    numObs       = sum(modelInputs$choice)
-    numParams    = length(coef)
-    logLik       = as.numeric(model$logLik)
-    nullLogLik   = -1*modelInputs$evalFuncs$negLL(coef*0, modelInputs)
-    options      = append(modelInputs$options, model$options)
-    summaryTable = getSummaryTable(coef, se, numObs, numParams, logLik,
-                   nullLogLik)
-    result = list(
-        summaryTable=summaryTable, coef=coef, standErrs=se, logLik=logLik,
-        nullLogLik=nullLogLik, gradient=gradient, hessian=hessian,
-        startPars=model$startPars, multistartNumber=model$multistartNumber,
-        time = model$time, iterations=model$iterations, message=model$message,
+    coef       = getModelPars(model, modelInputs)
+    gradient   = -1*modelInputs$evalFuncs$negGradLL(coef, modelInputs)
+    hessian    = getModelHessian(model, modelInputs)
+    se         = getModelStandErrs(coef, hessian)
+    logLik     = as.numeric(model$logLik)
+    nullLogLik = -1*modelInputs$evalFuncs$negLL(coef*0, modelInputs)
+    numObs     = sum(modelInputs$choice)
+    options    = append(modelInputs$options, model$options)
+    result = structure(list(
+        coef=coef, standErrs=se, logLik=logLik, nullLogLik=nullLogLik,
+        gradient=gradient, hessian=hessian, numObs=numObs,
+        numParams=length(coef), startPars=model$startPars,
+        multistartNumber=model$multistartNumber, time=model$time,
+        iterations=model$iterations, message=model$message,
         status=model$status, modelSpace=modelInputs$modelSpace,
-        standardDraws=NA, randParSummary=NA, wtpComparison=NA, options=options)
+        standardDraws=NA, randParSummary=NA, options=options),
+        class='logitr')
     # If MXL model, attached draws and summary of parameter distributions
     if (modelInputs$modelType =='mxl') {
         result$standardDraws  = modelInputs$standardDraws
         result$randParSummary = getRandParSummary(coef, modelInputs)
     }
-    # If prefSpaceModel was included in the options, attach comparison of WTP
-    # between the two spaces
-    if ((is.null(modelInputs$prefSpace.wtp)==F) &
-        (modelInputs$modelSpace=='wtp')) {
-        result$wtpComparison = getWtpComparison(coef, logLik, modelInputs)
-    }
-    class(result) = 'logitr'
     return(result)
 }
 
@@ -101,55 +93,6 @@ getModelStandErrs = function(coef, hessian) {
     return(se)
 }
 
-getSummaryTable = function(coef, se, numObs, numParams, logLik,
-                           nullLogLik) {
-    coefMat      = getCoefMat(coef, se, numObs, numParams)
-    statMat      = getStatMat(numObs, numParams, logLik, nullLogLik)
-    summaryTable = rbind(coefMat, statMat)
-    colnames(summaryTable)[1:2] = c('Estimate', 'StdError')
-    return(summaryTable)
-}
-
-getCoefMat = function(coef, se, numObs, numParams) {
-    tStat  = rep(NA, length(coef))
-    pVal   = rep(NA, length(coef))
-    signif = rep('', length(coef))
-    if (sum(is.na(se))==0) {
-        tStat  = as.numeric(coef / se)
-        dof    = numObs - numParams
-        pVal   = 2*(1-pt(abs(tStat), dof))
-        signif = rep('', length(pVal))
-        signif[which(pVal <= 0.001)] <- '***'
-        signif[which(pVal >  0.001 & pVal <= 0.01)] <- '**'
-        signif[which(pVal >  0.01  & pVal <= 0.05)] <- '*'
-        signif[which(pVal >  0.05  & pVal <= 0.1)] <- '.'
-    }
-    coefMat = data.frame(
-        coef=round(coef, 6), se=round(se, 6), tStat=round(tStat, 4),
-        pVal=round(pVal, 4), signif=signif)
-    row.names(coefMat) = names(coef)
-    return(coefMat)
-}
-
-getStatMat = function(numObs, numParams, logLik, nullLogLik) {
-    aic           = round(2*numParams - 2*logLik, 4)
-    bic           = round(log(numObs)*numParams - 2*logLik, 4)
-    mcFaddenR2    = 1 - (logLik / nullLogLik)
-    adjMcFaddenR2 = 1 - ((logLik - numParams) / nullLogLik)
-    results       = c(logLik, nullLogLik, aic, bic, mcFaddenR2, adjMcFaddenR2,
-                    numObs)
-    statMat = data.frame(
-        coef   = results,
-        se     = rep('', length(results)),
-        tStat  = rep('', length(results)),
-        pVal   = rep('', length(results)),
-        signif = rep('', length(results)))
-    row.names(statMat) = c('Log-Likelihood:',
-        'Null Log-Likelihood:', 'AIC:', 'BIC:', 'McFadden R2:',
-        'Adj. McFadden R2', 'Number of Observations:')
-    return(statMat)
-}
-
 getRandParSummary = function(coef, modelInputs) {
     temp       = modelInputs
     parSetup   = modelInputs$parSetup
@@ -169,17 +112,4 @@ getRandParSummary = function(coef, modelInputs) {
     colnames(randParSummary) = summaryNames
     randParSummary           = t(randParSummary[,randParIDs])
     return(as.data.frame(randParSummary))
-}
-
-getWtpComparison = function(wtpSpace.coef, wtpSpace.logLik, modelInputs) {
-    wtpComparison = data.frame(
-        prefSpace = modelInputs$prefSpace.wtp,
-        wtpSpace  = wtpSpace.coef)
-    # Add logLik values
-    logLikCompare     = c(modelInputs$prefSpace.logLik, wtpSpace.logLik)
-    wtpComparison = rbind(wtpComparison, logLikCompare)
-    row.names(wtpComparison)[nrow(wtpComparison)] = 'logLik'
-    wtpComparison$difference = round(wtpComparison$wtpSpace -
-        wtpComparison$prefSpace, 8)
-    return(wtpComparison)
 }
