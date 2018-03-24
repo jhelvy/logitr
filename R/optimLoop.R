@@ -14,24 +14,26 @@ runMultistart = function(modelInputs) {
         }
         logLik        = NA
         noFirstRunErr = TRUE
-        # Keep trying until a solution is reached for each multistart iteration
         while (is.na(logLik)) {
         tryCatch({
             startPars = getRandomStartPars(modelInputs)
-            if ((is.null(modelInputs$prefSpace.wtp)==F) & i==1 &
-                noFirstRunErr & modelInputs$modelSpace=='wtp') {
-                cat('**Using Preference Space Model WTP Results as Starting ',
-                    'Point For This Run**', '\n', sep='')
-                startPars = modelInputs$prefSpace.wtp
+            if ((is.null(modelInputs$options$startVals)==F) &
+                (i==1) & noFirstRunErr) {
+                cat('**Using User Provided Starting Values For This Run**',
+                    '\n', sep='')
+                startPars = modelInputs$options$startVals
             }
             model  = runModel(modelInputs, startPars)
             logLik = model$logLik
             model$multistartNumber = i
-                   # -1 to get the positive rather than negative LL
         }, error=function(e){
             cat('ERROR: failed to converge...restarting search', '\n',
                 sep='')})
-            if (i==1 & is.na(logLik)) {noFirstRunErr = FALSE}
+            if (i==1 & is.na(logLik)) {
+                noFirstRunErr = FALSE
+                cat('**User Provided Starting Values Did Not Converge, ',
+                    'Using Random Values Now**', '\n', sep='')
+            }
         }
         models[[i]] = model
     }
@@ -39,7 +41,7 @@ runMultistart = function(modelInputs) {
 }
 
 # Returns randomly drawn starting parameters from a uniform distribution
-# between -1 and 1
+# between modelInputs$options$startParBounds
 getRandomStartPars = function(modelInputs) {
     parNameList = modelInputs$parNameList
     bounds      = modelInputs$options$startParBounds
@@ -70,6 +72,6 @@ runModel = function(modelInputs, startPars) {
             maxeval     = modelInputs$options$maxeval))
     model$time      = proc.time() - startTime
     model$startPars = startPars
-    model$logLik    = -1*model$objective
+    model$logLik    = -1*model$objective # -1 for (+) rather than (-) LL
     return(model)
 }
