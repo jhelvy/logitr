@@ -3,6 +3,6 @@
 S3method(coef,logitr)
 S3method(summary,logitr)
 export(logitr)
-export(logitr.coefTable)
-export(logitr.statTable)
 export(logitr.statusCodes)
+export(wtp.logitr)
+export(wtpCompare)
