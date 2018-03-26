@@ -19,7 +19,6 @@
 logitr = function(data, choiceName, obsIDName, parNames, priceName=NULL,
                   randPars=NULL, randPrice=NULL, modelSpace='pref',
                   options=list()) {
-    require(randtoolbox) # Required for taking Halton draws
     require(nloptr)      # Required for optimization
     options     = runOptionsChecks(options)
     modelInputs = getModelInputs(data, choiceName, obsIDName, parNames,

@@ -1,5 +1,3 @@
-- Make a wtp.logitr() function that computes wtp from a prefSpaceModel
-- Remove the prefSpaceModel option and add a wtpCompare(prefModel, wtpModel) function
 - Add support for adding weights to model.
 - Make plot of search space with all multistarts?
 - The current MXL analytic gradients are not very efficient (they have loops).
