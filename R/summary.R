@@ -11,9 +11,9 @@
 #' # View a summary of an estimate model:
 #' summary(model)
 summary.logitr = function(model) {
-    if ('bestModel' %in% names(model)) {
-        # This is a list of all models from a multistart, so print the
-        # multistart summary first and then print the summary of the best model
+    if ('logitr.multistart' %in% class(model)) {
+        # Print the multistart summary first and then print the summary of the
+        # best model
         printLine()
         cat('SUMMARY OF ALL MULTISTART RUNS:', '\n', '\n', sep='')
         multistartSummary = getMulitstartSummary(model)
@@ -26,6 +26,9 @@ summary.logitr = function(model) {
         cat('\n', sep='')
         printModelSummary(model$bestModel)
     } else {
+        if (class(model) != 'logitr') {
+            stop('Model must be estimated using the"logitr" package')
+        }
         printModelSummary(model)
     }
 }
@@ -48,12 +51,13 @@ getMulitstartSummary = function(model) {
 }
 
 printModelSummary = function(model) {
-    basicInfoSummary = getBasicInfoTable(model)
-    coefTable        = logitr.coefTable(model)
-    statTable        = logitr.statTable(model)
+    coefTable = getCoefTable(model$coef, model$se, model$numObs,
+                model$numParams)
+    statTable = getStatTable(model$logLik, model$nullLogLik,model$numObs,
+                model$numParams)
     printLine()
     cat('MODEL SUMMARY:', '\n')
-    print(basicInfoSummary)
+    print(getBasicInfoTable(model))
     cat('\n')
     cat('Model Coefficients:', '\n')
     print(coefTable)
@@ -84,21 +88,7 @@ getBasicInfoTable = function(model) {
     return(basicInfoSummary)
 }
 
-#' Returns the summary coefficient table of an estimated model of the
-#' 'logitr' class.
-#'
-#' Returns the summary coefficient table of an estimated model of the
-#' 'logitr' class.
-#' @keywords logitr, coefTable
-#' @export
-#' @examples
-#' # Get the coefficients table of an estimated model:
-#' logitr.coefTable(model)
-logitr.coefTable = function(model) {
-    coef      = model$coef
-    se        = model$standErrs
-    numObs    = model$numObs
-    numParams = model$numParams
+getCoefTable = function(coef, se, numObs, numParams) {
     tStat  = rep(NA, length(coef))
     pVal   = rep(NA, length(coef))
     signif = rep('', length(coef))
@@ -106,36 +96,30 @@ logitr.coefTable = function(model) {
         tStat  = as.numeric(coef / se)
         dof    = numObs - numParams
         pVal   = 2*(1-pt(abs(tStat), dof))
-        signif = rep('', length(pVal))
-        signif[which(pVal <= 0.001)] <- '***'
-        signif[which(pVal >  0.001 & pVal <= 0.01)] <- '**'
-        signif[which(pVal >  0.01  & pVal <= 0.05)] <- '*'
-        signif[which(pVal >  0.05  & pVal <= 0.1)] <- '.'
+        signif = getSignifCodes(pVal)
     }
     coefTable = data.frame(
-        Estimate=round(coef, 6), StdError=round(se, 6), tStat=round(tStat, 4),
-        pVal=round(pVal, 4), signif=signif)
+        Estimate = round(coef, 6),
+        StdError = round(se, 6),
+        tStat    = round(tStat, 4),
+        pVal     = round(pVal, 4),
+        signif   = signif)
     row.names(coefTable) = names(coef)
     return(coefTable)
 }
 
-#' Returns the summary statistics table of an estimated model of the
-#' 'logitr' class.
-#'
-#' Returns the summary statistics table of an estimated model of the
-#' 'logitr' class.
-#' @keywords logitr, statTable
-#' @export
-#' @examples
-#' # Get the statistics table of an estimated model:
-#' logitr.statTable(model)
-logitr.statTable = function(model) {
-    numObs     = model$numObs
-    numParams  = model$numParams
-    logLik     = model$logLik
-    nullLogLik = model$nullLogLik
-    aic        = round(2*numParams - 2*logLik, 4)
-    bic        = round(log(numObs)*numParams - 2*logLik, 4)
+getSignifCodes = function(pVal) {
+    signif = rep('', length(pVal))
+    signif[which(pVal <= 0.001)] <- '***'
+    signif[which(pVal >  0.001 & pVal <= 0.01)] <- '**'
+    signif[which(pVal >  0.01  & pVal <= 0.05)] <- '*'
+    signif[which(pVal >  0.05  & pVal <= 0.1)] <- '.'
+    return(signif)
+}
+
+getStatTable = function(logLik, nullLogLik, numObs, numParams) {
+    aic = round(2*numParams - 2*logLik, 4)
+    bic = round(log(numObs)*numParams - 2*logLik, 4)
     result = t(data.frame(
         'Log-Likelihood:'         = logLik,
         'Null Log-Likelihood:'    = nullLogLik,
@@ -157,6 +141,9 @@ logitr.statTable = function(model) {
 #' # Get the coefficients of an estimated model:
 #' coef(model)
 coef.logitr = function(model) {
+    if (!('logitr' %in% class(model))) {
+        stop('Model must be estimated using the"logitr" package')
+    }
     return(model$coef)
 }
 

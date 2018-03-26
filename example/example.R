@@ -23,8 +23,13 @@ mnl.pref = logitr(
 
 # Print a summary of the results:
 summary(mnl.pref)
+
 # Get the coefficients from the model:
 coef(mnl.pref)
+
+# Get the WTP implied from the preference space model
+mnl.pref.wtp = wtp.logitr(mnl.pref, priceName='price')
+mnl.pref.wtp
 
 # Run a MNL model in the WTP Space using a multistart:
 mnl.wtp = logitr(
@@ -35,14 +40,16 @@ mnl.wtp = logitr(
   priceName  = 'price',
   modelSpace = 'wtp',
   options = list(
-    # You should run a multistart for WTP models since they are non-convex
+    # You should run a multistart for WTP models since they are non-convex:
     numMultiStarts = 10,
-    # You can review the results of each multistart run with keepAllRuns=T
+    # You can review the results of each multistart run with keepAllRuns=T:
     keepAllRuns = TRUE,
-    # Include the preference space model as an input to 1) use the computed
-    # WTP as the starting parameters for the first multistart run, and
-    # 2) compare the WTP between the two spaces.
-    prefSpaceModel = mnl.pref))
+    # It can be useful to use the WTP from the preference space model as the
+    # starting values for the first run:
+    startVals = mnl.pref.wtp$Estimate,
+    # Because the prefSpaceWtp has values as large as 8, I increase the
+    # boundaries of the random starting values:
+    startParBounds = c(-5,5)))
 
 # Print a summary of all multistart runs and a summary of the best model:
 summary(mnl.wtp)
@@ -52,20 +59,14 @@ summary(mnl.wtp$models[[3]])
 
 # Print a summary of the best model:
 summary(mnl.wtp$bestModel)
-# Get the coefficients from the best model:
-coef(mnl.wtp$bestModel)
 
-# CAUTION ON LOCAL MINIMA:
-# To check whether you have reached a global solution in WTP space models,
-# try running the equivalent model in the preference space and compare the
-# log-likelihood values at the solution as well as the computed mean WTP
-# values with those from the WTP space model. If they do not agree, then the
-# WTP space model might have reached a local minimum (the solution for the
-# preference space mnl model should be global since the log-likelihood in the
-# preference space is convex). Increase numMultiStarts and run the model again
-# to search the solution space for the global solution. By including the
-# prefSpaceModel argument in a WTP space model, this comparison is
-# automatically done for you.
+# NOTE ON LOCAL MINIMA IN WTP SPACE MODELS:
+# Comparing the WTP and log-likelihood values between the equivalent models in
+# the preference space and WTP space is a helpful check for whether you have
+# reached a global solution in WTP space models, which have non-convex
+# log-likelihoods functions. This can be done using the wtpCompare function:
+
+wtpCompare(mnl.pref, mnl.wtp, priceName='price')
 
 # ============================================================================
 # Heterogeneous MXL models
@@ -79,13 +80,17 @@ mxl.pref = logitr(
   randPars   = c(price='n', feat='n'),
   options    = list(
   # You should run a multistart for MXL models since they are non-convex,
-  # but it can take a long time.
+  # but it can take a long time. Here I just use 1 for brevity:
       numMultiStarts = 1,
       keepAllRuns    = TRUE,
       numDraws       = 200))
 
 # View summary of model:
 summary(mxl.pref)
+
+# Get the WTP implied from the preference space model
+mxl.pref.wtp = wtp.logitr(mxl.pref, priceName='price.mu')
+mxl.pref.wtp
 
 # Multistart MXL model in the WTP Space:
 mxl.wtp = logitr(
@@ -99,12 +104,30 @@ mxl.wtp = logitr(
   modelSpace = 'wtp',
   options = list(
   # You should run a multistart for MXL models since they are non-convex,
-  # but it can take a long time.
+  # but it can take a long time. Here I just use 1 for brevity:
     numMultiStarts = 1,
     keepAllRuns    = TRUE,
-    prefSpaceModel = mxl.pref,
+    startVals      = mxl.pref.wtp$Estimate,
+    startParBounds = c(-5,5),
     numDraws       = 200))
 
 # View summary of model:
 summary(mxl.wtp)
 
+# Compare WTP from each space:
+wtpCompare(mxl.pref, mxl.wtp, priceName='price.mu')
+
+# Note that the WTP will not be the same between preference space and WTP
+# space MXL models. This is because the distributional assumptions
+# in MXL models imply different distributions on WTP depending on the model
+# space. See Train and Weeks (2005) and Sonnier, Ainslie, and Otter (2007) for
+# details on this topic:
+
+# Train K, Weeks M (2005). “Discrete Choice Models in Preference Space and
+# Willingness- to-Pay Space.” In R Scarpa, A Alberini (eds.), Applications of
+# Simulation Methods in Environmental and Resource Economics, volume 6 of The
+# Economics of Non-Market Goods and Resources, pp. 1-16. Springer-Verlag.
+
+# Sonnier G, Ainslie A, Otter T (2007). “Heterogeneity Distributions of
+# Willingness-to-Pay in Choice Models.” Quantitative Marketing and Economics,
+# 5(3), 313–331.

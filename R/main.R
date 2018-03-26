@@ -46,7 +46,6 @@ runOptionsChecks = function(options) {
     if(is.null(options$scaleInputs))     {options$scaleInputs     = T}
     if(is.null(options$startParBounds))  {options$startParBounds  = c(-1, 1)}
     if(is.null(options$startVals))       {options$startVals       = NULL}
-    if(is.null(options$prefSpaceModel))  {options$prefSpaceModel  = NULL}
     if(is.null(options$standardDraws))   {options$standardDraws   = NULL}
     if(is.null(options$numDraws))        {options$numDraws        = 200}
     if(is.null(options$drawType))        {options$drawType        = 'halton'}
@@ -66,8 +65,8 @@ appendAllModelsInfo = function(allModels, modelInputs) {
     }
     bestModel = getBestModel(allModels)
     bestModel = appendModelInfo(bestModel, modelInputs)
-    result    = structure(list(models=models, bestModel=bestModel),
-                class='logitr')
+    result    = list(models=models, bestModel=bestModel)
+    class(result) = c('logitr.multistart', 'logitr')
     return(result)
 }
 
