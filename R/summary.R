@@ -51,7 +51,7 @@ getMulitstartSummary = function(model) {
 }
 
 printModelSummary = function(model) {
-    coefTable = getCoefTable(model$coef, model$se, model$numObs,
+    coefTable = getCoefTable(model$coef, model$standErrs, model$numObs,
                 model$numParams)
     statTable = getStatTable(model$logLik, model$nullLogLik,model$numObs,
                 model$numParams)
