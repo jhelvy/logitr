@@ -33,7 +33,11 @@ repmatColEach <- function(mat, n) {
 # (modified from the gmnl package)
 convertTime <- function(time){
     et <- time['elapsed']
-    s <- round(et, 2)
+    if (et < 1) {
+        s <- round(et, 2)
+    } else {
+        s <- round(et, 0)
+    }
     h <- s %/% 3600
     s <- s - 3600*h
     m <- s %/% 60
