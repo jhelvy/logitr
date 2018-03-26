@@ -75,7 +75,7 @@ getBasicInfoTable = function(model) {
     if (model$modelSpace=='wtp') {modelSpace = 'Willingness-to-Pay'}
     modelRun = paste(model$multistartNumber, 'of',
                      model$options$numMultiStarts, sep=' ')
-    modelTime = paste(round(model$time['elapsed'], 3), 'sec', sep=' ')
+    modelTime = convertTime(model$time)
     basicInfoSummary = data.frame(c(modelSpace, modelRun, model$iterations,
         modelTime))
     colnames(basicInfoSummary) = ''

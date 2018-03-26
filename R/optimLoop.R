@@ -70,8 +70,8 @@ runModel = function(modelInputs, startPars) {
             'ftol_abs'  = modelInputs$options$ftol_abs,
             print_level = modelInputs$options$printLevel,
             maxeval     = modelInputs$options$maxeval))
-    model$time      = proc.time() - startTime
     model$startPars = startPars
     model$logLik    = -1*model$objective # -1 for (+) rather than (-) LL
+    model$time      = proc.time() - startTime
     return(model)
 }
