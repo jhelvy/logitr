@@ -36,9 +36,7 @@ library('logitr')
 ```
 
 ### Required Libraries
-*logitr* requires the following libraries:
-- `nloptr` (for doing the optimization)
-- `randtoolbox` (for taking Halton draws in MXL models)
+*logitr* requires the `nloptr` library.
 
 The main optimization loop uses the `nloptr` function to minimize the negative log-likelihood function. `nloptr` is used instead of the Base R `optim` because it allows for both the objective and gradient functions to be included in one function. This speeds up computation time considerably because both the objective and gradient functions require many of the same calculations (e.g. computing the probabilities), which only have to be computed once in `nloptr` (`optim` requires separate objective and gradient functions, so many calculations are repeated within each iteration of the optimization loop).
 
