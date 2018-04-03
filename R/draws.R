@@ -75,6 +75,13 @@ getSobolDraws = function(numDraws, numBetas) {
     return(sobol(n=numDraws, dim=numBetas, scrambling=3, normal=T))
 }
 
+getUncertaintyDraws = function(model) {
+    coefs  = coef(model)
+    varcov = abs(solve(as.matrix(model$hessian)))
+    draws  = data.frame(mvrnorm(10^5, coefs, varcov))
+    return(draws)
+}
+
 # mvrnorm function, copied from the MASS package
 mvrnorm <- function(n=1, mu, Sigma, tol=1e-6, empirical=FALSE, EISPACK=FALSE) {
     p <- length(mu)
@@ -95,3 +102,4 @@ mvrnorm <- function(n=1, mu, Sigma, tol=1e-6, empirical=FALSE, EISPACK=FALSE) {
     dimnames(X) <- list(nm, NULL)
     if(n == 1) drop(X) else t(X)
 }
+
