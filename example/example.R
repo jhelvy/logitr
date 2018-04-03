@@ -5,18 +5,16 @@ install_github('jhelvy/logitr')
 # Load logitr package
 library('logitr')
 
-# Import the choice data. Example data is the 'Yogurt' data set from the
-# mlogit package, reformatted for usage with the logitr package
-choiceData = read.csv(
-    file   = 'https://raw.github.com/jhelvy/logitr/master/example/yogurt.csv',
-    header = TRUE)
+# Import the 'Yogurt' data set from the mlogit package, reformatted for usage
+# with logitr
+data(yogurt)
 
 # ============================================================================
 # Homogeneous MNL models
 
 # Run a MNL model in the Preference Space:
 mnl.pref = logitr(
-  data       = choiceData,
+  data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
@@ -33,7 +31,7 @@ mnl.pref.wtp
 
 # Run a MNL model in the WTP Space using a multistart:
 mnl.wtp = logitr(
-  data       = choiceData,
+  data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
   parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
@@ -73,7 +71,7 @@ wtpCompare(mnl.pref, mnl.wtp, priceName='price')
 
 # Multistart MXL model in the Preference Space:
 mxl.pref = logitr(
-  data       = choiceData,
+  data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
@@ -94,7 +92,7 @@ mxl.pref.wtp
 
 # Multistart MXL model in the WTP Space:
 mxl.wtp = logitr(
-  data       = choiceData,
+  data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
   parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),

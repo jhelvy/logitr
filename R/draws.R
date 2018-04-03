@@ -82,7 +82,7 @@ getUncertaintyDraws = function(model) {
     return(draws)
 }
 
-# mvrnorm function, copied from the MASS package
+# mvrnorm function (copied from the MASS package)
 mvrnorm <- function(n=1, mu, Sigma, tol=1e-6, empirical=FALSE, EISPACK=FALSE) {
     p <- length(mu)
     if(!all(dim(Sigma) == c(p,p))) stop("incompatible arguments")

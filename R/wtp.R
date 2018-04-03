@@ -1,3 +1,7 @@
+# ============================================================================
+# Functions for computing the WTP from estimated models
+# ============================================================================
+
 #' Returns the computed WTP from a preference space model.
 #'
 #' Returns the computed WTP from a preference space model.
