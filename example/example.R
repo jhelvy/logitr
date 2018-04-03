@@ -5,8 +5,7 @@ install_github('jhelvy/logitr')
 # Load logitr package
 library('logitr')
 
-# Import the 'Yogurt' data set from the mlogit package, reformatted for usage
-# with logitr
+# Load the reformatted 'Yogurt' data set from the mlogit package
 data(yogurt)
 
 # ============================================================================

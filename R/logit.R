@@ -8,7 +8,7 @@
 # MNL logit and log-likelihood functions
 # ============================================================================
 
-# # Logit fraction using data.table package (faster)
+# # Logit fraction using data.table package (faster, but requires data.table)
 # # Returns the logit fraction for mnl (homogeneous) models
 # getMnlLogit = function(V, obsID) {
 #     data = data.table(V=V, obsID=obsID)
@@ -37,11 +37,11 @@ mnlNegLL = function(choice, logit) {
 # Primary objective function for the nloptr optimizer.
 mnlNegLLAndGradLL = function(pars, modelInputs) {
     logitFuncs = modelInputs$logitFuncs
-    p          = modelInputs$price
     X          = modelInputs$X
+    p          = modelInputs$price
     obsID      = modelInputs$obsID
     choice     = modelInputs$choice
-    V          = logitFuncs$getMnlV(pars, modelInputs)
+    V          = logitFuncs$getMnlV(pars, X, p)
     logit      = logitFuncs$getMnlLogit(V, obsID)
     negLL      = logitFuncs$mnlNegLL(choice, logit)
     negGradLL  = logitFuncs$mnlNegGradLL(p, X, pars, choice, logit)
@@ -49,10 +49,12 @@ mnlNegLLAndGradLL = function(pars, modelInputs) {
 }
 
 getMnlNegLL = function(pars, modelInputs) {
+    X          = modelInputs$X
+    p          = modelInputs$price
     logitFuncs = modelInputs$logitFuncs
     obsID      = modelInputs$obsID
     choice     = modelInputs$choice
-    V          = logitFuncs$getMnlV(pars, modelInputs)
+    V          = logitFuncs$getMnlV(pars, X, p)
     logit      = logitFuncs$getMnlLogit(V, obsID)
     negLL      = logitFuncs$mnlNegLL(choice, logit)
     return(negLL)
@@ -60,11 +62,11 @@ getMnlNegLL = function(pars, modelInputs) {
 
 getMnlNegGradLL = function(pars, modelInputs) {
     logitFuncs = modelInputs$logitFuncs
-    p          = modelInputs$price
     X          = modelInputs$X
+    p          = modelInputs$price
     obsID      = modelInputs$obsID
     choice     = modelInputs$choice
-    V          = logitFuncs$getMnlV(pars, modelInputs)
+    V          = logitFuncs$getMnlV(pars, X, p)
     logit      = logitFuncs$getMnlLogit(V, obsID)
     negGradLL  = logitFuncs$mnlNegGradLL(p, X, pars, choice, logit)
     return(negGradLL)
@@ -102,12 +104,13 @@ mxlNegLL = function(choice, pHat) {
 mxlNegLLAndGradLL = function(pars, modelInputs){
     logitFuncs    = modelInputs$logitFuncs
     X             = modelInputs$X
+    p             = modelInputs$price
     obsID         = modelInputs$obsID
     choice        = modelInputs$choice
     parSetup      = modelInputs$parSetup
     standardDraws = modelInputs$standardDraws
     betaDraws     = makeBetaDraws(pars, modelInputs)
-    VDraws        = logitFuncs$getMxlV(betaDraws, modelInputs)
+    VDraws        = logitFuncs$getMxlV(betaDraws, X, p)
     logitDraws    = logitFuncs$getMxlLogit(VDraws, obsID)
     pHat          = rowMeans(logitDraws)
     negLL         = logitFuncs$mxlNegLL(choice, pHat)
@@ -118,11 +121,13 @@ mxlNegLLAndGradLL = function(pars, modelInputs){
 
 # Returns the negative log-likelihood of an mxl (heterogeneous) model
 getMxlNegLL = function(pars, modelInputs){
+    X          = modelInputs$X
+    p          = modelInputs$price
     logitFuncs = modelInputs$logitFuncs
     obsID      = modelInputs$obsID
     choice     = modelInputs$choice
     betaDraws  = makeBetaDraws(pars, modelInputs)
-    VDraws     = logitFuncs$getMxlV(betaDraws, modelInputs)
+    VDraws     = logitFuncs$getMxlV(betaDraws, X, p)
     logitDraws = logitFuncs$getMxlLogit(VDraws, obsID)
     pHat       = rowMeans(logitDraws)
     negLL      = logitFuncs$mxlNegLL(choice, pHat)
@@ -132,12 +137,13 @@ getMxlNegLL = function(pars, modelInputs){
 getMxlNegGradLL = function(pars, modelInputs) {
     logitFuncs    = modelInputs$logitFuncs
     X             = modelInputs$X
+    p             = modelInputs$price
     obsID         = modelInputs$obsID
     choice        = modelInputs$choice
     parSetup      = modelInputs$parSetup
     standardDraws = modelInputs$standardDraws
     betaDraws     = makeBetaDraws(pars, modelInputs)
-    VDraws        = logitFuncs$getMxlV(betaDraws, modelInputs)
+    VDraws        = logitFuncs$getMxlV(betaDraws, X, p)
     logitDraws    = logitFuncs$getMxlLogit(VDraws, obsID)
     pHat          = rowMeans(logitDraws)
     negGradLL     = logitFuncs$mxlNegGradLL(X, parSetup, obsID, choice,
@@ -179,8 +185,8 @@ getNumericHessLL = function(pars, modelInputs) {
 # Preference Space Logit Functions - MNL models
 # ============================================================================
 
-getMnlV.pref = function(pars, modelInputs) {
-    V = modelInputs$X %*% as.numeric(pars)
+getMnlV.pref = function(pars, X, p) {
+    V = X %*% as.numeric(pars)
     return(V)
 }
 
@@ -192,9 +198,10 @@ mnlNegGradLL.pref = function(p, X, pars, choice, logit) {
 # Returns the hessian of the log-likelihood at the given pars
 mnlHessLL.pref = function(pars, modelInputs) {
     X        = modelInputs$X
+    p        = modelInputs$p
     obsID    = modelInputs$obsID
     choice   = modelInputs$choice
-    V        = getMnlV.pref(pars, modelInputs)
+    V        = getMnlV.pref(pars, X, p)
     logit    = getMnlLogit(V, obsID)
     diffMat  = getDiffMatByObsID.pref(logit, X, obsID)
     logitMat = repmat(matrix(logit), 1, ncol(X))
@@ -219,8 +226,8 @@ getDiffMatByObsID.pref = function(logit, X, obsID) {
 # ============================================================================
 
 # Returns the observed utility
-getMxlV.pref = function(betaDraws, modelInputs) {
-    VDraws = modelInputs$X %*% t(betaDraws)
+getMxlV.pref = function(betaDraws, X, p) {
+    VDraws = X %*% t(betaDraws)
     return(VDraws)
 }
 
@@ -299,11 +306,9 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
 # ============================================================================
 
 # Returns the observed utility
-getMnlV.wtp = function(pars, modelInputs) {
+getMnlV.wtp = function(pars, X, p) {
     lambda = as.numeric(pars[1])
     beta   = as.numeric(pars[2:length(pars)])
-    X      = modelInputs$X
-    p      = modelInputs$price
     V      = lambda*(p + (X %*% beta))
     return(V)
 }
@@ -326,7 +331,7 @@ mnlHessLL.wtp = function(pars, modelInputs) {
     p        = modelInputs$price
     choice   = modelInputs$choice
     obsID    = modelInputs$obsID
-    V        = getMnlV.wtp(pars, modelInputs)
+    V        = getMnlV.wtp(pars, X, p)
     logit    = getMnlLogit(V, obsID)
     diffMat  = getDiffMatByObsID.wtp(lambda, beta, p, X, logit, obsID)
     logitMat = repmat(matrix(logit), 1, ncol(diffMat))
@@ -357,9 +362,7 @@ getDiffMatByObsID.wtp = function(lambda, beta, p, X, logit, obsID) {
 # ============================================================================
 
 # Returns the observed utility
-getMxlV.wtp = function(betaDraws, modelInputs) {
-    X           = modelInputs$X
-    p           = modelInputs$price
+getMxlV.wtp = function(betaDraws, X, p) {
     numDraws    = nrow(betaDraws)
     lambdaDraws = matrix(rep(betaDraws[,1], nrow(X)),ncol=numDraws,byrow=T)
     gammaDraws  = matrix(betaDraws[,2:ncol(betaDraws)], nrow=numDraws)

@@ -44,3 +44,13 @@ convertTime <- function(time){
     s <- s - 60*m
     return(paste(h, "h:", m, "m:", s, "s", sep = ""))
 }
+
+# Returns a confidence interval from a vector of data
+ci = function(data, alpha) {
+    B = mean(data)
+    L = quantile(data, alpha)
+    U = quantile(data, 1-alpha)
+    ests = c(B,L,U)
+    names(ests) = Cs(mean, low, high)
+    return(ests)
+}
