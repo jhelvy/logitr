@@ -36,9 +36,6 @@ getStandardDraws = function(parSetup, numDraws, drawType='halton') {
     if (drawType=='normal') {
         draws = getNormalDraws(numDraws, numBetas)
     }
-    if (drawType=='sobol') {
-        draws = getSobolDraws(numDraws, numBetas)
-    }
     fixedParIDs = getFixedParIDs(parSetup)
     draws[,fixedParIDs] = rep(0, numDraws)
     return(draws)
@@ -62,14 +59,54 @@ getNormalDraws = function(numDraws, numBetas) {
 
 # Returns a matrix of numDraws x numBetas random standard normal draws
 # approximated using Halton draws
-getHaltonDraws = function(numDraws, numBetas) {
-    return(halton(n=numDraws, dim=numBetas, normal=T))
+# *Function coped and modified from the mlogit package on CRAN
+getHaltonDraws <- function(R, Ka, halton=NA) {
+  # R = numDraws, Ka = numBetas
+  # Create the matrix of random numbers
+  if (!is.null(halton)){
+    length.halton <- rep(R,Ka)
+    prime <- c(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43,
+               47, 53, 59, 61, 71, 73, 79, 83, 89, 97, 101, 103,
+               107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167,
+               173, 179, 181, 191, 193, 197, 199)
+    drop.halton <- rep(100,Ka)
+    if (!is.na(halton) && !is.null(halton$prime)){
+      if (length(halton$prime) != Ka){
+        stop("wrong number of prime numbers indicated")
+      }
+      else{
+        prime <- halton$prime
+      }
+      if (!is.na(halton) && !is.null(halton$drop)){
+        if (!length(halton$drop) %in% c(1,Ka)) stop("wrong number of drop indicated")
+        if (length(halton$drop) == 1){
+          drop.halton <- rep(halton$drop,Ka)
+        }
+        else{
+          drop.halton <- halton$drop
+        }
+      }
+    }
+    random.nb <- numeric(0)
+    i <- 0
+    for (i in 1:Ka){
+      random.nb <- cbind(random.nb,qnorm(halton(prime[i],R,drop.halton[i])))
+    }
+  }
+  else{
+    random.nb <- matrix(rnorm(R*Ka), ncol = Ka, nrow = R)
+  }
+  return(random.nb)
 }
 
-# Returns a matrix of numDraws x numBetas random standard normal draws
-# approximated using Sobol draws
-getSobolDraws = function(numDraws, numBetas) {
-    return(sobol(n=numDraws, dim=numBetas, scrambling=3, normal=T))
+halton <- function(prime = 3, length = 100, drop = 10){
+  halt <- 0
+  t <- 0
+  while(length(halt) < length + drop){
+    t <- t + 1
+    halt <- c(halt, rep(halt, prime - 1) + rep(seq(1, prime - 1, 1) / prime ^ t, each = length(halt)))
+  }
+  return(halt[(drop + 1):(length + drop)])
 }
 
 getUncertaintyDraws = function(model) {
@@ -79,7 +116,8 @@ getUncertaintyDraws = function(model) {
     return(draws)
 }
 
-# mvrnorm function (copied from the MASS package)
+# mvrnorm function
+# *Copied from the MASS package on CRAN
 mvrnorm <- function(n=1, mu, Sigma, tol=1e-6, empirical=FALSE, EISPACK=FALSE) {
     p <- length(mu)
     if(!all(dim(Sigma) == c(p,p))) stop("incompatible arguments")

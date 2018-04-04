@@ -19,8 +19,7 @@
 logitr = function(data, choiceName, obsIDName, parNames, priceName=NULL,
                   randPars=NULL, randPrice=NULL, modelSpace='pref',
                   options=list()) {
-    require(nloptr)      # Required for optimization
-    require(randtoolbox) # Required for making draws
+    require(nloptr) # Required for optimization
     options     = runOptionsChecks(options)
     modelInputs = getModelInputs(data, choiceName, obsIDName, parNames,
                   randPars, priceName, randPrice, modelSpace, options)
