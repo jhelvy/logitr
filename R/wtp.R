@@ -57,6 +57,38 @@ getPrefSpaceWtp = function(model, priceName) {
     return(getCoefTable(wtp.mean, wtp.se, model$numObs, model$numParams))
 }
 
+#' Returns a comparison of the WTP between a preference space and WTP space
+#' model.
+#'
+#' Returns a comparison of the WTP between a preference space and WTP space
+#' model.
+#' @keywords logitr, wtp
+#' @export
+#' @examples
+#' # Run a MNL model in the Preference Space:
+#' data(yogurt)
+#'
+#' mnl.pref = logitr(
+#'   data       = yogurt,
+#'   choiceName = 'choice',
+#'   obsIDName  = 'obsID',
+#'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
+#'
+#' # Get the WTP implied from the preference space model
+#' mnl.pref.wtp = wtp(mnl.pref, priceName='price')
+#'
+#' # Run a MNL model in the WTP Space:
+#' mnl.wtp = logitr(
+#'   data       = yogurt,
+#'   choiceName = 'choice',
+#'   obsIDName  = 'obsID',
+#'   parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
+#'   priceName  = 'price',
+#'   modelSpace = 'wtp',
+#'   options = list(startVals = mnl.pref.wtp$Estimate))
+#'
+#' # Compare the WTP between the two spaces:
+#' wtpCompare(mnl.pref, mnl.wtp, priceName='price')
 wtpCompare.logitr = function(model.pref, model.wtp, priceName) {
     if (!is.logitr(model.pref) | !is.logitr(model.wtp)) {
         stop('Models must be estimated using the "logitr" package')
