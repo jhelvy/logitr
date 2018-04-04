@@ -49,7 +49,7 @@ getPrefSpaceWtp = function(model, priceName) {
     wtp.mean[priceID] = -1*coefs[priceID]
     names(wtp.mean)[priceID] = 'lambda'
     # Compute standErrs using simulation (draws from the varcov matrix)
-    draws      = getUncertaintyDraws(model)
+    draws      = getUncertaintyDraws(model, 10^5)
     priceDraws = repmatCol(-1*draws[priceName], ncol(draws))
     wtpDraws   = draws / priceDraws
     wtpDraws[,priceID] = draws[,priceID]

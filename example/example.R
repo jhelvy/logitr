@@ -9,7 +9,7 @@ library('logitr')
 data(yogurt)
 
 # ============================================================================
-# Homogeneous MNL models
+# Estimate Homogeneous MNL models
 
 # Run a MNL model in the Preference Space:
 mnl.pref = logitr(
@@ -66,7 +66,7 @@ summary(mnl.wtp$bestModel)
 wtpCompare(mnl.pref, mnl.wtp, priceName='price')
 
 # ============================================================================
-# Heterogeneous MXL models
+# Estimate Heterogeneous MXL models
 
 # Multistart MXL model in the Preference Space:
 mxl.pref = logitr(
@@ -128,3 +128,39 @@ wtpCompare(mxl.pref, mxl.wtp, priceName='price.mu')
 # Sonnier G, Ainslie A, Otter T (2007). “Heterogeneity Distributions of
 # Willingness-to-Pay in Choice Models.” Quantitative Marketing and Economics,
 # 5(3), 313–331.
+
+# ============================================================================
+# Run market simulation using MNL models
+
+# Create a market to simulate. Each row is an alternative and each column an
+# attribute. In this example, I just use the first choice observation from the
+# yogurt dataset:
+market = subset(yogurt, obsID==1,
+         select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
+market
+
+# Run the simulation using the preference space MNL model:
+mnl.pref.simulation = marketSimulation(mnl.pref, market, alpha=0.025)
+mnl.pref.simulation
+# The results show the expected market shares for each alternative.
+# The low and high values show a 95% confidence interval, estimated using
+# simulation. You can change the CI level by setting alpha to a different
+# value (e.g. a 90% CI is obtained with alpha=0.05).
+
+# Run the simulation using the WTP space MNL model:
+mnl.wtp.simulation = marketSimulation(mnl.wtp, market, priceName='price')
+mnl.wtp.simulation
+# Since these two models are equivalent except in different spaces, the
+# simulation results should be the same. Note that 'priceName' is the name
+# of the price attribute in the market argument and must be included for
+# WTP space models.
+
+# Plot simulation results
+library(ggplot2)
+mnl.pref.simulation$alt = seq(nrow(mnl.pref.simulation))
+ggplot(mnl.pref.simulation, aes(x=alt, y=mean)) +
+    geom_bar(stat='identity', width=0.7) +
+    geom_errorbar(aes(ymin=low, ymax=high), width=0.2) +
+    scale_y_continuous(limits=c(0,1)) +
+    labs(x='Market Share', y='Alternative') +
+    theme_bw()
