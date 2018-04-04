@@ -135,17 +135,17 @@ To understand the status code of any model, type `logitr.statusCodes()`, which p
 ## Computing and Comparing WTP
 For models in the preference space, you can get a summary table of the implied WTP by using:
 
-`wtp.logitr(prefSpaceModel, priceName)`
+`logitr.wtp(prefSpaceModel, priceName)`
 
 To compare the WTP between two equivalent models in the preference space and WTP spaces, use:
 
-`wtpCompare(prefSpaceModel, wtpSpaceModel, priceName)`
+`logitr.wtpCompare(prefSpaceModel, wtpSpaceModel, priceName)`
 
 # Market Simulations
-After estimating a model, often times modelers want to use the results to simulate the market shares of a particular set of market alternatives. This can be done using the function `marketSimulation()`. The simulation reports the expected market share as well as a confidence interval for each market alternative:
+After estimating a model, often times modelers want to use the results to simulate the market shares of a particular set of market alternatives. This can be done using the function `logitr.simulation()`. The simulation reports the expected market share as well as a confidence interval for each market alternative:
 
 ```
-simulation = marketSimulation(model, market, priceName=NULL, alpha=0.025)
+simulation = logitr.simulation(model, market, priceName=NULL, alpha=0.025)
 ```
 
 **Arguments:**
@@ -155,7 +155,7 @@ simulation = marketSimulation(model, market, priceName=NULL, alpha=0.025)
 |`model`|A model estimated using the `logitr` package.| -- |
 |`market`|A data frame of the market alternatives. Each row should be an alternative, and each column an attribute for which there is a corresponding coefficient in the estimated model.| -- |
 |`priceName`|The name of the column that identifies the price variable. Only required for WTP space models.|`NULL`|
-|`alpha`|The significance level for the confidence interval (e.g. 0.025 results in a 95% CI).| 0.025 |
+|`alpha`|The significance level for the confidence interval (e.g. `0.025` results in a 95% CI).| `0.025` |
 
 # Author, Version, and License Information
 - Author: *John Paul Helveston* (www.jhelvy.com)

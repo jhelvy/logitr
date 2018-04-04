@@ -11,7 +11,7 @@
 #' # View a summary of an estimate model:
 #' summary(model)
 summary.logitr = function(model) {
-    if ('logitr.multistart' %in% class(model)) {
+    if (is.logitr.multistart(model)) {
         # Print the multistart summary first and then print the summary of the
         # best model
         printLine()
@@ -138,7 +138,16 @@ getStatTable = function(logLik, nullLogLik, numObs, numParams) {
 #' @keywords logitr, coef
 #' @export
 #' @examples
-#' # Get the coefficients of an estimated model:
+#' # Run a MNL model in the Preference Space:
+#' data(yogurt)
+#'
+#' mnl.pref = logitr(
+#'   data       = yogurt,
+#'   choiceName = 'choice',
+#'   obsIDName  = 'obsID',
+#'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
+#'
+#' # Get the model coefficients:
 #' coef(model)
 coef.logitr = function(model) {
     if (!('logitr' %in% class(model))) {

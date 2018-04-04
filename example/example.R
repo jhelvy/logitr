@@ -25,7 +25,7 @@ summary(mnl.pref)
 coef(mnl.pref)
 
 # Get the WTP implied from the preference space model
-mnl.pref.wtp = wtp.logitr(mnl.pref, priceName='price')
+mnl.pref.wtp = logitr.wtp(mnl.pref, priceName='price')
 mnl.pref.wtp
 
 # Run a MNL model in the WTP Space using a multistart:
@@ -63,7 +63,7 @@ summary(mnl.wtp$bestModel)
 # reached a global solution in WTP space models, which have non-convex
 # log-likelihoods functions. This can be done using the wtpCompare function:
 
-wtpCompare(mnl.pref, mnl.wtp, priceName='price')
+logitr.wtpCompare(mnl.pref, mnl.wtp, priceName='price')
 
 # ============================================================================
 # Estimate Heterogeneous MXL models
@@ -86,7 +86,7 @@ mxl.pref = logitr(
 summary(mxl.pref)
 
 # Get the WTP implied from the preference space model
-mxl.pref.wtp = wtp.logitr(mxl.pref, priceName='price.mu')
+mxl.pref.wtp = logitr.wtp(mxl.pref, priceName='price.mu')
 mxl.pref.wtp
 
 # Multistart MXL model in the WTP Space:
@@ -112,7 +112,7 @@ mxl.wtp = logitr(
 summary(mxl.wtp)
 
 # Compare WTP from each space:
-wtpCompare(mxl.pref, mxl.wtp, priceName='price.mu')
+logitr.wtpCompare(mxl.pref, mxl.wtp, priceName='price.mu')
 
 # Note that the WTP will not be the same between preference space and WTP
 # space MXL models. This is because the distributional assumptions
@@ -140,7 +140,7 @@ market = subset(yogurt, obsID==1,
 market
 
 # Run the simulation using the preference space MNL model:
-mnl.pref.simulation = marketSimulation(mnl.pref, market, alpha=0.025)
+mnl.pref.simulation = logitr.simulation(mnl.pref, market, alpha=0.025)
 mnl.pref.simulation
 # The results show the expected market shares for each alternative.
 # The low and high values show a 95% confidence interval, estimated using
@@ -148,7 +148,7 @@ mnl.pref.simulation
 # value (e.g. a 90% CI is obtained with alpha=0.05).
 
 # Run the simulation using the WTP space MNL model:
-mnl.wtp.simulation = marketSimulation(mnl.wtp, market, priceName='price')
+mnl.wtp.simulation = logitr.simulation(mnl.wtp, market, priceName='price')
 mnl.wtp.simulation
 # Since these two models are equivalent except in different spaces, the
 # simulation results should be the same. Note that 'priceName' is the name

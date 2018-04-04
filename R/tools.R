@@ -54,3 +54,7 @@ ci = function(data, alpha=0.025) {
     names(ests) = Cs(mean, low, high)
     return(ests)
 }
+
+# Class check functions
+is.logitr <- function(x) {inherits(x, "logitr")}
+is.logitr.multistart <- function(x) {inherits(x, "logitr.multistart")}

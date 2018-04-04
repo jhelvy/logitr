@@ -10,7 +10,16 @@
 Returns the coefficients of an estimated model of the 'logitr' class.
 }
 \examples{
-# Get the coefficients of an estimated model:
+# Run a MNL model in the Preference Space:
+data(yogurt)
+
+mnl.pref = logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
+
+# Get the model coefficients:
 coef(model)
 }
 \keyword{coef}

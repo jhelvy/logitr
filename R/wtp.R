@@ -18,15 +18,15 @@
 #'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
 #'
 #' # Get the WTP implied from the preference space model
-#' wtp.logitr(mnl.pref, priceName='price')
-wtp.logitr = function(model, priceName) {
-    if (!('logitr' %in% class(model))) {
+#' logitr.wtp(mnl.pref, priceName='price')
+logitr.wtp = function(model, priceName) {
+    if (!is.logitr(model)) {
         stop('Model must be estimated using the"logitr" package')
     }
     if (is.null(priceName)) {
         stop('Must provide priceName to compute WTP')
     }
-    if ('logitr.multistart' %in% class(model)) {
+    if (is.logitr.multistart(model)) {
         cat('**Using results for the best model from the multistart**',
             '\n', sep='')
         model = model$bestModel
@@ -75,7 +75,7 @@ getPrefSpaceWtp = function(model, priceName) {
 #'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
 #'
 #' # Get the WTP implied from the preference space model
-#' wtp.logitr(mnl.pref, priceName='price')
+#' logitr.wtp(mnl.pref, priceName='price')
 #'
 #' # Run a MNL model in the WTP Space:
 #' mnl.wtp = logitr(
@@ -88,18 +88,17 @@ getPrefSpaceWtp = function(model, priceName) {
 #'   options = list(startVals = mnl.pref.wtp$Estimate))
 #'
 #' # Compare the WTP between the two spaces:
-#' wtpCompare(mnl.pref, mnl.wtp, priceName='price')
-wtpCompare = function(model.pref, model.wtp, priceName) {
-    if (!('logitr' %in% class(model.pref)) |
-        !('logitr' %in% class(model.wtp))) {
-        stop('Models must be estimated using the"logitr" package')
+#' logitr.wtpCompare(mnl.pref, mnl.wtp, priceName='price')
+logitr.wtpCompare = function(model.pref, model.wtp, priceName) {
+    if (!is.logitr(model.pref) | !is.logitr(model.wtp)) {
+        stop('Models must be estimated using the "logitr" package')
     }
-    if ('logitr.multistart' %in% class(model.pref)) {
+    if (is.logitr.multistart(model.pref)) {
         cat('**Using results for the best model from the model.pref ',
             'multistart**', '\n', sep='')
         model.pref = model.pref$bestModel
     }
-    if ('logitr.multistart' %in% class(model.wtp)) {
+    if (is.logitr.multistart(model.wtp)) {
         cat('**Using results for the best model from the model.wtp ',
             'multistart**', '\n', sep='')
         model.wtp = model.wtp$bestModel

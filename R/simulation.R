@@ -24,12 +24,12 @@
 #'          select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
 #'
 #' # Run the simulation using the estimated preference space MNL model:
-#' marketSimulation(mnl.pref, market, alpha=0.025)
-marketSimulation = function(model, market, priceName=NULL, alpha=0.025) {
-    if (!('logitr' %in% class(model))) {
+#' logitr.simulation(mnl.pref, market, alpha=0.025)
+logitr.simulation = function(model, market, priceName=NULL, alpha=0.025) {
+    if (!is.logitr(model)) {
         stop('Model must be estimated using the "logitr" package')
     }
-     if ('logitr.multistart' %in% class(model)) {
+     if (is.logitr.multistart(model)) {
         cat('**Using results for the best model from the multistart**',
             '\n', sep='')
         model = model$bestModel
