@@ -103,7 +103,7 @@ logitr.wtpCompare = function(model.pref, model.wtp, priceName) {
             'multistart**', '\n', sep='')
         model.wtp = model.wtp$bestModel
     }
-    pref = wtp.logitr(model.pref, priceName)$Estimate
+    pref = logitr.wtp(model.pref, priceName)$Estimate
     pref = c(pref, model.pref$logLik)
     wtp  = coef(model.wtp)
     wtp  = c(wtp, model.wtp$logLik)
