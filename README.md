@@ -135,17 +135,17 @@ To understand the status code of any model, type `logitr.statusCodes()`, which p
 ## Computing and Comparing WTP
 For models in the preference space, you can get a summary table of the implied WTP by using:
 
-`logitr.wtp(prefSpaceModel, priceName)`
+`wtp(prefSpaceModel, priceName)`
 
 To compare the WTP between two equivalent models in the preference space and WTP spaces, use:
 
-`logitr.wtpCompare(prefSpaceModel, wtpSpaceModel, priceName)`
+`wtpCompare(prefSpaceModel, wtpSpaceModel, priceName)`
 
 # Market Simulations
-After estimating a model, often times modelers want to use the results to simulate the market shares of a particular set of market alternatives. This can be done using the function `logitr.simulation()`. The simulation reports the expected market share as well as a confidence interval for each market alternative:
+After estimating a model, often times modelers want to use the results to simulate the market shares of a particular set of market alternatives. This can be done using the function `marketSimulation()`. The simulation reports the expected market share as well as a confidence interval for each market alternative:
 
 ```
-simulation = logitr.simulation(model, market, priceName=NULL, alpha=0.025)
+simulation = marketSimulation(model, market, priceName=NULL, alpha=0.025)
 ```
 
 **Arguments:**

@@ -18,8 +18,8 @@
 #'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
 #'
 #' # Get the WTP implied from the preference space model
-#' logitr.wtp(mnl.pref, priceName='price')
-logitr.wtp = function(model, priceName) {
+#' wtp(mnl.pref, priceName='price')
+wtp.logitr = function(model, priceName) {
     if (!is.logitr(model)) {
         stop('Model must be estimated using the"logitr" package')
     }
@@ -57,39 +57,7 @@ getPrefSpaceWtp = function(model, priceName) {
     return(getCoefTable(wtp.mean, wtp.se, model$numObs, model$numParams))
 }
 
-#' Returns a comparison of the WTP between a preference space and WTP space
-#' model.
-#'
-#' Returns a comparison of the WTP between a preference space and WTP space
-#' model.
-#' @keywords logitr, wtp
-#' @export
-#' @examples
-#' # Run a MNL model in the Preference Space:
-#' data(yogurt)
-#'
-#' mnl.pref = logitr(
-#'   data       = yogurt,
-#'   choiceName = 'choice',
-#'   obsIDName  = 'obsID',
-#'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
-#'
-#' # Get the WTP implied from the preference space model
-#' logitr.wtp(mnl.pref, priceName='price')
-#'
-#' # Run a MNL model in the WTP Space:
-#' mnl.wtp = logitr(
-#'   data       = yogurt,
-#'   choiceName = 'choice',
-#'   obsIDName  = 'obsID',
-#'   parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
-#'   priceName  = 'price',
-#'   modelSpace = 'wtp',
-#'   options = list(startVals = mnl.pref.wtp$Estimate))
-#'
-#' # Compare the WTP between the two spaces:
-#' logitr.wtpCompare(mnl.pref, mnl.wtp, priceName='price')
-logitr.wtpCompare = function(model.pref, model.wtp, priceName) {
+wtpCompare.logitr = function(model.pref, model.wtp, priceName) {
     if (!is.logitr(model.pref) | !is.logitr(model.wtp)) {
         stop('Models must be estimated using the "logitr" package')
     }
@@ -103,7 +71,7 @@ logitr.wtpCompare = function(model.pref, model.wtp, priceName) {
             'multistart**', '\n', sep='')
         model.wtp = model.wtp$bestModel
     }
-    pref = logitr.wtp(model.pref, priceName)$Estimate
+    pref = wtp.logitr(model.pref, priceName)$Estimate
     pref = c(pref, model.pref$logLik)
     wtp  = coef(model.wtp)
     wtp  = c(wtp, model.wtp$logLik)

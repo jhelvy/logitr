@@ -24,8 +24,8 @@
 #'          select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
 #'
 #' # Run the simulation using the estimated preference space MNL model:
-#' logitr.simulation(mnl.pref, market, alpha=0.025)
-logitr.simulation = function(model, market, priceName=NULL, alpha=0.025) {
+#' marketSimulation(mnl.pref, market, alpha=0.025)
+marketSimulation.logitr = function(model, market, priceName=NULL,alpha=0.025) {
     if (!is.logitr(model)) {
         stop('Model must be estimated using the "logitr" package')
     }
