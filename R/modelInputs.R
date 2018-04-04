@@ -7,9 +7,8 @@
 getModelInputs = function(data, choiceName, obsIDName, parNames, randPars,
                           priceName, randPrice, modelSpace, options) {
     # Setup pars
-    parSetup    = getParSetup(parNames, randPars, randPrice, modelSpace)
+    parSetup    = getParSetup(parNames, priceName, randPars, randPrice)
     parNameList = getParNameList(parSetup)
-    numBetas    = nrow(parSetup)
     # Separate data elements
     data   = removeNAs(data, choiceName, obsIDName, parNames, priceName,
              modelSpace)
@@ -22,14 +21,14 @@ getModelInputs = function(data, choiceName, obsIDName, parNames, randPars,
     modelInputs = list(
         price=price, X=X, choice=choice, obsID=obsID, priceName=priceName,
         parNameList=parNameList, parSetup=parSetup, scaleFactors=NA,
-        numBetas=numBetas, modelSpace=modelSpace, modelType='mnl',
-        options=options)
+        modelSpace=modelSpace, modelType='mnl', options=options)
     if (options$scaleInputs) {modelInputs = scaleInputs(modelInputs)}
-    if (sum(parSetup$dist != 0)) {
+    if (length(unique(parSetup)) > 1) {
         modelInputs$modelType     = 'mxl'
         modelInputs$standardDraws = options$standardDraws
         if (is.null(options$standardDraws)) {
-            modelInputs$standardDraws = getStandardDraws(parSetup, options)
+            modelInputs$standardDraws = getStandardDraws(parSetup,
+                options$numDraws, options$drawType)
         }
     }
     modelInputs$logitFuncs = setLogitFunctions(modelInputs)
@@ -89,34 +88,27 @@ scaleVar = function(var, scalingFactor) {
     return(list(scaledVar=scaledVar, scalingFactor=scalingFactor))
 }
 
-getParSetup = function(parNames, randPars, randPrice, modelSpace) {
-    parDist   = rep(0, length(parNames))
-    priceDist = 0
-    if (is.null(randPars)==F) {
-        normParNames  = names(which(randPars=='n'))
-        lnormParNames = names(which(randPars=='ln'))
-        parDist[which(parNames %in% normParNames)]  = 1
-        parDist[which(parNames %in% lnormParNames)] = 2
-    }
-    if (is.null(randPrice)==F) {
-        if (randPrice=='n') {
-            priceDist = 1
-        } else if (randPrice=='ln') {
-            priceDist = 2
+getParSetup = function(parNames, priceName, randPars, randPrice) {
+    parSetup = rep('f', length(parNames))
+    for (i in 1:length(parNames)) {
+        name = parNames[i]
+        if (name %in% names(randPars)) {
+            parSetup[i] = randPars[name]
         }
     }
-    if (modelSpace=='wtp') {
-        parNames = c('lambda', parNames)
-        parDist  = c(priceDist, parDist)
+    names(parSetup) = parNames
+    if (is.null(priceName)==F) {
+        if (is.null(randPrice)) {randPrice = 'f'}
+        parSetup = c(randPrice, parSetup)
+        names(parSetup)[1] = 'lambda'
     }
-    parSetup = data.frame(par=parNames, dist=parDist)
     return(parSetup)
 }
 
 getParNameList = function(parSetup) {
     # For mxl models, need both '.mu' and '.sigma' parameters
-    randParIDs        = which(parSetup$dist != 0)
-    parNameList       = as.character(parSetup$par)
+    randParIDs        = getRandParIDs(parSetup)
+    parNameList       = names(parSetup)
     parNameList.mu    = parNameList
     parNameList.sigma = parNameList[randParIDs]
     if (length(randParIDs) > 0) {
@@ -169,4 +161,20 @@ setEvalFunctions = function(modelInputs) {
         }
     }
     return(evalFuncs)
+}
+
+getFixedParIDs = function(parSetup) {
+    return(which(parSetup == 'f'))
+}
+
+getRandParIDs = function(parSetup) {
+    return(which(parSetup != 'f'))
+}
+
+getNormParIDs = function(parSetup) {
+    return(which(parSetup == 'n'))
+}
+
+getLogNormParIDs = function(parSetup) {
+    return(which(parSetup == 'ln'))
 }

@@ -9,11 +9,10 @@
 #' @export
 #' @examples
 #' # Run a MNL model in the Preference Space:
-#' choiceData = read.csv(
-#'     file   = 'https://raw.github.com/jhelvy/logitr/master/example/yogurt.csv', header = TRUE)
+#' data(yogurt)
 #'
 #' mnl.pref = logitr(
-#'   data       = choiceData,
+#'   data       = yogurt,
 #'   choiceName = 'choice',
 #'   obsIDName  = 'obsID',
 #'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
@@ -67,11 +66,10 @@ getPrefSpaceWtp = function(model, priceName) {
 #' @export
 #' @examples
 #' # Run a MNL model in the Preference Space:
-#' choiceData = read.csv(
-#'     file   = 'https://raw.github.com/jhelvy/logitr/master/example/yogurt.csv', header = TRUE)
+#' data(yogurt)
 #'
 #' mnl.pref = logitr(
-#'   data       = choiceData,
+#'   data       = yogurt,
 #'   choiceName = 'choice',
 #'   obsIDName  = 'obsID',
 #'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
@@ -81,7 +79,7 @@ getPrefSpaceWtp = function(model, priceName) {
 #'
 #' # Run a MNL model in the WTP Space:
 #' mnl.wtp = logitr(
-#'   data       = choiceData,
+#'   data       = yogurt,
 #'   choiceName = 'choice',
 #'   obsIDName  = 'obsID',
 #'   parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),

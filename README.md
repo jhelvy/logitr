@@ -105,6 +105,7 @@ The function returns a list of values, so assign the model output to a variable 
 |`modelSpace`|The model space (`'pref'` or `'wtp'`).|
 |`standardDraws`|The draws used during maximum simulated likelihood (for MXL models).|
 |`randParSummary`|A summary of any random parameters (for MXL models).|
+|`parSetup`|A summary of the distributional assumptions on each model parameter (`"f"`="fixed", `"n"`="normal distribution", `"ln"`="log-normal distribution").|
 |`options`|A list of all the model options.|
 
 ## Data File Setup

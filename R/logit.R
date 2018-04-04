@@ -108,8 +108,9 @@ mxlNegLLAndGradLL = function(pars, modelInputs){
     obsID         = modelInputs$obsID
     choice        = modelInputs$choice
     parSetup      = modelInputs$parSetup
+    numDraws      = modelInputs$options$numDraws
     standardDraws = modelInputs$standardDraws
-    betaDraws     = makeBetaDraws(pars, modelInputs)
+    betaDraws     = makeBetaDraws(pars, parSetup, numDraws, standardDraws)
     VDraws        = logitFuncs$getMxlV(betaDraws, X, p)
     logitDraws    = logitFuncs$getMxlLogit(VDraws, obsID)
     pHat          = rowMeans(logitDraws)
@@ -121,16 +122,19 @@ mxlNegLLAndGradLL = function(pars, modelInputs){
 
 # Returns the negative log-likelihood of an mxl (heterogeneous) model
 getMxlNegLL = function(pars, modelInputs){
-    X          = modelInputs$X
-    p          = modelInputs$price
-    logitFuncs = modelInputs$logitFuncs
-    obsID      = modelInputs$obsID
-    choice     = modelInputs$choice
-    betaDraws  = makeBetaDraws(pars, modelInputs)
-    VDraws     = logitFuncs$getMxlV(betaDraws, X, p)
-    logitDraws = logitFuncs$getMxlLogit(VDraws, obsID)
-    pHat       = rowMeans(logitDraws)
-    negLL      = logitFuncs$mxlNegLL(choice, pHat)
+    X             = modelInputs$X
+    p             = modelInputs$price
+    logitFuncs    = modelInputs$logitFuncs
+    obsID         = modelInputs$obsID
+    choice        = modelInputs$choice
+    parSetup      = modelInputs$parSetup
+    numDraws      = modelInputs$options$numDraws
+    standardDraws = modelInputs$standardDraws
+    betaDraws     = makeBetaDraws(pars, parSetup, numDraws, standardDraws)
+    VDraws        = logitFuncs$getMxlV(betaDraws, X, p)
+    logitDraws    = logitFuncs$getMxlLogit(VDraws, obsID)
+    pHat          = rowMeans(logitDraws)
+    negLL         = logitFuncs$mxlNegLL(choice, pHat)
     return(negLL)
 }
 
@@ -141,8 +145,9 @@ getMxlNegGradLL = function(pars, modelInputs) {
     obsID         = modelInputs$obsID
     choice        = modelInputs$choice
     parSetup      = modelInputs$parSetup
+    numDraws      = modelInputs$options$numDraws
     standardDraws = modelInputs$standardDraws
-    betaDraws     = makeBetaDraws(pars, modelInputs)
+    betaDraws     = makeBetaDraws(pars, parSetup, numDraws, standardDraws)
     VDraws        = logitFuncs$getMxlV(betaDraws, X, p)
     logitDraws    = logitFuncs$getMxlLogit(VDraws, obsID)
     pHat          = rowMeans(logitDraws)
@@ -234,10 +239,10 @@ getMxlV.pref = function(betaDraws, X, p) {
 # Computes the gradient of the negative likelihood for a mixed logit model.
 mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
     betaDraws, VDraws, logitDraws, pHat) {
-    randParIDs = which(parSetup$dist != 0)
+    randParIDs = getRandParIDs(parSetup)
     numDraws   = nrow(standardDraws)
-    numBetas   = ncol(standardDraws)
-    logNormIDs = which(parSetup$dist==2)
+    numBetas   = length(parSetup)
+    logNormParIDs = getLogNormParIDs(parSetup)
     repTimes   = rep(as.numeric(table(obsID)), each=2*numBetas)
     # Compute the gradient of V for all parameters
     grad = matrix(0, nrow=nrow(X), ncol=2*numBetas)
@@ -248,10 +253,11 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
         drawsMat = matrix(rep(draws, nrow(X)), ncol=numBetas, byrow=T)
         logitMat = matrix(rep(logit, numBetas), ncol=numBetas, byrow=F)
         logitMat = cbind(logitMat, logitMat)
-        if (length(logNormIDs) > 0) {
+        if (length(logNormParIDs) > 0) {
             beta     = betaDraws[i,]
             betaMat  = matrix(rep(beta, nrow(X)), ncol=numBetas, byrow=T)
-            Xtemp[,logNormIDs] = Xtemp[,logNormIDs]*betaMat[,logNormIDs]
+            Xtemp[,logNormParIDs] = Xtemp[,logNormParIDs] *
+                                    betaMat[,logNormParIDs]
         }
         partial.mu    = Xtemp
         partial.sigma = Xtemp*drawsMat
@@ -272,15 +278,15 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
 # # Gets rid of the loop, but it's slower:
 # mxlNegGradLL.pref2 = function(X, parSetup, obsID, choice, standardDraws,
 #     betaDraws, VDraws, logitDraws, pHat) {
-#     randParIDs = which(parSetup$dist != 0)
+#     randParIDs = getRandParIDs(parSetup)
 #     numDraws   = nrow(standardDraws)
-#     numBetas   = ncol(standardDraws)
-#     logNormIDs = which(parSetup$dist==2)
+#     numBetas   = length(parSetup)
+#     logNormParIDs = getLogNormParIDs(parSetup)
 #     # Get the partial matrices
 #     Xmat    = repmatRow(X, numDraws)
-#     if (length(logNormIDs) > 0) {
+#     if (length(logNormParIDs) > 0) {
 #         betaMat           = repmatRowEach(betaDraws, nrow(X))
-#         Xmat[,logNormIDs] = Xmat[,logNormIDs]*betaMat[,logNormIDs]
+#         Xmat[,logNormParIDs] = Xmat[,logNormParIDs]*betaMat[,logNormParIDs]
 #     }
 #     drawsMat      = repmatRowEach(standardDraws, nrow(X))
 #     partial.mu    = Xmat
@@ -374,13 +380,12 @@ mxlNegGradLL.wtp = function(X, parSetup, obsID, choice, standardDraws,
     betaDraws, VDraws, logitDraws, pHat) {
     stdDraws.lambda = standardDraws[,1]
     stdDraws.gamma  = standardDraws[,2:ncol(standardDraws)]
-    randParIDs      = which(parSetup$dist!=0)
+    randParIDs      = getRandParIDs(parSetup)
     numDraws        = nrow(standardDraws)
     numBetas        = ncol(X)
     numPars         = numBetas + 1 # +1 for lambda par
-    xParSetup       = parSetup[which(parSetup$par!='lambda'),]
-    xLogNormIDs     = which(xParSetup$dist==2)
-    lambdaDist      = parSetup[which(parSetup$par=='lambda'),]$dist
+    xParSetup       = parSetup[which(names(parSetup) != 'lambda')]
+    xLogNormIDs     = which(xParSetup == 'ln')
     repTimes        = rep(as.numeric(table(obsID)), each=2*numPars)
     lambdaDraws     = matrix(rep(betaDraws[,1], nrow(X)),ncol=numDraws,byrow=T)
     gammaDraws      = matrix(betaDraws[,2:ncol(betaDraws)], nrow=numDraws)
@@ -406,7 +411,7 @@ mxlNegGradLL.wtp = function(X, parSetup, obsID, choice, standardDraws,
         gamma.partial.mu    = lambdaMat*Xtemp
         gamma.partial.sigma = gamma.partial.mu*drawsMat.gamma
         lambda.partial.mu   = v / lambda
-        if (lambdaDist==2) {lambda.partial.mu = v}
+        if (parSetup['lambda'] == 'ln') {lambda.partial.mu = v}
         lambda.partial.sigma = lambda.partial.mu*drawsMat.lambda
         partial.mu    = cbind(lambda.partial.mu, gamma.partial.mu)
         partial.sigma = cbind(lambda.partial.sigma, gamma.partial.sigma)

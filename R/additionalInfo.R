@@ -19,8 +19,8 @@ appendModelInfo = function(model, modelInputs) {
         multistartNumber=model$multistartNumber, time=model$time,
         iterations=model$iterations, message=model$message,
         status=model$status, modelSpace=modelInputs$modelSpace,
-        standardDraws=NA, randParSummary=NA, options=options),
-        class='logitr')
+        standardDraws=NA, randParSummary=NA, parSetup=modelInputs$parSetup,
+        options=options), class='logitr')
     # If MXL model, attached draws and summary of parameter distributions
     if (modelInputs$modelType =='mxl') {
         result$standardDraws  = modelInputs$standardDraws
@@ -94,22 +94,18 @@ getModelStandErrs = function(coef, hessian) {
 }
 
 getRandParSummary = function(coef, modelInputs) {
-    temp       = modelInputs
-    parSetup   = modelInputs$parSetup
-    randParIDs = which(parSetup$dist != 0)
-    normIDs    = which(parSetup$dist==1)
-    logNormIDs = which(parSetup$dist==2)
-    temp$options$numDraws = 10^4
-    temp$standardDraws    = getStandardDraws(parSetup, temp$options)
-    betaDraws             = makeBetaDraws(coef, temp)
-    randParSummary        = apply(betaDraws, 2, summary)
+    parSetup       = modelInputs$parSetup
+    numDraws       = 10^4
+    randParIDs     = getRandParIDs(parSetup)
+    standardDraws  = getStandardDraws(parSetup, numDraws, 'halton')
+    betaDraws      = makeBetaDraws(coef, parSetup, 10^4, standardDraws)
+    randParSummary = apply(betaDraws, 2, summary)
     # Add names to summary
-    distName             = rep('', nrow(parSetup))
-    distName[normIDs]    = 'normal'
-    distName[logNormIDs] = 'log-normal'
-    parSetup$distName    = distName
-    summaryNames = paste(parSetup$par, ' (', parSetup$distName, ')', sep='')
+    distName = rep('', length(parSetup))
+    distName[getNormParIDs(parSetup)]    = 'normal'
+    distName[getLogNormParIDs(parSetup)] = 'log-normal'
+    summaryNames = paste(names(parSetup), ' (', distName, ')', sep='')
     colnames(randParSummary) = summaryNames
-    randParSummary           = t(randParSummary[,randParIDs])
+    randParSummary = t(randParSummary[,randParIDs])
     return(as.data.frame(randParSummary))
 }

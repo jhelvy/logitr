@@ -3,46 +3,43 @@
 # ============================================================================
 
 # Returns shifted normal draws for each parameter
-makeBetaDraws = function(pars, modelInputs){
-    muMat    = getMuMat(pars, modelInputs)
-    sigmaMat = getSigmaMat(pars, modelInputs)
+makeBetaDraws = function(pars, parSetup, numDraws, standardDraws) {
+    muMat    = getMuMat(pars, parSetup, numDraws)
+    sigmaMat = getSigmaMat(pars, parSetup, numDraws)
     # Shift draws by mu and sigma
-    betaDraws = muMat + modelInputs$standardDraws*sigmaMat
+    betaDraws = muMat + standardDraws*sigmaMat
     # Exponentiate draws for those with logN distribution
-    logNormIDs = which(modelInputs$parSetup$dist==2)
-    if (length(logNormIDs) > 0) {
-        betaDraws[,logNormIDs] = exp(betaDraws[,logNormIDs])
+    logNormParIDs = getLogNormParIDs(parSetup)
+    if (length(logNormParIDs) > 0) {
+        betaDraws[,logNormParIDs] = exp(betaDraws[,logNormParIDs])
     }
     return(betaDraws)
 }
 
-getMuMat = function(pars, modelInputs) {
-    pars.mu = pars[1:modelInputs$numBetas]
-    numDraws = modelInputs$options$numDraws
+getMuMat = function(pars, parSetup, numDraws) {
+    pars.mu = pars[1:length(parSetup)]
     return(matrix(rep(pars.mu, numDraws), ncol=length(pars.mu), byrow=T))
 }
 
-getSigmaMat = function(pars, modelInputs) {
-    numDraws   = modelInputs$options$numDraws
-    pars.sigma = rep(0, modelInputs$numBetas)
-    randParIDs = which(modelInputs$parSetup$dist != 0)
-    pars.sigma[randParIDs] = pars[(modelInputs$numBetas+1):length(pars)]
+getSigmaMat = function(pars, parSetup, numDraws) {
+    pars.sigma = rep(0, length(parSetup))
+    randParIDs = getRandParIDs(parSetup)
+    pars.sigma[randParIDs] = pars[(length(parSetup)+1):length(pars)]
     return(matrix(rep(pars.sigma, numDraws), ncol=length(pars.sigma),
            byrow=T))
 }
 
-getStandardDraws = function(parSetup, options) {
-    numDraws = options$numDraws
-    numBetas = nrow(parSetup)
+getStandardDraws = function(parSetup, numDraws, drawType='halton') {
+    numBetas = length(parSetup)
     # Use Halton draws by default
     draws = getHaltonDraws(numDraws, numBetas)
-    if (options$drawType=='normal') {
+    if (drawType=='normal') {
         draws = getNormalDraws(numDraws, numBetas)
     }
-    if (options$drawType=='sobol') {
+    if (drawType=='sobol') {
         draws = getSobolDraws(numDraws, numBetas)
     }
-    fixedParIDs = which(parSetup$dist==0)
+    fixedParIDs = getFixedParIDs(parSetup)
     draws[,fixedParIDs] = rep(0, numDraws)
     return(draws)
 }
