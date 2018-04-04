@@ -2,14 +2,28 @@
 # Functions for printing results and summaries
 # ============================================================================
 
-#' Prints a summary of an estimated model of the 'logitr' class.
+#' Prints a summary of an estimated model of the 'logitr' or
+#' 'logitr.multistart' class.
 #'
-#' Prints a summary of an estimated model of the 'logitr' class.
-#' @keywords logitr, summary
+#' Prints a summary of an estimated model of the 'logitr' or
+#' 'logitr.multistart' class.
+#' @keywords logitr, summary, logitr.multistart
 #' @export
 #' @examples
-#' # View a summary of an estimate model:
-#' summary(model)
+#' # Run a MNL model in the Preference Space with a multistart:
+#' data(yogurt)
+#'
+#' mnl.pref = logitr(
+#'   data       = yogurt,
+#'   choiceName = 'choice',
+#'   obsIDName  = 'obsID',
+#'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
+#'   options    = list(
+#'     numMultiStarts = 10,
+#'     keepAllRuns = TRUE))
+#'
+#' # View a summary of the model:
+#' summary(mnl.pref)
 summary.logitr = function(model) {
     if (is.logitr.multistart(model)) {
         # Print the multistart summary first and then print the summary of the
@@ -27,7 +41,7 @@ summary.logitr = function(model) {
         printModelSummary(model$bestModel)
     } else {
         if (class(model) != 'logitr') {
-            stop('Model must be estimated using the"logitr" package')
+            stop('Model must be estimated using the "logitr" package')
         }
         printModelSummary(model)
     }
@@ -131,28 +145,3 @@ getStatTable = function(logLik, nullLogLik, numObs, numParams) {
     colnames(result) = ''
     return(result)
 }
-
-#' Returns the coefficients of an estimated model of the 'logitr' class.
-#'
-#' Returns the coefficients of an estimated model of the 'logitr' class.
-#' @keywords logitr, coef
-#' @export
-#' @examples
-#' # Run a MNL model in the Preference Space:
-#' data(yogurt)
-#'
-#' mnl.pref = logitr(
-#'   data       = yogurt,
-#'   choiceName = 'choice',
-#'   obsIDName  = 'obsID',
-#'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
-#'
-#' # Get the model coefficients:
-#' coef(model)
-coef.logitr = function(model) {
-    if (!('logitr' %in% class(model))) {
-        stop('Model must be estimated using the"logitr" package')
-    }
-    return(model$coef)
-}
-

@@ -86,4 +86,27 @@ marketSimulation <- function(model, market, priceName, alpha) {
     UseMethod('marketSimulation', model)
 }
 
+#' Returns the coefficients of an estimated model of the 'logitr' class.
+#'
+#' Returns the coefficients of an estimated model of the 'logitr' class.
+#' @keywords logitr, coef
+#' @export
+#' @examples
+#' # Run a MNL model in the Preference Space:
+#' data(yogurt)
+#'
+#' mnl.pref = logitr(
+#'   data       = yogurt,
+#'   choiceName = 'choice',
+#'   obsIDName  = 'obsID',
+#'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
+#'
+#' # Get the model coefficients:
+#' coef(model)
+coef.logitr = function(model) {
+    if (!('logitr' %in% class(model))) {
+        stop('Model must be estimated using the"logitr" package')
+    }
+    return(model$coef)
+}
 
