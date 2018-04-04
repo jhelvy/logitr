@@ -51,7 +51,7 @@ ci = function(data, alpha=0.025) {
     L = quantile(data, alpha)
     U = quantile(data, 1-alpha)
     ests = c(B,L,U)
-    names(ests) = Cs(mean, low, high)
+    names(ests) = c('mean', 'low', 'high')
     return(ests)
 }
 
