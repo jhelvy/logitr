@@ -46,7 +46,7 @@ marketSimulation.logitr = function(model, market, priceName=NULL,alpha=0.025) {
     VDraws     = getVDraws(betaDraws, X, price)
     logitDraws = getMxlLogit(VDraws, rep(1, nrow(VDraws)))
     shares     = as.data.frame(t(apply(logitDraws, 1, ci, alpha=0.05)))
-    row.names(shares) = paste('Alt-', seq(nrow(X)), sep='')
+    row.names(shares) = paste('Alt: ', row.names(shares), sep='')
     return(shares)
 }
 

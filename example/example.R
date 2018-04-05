@@ -133,10 +133,11 @@ wtpCompare(mxl.pref, mxl.wtp, priceName='price.mu')
 # Run market simulation using MNL models
 
 # Create a market to simulate. Each row is an alternative and each column an
-# attribute. In this example, I just use the first choice observation from the
-# yogurt dataset:
-market = subset(yogurt, obsID==1,
+# attribute. In this example, I just use one of the choice observations from
+# the yogurt dataset:
+market = subset(yogurt, obsID==42,
          select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
+row.names(market) = c('dannon', 'hiland', 'weight', 'yoplait')
 market
 
 # Run the simulation using the preference space MNL model:
