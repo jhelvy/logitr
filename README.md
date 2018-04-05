@@ -5,6 +5,7 @@
 - Preference space utility parameterization.
 - WTP space utility parameterization.
 - A multistart optimization loop with random starting points in each iteration (useful for non-convex problems like MXL models or models with WTP space utility parameterizations).
+- A [market simulation](#market-simulations) function for computing the expected market shares of a set of alternatives using an estimated model.
 
 MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in [Kenneth Train's](http://eml.berkeley.edu/~train/) book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)*](http://eml.berkeley.edu/books/choice2.html).
 
