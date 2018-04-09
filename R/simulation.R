@@ -82,11 +82,11 @@ mxlMarketSimulation = function(model, market, priceName, alpha) {
         getVDraws = getMxlV.wtp
     }
     betaUncDraws  = getUncertaintyDraws(model, numDraws)
-    meanShare     = getSimPHat(coef(model), model, X, price, obsID)
+    meanShare     = getSimPHat(coef(model), model, X, price, obsID, getVDraws)
     logitUncDraws = matrix(0, nrow=nrow(X), ncol=nrow(betaUncDraws))
     for (i in 1:nrow(betaUncDraws)) {
         pars = betaUncDraws[i,]
-        logitUncDraws[,i] = getSimPHat(pars, model, X, price, obsID)
+        logitUncDraws[,i] = getSimPHat(pars, model, X, price, obsID, getVDraws)
     }
     shares      = as.data.frame(t(apply(logitUncDraws, 1, ci, alpha=0.05)))
     shares$mean = meanShare
@@ -106,7 +106,7 @@ selectSimDraws = function(betaDraws, model, X) {
     return(as.matrix(betaDraws))
 }
 
-getSimPHat = function(pars, model, X, price, obsID) {
+getSimPHat = function(pars, model, X, price, obsID, getVDraws) {
     betaDraws = makeBetaDraws(pars, model$parSetup, model$options$numDraws,
                 model$standardDraws)
     colnames(betaDraws) = names(model$parSetup)
