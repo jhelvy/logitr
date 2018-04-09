@@ -153,9 +153,9 @@ simulation = marketSimulation(model, market, priceName=NULL, alpha=0.025)
 
 |    Argument    |    Description    |    Default    |
 |:---------------|:------------------|:--------------|
-|`model`|A model estimated using the `logitr` package.| -- |
+|`model`|A MNL or MXL model estimated using the `logitr` package.| -- |
 |`market`|A data frame of the market alternatives. Each row should be an alternative, and each column an attribute for which there is a corresponding coefficient in the estimated model.| -- |
-|`priceName`|The name of the column that identifies the price variable. Only required for WTP space models.|`NULL`|
+|`priceName`|The name of the column in the `market` that identifies price (only required for WTP space models).|`NULL`|
 |`alpha`|The significance level for the confidence interval (e.g. `0.025` results in a 95% CI).| `0.025` |
 
 # Author, Version, and License Information

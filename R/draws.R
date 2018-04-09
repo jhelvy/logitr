@@ -17,16 +17,19 @@ makeBetaDraws = function(pars, parSetup, numDraws, standardDraws) {
 }
 
 getMuMat = function(pars, parSetup, numDraws) {
-    pars.mu = pars[1:length(parSetup)]
-    return(matrix(rep(pars.mu, numDraws), ncol=length(pars.mu), byrow=T))
+    pars.mu = as.numeric(pars[1:length(parSetup)])
+    muMat   = matrix(rep(pars.mu, numDraws), ncol=length(pars.mu), byrow=T)
+    return(muMat)
 }
 
 getSigmaMat = function(pars, parSetup, numDraws) {
+    numPars    = length(parSetup)
     pars.sigma = rep(0, length(parSetup))
     randParIDs = getRandParIDs(parSetup)
-    pars.sigma[randParIDs] = pars[(length(parSetup)+1):length(pars)]
-    return(matrix(rep(pars.sigma, numDraws), ncol=length(pars.sigma),
-           byrow=T))
+    pars.sigma[randParIDs] = as.numeric(pars[(numPars+1):length(pars)])
+    sigmaMat = matrix(rep(pars.sigma, numDraws), ncol=length(pars.sigma),
+               byrow=T)
+    return(sigmaMat)
 }
 
 getStandardDraws = function(parSetup, numDraws, drawType='halton') {

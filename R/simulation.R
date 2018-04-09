@@ -20,12 +20,14 @@
 #'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
 #'
 #' # Create a market to simulate.
-#' market = subset(yogurt, obsID==1,
+#' market = subset(yogurt, obsID==42,
 #'          select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
+#' row.names(market) = c('dannon', 'hiland', 'weight', 'yoplait')
+#' market
 #'
 #' # Run the simulation using the estimated preference space MNL model:
 #' marketSimulation(mnl.pref, market, alpha=0.025)
-marketSimulation.logitr = function(model, market, priceName=NULL,alpha=0.025) {
+marketSimulation.logitr = function(model, market, priceName=NULL, alpha=0.025){
     if (!is.logitr(model)) {
         stop('Model must be estimated using the "logitr" package')
     }
@@ -34,50 +36,83 @@ marketSimulation.logitr = function(model, market, priceName=NULL,alpha=0.025) {
             '\n', sep='')
         model = model$bestModel
     }
-    getVDraws = setVDraws(model, priceName)
-    attributeNames = colnames(market)
-    X = as.matrix(market[attributeNames])
-    price = NA
-    if (model$modelSpace=='wtp') {
-        price = -1*market[,which(colnames(market)==priceName)]
-        X = as.matrix(market[attributeNames[which(attributeNames != 'price')]])
+    if (isMxlModel(model$parSetup)) {
+        return(mxlMarketSimulation(model, market, priceName, alpha))
+    } else {
+        return(mnlMarketSimulation(model, market, priceName, alpha))
     }
-    betaDraws  = getSimulationBetaDraws(model, X, numDraws=10^4)
-    VDraws     = getVDraws(betaDraws, X, price)
-    logitDraws = getMxlLogit(VDraws, rep(1, nrow(VDraws)))
-    shares     = as.data.frame(t(apply(logitDraws, 1, ci, alpha=0.05)))
-    row.names(shares) = paste('Alt: ', row.names(shares), sep='')
+}
+
+mnlMarketSimulation = function(model, market, priceName, alpha) {
+    numDraws     = 10^4
+    getVUncDraws = getMxlV.pref
+    getV         = getMnlV.pref
+    attNames     = colnames(market)
+    X            = as.matrix(market[attNames])
+    price        = NA
+    obsID        = rep(1, nrow(X))
+    if (model$modelSpace=='wtp') {
+        price        = -1*market[,which(colnames(market)==priceName)]
+        X            = as.matrix(market[attNames[which(attNames != 'price')]])
+        getVUncDraws = getMxlV.wtp
+        getV         = getMnlV.wtp
+    }
+    betaUncDraws  = getUncertaintyDraws(model, numDraws)
+    betaUncDraws  = selectSimDraws(betaUncDraws, model, X)
+    V             = getV(coef(model)[colnames(betaUncDraws)], X, price)
+    meanShare     = getMnlLogit(V, obsID)
+    VUncDraws     = getVUncDraws(betaUncDraws, X, price)
+    logitUncDraws = getMxlLogit(VUncDraws, obsID)
+    shares        = as.data.frame(t(apply(logitUncDraws, 1, ci, alpha=0.05)))
+    shares$mean   = meanShare
+    row.names(shares) = paste('Alt: ', row.names(market), sep='')
     return(shares)
 }
 
-setVDraws = function(model, priceName) {
-    if (model$modelSpace == 'pref') {
-        getVDraws = getMxlV.pref
-    } else if (model$modelSpace == 'wtp') {
+mxlMarketSimulation = function(model, market, priceName, alpha) {
+    numDraws  = 10^4
+    getVDraws = getMxlV.pref
+    attNames  = colnames(market)
+    X         = as.matrix(market[attNames])
+    price     = NA
+    obsID     = rep(1, nrow(X))
+    if (model$modelSpace=='wtp') {
+        price     = -1*market[,which(colnames(market)==priceName)]
+        X         = as.matrix(market[attNames[which(attNames != 'price')]])
         getVDraws = getMxlV.wtp
-        if (is.null(priceName)) {
-            stop('This is a WTP space model - must provide "priceName"')
-        }
     }
-    return(getVDraws)
+    betaUncDraws  = getUncertaintyDraws(model, numDraws)
+    meanShare     = getSimPHat(coef(model), model, X, price, obsID)
+    logitUncDraws = matrix(0, nrow=nrow(X), ncol=nrow(betaUncDraws))
+    for (i in 1:nrow(betaUncDraws)) {
+        pars = betaUncDraws[i,]
+        logitUncDraws[,i] = getSimPHat(pars, model, X, price, obsID)
+    }
+    shares      = as.data.frame(t(apply(logitUncDraws, 1, ci, alpha=0.05)))
+    shares$mean = meanShare
+    row.names(shares) = paste('Alt: ', row.names(market), sep='')
+    return(shares)
 }
 
-getSimulationBetaDraws = function(model, X, numDraws) {
-    betaDraws = getUncertaintyDraws(model, numDraws)
+selectSimDraws = function(betaDraws, model, X) {
+    betaDraws = as.data.frame(betaDraws)
     if (model$modelSpace=='wtp') {
         lambdaDraws = betaDraws['lambda']
         gammaDraws  = betaDraws[colnames(X)]
         betaDraws   = cbind(lambdaDraws, gammaDraws)
-    } else if (model$modelSpace=='pref'){
+    } else {
         betaDraws = betaDraws[colnames(X)]
-    }
-    if (length(unique(model$parSetup)) > 1) {
-        # This is a MXL model, so include heterogeneity terms for making draws
-        betaDraws = betaDraws
     }
     return(as.matrix(betaDraws))
 }
 
-
-
-
+getSimPHat = function(pars, model, X, price, obsID) {
+    betaDraws = makeBetaDraws(pars, model$parSetup, model$options$numDraws,
+                model$standardDraws)
+    colnames(betaDraws) = names(model$parSetup)
+    betaDraws  = selectSimDraws(betaDraws, model, X)
+    VDraws     = getVDraws(betaDraws, X, price)
+    logitDraws = getMxlLogit(VDraws, obsID)
+    pHat       = rowMeans(logitDraws)
+    return(pHat)
+}

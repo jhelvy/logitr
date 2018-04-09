@@ -130,7 +130,7 @@ wtpCompare(mxl.pref, mxl.wtp, priceName='price.mu')
 # 5(3), 313–331.
 
 # ============================================================================
-# Run market simulation using MNL models
+# Run Market Simulation Using Estimated Models
 
 # Create a market to simulate. Each row is an alternative and each column an
 # attribute. In this example, I just use one of the choice observations from
@@ -156,12 +156,18 @@ mnl.wtp.simulation
 # of the price attribute in the market argument and must be included for
 # WTP space models.
 
-# Plot simulation results
+# Market simulations can also be run using MXL models:
+mxl.pref.simulation = marketSimulation(mxl.pref, market, alpha=0.025)
+mxl.pref.simulation
+
+# Plot simulation results from preference space MNL model:
 library(ggplot2)
-mnl.pref.simulation$alt = seq(nrow(mnl.pref.simulation))
+mnl.pref.simulation$alt = row.names(mnl.pref.simulation)
 ggplot(mnl.pref.simulation, aes(x=alt, y=mean)) +
     geom_bar(stat='identity', width=0.7) +
     geom_errorbar(aes(ymin=low, ymax=high), width=0.2) +
     scale_y_continuous(limits=c(0,1)) +
     labs(x='Market Share', y='Alternative') +
     theme_bw()
+
+

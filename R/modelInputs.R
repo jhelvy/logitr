@@ -23,7 +23,7 @@ getModelInputs = function(data, choiceName, obsIDName, parNames, randPars,
         parNameList=parNameList, parSetup=parSetup, scaleFactors=NA,
         modelSpace=modelSpace, modelType='mnl', options=options)
     if (options$scaleInputs) {modelInputs = scaleInputs(modelInputs)}
-    if (length(unique(parSetup)) > 1) {
+    if (isMxlModel(parSetup)) {
         modelInputs$modelType     = 'mxl'
         modelInputs$standardDraws = options$standardDraws
         if (is.null(options$standardDraws)) {
@@ -31,8 +31,9 @@ getModelInputs = function(data, choiceName, obsIDName, parNames, randPars,
                 options$numDraws, options$drawType)
         }
     }
-    modelInputs$logitFuncs = setLogitFunctions(modelInputs)
-    modelInputs$evalFuncs  = setEvalFunctions(modelInputs)
+    modelInputs$logitFuncs = setLogitFunctions(modelSpace)
+    modelInputs$evalFuncs  = setEvalFunctions(modelInputs$modelType,
+                             options$useAnalyticGrad)
     return(modelInputs)
 }
 
@@ -118,7 +119,7 @@ getParNameList = function(parSetup) {
     return(list(mu=parNameList.mu, sigma=parNameList.sigma))
 }
 
-setLogitFunctions = function(modelInputs) {
+setLogitFunctions = function(modelSpace) {
     logitFuncs = list(
         getMnlLogit  = getMnlLogit,
         mnlNegLL     = mnlNegLL,
@@ -129,7 +130,7 @@ setLogitFunctions = function(modelInputs) {
         mxlNegLL     = mxlNegLL,
         getMxlV      = getMxlV.pref,
         mxlNegGradLL = mxlNegGradLL.pref)
-    if (modelInputs$modelSpace=='wtp') {
+    if (modelSpace=='wtp') {
         logitFuncs$getMnlV      = getMnlV.wtp
         logitFuncs$mnlNegGradLL = mnlNegGradLL.wtp
         logitFuncs$mnlHessLL    = mnlHessLL.wtp
@@ -139,23 +140,23 @@ setLogitFunctions = function(modelInputs) {
     return(logitFuncs)
 }
 
-setEvalFunctions = function(modelInputs) {
+setEvalFunctions = function(modelType, useAnalyticGrad) {
     evalFuncs = list(
         objective = mnlNegLLAndNumericGradLL,
         negLL     = getMnlNegLL,
         negGradLL = getNumericNegGradLL,
         hessLL    = getNumericHessLL)
-    if (modelInputs$options$useAnalyticGrad) {
+    if (useAnalyticGrad) {
         evalFuncs$objective = mnlNegLLAndGradLL
         evalFuncs$negGradLL = getMnlNegGradLL
         # evalFuncs$hessLL    = getMnlHessLL # Numeric approx is faster
     }
-    if (modelInputs$modelType=='mxl') {
+    if (modelType=='mxl') {
         evalFuncs$objective = mxlNegLLAndNumericGradLL
         evalFuncs$negLL     = getMxlNegLL
         evalFuncs$negGradLL = getNumericNegGradLL
         evalFuncs$hessLL    = getNumericHessLL
-        if (modelInputs$options$useAnalyticGrad) {
+        if (useAnalyticGrad) {
             evalFuncs$objective = mxlNegLLAndGradLL
             evalFuncs$negGradLL = getMxlNegGradLL
         }
@@ -177,4 +178,8 @@ getNormParIDs = function(parSetup) {
 
 getLogNormParIDs = function(parSetup) {
     return(which(parSetup == 'ln'))
+}
+
+isMxlModel = function(parSetup) {
+    return(('n' %in% parSetup) | ('ln' %in% parSetup))
 }
