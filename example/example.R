@@ -167,7 +167,7 @@ ggplot(mnl.pref.simulation, aes(x=alt, y=mean)) +
     geom_bar(stat='identity', width=0.7) +
     geom_errorbar(aes(ymin=low, ymax=high), width=0.2) +
     scale_y_continuous(limits=c(0,1)) +
-    labs(x='Market Share', y='Alternative') +
+    labs(x='Alternative', y='Market Share') +
     theme_bw()
 
 
