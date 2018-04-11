@@ -64,8 +64,9 @@ mnlMarketSimulation = function(model, market, priceName, alpha) {
     VUncDraws     = getVUncDraws(betaUncDraws, X, price)
     logitUncDraws = getMxlLogit(VUncDraws, obsID)
     shares        = as.data.frame(t(apply(logitUncDraws, 1, ci, alpha=0.05)))
-    shares$mean   = meanShare
+    shares$mean   = as.numeric(meanShare)
     row.names(shares) = paste('Alt: ', row.names(market), sep='')
+    colnames(shares)  = c('share.mean', 'share.low', 'share.high')
     return(shares)
 }
 
