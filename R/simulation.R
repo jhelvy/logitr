@@ -92,6 +92,7 @@ mxlMarketSimulation = function(model, market, priceName, alpha) {
     shares      = as.data.frame(t(apply(logitUncDraws, 1, ci, alpha=0.05)))
     shares$mean = meanShare
     row.names(shares) = paste('Alt: ', row.names(market), sep='')
+    colnames(shares)  = c('share.mean', 'share.low', 'share.high')
     return(shares)
 }
 
