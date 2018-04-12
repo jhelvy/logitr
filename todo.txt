@@ -2,4 +2,3 @@
 - The current MXL analytic gradients are not very efficient (they have loops).
   Maybe I can revise them for efficiency by using matrix operations?
 - Consider adding support for latent class models
-- Make plot of search space with all multistarts?

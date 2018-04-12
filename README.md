@@ -43,7 +43,7 @@ library('logitr')
 The main optimization loop uses the `nloptr` function to minimize the negative log-likelihood function. `nloptr` is used instead of the Base R `optim` because it allows for both the objective and gradient functions to be included in one function. This speeds up computation time considerably because both the objective and gradient functions require many of the same calculations (e.g. computing the probabilities), which only have to be computed once in `nloptr` (`optim` requires separate objective and gradient functions, so many calculations are repeated within each iteration of the optimization loop).
 
 # Using `logitr()`
-(See the './example' folder for an example)
+(For a detailed example, see the './examples/example.R' file)
 
 The main model estimation function is the `logitr()` function:
 
