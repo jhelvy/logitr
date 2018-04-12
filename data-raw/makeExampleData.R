@@ -1,57 +1,43 @@
 # ============================================================================
 # Add the mlogit yogurt dataset to the logitr package
 # ============================================================================
+setwd('/Users/jhelvy/Documents/github/logitr')
 
-# Load libraries and functions
+# Load libraries
 library(devtools)
 library(roxygen2)
 library(mlogit)
 library(dplyr)
 library(tidyr)
-setwd('/Users/jhelvy/Documents/github/logitr')
 
-# Dummy codes a vector of characters into a matrix with one level dummied out
-dummyCode = function(data, dummyName) {
-    levels = levels(data)
-    levels = levels[-which(levels==dummyName)]
-    result = matrix(0, nrow=length(data), ncol=length(levels))
-    colnames(result) = levels
-    for (i in 1:nrow(result)) {
-        for (j in 1:ncol(result)) {
-            if (data[i]==levels[j]) {
-                result[i,j] = 1
-            }
-        }
-    }
-    return(result)
-}
-
-# ============================================================================
 # Create data-raw folder
 devtools::use_data_raw()
 
-# Import 'Yogurt' dataset from the mlogit package
+# Load the 'Yogurt' dataset from the mlogit package
 data(Yogurt)
 
 # Format the Yogurt dataset for use in logitr
 Yogurt$obsID = 1:nrow(Yogurt)
+brandDummies = data.frame(
+    brand   = as.character(c('dannon', 'hiland', 'weight', 'yoplait')),
+    dannon  = c(1, 0, 0, 0),
+    hiland  = c(0, 1, 0, 0),
+    weight  = c(0, 0, 1, 0),
+    yoplait = c(0, 0, 0, 1))
 yogurt = Yogurt %>%
     gather(brand, attributeValue, feat.yoplait:price.weight) %>%
     separate(brand, into=c('attributeName', 'brand'), sep='\\.') %>%
     spread(attributeName, attributeValue) %>%
     mutate(choice=ifelse(choice==brand, 1, 0)) %>%
-    arrange(obsID)
-
-# Dummy code the brand attribute using the 'weight' (weight watcher) brand as
-# the dummy brand
-brandsDummyCoded = dummyCode(as.factor(yogurt$brand), 'weight')
-yogurt = cbind(yogurt, brandsDummyCoded)
+    arrange(obsID) %>%
+    left_join(brandDummies) %>%
+    select(id, obsID, choice, price, feat, brand, dannon, hiland, weight,
+           yoplait)
 
 # Save the formatted yogurt dataset
-devtools::use_data(yogurt)
+devtools::use_data(yogurt, overwrite=TRUE)
 
-
-# Description of 'yogurt' dataset:
+# Description of 'Yogurt' dataset, from the mlogit package:
 # ============================================================================
 # The example data set is the 'Yogurt' dataset from the mlogit package
 # This file reformats the dataset into a form appropriate for use in the
