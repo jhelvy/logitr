@@ -113,7 +113,7 @@ mxlNegLLAndGradLL = function(pars, modelInputs){
     betaDraws     = makeBetaDraws(pars, parSetup, numDraws, standardDraws)
     VDraws        = logitFuncs$getMxlV(betaDraws, X, p)
     logitDraws    = logitFuncs$getMxlLogit(VDraws, obsID)
-    pHat          = rowMeans(logitDraws)
+    pHat          = rowMeans(logitDraws, na.rm=T)
     negLL         = logitFuncs$mxlNegLL(choice, pHat)
     negGradLL     = logitFuncs$mxlNegGradLL(X, parSetup, obsID, choice,
                     standardDraws, betaDraws, VDraws, logitDraws, pHat)
@@ -133,7 +133,7 @@ getMxlNegLL = function(pars, modelInputs){
     betaDraws     = makeBetaDraws(pars, parSetup, numDraws, standardDraws)
     VDraws        = logitFuncs$getMxlV(betaDraws, X, p)
     logitDraws    = logitFuncs$getMxlLogit(VDraws, obsID)
-    pHat          = rowMeans(logitDraws)
+    pHat          = rowMeans(logitDraws, na.rm=T)
     negLL         = logitFuncs$mxlNegLL(choice, pHat)
     return(negLL)
 }
@@ -150,7 +150,7 @@ getMxlNegGradLL = function(pars, modelInputs) {
     betaDraws     = makeBetaDraws(pars, parSetup, numDraws, standardDraws)
     VDraws        = logitFuncs$getMxlV(betaDraws, X, p)
     logitDraws    = logitFuncs$getMxlLogit(VDraws, obsID)
-    pHat          = rowMeans(logitDraws)
+    pHat          = rowMeans(logitDraws, na.rm=T)
     negGradLL     = logitFuncs$mxlNegGradLL(X, parSetup, obsID, choice,
                     standardDraws, betaDraws, VDraws, logitDraws, pHat)
     return(negGradLL)

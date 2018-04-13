@@ -47,9 +47,9 @@ convertTime <- function(time){
 
 # Returns a confidence interval from a vector of data
 ci = function(data, alpha=0.025) {
-    B = mean(data)
-    L = quantile(data, alpha)
-    U = quantile(data, 1-alpha)
+    B = mean(data, na.rm=T)
+    L = quantile(data, alpha, na.rm=T)
+    U = quantile(data, 1-alpha, na.rm=T)
     ests = c(B,L,U)
     names(ests) = c('mean', 'low', 'high')
     return(ests)

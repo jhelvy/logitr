@@ -115,6 +115,6 @@ getSimPHat = function(pars, model, X, price, obsID, getVDraws) {
     betaDraws  = selectSimDraws(betaDraws, model, X)
     VDraws     = getVDraws(betaDraws, X, price)
     logitDraws = getMxlLogit(VDraws, obsID)
-    pHat       = rowMeans(logitDraws)
+    pHat       = rowMeans(logitDraws, na.rm=T)
     return(pHat)
 }
