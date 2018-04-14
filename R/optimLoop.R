@@ -15,18 +15,12 @@ runMultistart = function(modelInputs) {
         logLik        = NA
         noFirstRunErr = TRUE
         while (is.na(logLik)) {
-        tryCatch({
-            startPars = getRandomStartPars(modelInputs)
-            if ((is.null(modelInputs$options$startVals)==F) &
-                (i==1) & noFirstRunErr) {
-                cat('**Using User Provided Starting Values For This Run**',
-                    '\n', sep='')
-                startPars = modelInputs$options$startVals
-            }
-            model  = runModel(modelInputs, startPars)
-            logLik = model$logLik
-            model$multistartNumber = i
-        }, error=function(e){
+            tryCatch({
+                startPars = getStartPars(modelInputs, i, noFirstRunErr)
+                model     = runModel(modelInputs, startPars)
+                logLik    = model$logLik
+                model$multistartNumber = i
+            }, error=function(e) {
             cat('ERROR: failed to converge...restarting search', '\n',
                 sep='')})
             if (i==1 & is.na(logLik)) {
@@ -38,6 +32,22 @@ runMultistart = function(modelInputs) {
         models[[i]] = model
     }
     return(models)
+}
+
+getStartPars = function(modelInputs, i, noFirstRunErr) {
+    startPars = getRandomStartPars(modelInputs)
+    if (i==1) {
+        startPars = 0*startPars
+        if (noFirstRunErr & is.null(modelInputs$options$startVals)==F) {
+            cat('**Using User Provided Starting Values For This Run**',
+                '\n', sep='')
+            startPars = modelInputs$options$startVals
+        }
+    }
+    if (i==2 & noFirstRunErr & is.null(modelInputs$options$startVals)==F) {
+        startPars = 0*startPars
+    }
+    return(startPars)
 }
 
 # Returns randomly drawn starting parameters from a uniform distribution
