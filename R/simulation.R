@@ -43,7 +43,7 @@ marketSimulation.logitr = function(model, market, priceName=NULL, alpha=0.025){
     }
 }
 
-mnlMarketSimulation = function(model, market, priceName, alpha) {
+mnlMarketSimulation = function(model, market, priceName, alpha=0.025) {
     numDraws     = 10^4
     getVUncDraws = getMxlV.pref
     getV         = getMnlV.pref
@@ -63,14 +63,14 @@ mnlMarketSimulation = function(model, market, priceName, alpha) {
     meanShare     = getMnlLogit(V, obsID)
     VUncDraws     = getVUncDraws(betaUncDraws, X, price)
     logitUncDraws = getMxlLogit(VUncDraws, obsID)
-    shares        = as.data.frame(t(apply(logitUncDraws, 1, ci, alpha=0.05)))
+    shares        = as.data.frame(t(apply(logitUncDraws, 1, ci, alpha)))
     shares$mean   = as.numeric(meanShare)
     row.names(shares) = paste('Alt: ', row.names(market), sep='')
     colnames(shares)  = c('share.mean', 'share.low', 'share.high')
     return(shares)
 }
 
-mxlMarketSimulation = function(model, market, priceName, alpha) {
+mxlMarketSimulation = function(model, market, priceName, alpha=0.025) {
     numDraws  = 10^4
     getVDraws = getMxlV.pref
     attNames  = colnames(market)
@@ -89,7 +89,7 @@ mxlMarketSimulation = function(model, market, priceName, alpha) {
         pars = betaUncDraws[i,]
         logitUncDraws[,i] = getSimPHat(pars, model, X, price, obsID, getVDraws)
     }
-    shares      = as.data.frame(t(apply(logitUncDraws, 1, ci, alpha=0.05)))
+    shares      = as.data.frame(t(apply(logitUncDraws, 1, ci, alpha)))
     shares$mean = meanShare
     row.names(shares) = paste('Alt: ', row.names(market), sep='')
     colnames(shares)  = c('share.mean', 'share.low', 'share.high')
