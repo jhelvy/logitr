@@ -4,8 +4,8 @@
 
 appendModelInfo = function(model, modelInputs) {
     # Compute variables
-    coef       = getModelPars(model, modelInputs)
-    gradient   = -1*modelInputs$evalFuncs$negGradLL(coef, modelInputs)
+    coef       = getModelCoefs(model, modelInputs)
+    gradient   = getModelGradient(model, modelInputs)
     hessian    = getModelHessian(model, modelInputs)
     se         = getModelStandErrs(coef, hessian)
     logLik     = as.numeric(model$logLik)
@@ -29,38 +29,41 @@ appendModelInfo = function(model, modelInputs) {
     return(result)
 }
 
-getModelPars= function(model, modelInputs) {
+getUnscaledPars = function(model, modelInputs) {
     pars        = model$solution
     muNames     = modelInputs$parNameList$mu
     sigmaNames  = modelInputs$parNameList$sigma
     names(pars) = c(muNames, sigmaNames)
+    return(pars)
+}
+
+getModelCoefs = function(model, modelInputs) {
+    pars = getUnscaledPars(model, modelInputs)
     if (modelInputs$options$scaleInputs) {
         scaleFactors = getModelScaleFactors(model, modelInputs)
-        pars = pars / scaleFactors
-        if (modelInputs$modelSpace=='wtp') {
-            priceScaleFactor = scaleFactors[1]
-            pars             = pars*priceScaleFactor
-            pars[1]          = pars[1]/priceScaleFactor
-        }
+        pars         = pars / scaleFactors
     }
     # Make sigmas positive
+    sigmaNames  = modelInputs$parNameList$sigma
     pars[sigmaNames] = abs(pars[sigmaNames])
     return(pars)
 }
 
+getModelGradient = function(model, modelInputs) {
+    pars     = getUnscaledPars(model, modelInputs)
+    gradient = -1*modelInputs$evalFuncs$negGradLL(pars, modelInputs)
+    names(gradient) = names(pars)
+    return(gradient)
+}
+
 getModelHessian = function(model, modelInputs) {
-    hessian = modelInputs$evalFuncs$hessLL(model$solution, modelInputs)
+    pars    = getUnscaledPars(model, modelInputs)
+    hessian = modelInputs$evalFuncs$hessLL(pars, modelInputs)
     if (modelInputs$options$scaleInputs) {
         scaleFactors = getModelScaleFactors(model, modelInputs)
         sf           = matrix(scaleFactors, ncol=1)
         sfMat        = sf %*% t(sf)
         hessian      = hessian*sfMat
-        if (modelInputs$modelSpace=='wtp') {
-            priceScaleFactor = scaleFactors[1]
-            hessian          = hessian/priceScaleFactor^2
-            hessian[1,]      = hessian[1,]*priceScaleFactor
-            hessian[,1]      = hessian[,1]*priceScaleFactor
-        }
     }
     parNames = c(modelInputs$parNameList$mu, modelInputs$parNameList$sigma)
     colnames(hessian)  = parNames
@@ -69,16 +72,23 @@ getModelHessian = function(model, modelInputs) {
 }
 
 getModelScaleFactors = function(model, modelInputs) {
+    scaleFactors = modelInputs$scaleFactors
+    if (modelInputs$modelSpace=='wtp') {
+        lambdaID    = which(grepl('lambda', names(scaleFactors))==T)
+        nonLambdaID = which(grepl('lambda', names(scaleFactors))==F)
+        lambdaSF    = scaleFactors[lambdaID]
+        scaleFactors[nonLambdaID] = scaleFactors[nonLambdaID]/lambdaSF
+    }
     if (modelInputs$modelType=='mnl') {
-        return(modelInputs$scaleFactors)
+        return(scaleFactors)
     } else {
         parNames = c(modelInputs$parNameList$mu, modelInputs$parNameList$sigma)
-        scaleFactors = modelInputs$scaleFactors
         mxlScaleFactors = rep(0, length(parNames))
         for (i in 1:length(scaleFactors)) {
             scaleFactor = scaleFactors[i]
             factorIDs   = which(grepl(names(scaleFactor), parNames))
             mxlScaleFactors[factorIDs] = scaleFactor
+            names(mxlScaleFactors)[factorIDs] = parNames[factorIDs]
         }
         return(mxlScaleFactors)
     }

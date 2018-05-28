@@ -270,7 +270,7 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
     grad           = grad / numDraws
     pHatInvChosen  = matrix(rep(choice*(1/pHat), 2*numBetas), ncol=2*numBetas,
                             byrow=F)
-    grad      = colSums(pHatInvChosen*grad)
+    grad      = colSums(pHatInvChosen*grad, na.rm=TRUE)
     negGradLL = -1*grad[c(1:numBetas, numBetas + randParIDs)]
     return(negGradLL)
 }
@@ -302,7 +302,8 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
 #                     byrow=F)
 
 #     gradGroup     = rep(seq(nrow(X)), numDraws)
-#     grad          = rowsum(logitMat*(partial - tempMat), group=gradGroup)
+#     grad          = rowsum(logitMat*(partial - tempMat), group=gradGroup,
+#                     na.rm=TRUE)
 #     negGradLL     = -1*((choice / pHat) %*% (grad / numDraws))
 #     return(negGradLL[c(1:numBetas, numBetas + randParIDs)])
 # }
@@ -424,7 +425,7 @@ mxlNegGradLL.wtp = function(X, parSetup, obsID, choice, standardDraws,
     grad           = grad / numDraws
     pHatInvChosen  = matrix(rep(choice*(1/pHat), 2*numPars), ncol=2*numPars,
                             byrow=F)
-    grad      = colSums(pHatInvChosen*grad)
+    grad      = colSums(pHatInvChosen*grad, na.rm=TRUE)
     negGradLL = -1*grad[c(1:numPars, numPars + randParIDs)]
     return(negGradLL)
 }
