@@ -113,9 +113,8 @@ halton <- function(prime = 3, length = 100, drop = 10){
 }
 
 getUncertaintyDraws = function(model, numDraws) {
-    coefs  = coef(model)
     varcov = abs(solve(as.matrix(model$hessian)))
-    draws  = data.frame(mvrnorm(numDraws, coefs, varcov))
+    draws  = data.frame(mvrnorm(numDraws, model$coef, varcov))
     return(draws)
 }
 

@@ -47,6 +47,7 @@ getStartPars = function(modelInputs, i, noFirstRunErr) {
     if (i==2 & noFirstRunErr & is.null(modelInputs$options$startVals)==F) {
         startPars = 0*startPars
     }
+    startPars = checkPars(startPars, modelInputs)
     return(startPars)
 }
 
@@ -62,6 +63,16 @@ getRandomStartPars = function(modelInputs) {
     pars.sigma = runif(length(parNameList$sigma), lower, upper)
     startPars  = c(pars.mu, pars.sigma)
     names(startPars) = c(parNameList$mu, parNameList$sigma)
+    return(startPars)
+}
+
+# For mxl models in the WTP space, lambda.mu can't be zero
+checkPars = function(startPars, modelInputs) {
+    if (modelInputs$modelSpace == 'wtp' & modelInputs$modelType == 'mxl') {
+        if (startPars['lambda.mu'] <= 0) {
+            startPars['lambda.mu'] = 0.01
+        }
+    }
     return(startPars)
 }
 
@@ -85,3 +96,4 @@ runModel = function(modelInputs, startPars) {
     model$time      = proc.time() - startTime
     return(model)
 }
+
