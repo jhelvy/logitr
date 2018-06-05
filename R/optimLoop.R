@@ -74,6 +74,8 @@ checkStartPars = function(startPars, modelInputs) {
         'lambda.mu' %in% modelInputs$parNameList$mu) {
         if (startPars['lambda.mu'] <= 0) {
             startPars['lambda.mu'] = 0.01
+            cat('Warning: lambda.mu must be > 0...', '\n', sep='')
+            cat('...setting starting point for lambda.mu to 0.01 ','\n',sep='')
         }
     }
     return(startPars)
