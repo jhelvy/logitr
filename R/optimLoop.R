@@ -23,10 +23,11 @@ runMultistart = function(modelInputs) {
             }, error=function(e) {
             cat('ERROR: failed to converge...restarting search', '\n',
                 sep='')})
-            if (i==1 & is.na(logLik)) {
+            if (i==1 & is.na(logLik) &
+                is.null(modelInputs$options$startVals)==F) {
                 noFirstRunErr = FALSE
-                cat('**User Provided Starting Values Did Not Converge, ',
-                    'Using Random Values Now**', '\n', sep='')
+                cat('**User provided starting values did not converge, ',
+                    'using random values now**', '\n', sep='')
             }
         }
         models[[i]] = model
@@ -37,17 +38,18 @@ runMultistart = function(modelInputs) {
 getStartPars = function(modelInputs, i, noFirstRunErr) {
     startPars = getRandomStartPars(modelInputs)
     if (i==1) {
-        startPars = 0*startPars
         if (noFirstRunErr & is.null(modelInputs$options$startVals)==F) {
             cat('**Using User Provided Starting Values For This Run**',
                 '\n', sep='')
             startPars = modelInputs$options$startVals
+        } else if (noFirstRunErr) {
+            startPars = 0*startPars
         }
     }
     if (i==2 & noFirstRunErr & is.null(modelInputs$options$startVals)==F) {
         startPars = 0*startPars
     }
-    startPars = checkPars(startPars, modelInputs)
+    startPars = checkStartPars(startPars, modelInputs)
     return(startPars)
 }
 
@@ -59,16 +61,17 @@ getRandomStartPars = function(modelInputs) {
     lower       = bounds[1]
     upper       = bounds[2]
     # For mxl models, need both '.mu' and '.sigma' parameters
-    pars.mu    = runif(length(parNameList$mu), lower, upper)
-    pars.sigma = runif(length(parNameList$sigma), lower, upper)
-    startPars  = c(pars.mu, pars.sigma)
-    names(startPars) = c(parNameList$mu, parNameList$sigma)
+    pars.mu          = runif(length(parNameList$mu), lower, upper)
+    pars.sigma       = runif(length(parNameList$sigma), lower, upper)
+    startPars        = c(pars.mu, pars.sigma)
+    names(startPars) = parNameList$all
     return(startPars)
 }
 
 # For mxl models in the WTP space, lambda.mu can't be zero
-checkPars = function(startPars, modelInputs) {
-    if (modelInputs$modelSpace == 'wtp' & modelInputs$modelType == 'mxl') {
+checkStartPars = function(startPars, modelInputs) {
+    if (modelInputs$modelSpace == 'wtp' &
+        'lambda.mu' %in% modelInputs$parNameList$mu) {
         if (startPars['lambda.mu'] <= 0) {
             startPars['lambda.mu'] = 0.01
         }

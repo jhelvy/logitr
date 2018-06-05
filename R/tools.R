@@ -58,3 +58,24 @@ ci = function(data, alpha=0.025) {
 # Class check functions
 is.logitr <- function(x) {inherits(x, "logitr")}
 is.logitr.multistart <- function(x) {inherits(x, "logitr.multistart")}
+
+# Functions for getting specific parameter indexes
+getFixedParIDs = function(parSetup) {
+    return(which(parSetup == 'f'))
+}
+
+getRandParIDs = function(parSetup) {
+    return(which(parSetup != 'f'))
+}
+
+getNormParIDs = function(parSetup) {
+    return(which(parSetup == 'n'))
+}
+
+getLogNormParIDs = function(parSetup) {
+    return(which(parSetup == 'ln'))
+}
+
+isMxlModel = function(parSetup) {
+    return(('n' %in% parSetup) | ('ln' %in% parSetup))
+}

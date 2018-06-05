@@ -44,7 +44,7 @@ mnl.wtp = logitr(
     # It can be useful to use the WTP from the preference space model as the
     # starting values for the first run:
     startVals = mnl.pref.wtp$Estimate,
-    # Because the prefSpaceWtp has values as large as 8, I increase the
+    # Because the mnl.pref.wtp has values as large as 8, I increase the
     # boundaries of the random starting values:
     startParBounds = c(-5,5)))
 
