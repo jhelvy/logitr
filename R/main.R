@@ -22,7 +22,8 @@ logitr = function(data, choiceName, obsIDName, parNames, priceName=NULL,
     require(nloptr) # Required for optimization
     modelInputs = getModelInputs(data, choiceName, obsIDName, parNames,
                   randPars, priceName, randPrice, modelSpace, options)
-    allModels   = runMultistart(modelInputs)
+    options   = modelInputs$options
+    allModels = runMultistart(modelInputs)
     if (options$keepAllRuns) {
         models = appendAllModelsInfo(allModels, modelInputs)
         cat('Done!', '\n', sep='')

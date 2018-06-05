@@ -427,7 +427,5 @@ mxlNegGradLL.wtp = function(X, parSetup, obsID, choice, standardDraws,
                             byrow=F)
     grad      = colSums(pHatInvChosen*grad, na.rm=TRUE)
     negGradLL = -1*grad[c(1:numPars, numPars + randParIDs)]
-    names(negGradLL) = c(modelInputs$parNameList$mu,
-                       modelInputs$parNameList$sigma)
     return(negGradLL)
 }
