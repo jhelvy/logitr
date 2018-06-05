@@ -104,8 +104,7 @@ mxl.wtp = logitr(
   # but it can take a long time. Here I just use 1 for brevity:
     numMultiStarts = 1,
     keepAllRuns    = TRUE,
-    # startVals      = mxl.pref.wtp$Estimate,
-    startVals = rep(0, 7),
+    startVals      = mxl.pref.wtp$Estimate,
     startParBounds = c(-5,5),
     numDraws       = 200))
 
