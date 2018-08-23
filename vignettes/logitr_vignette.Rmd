@@ -6,16 +6,16 @@ author:
       Science & Engineering Hall\hfill\break
       800 22nd St NW\hfill\break
       Washington, DC 20052
-    email: \email{john.helveston@gmail.com}
+    email: \email{jph@gwu.edu}
     url: http://jhelvy.com
 title:
-  formatted: "Multinomial Logit Models with Preference Space and Willingness-to-Pay Space Utility Specifications in R: The \\pkg{logitr} Package"
+  formatted: "Flexible Multinomial Logit Models with Preference Space and Willingness-to-Pay Space Utility Specifications in R: The \\pkg{logitr} Package"
   # If you use tex in the formatted title, also supply version without
-  plain:     "Multinomial Logit Models with Preference Space and Willingness-to-Pay Space Utility Specifications in R: The logitr Package"
+  plain:     "Flexible Multinomial Logit Models with Preference Space and Willingness-to-Pay Space Utility Specifications in R: The logitr Package"
   # For running headers, if needed
   short:     "\\pkg{logitr}: Preference and WTP Space Multinomial Logit Models"
 abstract: >
-  The abstract of the article.
+  In many applications of discrete choice models, modelers are interested in estimating consumer's marginal "willingness-to-pay" (WTP) for different attributes. WTP can computed by dividing the estimated parameters of a utility model in the preference space by the price parameter or by estimating a utility model in the WTP space. For homogeneous models, these two procedures generally produce the same estimates of WTP, but the same is not true for heterogeneous models where model parameters are assumed to follow a specific distribution. The \pkg{logitr} package was written to allow for flexible estimation of multinomial logit models with preference space and WTP space utility specifications. The package supports homogeneous multinomial logit (MNL) and heterogeneous mixed logit (MXL) models, including support for normal and log-normal parameter distributions. Since MXL models and models with WTP space utility specifications are non-convex, an option is included to run a multi-start optimization loop with random starting points in each iteration. The package also includes a market simulation function to estimate the expected market shares of a set of alternatives using an estimated model.
 keywords:
   # at least one keyword must be supplied
   formatted: [multinomial logit, preference space, willingness-to-pay space, discrete choice, "\\proglang{R}"]
@@ -37,22 +37,22 @@ output: rticles::jss_article
 \newcommand{\XVec}{\mathrm{\mathbf{X}}}
 
 # Introduction
-In many applications of discrete choice models, modelers are interested in estimating consumer's marginal "willingness-to-pay" (WTP) for different attributes (cites). 
-<!-- Revelt, D. and K. Train (1998), ‘Mixed logit with repeated choices’, Review of Economics and Statistics 80, 647–657. -->
-<!-- Goett, A., K. Hudson and K. Train (2000), ‘Consumers’ choice among retail energy suppliers: The willingnes-to-pay for service attributes’, The Energy Journal 21, 1–28 -->
-<!-- Hensher, D., N. Shore and K. Train (2004), ‘Households’ willingness to pay for water service attributes’, Working Paper, School of Business, The University of Sydney, and Department of Economics, University of California, Berkeley -->
-<!-- Layton and Brown, 2000; Scarpa et al., 2002 -->
+In many applications of discrete choice models, modelers are interested in estimating consumer's marginal "willingness-to-pay" (WTP) for different attributes. WTP can be estimated in two ways: 
 
+1. Estimate a discrete choice model in the "preference space" where parameters have units of utility and then compute the WTP by dividing the parameters by the price parameter.
+2. Estimate a discrete choice model in the "WTP space" where parameters have units of WTP.
 
-# The Random Utility Model
+While the two procedures generally produce the same estimates of WTP for homogenous models, the same is not true for heterogeneous models where model parameters are assumed to follow a specific distribution, such as normal or log-normal [@Train2005]. For example, in a preference space specification, a normally distributed attribute parameter divided by a log-normally distributed price parameter produces a strange WTP distribution with large tails. In contrast, a WTP space specification allows the modeler to directly assume WTP is normally distributed. The \pkg{logitr} package was developed to enable modelers to choose between these two utility spaces when estimating multinomial logit models.
+
+# The random utility model
 
 The random utility model is a well-established framework in many fields for estimating consumer preferences from observed consumer choices [@Louviere2000, @Train2009]. Random utility models assume that consumers choose the alternative $j$ a set of alternatives that has the greatest utility $u_{j}$. Utility is a random variable that is modeled as $u_{j} = v_{j} + \varepsilon_{j}$, where $v_{j}$ is the "observed utility" (a function of the observed attributes such that $v_{j} = f(\xVec_{j})$) and $\varepsilon_{j}$ is a random variable representing the portion of utility unobservable to the modeler.
 
-Consider the following utility model:
+Adopting the same notation as in [@Helveston2018], consider the following utility model:
 
 \input{./eqns/utility.Rmd}
 
-where $\betaVec^{*}$ is the vector of coefficients for non-price attributes $\xVec_{j}$, $\alpha^{*}$ is the coefficient for price $p_{j}$, and the error term, $\varepsilon^{*}_{j}$, is an IID random variable with a Gumbel extreme value distribution of mean zero and variance $\sigma^2(\pi^2/6)$. This model is not identified since there exists an infinite set of combinations of values for $\betaVec^{*}$, $\alpha^{*}$, and $\sigma$ that produce the same choice probabilities. In order to specify an identifiable model, the modeler must normalize equation (\ref{eq:utility}). One approach is to normalize the scale of the error term by dividing equation (\ref{eq:utility}) by $\sigma$, producing the "preference space" utility specification [@Train2005]: 
+where $\betaVec^{*}$ is the vector of coefficients for non-price attributes $\xVec_{j}$, $\alpha^{*}$ is the coefficient for price $p_{j}$, and the error term, $\varepsilon^{*}_{j}$, is an IID random variable with a Gumbel extreme value distribution of mean zero and variance $\sigma^2(\pi^2/6)$. This model is not identified since there exists an infinite set of combinations of values for $\betaVec^{*}$, $\alpha^{*}$, and $\sigma$ that produce the same choice probabilities. In order to specify an identifiable model, the modeler must normalize equation (\ref{eq:utility}). One approach is to normalize the scale of the error term by dividing equation (\ref{eq:utility}) by $\sigma$, producing the "preference space" utility specification: 
 
 \input{./eqns/utilityPreferenceScaled.Rmd}
 
@@ -62,7 +62,7 @@ The typical preference space parameterization of the multinomial logit (MNL) mod
 
 The vector $\betaVec$ represents the marginal utility for changes in each non-price attribute, and $\alpha$ represents the marginal utility obtained from price reductions. In addition, the coefficients $\betaVec$ and $\alpha$ are measured in units of *utility*, which only has relative rather than absolute meaning.
 
-The alternative normalization approach is to normalize equation (\ref{eq:utility}) by $\alpha^*$ instead of $\sigma$, producing the "willingness-to-pay (WTP) space" utility specification [@Train2005]:
+The alternative normalization approach is to normalize equation (\ref{eq:utility}) by $\alpha^*$ instead of $\sigma$, producing the "willingness-to-pay (WTP) space" utility specification:
 
 \input{./eqns/utilityWtpScaled.Rmd}
 
@@ -71,3 +71,25 @@ Since the error term in equation is scaled by $\lambda^2 = \sigma^2/(\alpha^{*})
 \input{./eqns/utilityWtp.Rmd}
 
 Here $\omegaVec$ represents the marginal WTP for changes in each non-price attribute, and $\lambda$ represents the scale of the deterministic portion of utility relative to the standardized scale of the random error term. 
+
+The utility models in equations \ref{eq:utilityPreference} and \ref{eq:utilityWtp} represent the preference space and WTP space utility specifications, respectively. In equation \ref{eq:utilityPreference}, WTP is estimated as $\hat{\betaVec} / \hat{\alpha}$; in equation \ref{eq:utilityWtp}, WTP is simply $\hat{\omegaVec}$.
+
+# The logitr package
+ 
+## Installation
+First, make sure you have the \pkg{devtools} library installed:
+
+```{r eval=FALSE, tidy=TRUE}
+install.packages('devtools')
+```
+
+Then load the \pkg{devtools} library and install the \pkg{logitr} package:
+
+```{r eval=FALSE, tidy=TRUE}
+library('devtools')
+install_github('jhelvy/logitr')
+library('logitr')
+```
+
+## Data format 
+

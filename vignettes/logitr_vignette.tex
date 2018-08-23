@@ -7,16 +7,34 @@
 \author{
 John Paul Helveston\\George Washington University
 }
-\title{Multinomial Logit Models with Preference Space and Willingness-to-Pay
-Space Utility Specifications in R: The \pkg{logitr} Package}
+\title{Flexible Multinomial Logit Models with Preference Space and
+Willingness-to-Pay Space Utility Specifications in R: The \pkg{logitr}
+Package}
 
 \Plainauthor{John Paul Helveston}
-\Plaintitle{Multinomial Logit Models with Preference Space and Willingness-to-Pay
-Space Utility Specifications in R: The logitr Package}
+\Plaintitle{Flexible Multinomial Logit Models with Preference Space and
+Willingness-to-Pay Space Utility Specifications in R: The logitr Package}
 \Shorttitle{\pkg{logitr}: Preference and WTP Space Multinomial Logit Models}
 
 \Abstract{
-The abstract of the article.
+In many applications of discrete choice models, modelers are interested
+in estimating consumer's marginal ``willingness-to-pay'' (WTP) for
+different attributes. WTP can computed by dividing the estimated
+parameters of a utility model in the preference space by the price
+parameter or by estimating a utility model in the WTP space. For
+homogeneous models, these two procedures generally produce the same
+estimates of WTP, but the same is not true for heterogeneous models
+where model parameters are assumed to follow a specific distribution.
+The \pkg{logitr} package was written to allow for flexible estimation of
+multinomial logit models with preference space and WTP space utility
+specifications. The package supports homogeneous multinomial logit (MNL)
+and heterogeneous mixed logit (MXL) models, including support for normal
+and log-normal parameter distributions. Since MXL models and models with
+WTP space utility specifications are non-convex, an option is included
+to run a multi-start optimization loop with random starting points in
+each iteration. The package also includes a market simulation function
+to estimate the expected market shares of a set of alternatives using an
+estimated model.
 }
 
 \Keywords{multinomial logit, preference space, willingness-to-pay space, discrete choice, \proglang{R}}
@@ -35,7 +53,7 @@ The abstract of the article.
   George Washington University\\
   Science \& Engineering Hall\hfill\break 800 22nd St
   NW\hfill\break Washington, DC 20052\\
-  E-mail: \email{john.helveston@gmail.com}\\
+  E-mail: \email{jph@gwu.edu}\\
   URL: \url{http://jhelvy.com}\\~\\
   }
 
@@ -59,10 +77,33 @@ The abstract of the article.
 
 In many applications of discrete choice models, modelers are interested
 in estimating consumer's marginal ``willingness-to-pay'' (WTP) for
-different attributes (cites).
+different attributes. WTP can be estimated in two ways:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Estimate a discrete choice model in the ``preference space'' where
+  parameters have units of utility and then compute the WTP by dividing
+  the parameters by the price parameter.
+\item
+  Estimate a discrete choice model in the ``WTP space'' where parameters
+  have units of WTP.
+\end{enumerate}
+
+While the two procedures generally produce the same estimates of WTP for
+homogenous models, the same is not true for heterogeneous models where
+model parameters are assumed to follow a specific distribution, such as
+normal or log-normal \citep{Train2005}. For example, in a preference
+space specification, a normally distributed attribute parameter divided
+by a log-normally distributed price parameter produces a strange WTP
+distribution with large tails. In contrast, a WTP space specification
+allows the modeler to directly assume WTP is normally distributed. The
+\pkg{logitr} package was developed to enable modelers to choose between
+these two utility spaces when estimating multinomial logit models.
 
 \hypertarget{the-random-utility-model}{%
-\section{The Random Utility Model}\label{the-random-utility-model}}
+\section{The random utility model}\label{the-random-utility-model}}
 
 The random utility model is a well-established framework in many fields
 for estimating consumer preferences from observed consumer choices
@@ -75,7 +116,8 @@ modeled as \(u_{j} = v_{j} + \varepsilon_{j}\), where \(v_{j}\) is the
 random variable representing the portion of utility unobservable to the
 modeler.
 
-Consider the following utility model:
+Adopting the same notation as in \citep{Helveston2018}, consider the
+following utility model:
 
 \input{./eqns/utility.Rmd}
 
@@ -90,7 +132,7 @@ and \(\sigma\) that produce the same choice probabilities. In order to
 specify an identifiable model, the modeler must normalize equation
 (\ref{eq:utility}). One approach is to normalize the scale of the error
 term by dividing equation (\ref{eq:utility}) by \(\sigma\), producing
-the ``preference space'' utility specification \citep{Train2005}:
+the ``preference space'' utility specification:
 
 \input{./eqns/utilityPreferenceScaled.Rmd}
 
@@ -111,8 +153,7 @@ of \emph{utility}, which only has relative rather than absolute meaning.
 
 The alternative normalization approach is to normalize equation
 (\ref{eq:utility}) by \(\alpha^*\) instead of \(\sigma\), producing the
-``willingness-to-pay (WTP) space'' utility specification
-\citep{Train2005}:
+``willingness-to-pay (WTP) space'' utility specification:
 
 \input{./eqns/utilityWtpScaled.Rmd}
 
@@ -130,6 +171,41 @@ Here \(\boldsymbol\upomega\) represents the marginal WTP for changes in
 each non-price attribute, and \(\lambda\) represents the scale of the
 deterministic portion of utility relative to the standardized scale of
 the random error term.
+
+The utility models in equations \ref{eq:utilityPreference} and
+\ref{eq:utilityWtp} represent the preference space and WTP space utility
+specifications, respectively. In equation \ref{eq:utilityPreference},
+WTP is estimated as \(\hat{\boldsymbol\upbeta} / \hat{\alpha}\); in
+equation \ref{eq:utilityWtp}, WTP is simply
+\(\hat{\boldsymbol\upomega}\).
+
+\hypertarget{the-logitr-package}{%
+\section{The logitr package}\label{the-logitr-package}}
+
+\hypertarget{installation}{%
+\subsection{Installation}\label{installation}}
+
+First, make sure you have the \pkg{devtools} library installed:
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> install.packages("devtools")
+\end{CodeInput}
+\end{CodeChunk}
+
+Then load the \pkg{devtools} library and install the \pkg{logitr}
+package:
+
+\textbackslash{}begin\{CodeChunk\}
+
+\textbackslash{}begin\{CodeInput\} R\textgreater{} library(``devtools'')
+R\textgreater{} install\_github(``jhelvy/logitr'') R\textgreater{}
+library(``logitr'') \textbackslash{}end\{CodeInput\}
+\textbackslash{}end\{CodeChunk\}
+
+\hypertarget{data-format}{%
+\subsection{Data format}\label{data-format}}
 
 \bibliography{library.bib}
 

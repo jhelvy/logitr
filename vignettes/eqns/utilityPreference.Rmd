@@ -8,5 +8,3 @@
         \varepsilon_{j} \sim \textrm{Gumbel}\left(0,\frac{\pi^2}{6}\right)
 \label{eq:utilityPreference}
 \end{equation}
-
-
