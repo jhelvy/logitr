@@ -21,8 +21,13 @@ keywords:
   formatted: [multinomial logit, preference space, willingness-to-pay space, discrete choice, "\\proglang{R}"]
   plain:     [multinomial logit, preference space, willingness-to-pay space, discrete choice, R]
 preamble: >
-  \usepackage{amsmath}
-  \usepackage{upgreek}
+    \usepackage{amsmath}
+    \usepackage{upgreek}
+    \usepackage{longtable}
+    \usepackage{booktabs} 
+    \usepackage{float}
+    \usepackage{array}
+
 bibliography: library.bib
 output: rticles::jss_article
 ---
@@ -35,6 +40,13 @@ output: rticles::jss_article
 \newcommand{\epsilonVec}{\boldsymbol\upepsilon}
 \newcommand{\xVec}{\mathrm{\mathbf{x}}}
 \newcommand{\XVec}{\mathrm{\mathbf{X}}}
+
+<!-- Load libraries for all code chunks -->
+```{r echo=FALSE, message=FALSE}
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+```
 
 # Introduction
 In many applications of discrete choice models, modelers are interested in estimating consumer's marginal "willingness-to-pay" (WTP) for different attributes. WTP can be estimated in two ways: 
@@ -98,43 +110,51 @@ install_github('jhelvy/logitr')
 The data must be arranged the following way:
 
 1. The data must be a `data.frame` object.
-2. Each row is an alternative from a choice observation. Choice observations do not have to be symmetric (i.e. they could each have a different number of alternatives).
+2. Each row is an alternative from a choice observation. Each choice observation does not have to have the same number of alternatives.
 3. Each column is a variable. 
-4. One column must identify the "observation ID" --- a sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the `obsID` variable would be `1,1,2,2,3,3`.
-5. One column must identify choice --- a dummy variable that identifies which alternative was chosen (`1`=chosen, `0`=not chosen).
-6. For WTP space models, once column must identify price --- a continous variable of the price values.
+4. One column must identify `obsID` (the "observation ID"): a sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the `obsID` variable would be `1,1,2,2,3,3`.
+5. One column must identify `choice`: a dummy variable that identifies which alternative was chosen (`1`=chosen, `0`=not chosen).
+6. For WTP space models, once column must identify `price`: a continous variable of the price values.
 
-## The `logitr()` function
+An example of of the 'Yogurt' data set from the \pkg{mlogit} package illustrates this format:
+
+```{r tidy=TRUE}
+library('logitr')
+data(yogurt)
+head(yogurt, 12)
+```
+
+## The logitr() function
 
 The main model estimation function is the `logitr()` function:
 
-```
+```{r eval=FALSE}
 model = logitr(data, choiceName, obsIDName, parNames, priceName=NULL,
-               randPars=NULL, randPrice=NULL, modelSpace='pref',
-               options=list(...))
+            randPars=NULL, randPrice=NULL, modelSpace="pref",
+            options=list(...))
 ```
 
-The function returns a list of values, so assign the model output to a variable (e.g. "model") to store the output values.
+The function returns a list of values, so assign the model output to a variable (e.g. `model`) to store the output values.
 
-## Arguments
-|    Argument    |    Description    |    Default    |
-|:---------------|:------------------|:--------------|
-|`data`|The choice data, formatted as a data.frame object (see the [Data File Setup](#data-file-setup) Section for details).| -- |
+### Arguments
+| Argument |  Description |  Default |
+|--------|-------------------------------------|------|
+|`data`|The choice data, formatted as a data.frame object.| -- |
 |`choiceName`|The name of the column that identifies the `choice` variable.| -- |
 |`obsIDName`|The name of the column that identifies the `obsID` variable.| -- |
-|`parNames`|The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in `parNames`. See the [Details About `parNames` Argument](#details-about-parnames-argument) Section for more details.| -- |
+|`parNames`|The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include `price` in `parNames`.| -- |
 |`priceName`|The name of the column that identifies the price variable. Only required for WTP space models.|`NULL`|
 |`randPars`|A named vector whose names are the random parameters and values the destribution: `'n'` for normal or `'ln'` for log-normal.|`NULL`|
 |`randPrice`|The random distribution for the price parameter: `'n'` for normal or `'ln'` for log-normal. Only used for WTP space MXL models.|`NULL`|
 |`modelSpace`|Set to `'wtp'` for WTP space models.|`'pref'`|
-|`options`|A list of options (see the [Options](#options) Section for details).| -- |
+|`options`|A list of options.| -- |
 
-## Options
-|    Argument    |    Description    |    Default    |
-|:---------------|:------------------|:--------------|
+### Options
+| Argument |  Description |  Default |
+|-----------|-------------------------------------|-------|
 |`numMultiStarts`|Number of times to run the optimization loop, each time starting from a different random starting point for each parameter between `startParBounds`. Recommended for non-convex models, such as WTP space models and MXL models.|`1`|
 |`keepAllRuns`|Set to `TRUE` to keep all the model information for each multistart run. If `TRUE`, the `logitr()` function will return a list with two values: `models` (a list of each model), and `bestModel` (the model with the largest log-likelihood value).|`FALSE`|
-|`startParBounds`|Set the `lower` and `upper` bounds for the starting parameters for each optimization run, which are generated by `runif(n, lower, upper)`.|`c(-1, 1)`|
+|`startParBounds`|Set the `lower` and `upper` bounds for the starting parameters for each optimization run, which are generated by `runif(n, lower, upper)`.|`c(-1,1)`|
 |`startVals`|A vector of values to be used as starting values for the optimization. Only used for the first run if `numMultiStarts > 1`.|`NULL`|
 |`useAnalyticGrad`|Set to `FALSE` to use numerically approximated gradients instead of analytic gradients during estimation (which is slower).|`TRUE`|
 |`scaleInputs`|By default each variable in `data` is scaled to be between 0 and 1 before running the optimization routine because it usually helps with stability, especially if some of the variables have very large or very small values (e.g. `> 10^3` or `< 10^-3`). Set to `FALSE` to turn this feature off.|`TRUE`|
@@ -148,9 +168,9 @@ The function returns a list of values, so assign the model output to a variable 
 |`ftol_abs`|The absolute `f` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1.0e-8`|
 |`maxeval`|The maximum number of function evaluations for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1000`|
 
-## Values
-|    Value    |    Description    |
-|:------------|:------------------|
+### Values
+| Value |    Description    |
+|-----------|--------------------------------------|
 |`coef`|The model coefficients at convergence.|
 |`standErrs`|The standard errors of the model coefficients at convergence.|
 |`logLik`|The log-likelihood value at convergence.|
@@ -170,3 +190,9 @@ The function returns a list of values, so assign the model output to a variable 
 |`randParSummary`|A summary of any random parameters (for MXL models).|
 |`parSetup`|A summary of the distributional assumptions on each model parameter (`"f"`="fixed", `"n"`="normal distribution", `"ln"`="log-normal distribution").|
 |`options`|A list of all the model options.|
+
+## Details about "parNames" argument:
+A structural assumption in the `logitr` package is that the deterministic part of the utility specification is linear in parameters: $v_{j} = \betaVec' \xVec_{j}$ for preference space models, and $v_{j} = \omegaVec' \xVec_{j}$ for WTP space models. Accordingly, each parameter in the `parNames` argument is an additive part of $v_{j}$. For example, for the utility model $u_{j} = \beta_1 price + \beta_2 size + \varepsilon_{j}$, then the `parNames` argument should be `c('price', 'size')`, and the data should contain two columns labeled `price` and `size`. If you wanted to add a third parameter, say $price^2$, then you should create an additional variable in the data called `priceSquared`, and your `parNames` argument would be `c('price', 'size', 'priceSquared')`.
+    
+**WTP space models**:
+For WTP space models, the `parNames` should only include the WTP parameters, and the `price` parameter is denoted by the separate argument `priceName`. For example, for the utility model *u* = *lambda*(*beta1* * *size* - *price*) + *error*, then the `parNames` argument should be `c('size')` and the `priceName` argument should be `'price'
