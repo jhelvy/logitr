@@ -59,7 +59,8 @@ estimated model.
 
 % Pandoc header
 
-\usepackage{amsmath} \usepackage{upgreek} \usepackage{longtable} \usepackage{booktabs}  \usepackage{float} \usepackage{array}
+\usepackage{amsmath} \usepackage{upgreek} \usepackage{longtable}
+\usepackage{booktabs} \usepackage{float} \usepackage{array}
 
 \begin{document}
 
@@ -71,13 +72,6 @@ estimated model.
 \newcommand{\epsilonVec}{\boldsymbol\upepsilon}
 \newcommand{\xVec}{\mathrm{\mathbf{x}}}
 \newcommand{\XVec}{\mathrm{\mathbf{X}}}
-
-\begin{CodeChunk}
-
-\begin{CodeOutput}
-Warning: package 'kableExtra' was built under R version 3.4.4
-\end{CodeOutput}
-\end{CodeChunk}
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
@@ -109,8 +103,9 @@ allows the modeler to directly assume WTP is normally distributed. The
 \pkg{logitr} package was developed to enable modelers to choose between
 these two utility spaces when estimating multinomial logit models.
 
-\hypertarget{the-random-utility-model}{%
-\section{The random utility model}\label{the-random-utility-model}}
+\hypertarget{the-random-utility-model-in-two-spaces}{%
+\section{The random utility model in two
+spaces}\label{the-random-utility-model-in-two-spaces}}
 
 The random utility model is a well-established framework in many fields
 for estimating consumer preferences from observed consumer choices
@@ -123,8 +118,8 @@ modeled as \(u_{j} = v_{j} + \varepsilon_{j}\), where \(v_{j}\) is the
 random variable representing the portion of utility unobservable to the
 modeler.
 
-Adopting the same notation as in \citep{Helveston2018}, consider the
-following utility model:
+Adopting the same notation as in Helveston et al.
+\citeyearpar{Helveston2018}, consider the following utility model:
 
 \input{./eqns/utility.Rmd}
 
@@ -199,24 +194,18 @@ depends on the \pkg{nloptr} library.
 First, make sure you have the \pkg{devtools} and \pkg{nloptr} libraries
 installed:
 
-\begin{CodeChunk}
-
-\begin{CodeInput}
-R> install.packages("devtools")
-R> install.packages("nloptr")
-\end{CodeInput}
-\end{CodeChunk}
+\begin{quote}
+\texttt{install.packages("devtools")}~\\
+\texttt{install.packages("nloptr")}
+\end{quote}
 
 Then load the \pkg{devtools} library and install the \pkg{logitr}
 package:
 
-\begin{CodeChunk}
-
-\begin{CodeInput}
-R> library("devtools")
-R> install_github("jhelvy/logitr")
-\end{CodeInput}
-\end{CodeChunk}
+\begin{quote}
+\texttt{library("devtools")}~\\
+\texttt{install\_github("jhelvy/logitr")}
+\end{quote}
 
 \hypertarget{data-format}{%
 \subsection{Data format}\label{data-format}}
@@ -254,14 +243,7 @@ illustrates this format:
 \begin{CodeChunk}
 
 \begin{CodeInput}
-R> library("logitr")
-\end{CodeInput}
-
-\begin{CodeOutput}
-Loading required package: nloptr
-\end{CodeOutput}
-
-\begin{CodeInput}
+R> library('logitr')
 R> data(yogurt)
 R> head(yogurt, 12)
 \end{CodeInput}
@@ -661,6 +643,173 @@ A list of all the model options.\strut
 \end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
+
+\hypertarget{details-about-parnames-argument}{%
+\subsection{Details about ``parNames''
+argument:}\label{details-about-parnames-argument}}
+
+A structural assumption in the \texttt{logitr} package is that the
+deterministic part of the utility specification is linear in parameters:
+\(v_{j} = \boldsymbol\upbeta' \mathrm{\mathbf{x}}_{j}\) for preference
+space models, and
+\(v_{j} = \boldsymbol\upomega' \mathrm{\mathbf{x}}_{j}\) for WTP space
+models. Accordingly, each parameter in the \texttt{parNames} argument
+must correspond to a variable in the data that is an additive part of
+\(v_{j}\). For WTP space models, the \texttt{parNames} should only
+include the WTP parameters, and the \texttt{price} parameter is denoted
+by the separate argument \texttt{priceName}. Here are several examples:
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+\begin{minipage}[b]{0.13\columnwidth}\raggedright
+Space\strut
+\end{minipage} & \begin{minipage}[b]{0.39\columnwidth}\raggedright
+Model\strut
+\end{minipage} & \begin{minipage}[b]{0.24\columnwidth}\raggedright
+\texttt{parNames}\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\raggedright
+\texttt{priceName}\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.13\columnwidth}\raggedright
+Preference\strut
+\end{minipage} & \begin{minipage}[t]{0.39\columnwidth}\raggedright
+\(u_{j} = \beta_1 price_j + \beta_2 size_j + \varepsilon_{j}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.24\columnwidth}\raggedright
+\texttt{c(\textquotesingle{}price\textquotesingle{},\ \textquotesingle{}size\textquotesingle{})}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+\texttt{NULL}\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.13\columnwidth}\raggedright
+WTP\strut
+\end{minipage} & \begin{minipage}[t]{0.39\columnwidth}\raggedright
+\(u_{j} = \lambda_j (\beta_1 size_j - price_j) + \varepsilon_{j}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.24\columnwidth}\raggedright
+\texttt{c(\textquotesingle{}size\textquotesingle{})}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+\texttt{\textquotesingle{}price\textquotesingle{}}\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{using-summary-with-logitr}{%
+\subsection{Using summary() with
+logitr}\label{using-summary-with-logitr}}
+
+The \texttt{logitr} package includes a summary function that has several
+variations:
+
+\begin{itemize}
+\tightlist
+\item
+  For a single model run, it prints some summary information, including
+  the model space, log-likelihood value at the solution, and a summary
+  table of the model coefficients.
+\item
+  For MXL models, the function also prints a summary of the random
+  parameters.
+\item
+  If the \texttt{keepAllRuns} option is set to \texttt{TRUE}, the
+  function will print a summary of all the multistart runs followed by a
+  summary of the best model (as determined by the largest log-likelihood
+  value).
+\end{itemize}
+
+To understand the status code of any model, type
+\texttt{logitr.statusCodes()}, which prints a description of each status
+code from the \texttt{nloptr} optimization routine.
+
+\hypertarget{computing-and-comparing-wtp}{%
+\subsection{Computing and Comparing
+WTP}\label{computing-and-comparing-wtp}}
+
+For models in the preference space, you can get a summary table of the
+implied WTP by using the \texttt{wtp()} function:
+
+\begin{quote}
+\texttt{wtp(model,\ priceName)}
+\end{quote}
+
+To compare the WTP between two equivalent models in the preference space
+and WTP spaces, use the \texttt{wtpCompare()} function:
+
+\begin{quote}
+\texttt{wtpCompare(prefSpaceModel,\ wtpSpaceModel,\ priceName)}
+\end{quote}
+
+\hypertarget{market-simulations}{%
+\subsection{Market Simulations}\label{market-simulations}}
+
+After estimating a model, often times modelers use the results to
+simulate the market shares of a particular set of market alternatives.
+This can be done using the \texttt{marketSimulation()} function. The
+simulation reports the expected market share as well as a confidence
+interval for each market alternative:
+
+\begin{quote}
+\texttt{simulation\ =\ marketSimulation(model,\ market,\ priceName=NULL,\ alpha=0.025)}
+\end{quote}
+
+\hypertarget{arguments-1}{%
+\subsubsection{Arguments}\label{arguments-1}}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+\begin{minipage}[b]{0.14\columnwidth}\raggedright
+Argument\strut
+\end{minipage} & \begin{minipage}[b]{0.66\columnwidth}\raggedright
+Description\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\raggedright
+Default\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.14\columnwidth}\raggedright
+\texttt{model}\strut
+\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+A MNL or MXL model estimated using the \texttt{logitr} package.\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright
+--\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.14\columnwidth}\raggedright
+\texttt{market}\strut
+\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+A data frame of the market alternatives. Each row should be an
+alternative, and each column an attribute for which there is a
+corresponding coefficient in the estimated model.\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright
+--\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.14\columnwidth}\raggedright
+\texttt{priceName}\strut
+\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+The name of the column in the \texttt{market} that identifies price
+(only required for WTP space models).\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright
+\texttt{NULL}\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.14\columnwidth}\raggedright
+\texttt{alpha}\strut
+\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+The significance level for the confidence interval (e.g. \texttt{0.025}
+results in a 95\% CI).\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright
+\texttt{0.025}\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{citation-information}{%
+\section{Citation Information}\label{citation-information}}
+
+If you use this package for an analysis that is published, I would
+greatly appreciate it if you included a citation. You can get the
+citation information by typing this into R:
+
+\begin{quote}
+\texttt{citation("logitr")}
+\end{quote}
 
 \bibliography{library.bib}
 
