@@ -41,13 +41,6 @@ output: rticles::jss_article
 \newcommand{\xVec}{\mathrm{\mathbf{x}}}
 \newcommand{\XVec}{\mathrm{\mathbf{X}}}
 
-<!-- Load libraries for all code chunks -->
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-library(knitr)
-library(kableExtra)
-library(tidyverse)
-```
-
 # Introduction
 
 In many applications of discrete choice models, modelers are interested in estimating consumer's marginal "willingness-to-pay" (WTP) for different attributes. WTP can be estimated in two ways: 
