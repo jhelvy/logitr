@@ -1,6 +1,4 @@
-# Install logitr package from github
-library('devtools')
-install_github('jhelvy/logitr')
+setwd('/Users/jhelvy/Documents/GitHub/logitr/vignettes/examples')
 
 # Load logitr package
 library('logitr')
@@ -18,15 +16,8 @@ mnl.pref = logitr(
   obsIDName  = 'obsID',
   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
 
-# Print a summary of the results:
-summary(mnl.pref)
-
-# Get the coefficients from the model:
-coef(mnl.pref)
-
 # Get the WTP implied from the preference space model
 mnl.pref.wtp = wtp(mnl.pref, priceName='price')
-mnl.pref.wtp
 
 # Run a MNL model in the WTP Space using a multistart:
 mnl.wtp = logitr(
@@ -48,25 +39,10 @@ mnl.wtp = logitr(
     # boundaries of the random starting values:
     startParBounds = c(-5,5)))
 
-# Print a summary of all multistart runs and a summary of the best model:
-summary(mnl.wtp)
-
-# Print a summary of only the third model run:
-summary(mnl.wtp$models[[3]])
-
-# Print a summary of the best model:
-summary(mnl.wtp$bestModel)
-
-# Get the coefficients from the model:
-coef(mnl.wtp)
-
-# NOTE ON LOCAL MINIMA IN WTP SPACE MODELS:
-# Comparing the WTP and log-likelihood values between the equivalent models in
-# the preference space and WTP space is a helpful check for whether you have
-# reached a global solution in WTP space models, which have non-convex
-# log-likelihoods functions. This can be done using the wtpCompare function:
-
-wtpCompare(mnl.pref, mnl.wtp, priceName='price')
+# Save results
+saveRDS(mnl.pref,     './mnl.pref.Rds')
+saveRDS(mnl.pref.wtp, './mnl.pref.wtp.Rds')
+saveRDS(mnl.wtp,      './mnl.wtp.Rds')
 
 # ============================================================================
 # Estimate Heterogeneous MXL models
@@ -77,20 +53,16 @@ mxl.pref = logitr(
   choiceName = 'choice',
   obsIDName  = 'obsID',
   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
-  randPars   = c(price='n', feat='n'),
+  randPars   = c(price='ln', feat='n'),
   options    = list(
   # You should run a multistart for MXL models since they are non-convex,
   # but it can take a long time. Here I just use 1 for brevity:
       numMultiStarts = 1,
       keepAllRuns    = TRUE,
-      numDraws       = 200))
-
-# View summary of model:
-summary(mxl.pref)
+      numDraws       = 500))
 
 # Get the WTP implied from the preference space model
 mxl.pref.wtp = wtp(mxl.pref, priceName='price.mu')
-mxl.pref.wtp
 
 # Multistart MXL model in the WTP Space:
 mxl.wtp = logitr(
@@ -100,7 +72,7 @@ mxl.wtp = logitr(
   parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
   priceName  = 'price',
   randPars   = c(feat='n'),
-  randPrice  = 'n',
+  # randPrice  = 'ln',
   modelSpace = 'wtp',
   options = list(
   # You should run a multistart for MXL models since they are non-convex,
@@ -109,68 +81,53 @@ mxl.wtp = logitr(
     keepAllRuns    = TRUE,
     startVals      = mxl.pref.wtp$Estimate,
     startParBounds = c(-5,5),
-    numDraws       = 200))
+    numDraws       = 500))
 
-# View summary of model:
-summary(mxl.wtp)
-
-# Compare WTP from each space:
-wtpCompare(mxl.pref, mxl.wtp, priceName='price.mu')
-
-# Note that the WTP will not be the same between preference space and WTP
-# space MXL models. This is because the distributional assumptions
-# in MXL models imply different distributions on WTP depending on the model
-# space. See Train and Weeks (2005) and Sonnier, Ainslie, and Otter (2007) for
-# details on this topic:
-
-# Train K, Weeks M (2005). “Discrete Choice Models in Preference Space and
-# Willingness- to-Pay Space.” In R Scarpa, A Alberini (eds.), Applications of
-# Simulation Methods in Environmental and Resource Economics, volume 6 of The
-# Economics of Non-Market Goods and Resources, pp. 1-16. Springer-Verlag.
-
-# Sonnier G, Ainslie A, Otter T (2007). “Heterogeneity Distributions of
-# Willingness-to-Pay in Choice Models.” Quantitative Marketing and Economics,
-# 5(3), 313–331.
+# Save results
+saveRDS(mxl.pref,     './mxl.pref.Rds')
+saveRDS(mxl.pref.wtp, './mxl.pref.wtp.Rds')
+saveRDS(mxl.wtp,      './mxl.wtp.Rds')
 
 # ============================================================================
 # Run Market Simulation Using Estimated Models
 
-# Create a market to simulate. Each row is an alternative and each column an
-# attribute. In this example, I just use one of the choice observations from
-# the yogurt dataset:
+# Create a market to simulate.
 market = subset(yogurt, obsID==42,
          select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
 row.names(market) = c('dannon', 'hiland', 'weight', 'yoplait')
-market
 
 # Run the simulation using the preference space MNL model:
 mnl.pref.simulation = marketSimulation(mnl.pref, market, alpha=0.025)
-mnl.pref.simulation
-# The results show the expected market shares for each alternative.
-# The low and high values show a 95% confidence interval, estimated using
-# simulation. You can change the CI level by setting alpha to a different
-# value (e.g. a 90% CI is obtained with alpha=0.05).
 
 # Run the simulation using the WTP space MNL model:
 mnl.wtp.simulation = marketSimulation(mnl.wtp, market, priceName='price')
-mnl.wtp.simulation
-# Since these two models are equivalent except in different spaces, the
-# simulation results should be the same. Note that 'priceName' is the name
-# of the price attribute in the market argument and must be included for
-# WTP space models.
 
 # Market simulations can also be run using MXL models:
 mxl.pref.simulation = marketSimulation(mxl.pref, market, alpha=0.025)
-mxl.pref.simulation
 
-# Plot simulation results from preference space MNL model:
-library(ggplot2)
-mnl.pref.simulation$alt = row.names(mnl.pref.simulation)
-ggplot(mnl.pref.simulation, aes(x=alt, y=mean)) +
-    geom_bar(stat='identity', width=0.7) +
-    geom_errorbar(aes(ymin=low, ymax=high), width=0.2) +
-    scale_y_continuous(limits=c(0,1)) +
-    labs(x='Alternative', y='Market Share') +
-    theme_bw()
+# Save results
+saveRDS(mnl.pref.simulation, './mnl.pref.simulation.Rds')
+saveRDS(mnl.wtp.simulation,  './mnl.wtp.simulation.Rds')
+saveRDS(mxl.pref.simulation, './mxl.pref.simulation.Rds')
 
 
+
+
+
+
+
+
+library(mlogit)
+mlogitData = mlogit.data(yogurt,
+    shape      = 'long',
+    choice     = 'choice',
+    alt.levels = c('1', '2', '3', '4'),
+    alt.id     = 'obsID',
+    id.var     = 'id')
+
+model = mlogit(data=mlogitData, formula=choice ~
+    price + feat + dannon + hiland + yoplait |0,
+    rpar = c(price='ln', feat='n'),
+    R = 500, halton = NA)
+
+summary(model)

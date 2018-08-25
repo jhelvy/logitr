@@ -41,6 +41,20 @@ output: rticles::jss_article
 \newcommand{\xVec}{\mathrm{\mathbf{x}}}
 \newcommand{\XVec}{\mathrm{\mathbf{X}}}
 
+
+<!-- Read in results for examples -->
+```{r echo=FALSE, message=FALSE}
+mnl.pref            = readRDS('./examples/mnl.pref.Rds')
+mnl.pref.wtp        = readRDS('./examples/mnl.pref.wtp.Rds')
+mnl.wtp             = readRDS('./examples/mnl.wtp.Rds')
+mxl.pref            = readRDS('./examples/mxl.pref.Rds')
+mxl.pref.wtp        = readRDS('./examples/mxl.pref.wtp.Rds')
+# mxl.wtp             = readRDS('./examples/mxl.wtp.Rds')
+# mnl.pref.simulation = readRDS('./examples/mnl.pref.simulation.Rds')
+# mnl.wtp.simulation  = readRDS('./examples/mnl.wtp.simulation.Rds')
+# mxl.pref.simulation = readRDS('./examples/mxl.pref.simulation.Rds')
+```
+
 # Introduction
 
 In many applications of discrete choice models, modelers are interested in estimating consumer's marginal "willingness-to-pay" (WTP) for different attributes. WTP can be estimated in two ways: 
@@ -80,7 +94,7 @@ Here $\omegaVec$ represents the marginal WTP for changes in each non-price attri
 
 The utility models in equations \ref{eq:utilityPreference} and \ref{eq:utilityWtp} represent the preference space and WTP space utility specifications, respectively. In equation \ref{eq:utilityPreference}, WTP is estimated as $\hat{\betaVec} / \hat{\alpha}$; in equation \ref{eq:utilityWtp}, WTP is simply $\hat{\omegaVec}$.
 
-# The logitr package
+# Using the logitr package
  
 ## Installation
 
@@ -225,8 +239,101 @@ After estimating a model, often times modelers use the results to simulate the m
 |`priceName`|The name of the column in the `market` that identifies price (only required for WTP space models).|`NULL`|
 |`alpha`|The significance level for the confidence interval (e.g. `0.025` results in a 95% CI).| `0.025` |
 
-# Citation Information
+## Citation Information
 
 If you use this package for an analysis that is published, I would greatly appreciate it if you included a citation. You can get the citation information by typing this into R:
 
 > `citation("logitr")`
+
+# Examples 
+
+All examples use the `Yogurt` data set from Jain et al. [-@Jain1994], reformatted for use in the `logitr` package. The data set contains 2,412 choice observations from a series of yogurt purchases by a panel of 100 households in Springfield, Missouri, over a roughly two-year period. The data were collected by optical scanners and contain information about the price, brand, and a "feature" variable, which identifies whether a newspaper advertisement was shown to the customer. There are four brands of yogurt: Yoplait, Dannon, Weight Watchers, and Hiland, with market shares of 34%, 40%, 23% and 3%, respectively.
+
+In the utility models described below, the data variables are represented as follows:
+
+\input{./tables/examplePars.Rmd}
+
+## MNL model in the preference space
+
+Estimate the following homogeneous multinomial logit model in the preference space:
+
+\input{./eqns/mnlPrefExample.Rmd}
+
+where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ have units of utility. 
+
+**Estimate the model**:
+```{r eval=FALSE}
+library("logitr")
+data(yogurt)
+
+mnl.pref = logitr(
+    data       = yogurt,
+    choiceName = "choice",
+    obsIDName  = "obsID",
+    parNames   = c("price", "feat", "dannon", "hiland", "yoplait"))
+```
+
+**Print a summary of the results**:
+```{r}
+summary(mnl.pref)
+```
+
+**Get the estimated model coefficients**:
+```{r}
+coef(mnl.pref)
+```
+
+**Get the WTP implied from the preference space model**:
+```{r}
+mnl.pref.wtp = wtp(mnl.pref, priceName="price")
+mnl.pref.wtp
+```
+
+## MNL model in the WTP space
+
+Estimate the following homogeneous multinomial logit model in the WTP space:
+
+\input{./eqns/mnlWtpExample.Rmd}
+
+where the parameters $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ have units of dollars and $\lambda$ is the scale parameter. 
+
+**Estimate the model**:
+```{r eval=FALSE}
+library("logitr")
+data(yogurt)
+
+mnl.wtp = logitr(
+  data       = yogurt,
+  choiceName = "choice",
+  obsIDName  = "obsID",
+  parNames   = c("feat", "dannon", "hiland", "yoplait"),
+  priceName  = "price",
+  modelSpace = "wtp",
+  options = list(
+    # Since WTP space models are non-convex, run a multistart :
+    numMultiStarts = 10,
+    # If you want to review the results from each multistart run, set keepAllRuns=T:
+    keepAllRuns = TRUE,
+    # Use the computed WTP from the preference space model as the starting values 
+    # for the first run:
+    startVals = mnl.pref.wtp$Estimate,
+    # Because the computed WTP from the preference space model has values 
+    # as large as 8, I increase the boundaries of the random starting values:
+    startParBounds = c(-5,5)))
+```
+
+**Print a summary of the results**:
+```{r}
+summary(mnl.wtp)
+```
+
+**Get the estimated model coefficients**:
+```{r}
+coef(mnl.wtp)
+```
+
+Since WTP space models are non-convex, you cannot be certain that the model reached a global solution, even when using a multistart. However, since the preference space model is convex, you can compute the WTP from the preference space model and compare it against the results from the WTP space model. If the WTP values and log-likelhiood values from the two model spaces are equal, then the WTP space model is likely at a global solution. To compare the WTP and log-likelihood values between the preference space and WTP space models, use the `wtpCompare()` function:
+
+```{r}
+wtpCompare(mnl.pref, mnl.wtp, priceName='price')
+```

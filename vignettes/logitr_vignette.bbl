@@ -1,4 +1,4 @@
-\begin{thebibliography}{4}
+\begin{thebibliography}{5}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -16,6 +16,13 @@ Helveston JP, Feit EM, Michalek JJ (2018).
   of RP endogeneity}.}
 \newblock \emph{Transportation Research Part B: Methodological}, \textbf{109},
   70--89.
+
+\bibitem[{Jain \emph{et~al.}(1994)Jain, Vilcassim, and Chintagunta}]{Jain1994}
+Jain DC, Vilcassim NJ, Chintagunta PK (1994).
+\newblock \enquote{A random-coefficients logit brand-choice model applied to
+  panel data.}
+\newblock \emph{Journal of Business \& Economic Statistics}, \textbf{12}(3),
+  317--328.
 
 \bibitem[{Louviere \emph{et~al.}(2000)Louviere, Hensher, and
   Swait}]{Louviere2000}

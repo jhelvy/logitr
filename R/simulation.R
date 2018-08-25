@@ -28,14 +28,7 @@
 #' # Run the simulation using the estimated preference space MNL model:
 #' marketSimulation(mnl.pref, market, alpha=0.025)
 marketSimulation.logitr = function(model, market, priceName=NULL, alpha=0.025){
-    if (!is.logitr(model)) {
-        stop('Model must be estimated using the "logitr" package')
-    }
-     if (is.logitr.multistart(model)) {
-        cat('**Using results for the best model from the multistart**',
-            '\n', sep='')
-        model = model$bestModel
-    }
+    model = modelClassCheck(model)
     if (isMxlModel(model$parSetup)) {
         return(mxlMarketSimulation(model, market, priceName, alpha))
     } else {

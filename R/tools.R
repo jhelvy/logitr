@@ -56,8 +56,19 @@ ci = function(data, alpha=0.025) {
 }
 
 # Class check functions
-is.logitr <- function(x) {inherits(x, "logitr")}
+is.logitr            <- function(x) {inherits(x, "logitr")}
 is.logitr.multistart <- function(x) {inherits(x, "logitr.multistart")}
+modelClassCheck      <- function(model) {
+    if (!is.logitr(model)) {
+        stop('Model must be estimated using the "logitr" package')
+    }
+     if (is.logitr.multistart(model)) {
+        cat('**Using results for the best model from the multistart**',
+            '\n', sep='')
+        return(model$bestModel)
+    }
+    return(model)
+}
 
 # Functions for getting specific parameter indexes
 getFixedParIDs = function(parSetup) {
