@@ -27,9 +27,7 @@ wtp.logitr = function(model, priceName) {
         stop('Must provide priceName to compute WTP')
     }
     if (is.logitr.multistart(model)) {
-        cat('**Using results for the best model from the multistart**',
-            '\n', sep='')
-        model = model$bestModel
+        model = useBestModel(model)
     }
     if (model$modelSpace == 'pref') {
         return(getPrefSpaceWtp(model, priceName))
