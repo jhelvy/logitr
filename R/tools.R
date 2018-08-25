@@ -70,7 +70,7 @@ modelClassCheck      <- function(model) {
             '**Using results for model ', modelRun,
             ', the best model (largest log-likelihood) from the multistart**',
             '\n', sep=''))
-        return()
+        return(model)
     }
     return(model)
 }
