@@ -63,9 +63,14 @@ modelClassCheck      <- function(model) {
         stop('Model must be estimated using the "logitr" package')
     }
      if (is.logitr.multistart(model)) {
-        cat('**Using results for the best model from the multistart**',
-            '\n', sep='')
-        return(model$bestModel)
+        model    = model$bestModel
+        modelRun = paste(model$multistartNumber, 'of',
+                   model$options$numMultiStarts, sep=' ')
+        cat(paste(
+            '**Using results for model ', modelRun,
+            ', the best model (largest log-likelihood) from the multistart**',
+            '\n', sep=''))
+        return()
     }
     return(model)
 }
