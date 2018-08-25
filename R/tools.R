@@ -67,7 +67,7 @@ modelClassCheck      <- function(model) {
         modelRun = paste(model$multistartNumber, 'of',
                    model$options$numMultiStarts, sep=' ')
         cat(paste(
-            '**Using results for model ', modelRun,
+            '**Using results for model ', modelRun, '\n',
             ', the best model (largest log-likelihood) from the multistart**',
             '\n', sep=''))
         return(model)
