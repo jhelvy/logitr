@@ -2,16 +2,31 @@
 % Please edit documentation in R/summary.R
 \name{summary.logitr}
 \alias{summary.logitr}
-\title{Prints a summary of an estimated model of the 'logitr' class.}
+\title{Prints a summary of an estimated model of the 'logitr' or
+'logitr.multistart' class.}
 \usage{
 \method{summary}{logitr}(model)
 }
 \description{
-Prints a summary of an estimated model of the 'logitr' class.
+Prints a summary of an estimated model of the 'logitr' or
+'logitr.multistart' class.
 }
 \examples{
-# View a summary of an estimate model:
-summary(model)
+# Run a MNL model in the Preference Space with a multistart:
+data(yogurt)
+
+mnl.pref = logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
+  options    = list(
+    numMultiStarts = 10,
+    keepAllRuns = TRUE))
+
+# View a summary of the model:
+summary(mnl.pref)
 }
 \keyword{logitr,}
-\keyword{summary}
+\keyword{logitr.multistart}
+\keyword{summary,}

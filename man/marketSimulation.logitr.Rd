@@ -23,8 +23,10 @@ mnl.pref = logitr(
   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
 
 # Create a market to simulate.
-market = subset(yogurt, obsID==1,
+market = subset(yogurt, obsID==42,
          select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
+row.names(market) = c('dannon', 'hiland', 'weight', 'yoplait')
+market
 
 # Run the simulation using the estimated preference space MNL model:
 marketSimulation(mnl.pref, market, alpha=0.025)
