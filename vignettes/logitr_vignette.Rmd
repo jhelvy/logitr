@@ -333,7 +333,7 @@ coef(mnl.wtp)
 ```
 
 **Comparing WTP**:  
-Since WTP space models are non-convex, you cannot be certain that the model reached a global solution, even when using a multistart. However, the preference space model is convex, so you are guaranteed to find the global solution in that space. Therefore, it can be useful to compute the WTP from the preference space model and compare it against the WTP from the WTP space model. If the WTP values and log-likelhiood values from the two model spaces are equal, then the WTP space model is likely at a global solution. To compare the WTP and log-likelihood values between the preference space and WTP space models, use the `wtpCompare()` function:
+Since WTP space models are non-convex, you cannot be certain that the model reached a global solution, even when using a multistart. However, homogeneous models in the preference space are convex, so you are guaranteed to find the global solution in that space. Therefore, it can be useful to compute the WTP from the preference space model and compare it against the WTP from the WTP space model. If the WTP values and log-likelhiood values from the two model spaces are equal, then the WTP space model is likely at a global solution. To compare the WTP and log-likelihood values between the preference space and WTP space models, use the `wtpCompare()` function:
 
 ```{r}
 wtpCompare(mnl.pref, mnl.wtp, priceName='price')

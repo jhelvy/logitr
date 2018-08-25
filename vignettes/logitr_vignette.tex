@@ -868,11 +868,11 @@ R> summary(mnl.pref)
 \begin{CodeOutput}
 =================================================
 MODEL SUMMARY: 
-                        
-Model Space:  Preference
-Model Run:        1 of 1
-Iterations:           26
-Elapsed Time: 0h:0m:0.2s
+                         
+Model Space:   Preference
+Model Run:         1 of 1
+Iterations:            26
+Elapsed Time: 0h:0m:0.21s
 
 Model Coefficients: 
          Estimate StdError    tStat pVal signif
@@ -921,11 +921,11 @@ R> mnl.pref.wtp
 
 \begin{CodeOutput}
          Estimate StdError    tStat  pVal signif
-lambda   0.366584 0.024468  14.9823 0e+00    ***
-feat     1.340569 0.359760   3.7263 2e-04    ***
-dannon   1.749081 0.199520   8.7664 0e+00    ***
-hiland  -8.386651 0.510315 -16.4343 0e+00    ***
-yoplait  3.752907 0.471823   7.9541 0e+00    ***
+lambda   0.366584 0.024316  15.0761 0e+00    ***
+feat     1.340569 0.358244   3.7421 2e-04    ***
+dannon   1.749081 0.199394   8.7720 0e+00    ***
+hiland  -8.386651 0.508084 -16.5064 0e+00    ***
+yoplait  3.752907 0.469575   7.9921 0e+00    ***
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -983,17 +983,17 @@ R> summary(mnl.wtp)
 =================================================
 SUMMARY OF ALL MULTISTART RUNS:
 
-   run    logLik iterations status
-1    1 -2656.888          6      3
-2    2 -2841.899         69     -1
-3    3 -2656.888         30      3
-4    4 -2862.349         65      3
-5    5 -2852.897         54     -1
-6    6 -2656.888         39      3
-7    7 -2656.888         54      3
-8    8 -2656.888         51      3
-9    9 -2816.146         51     -1
-10  10 -2656.888         82      3
+   run     logLik iterations status
+1    1  -2656.888          6      3
+2    2  -2841.899         69     -1
+3    3  -2822.715         60     -1
+4    4 -12524.410         12     -1
+5    5  -4307.141         12     -1
+6    6  -2656.888         40      3
+7    7  -2849.133         52     -1
+8    8  -2851.091         50     -1
+9    9 -81375.987         12     -1
+10  10  -6556.726         12     -1
 ---
 To view meaning of status codes, use logitr.statusCodes() 
 
@@ -1004,7 +1004,7 @@ MODEL SUMMARY:
 Model Space:  Willingness-to-Pay
 Model Run:               1 of 10
 Iterations:                    6
-Elapsed Time:        0h:0m:0.04s
+Elapsed Time:        0h:0m:0.05s
 
 Model Coefficients: 
          Estimate StdError    tStat  pVal signif
@@ -1050,14 +1050,14 @@ the best model (largest log-likelihood) from the multistart**
 \textbf{Comparing WTP}:\\
 Since WTP space models are non-convex, you cannot be certain that the
 model reached a global solution, even when using a multistart. However,
-the preference space model is convex, so you are guaranteed to find the
-global solution in that space. Therefore, it can be useful to compute
-the WTP from the preference space model and compare it against the WTP
-from the WTP space model. If the WTP values and log-likelhiood values
-from the two model spaces are equal, then the WTP space model is likely
-at a global solution. To compare the WTP and log-likelihood values
-between the preference space and WTP space models, use the
-\texttt{wtpCompare()} function:
+homogeneous models in the preference space are convex, so you are
+guaranteed to find the global solution in that space. Therefore, it can
+be useful to compute the WTP from the preference space model and compare
+it against the WTP from the WTP space model. If the WTP values and
+log-likelhiood values from the two model spaces are equal, then the WTP
+space model is likely at a global solution. To compare the WTP and
+log-likelihood values between the preference space and WTP space models,
+use the \texttt{wtpCompare()} function:
 
 \begin{CodeChunk}
 
