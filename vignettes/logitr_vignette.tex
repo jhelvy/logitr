@@ -180,6 +180,8 @@ WTP is estimated as \(\hat{\boldsymbol\upbeta} / \hat{\alpha}\); in
 equation \ref{eq:utilityWtp}, WTP is simply
 \(\hat{\boldsymbol\upomega}\).
 
+\newpage
+
 \hypertarget{using-the-logitr-package}{%
 \section{Using the logitr package}\label{using-the-logitr-package}}
 
@@ -236,13 +238,13 @@ The data must be arranged the following way:
   continous variable of the price values.
 \end{enumerate}
 
-An example of of the `Yogurt' data set from the \pkg{mlogit} package
-illustrates this format:
+An example of of the \texttt{Yogurt} data set from the \pkg{mlogit}
+package illustrates this format:
 
 \begin{CodeChunk}
 
 \begin{CodeInput}
-R> library('logitr')
+R> library("logitr")
 R> data(yogurt)
 R> head(yogurt, 12)
 \end{CodeInput}
@@ -810,6 +812,8 @@ citation information by typing this into R:
 \texttt{citation("logitr")}
 \end{quote}
 
+\newpage
+
 \hypertarget{examples}{%
 \section{Examples}\label{examples}}
 
@@ -828,6 +832,8 @@ In the utility models described below, the data variables are
 represented as follows:
 
 \input{./tables/examplePars.Rmd}
+
+\newpage
 
 \hypertarget{mnl-model-in-the-preference-space}{%
 \subsection{MNL model in the preference
@@ -850,10 +856,10 @@ R> library("logitr")
 R> data(yogurt)
 R> 
 R> mnl.pref = logitr(
-R>     data       = yogurt,
-R>     choiceName = "choice",
-R>     obsIDName  = "obsID",
-R>     parNames   = c("price", "feat", "dannon", "hiland", "yoplait"))
+R>   data       = yogurt,
+R>   choiceName = "choice",
+R>   obsIDName  = "obsID",
+R>   parNames   = c("price", "feat", "dannon", "hiland", "yoplait"))
 \end{CodeInput}
 \end{CodeChunk}
 
@@ -921,13 +927,15 @@ R> mnl.pref.wtp
 
 \begin{CodeOutput}
          Estimate StdError    tStat  pVal signif
-lambda   0.366584 0.024316  15.0761 0e+00    ***
-feat     1.340569 0.358244   3.7421 2e-04    ***
-dannon   1.749081 0.199394   8.7720 0e+00    ***
-hiland  -8.386651 0.508084 -16.5064 0e+00    ***
-yoplait  3.752907 0.469575   7.9921 0e+00    ***
+lambda   0.366584 0.024301  15.0849 0e+00    ***
+feat     1.340569 0.358475   3.7396 2e-04    ***
+dannon   1.749081 0.199322   8.7751 0e+00    ***
+hiland  -8.386651 0.508711 -16.4861 0e+00    ***
+yoplait  3.752907 0.469490   7.9936 0e+00    ***
 \end{CodeOutput}
 \end{CodeChunk}
+
+\newpage
 
 \hypertarget{mnl-model-in-the-wtp-space}{%
 \subsection{MNL model in the WTP
@@ -958,14 +966,15 @@ R>   parNames   = c("feat", "dannon", "hiland", "yoplait"),
 R>   priceName  = "price",
 R>   modelSpace = "wtp",
 R>   options = list(
-R>     # Since WTP space models are non-convex, run a multistart :
+R>     # Since WTP space models are non-convex, run a multistart:
 R>     numMultiStarts = 10,
-R>     # If you want to review the results from each multistart run, set keepAllRuns=T:
+R>     # If you want to view the results from each multistart run,
+R>     # set keepAllRuns=TRUE:
 R>     keepAllRuns = TRUE,
-R>     # Use the computed WTP from the preference space model as the starting values 
-R>     # for the first run:
+R>     # Use the computed WTP from the preference space model as the starting
+R>     # values for the first run:
 R>     startVals = mnl.pref.wtp$Estimate,
-R>     # Because the computed WTP from the preference space model has values 
+R>     # Because the computed WTP from the preference space model has values
 R>     # as large as 8, I increase the boundaries of the random starting values:
 R>     startParBounds = c(-5,5)))
 \end{CodeInput}
@@ -1062,7 +1071,7 @@ use the \texttt{wtpCompare()} function:
 \begin{CodeChunk}
 
 \begin{CodeInput}
-R> wtpCompare(mnl.pref, mnl.wtp, priceName='price')
+R> wtpCompare(mnl.pref, mnl.wtp, priceName="price")
 \end{CodeInput}
 
 \begin{CodeOutput}
@@ -1077,6 +1086,395 @@ dannon      1.749081     1.7490786  -2.42e-06
 hiland     -8.386651    -8.3866509   7.00e-08
 yoplait     3.752907     3.7529020  -5.04e-06
 logLik  -2656.887878 -2656.8878779   0.00e+00
+\end{CodeOutput}
+\end{CodeChunk}
+
+\newpage
+
+\hypertarget{mxl-model-in-the-preference-space}{%
+\subsection{MXL model in the preference
+space}\label{mxl-model-in-the-preference-space}}
+
+Estimate the following mixed logit model in the preference space:
+
+\input{./eqns/mxlPrefExample.Rmd}
+
+where the parameters \(\alpha\), \(\beta_1\), \(\beta_2\), \(\beta_3\),
+and \(\beta_4\) have units of utility.
+
+\textbf{Estimate the model}:
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> library("logitr")
+R> data(yogurt)
+R> 
+R> mxl.pref = logitr(
+R>     data       = yogurt,
+R>     choiceName = "choice",
+R>     obsIDName  = "obsID",
+R>     parNames   = c("price", "feat", "dannon", "hiland", "yoplait"),
+R>     randPars   = c(feat="n"),
+R>     options    = list(
+R>     # You should run a multistart for MXL models since they are non-convex,
+R>     # but it can take a long time. Here I just use 1 for brevity:
+R>         numMultiStarts = 1,
+R>         numDraws       = 500))
+\end{CodeInput}
+\end{CodeChunk}
+
+\textbf{Print a summary of the results}:
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> summary(mxl.pref)
+\end{CodeInput}
+
+\begin{CodeOutput}
+=================================================
+SUMMARY OF ALL MULTISTART RUNS:
+
+  run   logLik iterations status
+1   1 -2645.92         35      3
+---
+To view meaning of status codes, use logitr.statusCodes() 
+
+Summary of BEST model below (run with largest log-likelihood value)
+=================================================
+MODEL SUMMARY: 
+                        
+Model Space:  Preference
+Model Run:        1 of 1
+Iterations:           35
+Elapsed Time:  0h:2m:24s
+
+Model Coefficients: 
+            Estimate StdError    tStat   pVal signif
+price      -0.392769 0.026708 -14.7062 0.0000    ***
+feat.mu     0.351935 0.204608   1.7201 0.0856      .
+dannon      0.663864 0.055794  11.8985 0.0000    ***
+hiland     -3.324274 0.164101 -20.2575 0.0000    ***
+yoplait     1.458058 0.095513  15.2656 0.0000    ***
+feat.sigma  2.360354 0.515567   4.5782 0.0000    ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Model Fit Values: 
+                                     
+Log.Likelihood.         -2645.9202707
+Null.Log.Likelihood.    -3343.7419990
+AIC.                     5303.8405000
+BIC.                     5338.5698000
+McFadden.R2.                0.2086948
+Adj..McFadden.R2            0.2069005
+Number.of.Observations.  2412.0000000
+
+Summary of 10k Draws for Random Coefficients: 
+       Min.   1st Qu.    Median      Mean  3rd Qu.     Max.
+1 -8.822085 -1.240571 0.3511837 0.3499345 1.942272 8.875549
+\end{CodeOutput}
+\end{CodeChunk}
+
+\textbf{Get the estimated model coefficients}:
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> coef(mxl.pref)
+\end{CodeInput}
+
+\begin{CodeOutput}
+**Using results for model 1 of 1,
+the best model (largest log-likelihood) from the multistart**
+\end{CodeOutput}
+
+\begin{CodeOutput}
+     price    feat.mu     dannon     hiland    yoplait feat.sigma 
+-0.3927685  0.3519352  0.6638642 -3.3242735  1.4580579  2.3603539 
+\end{CodeOutput}
+\end{CodeChunk}
+
+\textbf{Get the WTP implied from the preference space model}:
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> mxl.pref.wtp = wtp(mxl.pref, priceName="price")
+\end{CodeInput}
+
+\begin{CodeOutput}
+**Using results for model 1 of 1,
+the best model (largest log-likelihood) from the multistart**
+\end{CodeOutput}
+
+\begin{CodeInput}
+R> mxl.pref.wtp
+\end{CodeInput}
+
+\begin{CodeOutput}
+            Estimate StdError    tStat  pVal signif
+lambda      0.392769 0.026642  14.7426 0.000    ***
+feat.mu     0.896037 0.536539   1.6700 0.095      .
+dannon      1.690217 0.194398   8.6946 0.000    ***
+hiland     -8.463696 0.524763 -16.1286 0.000    ***
+yoplait     3.712257 0.475960   7.7995 0.000    ***
+feat.sigma  6.009529 1.438721   4.1770 0.000    ***
+\end{CodeOutput}
+\end{CodeChunk}
+
+\newpage
+
+\hypertarget{mxl-model-in-the-wtp-space}{%
+\subsection{MXL model in the WTP
+space}\label{mxl-model-in-the-wtp-space}}
+
+Estimate the following mixed logit model in the WTP space:
+
+\input{./eqns/mxlWtpExample.Rmd}
+
+where the parameters \(\omega_1\), \(\omega_2\), \(\omega_3\), and
+\(\omega_4\) have units of dollars and \(\lambda\) is the scale
+parameter.
+
+\textbf{Estimate the model}:
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> library("logitr")
+R> data(yogurt)
+R> 
+R> mxl.wtp = logitr(
+R>   data       = yogurt,
+R>   choiceName = "choice",
+R>   obsIDName  = "obsID",
+R>   parNames   = c("feat", "dannon", "hiland", "yoplait"),
+R>   priceName  = "price",
+R>   randPars   = c(feat="n"),
+R>   modelSpace = "wtp",
+R>   options = list(
+R>   # You should run a multistart for MXL models since they are non-convex,
+R>   # but it can take a long time. Here I just use 1 for brevity:
+R>     numMultiStarts = 1,
+R>     startVals      = mxl.pref.wtp$Estimate,
+R>     startParBounds = c(-5,5),
+R>     numDraws       = 500))
+\end{CodeInput}
+\end{CodeChunk}
+
+\textbf{Print a summary of the results}:
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> summary(mxl.wtp)
+\end{CodeInput}
+
+\begin{CodeOutput}
+=================================================
+MODEL SUMMARY: 
+                                
+Model Space:  Willingness-to-Pay
+Model Run:                1 of 1
+Iterations:                   14
+Elapsed Time:          0h:1m:25s
+
+Model Coefficients: 
+            Estimate StdError    tStat  pVal signif
+lambda      0.392827 0.026705  14.7101 0.000    ***
+feat.mu     0.918960 0.535044   1.7175 0.086      .
+dannon      1.690071 0.172643   9.7894 0.000    ***
+hiland     -8.462586 0.517519 -16.3522 0.000    ***
+yoplait     3.711836 0.161324  23.0086 0.000    ***
+feat.sigma  6.024517 1.321772   4.5579 0.000    ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Model Fit Values: 
+                                     
+Log.Likelihood.         -2645.9049060
+Null.Log.Likelihood.    -3343.7419990
+AIC.                     5303.8098000
+BIC.                     5338.5391000
+McFadden.R2.                0.2086994
+Adj..McFadden.R2            0.2069050
+Number.of.Observations.  2412.0000000
+
+Summary of 10k Draws for Random Coefficients: 
+       Min.   1st Qu.    Median      Mean  3rd Qu.     Max.
+1 -22.49661 -3.145719 0.9170417 0.9138531 4.978102 22.67445
+\end{CodeOutput}
+\end{CodeChunk}
+
+\textbf{Get the estimated model coefficients}:
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> coef(mxl.wtp)
+\end{CodeInput}
+
+\begin{CodeOutput}
+    lambda    feat.mu     dannon     hiland    yoplait feat.sigma 
+ 0.3928271  0.9189597  1.6900713 -8.4625857  3.7118360  6.0245171 
+\end{CodeOutput}
+\end{CodeChunk}
+
+\textbf{Comparing WTP}:\\
+Note that the WTP will \textbf{not} necessarily be the same between
+preference space and WTP space MXL models. This is because the
+distributional assumptions in MXL models imply different distributions
+on WTP depending on the model space. In this particular example, the
+distributional assumptions are not too different and the WTP results are
+similar. See Train and Weeks \citeyearpar{Train2005} and Sonnier,
+Ainslie, and Otter \citeyearpar{Sonnier2007} for details on this topic:
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> wtpCompare(mxl.pref, mxl.wtp, priceName="price")
+\end{CodeInput}
+
+\begin{CodeOutput}
+**Using results for the best model from the model.pref multistart**
+\end{CodeOutput}
+
+\begin{CodeOutput}
+                   pref           wtp  difference
+lambda         0.392769     0.3928271  0.00005815
+feat.mu        0.896037     0.9189597  0.02292273
+dannon         1.690217     1.6900713 -0.00014566
+hiland        -8.463696    -8.4625857  0.00111030
+yoplait        3.712257     3.7118360 -0.00042097
+feat.sigma     6.009529     6.0245171  0.01498813
+logLik     -2645.920271 -2645.9049060  0.01536475
+\end{CodeOutput}
+\end{CodeChunk}
+
+\newpage
+
+\hypertarget{market-simulations-1}{%
+\subsection{Market simulations}\label{market-simulations-1}}
+
+Simulate the market shares a particular set of alternatives will obtain
+given an estimated model. First, create a market to simulate. Here I
+just choose the 42nd choice set from the \texttt{Yogurt} data set:
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> market = subset(yogurt, obsID==42,
+R+          select=c("feat", "price", "dannon", "hiland", "yoplait"))
+R> row.names(market) = c("dannon", "hiland", "weight", "yoplait")
+R> market
+\end{CodeInput}
+
+\begin{CodeOutput}
+        feat price dannon hiland yoplait
+dannon     0   6.3      1      0       0
+hiland     1   6.1      0      1       0
+weight     0   7.9      0      0       0
+yoplait    0  11.5      0      0       1
+\end{CodeOutput}
+\end{CodeChunk}
+
+\textbf{Run the simulation using the preference space MNL model}:
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> mnl.pref.simulation = marketSimulation(mnl.pref, market, 
+R+                                        alpha=0.025)
+R> mnl.pref.simulation
+\end{CodeInput}
+
+\begin{CodeOutput}
+             share.mean  share.low share.high
+Alt: dannon  0.60767184 0.54899321 0.65993025
+Alt: hiland  0.02601784 0.01861594 0.03632479
+Alt: weight  0.17802325 0.16339959 0.19243791
+Alt: yoplait 0.18828707 0.13861044 0.24869811
+\end{CodeOutput}
+\end{CodeChunk}
+
+\textbf{Run the simulation using the WTP space MNL model} (note that you
+must denote the ``price'' variable):
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> mnl.wtp.simulation = marketSimulation(mnl.wtp, market,
+R+                                       priceName="price", alpha=0.025)
+\end{CodeInput}
+
+\begin{CodeOutput}
+**Using results for model 1 of 10,
+the best model (largest log-likelihood) from the multistart**
+\end{CodeOutput}
+
+\begin{CodeInput}
+R> mnl.wtp.simulation
+\end{CodeInput}
+
+\begin{CodeOutput}
+             share.mean  share.low share.high
+Alt: dannon  0.60767187 0.55590043 0.65927157
+Alt: hiland  0.02601788 0.01803315 0.03770564
+Alt: weight  0.17802340 0.14743087 0.20835237
+Alt: yoplait 0.18828685 0.16329499 0.21166447
+\end{CodeOutput}
+\end{CodeChunk}
+
+\textbf{Run the simulation using the preference space MXL model}:
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> mxl.pref.simulation = marketSimulation(mxl.pref, market, 
+R>                                        alpha=0.025)
+\end{CodeInput}
+\end{CodeChunk}
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> mxl.pref.simulation
+\end{CodeInput}
+
+\begin{CodeOutput}
+             share.mean  share.low share.high
+Alt: dannon  0.58484934 0.50538098  0.6534237
+Alt: hiland  0.08666403 0.03024442  0.1642380
+Alt: weight  0.16062305 0.14159971  0.1776595
+Alt: yoplait 0.16786359 0.11991316  0.2269851
+\end{CodeOutput}
+\end{CodeChunk}
+
+\textbf{Run the simulation using the WTP space MXL model (note that you
+must denote the ``price'' variable)}:
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> mxl.wtp.simulation = marketSimulation(mxl.wtp, market,
+R>                                       priceName="price", alpha=0.025)
+\end{CodeInput}
+\end{CodeChunk}
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> mxl.wtp.simulation
+\end{CodeInput}
+
+\begin{CodeOutput}
+             share.mean  share.low share.high
+Alt: dannon  0.58435544 0.52547872  0.6393934
+Alt: hiland  0.08750646 0.03083815  0.1702705
+Alt: weight  0.16046566 0.12465661  0.1955160
+Alt: yoplait 0.16767244 0.13619400  0.1968769
 \end{CodeOutput}
 \end{CodeChunk}
 

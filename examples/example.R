@@ -37,15 +37,16 @@ mnl.wtp = logitr(
   priceName  = 'price',
   modelSpace = 'wtp',
   options = list(
-    # You should run a multistart for WTP models since they are non-convex:
+    # Since WTP space models are non-convex, run a multistart:
     numMultiStarts = 10,
-    # You can review the results of each multistart run with keepAllRuns=T:
+    # If you want to view the results from each multistart run,
+    # set keepAllRuns=TRUE:
     keepAllRuns = TRUE,
-    # It can be useful to use the WTP from the preference space model as the
-    # starting values for the first run:
+    # Use the computed WTP from the preference space model as the starting
+    # values for the first run:
     startVals = mnl.pref.wtp$Estimate,
-    # Because the mnl.pref.wtp has values as large as 8, I increase the
-    # boundaries of the random starting values:
+    # Because the computed WTP from the preference space model has values
+    # as large as 8, I increase the boundaries of the random starting values:
     startParBounds = c(-5,5)))
 
 # Print a summary of all multistart runs and a summary of the best model:
@@ -77,19 +78,18 @@ mxl.pref = logitr(
   choiceName = 'choice',
   obsIDName  = 'obsID',
   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
-  randPars   = c(price='n', feat='n'),
+  randPars   = c(feat='n'),
   options    = list(
   # You should run a multistart for MXL models since they are non-convex,
   # but it can take a long time. Here I just use 1 for brevity:
-      numMultiStarts = 1,
-      keepAllRuns    = TRUE,
-      numDraws       = 200))
+    numMultiStarts = 1,
+    numDraws       = 500))
 
 # View summary of model:
 summary(mxl.pref)
 
 # Get the WTP implied from the preference space model
-mxl.pref.wtp = wtp(mxl.pref, priceName='price.mu')
+mxl.pref.wtp = wtp(mxl.pref, priceName='price')
 mxl.pref.wtp
 
 # Multistart MXL model in the WTP Space:
@@ -100,22 +100,21 @@ mxl.wtp = logitr(
   parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
   priceName  = 'price',
   randPars   = c(feat='n'),
-  randPrice  = 'n',
+  # randPrice  = 'ln',
   modelSpace = 'wtp',
   options = list(
   # You should run a multistart for MXL models since they are non-convex,
   # but it can take a long time. Here I just use 1 for brevity:
     numMultiStarts = 1,
-    keepAllRuns    = TRUE,
     startVals      = mxl.pref.wtp$Estimate,
     startParBounds = c(-5,5),
-    numDraws       = 200))
+    numDraws       = 500))
 
 # View summary of model:
 summary(mxl.wtp)
 
 # Compare WTP from each space:
-wtpCompare(mxl.pref, mxl.wtp, priceName='price.mu')
+wtpCompare(mxl.pref, mxl.wtp, priceName='price')
 
 # Note that the WTP will not be the same between preference space and WTP
 # space MXL models. This is because the distributional assumptions
@@ -159,9 +158,11 @@ mnl.wtp.simulation
 # of the price attribute in the market argument and must be included for
 # WTP space models.
 
-# Market simulations can also be run using MXL models:
+# Market simulations can also be run using MXL models in either space:
 mxl.pref.simulation = marketSimulation(mxl.pref, market, alpha=0.025)
 mxl.pref.simulation
+mxl.wtp.simulation = marketSimulation(mxl.wtp, market, priceName='price', alpha=0.025)
+mxl.wtp.simulation
 
 # Plot simulation results from preference space MNL model:
 library(ggplot2)

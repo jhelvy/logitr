@@ -49,10 +49,11 @@ mnl.pref.wtp        = readRDS('./examples/mnl.pref.wtp.Rds')
 mnl.wtp             = readRDS('./examples/mnl.wtp.Rds')
 mxl.pref            = readRDS('./examples/mxl.pref.Rds')
 mxl.pref.wtp        = readRDS('./examples/mxl.pref.wtp.Rds')
-# mxl.wtp             = readRDS('./examples/mxl.wtp.Rds')
-# mnl.pref.simulation = readRDS('./examples/mnl.pref.simulation.Rds')
-# mnl.wtp.simulation  = readRDS('./examples/mnl.wtp.simulation.Rds')
-# mxl.pref.simulation = readRDS('./examples/mxl.pref.simulation.Rds')
+mxl.wtp             = readRDS('./examples/mxl.wtp.Rds')
+mnl.pref.simulation = readRDS('./examples/mnl.pref.simulation.Rds')
+mnl.wtp.simulation  = readRDS('./examples/mnl.wtp.simulation.Rds')
+mxl.pref.simulation = readRDS('./examples/mxl.pref.simulation.Rds')
+mxl.wtp.simulation  = readRDS('./examples/mxl.wtp.simulation.Rds')
 ```
 
 # Introduction
@@ -94,6 +95,7 @@ Here $\omegaVec$ represents the marginal WTP for changes in each non-price attri
 
 The utility models in equations \ref{eq:utilityPreference} and \ref{eq:utilityWtp} represent the preference space and WTP space utility specifications, respectively. In equation \ref{eq:utilityPreference}, WTP is estimated as $\hat{\betaVec} / \hat{\alpha}$; in equation \ref{eq:utilityWtp}, WTP is simply $\hat{\omegaVec}$.
 
+\newpage
 # Using the logitr package
  
 ## Installation
@@ -121,10 +123,10 @@ The data must be arranged the following way:
 5. One column must identify `choice`: a dummy variable that identifies which alternative was chosen (`1`=chosen, `0`=not chosen).
 6. For WTP space models, once column must identify `price`: a continous variable of the price values.
 
-An example of of the 'Yogurt' data set from the \pkg{mlogit} package illustrates this format:
+An example of of the `Yogurt` data set from the \pkg{mlogit} package illustrates this format:
 
 ```{r message=F}
-library('logitr')
+library("logitr")
 data(yogurt)
 head(yogurt, 12)
 ```
@@ -245,6 +247,7 @@ If you use this package for an analysis that is published, I would greatly appre
 
 > `citation("logitr")`
 
+\newpage
 # Examples 
 
 All examples use the `Yogurt` data set from Jain et al. [-@Jain1994], reformatted for use in the `logitr` package. The data set contains 2,412 choice observations from a series of yogurt purchases by a panel of 100 households in Springfield, Missouri, over a roughly two-year period. The data were collected by optical scanners and contain information about the price, brand, and a "feature" variable, which identifies whether a newspaper advertisement was shown to the customer. There are four brands of yogurt: Yoplait, Dannon, Weight Watchers, and Hiland, with market shares of 34%, 40%, 23% and 3%, respectively.
@@ -253,6 +256,7 @@ In the utility models described below, the data variables are represented as fol
 
 \input{./tables/examplePars.Rmd}
 
+\newpage
 ## MNL model in the preference space
 
 Estimate the following homogeneous multinomial logit model in the preference space:
@@ -267,10 +271,10 @@ library("logitr")
 data(yogurt)
 
 mnl.pref = logitr(
-    data       = yogurt,
-    choiceName = "choice",
-    obsIDName  = "obsID",
-    parNames   = c("price", "feat", "dannon", "hiland", "yoplait"))
+  data       = yogurt,
+  choiceName = "choice",
+  obsIDName  = "obsID",
+  parNames   = c("price", "feat", "dannon", "hiland", "yoplait"))
 ```
 
 **Print a summary of the results**:
@@ -289,6 +293,7 @@ mnl.pref.wtp = wtp(mnl.pref, priceName="price")
 mnl.pref.wtp
 ```
 
+\newpage
 ## MNL model in the WTP space
 
 Estimate the following homogeneous multinomial logit model in the WTP space:
@@ -310,14 +315,15 @@ mnl.wtp = logitr(
   priceName  = "price",
   modelSpace = "wtp",
   options = list(
-    # Since WTP space models are non-convex, run a multistart :
+    # Since WTP space models are non-convex, run a multistart:
     numMultiStarts = 10,
-    # If you want to review the results from each multistart run, set keepAllRuns=T:
+    # If you want to view the results from each multistart run,
+    # set keepAllRuns=TRUE:
     keepAllRuns = TRUE,
-    # Use the computed WTP from the preference space model as the starting values 
-    # for the first run:
+    # Use the computed WTP from the preference space model as the starting
+    # values for the first run:
     startVals = mnl.pref.wtp$Estimate,
-    # Because the computed WTP from the preference space model has values 
+    # Because the computed WTP from the preference space model has values
     # as large as 8, I increase the boundaries of the random starting values:
     startParBounds = c(-5,5)))
 ```
@@ -336,5 +342,138 @@ coef(mnl.wtp)
 Since WTP space models are non-convex, you cannot be certain that the model reached a global solution, even when using a multistart. However, homogeneous models in the preference space are convex, so you are guaranteed to find the global solution in that space. Therefore, it can be useful to compute the WTP from the preference space model and compare it against the WTP from the WTP space model. If the WTP values and log-likelhiood values from the two model spaces are equal, then the WTP space model is likely at a global solution. To compare the WTP and log-likelihood values between the preference space and WTP space models, use the `wtpCompare()` function:
 
 ```{r}
-wtpCompare(mnl.pref, mnl.wtp, priceName='price')
+wtpCompare(mnl.pref, mnl.wtp, priceName="price")
+```
+
+\newpage
+## MXL model in the preference space
+
+Estimate the following mixed logit model in the preference space:
+
+\input{./eqns/mxlPrefExample.Rmd}
+
+where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ have units of utility. 
+
+**Estimate the model**:
+```{r eval=FALSE}
+library("logitr")
+data(yogurt)
+
+mxl.pref = logitr(
+    data       = yogurt,
+    choiceName = "choice",
+    obsIDName  = "obsID",
+    parNames   = c("price", "feat", "dannon", "hiland", "yoplait"),
+    randPars   = c(feat="n"),
+    options    = list(
+    # You should run a multistart for MXL models since they are non-convex,
+    # but it can take a long time. Here I just use 1 for brevity:
+        numMultiStarts = 1,
+        numDraws       = 500))
+```
+
+**Print a summary of the results**:
+```{r}
+summary(mxl.pref)
+```
+
+**Get the estimated model coefficients**:
+```{r}
+coef(mxl.pref)
+```
+
+**Get the WTP implied from the preference space model**:
+```{r}
+mxl.pref.wtp = wtp(mxl.pref, priceName="price")
+mxl.pref.wtp
+```
+
+\newpage
+## MXL model in the WTP space
+
+Estimate the following mixed logit model in the WTP space:
+
+\input{./eqns/mxlWtpExample.Rmd}
+
+where the parameters $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ have units of dollars and $\lambda$ is the scale parameter. 
+
+**Estimate the model**:
+```{r eval=FALSE}
+library("logitr")
+data(yogurt)
+
+mxl.wtp = logitr(
+  data       = yogurt,
+  choiceName = "choice",
+  obsIDName  = "obsID",
+  parNames   = c("feat", "dannon", "hiland", "yoplait"),
+  priceName  = "price",
+  randPars   = c(feat="n"),
+  modelSpace = "wtp",
+  options = list(
+  # You should run a multistart for MXL models since they are non-convex,
+  # but it can take a long time. Here I just use 1 for brevity:
+    numMultiStarts = 1,
+    startVals      = mxl.pref.wtp$Estimate,
+    startParBounds = c(-5,5),
+    numDraws       = 500))
+```
+
+**Print a summary of the results**:
+```{r}
+summary(mxl.wtp)
+```
+
+**Get the estimated model coefficients**:
+```{r}
+coef(mxl.wtp)
+```
+
+**Comparing WTP**:  
+Note that the WTP will **not** necessarily be the same between preference space and WTP space MXL models. This is because the distributional assumptions in MXL models imply different distributions on WTP depending on the model space. In this particular example, the distributional assumptions are not too different and the WTP results are similar. See Train and Weeks [-@Train2005] and Sonnier, Ainslie, and Otter [-@Sonnier2007] for details on this topic:
+```{r}
+wtpCompare(mxl.pref, mxl.wtp, priceName="price")
+```
+
+\newpage
+## Market simulations
+
+Simulate the market shares a particular set of alternatives will obtain given an estimated model. First, create a market to simulate. Here I just choose the 42nd choice set from the `Yogurt` data set:
+```{r}
+market = subset(yogurt, obsID==42,
+         select=c("feat", "price", "dannon", "hiland", "yoplait"))
+row.names(market) = c("dannon", "hiland", "weight", "yoplait")
+market
+```
+
+**Run the simulation using the preference space MNL model**:
+```{r}
+mnl.pref.simulation = marketSimulation(mnl.pref, market, 
+                                       alpha=0.025)
+mnl.pref.simulation
+```
+
+**Run the simulation using the WTP space MNL model** (note that you must denote the "price" variable):
+```{r}
+mnl.wtp.simulation = marketSimulation(mnl.wtp, market,
+                                      priceName="price", alpha=0.025)
+mnl.wtp.simulation
+```
+
+**Run the simulation using the preference space MXL model**:
+```{r eval=FALSE}
+mxl.pref.simulation = marketSimulation(mxl.pref, market, 
+                                       alpha=0.025)
+```
+```{r}
+mxl.pref.simulation
+```
+
+**Run the simulation using the WTP space MXL model (note that you must denote the "price" variable)**:
+```{r eval=FALSE}
+mxl.wtp.simulation = marketSimulation(mxl.wtp, market,
+                                      priceName="price", alpha=0.025)
+```
+```{r}
+mxl.wtp.simulation
 ```

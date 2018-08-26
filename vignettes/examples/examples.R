@@ -53,16 +53,15 @@ mxl.pref = logitr(
   choiceName = 'choice',
   obsIDName  = 'obsID',
   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
-  randPars   = c(price='ln', feat='n'),
+  randPars   = c(feat='n'),
   options    = list(
   # You should run a multistart for MXL models since they are non-convex,
   # but it can take a long time. Here I just use 1 for brevity:
-      numMultiStarts = 1,
-      keepAllRuns    = TRUE,
-      numDraws       = 500))
+    numMultiStarts = 1,
+    numDraws       = 500))
 
 # Get the WTP implied from the preference space model
-mxl.pref.wtp = wtp(mxl.pref, priceName='price.mu')
+mxl.pref.wtp = wtp(mxl.pref, priceName='price')
 
 # Multistart MXL model in the WTP Space:
 mxl.wtp = logitr(
@@ -78,7 +77,6 @@ mxl.wtp = logitr(
   # You should run a multistart for MXL models since they are non-convex,
   # but it can take a long time. Here I just use 1 for brevity:
     numMultiStarts = 1,
-    keepAllRuns    = TRUE,
     startVals      = mxl.pref.wtp$Estimate,
     startParBounds = c(-5,5),
     numDraws       = 500))
@@ -95,39 +93,22 @@ saveRDS(mxl.wtp,      './mxl.wtp.Rds')
 market = subset(yogurt, obsID==42,
          select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
 row.names(market) = c('dannon', 'hiland', 'weight', 'yoplait')
+market
 
 # Run the simulation using the preference space MNL model:
 mnl.pref.simulation = marketSimulation(mnl.pref, market, alpha=0.025)
 
-# Run the simulation using the WTP space MNL model:
+# Run the simulation using the WTP space MNL model (note that you must denote the "price" variable):
 mnl.wtp.simulation = marketSimulation(mnl.wtp, market, priceName='price')
 
-# Market simulations can also be run using MXL models:
+# Run the simulation using the preference space MXL model:
 mxl.pref.simulation = marketSimulation(mxl.pref, market, alpha=0.025)
+
+# Run the simulation using the WTP space MXL model (note that you must denote the "price" variable):
+mxl.wtp.simulation = marketSimulation(mxl.wtp, market, priceName='price')
 
 # Save results
 saveRDS(mnl.pref.simulation, './mnl.pref.simulation.Rds')
 saveRDS(mnl.wtp.simulation,  './mnl.wtp.simulation.Rds')
 saveRDS(mxl.pref.simulation, './mxl.pref.simulation.Rds')
-
-
-
-
-
-
-
-
-library(mlogit)
-mlogitData = mlogit.data(yogurt,
-    shape      = 'long',
-    choice     = 'choice',
-    alt.levels = c('1', '2', '3', '4'),
-    alt.id     = 'obsID',
-    id.var     = 'id')
-
-model = mlogit(data=mlogitData, formula=choice ~
-    price + feat + dannon + hiland + yoplait |0,
-    rpar = c(price='ln', feat='n'),
-    R = 500, halton = NA)
-
-summary(model)
+saveRDS(mxl.wtp.simulation, './mxl.wtp.simulation.Rds')
