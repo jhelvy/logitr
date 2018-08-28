@@ -20,15 +20,13 @@
 #' # Get the WTP implied from the preference space model
 #' wtp(mnl.pref, priceName='price')
 wtp.logitr = function(model, priceName) {
-    if (!is.logitr(model)) {
+    if (is.logitr(model) == FALSE) {
         stop('Model must be estimated using the"logitr" package')
     }
     if (is.null(priceName)) {
         stop('Must provide priceName to compute WTP')
     }
-    if (is.logitr.multistart(model)) {
-        model = useBestModel(model)
-    }
+    model = allRunsCheck(model)
     if (model$modelSpace == 'pref') {
         return(getPrefSpaceWtp(model, priceName))
     } else if (model$modelSpace == 'wtp') {
@@ -88,19 +86,11 @@ getPrefSpaceWtp = function(model, priceName) {
 #' # Compare the WTP between the two spaces:
 #' wtpCompare(mnl.pref, mnl.wtp, priceName='price')
 wtpCompare.logitr = function(model.pref, model.wtp, priceName) {
-    if (!is.logitr(model.pref) | !is.logitr(model.wtp)) {
+    if (is.logitr(model.pref)==FALSE | is.logitr(model.wtp)==FALSE) {
         stop('Models must be estimated using the "logitr" package')
     }
-    if (is.logitr.multistart(model.pref)) {
-        cat('**Using results for the best model from the model.pref ',
-            'multistart**', '\n', sep='')
-        model.pref = model.pref$bestModel
-    }
-    if (is.logitr.multistart(model.wtp)) {
-        cat('**Using results for the best model from the model.wtp ',
-            'multistart**', '\n', sep='')
-        model.wtp = model.wtp$bestModel
-    }
+    model.pref = allRunsCheck(model.pref)
+    model.wtp = allRunsCheck(model.wtp)
     pref = wtp.logitr(model.pref, priceName)$Estimate
     pref = c(pref, model.pref$logLik)
     wtp  = coef(model.wtp)

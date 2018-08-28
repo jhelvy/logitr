@@ -2,14 +2,12 @@
 % Please edit documentation in R/summary.R
 \name{summary.logitr}
 \alias{summary.logitr}
-\title{Prints a summary of an estimated model of the 'logitr' or
-'logitr.multistart' class.}
+\title{Prints a summary of a model estimated using the 'logitr' package}
 \usage{
 \method{summary}{logitr}(model)
 }
 \description{
-Prints a summary of an estimated model of the 'logitr' or
-'logitr.multistart' class.
+Prints a summary of a model estimated using the 'logitr' package
 }
 \examples{
 # Run a MNL model in the Preference Space with a multistart:
@@ -21,8 +19,8 @@ mnl.pref = logitr(
   obsIDName  = 'obsID',
   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
   options    = list(
-    numMultiStarts = 10,
-    keepAllRuns = TRUE))
+    numMultiStarts = 5,
+    keepAllRuns    = TRUE))
 
 # View a summary of the model:
 summary(mnl.pref)

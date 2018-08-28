@@ -109,6 +109,7 @@ The function returns a list of values, so assign the model output to a variable 
 |`randParSummary`|A summary of any random parameters (for MXL models).|
 |`parSetup`|A summary of the distributional assumptions on each model parameter (`"f"`="fixed", `"n"`="normal distribution", `"ln"`="log-normal distribution").|
 |`options`|A list of all the model options.|
+|`multistartSummary`|A summary of the log-likelihood values for each multistart run.|
 
 ## Data File Setup
 The data must be a `data.frame` object and arranged such that each row is an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. they could each have a different number of alternatives). The columns must include all variables that will be used as model covariates. In addition, the following variables must be included:

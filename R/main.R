@@ -29,8 +29,11 @@ logitr = function(data, choiceName, obsIDName, parNames, priceName=NULL,
         cat('Done!', '\n', sep='')
         return(models)
     } else {
-        bestModel = getBestModel(allModels)
-        bestModel = appendModelInfo(bestModel, modelInputs)
+        bestModel = getBestModel(allModels, modelInputs)
+        if (options$numMultiStarts > 1) {
+            bestModel$multistartSummary = getMultistartSummary(allModels)
+            class(bestModel) = c('logitr', 'logitr.multistart')
+        }
         cat('Done!', '\n', sep='')
         return(bestModel)
     }
@@ -41,16 +44,30 @@ appendAllModelsInfo = function(allModels, modelInputs) {
     for (i in 1:length(allModels)) {
         models[[i]] = appendModelInfo(allModels[[i]], modelInputs)
     }
-    bestModel = getBestModel(allModels)
-    bestModel = appendModelInfo(bestModel, modelInputs)
-    result    = list(models=models, bestModel=bestModel)
-    class(result) = c('logitr.multistart', 'logitr')
+    bestModel = getBestModel(allModels, modelInputs)
+    multistartSummary = getMultistartSummary(models)
+    result = structure(list(models=models, bestModel=bestModel,
+        multistartSummary=multistartSummary),
+        class = c('logitr', 'logitr.multistart', 'logitr.allRuns'))
     return(result)
 }
 
-getBestModel = function(models) {
+getMultistartSummary = function(models) {
+    summary = as.data.frame(matrix(0, ncol=4, nrow=length(models)))
+    colnames(summary) = c('run', 'logLik', 'iterations', 'status')
+    for (i in 1:length(models)) {
+        summary[i, 1] = i
+        summary[i, 2] = round(models[[i]]$logLik, 5)
+        summary[i, 3] = models[[i]]$iterations
+        summary[i, 4] = models[[i]]$status
+    }
+    return(summary)
+}
+
+getBestModel = function(models, modelInputs) {
     logLikVals = getLogLikVals(models)
     bestModel  = models[[which(logLikVals==max(logLikVals))[1]]]
+    bestModel  = appendModelInfo(bestModel, modelInputs)
     return(bestModel)
 }
 
@@ -61,3 +78,5 @@ getLogLikVals = function(models) {
     }
     return(logLikVals)
 }
+
+

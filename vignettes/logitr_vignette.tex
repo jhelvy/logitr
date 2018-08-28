@@ -59,7 +59,8 @@ estimated model.
 
 % Pandoc header
 
-\usepackage{amsmath} \usepackage{upgreek} \usepackage{longtable} \usepackage{booktabs}  \usepackage{float} \usepackage{array}
+\usepackage{amsmath} \usepackage{upgreek} \usepackage{longtable}
+\usepackage{booktabs} \usepackage{float} \usepackage{array}
 
 \begin{document}
 
@@ -642,6 +643,11 @@ A summary of the distributional assumptions on each model parameter
 \end{minipage} & \begin{minipage}[t]{0.73\columnwidth}\raggedright
 A list of all the model options.\strut
 \end{minipage}\tabularnewline
+\begin{minipage}[t]{0.21\columnwidth}\raggedright
+\texttt{multistartSummary}\strut
+\end{minipage} & \begin{minipage}[t]{0.73\columnwidth}\raggedright
+A summary of the log-likelihood values for each multistart run.\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -927,11 +933,11 @@ R> mnl.pref.wtp
 
 \begin{CodeOutput}
          Estimate StdError    tStat  pVal signif
-lambda   0.366584 0.024301  15.0849 0e+00    ***
-feat     1.340569 0.358475   3.7396 2e-04    ***
-dannon   1.749081 0.199322   8.7751 0e+00    ***
-hiland  -8.386651 0.508711 -16.4861 0e+00    ***
-yoplait  3.752907 0.469490   7.9936 0e+00    ***
+lambda   0.366584 0.024293  15.0900 0e+00    ***
+feat     1.340569 0.359319   3.7309 2e-04    ***
+dannon   1.749081 0.199754   8.7562 0e+00    ***
+hiland  -8.386651 0.507870 -16.5134 0e+00    ***
+yoplait  3.752907 0.469751   7.9891 0e+00    ***
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -950,35 +956,26 @@ where the parameters \(\omega_1\), \(\omega_2\), \(\omega_3\), and
 \(\omega_4\) have units of dollars and \(\lambda\) is the scale
 parameter.
 
-\textbf{Estimate the model}:
+\textbf{Estimate the model}: \textbackslash{}begin\{CodeChunk\}
 
-\begin{CodeChunk}
-
-\begin{CodeInput}
-R> library("logitr")
-R> data(yogurt)
-R> 
-R> mnl.wtp = logitr(
-R>   data       = yogurt,
-R>   choiceName = "choice",
-R>   obsIDName  = "obsID",
-R>   parNames   = c("feat", "dannon", "hiland", "yoplait"),
-R>   priceName  = "price",
-R>   modelSpace = "wtp",
-R>   options = list(
-R>     # Since WTP space models are non-convex, run a multistart:
-R>     numMultiStarts = 10,
-R>     # If you want to view the results from each multistart run,
-R>     # set keepAllRuns=TRUE:
-R>     keepAllRuns = TRUE,
-R>     # Use the computed WTP from the preference space model as the starting
-R>     # values for the first run:
-R>     startVals = mnl.pref.wtp$Estimate,
-R>     # Because the computed WTP from the preference space model has values
-R>     # as large as 8, I increase the boundaries of the random starting values:
-R>     startParBounds = c(-5,5)))
-\end{CodeInput}
-\end{CodeChunk}
+\textbackslash{}begin\{CodeInput\} R\textgreater{} library(``logitr'')
+R\textgreater{} data(yogurt) R\textgreater{} R\textgreater{} mnl.wtp =
+logitr( R\textgreater{} data = yogurt, R\textgreater{} choiceName =
+``choice'', R\textgreater{} obsIDName = ``obsID'', R\textgreater{}
+parNames = c(``feat'', ``dannon'', ``hiland'', ``yoplait''),
+R\textgreater{} priceName = ``price'', R\textgreater{} modelSpace =
+``wtp'', R\textgreater{} options = list( R\textgreater{} \# Since WTP
+space models are non-convex, run a multistart: R\textgreater{}
+numMultiStarts = 10, R\textgreater{} \# If you want to view the results
+from each multistart run, R\textgreater{} \# set keepAllRuns=TRUE:
+R\textgreater{} keepAllRuns = TRUE, R\textgreater{} \# Use the computed
+WTP from the preference space model as the starting R\textgreater{} \#
+values for the first run: R\textgreater{} startVals =
+mnl.pref.wtp\$Estimate, R\textgreater{} \# Because the computed WTP from
+the preference space model has values R\textgreater{} \# as large as 8,
+I increase the boundaries of the random starting values: R\textgreater{}
+startParBounds = c(-5,5))) \textbackslash{}end\{CodeInput\}
+\textbackslash{}end\{CodeChunk\}
 
 \textbf{Print a summary of the results}:
 
@@ -1214,13 +1211,13 @@ R> mxl.pref.wtp
 \end{CodeInput}
 
 \begin{CodeOutput}
-            Estimate StdError    tStat  pVal signif
-lambda      0.392769 0.026642  14.7426 0.000    ***
-feat.mu     0.896037 0.536539   1.6700 0.095      .
-dannon      1.690217 0.194398   8.6946 0.000    ***
-hiland     -8.463696 0.524763 -16.1286 0.000    ***
-yoplait     3.712257 0.475960   7.7995 0.000    ***
-feat.sigma  6.009529 1.438721   4.1770 0.000    ***
+            Estimate StdError    tStat   pVal signif
+lambda      0.392769 0.026710  14.7047 0.0000    ***
+feat.mu     0.896037 0.538604   1.6636 0.0963      .
+dannon      1.690217 0.194542   8.6882 0.0000    ***
+hiland     -8.463696 0.525200 -16.1152 0.0000    ***
+yoplait     3.712257 0.476586   7.7893 0.0000    ***
+feat.sigma  6.009529 1.441797   4.1681 0.0000    ***
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1238,31 +1235,21 @@ where the parameters \(\omega_1\), \(\omega_2\), \(\omega_3\), and
 \(\omega_4\) have units of dollars and \(\lambda\) is the scale
 parameter.
 
-\textbf{Estimate the model}:
+\textbf{Estimate the model}: \textbackslash{}begin\{CodeChunk\}
 
-\begin{CodeChunk}
-
-\begin{CodeInput}
-R> library("logitr")
-R> data(yogurt)
-R> 
-R> mxl.wtp = logitr(
-R>   data       = yogurt,
-R>   choiceName = "choice",
-R>   obsIDName  = "obsID",
-R>   parNames   = c("feat", "dannon", "hiland", "yoplait"),
-R>   priceName  = "price",
-R>   randPars   = c(feat="n"),
-R>   modelSpace = "wtp",
-R>   options = list(
-R>   # You should run a multistart for MXL models since they are non-convex,
-R>   # but it can take a long time. Here I just use 1 for brevity:
-R>     numMultiStarts = 1,
-R>     startVals      = mxl.pref.wtp$Estimate,
-R>     startParBounds = c(-5,5),
-R>     numDraws       = 500))
-\end{CodeInput}
-\end{CodeChunk}
+\textbackslash{}begin\{CodeInput\} R\textgreater{} library(``logitr'')
+R\textgreater{} data(yogurt) R\textgreater{} R\textgreater{} mxl.wtp =
+logitr( R\textgreater{} data = yogurt, R\textgreater{} choiceName =
+``choice'', R\textgreater{} obsIDName = ``obsID'', R\textgreater{}
+parNames = c(``feat'', ``dannon'', ``hiland'', ``yoplait''),
+R\textgreater{} priceName = ``price'', R\textgreater{} randPars =
+c(feat=``n''), R\textgreater{} modelSpace = ``wtp'', R\textgreater{}
+options = list( R\textgreater{} \# You should run a multistart for MXL
+models since they are non-convex, R\textgreater{} \# but it can take a
+long time. Here I just use 1 for brevity: R\textgreater{} numMultiStarts
+= 1, R\textgreater{} startVals = mxl.pref.wtp\$Estimate, R\textgreater{}
+startParBounds = c(-5,5), R\textgreater{} numDraws = 500))
+\textbackslash{}end\{CodeInput\} \textbackslash{}end\{CodeChunk\}
 
 \textbf{Print a summary of the results}:
 
@@ -1392,10 +1379,10 @@ R> mnl.pref.simulation
 
 \begin{CodeOutput}
              share.mean  share.low share.high
-Alt: dannon  0.60767184 0.54899321 0.65993025
-Alt: hiland  0.02601784 0.01861594 0.03632479
-Alt: weight  0.17802325 0.16339959 0.19243791
-Alt: yoplait 0.18828707 0.13861044 0.24869811
+Alt: dannon  0.60767184 0.54784588 0.66071855
+Alt: hiland  0.02601784 0.01837808 0.03608819
+Alt: weight  0.17802325 0.16334292 0.19220922
+Alt: yoplait 0.18828707 0.13818003 0.25011957
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1420,10 +1407,10 @@ R> mnl.wtp.simulation
 
 \begin{CodeOutput}
              share.mean  share.low share.high
-Alt: dannon  0.60767187 0.55590043 0.65927157
-Alt: hiland  0.02601788 0.01803315 0.03770564
-Alt: weight  0.17802340 0.14743087 0.20835237
-Alt: yoplait 0.18828685 0.16329499 0.21166447
+Alt: dannon  0.60767187 0.55444561 0.65964844
+Alt: hiland  0.02601788 0.01813574 0.03757673
+Alt: weight  0.17802340 0.14670219 0.20870779
+Alt: yoplait 0.18828685 0.16397112 0.21157891
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1436,7 +1423,6 @@ R> mxl.pref.simulation = marketSimulation(mxl.pref, market,
 R>                                        alpha=0.025)
 \end{CodeInput}
 \end{CodeChunk}
-
 \begin{CodeChunk}
 
 \begin{CodeInput}
@@ -1462,7 +1448,6 @@ R> mxl.wtp.simulation = marketSimulation(mxl.wtp, market,
 R>                                       priceName="price", alpha=0.025)
 \end{CodeInput}
 \end{CodeChunk}
-
 \begin{CodeChunk}
 
 \begin{CodeInput}

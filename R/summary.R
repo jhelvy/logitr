@@ -2,11 +2,9 @@
 # Functions for printing results and summaries
 # ============================================================================
 
-#' Prints a summary of an estimated model of the 'logitr' or
-#' 'logitr.multistart' class.
+#' Prints a summary of a model estimated using the 'logitr' package
 #'
-#' Prints a summary of an estimated model of the 'logitr' or
-#' 'logitr.multistart' class.
+#' Prints a summary of a model estimated using the 'logitr' package
 #' @keywords logitr, summary, logitr.multistart
 #' @export
 #' @examples
@@ -19,30 +17,21 @@
 #'   obsIDName  = 'obsID',
 #'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
 #'   options    = list(
-#'     numMultiStarts = 10,
-#'     keepAllRuns = TRUE))
+#'     numMultiStarts = 5,
+#'     keepAllRuns    = TRUE))
 #'
 #' # View a summary of the model:
 #' summary(mnl.pref)
 summary.logitr = function(model) {
+    if (is.logitr(model)==FALSE) {
+        stop('Model must be estimated using the "logitr" package')
+    }
     if (is.logitr.multistart(model)) {
-        # Print the multistart summary first and then print the summary of the
-        # best model
-        printLine()
-        cat('SUMMARY OF ALL MULTISTART RUNS:', '\n', '\n', sep='')
-        multistartSummary = getMulitstartSummary(model)
-        print(multistartSummary)
-        cat('---', '\n', sep='')
-        cat('To view meaning of status codes, use logitr.statusCodes()', '\n')
-        cat('\n', sep='')
-        cat('Summary of BEST model below (run with largest',
-            'log-likelihood value)', sep=' ')
-        cat('\n', sep='')
+        printMultistartSummary(model)
+    }
+    if (is.logitr.allRuns(model)) {
         printModelSummary(model$bestModel)
     } else {
-        if (class(model) != 'logitr') {
-            stop('Model must be estimated using the "logitr" package')
-        }
         printModelSummary(model)
     }
 }
@@ -51,17 +40,16 @@ printLine = function() {
     cat('=================================================', '\n', sep='')
 }
 
-getMulitstartSummary = function(model) {
-    models  = model$models
-    summary = as.data.frame(matrix(0, ncol=4, nrow=length(models)))
-    colnames(summary) = c('run', 'logLik', 'iterations', 'status')
-    for (i in 1:length(models)) {
-        summary[i, 1] = i
-        summary[i, 2] = round(models[[i]]$logLik, 5)
-        summary[i, 3] = models[[i]]$iterations
-        summary[i, 4] = models[[i]]$status
-    }
-    return(summary)
+printMultistartSummary = function(model) {
+    printLine()
+    cat('SUMMARY OF ALL MULTISTART RUNS:', '\n', '\n', sep='')
+    print(model$multistartSummary)
+    cat('---', '\n', sep='')
+    cat('To view meaning of status codes, use logitr.statusCodes()', '\n')
+    cat('\n', sep='')
+    cat('Summary of BEST model below (run with largest',
+        'log-likelihood value)', sep=' ')
+    cat('\n', sep='')
 }
 
 printModelSummary = function(model) {

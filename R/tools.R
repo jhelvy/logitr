@@ -58,11 +58,10 @@ ci = function(data, alpha=0.025) {
 # Class check functions
 is.logitr            <- function(x) {inherits(x, "logitr")}
 is.logitr.multistart <- function(x) {inherits(x, "logitr.multistart")}
-modelClassCheck      <- function(model) {
-    if (!is.logitr(model)) {
-        stop('Model must be estimated using the "logitr" package')
-    }
-     if (is.logitr.multistart(model)) {
+is.logitr.allRuns    <- function(x) {inherits(x, "logitr.allRuns")}
+
+allRunsCheck <- function(model) {
+     if (is.logitr.allRuns(model)) {
         model = useBestModel(model)
     }
     return(model)

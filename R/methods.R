@@ -104,7 +104,7 @@ marketSimulation <- function(model, market, priceName, alpha) {
 #' # Get the model coefficients:
 #' coef(model)
 coef.logitr = function(model) {
-    model = modelClassCheck(model)
+    model = allRunsCheck(model)
     return(model$coef)
 }
 
