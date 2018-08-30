@@ -28,7 +28,7 @@
 #' # Run the simulation using the estimated preference space MNL model:
 #' marketSimulation(mnl.pref, market, alpha=0.025)
 marketSimulation.logitr = function(model, market, priceName=NULL, alpha=0.025){
-    model = modelClassCheck(model)
+    model = allRunsCheck(model)
     if (isMxlModel(model$parSetup)) {
         return(mxlMarketSimulation(model, market, priceName, alpha))
     } else {
