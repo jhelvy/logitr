@@ -55,6 +55,8 @@ mnl.wtp.simulation  = readRDS('./examples/mnl.wtp.simulation.Rds')
 mxl.pref.simulation = readRDS('./examples/mxl.pref.simulation.Rds')
 mxl.wtp.simulation  = readRDS('./examples/mxl.wtp.simulation.Rds')
 ```
+# WARNING:
+**This document is not complete and contains many errors**
 
 # Introduction
 

@@ -59,7 +59,8 @@ estimated model.
 
 % Pandoc header
 
-\usepackage{amsmath} \usepackage{upgreek} \usepackage{longtable} \usepackage{booktabs}  \usepackage{float} \usepackage{array}
+\usepackage{amsmath} \usepackage{upgreek} \usepackage{longtable}
+\usepackage{booktabs} \usepackage{float} \usepackage{array}
 
 \begin{document}
 
@@ -71,6 +72,11 @@ estimated model.
 \newcommand{\epsilonVec}{\boldsymbol\upepsilon}
 \newcommand{\xVec}{\mathrm{\mathbf{x}}}
 \newcommand{\XVec}{\mathrm{\mathbf{X}}}
+
+\hypertarget{warning}{%
+\section{WARNING:}\label{warning}}
+
+\textbf{This document is not complete and contains many errors}
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
@@ -948,11 +954,11 @@ R> mnl.pref.wtp
 
 \begin{CodeOutput}
          Estimate StdError    tStat  pVal signif
-lambda   0.366584 0.024422  15.0107 0e+00    ***
-feat     1.340569 0.359350   3.7305 2e-04    ***
-dannon   1.749081 0.199749   8.7564 0e+00    ***
-hiland  -8.386651 0.509578 -16.4580 0e+00    ***
-yoplait  3.752907 0.472162   7.9483 0e+00    ***
+lambda   0.366584 0.024369  15.0431 0e+00    ***
+feat     1.340569 0.359012   3.7341 2e-04    ***
+dannon   1.749081 0.199531   8.7660 0e+00    ***
+hiland  -8.386651 0.508074 -16.5067 0e+00    ***
+yoplait  3.752907 0.470629   7.9742 0e+00    ***
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -971,35 +977,26 @@ where the parameters \(\omega_1\), \(\omega_2\), \(\omega_3\), and
 \(\omega_4\) have units of dollars and \(\lambda\) is the scale
 parameter.
 
-\textbf{Estimate the model}:
+\textbf{Estimate the model}: \textbackslash{}begin\{CodeChunk\}
 
-\begin{CodeChunk}
-
-\begin{CodeInput}
-R> library("logitr")
-R> data(yogurt)
-R> 
-R> mnl.wtp = logitr(
-R>   data       = yogurt,
-R>   choiceName = "choice",
-R>   obsIDName  = "obsID",
-R>   parNames   = c("feat", "dannon", "hiland", "yoplait"),
-R>   priceName  = "price",
-R>   modelSpace = "wtp",
-R>   options = list(
-R>     # Since WTP space models are non-convex, run a multistart:
-R>     numMultiStarts = 10,
-R>     # If you want to view the results from each multistart run,
-R>     # set keepAllRuns=TRUE:
-R>     keepAllRuns = TRUE,
-R>     # Use the computed WTP from the preference space model as the starting
-R>     # values for the first run:
-R>     startVals = mnl.pref.wtp$Estimate,
-R>     # Because the computed WTP from the preference space model has values
-R>     # as large as 8, I increase the boundaries of the random starting values:
-R>     startParBounds = c(-5,5)))
-\end{CodeInput}
-\end{CodeChunk}
+\textbackslash{}begin\{CodeInput\} R\textgreater{} library(``logitr'')
+R\textgreater{} data(yogurt) R\textgreater{} R\textgreater{} mnl.wtp =
+logitr( R\textgreater{} data = yogurt, R\textgreater{} choiceName =
+``choice'', R\textgreater{} obsIDName = ``obsID'', R\textgreater{}
+parNames = c(``feat'', ``dannon'', ``hiland'', ``yoplait''),
+R\textgreater{} priceName = ``price'', R\textgreater{} modelSpace =
+``wtp'', R\textgreater{} options = list( R\textgreater{} \# Since WTP
+space models are non-convex, run a multistart: R\textgreater{}
+numMultiStarts = 10, R\textgreater{} \# If you want to view the results
+from each multistart run, R\textgreater{} \# set keepAllRuns=TRUE:
+R\textgreater{} keepAllRuns = TRUE, R\textgreater{} \# Use the computed
+WTP from the preference space model as the starting R\textgreater{} \#
+values for the first run: R\textgreater{} startVals =
+mnl.pref.wtp\$Estimate, R\textgreater{} \# Because the computed WTP from
+the preference space model has values R\textgreater{} \# as large as 8,
+I increase the boundaries of the random starting values: R\textgreater{}
+startParBounds = c(-5,5))) \textbackslash{}end\{CodeInput\}
+\textbackslash{}end\{CodeChunk\}
 
 \textbf{Print a summary of the results}:
 
@@ -1215,12 +1212,12 @@ R> mxl.pref.wtp
 
 \begin{CodeOutput}
             Estimate StdError    tStat   pVal signif
-lambda      0.392769 0.026772  14.6707 0.0000    ***
-feat.mu     0.896037 0.537343   1.6675 0.0955      .
-dannon      1.690217 0.194304   8.6988 0.0000    ***
-hiland     -8.463696 0.526215 -16.0841 0.0000    ***
-yoplait     3.712257 0.477630   7.7722 0.0000    ***
-feat.sigma  6.009529 1.433511   4.1922 0.0000    ***
+lambda      0.392769 0.026619  14.7554 0.0000    ***
+feat.mu     0.896037 0.538862   1.6628 0.0965      .
+dannon      1.690217 0.193995   8.7127 0.0000    ***
+hiland     -8.463696 0.523847 -16.1568 0.0000    ***
+yoplait     3.712257 0.475319   7.8100 0.0000    ***
+feat.sigma  6.009529 1.436228   4.1842 0.0000    ***
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1238,31 +1235,21 @@ where the parameters \(\omega_1\), \(\omega_2\), \(\omega_3\), and
 \(\omega_4\) have units of dollars and \(\lambda\) is the scale
 parameter.
 
-\textbf{Estimate the model}:
+\textbf{Estimate the model}: \textbackslash{}begin\{CodeChunk\}
 
-\begin{CodeChunk}
-
-\begin{CodeInput}
-R> library("logitr")
-R> data(yogurt)
-R> 
-R> mxl.wtp = logitr(
-R>   data       = yogurt,
-R>   choiceName = "choice",
-R>   obsIDName  = "obsID",
-R>   parNames   = c("feat", "dannon", "hiland", "yoplait"),
-R>   priceName  = "price",
-R>   randPars   = c(feat="n"),
-R>   modelSpace = "wtp",
-R>   options = list(
-R>   # You should run a multistart for MXL models since they are non-convex,
-R>   # but it can take a long time. Here I just use 1 for brevity:
-R>     numMultiStarts = 1,
-R>     startVals      = mxl.pref.wtp$Estimate,
-R>     startParBounds = c(-5,5),
-R>     numDraws       = 500))
-\end{CodeInput}
-\end{CodeChunk}
+\textbackslash{}begin\{CodeInput\} R\textgreater{} library(``logitr'')
+R\textgreater{} data(yogurt) R\textgreater{} R\textgreater{} mxl.wtp =
+logitr( R\textgreater{} data = yogurt, R\textgreater{} choiceName =
+``choice'', R\textgreater{} obsIDName = ``obsID'', R\textgreater{}
+parNames = c(``feat'', ``dannon'', ``hiland'', ``yoplait''),
+R\textgreater{} priceName = ``price'', R\textgreater{} randPars =
+c(feat=``n''), R\textgreater{} modelSpace = ``wtp'', R\textgreater{}
+options = list( R\textgreater{} \# You should run a multistart for MXL
+models since they are non-convex, R\textgreater{} \# but it can take a
+long time. Here I just use 1 for brevity: R\textgreater{} numMultiStarts
+= 1, R\textgreater{} startVals = mxl.pref.wtp\$Estimate, R\textgreater{}
+startParBounds = c(-5,5), R\textgreater{} numDraws = 500))
+\textbackslash{}end\{CodeInput\} \textbackslash{}end\{CodeChunk\}
 
 \textbf{Print a summary of the results}:
 
@@ -1388,10 +1375,10 @@ R> mnl.pref.simulation
 
 \begin{CodeOutput}
              share.mean  share.low share.high
-Alt: dannon  0.60767184 0.54795518 0.65928795
-Alt: hiland  0.02601784 0.01849101 0.03631467
-Alt: weight  0.17802325 0.16271351 0.19264601
-Alt: yoplait 0.18828707 0.13778480 0.25130974
+Alt: dannon  0.60767184 0.54811495  0.6602219
+Alt: hiland  0.02601784 0.01844573  0.0361543
+Alt: weight  0.17802325 0.16324483  0.1925427
+Alt: yoplait 0.18828707 0.13881972  0.2502116
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1416,10 +1403,10 @@ R> mnl.wtp.simulation
 
 \begin{CodeOutput}
              share.mean  share.low share.high
-Alt: dannon   0.6076718 0.55509647  0.6581118
-Alt: hiland   0.0260179 0.01817818  0.0376906
-Alt: weight   0.1780234 0.14768727  0.2084269
-Alt: yoplait  0.1882869 0.16365057  0.2118285
+Alt: dannon   0.6076718 0.55588461 0.65971365
+Alt: hiland   0.0260179 0.01799532 0.03740401
+Alt: weight   0.1780234 0.14704761 0.20832311
+Alt: yoplait  0.1882869 0.16353876 0.21077416
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1432,7 +1419,6 @@ R> mxl.pref.simulation = marketSimulation(mxl.pref, market,
 R>                                        alpha=0.025)
 \end{CodeInput}
 \end{CodeChunk}
-
 \begin{CodeChunk}
 
 \begin{CodeInput}
@@ -1458,7 +1444,6 @@ R> mxl.wtp.simulation = marketSimulation(mxl.wtp, market,
 R>                                       priceName="price", alpha=0.025)
 \end{CodeInput}
 \end{CodeChunk}
-
 \begin{CodeChunk}
 
 \begin{CodeInput}
