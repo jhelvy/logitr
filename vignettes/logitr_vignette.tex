@@ -59,8 +59,7 @@ estimated model.
 
 % Pandoc header
 
-\usepackage{amsmath} \usepackage{upgreek} \usepackage{longtable}
-\usepackage{booktabs} \usepackage{float} \usepackage{array}
+\usepackage{amsmath} \usepackage{upgreek} \usepackage{longtable} \usepackage{booktabs}  \usepackage{float} \usepackage{array}
 
 \begin{document}
 
@@ -643,11 +642,6 @@ A summary of the distributional assumptions on each model parameter
 \end{minipage} & \begin{minipage}[t]{0.73\columnwidth}\raggedright
 A list of all the model options.\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.21\columnwidth}\raggedright
-\texttt{multistartSummary}\strut
-\end{minipage} & \begin{minipage}[t]{0.73\columnwidth}\raggedright
-A summary of the log-likelihood values for each multistart run.\strut
-\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -814,9 +808,30 @@ If you use this package for an analysis that is published, I would
 greatly appreciate it if you included a citation. You can get the
 citation information by typing this into R:
 
-\begin{quote}
-\texttt{citation("logitr")}
-\end{quote}
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> citation("logitr")
+\end{CodeInput}
+
+\begin{CodeOutput}
+
+To cite package 'logitr' in publications use:
+
+  John Helveston (2018). logitr: Multinomial and mixed logit
+  estimation in preference and willingness to pay space utility
+  specifications. R package version 1.0.
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {logitr: Multinomial and mixed logit estimation in preference and willingness to pay space utility specifications},
+    author = {John Helveston},
+    year = {2018},
+    note = {R package version 1.0},
+  }
+\end{CodeOutput}
+\end{CodeChunk}
 
 \newpage
 
@@ -884,7 +899,7 @@ MODEL SUMMARY:
 Model Space:   Preference
 Model Run:         1 of 1
 Iterations:            26
-Elapsed Time: 0h:0m:0.21s
+Elapsed Time: 0h:0m:0.19s
 
 Model Coefficients: 
          Estimate StdError    tStat pVal signif
@@ -933,11 +948,11 @@ R> mnl.pref.wtp
 
 \begin{CodeOutput}
          Estimate StdError    tStat  pVal signif
-lambda   0.366584 0.024293  15.0900 0e+00    ***
-feat     1.340569 0.359319   3.7309 2e-04    ***
-dannon   1.749081 0.199754   8.7562 0e+00    ***
-hiland  -8.386651 0.507870 -16.5134 0e+00    ***
-yoplait  3.752907 0.469751   7.9891 0e+00    ***
+lambda   0.366584 0.024422  15.0107 0e+00    ***
+feat     1.340569 0.359350   3.7305 2e-04    ***
+dannon   1.749081 0.199749   8.7564 0e+00    ***
+hiland  -8.386651 0.509578 -16.4580 0e+00    ***
+yoplait  3.752907 0.472162   7.9483 0e+00    ***
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -956,26 +971,35 @@ where the parameters \(\omega_1\), \(\omega_2\), \(\omega_3\), and
 \(\omega_4\) have units of dollars and \(\lambda\) is the scale
 parameter.
 
-\textbf{Estimate the model}: \textbackslash{}begin\{CodeChunk\}
+\textbf{Estimate the model}:
 
-\textbackslash{}begin\{CodeInput\} R\textgreater{} library(``logitr'')
-R\textgreater{} data(yogurt) R\textgreater{} R\textgreater{} mnl.wtp =
-logitr( R\textgreater{} data = yogurt, R\textgreater{} choiceName =
-``choice'', R\textgreater{} obsIDName = ``obsID'', R\textgreater{}
-parNames = c(``feat'', ``dannon'', ``hiland'', ``yoplait''),
-R\textgreater{} priceName = ``price'', R\textgreater{} modelSpace =
-``wtp'', R\textgreater{} options = list( R\textgreater{} \# Since WTP
-space models are non-convex, run a multistart: R\textgreater{}
-numMultiStarts = 10, R\textgreater{} \# If you want to view the results
-from each multistart run, R\textgreater{} \# set keepAllRuns=TRUE:
-R\textgreater{} keepAllRuns = TRUE, R\textgreater{} \# Use the computed
-WTP from the preference space model as the starting R\textgreater{} \#
-values for the first run: R\textgreater{} startVals =
-mnl.pref.wtp\$Estimate, R\textgreater{} \# Because the computed WTP from
-the preference space model has values R\textgreater{} \# as large as 8,
-I increase the boundaries of the random starting values: R\textgreater{}
-startParBounds = c(-5,5))) \textbackslash{}end\{CodeInput\}
-\textbackslash{}end\{CodeChunk\}
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> library("logitr")
+R> data(yogurt)
+R> 
+R> mnl.wtp = logitr(
+R>   data       = yogurt,
+R>   choiceName = "choice",
+R>   obsIDName  = "obsID",
+R>   parNames   = c("feat", "dannon", "hiland", "yoplait"),
+R>   priceName  = "price",
+R>   modelSpace = "wtp",
+R>   options = list(
+R>     # Since WTP space models are non-convex, run a multistart:
+R>     numMultiStarts = 10,
+R>     # If you want to view the results from each multistart run,
+R>     # set keepAllRuns=TRUE:
+R>     keepAllRuns = TRUE,
+R>     # Use the computed WTP from the preference space model as the starting
+R>     # values for the first run:
+R>     startVals = mnl.pref.wtp$Estimate,
+R>     # Because the computed WTP from the preference space model has values
+R>     # as large as 8, I increase the boundaries of the random starting values:
+R>     startParBounds = c(-5,5)))
+\end{CodeInput}
+\end{CodeChunk}
 
 \textbf{Print a summary of the results}:
 
@@ -989,17 +1013,17 @@ R> summary(mnl.wtp)
 =================================================
 SUMMARY OF ALL MULTISTART RUNS:
 
-   run     logLik iterations status
-1    1  -2656.888          6      3
-2    2  -2841.899         69     -1
-3    3  -2822.715         60     -1
-4    4 -12524.410         12     -1
-5    5  -4307.141         12     -1
-6    6  -2656.888         40      3
-7    7  -2849.133         52     -1
-8    8  -2851.091         50     -1
-9    9 -81375.987         12     -1
-10  10  -6556.726         12     -1
+   run    logLik iterations status
+1    1 -2656.888          6      3
+2    2 -2841.899         69     -1
+3    3 -2656.888         41      3
+4    4 -2890.611         60     -1
+5    5 -2819.873         71      3
+6    6 -2885.528         58     -1
+7    7 -2656.888         50      3
+8    8 -2871.870         47     -1
+9    9 -2656.888         43      3
+10  10 -2656.888         41      3
 ---
 To view meaning of status codes, use logitr.statusCodes() 
 
@@ -1008,16 +1032,16 @@ Summary of BEST model below (run with largest log-likelihood value)
 MODEL SUMMARY: 
                                 
 Model Space:  Willingness-to-Pay
-Model Run:               1 of 10
-Iterations:                    6
-Elapsed Time:        0h:0m:0.05s
+Model Run:              10 of 10
+Iterations:                   41
+Elapsed Time:        0h:0m:0.23s
 
 Model Coefficients: 
          Estimate StdError    tStat  pVal signif
 lambda   0.366584 0.024366  15.0449 0e+00    ***
-feat     1.340571 0.355865   3.7671 2e-04    ***
-dannon   1.749079 0.179897   9.7227 0e+00    ***
-hiland  -8.386651 0.502472 -16.6908 0e+00    ***
+feat     1.340573 0.355865   3.7671 2e-04    ***
+dannon   1.749077 0.179897   9.7227 0e+00    ***
+hiland  -8.386650 0.502472 -16.6908 0e+00    ***
 yoplait  3.752902 0.168121  22.3226 0e+00    ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -1043,13 +1067,13 @@ R> coef(mnl.wtp)
 \end{CodeInput}
 
 \begin{CodeOutput}
-**Using results for model 1 of 10,
+**Using results for model 10 of 10,
 the best model (largest log-likelihood) from the multistart**
 \end{CodeOutput}
 
 \begin{CodeOutput}
     lambda       feat     dannon     hiland    yoplait 
- 0.3665844  1.3405709  1.7490786 -8.3866509  3.7529020 
+ 0.3665845  1.3405732  1.7490766 -8.3866503  3.7529018 
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1072,16 +1096,17 @@ R> wtpCompare(mnl.pref, mnl.wtp, priceName="price")
 \end{CodeInput}
 
 \begin{CodeOutput}
-**Using results for the best model from the model.wtp multistart**
+**Using results for model 10 of 10,
+the best model (largest log-likelihood) from the multistart**
 \end{CodeOutput}
 
 \begin{CodeOutput}
                 pref           wtp difference
-lambda      0.366584     0.3665844   3.90e-07
-feat        1.340569     1.3405709   1.93e-06
-dannon      1.749081     1.7490786  -2.42e-06
-hiland     -8.386651    -8.3866509   7.00e-08
-yoplait     3.752907     3.7529020  -5.04e-06
+lambda      0.366584     0.3665845   5.00e-07
+feat        1.340569     1.3405732   4.21e-06
+dannon      1.749081     1.7490766  -4.41e-06
+hiland     -8.386651    -8.3866503   7.20e-07
+yoplait     3.752907     3.7529018  -5.18e-06
 logLik  -2656.887878 -2656.8878779   0.00e+00
 \end{CodeOutput}
 \end{CodeChunk}
@@ -1131,21 +1156,12 @@ R> summary(mxl.pref)
 
 \begin{CodeOutput}
 =================================================
-SUMMARY OF ALL MULTISTART RUNS:
-
-  run   logLik iterations status
-1   1 -2645.92         35      3
----
-To view meaning of status codes, use logitr.statusCodes() 
-
-Summary of BEST model below (run with largest log-likelihood value)
-=================================================
 MODEL SUMMARY: 
                         
 Model Space:  Preference
 Model Run:        1 of 1
 Iterations:           35
-Elapsed Time:  0h:2m:24s
+Elapsed Time:  0h:3m:11s
 
 Model Coefficients: 
             Estimate StdError    tStat   pVal signif
@@ -1183,11 +1199,6 @@ R> coef(mxl.pref)
 \end{CodeInput}
 
 \begin{CodeOutput}
-**Using results for model 1 of 1,
-the best model (largest log-likelihood) from the multistart**
-\end{CodeOutput}
-
-\begin{CodeOutput}
      price    feat.mu     dannon     hiland    yoplait feat.sigma 
 -0.3927685  0.3519352  0.6638642 -3.3242735  1.4580579  2.3603539 
 \end{CodeOutput}
@@ -1199,25 +1210,17 @@ the best model (largest log-likelihood) from the multistart**
 
 \begin{CodeInput}
 R> mxl.pref.wtp = wtp(mxl.pref, priceName="price")
-\end{CodeInput}
-
-\begin{CodeOutput}
-**Using results for model 1 of 1,
-the best model (largest log-likelihood) from the multistart**
-\end{CodeOutput}
-
-\begin{CodeInput}
 R> mxl.pref.wtp
 \end{CodeInput}
 
 \begin{CodeOutput}
             Estimate StdError    tStat   pVal signif
-lambda      0.392769 0.026710  14.7047 0.0000    ***
-feat.mu     0.896037 0.538604   1.6636 0.0963      .
-dannon      1.690217 0.194542   8.6882 0.0000    ***
-hiland     -8.463696 0.525200 -16.1152 0.0000    ***
-yoplait     3.712257 0.476586   7.7893 0.0000    ***
-feat.sigma  6.009529 1.441797   4.1681 0.0000    ***
+lambda      0.392769 0.026772  14.6707 0.0000    ***
+feat.mu     0.896037 0.537343   1.6675 0.0955      .
+dannon      1.690217 0.194304   8.6988 0.0000    ***
+hiland     -8.463696 0.526215 -16.0841 0.0000    ***
+yoplait     3.712257 0.477630   7.7722 0.0000    ***
+feat.sigma  6.009529 1.433511   4.1922 0.0000    ***
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1235,21 +1238,31 @@ where the parameters \(\omega_1\), \(\omega_2\), \(\omega_3\), and
 \(\omega_4\) have units of dollars and \(\lambda\) is the scale
 parameter.
 
-\textbf{Estimate the model}: \textbackslash{}begin\{CodeChunk\}
+\textbf{Estimate the model}:
 
-\textbackslash{}begin\{CodeInput\} R\textgreater{} library(``logitr'')
-R\textgreater{} data(yogurt) R\textgreater{} R\textgreater{} mxl.wtp =
-logitr( R\textgreater{} data = yogurt, R\textgreater{} choiceName =
-``choice'', R\textgreater{} obsIDName = ``obsID'', R\textgreater{}
-parNames = c(``feat'', ``dannon'', ``hiland'', ``yoplait''),
-R\textgreater{} priceName = ``price'', R\textgreater{} randPars =
-c(feat=``n''), R\textgreater{} modelSpace = ``wtp'', R\textgreater{}
-options = list( R\textgreater{} \# You should run a multistart for MXL
-models since they are non-convex, R\textgreater{} \# but it can take a
-long time. Here I just use 1 for brevity: R\textgreater{} numMultiStarts
-= 1, R\textgreater{} startVals = mxl.pref.wtp\$Estimate, R\textgreater{}
-startParBounds = c(-5,5), R\textgreater{} numDraws = 500))
-\textbackslash{}end\{CodeInput\} \textbackslash{}end\{CodeChunk\}
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> library("logitr")
+R> data(yogurt)
+R> 
+R> mxl.wtp = logitr(
+R>   data       = yogurt,
+R>   choiceName = "choice",
+R>   obsIDName  = "obsID",
+R>   parNames   = c("feat", "dannon", "hiland", "yoplait"),
+R>   priceName  = "price",
+R>   randPars   = c(feat="n"),
+R>   modelSpace = "wtp",
+R>   options = list(
+R>   # You should run a multistart for MXL models since they are non-convex,
+R>   # but it can take a long time. Here I just use 1 for brevity:
+R>     numMultiStarts = 1,
+R>     startVals      = mxl.pref.wtp$Estimate,
+R>     startParBounds = c(-5,5),
+R>     numDraws       = 500))
+\end{CodeInput}
+\end{CodeChunk}
 
 \textbf{Print a summary of the results}:
 
@@ -1266,7 +1279,7 @@ MODEL SUMMARY:
 Model Space:  Willingness-to-Pay
 Model Run:                1 of 1
 Iterations:                   14
-Elapsed Time:          0h:1m:25s
+Elapsed Time:          0h:1m:49s
 
 Model Coefficients: 
             Estimate StdError    tStat  pVal signif
@@ -1325,10 +1338,6 @@ R> wtpCompare(mxl.pref, mxl.wtp, priceName="price")
 \end{CodeInput}
 
 \begin{CodeOutput}
-**Using results for the best model from the model.pref multistart**
-\end{CodeOutput}
-
-\begin{CodeOutput}
                    pref           wtp  difference
 lambda         0.392769     0.3928271  0.00005815
 feat.mu        0.896037     0.9189597  0.02292273
@@ -1379,10 +1388,10 @@ R> mnl.pref.simulation
 
 \begin{CodeOutput}
              share.mean  share.low share.high
-Alt: dannon  0.60767184 0.54784588 0.66071855
-Alt: hiland  0.02601784 0.01837808 0.03608819
-Alt: weight  0.17802325 0.16334292 0.19220922
-Alt: yoplait 0.18828707 0.13818003 0.25011957
+Alt: dannon  0.60767184 0.54795518 0.65928795
+Alt: hiland  0.02601784 0.01849101 0.03631467
+Alt: weight  0.17802325 0.16271351 0.19264601
+Alt: yoplait 0.18828707 0.13778480 0.25130974
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1397,7 +1406,7 @@ R+                                       priceName="price", alpha=0.025)
 \end{CodeInput}
 
 \begin{CodeOutput}
-**Using results for model 1 of 10,
+**Using results for model 10 of 10,
 the best model (largest log-likelihood) from the multistart**
 \end{CodeOutput}
 
@@ -1407,10 +1416,10 @@ R> mnl.wtp.simulation
 
 \begin{CodeOutput}
              share.mean  share.low share.high
-Alt: dannon  0.60767187 0.55444561 0.65964844
-Alt: hiland  0.02601788 0.01813574 0.03757673
-Alt: weight  0.17802340 0.14670219 0.20870779
-Alt: yoplait 0.18828685 0.16397112 0.21157891
+Alt: dannon   0.6076718 0.55509647  0.6581118
+Alt: hiland   0.0260179 0.01817818  0.0376906
+Alt: weight   0.1780234 0.14768727  0.2084269
+Alt: yoplait  0.1882869 0.16365057  0.2118285
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1423,6 +1432,7 @@ R> mxl.pref.simulation = marketSimulation(mxl.pref, market,
 R>                                        alpha=0.025)
 \end{CodeInput}
 \end{CodeChunk}
+
 \begin{CodeChunk}
 
 \begin{CodeInput}
@@ -1431,10 +1441,10 @@ R> mxl.pref.simulation
 
 \begin{CodeOutput}
              share.mean  share.low share.high
-Alt: dannon  0.58484934 0.50538098  0.6534237
-Alt: hiland  0.08666403 0.03024442  0.1642380
-Alt: weight  0.16062305 0.14159971  0.1776595
-Alt: yoplait 0.16786359 0.11991316  0.2269851
+Alt: dannon  0.58484934 0.50522349  0.6540077
+Alt: hiland  0.08666403 0.02950048  0.1626655
+Alt: weight  0.16062305 0.14157514  0.1781275
+Alt: yoplait 0.16786359 0.11967127  0.2304225
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1448,6 +1458,7 @@ R> mxl.wtp.simulation = marketSimulation(mxl.wtp, market,
 R>                                       priceName="price", alpha=0.025)
 \end{CodeInput}
 \end{CodeChunk}
+
 \begin{CodeChunk}
 
 \begin{CodeInput}
@@ -1456,10 +1467,10 @@ R> mxl.wtp.simulation
 
 \begin{CodeOutput}
              share.mean  share.low share.high
-Alt: dannon  0.58435544 0.52547872  0.6393934
-Alt: hiland  0.08750646 0.03083815  0.1702705
-Alt: weight  0.16046566 0.12465661  0.1955160
-Alt: yoplait 0.16767244 0.13619400  0.1968769
+Alt: dannon  0.58435544 0.52656969  0.6389182
+Alt: hiland  0.08750646 0.03029285  0.1683864
+Alt: weight  0.16046566 0.12500750  0.1960403
+Alt: yoplait 0.16767244 0.13722497  0.1967524
 \end{CodeOutput}
 \end{CodeChunk}
 

@@ -197,7 +197,6 @@ The function returns a list of values, so assign the model output to a variable 
 |`randParSummary`|A summary of any random parameters (for MXL models).|
 |`parSetup`|A summary of the distributional assumptions on each model parameter (`"f"`="fixed", `"n"`="normal distribution", `"ln"`="log-normal distribution").|
 |`options`|A list of all the model options.|
-|`multistartSummary`|A summary of the log-likelihood values for each multistart run.|
 
 ## Details about "parNames" argument:
 
@@ -246,7 +245,9 @@ After estimating a model, often times modelers use the results to simulate the m
 
 If you use this package for an analysis that is published, I would greatly appreciate it if you included a citation. You can get the citation information by typing this into R:
 
-> `citation("logitr")`
+```{r}
+citation("logitr")
+```
 
 \newpage
 # Examples 
