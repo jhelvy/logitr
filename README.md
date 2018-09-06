@@ -5,7 +5,7 @@
 - Preference space utility parameterization.
 - WTP space utility parameterization.
 - A multistart optimization loop with random starting points in each iteration (useful for non-convex problems like MXL models or models with WTP space utility parameterizations).
-- A [market simulation](#market-simulations) function for computing the expected market shares of a set of alternatives using an estimated model.
+- A [simulation](#simulation) function for computing the expected shares of a set of alternatives using an estimated model.
 
 MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in [Kenneth Train's](http://eml.berkeley.edu/~train/) book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)*](http://eml.berkeley.edu/books/choice2.html).
 
@@ -20,7 +20,7 @@ MXL models assume uncorrelated heterogeneity covariances and are estimated using
   - [Details About `parNames` Argument](#details-about-parnames-argument)
   - [Using `summary()` with `logitr`](#using-summary-with-logitr)
   - [Computing and Comparing WTP](#computing-and-comparing-wtp)
-- [Market Simulations](#market-simulations)
+- [Simulation](#simulation)
 - [Author, Version, and License Information](#author-version-and-license-information)
 - [Citation Information](#citation-information)
 
@@ -143,11 +143,11 @@ To compare the WTP between two equivalent models in the preference space and WTP
 
 `wtpCompare(prefSpaceModel, wtpSpaceModel, priceName)`
 
-# Market Simulations
-After estimating a model, often times modelers want to use the results to simulate the market shares of a particular set of market alternatives. This can be done using the function `marketSimulation()`. The simulation reports the expected market share as well as a confidence interval for each market alternative:
+# Simulation
+After estimating a model, often times modelers want to use the results to simulate the expected shares of a particular set of alternatives. This can be done using the function `simulateShares()`. The simulation reports the expected share as well as a confidence interval for each alternative:
 
 ```
-simulation = marketSimulation(model, market, priceName=NULL, alpha=0.025)
+shares = simulateShares(model, alts, priceName=NULL, alpha=0.025)
 ```
 
 **Arguments:**
@@ -155,8 +155,8 @@ simulation = marketSimulation(model, market, priceName=NULL, alpha=0.025)
 |    Argument    |    Description    |    Default    |
 |:---------------|:------------------|:--------------|
 |`model`|A MNL or MXL model estimated using the `logitr` package.| -- |
-|`market`|A data frame of the market alternatives. Each row should be an alternative, and each column an attribute for which there is a corresponding coefficient in the estimated model.| -- |
-|`priceName`|The name of the column in the `market` that identifies price (only required for WTP space models).|`NULL`|
+|`alts`|A data frame of the alternatives. Each row should be an alternative, and each column an attribute for which there is a corresponding coefficient in the estimated model.| -- |
+|`priceName`|The name of the column in `alts` that identifies price (only required for WTP space models).|`NULL`|
 |`alpha`|The significance level for the confidence interval (e.g. `0.025` results in a 95% CI).| `0.025` |
 
 # Author, Version, and License Information

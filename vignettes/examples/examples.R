@@ -89,23 +89,23 @@ saveRDS(mxl.wtp,      './mxl.wtp.Rds')
 # ============================================================================
 # Run Market Simulation Using Estimated Models
 
-# Create a market to simulate.
-market = subset(yogurt, obsID==42,
+# Create a set of alternatives for which to simulate shares:
+alts = subset(yogurt, obsID==42,
          select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
-row.names(market) = c('dannon', 'hiland', 'weight', 'yoplait')
-market
+row.names(alts) = c('dannon', 'hiland', 'weight', 'yoplait')
+alts
 
 # Run the simulation using the preference space MNL model:
-mnl.pref.simulation = marketSimulation(mnl.pref, market, alpha=0.025)
+mnl.pref.simulation = simulateShares(mnl.pref, alts, alpha=0.025)
 
 # Run the simulation using the WTP space MNL model (note that you must denote the "price" variable):
-mnl.wtp.simulation = marketSimulation(mnl.wtp, market, priceName='price')
+mnl.wtp.simulation = simulateShares(mnl.wtp, alts, priceName='price')
 
 # Run the simulation using the preference space MXL model:
-mxl.pref.simulation = marketSimulation(mxl.pref, market, alpha=0.025)
+mxl.pref.simulation = simulateShares(mxl.pref, alts, alpha=0.025)
 
 # Run the simulation using the WTP space MXL model (note that you must denote the "price" variable):
-mxl.wtp.simulation = marketSimulation(mxl.wtp, market, priceName='price')
+mxl.wtp.simulation = simulateShares(mxl.wtp, alts, priceName='price')
 
 # Save results
 saveRDS(mnl.pref.simulation, './mnl.pref.simulation.Rds')

@@ -59,8 +59,7 @@ estimated model.
 
 % Pandoc header
 
-\usepackage{amsmath} \usepackage{upgreek} \usepackage{longtable}
-\usepackage{booktabs} \usepackage{float} \usepackage{array}
+\usepackage{amsmath} \usepackage{upgreek} \usepackage{longtable} \usepackage{booktabs}  \usepackage{float} \usepackage{array}
 
 \begin{document}
 
@@ -73,10 +72,9 @@ estimated model.
 \newcommand{\xVec}{\mathrm{\mathbf{x}}}
 \newcommand{\XVec}{\mathrm{\mathbf{X}}}
 
-\hypertarget{warning}{%
-\section{WARNING:}\label{warning}}
-
-\textbf{This document is not complete and contains many errors}
+\begin{center}
+\textcolor{red}{**WARNING: This document is not complete and may contain errors**}
+\end{center}
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
@@ -745,17 +743,17 @@ and WTP spaces, use the \texttt{wtpCompare()} function:
 \texttt{wtpCompare(prefSpaceModel,\ wtpSpaceModel,\ priceName)}
 \end{quote}
 
-\hypertarget{market-simulations}{%
-\subsection{Market Simulations}\label{market-simulations}}
+\hypertarget{simulation}{%
+\subsection{Simulation}\label{simulation}}
 
-After estimating a model, often times modelers use the results to
-simulate the market shares of a particular set of market alternatives.
-This can be done using the \texttt{marketSimulation()} function. The
-simulation reports the expected market share as well as a confidence
-interval for each market alternative:
+After estimating a model, often times modelers want to use the results
+to simulate the expected shares of a particular set of alternatives.
+This can be done using the function \texttt{simulateShares()}. The
+simulation reports the expected share as well as a confidence interval
+for each alternative:
 
 \begin{quote}
-\texttt{simulation\ =\ marketSimulation(model,\ market,\ priceName=NULL,\ alpha=0.025)}
+\texttt{shares\ =\ simulateShares(model,\ alts,\ priceName=NULL,\ alpha=0.025)}
 \end{quote}
 
 \hypertarget{arguments-1}{%
@@ -780,19 +778,19 @@ A MNL or MXL model estimated using the \texttt{logitr} package.\strut
 --\strut
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.14\columnwidth}\raggedright
-\texttt{market}\strut
+\texttt{alts}\strut
 \end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
-A data frame of the market alternatives. Each row should be an
-alternative, and each column an attribute for which there is a
-corresponding coefficient in the estimated model.\strut
+A data frame of the alternatives. Each row should be an alternative, and
+each column an attribute for which there is a corresponding coefficient
+in the estimated model.\strut
 \end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright
 --\strut
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.14\columnwidth}\raggedright
 \texttt{priceName}\strut
 \end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
-The name of the column in the \texttt{market} that identifies price
-(only required for WTP space models).\strut
+The name of the column in \texttt{alts} that identifies price (only
+required for WTP space models).\strut
 \end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright
 \texttt{NULL}\strut
 \end{minipage}\tabularnewline
@@ -812,7 +810,7 @@ results in a 95\% CI).\strut
 
 If you use this package for an analysis that is published, I would
 greatly appreciate it if you included a citation. You can get the
-citation information by typing this into R:
+citation information by using the \texttt{citation()} function:
 
 \begin{CodeChunk}
 
@@ -826,7 +824,7 @@ To cite package 'logitr' in publications use:
 
   John Helveston (2018). logitr: Multinomial and mixed logit
   estimation in preference and willingness to pay space utility
-  specifications. R package version 1.0.
+  specifications. R package version 1.2.
 
 A BibTeX entry for LaTeX users is
 
@@ -834,7 +832,7 @@ A BibTeX entry for LaTeX users is
     title = {logitr: Multinomial and mixed logit estimation in preference and willingness to pay space utility specifications},
     author = {John Helveston},
     year = {2018},
-    note = {R package version 1.0},
+    note = {R package version 1.2},
   }
 \end{CodeOutput}
 \end{CodeChunk}
@@ -954,11 +952,11 @@ R> mnl.pref.wtp
 
 \begin{CodeOutput}
          Estimate StdError    tStat  pVal signif
-lambda   0.366584 0.024369  15.0431 0e+00    ***
-feat     1.340569 0.359012   3.7341 2e-04    ***
-dannon   1.749081 0.199531   8.7660 0e+00    ***
-hiland  -8.386651 0.508074 -16.5067 0e+00    ***
-yoplait  3.752907 0.470629   7.9742 0e+00    ***
+lambda   0.366584 0.024376  15.0387 0e+00    ***
+feat     1.340569 0.357244   3.7525 2e-04    ***
+dannon   1.749081 0.199363   8.7733 0e+00    ***
+hiland  -8.386651 0.508079 -16.5066 0e+00    ***
+yoplait  3.752907 0.470556   7.9755 0e+00    ***
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -977,26 +975,35 @@ where the parameters \(\omega_1\), \(\omega_2\), \(\omega_3\), and
 \(\omega_4\) have units of dollars and \(\lambda\) is the scale
 parameter.
 
-\textbf{Estimate the model}: \textbackslash{}begin\{CodeChunk\}
+\textbf{Estimate the model}:
 
-\textbackslash{}begin\{CodeInput\} R\textgreater{} library(``logitr'')
-R\textgreater{} data(yogurt) R\textgreater{} R\textgreater{} mnl.wtp =
-logitr( R\textgreater{} data = yogurt, R\textgreater{} choiceName =
-``choice'', R\textgreater{} obsIDName = ``obsID'', R\textgreater{}
-parNames = c(``feat'', ``dannon'', ``hiland'', ``yoplait''),
-R\textgreater{} priceName = ``price'', R\textgreater{} modelSpace =
-``wtp'', R\textgreater{} options = list( R\textgreater{} \# Since WTP
-space models are non-convex, run a multistart: R\textgreater{}
-numMultiStarts = 10, R\textgreater{} \# If you want to view the results
-from each multistart run, R\textgreater{} \# set keepAllRuns=TRUE:
-R\textgreater{} keepAllRuns = TRUE, R\textgreater{} \# Use the computed
-WTP from the preference space model as the starting R\textgreater{} \#
-values for the first run: R\textgreater{} startVals =
-mnl.pref.wtp\$Estimate, R\textgreater{} \# Because the computed WTP from
-the preference space model has values R\textgreater{} \# as large as 8,
-I increase the boundaries of the random starting values: R\textgreater{}
-startParBounds = c(-5,5))) \textbackslash{}end\{CodeInput\}
-\textbackslash{}end\{CodeChunk\}
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> library("logitr")
+R> data(yogurt)
+R> 
+R> mnl.wtp = logitr(
+R>   data       = yogurt,
+R>   choiceName = "choice",
+R>   obsIDName  = "obsID",
+R>   parNames   = c("feat", "dannon", "hiland", "yoplait"),
+R>   priceName  = "price",
+R>   modelSpace = "wtp",
+R>   options = list(
+R>     # Since WTP space models are non-convex, run a multistart:
+R>     numMultiStarts = 10,
+R>     # If you want to view the results from each multistart run,
+R>     # set keepAllRuns=TRUE:
+R>     keepAllRuns = TRUE,
+R>     # Use the computed WTP from the preference space model as the starting
+R>     # values for the first run:
+R>     startVals = mnl.pref.wtp$Estimate,
+R>     # Because the computed WTP from the preference space model has values
+R>     # as large as 8, I increase the boundaries of the random starting values:
+R>     startParBounds = c(-5,5)))
+\end{CodeInput}
+\end{CodeChunk}
 
 \textbf{Print a summary of the results}:
 
@@ -1212,12 +1219,12 @@ R> mxl.pref.wtp
 
 \begin{CodeOutput}
             Estimate StdError    tStat   pVal signif
-lambda      0.392769 0.026619  14.7554 0.0000    ***
-feat.mu     0.896037 0.538862   1.6628 0.0965      .
-dannon      1.690217 0.193995   8.7127 0.0000    ***
-hiland     -8.463696 0.523847 -16.1568 0.0000    ***
-yoplait     3.712257 0.475319   7.8100 0.0000    ***
-feat.sigma  6.009529 1.436228   4.1842 0.0000    ***
+lambda      0.392769 0.026657  14.7340 0.0000    ***
+feat.mu     0.896037 0.538625   1.6636 0.0963      .
+dannon      1.690217 0.193849   8.7193 0.0000    ***
+hiland     -8.463696 0.524508 -16.1364 0.0000    ***
+yoplait     3.712257 0.475225   7.8116 0.0000    ***
+feat.sigma  6.009529 1.435972   4.1850 0.0000    ***
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1235,21 +1242,31 @@ where the parameters \(\omega_1\), \(\omega_2\), \(\omega_3\), and
 \(\omega_4\) have units of dollars and \(\lambda\) is the scale
 parameter.
 
-\textbf{Estimate the model}: \textbackslash{}begin\{CodeChunk\}
+\textbf{Estimate the model}:
 
-\textbackslash{}begin\{CodeInput\} R\textgreater{} library(``logitr'')
-R\textgreater{} data(yogurt) R\textgreater{} R\textgreater{} mxl.wtp =
-logitr( R\textgreater{} data = yogurt, R\textgreater{} choiceName =
-``choice'', R\textgreater{} obsIDName = ``obsID'', R\textgreater{}
-parNames = c(``feat'', ``dannon'', ``hiland'', ``yoplait''),
-R\textgreater{} priceName = ``price'', R\textgreater{} randPars =
-c(feat=``n''), R\textgreater{} modelSpace = ``wtp'', R\textgreater{}
-options = list( R\textgreater{} \# You should run a multistart for MXL
-models since they are non-convex, R\textgreater{} \# but it can take a
-long time. Here I just use 1 for brevity: R\textgreater{} numMultiStarts
-= 1, R\textgreater{} startVals = mxl.pref.wtp\$Estimate, R\textgreater{}
-startParBounds = c(-5,5), R\textgreater{} numDraws = 500))
-\textbackslash{}end\{CodeInput\} \textbackslash{}end\{CodeChunk\}
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> library("logitr")
+R> data(yogurt)
+R> 
+R> mxl.wtp = logitr(
+R>   data       = yogurt,
+R>   choiceName = "choice",
+R>   obsIDName  = "obsID",
+R>   parNames   = c("feat", "dannon", "hiland", "yoplait"),
+R>   priceName  = "price",
+R>   randPars   = c(feat="n"),
+R>   modelSpace = "wtp",
+R>   options = list(
+R>   # You should run a multistart for MXL models since they are non-convex,
+R>   # but it can take a long time. Here I just use 1 for brevity:
+R>     numMultiStarts = 1,
+R>     startVals      = mxl.pref.wtp$Estimate,
+R>     startParBounds = c(-5,5),
+R>     numDraws       = 500))
+\end{CodeInput}
+\end{CodeChunk}
 
 \textbf{Print a summary of the results}:
 
@@ -1338,20 +1355,20 @@ logLik     -2645.920271 -2645.9049060  0.01536475
 
 \newpage
 
-\hypertarget{market-simulations-1}{%
-\subsection{Market simulations}\label{market-simulations-1}}
+\hypertarget{simulation-1}{%
+\subsection{Simulation}\label{simulation-1}}
 
-Simulate the market shares a particular set of alternatives will obtain
-given an estimated model. First, create a market to simulate. Here I
-just choose the 42nd choice set from the \texttt{Yogurt} data set:
+For a particular set of alternatives, simulate the expected shares given
+an estimated model. First, create a set of altneratives (here I use one
+particular choice set from the \texttt{Yogurt} data set):
 
 \begin{CodeChunk}
 
 \begin{CodeInput}
-R> market = subset(yogurt, obsID==42,
-R+          select=c("feat", "price", "dannon", "hiland", "yoplait"))
-R> row.names(market) = c("dannon", "hiland", "weight", "yoplait")
-R> market
+R> alts = subset(yogurt, obsID==42,
+R+        select=c("feat", "price", "dannon", "hiland", "yoplait"))
+R> row.names(alts) = c("dannon", "hiland", "weight", "yoplait")
+R> alts
 \end{CodeInput}
 
 \begin{CodeOutput}
@@ -1368,17 +1385,16 @@ yoplait    0  11.5      0      0       1
 \begin{CodeChunk}
 
 \begin{CodeInput}
-R> mnl.pref.simulation = marketSimulation(mnl.pref, market, 
-R+                                        alpha=0.025)
+R> mnl.pref.simulation = simulateShares(mnl.pref, alts)
 R> mnl.pref.simulation
 \end{CodeInput}
 
 \begin{CodeOutput}
              share.mean  share.low share.high
-Alt: dannon  0.60767184 0.54811495  0.6602219
-Alt: hiland  0.02601784 0.01844573  0.0361543
-Alt: weight  0.17802325 0.16324483  0.1925427
-Alt: yoplait 0.18828707 0.13881972  0.2502116
+Alt: dannon  0.60767184 0.54754391 0.65982469
+Alt: hiland  0.02601784 0.01848257 0.03612443
+Alt: weight  0.17802325 0.16325914 0.19238224
+Alt: yoplait 0.18828707 0.13941295 0.25018224
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1388,8 +1404,7 @@ must denote the ``price'' variable):
 \begin{CodeChunk}
 
 \begin{CodeInput}
-R> mnl.wtp.simulation = marketSimulation(mnl.wtp, market,
-R+                                       priceName="price", alpha=0.025)
+R> mnl.wtp.simulation = simulateShares(mnl.wtp, alts, priceName="price")
 \end{CodeInput}
 
 \begin{CodeOutput}
@@ -1403,10 +1418,10 @@ R> mnl.wtp.simulation
 
 \begin{CodeOutput}
              share.mean  share.low share.high
-Alt: dannon   0.6076718 0.55588461 0.65971365
-Alt: hiland   0.0260179 0.01799532 0.03740401
-Alt: weight   0.1780234 0.14704761 0.20832311
-Alt: yoplait  0.1882869 0.16353876 0.21077416
+Alt: dannon   0.6076718 0.55528947 0.66012257
+Alt: hiland   0.0260179 0.01824687 0.03770966
+Alt: weight   0.1780234 0.14693558 0.20883855
+Alt: yoplait  0.1882869 0.16397110 0.21176389
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1415,10 +1430,10 @@ Alt: yoplait  0.1882869 0.16353876 0.21077416
 \begin{CodeChunk}
 
 \begin{CodeInput}
-R> mxl.pref.simulation = marketSimulation(mxl.pref, market, 
-R>                                        alpha=0.025)
+R> mxl.pref.simulation = simulateShares(mxl.pref, alts)
 \end{CodeInput}
 \end{CodeChunk}
+
 \begin{CodeChunk}
 
 \begin{CodeInput}
@@ -1427,23 +1442,23 @@ R> mxl.pref.simulation
 
 \begin{CodeOutput}
              share.mean  share.low share.high
-Alt: dannon  0.58484934 0.50522349  0.6540077
-Alt: hiland  0.08666403 0.02950048  0.1626655
-Alt: weight  0.16062305 0.14157514  0.1781275
-Alt: yoplait 0.16786359 0.11967127  0.2304225
+Alt: dannon  0.58484934 0.50533529  0.6542321
+Alt: hiland  0.08666403 0.03025259  0.1651975
+Alt: weight  0.16062305 0.14149715  0.1781776
+Alt: yoplait 0.16786359 0.11902155  0.2273408
 \end{CodeOutput}
 \end{CodeChunk}
 
-\textbf{Run the simulation using the WTP space MXL model (note that you
-must denote the ``price'' variable)}:
+\textbf{Run the simulation using the WTP space MXL model} (note that you
+must denote the ``price'' variable):
 
 \begin{CodeChunk}
 
 \begin{CodeInput}
-R> mxl.wtp.simulation = marketSimulation(mxl.wtp, market,
-R>                                       priceName="price", alpha=0.025)
+R> mxl.wtp.simulation = simulateShares(mxl.wtp, market, priceName="price")
 \end{CodeInput}
 \end{CodeChunk}
+
 \begin{CodeChunk}
 
 \begin{CodeInput}
@@ -1452,10 +1467,10 @@ R> mxl.wtp.simulation
 
 \begin{CodeOutput}
              share.mean  share.low share.high
-Alt: dannon  0.58435544 0.52656969  0.6389182
-Alt: hiland  0.08750646 0.03029285  0.1683864
-Alt: weight  0.16046566 0.12500750  0.1960403
-Alt: yoplait 0.16767244 0.13722497  0.1967524
+Alt: dannon  0.58435544 0.52665244  0.6387125
+Alt: hiland  0.08750646 0.03109963  0.1671529
+Alt: weight  0.16046566 0.12583610  0.1964370
+Alt: yoplait 0.16767244 0.13773861  0.1964418
 \end{CodeOutput}
 \end{CodeChunk}
 

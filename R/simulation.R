@@ -2,10 +2,10 @@
 # Functions for running simulations
 # ============================================================================
 
-#' Returns the expected market shares of a specific set of alternatives based
+#' Returns the expected shares of a specific set of alternatives based
 #' on an estimated model.
 #'
-#' Returns the expected market shares of a specific set of alternatives based
+#' Returns the expected shares of a specific set of alternatives based
 #' on an estimated model.
 #' @keywords logitr, simluation
 #' @export
@@ -19,34 +19,34 @@
 #'   obsIDName  = 'obsID',
 #'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
 #'
-#' # Create a market to simulate.
-#' market = subset(yogurt, obsID==42,
-#'          select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
-#' row.names(market) = c('dannon', 'hiland', 'weight', 'yoplait')
-#' market
+#' # Create a set of alternatives for which to simulate shares:
+#' alts = subset(yogurt, obsID==42,
+#'        select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
+#' row.names(alts) = c('dannon', 'hiland', 'weight', 'yoplait')
+#' alts
 #'
 #' # Run the simulation using the estimated preference space MNL model:
-#' marketSimulation(mnl.pref, market, alpha=0.025)
-marketSimulation.logitr = function(model, market, priceName=NULL, alpha=0.025){
+#' simulateShares(mnl.pref, alts, alpha=0.025)
+simulateShares.logitr = function(model, alts, priceName=NULL, alpha=0.025){
     model = allRunsCheck(model)
     if (isMxlModel(model$parSetup)) {
-        return(mxlMarketSimulation(model, market, priceName, alpha))
+        return(mxlSimulation(model, alts, priceName, alpha))
     } else {
-        return(mnlMarketSimulation(model, market, priceName, alpha))
+        return(mnlSimulation(model, alts, priceName, alpha))
     }
 }
 
-mnlMarketSimulation = function(model, market, priceName, alpha=0.025) {
+mnlSimulation = function(model, alts, priceName, alpha=0.025) {
     numDraws     = 10^4
     getVUncDraws = getMxlV.pref
     getV         = getMnlV.pref
-    attNames     = colnames(market)
-    X            = as.matrix(market[attNames])
+    attNames     = colnames(alts)
+    X            = as.matrix(alts[attNames])
     price        = NA
     obsID        = rep(1, nrow(X))
     if (model$modelSpace=='wtp') {
-        price        = -1*market[,which(colnames(market)==priceName)]
-        X            = as.matrix(market[attNames[which(attNames != 'price')]])
+        price        = -1*alts[,which(colnames(alts)==priceName)]
+        X            = as.matrix(alts[attNames[which(attNames != 'price')]])
         getVUncDraws = getMxlV.wtp
         getV         = getMnlV.wtp
     }
@@ -58,21 +58,21 @@ mnlMarketSimulation = function(model, market, priceName, alpha=0.025) {
     logitUncDraws = getMxlLogit(VUncDraws, obsID)
     shares        = as.data.frame(t(apply(logitUncDraws, 1, ci, alpha)))
     shares$mean   = as.numeric(meanShare)
-    row.names(shares) = paste('Alt: ', row.names(market), sep='')
+    row.names(shares) = paste('Alt: ', row.names(alts), sep='')
     colnames(shares)  = c('share.mean', 'share.low', 'share.high')
     return(shares)
 }
 
-mxlMarketSimulation = function(model, market, priceName, alpha=0.025) {
+mxlSimulation = function(model, alts, priceName, alpha=0.025) {
     numDraws  = 10^4
     getVDraws = getMxlV.pref
-    attNames  = colnames(market)
-    X         = as.matrix(market[attNames])
+    attNames  = colnames(alts)
+    X         = as.matrix(alts[attNames])
     price     = NA
     obsID     = rep(1, nrow(X))
     if (model$modelSpace=='wtp') {
-        price     = -1*market[,which(colnames(market)==priceName)]
-        X         = as.matrix(market[attNames[which(attNames != 'price')]])
+        price     = -1*alts[,which(colnames(alts)==priceName)]
+        X         = as.matrix(alts[attNames[which(attNames != 'price')]])
         getVDraws = getMxlV.wtp
     }
     betaUncDraws  = getUncertaintyDraws(model, numDraws)
@@ -84,7 +84,7 @@ mxlMarketSimulation = function(model, market, priceName, alpha=0.025) {
     }
     shares      = as.data.frame(t(apply(logitUncDraws, 1, ci, alpha)))
     shares$mean = meanShare
-    row.names(shares) = paste('Alt: ', row.names(market), sep='')
+    row.names(shares) = paste('Alt: ', row.names(alts), sep='')
     colnames(shares)  = c('share.mean', 'share.low', 'share.high')
     return(shares)
 }

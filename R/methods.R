@@ -59,10 +59,10 @@ wtpCompare <- function(model.pref, model.wtp, priceName) {
     UseMethod('wtpCompare', model.pref)
 }
 
-#' Returns the expected market shares of a specific set of alternatives based
+#' Returns the expected shares of a specific set of alternatives based
 #' on an estimated model.
 #'
-#' Returns the expected market shares of a specific set of alternatives based
+#' Returns the expected shares of a specific set of alternatives based
 #' on an estimated model.
 #' @keywords logitr, simluation
 #' @export
@@ -76,14 +76,16 @@ wtpCompare <- function(model.pref, model.wtp, priceName) {
 #'   obsIDName  = 'obsID',
 #'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
 #'
-#' # Create a market to simulate.
-#' market = subset(yogurt, obsID==1,
-#'          select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
+#' # Create a set of alternatives for which to simulate shares:
+#' alts = subset(yogurt, obsID==42,
+#'        select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
+#' row.names(alts) = c('dannon', 'hiland', 'weight', 'yoplait')
+#' alts
 #'
 #' # Run the simulation using the estimated preference space MNL model:
-#' marketSimulation(mnl.pref, market, alpha=0.025)
-marketSimulation <- function(model, market, priceName, alpha) {
-    UseMethod('marketSimulation', model)
+#' simulateShares(mnl.pref, alts, alpha=0.025)
+simulateShares <- function(model, alts, priceName, alpha) {
+    UseMethod('simulateShares', model)
 }
 
 #' Returns the coefficients of an estimated model of the 'logitr' class.
