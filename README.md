@@ -162,9 +162,9 @@ simulation = marketSimulation(model, market, priceName=NULL, alpha=0.025)
 # Author, Version, and License Information
 - Author: *John Paul Helveston* (www.jhelvy.com)
 - Date First Written: *Sunday, September 28, 2014*
-- Most Recent Update: *Thursday, April 5, 2018*
+- Most Recent Update: *Thursday, September 6, 2018*
 - License: GPL-3
-- Latest Version: 1.1
+- Latest Version: 1.2
 
 # Citation Information
 If you use this package for in a publication, I would greatly appreciate it if you cited it. You can get the citation information by typing this into R:
