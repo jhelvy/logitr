@@ -166,11 +166,11 @@ mxl.wtp.simulation
 # Plot simulation results from preference space MNL model:
 library(ggplot2)
 mnl.pref.simulation$alt = row.names(mnl.pref.simulation)
-ggplot(mnl.pref.simulation, aes(x=alt, y=mean)) +
+ggplot(mnl.pref.simulation, aes(x=alt, y=share.mean)) +
     geom_bar(stat='identity', width=0.7) +
-    geom_errorbar(aes(ymin=low, ymax=high), width=0.2) +
+    geom_errorbar(aes(ymin=share.low, ymax=share.high), width=0.2) +
     scale_y_continuous(limits=c(0,1)) +
-    labs(x='Alternative', y='Market Share') +
+    labs(x='Alternative', y='Expected Share') +
     theme_bw()
 
 
