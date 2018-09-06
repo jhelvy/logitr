@@ -134,34 +134,33 @@ wtpCompare(mxl.pref, mxl.wtp, priceName='price')
 # ============================================================================
 # Run Market Simulation Using Estimated Models
 
-# Create a market to simulate. Each row is an alternative and each column an
-# attribute. In this example, I just use one of the choice observations from
-# the yogurt dataset:
-market = subset(yogurt, obsID==42,
-         select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
-row.names(market) = c('dannon', 'hiland', 'weight', 'yoplait')
-market
+# Create a set of alternatives for which to simulate shares. Each row is an
+# alternative and each column an attribute. In this example, I just use one of the choice observations from the yogurt dataset:
+alts = subset(yogurt, obsID==42,
+              select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
+row.names(alts) = c('dannon', 'hiland', 'weight', 'yoplait')
+alts
 
 # Run the simulation using the preference space MNL model:
-mnl.pref.simulation = marketSimulation(mnl.pref, market, alpha=0.025)
+mnl.pref.simulation = simulateShares(mnl.pref, alts, alpha=0.025)
 mnl.pref.simulation
-# The results show the expected market shares for each alternative.
+# The results show the expected shares for each alternative.
 # The low and high values show a 95% confidence interval, estimated using
 # simulation. You can change the CI level by setting alpha to a different
 # value (e.g. a 90% CI is obtained with alpha=0.05).
 
 # Run the simulation using the WTP space MNL model:
-mnl.wtp.simulation = marketSimulation(mnl.wtp, market, priceName='price')
+mnl.wtp.simulation = simulateShares(mnl.wtp, alts, priceName='price')
 mnl.wtp.simulation
 # Since these two models are equivalent except in different spaces, the
 # simulation results should be the same. Note that 'priceName' is the name
-# of the price attribute in the market argument and must be included for
+# of the price attribute in the alts argument and must be included for
 # WTP space models.
 
-# Market simulations can also be run using MXL models in either space:
-mxl.pref.simulation = marketSimulation(mxl.pref, market, alpha=0.025)
+# Simulations can also be run using MXL models in either space:
+mxl.pref.simulation = simulateShares(mxl.pref, alts)
 mxl.pref.simulation
-mxl.wtp.simulation = marketSimulation(mxl.wtp, market, priceName='price', alpha=0.025)
+mxl.wtp.simulation = simulateShares(mxl.wtp, alts, priceName='price')
 mxl.wtp.simulation
 
 # Plot simulation results from preference space MNL model:
