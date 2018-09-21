@@ -25,15 +25,15 @@ parameter or by estimating a utility model in the WTP space. For
 homogeneous models, these two procedures generally produce the same
 estimates of WTP, but the same is not true for heterogeneous models
 where model parameters are assumed to follow a specific distribution.
-The \pkg{logitr} package was written to allow for flexible estimation of
+The \pkg{logitr} package was written to support flexible estimation of
 multinomial logit models with preference space and WTP space utility
 specifications. The package supports homogeneous multinomial logit (MNL)
 and heterogeneous mixed logit (MXL) models, including support for normal
 and log-normal parameter distributions. Since MXL models and models with
 WTP space utility specifications are non-convex, an option is included
 to run a multi-start optimization loop with random starting points in
-each iteration. The package also includes a market simulation function
-to estimate the expected market shares of a set of alternatives using an
+each iteration. The package also includes a simulation function to
+estimate the expected shares of a set of alternatives based on an
 estimated model.
 }
 
@@ -59,7 +59,8 @@ estimated model.
 
 % Pandoc header
 
-\usepackage{amsmath} \usepackage{upgreek} \usepackage{longtable} \usepackage{booktabs}  \usepackage{float} \usepackage{array}
+\usepackage{amsmath} \usepackage{upgreek} \usepackage{longtable}
+\usepackage{booktabs} \usepackage{float} \usepackage{array}
 
 \begin{document}
 
@@ -952,11 +953,11 @@ R> mnl.pref.wtp
 
 \begin{CodeOutput}
          Estimate StdError    tStat  pVal signif
-lambda   0.366584 0.024376  15.0387 0e+00    ***
-feat     1.340569 0.357244   3.7525 2e-04    ***
-dannon   1.749081 0.199363   8.7733 0e+00    ***
-hiland  -8.386651 0.508079 -16.5066 0e+00    ***
-yoplait  3.752907 0.470556   7.9755 0e+00    ***
+lambda   0.366584 0.024307  15.0815 0e+00    ***
+feat     1.340569 0.357830   3.7464 2e-04    ***
+dannon   1.749081 0.198467   8.8130 0e+00    ***
+hiland  -8.386651 0.508709 -16.4862 0e+00    ***
+yoplait  3.752907 0.468238   8.0150 0e+00    ***
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -983,6 +984,15 @@ parameter.
 R> library("logitr")
 R> data(yogurt)
 R> 
+R> # Use WTP from preference space model as starting values for first run:
+\end{CodeInput}
+\end{CodeChunk}
+
+\texttt{startingValues\ =\ mnl.pref.wtp\$Estimate}
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
 R> mnl.wtp = logitr(
 R>   data       = yogurt,
 R>   choiceName = "choice",
@@ -996,9 +1006,7 @@ R>     numMultiStarts = 10,
 R>     # If you want to view the results from each multistart run,
 R>     # set keepAllRuns=TRUE:
 R>     keepAllRuns = TRUE,
-R>     # Use the computed WTP from the preference space model as the starting
-R>     # values for the first run:
-R>     startVals = mnl.pref.wtp$Estimate,
+R>     startVals   = startingValues,
 R>     # Because the computed WTP from the preference space model has values
 R>     # as large as 8, I increase the boundaries of the random starting values:
 R>     startParBounds = c(-5,5)))
@@ -1126,7 +1134,8 @@ Estimate the following mixed logit model in the preference space:
 \input{./eqns/mxlPrefExample.Rmd}
 
 where the parameters \(\alpha\), \(\beta_1\), \(\beta_2\), \(\beta_3\),
-and \(\beta_4\) have units of utility.
+and \(\beta_4\) have units of utility, and the parameter for
+\(x_{j}^{\mathrm{FEAT}}\) is normally distributed.
 
 \textbf{Estimate the model}:
 
@@ -1219,12 +1228,12 @@ R> mxl.pref.wtp
 
 \begin{CodeOutput}
             Estimate StdError    tStat   pVal signif
-lambda      0.392769 0.026657  14.7340 0.0000    ***
-feat.mu     0.896037 0.538625   1.6636 0.0963      .
-dannon      1.690217 0.193849   8.7193 0.0000    ***
-hiland     -8.463696 0.524508 -16.1364 0.0000    ***
-yoplait     3.712257 0.475225   7.8116 0.0000    ***
-feat.sigma  6.009529 1.435972   4.1850 0.0000    ***
+lambda      0.392769 0.026786  14.6632 0.0000    ***
+feat.mu     0.896037 0.539162   1.6619 0.0967      .
+dannon      1.690217 0.195466   8.6471 0.0000    ***
+hiland     -8.463696 0.525479 -16.1066 0.0000    ***
+yoplait     3.712257 0.479741   7.7380 0.0000    ***
+feat.sigma  6.009529 1.439662   4.1743 0.0000    ***
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1240,9 +1249,22 @@ Estimate the following mixed logit model in the WTP space:
 
 where the parameters \(\omega_1\), \(\omega_2\), \(\omega_3\), and
 \(\omega_4\) have units of dollars and \(\lambda\) is the scale
-parameter.
+parameter, and the WTP parameter for \(x_{j}^{\mathrm{FEAT}}\) is
+normally distributed.
 
 \textbf{Estimate the model}:
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> library("logitr")
+R> data(yogurt)
+R> 
+R> # Use WTP from preference space model as starting values for first run:
+\end{CodeInput}
+\end{CodeChunk}
+
+\texttt{startingValues\ =\ mxl.pref.wtp\$Estimate}
 
 \begin{CodeChunk}
 
@@ -1262,7 +1284,7 @@ R>   options = list(
 R>   # You should run a multistart for MXL models since they are non-convex,
 R>   # but it can take a long time. Here I just use 1 for brevity:
 R>     numMultiStarts = 1,
-R>     startVals      = mxl.pref.wtp$Estimate,
+R>     startVals      = startingValues,
 R>     startParBounds = c(-5,5),
 R>     numDraws       = 500))
 \end{CodeInput}
@@ -1391,10 +1413,10 @@ R> mnl.pref.simulation
 
 \begin{CodeOutput}
              share.mean  share.low share.high
-Alt: dannon  0.60767184 0.54754391 0.65982469
-Alt: hiland  0.02601784 0.01848257 0.03612443
-Alt: weight  0.17802325 0.16325914 0.19238224
-Alt: yoplait 0.18828707 0.13941295 0.25018224
+Alt: dannon  0.60767184 0.54698563 0.65857677
+Alt: hiland  0.02601784 0.01834165 0.03651461
+Alt: weight  0.17802325 0.16322458 0.19246719
+Alt: yoplait 0.18828707 0.13935579 0.25079772
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1418,10 +1440,10 @@ R> mnl.wtp.simulation
 
 \begin{CodeOutput}
              share.mean  share.low share.high
-Alt: dannon   0.6076718 0.55528947 0.66012257
-Alt: hiland   0.0260179 0.01824687 0.03770966
-Alt: weight   0.1780234 0.14693558 0.20883855
-Alt: yoplait  0.1882869 0.16397110 0.21176389
+Alt: dannon   0.6076718 0.55511076 0.65976263
+Alt: hiland   0.0260179 0.01796662 0.03759781
+Alt: weight   0.1780234 0.14754337 0.20826982
+Alt: yoplait  0.1882869 0.16402123 0.21154407
 \end{CodeOutput}
 \end{CodeChunk}
 
@@ -1433,7 +1455,6 @@ Alt: yoplait  0.1882869 0.16397110 0.21176389
 R> mxl.pref.simulation = simulateShares(mxl.pref, alts)
 \end{CodeInput}
 \end{CodeChunk}
-
 \begin{CodeChunk}
 
 \begin{CodeInput}
@@ -1455,10 +1476,9 @@ must denote the ``price'' variable):
 \begin{CodeChunk}
 
 \begin{CodeInput}
-R> mxl.wtp.simulation = simulateShares(mxl.wtp, market, priceName="price")
+R> mxl.wtp.simulation = simulateShares(mxl.wtp, alts, priceName="price")
 \end{CodeInput}
 \end{CodeChunk}
-
 \begin{CodeChunk}
 
 \begin{CodeInput}

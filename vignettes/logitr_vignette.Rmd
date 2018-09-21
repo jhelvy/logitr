@@ -15,7 +15,7 @@ title:
   # For running headers, if needed
   short:     "\\pkg{logitr}: Preference and WTP Space Multinomial Logit Models"
 abstract: >
-  In many applications of discrete choice models, modelers are interested in estimating consumer's marginal "willingness-to-pay" (WTP) for different attributes. WTP can computed by dividing the estimated parameters of a utility model in the preference space by the price parameter or by estimating a utility model in the WTP space. For homogeneous models, these two procedures generally produce the same estimates of WTP, but the same is not true for heterogeneous models where model parameters are assumed to follow a specific distribution. The \pkg{logitr} package was written to allow for flexible estimation of multinomial logit models with preference space and WTP space utility specifications. The package supports homogeneous multinomial logit (MNL) and heterogeneous mixed logit (MXL) models, including support for normal and log-normal parameter distributions. Since MXL models and models with WTP space utility specifications are non-convex, an option is included to run a multi-start optimization loop with random starting points in each iteration. The package also includes a market simulation function to estimate the expected market shares of a set of alternatives using an estimated model.
+  In many applications of discrete choice models, modelers are interested in estimating consumer's marginal "willingness-to-pay" (WTP) for different attributes. WTP can computed by dividing the estimated parameters of a utility model in the preference space by the price parameter or by estimating a utility model in the WTP space. For homogeneous models, these two procedures generally produce the same estimates of WTP, but the same is not true for heterogeneous models where model parameters are assumed to follow a specific distribution. The \pkg{logitr} package was written to support flexible estimation of multinomial logit models with preference space and WTP space utility specifications. The package supports homogeneous multinomial logit (MNL) and heterogeneous mixed logit (MXL) models, including support for normal and log-normal parameter distributions. Since MXL models and models with WTP space utility specifications are non-convex, an option is included to run a multi-start optimization loop with random starting points in each iteration. The package also includes a simulation function to estimate the expected shares of a set of alternatives based on an estimated model.
 keywords:
   # at least one keyword must be supplied
   formatted: [multinomial logit, preference space, willingness-to-pay space, discrete choice, "\\proglang{R}"]
@@ -313,6 +313,10 @@ where the parameters $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ have uni
 library("logitr")
 data(yogurt)
 
+# Use WTP from preference space model as starting values for first run:
+```
+`startingValues = mnl.pref.wtp$Estimate`
+```{r eval=FALSE}
 mnl.wtp = logitr(
   data       = yogurt,
   choiceName = "choice",
@@ -326,9 +330,7 @@ mnl.wtp = logitr(
     # If you want to view the results from each multistart run,
     # set keepAllRuns=TRUE:
     keepAllRuns = TRUE,
-    # Use the computed WTP from the preference space model as the starting
-    # values for the first run:
-    startVals = mnl.pref.wtp$Estimate,
+    startVals   = startingValues,
     # Because the computed WTP from the preference space model has values
     # as large as 8, I increase the boundaries of the random starting values:
     startParBounds = c(-5,5)))
@@ -358,7 +360,7 @@ Estimate the following mixed logit model in the preference space:
 
 \input{./eqns/mxlPrefExample.Rmd}
 
-where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ have units of utility. 
+where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ have units of utility, and the parameter for $x_{j}^{\mathrm{FEAT}}$ is normally distributed. 
 
 **Estimate the model**:
 ```{r eval=FALSE}
@@ -401,9 +403,16 @@ Estimate the following mixed logit model in the WTP space:
 
 \input{./eqns/mxlWtpExample.Rmd}
 
-where the parameters $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ have units of dollars and $\lambda$ is the scale parameter. 
+where the parameters $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ have units of dollars and $\lambda$ is the scale parameter, and the WTP parameter for $x_{j}^{\mathrm{FEAT}}$ is normally distributed. 
 
 **Estimate the model**:
+```{r eval=FALSE}
+library("logitr")
+data(yogurt)
+
+# Use WTP from preference space model as starting values for first run:
+```
+`startingValues = mxl.pref.wtp$Estimate`
 ```{r eval=FALSE}
 library("logitr")
 data(yogurt)
@@ -420,7 +429,7 @@ mxl.wtp = logitr(
   # You should run a multistart for MXL models since they are non-convex,
   # but it can take a long time. Here I just use 1 for brevity:
     numMultiStarts = 1,
-    startVals      = mxl.pref.wtp$Estimate,
+    startVals      = startingValues,
     startParBounds = c(-5,5),
     numDraws       = 500))
 ```
@@ -474,7 +483,7 @@ mxl.pref.simulation
 
 **Run the simulation using the WTP space MXL model** (note that you must denote the "price" variable):
 ```{r eval=FALSE}
-mxl.wtp.simulation = simulateShares(mxl.wtp, market, priceName="price")
+mxl.wtp.simulation = simulateShares(mxl.wtp, alts, priceName="price")
 ```
 ```{r}
 mxl.wtp.simulation
