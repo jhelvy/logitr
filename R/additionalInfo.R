@@ -52,6 +52,10 @@ getModelCoefs = function(model, modelInputs) {
 getModelGradient = function(model, modelInputs) {
     pars     = getUnscaledPars(model, modelInputs)
     gradient = -1*modelInputs$evalFuncs$negGradLL(pars, modelInputs)
+    if (modelInputs$options$scaleInputs) {
+        scaleFactors = getModelScaleFactors(model, modelInputs)
+        gradient     = gradient / scaleFactors
+    }
     names(gradient) = names(pars)
     return(gradient)
 }
@@ -77,7 +81,7 @@ getModelScaleFactors = function(model, modelInputs) {
         lambdaID    = which(grepl('lambda', names(scaleFactors))==T)
         nonLambdaID = which(grepl('lambda', names(scaleFactors))==F)
         lambdaSF    = scaleFactors[lambdaID]
-        scaleFactors[nonLambdaID] = scaleFactors[nonLambdaID]/lambdaSF
+        scaleFactors[nonLambdaID] = scaleFactors[nonLambdaID] / lambdaSF
     }
     if (modelInputs$modelType=='mnl') {
         return(scaleFactors)

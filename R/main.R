@@ -22,15 +22,14 @@ logitr = function(data, choiceName, obsIDName, parNames, priceName=NULL,
     require(nloptr) # Required for optimization
     modelInputs = getModelInputs(data, choiceName, obsIDName, parNames,
                   randPars, priceName, randPrice, modelSpace, options)
-    options   = modelInputs$options
     allModels = runMultistart(modelInputs)
-    if (options$keepAllRuns) {
+    if (modelInputs$options$keepAllRuns) {
         models = appendAllModelsInfo(allModels, modelInputs)
         cat('Done!', '\n', sep='')
         return(models)
     } else {
         bestModel = getBestModel(allModels, modelInputs)
-        if (options$numMultiStarts > 1) {
+        if (modelInputs$options$numMultiStarts > 1) {
             bestModel$multistartSummary = getMultistartSummary(allModels)
             class(bestModel) = c('logitr', 'logitr.multistart')
         }

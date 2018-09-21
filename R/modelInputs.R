@@ -102,7 +102,7 @@ removeNAs = function(data, choiceName, obsIDName, parNames, priceName,
     return(na.omit(data[colsToSelect]))
 }
 
-# Function that scales all the variables in X to be between 0 and 1.
+# Function that scales all the variables in X to be between 0 and 1:
 scaleInputs = function(modelInputs) {
     price       = modelInputs$price
     X           = modelInputs$X
@@ -111,17 +111,19 @@ scaleInputs = function(modelInputs) {
     # Scale X data
     scaleFactorsX = rep(0, ncol(scaledX))
     for (col in 1:ncol(scaledX)) {
-        scalingResultsX    = scaleVar(X[,col], scalingFactor=1)
-        scaledX[,col]      = scalingResultsX$scaledVar
-        scaleFactorsX[col] = scalingResultsX$scalingFactor
+        var                = X[,col]
+        vals               = unique(var)
+        scalingFactor      = abs(max(vals) - min(vals))
+        scaledX[,col]      = var / scalingFactor
+        scaleFactorsX[col] = scalingFactor
     }
     scaleFactors = scaleFactorsX
     names(scaleFactors) = colnames(scaledX)
     # Scale price if WTP space model
     if (modelInputs$modelSpace=='wtp') {
-        scalingResultsPrice = scaleVar(price, scalingFactor=1)
-        scaledPrice         = scalingResultsPrice$scaledVar
-        scaleFactorPrice    = scalingResultsPrice$scalingFactor
+        vals                = unique(price)
+        scaleFactorPrice    = abs(max(vals) - min(vals))
+        scaledPrice         = price / scaleFactorPrice
         scaleFactors        = c(scaleFactorPrice, scaleFactorsX)
         names(scaleFactors) = c('lambda', colnames(scaledX))
     }
@@ -129,22 +131,6 @@ scaleInputs = function(modelInputs) {
     modelInputs$price        = scaledPrice
     modelInputs$scaleFactors = scaleFactors
     return(modelInputs)
-}
-
-scaleVar = function(var, scalingFactor) {
-    scaledVar = var/scalingFactor
-    if (abs(max(scaledVar)) > 1) {
-        while (abs(max(scaledVar)) > 1) {
-            scalingFactor = scalingFactor*10
-            scaledVar     = var/scalingFactor
-        }
-    } else if (abs(max(scaledVar)) < 0.1) {
-        while (abs(max(scaledVar)) < 0.1) {
-            scalingFactor = scalingFactor/10
-            scaledVar     = var/scalingFactor
-        }
-    }
-    return(list(scaledVar=scaledVar, scalingFactor=scalingFactor))
 }
 
 setLogitFunctions = function(modelSpace) {
