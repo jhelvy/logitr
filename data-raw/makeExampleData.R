@@ -17,25 +17,25 @@ devtools::use_data_raw()
 data(Yogurt)
 
 # Format the Yogurt dataset for use in logitr
-Yogurt$obsID = 1:nrow(Yogurt)
-brandDummies = data.frame(
-    brand   = as.character(c('dannon', 'hiland', 'weight', 'yoplait')),
-    dannon  = c(1, 0, 0, 0),
-    hiland  = c(0, 1, 0, 0),
-    weight  = c(0, 0, 1, 0),
-    yoplait = c(0, 0, 0, 1))
 yogurt = Yogurt %>%
+    mutate(obsID = seq(nrow(Yogurt))) %>%
     gather(brand, attributeValue, feat.yoplait:price.weight) %>%
     separate(brand, into=c('attributeName', 'brand'), sep='\\.') %>%
     spread(attributeName, attributeValue) %>%
     mutate(choice=ifelse(choice==brand, 1, 0)) %>%
     arrange(obsID) %>%
-    left_join(brandDummies) %>%
-    select(id, obsID, choice, price, feat, brand, dannon, hiland, weight,
+    mutate(alt = rep(seq(4), max(obsID))) %>%
+    left_join(data.frame(
+        brand   = as.character(c('dannon', 'hiland', 'weight', 'yoplait')),
+        dannon  = c(1, 0, 0, 0),
+        hiland  = c(0, 1, 0, 0),
+        weight  = c(0, 0, 1, 0),
+        yoplait = c(0, 0, 0, 1))) %>%
+    select(id, obsID, alt, choice, price, feat, brand, dannon, hiland, weight,
            yoplait)
 
 # Save the formatted yogurt dataset
-devtools::use_data(yogurt, overwrite=TRUE)
+usethis::use_data(yogurt, overwrite=TRUE)
 
 # Description of 'Yogurt' dataset, from the mlogit package:
 # ============================================================================
@@ -53,7 +53,7 @@ devtools::use_data(yogurt, overwrite=TRUE)
 # id:      individuals identifiers
 # choice:  one of yoplait, dannon, hiland, weight (weight watcher)
 # feat.z:  is there a newspaper feature advertisement for brand z ?
-# price.z:  price of brand z
+# price.z: price of brand z
 
 # Source:
 # Jain, Dipak C., Naufel J. Vilcassim and Pradeep K. Chintagunta (1994)
