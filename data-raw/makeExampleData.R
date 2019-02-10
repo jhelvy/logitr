@@ -14,7 +14,7 @@ library(tidyr)
 devtools::use_data_raw()
 
 # Load the 'Yogurt' dataset from the mlogit package
-data(Yogurt)
+load('./data-raw/Yogurt_mlogit.Rda')
 
 # Format the Yogurt dataset for use in logitr
 yogurt = Yogurt %>%
@@ -36,6 +36,7 @@ yogurt = Yogurt %>%
 
 # Save the formatted yogurt dataset
 usethis::use_data(yogurt, overwrite=TRUE)
+write.csv(yogurt, './data/yogurt.csv', row.names=F)
 
 # Description of 'Yogurt' dataset, from the mlogit package:
 # ============================================================================
