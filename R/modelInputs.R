@@ -94,7 +94,6 @@ runOptionsChecks = function(options, parNameList) {
     return(options)
 }
 
-
 removeNAs = function(data, choiceName, obsIDName, parNames, priceName,
                      modelSpace) {
     colsToSelect = c(choiceName, obsIDName, parNames)
