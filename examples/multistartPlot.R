@@ -28,12 +28,17 @@ getMultistartPars = function(model) {
     pars$run     = rep(seq(length(allModels)), each=length(coefs))
     return(pars)
 }
+
 plotMultistartPars = function(model) {
     pars = getMultistartPars(model)
     plot = ggplot(pars,
-        aes(x=parName, y=startPar)) +
-        geom_point(color='blue') +
-        geom_errorbar(aes(ymax=coef, ymin=coef), color="#AA0000")
+        aes(x = parName, y = startPar)) +
+        geom_point(color = 'blue') +
+        geom_errorbar(aes(ymax = coef, ymin = coef), color = "#AA0000") +
+    theme_bw() + 
+    labs(x = "Parameter name", 
+         y = "Starting parameter",
+         title = "Comparison of starting parameters (blue points) to\nbest coefficient estimate (red lines)")
     return(plot)
 }
 
@@ -52,6 +57,3 @@ model = logitr(
     startParBounds = c(-10, 10)))
 
 plotMultistartPars(model)
-
-
-

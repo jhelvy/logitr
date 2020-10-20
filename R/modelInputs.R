@@ -5,7 +5,15 @@
 
 # Creates a list of the data and other information needed for running the model
 getModelInputs = function(data, choiceName, obsIDName, parNames, randPars,
-                          priceName, randPrice, modelSpace, options) {
+                          priceName, randPrice, modelSpace, weightsName,
+                          options) {
+    # Setup weights
+    weights = matrix(1, nrow(X))
+    weightsUsed = FALSE
+    if (! is.null(weightsName)) {
+        weights = as.matrix(data[weightsName])
+        weightsUsed = TRUE
+    }
     # Setup pars
     parSetup    = getParSetup(parNames, priceName, randPars, randPrice)
     parNameList = getParNameList(parSetup)
@@ -14,16 +22,21 @@ getModelInputs = function(data, choiceName, obsIDName, parNames, randPars,
     data   = removeNAs(data, choiceName, obsIDName, parNames, priceName,
              modelSpace)
     X      = as.matrix(data[parNames])
-    obsID  = data[,which(names(data)==obsIDName)]
-    choice = data[,which(names(data)==choiceName)]
+    obsID  = data[, which(names(data) == obsIDName)]
+    choice = data[, which(names(data) == choiceName)]
     price  = NA
-    if (modelSpace=='wtp') {price = -1*data[,which(names(data)==priceName)]}
+    if (modelSpace == 'wtp') {
+        price = -1*data[, which(names(data) == priceName)]
+    }
     # Create the modelInputs list
     modelInputs = list(
-        price=price, X=X, choice=choice, obsID=obsID, priceName=priceName,
-        parNameList=parNameList, parSetup=parSetup, scaleFactors=NA,
-        modelSpace=modelSpace, modelType='mnl', options=options)
-    if (options$scaleInputs) {modelInputs = scaleInputs(modelInputs)}
+        price = price, X = X, choice = choice, obsID = obsID,
+        weights = weights, priceName = priceName, parNameList = parNameList,
+        parSetup = parSetup, scaleFactors = NA, modelSpace = modelSpace,
+        modelType = 'mnl', weightsUsed = weightsUsed, options = options)
+    if (options$scaleInputs) {
+        modelInputs = scaleInputs(modelInputs)
+    }
     if (isMxlModel(parSetup)) {
         modelInputs$modelType     = 'mxl'
         modelInputs$standardDraws = options$standardDraws
@@ -33,8 +46,8 @@ getModelInputs = function(data, choiceName, obsIDName, parNames, randPars,
         }
     }
     modelInputs$logitFuncs = setLogitFunctions(modelSpace)
-    modelInputs$evalFuncs  = setEvalFunctions(modelInputs$modelType,
-                             options$useAnalyticGrad)
+    modelInputs$evalFuncs  = setEvalFunctions(
+        modelInputs$modelType, options$useAnalyticGrad)
     return(modelInputs)
 }
 
@@ -71,22 +84,22 @@ getParNameList = function(parSetup) {
 
 runOptionsChecks = function(options, parNameList) {
     # Run checks for all inputs
-    if(is.null(options$numMultiStarts))  {options$numMultiStarts  = 1}
-    if(options$numMultiStarts < 1)       {options$numMultiStarts  = 1}
-    if(is.null(options$keepAllRuns))     {options$keepAllRuns     = F}
-    if(is.null(options$useAnalyticGrad)) {options$useAnalyticGrad = T}
-    if(is.null(options$scaleInputs))     {options$scaleInputs     = T}
-    if(is.null(options$startParBounds))  {options$startParBounds  = c(-1, 1)}
-    if(is.null(options$standardDraws))   {options$standardDraws   = NULL}
-    if(is.null(options$numDraws))        {options$numDraws        = 200}
-    if(is.null(options$drawType))        {options$drawType        = 'halton'}
-    if(is.null(options$printLevel))      {options$printLevel      = 0}
-    if(is.null(options$xtol_rel))        {options$xtol_rel        = 1.0e-8}
-    if(is.null(options$xtol_abs))        {options$xtol_abs        = 1.0e-8}
-    if(is.null(options$ftol_rel))        {options$ftol_rel        = 1.0e-8}
-    if(is.null(options$ftol_abs))        {options$ftol_abs        = 1.0e-8}
-    if(is.null(options$maxeval))         {options$maxeval         = 1000}
-    if(is.null(options$startVals)) {
+    if (is.null(options$numMultiStarts))  {options$numMultiStarts  = 1}
+    if (options$numMultiStarts < 1)       {options$numMultiStarts  = 1}
+    if (is.null(options$keepAllRuns))     {options$keepAllRuns     = F}
+    if (is.null(options$useAnalyticGrad)) {options$useAnalyticGrad = T}
+    if (is.null(options$scaleInputs))     {options$scaleInputs     = T}
+    if (is.null(options$startParBounds))  {options$startParBounds  = c(-1, 1)}
+    if (is.null(options$standardDraws))   {options$standardDraws   = NULL}
+    if (is.null(options$numDraws))        {options$numDraws        = 200}
+    if (is.null(options$drawType))        {options$drawType        = 'halton'}
+    if (is.null(options$printLevel))      {options$printLevel      = 0}
+    if (is.null(options$xtol_rel))        {options$xtol_rel        = 1.0e-8}
+    if (is.null(options$xtol_abs))        {options$xtol_abs        = 1.0e-8}
+    if (is.null(options$ftol_rel))        {options$ftol_rel        = 1.0e-8}
+    if (is.null(options$ftol_abs))        {options$ftol_abs        = 1.0e-8}
+    if (is.null(options$maxeval))         {options$maxeval         = 1000}
+    if (is.null(options$startVals)) {
         options$startVals = NULL
     } else {
         names(options$startVals) = parNameList$all
@@ -97,7 +110,9 @@ runOptionsChecks = function(options, parNameList) {
 removeNAs = function(data, choiceName, obsIDName, parNames, priceName,
                      modelSpace) {
     colsToSelect = c(choiceName, obsIDName, parNames)
-    if (modelSpace=='wtp') {colsToSelect = c(colsToSelect, priceName)}
+    if (modelSpace == 'wtp') {
+        colsToSelect = c(colsToSelect, priceName)
+    }
     return(na.omit(data[colsToSelect]))
 }
 

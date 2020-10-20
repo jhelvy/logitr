@@ -16,12 +16,13 @@
 #' @export
 #' @examples
 #' # For an example go to: https://github.com/jhelvy/logitr/tree/master/example
-logitr = function(data, choiceName, obsIDName, parNames, priceName=NULL,
-                  randPars=NULL, randPrice=NULL, modelSpace='pref',
-                  options=list()) {
+logitr = function(data, choiceName, obsIDName, parNames, priceName = NULL,
+                  randPars = NULL, randPrice = NULL, modelSpace = 'pref',
+                  weightsName = NULL, options = list()) {
     require(nloptr) # Required for optimization
     modelInputs = getModelInputs(data, choiceName, obsIDName, parNames,
-                  randPars, priceName, randPrice, modelSpace, options)
+                  randPars, priceName, randPrice, modelSpace, weightsName,
+                  options)
     allModels = runMultistart(modelInputs)
     if (modelInputs$options$keepAllRuns) {
         models = appendAllModelsInfo(allModels, modelInputs)
@@ -65,7 +66,7 @@ getMultistartSummary = function(models) {
 
 getBestModel = function(models, modelInputs) {
     logLikVals = getLogLikVals(models)
-    bestModel  = models[[which(logLikVals==max(logLikVals))[1]]]
+    bestModel  = models[[which(logLikVals == max(logLikVals))[1]]]
     bestModel  = appendModelInfo(bestModel, modelInputs)
     return(bestModel)
 }

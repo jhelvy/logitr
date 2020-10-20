@@ -23,7 +23,7 @@
 #' # View a summary of the model:
 #' summary(mnl.pref)
 summary.logitr = function(model) {
-    if (is.logitr(model)==FALSE) {
+    if (is.logitr(model) == FALSE) {
         stop('Model must be estimated using the "logitr" package')
     }
     if (is.logitr.multistart(model)) {
@@ -78,15 +78,17 @@ printModelSummary = function(model) {
 
 getBasicInfoTable = function(model) {
     modelSpace = 'Preference'
-    if (model$modelSpace=='wtp') {modelSpace = 'Willingness-to-Pay'}
+    if (model$modelSpace == 'wtp') {
+        modelSpace = 'Willingness-to-Pay'
+    }
     modelRun = paste(model$multistartNumber, 'of',
                      model$options$numMultiStarts, sep=' ')
     modelTime = convertTime(model$time)
     basicInfoSummary = data.frame(c(modelSpace, modelRun, model$iterations,
-        modelTime))
+        modelTime, model$weightsUsed))
     colnames(basicInfoSummary) = ''
     row.names(basicInfoSummary) = c('Model Space:', 'Model Run:',
-        'Iterations:', 'Elapsed Time:')
+        'Iterations:', 'Elapsed Time:', 'Weights Used?:')
     return(basicInfoSummary)
 }
 

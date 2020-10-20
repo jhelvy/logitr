@@ -4,9 +4,18 @@
 \alias{logitr}
 \title{The main function for running the logitr program}
 \usage{
-logitr(data, choiceName, obsIDName, parNames, priceName = NULL,
-  randPars = NULL, randPrice = NULL, modelSpace = "pref",
-  options = list())
+logitr(
+  data,
+  choiceName,
+  obsIDName,
+  parNames,
+  priceName = NULL,
+  randPars = NULL,
+  randPrice = NULL,
+  modelSpace = "pref",
+  weightsName = NULL,
+  options = list()
+)
 }
 \description{
 logitr estimates multinomial (MNL) and mixed logit (MXL) models in R.

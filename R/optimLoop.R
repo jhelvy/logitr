@@ -7,7 +7,7 @@ runMultistart = function(modelInputs) {
     numMultiStarts = modelInputs$options$numMultiStarts
     models = list()
     for (i in 1:numMultiStarts) {
-        if (numMultiStarts==1) {
+        if (numMultiStarts == 1) {
             cat('Running Model', '\n', sep='')
         } else {
             cat('Running Multistart', i, 'of', numMultiStarts, '\n', sep=' ')
@@ -37,8 +37,8 @@ runMultistart = function(modelInputs) {
 
 getStartPars = function(modelInputs, i, noFirstRunErr) {
     startPars = getRandomStartPars(modelInputs)
-    if (i==1) {
-        if (noFirstRunErr & is.null(modelInputs$options$startVals)==F) {
+    if (i == 1) {
+        if (noFirstRunErr & (is.null(modelInputs$options$startVals) == F)) {
             cat('**Using User Provided Starting Values For This Run**',
                 '\n', sep='')
             startPars = modelInputs$options$startVals
@@ -46,7 +46,8 @@ getStartPars = function(modelInputs, i, noFirstRunErr) {
             startPars = 0*startPars
         }
     }
-    if (i==2 & noFirstRunErr & is.null(modelInputs$options$startVals)==F) {
+    if ((i == 2) & noFirstRunErr &
+        (is.null(modelInputs$options$startVals) == F)) {
         startPars = 0*startPars
     }
     startPars = checkStartPars(startPars, modelInputs)

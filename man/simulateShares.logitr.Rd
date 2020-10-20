@@ -5,8 +5,7 @@
 \title{Returns the expected shares of a specific set of alternatives based
 on an estimated model.}
 \usage{
-\method{simulateShares}{logitr}(model, alts, priceName = NULL,
-  alpha = 0.025)
+\method{simulateShares}{logitr}(model, alts, priceName = NULL, alpha = 0.025)
 }
 \description{
 Returns the expected shares of a specific set of alternatives based

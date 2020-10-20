@@ -13,14 +13,27 @@ appendModelInfo = function(model, modelInputs) {
     numObs     = sum(modelInputs$choice)
     options    = append(modelInputs$options, model$options)
     result = structure(list(
-        coef=coef, standErrs=se, logLik=logLik, nullLogLik=nullLogLik,
-        gradient=gradient, hessian=hessian, numObs=numObs,
-        numParams=length(coef), startPars=model$startPars,
-        multistartNumber=model$multistartNumber, time=model$time,
-        iterations=model$iterations, message=model$message,
-        status=model$status, modelSpace=modelInputs$modelSpace,
-        standardDraws=NA, randParSummary=NA, parSetup=modelInputs$parSetup,
-        options=options), class='logitr')
+        coef             = coef,
+        standErrs        = se,
+        logLik           = logLik,
+        nullLogLik       = nullLogLik,
+        gradient         = gradient,
+        hessian          = hessian,
+        numObs           = numObs,
+        numParams        = length(coef),
+        startPars        = model$startPars,
+        multistartNumber = model$multistartNumber,
+        time             = model$time,
+        iterations       = model$iterations,
+        message          = model$message,
+        status           = model$status,
+        modelSpace       = modelInputs$modelSpace,
+        standardDraws    = NA,
+        randParSummary   = NA,
+        parSetup         = modelInputs$parSetup,
+        weightsUsed      = modelInputs$weightsUsed,
+        options          = options),
+    class = 'logitr')
     # If MXL model, attached draws and summary of parameter distributions
     if (modelInputs$modelType =='mxl') {
         result$standardDraws  = modelInputs$standardDraws

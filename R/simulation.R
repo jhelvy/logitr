@@ -27,7 +27,8 @@
 #'
 #' # Run the simulation using the estimated preference space MNL model:
 #' simulateShares(mnl.pref, alts, alpha=0.025)
-simulateShares.logitr = function(model, alts, priceName=NULL, alpha=0.025){
+simulateShares.logitr = function(model, alts, priceName = NULL,
+    alpha = 0.025) {
     model = allRunsCheck(model)
     if (isMxlModel(model$parSetup)) {
         return(mxlSimulation(model, alts, priceName, alpha))
@@ -59,7 +60,7 @@ mnlSimulation = function(model, alts, priceName, alpha=0.025) {
     shares        = as.data.frame(t(apply(logitUncDraws, 1, ci, alpha)))
     shares$mean   = as.numeric(meanShare)
     row.names(shares) = paste('Alt: ', row.names(alts), sep='')
-    colnames(shares)  = c('share.mean', 'share.low', 'share.high')
+    colnames(shares)  = c('share_mean', 'share_low', 'share_high')
     return(shares)
 }
 
@@ -85,7 +86,7 @@ mxlSimulation = function(model, alts, priceName, alpha=0.025) {
     shares      = as.data.frame(t(apply(logitUncDraws, 1, ci, alpha)))
     shares$mean = meanShare
     row.names(shares) = paste('Alt: ', row.names(alts), sep='')
-    colnames(shares)  = c('share.mean', 'share.low', 'share.high')
+    colnames(shares)  = c('share_mean', 'share_low', 'share_high')
     return(shares)
 }
 

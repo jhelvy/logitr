@@ -5,7 +5,7 @@
 # ============================================================================
 
 # ============================================================================
-# MNL logit and log-likelihood functions
+# MNL logit and log-likelihood functions for both Preference and WTP Spaces
 # ============================================================================
 
 # # Logit fraction using data.table package (faster, but requires data.table)
@@ -21,15 +21,15 @@
 # Returns the logit fraction for mnl (homogeneous) models
 getMnlLogit = function(V, obsID) {
     expV       = exp(V)
-    sumExpV    = rowsum(expV, group=obsID)
+    sumExpV    = rowsum(expV, group = obsID)
     repTimes   = as.numeric(table(obsID))
-    sumExpVMat = matrix(rep(sumExpV, times=repTimes), ncol=1)
+    sumExpVMat = matrix(rep(sumExpV, times = repTimes), ncol=1)
     logit      = expV / sumExpVMat
     return(logit)
 }
 
-mnlNegLL = function(choice, logit) {
-    negLL = -1*sum(choice*log(logit))
+mnlNegLL = function(choice, logit, weights) {
+    negLL = -1*sum(weights*choice*log(logit))
     return(negLL)
 }
 
@@ -41,10 +41,11 @@ mnlNegLLAndGradLL = function(pars, modelInputs) {
     p          = modelInputs$price
     obsID      = modelInputs$obsID
     choice     = modelInputs$choice
+    weights    = modelInputs$weights
     V          = logitFuncs$getMnlV(pars, X, p)
     logit      = logitFuncs$getMnlLogit(V, obsID)
-    negLL      = logitFuncs$mnlNegLL(choice, logit)
-    negGradLL  = logitFuncs$mnlNegGradLL(p, X, pars, choice, logit)
+    negLL      = logitFuncs$mnlNegLL(choice, logit, weights)
+    negGradLL  = logitFuncs$mnlNegGradLL(p, X, pars, choice, logit, weights)
     return(list('objective'=negLL, 'gradient'=negGradLL))
 }
 
@@ -54,9 +55,10 @@ getMnlNegLL = function(pars, modelInputs) {
     logitFuncs = modelInputs$logitFuncs
     obsID      = modelInputs$obsID
     choice     = modelInputs$choice
+    weights    = modelInputs$weights
     V          = logitFuncs$getMnlV(pars, X, p)
     logit      = logitFuncs$getMnlLogit(V, obsID)
-    negLL      = logitFuncs$mnlNegLL(choice, logit)
+    negLL      = logitFuncs$mnlNegLL(choice, logit, weights)
     return(negLL)
 }
 
@@ -66,9 +68,10 @@ getMnlNegGradLL = function(pars, modelInputs) {
     p          = modelInputs$price
     obsID      = modelInputs$obsID
     choice     = modelInputs$choice
+    weights    = modelInputs$weights
     V          = logitFuncs$getMnlV(pars, X, p)
     logit      = logitFuncs$getMnlLogit(V, obsID)
-    negGradLL  = logitFuncs$mnlNegGradLL(p, X, pars, choice, logit)
+    negGradLL  = logitFuncs$mnlNegGradLL(p, X, pars, choice, logit, weights)
     return(negGradLL)
 }
 
@@ -78,7 +81,7 @@ getMnlHessLL = function(pars, modelInputs) {
 }
 
 # ============================================================================
-# MXL logit and log-likelihood functions
+# MXL logit and log-likelihood functions for both Preference and WTP Spaces
 # ============================================================================
 # The log-likelihood function is given here as the negative log-likelihood
 # because the optim function performs a minimization
@@ -88,15 +91,15 @@ getMxlLogit = function(VDraws, obsID) {
     numDraws        = ncol(VDraws)
     expVDraws       = exp(VDraws)
     sumExpVDraws    = rowsum(expVDraws, group=obsID)
-    repTimes        = rep(as.numeric(table(obsID)), each=numDraws)
-    sumExpVDrawsMat = matrix(rep(sumExpVDraws, times=repTimes),
-                      ncol=numDraws, byrow=F)
+    repTimes        = rep(as.numeric(table(obsID)), each = numDraws)
+    sumExpVDrawsMat = matrix(rep(sumExpVDraws, times = repTimes),
+                      ncol = numDraws, byrow = FALSE)
     logitDraws      = expVDraws / sumExpVDrawsMat
     return(logitDraws)
 }
 
-mxlNegLL = function(choice, pHat) {
-    negLL = -1*sum(choice*log(pHat))
+mxlNegLL = function(choice, pHat, weights) {
+    negLL = -1*sum(weights*choice*log(pHat))
     return(negLL)
 }
 
@@ -107,6 +110,7 @@ mxlNegLLAndGradLL = function(pars, modelInputs){
     p             = modelInputs$price
     obsID         = modelInputs$obsID
     choice        = modelInputs$choice
+    weights       = modelInputs$weights
     parSetup      = modelInputs$parSetup
     numDraws      = modelInputs$options$numDraws
     standardDraws = modelInputs$standardDraws
@@ -114,10 +118,11 @@ mxlNegLLAndGradLL = function(pars, modelInputs){
     VDraws        = logitFuncs$getMxlV(betaDraws, X, p)
     logitDraws    = logitFuncs$getMxlLogit(VDraws, obsID)
     pHat          = rowMeans(logitDraws, na.rm=T)
-    negLL         = logitFuncs$mxlNegLL(choice, pHat)
+    negLL         = logitFuncs$mxlNegLL(choice, pHat, weights)
     negGradLL     = logitFuncs$mxlNegGradLL(X, parSetup, obsID, choice,
-                    standardDraws, betaDraws, VDraws, logitDraws, pHat)
-    return(list('objective'=negLL, 'gradient'=negGradLL))
+                    standardDraws, betaDraws, VDraws, logitDraws, pHat,
+                    weights)
+    return(list('objective' = negLL, 'gradient' = negGradLL))
 }
 
 # Returns the negative log-likelihood of an mxl (heterogeneous) model
@@ -127,6 +132,7 @@ getMxlNegLL = function(pars, modelInputs){
     logitFuncs    = modelInputs$logitFuncs
     obsID         = modelInputs$obsID
     choice        = modelInputs$choice
+    weights       = modelInputs$weights
     parSetup      = modelInputs$parSetup
     numDraws      = modelInputs$options$numDraws
     standardDraws = modelInputs$standardDraws
@@ -134,7 +140,7 @@ getMxlNegLL = function(pars, modelInputs){
     VDraws        = logitFuncs$getMxlV(betaDraws, X, p)
     logitDraws    = logitFuncs$getMxlLogit(VDraws, obsID)
     pHat          = rowMeans(logitDraws, na.rm=T)
-    negLL         = logitFuncs$mxlNegLL(choice, pHat)
+    negLL         = logitFuncs$mxlNegLL(choice, pHat, weights)
     return(negLL)
 }
 
@@ -144,6 +150,7 @@ getMxlNegGradLL = function(pars, modelInputs) {
     p             = modelInputs$price
     obsID         = modelInputs$obsID
     choice        = modelInputs$choice
+    weights       = modelInputs$weights
     parSetup      = modelInputs$parSetup
     numDraws      = modelInputs$options$numDraws
     standardDraws = modelInputs$standardDraws
@@ -152,12 +159,13 @@ getMxlNegGradLL = function(pars, modelInputs) {
     logitDraws    = logitFuncs$getMxlLogit(VDraws, obsID)
     pHat          = rowMeans(logitDraws, na.rm=T)
     negGradLL     = logitFuncs$mxlNegGradLL(X, parSetup, obsID, choice,
-                    standardDraws, betaDraws, VDraws, logitDraws, pHat)
+                    standardDraws, betaDraws, VDraws, logitDraws, pHat,
+                    weights)
     return(negGradLL)
 }
 
 # ============================================================================
-# Numerical log-likelihood functions
+# Numerical log-likelihood functions for both Preference and WTP Spaces
 # ============================================================================
 
 mnlNegLLAndNumericGradLL = function(pars, modelInputs) {
@@ -195,8 +203,9 @@ getMnlV.pref = function(pars, X, p) {
     return(V)
 }
 
-mnlNegGradLL.pref = function(p, X, pars, choice, logit) {
-    negGradLL = -1*(t(X) %*% (choice - logit))
+mnlNegGradLL.pref = function(p, X, pars, choice, logit, weights) {
+    weightedLogit = weights*(choice - logit)
+    negGradLL = -1*(t(X) %*% weightedLogit)
     return(negGradLL)
 }
 
@@ -206,11 +215,15 @@ mnlHessLL.pref = function(pars, modelInputs) {
     p        = modelInputs$p
     obsID    = modelInputs$obsID
     choice   = modelInputs$choice
+    weights  = modelInputs$weights
+    parSetup = modelInputs$parSetup
     V        = getMnlV.pref(pars, X, p)
     logit    = getMnlLogit(V, obsID)
     diffMat  = getDiffMatByObsID.pref(logit, X, obsID)
     logitMat = repmat(matrix(logit), 1, ncol(X))
-    hessLL   = -1*(t(diffMat) %*% (logitMat*diffMat))
+    weightsMat = matrix(rep(weights, length(parSetup)),
+        ncol = ncol(X), byrow = F)
+    hessLL   = -1*(t(diffMat) %*% (weightsMat*logitMat*diffMat))
     return(hessLL)
 }
 
@@ -238,24 +251,24 @@ getMxlV.pref = function(betaDraws, X, p) {
 
 # Computes the gradient of the negative likelihood for a mixed logit model.
 mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
-    betaDraws, VDraws, logitDraws, pHat) {
+    betaDraws, VDraws, logitDraws, pHat, weights) {
     randParIDs = getRandParIDs(parSetup)
     numDraws   = nrow(standardDraws)
     numBetas   = length(parSetup)
     logNormParIDs = getLogNormParIDs(parSetup)
-    repTimes   = rep(as.numeric(table(obsID)), each=2*numBetas)
+    repTimes   = rep(as.numeric(table(obsID)), each = 2*numBetas)
     # Compute the gradient of V for all parameters
     grad = matrix(0, nrow=nrow(X), ncol=2*numBetas)
     for (i in 1:numDraws) {
         Xtemp    = X
         draws    = standardDraws[i,]
         logit    = logitDraws[,i]
-        drawsMat = matrix(rep(draws, nrow(X)), ncol=numBetas, byrow=T)
-        logitMat = matrix(rep(logit, numBetas), ncol=numBetas, byrow=F)
+        drawsMat = matrix(rep(draws, nrow(X)), ncol = numBetas, byrow = TRUE)
+        logitMat = matrix(rep(logit, numBetas), ncol = numBetas, byrow = FALSE)
         logitMat = cbind(logitMat, logitMat)
         if (length(logNormParIDs) > 0) {
             beta     = betaDraws[i,]
-            betaMat  = matrix(rep(beta, nrow(X)), ncol=numBetas, byrow=T)
+            betaMat  = matrix(rep(beta, nrow(X)), ncol = numBetas, byrow=TRUE)
             Xtemp[,logNormParIDs] = Xtemp[,logNormParIDs] *
                                     betaMat[,logNormParIDs]
         }
@@ -267,7 +280,8 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
                         byrow=F)
         grad = grad + logitMat*(partial - tempMat)
     }
-    grad           = grad / numDraws
+    weightsMat = matrix(rep(weights, numBetas), ncol = ncol(X), byrow = F)
+    grad           = weightsMat*(grad / numDraws)
     pHatInvChosen  = matrix(rep(choice*(1/pHat), 2*numBetas), ncol=2*numBetas,
                             byrow=F)
     grad             = colSums(pHatInvChosen*grad, na.rm=TRUE)
@@ -281,6 +295,7 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
 #     randParIDs = getRandParIDs(parSetup)
 #     numDraws   = nrow(standardDraws)
 #     numBetas   = length(parSetup)
+#     weightsMat = matrix(rep(weights, numBetas), ncol = ncol(X), byrow = F)
 #     logNormParIDs = getLogNormParIDs(parSetup)
 #     # Get the partial matrices
 #     Xmat    = repmatRow(X, numDraws)
@@ -300,10 +315,9 @@ mxlNegGradLL.pref = function(X, parSetup, obsID, choice, standardDraws,
 #     obsIDtimesMat = rep(obsIDtimes, each=2*numBetas)
 #     tempMat       = matrix(rep(temp, times=obsIDtimesMat), ncol=2*numBetas,
 #                     byrow=F)
-
 #     gradGroup     = rep(seq(nrow(X)), numDraws)
-#     grad          = rowsum(logitMat*(partial - tempMat), group=gradGroup,
-#                     na.rm=TRUE)
+#     grad          = rowsum(weightsMat*logitMat*(partial - tempMat),
+#         group=gradGroup, na.rm=TRUE)
 #     negGradLL     = -1*((choice / pHat) %*% (grad / numDraws))
 #     return(negGradLL[c(1:numBetas, numBetas + randParIDs)])
 # }
@@ -321,12 +335,13 @@ getMnlV.wtp = function(pars, X, p) {
 }
 
 # Returns the negative gradient of the log-likelihood
-mnlNegGradLL.wtp = function(p, X, pars, choice, logit) {
-    lambda       = as.numeric(pars[1])
-    beta         = as.numeric(pars[2:length(pars)])
-    gradLLLambda = t(p + (X %*% beta)) %*% (choice - logit)
-    gradLLBeta   = lambda*(t(X) %*% (choice - logit))
-    negGradLL    = -1*c(gradLLLambda, gradLLBeta)
+mnlNegGradLL.wtp = function(p, X, pars, choice, logit, weights) {
+    lambda        = as.numeric(pars[1])
+    beta          = as.numeric(pars[2:length(pars)])
+    weightedLogit = weights*(choice - logit)
+    gradLLLambda  = t(p + (X %*% beta)) %*% weightedLogit
+    gradLLBeta    = lambda*(t(X) %*% weightedLogit)
+    negGradLL     = -1*c(gradLLLambda, gradLLBeta)
     return(negGradLL)
 }
 
@@ -338,11 +353,15 @@ mnlHessLL.wtp = function(pars, modelInputs) {
     p        = modelInputs$price
     choice   = modelInputs$choice
     obsID    = modelInputs$obsID
+    weights  = modelInputs$weights
+    parSetup = modelInputs$parSetup
     V        = getMnlV.wtp(pars, X, p)
     logit    = getMnlLogit(V, obsID)
     diffMat  = getDiffMatByObsID.wtp(lambda, beta, p, X, logit, obsID)
     logitMat = repmat(matrix(logit), 1, ncol(diffMat))
-    hessLL   = -1*(t(diffMat) %*% (logitMat*diffMat))
+    weightsMat = matrix(rep(weights, length(parSetup)),
+        ncol = ncol(X), byrow = F)
+    hessLL   = -1*(t(diffMat) %*% (weightsMat*logitMat*diffMat))
     return(hessLL)
 }
 
@@ -374,11 +393,11 @@ getMxlV.wtp = function(betaDraws, X, p) {
     lambdaDraws = matrix(rep(betaDraws[,1], nrow(X)),ncol=numDraws,byrow=T)
     gammaDraws  = matrix(betaDraws[,2:ncol(betaDraws)], nrow=numDraws)
     pMat        = matrix(rep(p, numDraws), ncol=numDraws, byrow=F)
-    return(lambdaDraws*(pMat + X%*%t(gammaDraws)))
+    return(lambdaDraws*(pMat + X %*% t(gammaDraws)))
 }
 
 mxlNegGradLL.wtp = function(X, parSetup, obsID, choice, standardDraws,
-    betaDraws, VDraws, logitDraws, pHat) {
+    betaDraws, VDraws, logitDraws, pHat, weights) {
     stdDraws.lambda = standardDraws[,1]
     stdDraws.gamma  = standardDraws[,2:ncol(standardDraws)]
     randParIDs      = getRandParIDs(parSetup)
@@ -412,7 +431,9 @@ mxlNegGradLL.wtp = function(X, parSetup, obsID, choice, standardDraws,
         gamma.partial.mu    = lambdaMat*Xtemp
         gamma.partial.sigma = gamma.partial.mu*drawsMat.gamma
         lambda.partial.mu   = v / lambda
-        if (parSetup['lambda'] == 'ln') {lambda.partial.mu = v}
+        if (parSetup['lambda'] == 'ln') {
+            lambda.partial.mu = v
+        }
         lambda.partial.sigma = lambda.partial.mu*drawsMat.lambda
         partial.mu    = cbind(lambda.partial.mu, gamma.partial.mu)
         partial.sigma = cbind(lambda.partial.sigma, gamma.partial.sigma)
@@ -422,7 +443,8 @@ mxlNegGradLL.wtp = function(X, parSetup, obsID, choice, standardDraws,
                         byrow=F)
         grad = grad + logitMat*(partial - tempMat)
     }
-    grad           = grad / numDraws
+    weightsMat = matrix(rep(weights, numBetas), ncol = ncol(X), byrow = F)
+    grad           = weightsMat*(grad / numDraws)
     pHatInvChosen  = matrix(rep(choice*(1/pHat), 2*numPars), ncol=2*numPars,
                             byrow=F)
     grad      = colSums(pHatInvChosen*grad, na.rm=TRUE)
