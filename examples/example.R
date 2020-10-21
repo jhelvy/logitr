@@ -1,6 +1,5 @@
 # # Install logitr package from github
-# library('devtools')
-# install_github('jhelvy/logitr')
+# devtools::install_github('jhelvy/logitr')
 
 # Load logitr package
 library('logitr')
@@ -25,8 +24,8 @@ summary(mnl_pref)
 coef(mnl_pref)
 
 # Get the WTP implied from the preference space model
-mnl_pref_wtp = wtp(mnl_pref, priceName = 'price')
-mnl_pref_wtp
+wtp_mnl_pref = wtp(mnl_pref, priceName = 'price')
+wtp_mnl_pref
 
 # Run a MNL model in the WTP Space using a multistart:
 mnl_wtp = logitr(
@@ -44,7 +43,7 @@ mnl_wtp = logitr(
     keepAllRuns = TRUE,
     # Use the computed WTP from the preference space model as the starting
     # values for the first run:
-    startVals = mnl_pref_wtp$Estimate,
+    startVals = wtp_mnl_pref$Estimate,
     # Because the computed WTP from the preference space model has values
     # as large as 8, I increase the boundaries of the random starting values:
     startParBounds = c(-5, 5)))
@@ -68,46 +67,51 @@ coef(mnl_wtp)
 # log-likelihoods functions. This can be done using the wtpCompare function:
 wtpCompare(mnl_pref, mnl_wtp, priceName = 'price')
 
+# Save results
+saveRDS(mnl_pref, here::here('examples', 'models', 'mnl_pref.Rds'))
+saveRDS(wtp_mnl_pref, here::here('examples', 'models', 'wtp_mnl_pref.Rds'))
+saveRDS(mnl_wtp, here::here('examples', 'models', 'mnl_wtp.Rds'))
+
 # ============================================================================
 # Estimate Homogeneous MNL model with weights
 
-# Often times, researchers oversample or undersample specific groups of 
-# people, resulting in a dataset that is not proportionally consistent with 
-# a desired sample population. To account for this, you can add weights to the 
-# model that proportionally increase the "weight" of specific choice 
-# observations. Weight values are evaluated relative to 1. For example, a 
-# value of 0.2 would weight the choice observation to be 1/5 of that of other 
-# observations, and a value of 5 would weight the choice observation to be 
-# 5 times of that of other observations. Weights spanning between 0.2 and 5 
+# Often times, researchers oversample or undersample specific groups of
+# people, resulting in a dataset that is not proportionally consistent with
+# a desired sample population. To account for this, you can add weights to the
+# model that proportionally increase the "weight" of specific choice
+# observations. Weight values are evaluated relative to 1. For example, a
+# value of 0.2 would weight the choice observation to be 1/5 of that of other
+# observations, and a value of 5 would weight the choice observation to be
+# 5 times of that of other observations. Weights spanning between 0.2 and 5
 # would result in some choice observations being weighted as much as 10 times
-# those of others. 
+# those of others.
 
-# To enable weighting, your data should have a column variable storing the 
-# weight value to use for each observation. Note that the same weight value 
-# should be repeated across rows of alternatives from the same choice 
-# observation. 
+# To enable weighting, your data should have a column variable storing the
+# weight value to use for each observation. Note that the same weight value
+# should be repeated across rows of alternatives from the same choice
+# observation.
 
-# To include these weights in the model estimation, provide the column name 
+# To include these weights in the model estimation, provide the column name
 # for the "weightsName" argument to the logitr() function. Here is an example:
 
-# First, define the weights. Here is an example with different random weights 
+# First, define the weights. Here is an example with different random weights
 # for different ids
 w <- data.frame(id = seq(max(yogurt$id)))
 w$w <- sample(c(0.25, 0.5, 1, 2, 4), nrow(w), replace = TRUE)
 yogurt_w <- merge(yogurt, w, by = "id")
 
-# Run a MNL model in the Preference Space with weights:  
+# Run a MNL model in the Preference Space with weights:
 mnl_pref_w = logitr(
   data       = yogurt_w,
   choiceName = 'choice',
   obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'), 
+  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
   weightsName = 'w') # Including this parameter enables weighting
 
 # Print a summary of the results:
 summary(mnl_pref_w)
 
-# Compare the coefficients and log-likelihood from the weighted model to 
+# Compare the coefficients and log-likelihood from the weighted model to
 # those of the unweighted model:
 data.frame(
   Unweighted = coef(mnl_pref),

@@ -15,7 +15,7 @@ title:
   # For running headers, if needed
   short:     "\\pkg{logitr}: Preference and WTP Space Multinomial Logit Models"
 abstract: >
-  In many applications of discrete choice models, modelers are interested in estimating consumer's marginal "willingness-to-pay" (WTP) for different attributes. WTP can computed by dividing the estimated parameters of a utility model in the preference space by the price parameter or by estimating a utility model in the WTP space. For homogeneous models, these two procedures generally produce the same estimates of WTP, but the same is not true for heterogeneous models where model parameters are assumed to follow a specific distribution. The \pkg{logitr} package was written to support flexible estimation of multinomial logit models with preference space and WTP space utility specifications. The package supports homogeneous multinomial logit (MNL) and heterogeneous mixed logit (MXL) models, including support for normal and log-normal parameter distributions. Since MXL models and models with WTP space utility specifications are non-convex, an option is included to run a multi-start optimization loop with random starting points in each iteration. The package also includes a simulation function to estimate the expected shares of a set of alternatives based on an estimated model.
+  In many applications of discrete choice models, modelers are interested in estimating consumer's marginal "willingness-to-pay" (WTP) for different attributes. WTP can computed by dividing the estimated parameters of a utility model in the "preference" space by the price parameter or by estimating a utility model in the WTP space. For homogeneous models that produce point estimates, these two procedures produce the same estimates of WTP, but the same is not true for models where model parameters are assumed to follow specific distributions. The \pkg{logitr} package was written to support flexible estimation of multinomial logit models with preference space and WTP space utility specifications. The package supports homogeneous multinomial logit (MNL) and heterogeneous mixed logit (MXL) models, including support for normal and log-normal parameter distributions. The package includes other features to support model estimation, including an option to weight individual choice observations, and an option to run a multi-start optimization loop with random starting points in each iteration for non-convex models. The package also includes a simulation tool for estimating the expected shares of a set of alternatives based on an estimated model.
 keywords:
   # at least one keyword must be supplied
   formatted: [multinomial logit, preference space, willingness-to-pay space, discrete choice, "\\proglang{R}"]
@@ -41,10 +41,9 @@ output: rticles::jss_article
 \newcommand{\xVec}{\mathrm{\mathbf{x}}}
 \newcommand{\XVec}{\mathrm{\mathbf{X}}}
 
-
 <!-- Read in results for examples -->
 ```{r echo=FALSE, message=FALSE}
-mnl.pref            = readRDS('./examples/mnl.pref.Rds')
+mnl.pref            = readRDS(here::here('examples', 'mnl.pref.Rds'))
 mnl.pref.wtp        = readRDS('./examples/mnl.pref.wtp.Rds')
 mnl.wtp             = readRDS('./examples/mnl.wtp.Rds')
 mxl.pref            = readRDS('./examples/mxl.pref.Rds')

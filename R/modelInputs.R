@@ -7,26 +7,26 @@
 getModelInputs = function(data, choiceName, obsIDName, parNames, randPars,
                           priceName, randPrice, modelSpace, weightsName,
                           options) {
-    # Setup weights
-    weights = matrix(1, nrow(X))
-    weightsUsed = FALSE
-    if (! is.null(weightsName)) {
-        weights = as.matrix(data[weightsName])
-        weightsUsed = TRUE
-    }
     # Setup pars
     parSetup    = getParSetup(parNames, priceName, randPars, randPrice)
     parNameList = getParNameList(parSetup)
     options     = runOptionsChecks(options, parNameList)
     # Separate data elements
     data   = removeNAs(data, choiceName, obsIDName, parNames, priceName,
-             modelSpace)
+             modelSpace, weightsName)
     X      = as.matrix(data[parNames])
     obsID  = data[, which(names(data) == obsIDName)]
     choice = data[, which(names(data) == choiceName)]
     price  = NA
     if (modelSpace == 'wtp') {
         price = -1*data[, which(names(data) == priceName)]
+    }
+    # Setup weights
+    weights = matrix(1, nrow(data))
+    weightsUsed = FALSE
+    if (! is.null(weightsName)) {
+        weights = as.matrix(data[weightsName])
+        weightsUsed = TRUE
     }
     # Create the modelInputs list
     modelInputs = list(
@@ -108,10 +108,10 @@ runOptionsChecks = function(options, parNameList) {
 }
 
 removeNAs = function(data, choiceName, obsIDName, parNames, priceName,
-                     modelSpace) {
-    colsToSelect = c(choiceName, obsIDName, parNames)
+                     modelSpace, weightsName) {
+    colsToSelect = c(choiceName, obsIDName, parNames, weightsName)
     if (modelSpace == 'wtp') {
-        colsToSelect = c(colsToSelect, priceName)
+        colsToSelect = c(colsToSelect, priceName, weightsName)
     }
     return(na.omit(data[colsToSelect]))
 }
@@ -179,7 +179,7 @@ setEvalFunctions = function(modelType, useAnalyticGrad) {
         evalFuncs$negGradLL = getMnlNegGradLL
         # evalFuncs$hessLL    = getMnlHessLL # Numeric approx is faster
     }
-    if (modelType=='mxl') {
+    if (modelType == 'mxl') {
         evalFuncs$objective = mxlNegLLAndNumericGradLL
         evalFuncs$negLL     = getMxlNegLL
         evalFuncs$negGradLL = getNumericNegGradLL
