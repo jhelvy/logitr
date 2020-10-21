@@ -165,11 +165,19 @@ model.</p>
   parNames   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'feat'</span>, <span class='st'>'dannon'</span>, <span class='st'>'hiland'</span>, <span class='st'>'yoplait'</span><span class='op'>)</span>,
   priceName  <span class='op'>=</span> <span class='st'>'price'</span>,
   modelSpace <span class='op'>=</span> <span class='st'>'wtp'</span>,
-  options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>startVals <span class='op'>=</span> <span class='va'>mnl_pref_wtp</span><span class='op'>$</span><span class='va'>Estimate</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in runOptionsChecks(options, parNameList): object 'mnl_pref_wtp' not found</span></div><div class='input'>
+  options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>startVals <span class='op'>=</span> <span class='va'>wtp_mnl_pref</span><span class='op'>$</span><span class='va'>Estimate</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Running Model
+#&gt; **Using User Provided Starting Values For This Run**
+#&gt; Done!</div><div class='input'>
 <span class='co'># Compare the WTP between the two spaces:</span>
 <span class='fu'>wtpCompare</span><span class='op'>(</span><span class='va'>mnl_pref</span>, <span class='va'>mnl_wtp</span>, priceName <span class='op'>=</span> <span class='st'>'price'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in is.logitr(model_wtp): object 'mnl_wtp' not found</span></div><div class='input'>
+</div><div class='output co'>#&gt;                 pref           wtp difference
+#&gt; lambda      0.366584     0.3665834 -6.200e-07
+#&gt; feat        1.340568     1.3405856  1.757e-05
+#&gt; dannon      1.749079     1.7490883  9.330e-06
+#&gt; hiland     -8.386650    -8.3866858 -3.582e-05
+#&gt; yoplait     3.752905     3.7528902 -1.480e-05
+#&gt; logLik  -2656.887878 -2656.8878780 -1.000e-08</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
