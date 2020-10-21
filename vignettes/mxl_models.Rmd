@@ -1,0 +1,99 @@
+---
+title: "Estimating mixed logit models"
+output:
+  html_document:
+    number_sections: false
+    toc: no
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Read in results from already estimated models, otherwise 
+# the page building will take forever!
+mxl_pref <- readRDS(here::here('examples', 'results', 'mxl_pref.Rds'))
+mxl_wtp  <- readRDS(here::here('examples', 'results', 'mxl_wtp.Rds'))
+wtp_mxl_comparison <- readRDS(here::here('examples', 'results', 'wtp_mxl_comparison.Rds'))
+```
+
+First, load the **logitr** library:
+```{r}
+library('logitr')
+```
+
+We'll use the Yogurt data set from the [**mlogit** package](https://cran.r-project.org/web/packages/mlogit/index.html)
+```{r}
+head(yogurt)
+```
+
+## Mixed logit models in the preference space
+
+To estimate the model, use the `logitr()` function. In the example below, the `randPars` argument is used to denote which parameters will be modeled with a distribution. In this example, only the `'feat'` attribute is modeled as normally distributed, so all other parameters will be modeled with fixed coefficients. Since this model is non-convex, it is recommended that you use a multi-start approach to search for different local minima (in this example, I set `numMultiStarts = 1` for brevity).
+```{r, eval=FALSE}
+mxl_pref <- logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
+  randPars   = c(feat = 'n'),
+  options    = list(
+    numMultiStarts = 1,
+    numDraws       = 500))
+```
+```
+Running Model
+Done!
+```
+
+You can view a summary of the model output with the `summary()` function:
+```{r}
+summary(mxl_pref)
+```
+
+Since this model is a "preference" space model, you can use the result to compute the implied willingness to pay with the `wtp()` function:
+```{r}
+wtp_mxl_pref = wtp(mxl_pref, priceName = 'price')
+wtp_mxl_pref
+```
+
+## Mixed logit models in the WTP space
+
+To estimate a mixed logit model in the WTP space, you have to add the `modelSpace = "wtp"` argument. You also must provide the `priceName` argument, which specified the name of the column in the `data` argument that is price. In this example, I model price with a fixed coefficient, but you could model it as a random parameter by specifying the `randPrice` argument (typically set to `'ln'` for log-normal).
+
+Note also that I am using the computed WTP from the preference space model as the starting parameters. These values will only be used as the starting guess for the first iteration of a multi-start run.
+```{r, eval=FALSE}
+mxl_wtp = logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
+  priceName  = 'price',
+  randPars   = c(feat = 'n'),
+  # randPrice  = 'ln',
+  modelSpace = 'wtp',
+  options = list(
+    numMultiStarts = 1,
+    startVals      = wtp_mxl_pref$Estimate,
+    startParBounds = c(-5, 5),
+    numDraws       = 500))
+```
+```
+Running Model
+Done!
+```
+
+You can view a summary of the model output with the `summary()` function:
+```{r}
+summary(mxl_wtp)
+```
+
+If you want to compare the WTP from the two different model spaces, use the `wtpCompare()` function:
+```{r, eval=FALSE}
+wtp_mxl_comparison <- wtpCompare(mxl_pref, mxl_wtp, priceName = 'price')
+```
+```{r}
+wtp_mxl_comparison
+```
+
+Note that the WTP will not be the same between preference space and WTP space MXL models. This is because the distributional assumptions in MXL models imply different distributions on WTP depending on the model space. See Train and Weeks (2005) and Sonnier, Ainslie, and Otter (2007) for details on this topic:
+
+- Train K, Weeks M (2005). “Discrete Choice Models in Preference Space and Willingness- to-Pay Space.” In R Scarpa, A Alberini (eds.), Applications of Simulation Methods in Environmental and Resource Economics, volume 6 of The Economics of Non-Market Goods and Resources, pp. 1-16. Springer-Verlag.
+- Sonnier G, Ainslie A, Otter T (2007). "Heterogeneity Distributions of Willingness-to-Pay in Choice Models." Quantitative Marketing and Economics, 5(3), 313–331.
