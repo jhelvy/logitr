@@ -43,16 +43,14 @@ output: rticles::jss_article
 
 <!-- Read in results for examples -->
 ```{r echo=FALSE, message=FALSE}
-mnl.pref            = readRDS(here::here('examples', 'mnl.pref.Rds'))
-mnl.pref.wtp        = readRDS('./examples/mnl.pref.wtp.Rds')
-mnl.wtp             = readRDS('./examples/mnl.wtp.Rds')
-mxl.pref            = readRDS('./examples/mxl.pref.Rds')
-mxl.pref.wtp        = readRDS('./examples/mxl.pref.wtp.Rds')
-mxl.wtp             = readRDS('./examples/mxl.wtp.Rds')
-mnl.pref.simulation = readRDS('./examples/mnl.pref.simulation.Rds')
-mnl.wtp.simulation  = readRDS('./examples/mnl.wtp.simulation.Rds')
-mxl.pref.simulation = readRDS('./examples/mxl.pref.simulation.Rds')
-mxl.wtp.simulation  = readRDS('./examples/mxl.wtp.simulation.Rds')
+mnl_pref <- readRDS(here::here('examples', 'results', 'mnl_pref.Rds'))
+mnl_wtp  <- readRDS(here::here('examples', 'results', 'mnl_wtp.Rds'))
+mxl_pref <- readRDS(here::here('examples', 'results', 'mxl_pref.Rds'))
+mxl_wtp  <- readRDS(here::here('examples', 'results', 'mxl_wtp.Rds'))
+sim_mnl_wtp <- readRDS(here::here('examples', 'results', 'sim_mnl_wtp.Rds'))
+sim_mnl_pref <- readRDS(here::here('examples', 'results', 'sim_mnl_pref.Rds'))
+sim_mxl_wtp <- readRDS(here::here('examples', 'results', 'sim_mxl_wtp.Rds'))
+sim_mxl_wtp <- readRDS(here::here('examples', 'results', 'sim_mxl_wtp.Rds'))
 ```
 
 \begin{center}
@@ -112,8 +110,7 @@ First, make sure you have the \pkg{devtools} and \pkg{nloptr} libraries installe
 
 Then load the \pkg{devtools} library and install the \pkg{logitr} package:
 
-> `library("devtools")`  
-> `install_github("jhelvy/logitr")`  
+> `devtools::install_github("jhelvy/logitr")`  
 
 ## Data format 
 
@@ -139,9 +136,10 @@ head(yogurt, 12)
 The main model estimation function is the `logitr()` function:
 
 ```{r eval=FALSE}
-model = logitr(data, choiceName, obsIDName, parNames, priceName=NULL,
-            randPars=NULL, randPrice=NULL, modelSpace="pref",
-            options=list(...))
+model <- logitr(data, choiceName, obsIDName, parNames, priceName = NULL,
+                randPars = NULL, randPrice = NULL, modelSpace = 'pref',
+                weightsName = NULL, options = list())
+  
 ```
 
 The function returns a list of values, so assign the model output to a variable (e.g. `model`) to store the output values.
@@ -154,9 +152,10 @@ The function returns a list of values, so assign the model output to a variable 
 |`obsIDName`|The name of the column that identifies the `obsID` variable.| -- |
 |`parNames`|The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include `price` in `parNames`.| -- |
 |`priceName`|The name of the column that identifies the price variable. Only required for WTP space models.|`NULL`|
-|`randPars`|A named vector whose names are the random parameters and values the destribution: `'n'` for normal or `'ln'` for log-normal.|`NULL`|
+|`randPars`|A named vector whose names are the random parameters and values the distribution: `'n'` for normal or `'ln'` for log-normal.|`NULL`|
 |`randPrice`|The random distribution for the price parameter: `'n'` for normal or `'ln'` for log-normal. Only used for WTP space MXL models.|`NULL`|
 |`modelSpace`|Set to `'wtp'` for WTP space models.|`'pref'`|
+|`weightsName`|The name of the column that identifies the weights to be used in model estimation. Optional.|`NULL`|
 |`options`|A list of options.| -- |
 
 ### Options

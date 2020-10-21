@@ -1,6 +1,9 @@
 # Create the documentation for the package
 devtools::document()
 
+# Build the pkgdown site
+pkgdown::build_site()
+
 # Install the package
 devtools::install(force = TRUE)
 

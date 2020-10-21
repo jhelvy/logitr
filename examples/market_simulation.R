@@ -25,8 +25,8 @@ row.names(market) = c('dannon', 'hiland', 'weight', 'yoplait')
 market
 
 # Run the simulation using the preference space MNL model:
-mnl_pref_simulation = simulateShares(mnl_pref, market, alpha = 0.025)
-mnl_pref_simulation
+sim_mnl_pref = simulateShares(mnl_pref, market, alpha = 0.025)
+sim_mnl_pref
 
 # The results show the expected shares for each alternative.
 # The low and high values show a 95% confidence interval, estimated using
@@ -34,8 +34,8 @@ mnl_pref_simulation
 # value (e.g. a 90% CI is obtained with alpha = 0.05).
 
 # Run the simulation using the WTP space MNL model:
-mnl_wtp_simulation = simulateShares(mnl_wtp, market, priceName = 'price')
-mnl_wtp_simulation
+sim_mnl_wtp = simulateShares(mnl_wtp, market, priceName = 'price')
+sim_mnl_wtp
 
 # Since these two models are equivalent except in different spaces, the
 # simulation results should be the same. Note that 'priceName' is the name
@@ -43,11 +43,11 @@ mnl_wtp_simulation
 # WTP space models.
 
 # Simulations can also be run using MXL models in either space:
-mxl_pref_simulation = simulateShares(mxl_pref, market)
-mxl_pref_simulation
+sim_mxl_pref = simulateShares(mxl_pref, market)
+sim_mxl_pref
 
-mxl_wtp_simulation = simulateShares(mxl_wtp, market, priceName = 'price')
-mxl_wtp_simulation
+sim_mxl_wtp = simulateShares(mxl_wtp, market, priceName = 'price')
+sim_mxl_wtp
 
 # Plot simulation results from preference space MNL model:
 library(ggplot2)
@@ -58,3 +58,13 @@ ggplot(mnl_pref_simulation, aes(x = alt, y = share_mean)) +
     scale_y_continuous(limits = c(0, 1)) +
     labs(x = 'Alternative', y = 'Expected Share') +
     theme_bw()
+
+# Save results
+saveRDS(sim_mnl_wtp,
+        here::here('examples', 'results', 'sim_mnl_wtp.Rds'))
+saveRDS(sim_mnl_pref,
+        here::here('examples', 'results', 'sim_mnl_pref.Rds'))
+saveRDS(sim_mxl_wtp,
+        here::here('examples', 'results', 'sim_mxl_wtp.Rds'))
+saveRDS(sim_mxl_wtp,
+        here::here('examples', 'results', 'sim_mxl_wtp.Rds'))

@@ -2,7 +2,7 @@
 % Please edit documentation in R/main.R
 \name{logitr}
 \alias{logitr}
-\title{The main function for running the logitr program}
+\title{The main function for estimating logit models}
 \usage{
 logitr(
   data,
@@ -17,17 +17,85 @@ logitr(
   options = list()
 )
 }
+\arguments{
+\item{data}{The choice data, formatted as a data.frame object.}
+
+\item{choiceName}{The name of the column that identifies the choice variable.}
+
+\item{obsIDName}{The name of the column that identifies the obsID variable.}
+
+\item{parNames}{The names of the parameters to be estimated in the model. Must be the same as the column names in the data argument. For WTP space models, do not include price in parNames.}
+
+\item{priceName}{The name of the column that identifies the price variable. Only required for WTP space models. Defaults to NULL}
+
+\item{randPars}{A named vector whose names are the random parameters and values the distribution: 'n' for normal or 'ln' for log-normal. Defaults to NULL}
+
+\item{randPrice}{The random distribution for the price parameter: 'n' for normal or 'ln' for log-normal. Only used for WTP space MXL models. Defaults to NULL}
+
+\item{modelSpace}{Set to 'wtp' for WTP space models. Defaults to "pref"}
+
+\item{weightsName}{The name of the column that identifies the weights to be used in model estimation. Optional. Defaults to NULL}
+
+\item{options}{A list of options.}
+}
+\value{
+\tabular{ll}{
+   Value \tab Description \cr
+   \code{coef} \tab The model coefficients at convergence. \cr
+   \code{standErrs} \tab The standard errors of the model coefficients at convergence. \cr
+   \code{logLik} \tab The log-likelihood value at convergence. \cr
+   \code{nullLogLik} \tab The null log-likelihood value (if all coefficients are 0). \cr
+   \code{gradient} \tab The gradient of the log-likelihood at convergence. \cr
+   \code{hessian} \tab The hessian of the log-likelihood at convergence. \cr
+   \code{numObs} \tab The number of observations. \cr
+   \code{numParams} \tab The number of model parameters. \cr
+   \code{startPars} \tab The starting values used. \cr
+   \code{multistartNumber} \tab The multistart run number for this model. \cr
+   \code{time} \tab The user, system, and elapsed time to run the optimization. \cr
+   \code{iterations} \tab The number of iterations until convergence. \cr
+   \code{message} \tab A more informative message with the status of the optimization result. \cr
+   \code{status} \tab An integer value with the status of the optimization (positive values are successes). Type \code{logitr.statusCodes()} for a detailed description. \cr
+   \code{modelSpace} \tab The model space (\code{'pref'} or \code{'wtp'}). \cr
+   \code{standardDraws} \tab The draws used during maximum simulated likelihood (for MXL models). \cr
+   \code{randParSummary} \tab A summary of any random parameters (for MXL models). \cr
+   \code{parSetup} \tab A summary of the distributional assumptions on each model parameter (\code{"f"}="fixed", \code{"n"}="normal distribution", \code{"ln"}="log-normal distribution"). \cr
+   \code{options} \tab A list of all the model options. \cr
+   \code{multistartSummary} \tab A summary of the log-likelihood values for each multistart run. \cr
+}
+}
 \description{
-logitr estimates multinomial (MNL) and mixed logit (MXL) models in R.
-Models can be estimated using "Preference" space or "Willingness-to-pay
-(WTP)" space utility parameterizations The program includes an option to
-run a multistart optimization loop with random starting points in each
-iteration, which is useful for non-convex problems like MXL models or
-models with WTP space utility parameterizations. The main optimization loop
-uses the nloptr function to minimize the negative log-likelihood function.
+Use this function to estimate multinomial (MNL) and mixed logit (MXL)
+models with "Preference" space or "Willingness-to-pay" (WTP) space utility
+parameterizations. The function includes an option to run a multistart
+optimization loop with random starting points in each iteration, which is
+useful for non-convex problems like MXL models or models with WTP space
+utility parameterizations. The main optimization loop uses the nloptr
+function to minimize the negative log-likelihood function.
+}
+\details{
+The following options control the detailed behavior of the optimization
+algorithm. They must be provided as a named list to the \code{options} argument,
+e.g. \code{options = list(...)}.\tabular{lll}{
+   Argument \tab Description \tab Default \cr
+   \code{numMultiStarts} \tab Number of times to run the optimization loop, each time starting from a different random starting point for each parameter between \code{startParBounds}. Recommended for non-convex models, such as WTP space models and MXL models. \tab \code{1} \cr
+   \code{keepAllRuns} \tab Set to \code{TRUE} to keep all the model information for each multistart run. If \code{TRUE}, the \code{logitr()} function will return a list with two values: \code{models} (a list of each model), and \code{bestModel} (the model with the largest log-likelihood value). \tab \code{FALSE} \cr
+   \code{startParBounds} \tab Set the \code{lower} and \code{upper} bounds for the starting parameters for each optimization run, which are generated by \code{runif(n, lower, upper)}. \tab \code{c(-1, 1)} \cr
+   \code{startVals} \tab A vector of values to be used as starting values for the optimization. Only used for the first run if \code{numMultiStarts > 1}. \tab \code{NULL} \cr
+   \code{useAnalyticGrad} \tab Set to \code{FALSE} to use numerically approximated gradients instead of analytic gradients during estimation (which is slower). \tab \code{TRUE} \cr
+   \code{scaleInputs} \tab By default each variable in \code{data} is scaled to be between 0 and 1 before running the optimization routine because it usually helps with stability, especially if some of the variables have very large or very small values (e.g. \verb{> 10^3} or \verb{< 10^-3}). Set to \code{FALSE} to turn this feature off. \tab \code{TRUE} \cr
+   \code{standardDraws} \tab By default, a new set of standard normal draws are generated during each call to \code{logitr} (the same draws are used during each multistart too). The user can override those draws by providing a matrix of standard normal draws if desired. \tab \code{NULL} \cr
+   \code{numDraws} \tab The number of draws to use for MXL models for the maximum simulated likelihood. \tab \code{200} \cr
+   \code{drawType} \tab The type of draw to use for MXL models for the maximum simulated likelihood. Set to \code{'normal'} to use random normal draws or \code{'halton'} for Halton draws. \tab \code{'halton'} \cr
+   \code{printLevel} \tab The print level of the \code{nloptr} optimization loop. Type \code{nloptr.print.options()} for more details. \tab \code{0} \cr
+   \code{xtol_rel} \tab The relative \code{x} tolerance for the \code{nloptr} optimization loop. Type \code{nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
+   \code{xtol_abs} \tab The absolute \code{x} tolerance for the \code{nloptr} optimization loop. Type \code{nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
+   \code{ftol_rel} \tab The relative \code{f} tolerance for the \code{nloptr} optimization loop. Type \code{nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
+   \code{ftol_abs} \tab The absolute \code{f} tolerance for the \code{nloptr} optimization loop. Type \code{nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
+   \code{maxeval} \tab The maximum number of function evaluations for the \code{nloptr} optimization loop. Type \code{nloptr.print.options()} for more details. \tab \code{1000} \cr
+}
 }
 \examples{
-# For an example go to: https://github.com/jhelvy/logitr/tree/master/example
+For detailed examples, go to: [https://github.com/jhelvy/logitr/tree/master/examples](https://github.com/jhelvy/logitr/tree/master/examples)
 }
 \keyword{logit}
 \keyword{logit,}

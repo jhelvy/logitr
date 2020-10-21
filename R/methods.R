@@ -3,22 +3,29 @@
 # ============================================================================
 
 #' Returns the computed WTP from a preference space model.
-#'
-#' Returns the computed WTP from a preference space model.
 #' @keywords logitr, wtp
+#'
+#' @param model The output of a "preference space" model estimated model using the **logitr** package.
+#' @param priceName The name of the parameter that identifies price.
+#'
+#' @details
+#' Willingness to pay is computed by dividing the estimated parameters of a utility model in the "preference" space by the price parameter
+#'
+#' @return
 #' @export
 #' @examples
 #' # Run a MNL model in the Preference Space:
 #' data(yogurt)
 #'
-#' mnl.pref = logitr(
+#' mnl_pref = logitr(
 #'   data       = yogurt,
 #'   choiceName = 'choice',
 #'   obsIDName  = 'obsID',
 #'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
 #'
 #' # Get the WTP implied from the preference space model
-#' wtp(mnl.pref, priceName='price')
+#' wtp(mnl_pref, priceName = 'price')
+#'
 wtp <- function(model, priceName) {
     UseMethod('wtp', model)
 }
