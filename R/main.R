@@ -13,15 +13,15 @@
 #' function to minimize the negative log-likelihood function.
 #' @keywords logitr, mnl, mxl, wtp, willingness-to-pay, mixed logit, logit
 #'
-#' @param data The choice data, formatted as a data.frame object.
+#' @param data The choice data, formatted as a `data.frame` object.
 #' @param choiceName The name of the column that identifies the choice variable.
-#' @param obsIDName The name of the column that identifies the obsID variable.
-#' @param parNames The names of the parameters to be estimated in the model. Must be the same as the column names in the data argument. For WTP space models, do not include price in parNames.
-#' @param priceName The name of the column that identifies the price variable. Only required for WTP space models. Defaults to NULL
-#' @param randPars A named vector whose names are the random parameters and values the distribution: 'n' for normal or 'ln' for log-normal. Defaults to NULL
-#' @param randPrice The random distribution for the price parameter: 'n' for normal or 'ln' for log-normal. Only used for WTP space MXL models. Defaults to NULL
-#' @param modelSpace Set to 'wtp' for WTP space models. Defaults to "pref"
-#' @param weightsName The name of the column that identifies the weights to be used in model estimation. Optional. Defaults to NULL
+#' @param obsIDName The name of the column that identifies the `obsID` variable.
+#' @param parNames The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in `parNames`.
+#' @param priceName The name of the column that identifies the `price` variable. Only required for WTP space models. Defaults to `NULL`.
+#' @param randPars A named vector whose names are the random parameters and values the distribution: `'n'` for normal or `'ln'` for log-normal. Defaults to `NULL`.
+#' @param randPrice The random distribution for the price parameter: `'n'` for normal or `'ln'` for log-normal. Only used for WTP space MXL models. Defaults to `NULL`.
+#' @param modelSpace Set to `'wtp'` for WTP space models. Defaults to `"pref"`.
+#' @param weightsName The name of the column that identifies the weights to be used in model estimation. Optional. Defaults to `NULL`.
 #' @param options A list of options.
 #'
 #' @details

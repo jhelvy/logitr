@@ -2,7 +2,7 @@
 # Functions for assessing sample size
 # ============================================================================
 
-#' Examine the standard errors from models before you collect choice data
+#' Preview standard errors from models before you collect choice data
 #'
 #' This function allows you to estimate a model on a design of experiment
 #' that you have not yet used to collect data. This allows you to learn
@@ -10,14 +10,25 @@
 #' size needed to achieve parameter precision levels before you go out and
 #' use the design to collect data. The function fills out the survey with
 #' random choices and estimates a model. It does this multiple times with an
-#' increasing number of observations, set by the "nbreaks" argument. While the
-#' coefficients in those models are meaningless, the standard errors on the
+#' increasing number of observations, set by the `nbreaks` argument. While the
+#' coefficients in those models are meaningless, the _standard errors_ on the
 #' coefficients are informative. The example below estimates 10 separate models
 #' and then plots the standard errors against the number of observations. In
 #' this example, assume that the yogurt data was not a completed survey but
 #' rather a blank design of experiment with no observed choices.
 #' @keywords logitr, mnl, mxl, logit, sample size
 #'
+#' @param data The choice data, formatted as a `data.frame` object.
+#' @param obsIDName The name of the column that identifies the `obsID` variable.
+#' @param parNames The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in `parNames`.
+#' @param nbreaks The number of different sample size groups.
+#' @param priceName The name of the column that identifies the `price` variable. Only required for WTP space models. Defaults to `NULL`.
+#' @param randPars A named vector whose names are the random parameters and values the distribution: `'n'` for normal or `'ln'` for log-normal. Defaults to `NULL`.
+#' @param randPrice The random distribution for the price parameter: `'n'` for normal or `'ln'` for log-normal. Only used for WTP space MXL models. Defaults to `NULL`.
+#' @param modelSpace Set to `'wtp'` for WTP space models. Defaults to `"pref"`.
+#' @param plot Creates a plot of the sample size results. Defaults to `TRUE`.
+#' @param options A list of options.
+#' @return Returns a data frame of the standard error values for different sample sizes.
 #' @export
 #' @examples
 #'
@@ -27,10 +38,10 @@
 #'     parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
 #'     nbreaks    = 10,
 #'     plot       = TRUE)
-
-sampleSizer = function(data, obsIDName, parNames, nbreaks=10, plot=TRUE,
-                       priceName=NULL, randPars=NULL, randPrice=NULL,
-                       modelSpace='pref', options=list()) {
+#' head(test)
+sampleSizer = function(data, obsIDName, parNames, nbreaks = 10, plot = TRUE,
+                       priceName = NULL, randPars = NULL, randPrice = NULL,
+                       modelSpace = 'pref', options = list()) {
     maxObs <- max(data[obsIDName])
     nobs <- ceiling(seq(ceiling(maxObs/nbreaks), maxObs, length.out = nbreaks))
     models <- list()

@@ -2,9 +2,15 @@
 % Please edit documentation in R/methods.R
 \name{coef.logitr}
 \alias{coef.logitr}
-\title{Returns the coefficients of an estimated model of the 'logitr' class.}
+\title{Get the model coefficients}
 \usage{
 \method{coef}{logitr}(model)
+}
+\arguments{
+\item{model}{The output of a model estimated using the \code{logitr()} function.}
+}
+\value{
+A vector of the coefficients from a model estimated using the \code{logitr()} function.
 }
 \description{
 Returns the coefficients of an estimated model of the 'logitr' class.
@@ -13,14 +19,14 @@ Returns the coefficients of an estimated model of the 'logitr' class.
 # Run a MNL model in the Preference Space:
 data(yogurt)
 
-mnl.pref = logitr(
+mnl_pref = logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
 
 # Get the model coefficients:
-coef(model)
+coef(mnl_pref)
 }
 \keyword{coef}
 \keyword{logitr,}

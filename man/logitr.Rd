@@ -18,28 +18,28 @@ logitr(
 )
 }
 \arguments{
-\item{data}{The choice data, formatted as a data.frame object.}
+\item{data}{The choice data, formatted as a \code{data.frame} object.}
 
 \item{choiceName}{The name of the column that identifies the choice variable.}
 
-\item{obsIDName}{The name of the column that identifies the obsID variable.}
+\item{obsIDName}{The name of the column that identifies the \code{obsID} variable.}
 
-\item{parNames}{The names of the parameters to be estimated in the model. Must be the same as the column names in the data argument. For WTP space models, do not include price in parNames.}
+\item{parNames}{The names of the parameters to be estimated in the model. Must be the same as the column names in the \code{data} argument. For WTP space models, do not include price in \code{parNames}.}
 
-\item{priceName}{The name of the column that identifies the price variable. Only required for WTP space models. Defaults to NULL}
+\item{priceName}{The name of the column that identifies the \code{price} variable. Only required for WTP space models. Defaults to \code{NULL}.}
 
-\item{randPars}{A named vector whose names are the random parameters and values the distribution: 'n' for normal or 'ln' for log-normal. Defaults to NULL}
+\item{randPars}{A named vector whose names are the random parameters and values the distribution: \code{'n'} for normal or \code{'ln'} for log-normal. Defaults to \code{NULL}.}
 
-\item{randPrice}{The random distribution for the price parameter: 'n' for normal or 'ln' for log-normal. Only used for WTP space MXL models. Defaults to NULL}
+\item{randPrice}{The random distribution for the price parameter: \code{'n'} for normal or \code{'ln'} for log-normal. Only used for WTP space MXL models. Defaults to \code{NULL}.}
 
-\item{modelSpace}{Set to 'wtp' for WTP space models. Defaults to "pref"}
+\item{modelSpace}{Set to \code{'wtp'} for WTP space models. Defaults to \code{"pref"}.}
 
-\item{weightsName}{The name of the column that identifies the weights to be used in model estimation. Optional. Defaults to NULL}
+\item{weightsName}{The name of the column that identifies the weights to be used in model estimation. Optional. Defaults to \code{NULL}.}
 
 \item{options}{A list of options.}
 }
 \value{
-\tabular{ll}{
+The function returns a list object with the following names.\tabular{ll}{
    Value \tab Description \cr
    \code{coef} \tab The model coefficients at convergence. \cr
    \code{standErrs} \tab The standard errors of the model coefficients at convergence. \cr
@@ -95,7 +95,8 @@ e.g. \code{options = list(...)}.\tabular{lll}{
 }
 }
 \examples{
-For detailed examples, go to: [https://github.com/jhelvy/logitr/tree/master/examples](https://github.com/jhelvy/logitr/tree/master/examples)
+For detailed examples, visit [https://github.com/jhelvy/logitr/tree/master/examples](https://github.com/jhelvy/logitr/tree/master/examples)
+
 }
 \keyword{logit}
 \keyword{logit,}

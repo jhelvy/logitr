@@ -5,37 +5,51 @@
 \title{Returns a comparison of the WTP between a preference space and WTP space
 model.}
 \usage{
-\method{wtpCompare}{logitr}(model.pref, model.wtp, priceName)
+\method{wtpCompare}{logitr}(model_pref, model_wtp, priceName)
+}
+\arguments{
+\item{model_pref}{The output of a "preference space" model estimated using the \code{logitr()} function.}
+
+\item{model_wtp}{The output of a "willingness to pay space" model estimated using the \code{logitr()} function.}
+
+\item{priceName}{The name of the parameter that identifies price.}
+}
+\value{
+A data frame comparing the WTP estimates from preference space and WTP space models.
 }
 \description{
 Returns a comparison of the WTP between a preference space and WTP space
 model.
 }
+\details{
+Willingness to pay (WTP) is first computed from the preference space model by dividing the estimated parameters by the price parameter. Then those estimates are compared against the WTP values directly estimated from the "WTP" space model. Uncertainty is handled via simulation.
+}
 \examples{
 # Run a MNL model in the Preference Space:
-data(yogurt)
+library(logitr)
 
-mnl.pref = logitr(
+mnl_pref = logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
 
 # Get the WTP implied from the preference space model
-mnl.pref.wtp = wtp(mnl.pref, priceName='price')
+wtp_mnl_pref = wtp(mnl_pref, priceName = 'price')
 
 # Run a MNL model in the WTP Space:
-mnl.wtp = logitr(
+mnl_wtp = logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
   parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
   priceName  = 'price',
   modelSpace = 'wtp',
-  options = list(startVals = mnl.pref.wtp$Estimate))
+  options = list(startVals = mnl_pref_wtp$Estimate))
 
 # Compare the WTP between the two spaces:
-wtpCompare(mnl.pref, mnl.wtp, priceName='price')
+wtpCompare(mnl_pref, mnl_wtp, priceName = 'price')
+
 }
 \keyword{logitr,}
 \keyword{wtp}

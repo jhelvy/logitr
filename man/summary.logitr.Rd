@@ -6,6 +6,12 @@
 \usage{
 \method{summary}{logitr}(model)
 }
+\arguments{
+\item{model}{The output of a model estimated model using the \code{logitr()} function.}
+}
+\value{
+Prints a summary of the model results to the console.
+}
 \description{
 Prints a summary of a model estimated using the 'logitr' package
 }
@@ -13,7 +19,7 @@ Prints a summary of a model estimated using the 'logitr' package
 # Run a MNL model in the Preference Space with a multistart:
 data(yogurt)
 
-mnl.pref = logitr(
+mnl_pref = logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
@@ -23,7 +29,7 @@ mnl.pref = logitr(
     keepAllRuns    = TRUE))
 
 # View a summary of the model:
-summary(mnl.pref)
+summary(mnl_pref)
 }
 \keyword{logitr,}
 \keyword{logitr.multistart}

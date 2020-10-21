@@ -1,6 +1,4 @@
 #' Prints the status codes from the nloptr optimization routine.
-#'
-#' Prints the status codes from the nloptr optimization routine.
 #' @keywords logitr, nloptr, status codes
 #' @export
 #' @examples
