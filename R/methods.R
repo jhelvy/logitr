@@ -64,7 +64,7 @@ wtp <- function(model, priceName) {
 #'   parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
 #'   priceName  = 'price',
 #'   modelSpace = 'wtp',
-#'   options = list(startVals = mnl_pref_wtp$Estimate))
+#'   options = list(startVals = wtp_mnl_pref$Estimate))
 #'
 #' # Compare the WTP between the two spaces:
 #' wtpCompare(mnl_pref, mnl_wtp, priceName = 'price')

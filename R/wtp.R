@@ -2,6 +2,8 @@
 # Functions for computing the WTP from estimated models
 # ============================================================================
 
+#' Get WTP from a preference space model
+#'
 #' Returns the computed WTP from a preference space model.
 #' @keywords logitr, wtp
 #'
@@ -60,6 +62,8 @@ getPrefSpaceWtp = function(model, priceName) {
     return(getCoefTable(wtp.mean, wtp.se, model$numObs, model$numParams))
 }
 
+#' Compare WTP from WTP space and preference space models
+#'
 #' Returns a comparison of the WTP between a preference space and WTP space
 #' model.
 #' @keywords logitr, wtp
@@ -94,7 +98,7 @@ getPrefSpaceWtp = function(model, priceName) {
 #'   parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
 #'   priceName  = 'price',
 #'   modelSpace = 'wtp',
-#'   options = list(startVals = mnl_pref_wtp$Estimate))
+#'   options = list(startVals = wtp_mnl_pref$Estimate))
 #'
 #' # Compare the WTP between the two spaces:
 #' wtpCompare(mnl_pref, mnl_wtp, priceName = 'price')

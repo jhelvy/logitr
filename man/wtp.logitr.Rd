@@ -2,7 +2,7 @@
 % Please edit documentation in R/wtp.R
 \name{wtp.logitr}
 \alias{wtp.logitr}
-\title{Returns the computed WTP from a preference space model.}
+\title{Get WTP from a preference space model}
 \usage{
 \method{wtp}{logitr}(model, priceName)
 }
