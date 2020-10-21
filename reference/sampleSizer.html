@@ -6,13 +6,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Examine the standard errors from models before you collect choice data — sampleSizer • logitr</title>
+<title>Preview standard errors from models before you collect choice data — sampleSizer • logitr</title>
 
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
@@ -39,14 +39,14 @@
 
 
 
-<meta property="og:title" content="Examine the standard errors from models before you collect choice data — sampleSizer" />
+<meta property="og:title" content="Preview standard errors from models before you collect choice data — sampleSizer" />
 <meta property="og:description" content="This function allows you to estimate a model on a design of experiment
 that you have not yet used to collect data. This allows you to learn
 about deficiencies in your design of experiment and also assess the sample
 size needed to achieve parameter precision levels before you go out and
 use the design to collect data. The function fills out the survey with
 random choices and estimates a model. It does this multiple times with an
-increasing number of observations, set by the &quot;nbreaks&quot; argument. While the
+increasing number of observations, set by the nbreaks argument. While the
 coefficients in those models are meaningless, the standard errors on the
 coefficients are informative. The example below estimates 10 separate models
 and then plots the standard errors against the number of observations. In
@@ -114,7 +114,7 @@ rather a blank design of experiment with no observed choices." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Examine the standard errors from models before you collect choice data</h1>
+    <h1>Preview standard errors from models before you collect choice data</h1>
     
     <div class="hidden name"><code>sampleSizer.Rd</code></div>
     </div>
@@ -126,8 +126,8 @@ about deficiencies in your design of experiment and also assess the sample
 size needed to achieve parameter precision levels before you go out and
 use the design to collect data. The function fills out the survey with
 random choices and estimates a model. It does this multiple times with an
-increasing number of observations, set by the "nbreaks" argument. While the
-coefficients in those models are meaningless, the standard errors on the
+increasing number of observations, set by the <code>nbreaks</code> argument. While the
+coefficients in those models are meaningless, the <em>standard errors</em> on the
 coefficients are informative. The example below estimates 10 separate models
 and then plots the standard errors against the number of observations. In
 this example, assume that the yogurt data was not a completed survey but
@@ -147,7 +147,54 @@ rather a blank design of experiment with no observed choices.</p>
   options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>data</th>
+      <td><p>The choice data, formatted as a <code>data.frame</code> object.</p></td>
+    </tr>
+    <tr>
+      <th>obsIDName</th>
+      <td><p>The name of the column that identifies the <code>obsID</code> variable.</p></td>
+    </tr>
+    <tr>
+      <th>parNames</th>
+      <td><p>The names of the parameters to be estimated in the model. Must be the same as the column names in the <code>data</code> argument. For WTP space models, do not include price in <code>parNames</code>.</p></td>
+    </tr>
+    <tr>
+      <th>nbreaks</th>
+      <td><p>The number of different sample size groups.</p></td>
+    </tr>
+    <tr>
+      <th>plot</th>
+      <td><p>Creates a plot of the sample size results. Defaults to <code>TRUE</code>.</p></td>
+    </tr>
+    <tr>
+      <th>priceName</th>
+      <td><p>The name of the column that identifies the <code>price</code> variable. Only required for WTP space models. Defaults to <code>NULL</code>.</p></td>
+    </tr>
+    <tr>
+      <th>randPars</th>
+      <td><p>A named vector whose names are the random parameters and values the distribution: <code>'n'</code> for normal or <code>'ln'</code> for log-normal. Defaults to <code>NULL</code>.</p></td>
+    </tr>
+    <tr>
+      <th>randPrice</th>
+      <td><p>The random distribution for the price parameter: <code>'n'</code> for normal or <code>'ln'</code> for log-normal. Only used for WTP space MXL models. Defaults to <code>NULL</code>.</p></td>
+    </tr>
+    <tr>
+      <th>modelSpace</th>
+      <td><p>Set to <code>'wtp'</code> for WTP space models. Defaults to <code>"pref"</code>.</p></td>
+    </tr>
+    <tr>
+      <th>options</th>
+      <td><p>A list of options.</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Returns a data frame of the standard error values for different sample sizes.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -176,7 +223,14 @@ rather a blank design of experiment with no observed choices.</p>
 #&gt; Running Model
 #&gt; Done!
 #&gt; Running Model
-#&gt; Done!</div><div class='img'><img src='sampleSizer-1.png' alt='' width='700' height='433' /></div></pre>
+#&gt; Done!</div><div class='img'><img src='sampleSizer-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>test</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   size         se    coef
+#&gt; 1  242 0.06480355   price
+#&gt; 2  242 0.51570011    feat
+#&gt; 3  242 0.17669160  dannon
+#&gt; 4  242 0.24346551  hiland
+#&gt; 5  242 0.24644574 yoplait
+#&gt; 6  484 0.05125270   price</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

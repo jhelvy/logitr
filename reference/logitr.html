@@ -12,7 +12,7 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
@@ -142,7 +142,7 @@ function to minimize the negative log-likelihood function.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>The choice data, formatted as a data.frame object.</p></td>
+      <td><p>The choice data, formatted as a <code>data.frame</code> object.</p></td>
     </tr>
     <tr>
       <th>choiceName</th>
@@ -150,31 +150,31 @@ function to minimize the negative log-likelihood function.</p>
     </tr>
     <tr>
       <th>obsIDName</th>
-      <td><p>The name of the column that identifies the obsID variable.</p></td>
+      <td><p>The name of the column that identifies the <code>obsID</code> variable.</p></td>
     </tr>
     <tr>
       <th>parNames</th>
-      <td><p>The names of the parameters to be estimated in the model. Must be the same as the column names in the data argument. For WTP space models, do not include price in parNames.</p></td>
+      <td><p>The names of the parameters to be estimated in the model. Must be the same as the column names in the <code>data</code> argument. For WTP space models, do not include price in <code>parNames</code>.</p></td>
     </tr>
     <tr>
       <th>priceName</th>
-      <td><p>The name of the column that identifies the price variable. Only required for WTP space models. Defaults to NULL</p></td>
+      <td><p>The name of the column that identifies the <code>price</code> variable. Only required for WTP space models. Defaults to <code>NULL</code>.</p></td>
     </tr>
     <tr>
       <th>randPars</th>
-      <td><p>A named vector whose names are the random parameters and values the distribution: 'n' for normal or 'ln' for log-normal. Defaults to NULL</p></td>
+      <td><p>A named vector whose names are the random parameters and values the distribution: <code>'n'</code> for normal or <code>'ln'</code> for log-normal. Defaults to <code>NULL</code>.</p></td>
     </tr>
     <tr>
       <th>randPrice</th>
-      <td><p>The random distribution for the price parameter: 'n' for normal or 'ln' for log-normal. Only used for WTP space MXL models. Defaults to NULL</p></td>
+      <td><p>The random distribution for the price parameter: <code>'n'</code> for normal or <code>'ln'</code> for log-normal. Only used for WTP space MXL models. Defaults to <code>NULL</code>.</p></td>
     </tr>
     <tr>
       <th>modelSpace</th>
-      <td><p>Set to 'wtp' for WTP space models. Defaults to "pref"</p></td>
+      <td><p>Set to <code>'wtp'</code> for WTP space models. Defaults to <code>"pref"</code>.</p></td>
     </tr>
     <tr>
       <th>weightsName</th>
-      <td><p>The name of the column that identifies the weights to be used in model estimation. Optional. Defaults to NULL</p></td>
+      <td><p>The name of the column that identifies the weights to be used in model estimation. Optional. Defaults to <code>NULL</code>.</p></td>
     </tr>
     <tr>
       <th>options</th>
@@ -184,8 +184,7 @@ function to minimize the negative log-likelihood function.</p>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-<table class='table'>
+    <p>The function returns a list object with the following names.</p><table class='table'>
 <tr><td>Value</td><td>Description</td></tr>
 <tr><td><code>coef</code></td><td>The model coefficients at convergence.</td></tr>
 <tr><td><code>standErrs</code></td><td>The standard errors of the model coefficients at convergence.</td></tr>

@@ -6,13 +6,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Returns the coefficients of an estimated model of the 'logitr' class. — coef.logitr • logitr</title>
+<title>Get the model coefficients — coef.logitr • logitr</title>
 
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Returns the coefficients of an estimated model of the 'logitr' class. — coef.logitr" />
+<meta property="og:title" content="Get the model coefficients — coef.logitr" />
 <meta property="og:description" content="Returns the coefficients of an estimated model of the 'logitr' class." />
 
 
@@ -103,7 +103,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Returns the coefficients of an estimated model of the 'logitr' class.</h1>
+    <h1>Get the model coefficients</h1>
     
     <div class="hidden name"><code>coef.logitr.Rd</code></div>
     </div>
@@ -115,13 +115,24 @@
     <pre class="usage"><span class='co'># S3 method for logitr</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>model</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>model</th>
+      <td><p>The output of a model estimated using the <code><a href='logitr.html'>logitr()</a></code> function.</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A vector of the coefficients from a model estimated using the <code><a href='logitr.html'>logitr()</a></code> function.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Run a MNL model in the Preference Space:</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>yogurt</span><span class='op'>)</span>
 
-<span class='va'>mnl.pref</span> <span class='op'>=</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
+<span class='va'>mnl_pref</span> <span class='op'>=</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
   data       <span class='op'>=</span> <span class='va'>yogurt</span>,
   choiceName <span class='op'>=</span> <span class='st'>'choice'</span>,
   obsIDName  <span class='op'>=</span> <span class='st'>'obsID'</span>,
@@ -129,8 +140,9 @@
 </div><div class='output co'>#&gt; Running Model
 #&gt; Done!</div><div class='input'>
 <span class='co'># Get the model coefficients:</span>
-<span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>model</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in coef(model): object 'model' not found</span></div></pre>
+<span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>mnl_pref</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;      price       feat     dannon     hiland    yoplait 
+#&gt; -0.3665843  0.4914314  0.6411848 -3.0744146  1.3757562 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
