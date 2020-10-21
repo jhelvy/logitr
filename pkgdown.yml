@@ -1,6 +1,7 @@
 pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
-articles: {}
-last_built: 2020-10-21T20:14Z
+articles:
+  mxl_models: mxl_models.html
+last_built: 2020-10-21T21:09Z
 
