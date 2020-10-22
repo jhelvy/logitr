@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -84,8 +84,29 @@
      
   </a>
 </li>
-<li>
-  <a href="../articles/index.html">Examples</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/utility_models.html">Utility Models in the Preference &amp; WTP Space</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mxl_models.html">Estimating mixed logit models</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../reference/index.html">Functions</a>
@@ -156,12 +177,11 @@
 <span class='co'># Get the WTP implied from the preference space model</span>
 <span class='fu'>wtp</span><span class='op'>(</span><span class='va'>mnl_pref</span>, priceName <span class='op'>=</span> <span class='st'>'price'</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;          Estimate StdError    tStat  pVal signif
-#&gt; lambda   0.366584 0.024271  15.1039 0e+00    ***
-#&gt; feat     1.340568 0.357930   3.7453 2e-04    ***
-#&gt; dannon   1.749079 0.198785   8.7988 0e+00    ***
-#&gt; hiland  -8.386650 0.508407 -16.4959 0e+00    ***
-#&gt; yoplait  3.752905 0.468610   8.0086 0e+00    ***</div><div class='input'>
-</div></pre>
+#&gt; lambda   0.366584 0.024369  15.0431 0e+00    ***
+#&gt; feat     1.340568 0.358714   3.7372 2e-04    ***
+#&gt; dannon   1.749079 0.199566   8.7644 0e+00    ***
+#&gt; hiland  -8.386650 0.507765 -16.5168 0e+00    ***
+#&gt; yoplait  3.752905 0.469587   7.9919 0e+00    ***</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

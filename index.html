@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -43,8 +43,29 @@
      
   </a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
 <li>
-  <a href="articles/index.html">Examples</a>
+      <a href="articles/utility_models.html">Utility Models in the Preference &amp; WTP Space</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/mxl_models.html">Estimating mixed logit models</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="reference/index.html">Functions</a>
@@ -73,424 +94,123 @@
 <div id="logitr" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#logitr" class="anchor"></a>logitr</h1></div>
-<p><em>logitr</em> estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using “Preference” space or “Willingness-to-pay (WTP)” space utility parameterizations. The current version includes support for:</p>
+<p><strong>logitr</strong> estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using “Preference” space or “Willingness-to-pay” (WTP) space utility parameterizations. The current version includes support for:</p>
 <ul>
 <li>Homogeneous multinomial logit (MNL) models</li>
-<li>Heterogeneous mixed logit (MXL) models (support for normal and log-normal parameter distributions).</li>
+<li>Heterogeneous mixed logit (MXL) models (with normal and log-normal parameter distributions).</li>
 <li>Preference space utility parameterization.</li>
 <li>WTP space utility parameterization.</li>
-<li>A multistart optimization loop with random starting points in each iteration (useful for non-convex problems like MXL models or models with WTP space utility parameterizations).</li>
-<li>A <a href="#simulation">simulation</a> function for computing the expected shares of a set of alternatives using an estimated model.</li>
+<li>An optional multistart optimization that uses different random starting points in each iteration (useful for non-convex problems like MXL models or models with WTP space parameterizations).</li>
+<li>A simulation function for computing the expected shares of a set of alternatives using an estimated model.</li>
 </ul>
 <p>MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in <a href="http://eml.berkeley.edu/~train/">Kenneth Train’s</a> book <a href="http://eml.berkeley.edu/books/choice2.html"><em>Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)</em></a>.</p>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h2>
+<p>The current version is not yet on CRAN, but you can install it from Github using the <strong>devtools</strong> library:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">'jhelvy/logitr'</span>)</span></code></pre></div>
 </div>
-<div id="table-of-contents" class="section level1">
+<div id="required-libraries" class="section level2">
+<h2 class="hasAnchor">
+<a href="#required-libraries" class="anchor"></a>Required Libraries</h2>
+<p><strong>logitr</strong> requires the <a href="https://cran.r-project.org/web/packages/nloptr/index.html"><strong>nloptr</strong></a> library. This is because <code>nloptr()</code> allows for both the objective and gradient functions to be computed in a single function. This speeds up computation time considerably because both the objective and gradient functions require many of the same calculations (e.g. computing probabilities).</p>
+</div>
+</div>
+<div id="estimating-models" class="section level1">
 <h1 class="hasAnchor">
-<a href="#table-of-contents" class="anchor"></a>Table of Contents</h1>
+<a href="#estimating-models" class="anchor"></a>Estimating models</h1>
+<p>The <code><a href="reference/logitr.html">logitr()</a></code> function estimates multinomial logit (MNL) and mixed logit (MXL) models using “Preference” space or “Willingness-to-pay (WTP)” space <a href="articles/utility_models.html">utility parameterizations</a>. The basic usage for estimating models is as follows:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/logitr.html">logitr</a></span><span class="op">(</span>
+  <span class="va">data</span>,
+  <span class="va">choiceName</span>,
+  <span class="va">obsIDName</span>,
+  <span class="va">parNames</span>,
+  priceName <span class="op">=</span> <span class="cn">NULL</span>,
+  randPars <span class="op">=</span> <span class="cn">NULL</span>,
+  randPrice <span class="op">=</span> <span class="cn">NULL</span>,
+  modelSpace <span class="op">=</span> <span class="st">"pref"</span>,
+  weightsName <span class="op">=</span> <span class="cn">NULL</span>,
+  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span></pre></div>
+<div id="data-format" class="section level2">
+<h2 class="hasAnchor">
+<a href="#data-format" class="anchor"></a>Data format</h2>
+<p>The <code>data</code> argument is set to the name of the <code>data.frame</code> storing the choice observations. The <code>data.frame</code> must be arranged such that each row is an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. each choice observation could have a different number of alternatives). The data must include columns for each of the following arguments in the <code><a href="reference/logitr.html">logitr()</a></code> function:</p>
 <ul>
 <li>
-<a href="#installation">Installation</a>
-<ul>
-<li><a href="#required-libraries">Required Libraries</a></li>
-</ul>
-</li>
+<code>choiceName</code>: A dummy variable that identifies which alternative was chosen (<code>1</code> = chosen, <code>0</code> = not chosen).</li>
 <li>
-<a href="#using-logitr">Using <code>logitr()</code></a>
-<ul>
-<li><a href="#arguments">Arguments</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#values">Values</a></li>
-<li><a href="#data-file-setup">Data File Setup</a></li>
-<li><a href="#details-about-parnames-argument">Details About <code>parNames</code> Argument</a></li>
-<li><a href="#using-summary-with-logitr">Using <code>summary()</code> with <code>logitr</code></a></li>
-<li><a href="#computing-and-comparing-wtp">Computing and Comparing WTP</a></li>
-</ul>
-</li>
-<li><a href="#simulation">Simulation</a></li>
-<li><a href="#author-version-and-license-information">Author, Version, and License Information</a></li>
-<li><a href="#citation-information">Citation Information</a></li>
-</ul>
-</div>
-<div id="installation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h1>
-<ol>
-<li>Make sure you have the <code>devtools</code> library installed:</li>
-</ol>
-<p><code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages('devtools')</a></code></p>
-<ol>
-<li>Load the <code>devtools</code> library and install the <code>logitr</code> package:</li>
-</ol>
-<pre><code>library('devtools')
-install_github('jhelvy/logitr')
-library('logitr')</code></pre>
-<div id="required-libraries" class="section level3">
-<h3 class="hasAnchor">
-<a href="#required-libraries" class="anchor"></a>Required Libraries</h3>
-<p><em>logitr</em> requires the <code>nloptr</code> library.</p>
-<p>The main optimization loop uses the <code>nloptr</code> function to minimize the negative log-likelihood function. <code>nloptr</code> is used instead of the Base R <code>optim</code> because it allows for both the objective and gradient functions to be included in one function. This speeds up computation time considerably because both the objective and gradient functions require many of the same calculations (e.g. computing the probabilities), which only have to be computed once in <code>nloptr</code> (<code>optim</code> requires separate objective and gradient functions, so many calculations are repeated within each iteration of the optimization loop).</p>
-</div>
-</div>
-<div id="using-logitr" class="section level1">
-<h1 class="hasAnchor">
-<a href="#using-logitr" class="anchor"></a>Using <code>logitr()</code>
-</h1>
-<p>(For a detailed example, see the ‘./examples/example.R’ file)</p>
-<p>The main model estimation function is the <code><a href="reference/logitr.html">logitr()</a></code> function:</p>
-<pre><code>model = logitr(data, choiceName, obsIDName, parNames, priceName=NULL,
-               randPars=NULL, randPrice=NULL, modelSpace='pref',
-               options=list(...))</code></pre>
-<p>The function returns a list of values, so assign the model output to a variable (e.g. “model”) to store the output values.</p>
-<div id="arguments" class="section level2">
-<h2 class="hasAnchor">
-<a href="#arguments" class="anchor"></a>Arguments</h2>
-<table class="table">
-<colgroup>
-<col width="32%">
-<col width="38%">
-<col width="30%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Argument</th>
-<th align="left">Description</th>
-<th align="left">Default</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left"><code>data</code></td>
-<td align="left">The choice data, formatted as a data.frame object (see the <a href="#data-file-setup">Data File Setup</a> Section for details).</td>
-<td align="left">–</td>
-</tr>
-<tr class="even">
-<td align="left"><code>choiceName</code></td>
-<td align="left">The name of the column that identifies the <code>choice</code> variable.</td>
-<td align="left">–</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>obsIDName</code></td>
-<td align="left">The name of the column that identifies the <code>obsID</code> variable.</td>
-<td align="left">–</td>
-</tr>
-<tr class="even">
-<td align="left"><code>parNames</code></td>
-<td align="left">The names of the parameters to be estimated in the model. Must be the same as the column names in the <code>data</code> argument. For WTP space models, do not include price in <code>parNames</code>. See the <a href="#details-about-parnames-argument">Details About <code>parNames</code> Argument</a> Section for more details.</td>
-<td align="left">–</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>priceName</code></td>
-<td align="left">The name of the column that identifies the price variable. Only required for WTP space models.</td>
-<td align="left"><code>NULL</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>randPars</code></td>
-<td align="left">A named vector whose names are the random parameters and values the destribution: <code>'n'</code> for normal or <code>'ln'</code> for log-normal.</td>
-<td align="left"><code>NULL</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>randPrice</code></td>
-<td align="left">The random distribution for the price parameter: <code>'n'</code> for normal or <code>'ln'</code> for log-normal. Only used for WTP space MXL models.</td>
-<td align="left"><code>NULL</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>modelSpace</code></td>
-<td align="left">Set to <code>'wtp'</code> for WTP space models.</td>
-<td align="left"><code>'pref'</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>options</code></td>
-<td align="left">A list of options (see the <a href="#options">Options</a> Section for details).</td>
-<td align="left">–</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="options" class="section level2">
-<h2 class="hasAnchor">
-<a href="#options" class="anchor"></a>Options</h2>
-<table class="table">
-<colgroup>
-<col width="32%">
-<col width="38%">
-<col width="30%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Argument</th>
-<th align="left">Description</th>
-<th align="left">Default</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left"><code>numMultiStarts</code></td>
-<td align="left">Number of times to run the optimization loop, each time starting from a different random starting point for each parameter between <code>startParBounds</code>. Recommended for non-convex models, such as WTP space models and MXL models.</td>
-<td align="left"><code>1</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>keepAllRuns</code></td>
-<td align="left">Set to <code>TRUE</code> to keep all the model information for each multistart run. If <code>TRUE</code>, the <code><a href="reference/logitr.html">logitr()</a></code> function will return a list with two values: <code>models</code> (a list of each model), and <code>bestModel</code> (the model with the largest log-likelihood value).</td>
-<td align="left"><code>FALSE</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>startParBounds</code></td>
-<td align="left">Set the <code>lower</code> and <code>upper</code> bounds for the starting parameters for each optimization run, which are generated by <code><a href="https://rdrr.io/r/stats/Uniform.html">runif(n, lower, upper)</a></code>.</td>
-<td align="left"><code><a href="https://rdrr.io/r/base/c.html">c(-1, 1)</a></code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>startVals</code></td>
-<td align="left">A vector of values to be used as starting values for the optimization. Only used for the first run if <code>numMultiStarts &gt; 1</code>.</td>
-<td align="left"><code>NULL</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>useAnalyticGrad</code></td>
-<td align="left">Set to <code>FALSE</code> to use numerically approximated gradients instead of analytic gradients during estimation (which is slower).</td>
-<td align="left"><code>TRUE</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>scaleInputs</code></td>
-<td align="left">By default each variable in <code>data</code> is scaled to be between 0 and 1 before running the optimization routine because it usually helps with stability, especially if some of the variables have very large or very small values (e.g. <code>&gt; 10^3</code> or <code>&lt; 10^-3</code>). Set to <code>FALSE</code> to turn this feature off.</td>
-<td align="left"><code>TRUE</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>standardDraws</code></td>
-<td align="left">By default, a new set of standard normal draws are generated during each call to <code>logitr</code> (the same draws are used during each multistart too). The user can override those draws by providing a matrix of standard normal draws if desired.</td>
-<td align="left"><code>NULL</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>numDraws</code></td>
-<td align="left">The number of draws to use for MXL models for the maximum simulated likelihood.</td>
-<td align="left"><code>200</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>drawType</code></td>
-<td align="left">The type of draw to use for MXL models for the maximum simulated likelihood. Set to <code>'normal'</code> to use random normal draws or <code>'halton'</code> for Halton draws.</td>
-<td align="left"><code>'halton'</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>printLevel</code></td>
-<td align="left">The print level of the <code>nloptr</code> optimization loop. Type <code>nloptr.print.options()</code> for more details.</td>
-<td align="left"><code>0</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>xtol_rel</code></td>
-<td align="left">The relative <code>x</code> tolerance for the <code>nloptr</code> optimization loop. Type <code>nloptr.print.options()</code> for more details.</td>
-<td align="left"><code>1.0e-8</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>xtol_abs</code></td>
-<td align="left">The absolute <code>x</code> tolerance for the <code>nloptr</code> optimization loop. Type <code>nloptr.print.options()</code> for more details.</td>
-<td align="left"><code>1.0e-8</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>ftol_rel</code></td>
-<td align="left">The relative <code>f</code> tolerance for the <code>nloptr</code> optimization loop. Type <code>nloptr.print.options()</code> for more details.</td>
-<td align="left"><code>1.0e-8</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>ftol_abs</code></td>
-<td align="left">The absolute <code>f</code> tolerance for the <code>nloptr</code> optimization loop. Type <code>nloptr.print.options()</code> for more details.</td>
-<td align="left"><code>1.0e-8</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>maxeval</code></td>
-<td align="left">The maximum number of function evaluations for the <code>nloptr</code> optimization loop. Type <code>nloptr.print.options()</code> for more details.</td>
-<td align="left"><code>1000</code></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="values" class="section level2">
-<h2 class="hasAnchor">
-<a href="#values" class="anchor"></a>Values</h2>
-<table class="table">
-<colgroup>
-<col width="40%">
-<col width="59%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Value</th>
-<th align="left">Description</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left"><code>coef</code></td>
-<td align="left">The model coefficients at convergence.</td>
-</tr>
-<tr class="even">
-<td align="left"><code>standErrs</code></td>
-<td align="left">The standard errors of the model coefficients at convergence.</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>logLik</code></td>
-<td align="left">The log-likelihood value at convergence.</td>
-</tr>
-<tr class="even">
-<td align="left"><code>nullLogLik</code></td>
-<td align="left">The null log-likelihood value (if all coefficients are 0).</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>gradient</code></td>
-<td align="left">The gradient of the log-likelihood at convergence.</td>
-</tr>
-<tr class="even">
-<td align="left"><code>hessian</code></td>
-<td align="left">The hessian of the log-likelihood at convergence.</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>numObs</code></td>
-<td align="left">The number of observations.</td>
-</tr>
-<tr class="even">
-<td align="left"><code>numParams</code></td>
-<td align="left">The number of model parameters.</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>startPars</code></td>
-<td align="left">The starting values used.</td>
-</tr>
-<tr class="even">
-<td align="left"><code>multistartNumber</code></td>
-<td align="left">The multistart run number for this model.</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>time</code></td>
-<td align="left">The user, system, and elapsed time to run the optimization.</td>
-</tr>
-<tr class="even">
-<td align="left"><code>iterations</code></td>
-<td align="left">The number of iterations until convergence.</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>message</code></td>
-<td align="left">A more informative message with the status of the optimization result.</td>
-</tr>
-<tr class="even">
-<td align="left"><code>status</code></td>
-<td align="left">An integer value with the status of the optimization (positive values are successes). Type <code><a href="reference/logitr.statusCodes.html">logitr.statusCodes()</a></code> for a detailed description.</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>modelSpace</code></td>
-<td align="left">The model space (<code>'pref'</code> or <code>'wtp'</code>).</td>
-</tr>
-<tr class="even">
-<td align="left"><code>standardDraws</code></td>
-<td align="left">The draws used during maximum simulated likelihood (for MXL models).</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>randParSummary</code></td>
-<td align="left">A summary of any random parameters (for MXL models).</td>
-</tr>
-<tr class="even">
-<td align="left"><code>parSetup</code></td>
-<td align="left">A summary of the distributional assumptions on each model parameter (<code>"f"</code>=“fixed”, <code>"n"</code>=“normal distribution”, <code>"ln"</code>=“log-normal distribution”).</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>options</code></td>
-<td align="left">A list of all the model options.</td>
-</tr>
-<tr class="even">
-<td align="left"><code>multistartSummary</code></td>
-<td align="left">A summary of the log-likelihood values for each multistart run.</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="data-file-setup" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data-file-setup" class="anchor"></a>Data File Setup</h2>
-<p>The data must be a <code>data.frame</code> object and arranged such that each row is an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. they could each have a different number of alternatives). The columns must include all variables that will be used as model covariates. In addition, the following variables must be included:</p>
-<ul>
+<code>obsIDName</code>: A sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the <code>obsID</code> variable would be <code>1, 1, 2, 2, 3, 3</code>.</li>
 <li>
-<code>obsID</code>: A sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the <code>obsID</code> variable would be <code>1,1,2,2,3,3</code>.</li>
-<li>
-<code>choice</code>: A dummy variable that identifies which alternative was chosen (<code>1</code>=chosen, <code>0</code>=not chosen).</li>
+<code>parNames</code>: The names of the variables that will be used as model covariates. For WTP space models, do <strong>not</strong> include the price variable in <code>parNames</code> - this is provided separately with the <code>priceName</code> argument.</li>
 </ul>
-<p><strong>WTP space models</strong>: You must include a <code>price</code> variable (entries should be the price values).</p>
 </div>
-<div id="details-about-parnames-argument" class="section level2">
+<div id="preference-space-models" class="section level2">
 <h2 class="hasAnchor">
-<a href="#details-about-parnames-argument" class="anchor"></a>Details About <code>parNames</code> Argument:</h2>
-<p>The model assumes that the deterministic part of the utility function is linear in parameters (<em>v</em> = <em>beta</em> ’ <em>x</em>). Accordingly, each parameter in the <code>parNames</code> argument is an additive part of <em>v</em>. For example, for the utility model <em>u</em> = <em>beta1</em> * <em>price</em> + <em>beta2</em> * <em>size</em> + <em>error</em>, then the <code>parNames</code> argument should be <code><a href="https://rdrr.io/r/base/c.html">c('price', 'size')</a></code>, and there should be two columns of data in the <code>data</code> argument called <code>price</code> and <code>size</code>. If you wanted to add a third parameter, say <em>price^2</em>, then you should create a separate variable in the data.frame called something like <code>priceSquared</code> and your <code>parNames</code> argument would be <code><a href="https://rdrr.io/r/base/c.html">c('price', 'size', 'priceSquared')</a></code>.</p>
-<p><strong>WTP space models</strong>: The <code>parNames</code> should be the WTP parameters, and the <code>price</code> parameter is denoted by the separate argument <code>priceName</code>. For example, for the utility model <em>u</em> = <em>lambda</em>(<em>beta1</em> * <em>size</em> - <em>price</em>) + <em>error</em>, then the <code>parNames</code> argument should be <code><a href="https://rdrr.io/r/base/c.html">c('size')</a></code> and the <code>priceName</code> argument should be <code>'price'</code>.</p>
+<a href="#preference-space-models" class="anchor"></a>Preference space models</h2>
+<p>Unlike similar packages like <a href="https://cran.r-project.org/web/packages/mlogit/index.html"><strong>mlogit</strong></a>, <strong>logitr</strong> does not support the formula type input that uses a symbolic description of the model to be estimated. Parameters are simply described as a vector of the column names in the <code>data.frame</code> provided to the <code>data</code> argument.</p>
+<p>The <code><a href="reference/logitr.html">logitr()</a></code> function assumes that the deterministic part of the utility function is linear in parameters, i.e.:</p>
+<p>Accordingly, each parameter in the <code>parNames</code> argument is an additive part of <span class="math inline"><em>v</em><sub><em>j</em></sub></span>. For example, if the observed utility was <span class="math inline"><em>v</em><sub><em>j</em></sub> = <em>β</em><em>x</em><sub><em>j</em></sub> − <em>α</em><em>p</em><sub><em>j</em></sub></span>, where <span class="math inline"><em>p</em><sub><em>j</em></sub></span> is price and <span class="math inline"><em>x</em><sub><em>j</em></sub></span> is size, then the <code>parNames</code> argument should be <code><a href="https://rdrr.io/r/base/c.html">c("price", "size")</a></code>, and the <code>data.frame</code> used for the <code>data</code> argument should have columns called <code>price</code> and <code>size</code>.</p>
 </div>
-<div id="using-summary-with-logitr" class="section level2">
+<div id="wtp-space-models" class="section level2">
 <h2 class="hasAnchor">
-<a href="#using-summary-with-logitr" class="anchor"></a>Using <code>summary()</code> with <code>logitr</code>
-</h2>
-<p>The <em>logitr</em> package also includes a summary function that has several variations:</p>
+<a href="#wtp-space-models" class="anchor"></a>WTP space models</h2>
+<p>For models estimated in the WTP space, the <code>modelSpace</code> argument should be set to <code>modelSpace = "wtp"</code>. The <code>parNames</code> argument should <strong>not</strong> contain the name of the column for the price attribute. This is provided separately with the <code>priceName</code> argument. For example, if the observed utility was <span class="math inline"><em>v</em><sub><em>j</em></sub> = <em>λ</em>(<em>ω</em>′<em>x</em><sub><em>j</em></sub>−<em>p</em><sub><em>j</em></sub>)</span>, where <span class="math inline"><em>p</em><sub><em>j</em></sub></span> is price and <span class="math inline"><em>x</em><sub><em>j</em></sub></span> is size, then the <code>parNames</code> argument should be <code>"size"</code>, and the <code>priceName</code> argument should be <code>"price"</code>.</p>
+<p>Since WTP space models are non-convex, it is recommended that you use a multi-start search to run the optimization loop multiple times (controlled by <code>numMultiStarts</code> in the <code>options</code> argument) to search for different local minima.</p>
+</div>
+<div id="mixed-logit-models" class="section level2">
+<h2 class="hasAnchor">
+<a href="#mixed-logit-models" class="anchor"></a>Mixed logit models</h2>
+<p>To estimate a mixed logit model, use the <code>randPars</code> argument to denote which parameters will be modeled with a distribution. The current package version supports normal and log-normal distributions. For example, if you wanted to model a covariate called <code>"size"</code> with a normal distribution, set <code>randPars = c(size = "n")</code>. Likewise, if you wanted it to be log-normally distributed, set <code>randPars = c(size = "ln")</code>.</p>
+<p>Since mixed logit models are non-convex, it is recommended that you use a multi-start search to run the optimization loop multiple times (controlled by <code>numMultiStarts</code> in the <code>options</code> argument) to search for different local minima. Note that mixed logit models can take a long time to estimate, so setting large number for <code>numMultiStarts</code> could take hours or more to complete.</p>
+</div>
+<div id="view-results" class="section level2">
+<h2 class="hasAnchor">
+<a href="#view-results" class="anchor"></a>View results</h2>
+<p>Use the <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> function to print a summary of the results from an estimated model. The function will print the following based on the model settings:</p>
 <ul>
-<li>For a single model run, it prints some summary information, including the model space, log-likelihood value at the solution, and a summary table of the model coefficients.</li>
+<li>For a single model run, it prints some summary information, including the model space (Preference or WTP), log-likelihood value at the solution, and a summary table of the model coefficients.</li>
 <li>For MXL models, the function also prints a summary of the random parameters.</li>
-<li>If the <code>keepAllRuns</code> option is set to <code>TRUE</code>, the function will print a summary of all the multistart runs followed by a summary of the best model (as determined by the largest log-likelihood value).</li>
+<li>If you set <code>keepAllRuns = TRUE</code> in the <code>options</code> argument, <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> will print a summary of all the multistart runs followed by a summary of the best model (as determined by the largest log-likelihood value).</li>
 </ul>
-<p>To understand the status code of any model, type <code><a href="reference/logitr.statusCodes.html">logitr.statusCodes()</a></code>, which prints a description of each status code from the <code>nloptr</code> optimization routine.</p>
+<p>Use <code><a href="reference/statusCodes.html">statusCodes()</a></code> to print a description of each status code from the <code>nloptr</code> optimization routine.</p>
 </div>
 <div id="computing-and-comparing-wtp" class="section level2">
 <h2 class="hasAnchor">
-<a href="#computing-and-comparing-wtp" class="anchor"></a>Computing and Comparing WTP</h2>
+<a href="#computing-and-comparing-wtp" class="anchor"></a>Computing and comparing WTP</h2>
 <p>For models in the preference space, you can get a summary table of the implied WTP by using:</p>
-<p><code><a href="reference/wtp.html">wtp(prefSpaceModel, priceName)</a></code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">wtp</span>(model_pref, priceName)</span></code></pre></div>
 <p>To compare the WTP between two equivalent models in the preference space and WTP spaces, use:</p>
-<p><code><a href="reference/wtpCompare.html">wtpCompare(prefSpaceModel, wtpSpaceModel, priceName)</a></code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">wtpCompare</span>(model_pref, model_wtp, priceName)</span></code></pre></div>
 </div>
+<div id="simulate-shares" class="section level2">
+<h2 class="hasAnchor">
+<a href="#simulate-shares" class="anchor"></a>Simulate shares</h2>
+<p>Once you have estimated a model, you can use it to simulate the expected shares of a particular set of alternatives. This can be done using the function <code><a href="reference/simulateShares.html">simulateShares()</a></code>. The simulation reports the expected share as well as a confidence interval for each alternative:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="va">shares</span> <span class="op">=</span> <span class="fu"><a href="reference/simulateShares.html">simulateShares</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">alts</span>, priceName <span class="op">=</span> <span class="cn">NULL</span>, alpha <span class="op">=</span> <span class="fl">0.025</span><span class="op">)</span></pre></div>
 </div>
-<div id="simulation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#simulation" class="anchor"></a>Simulation</h1>
-<p>After estimating a model, often times modelers want to use the results to simulate the expected shares of a particular set of alternatives. This can be done using the function <code><a href="reference/simulateShares.html">simulateShares()</a></code>. The simulation reports the expected share as well as a confidence interval for each alternative:</p>
-<pre><code>shares = simulateShares(model, alts, priceName=NULL, alpha=0.025)</code></pre>
-<p><strong>Arguments:</strong></p>
-<table class="table">
-<colgroup>
-<col width="32%">
-<col width="38%">
-<col width="30%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Argument</th>
-<th align="left">Description</th>
-<th align="left">Default</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left"><code>model</code></td>
-<td align="left">A MNL or MXL model estimated using the <code>logitr</code> package.</td>
-<td align="left">–</td>
-</tr>
-<tr class="even">
-<td align="left"><code>alts</code></td>
-<td align="left">A data frame of the alternatives. Each row should be an alternative, and each column an attribute for which there is a corresponding coefficient in the estimated model.</td>
-<td align="left">–</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>priceName</code></td>
-<td align="left">The name of the column in <code>alts</code> that identifies price (only required for WTP space models).</td>
-<td align="left"><code>NULL</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>alpha</code></td>
-<td align="left">The significance level for the confidence interval (e.g. <code>0.025</code> results in a 95% CI).</td>
-<td align="left"><code>0.025</code></td>
-</tr>
-</tbody>
-</table>
 </div>
 <div id="author-version-and-license-information" class="section level1">
 <h1 class="hasAnchor">
 <a href="#author-version-and-license-information" class="anchor"></a>Author, Version, and License Information</h1>
 <ul>
-<li>Author: <em>John Paul Helveston</em> (www.jhelvy.com)</li>
+<li>Author: <em>John Paul Helveston</em> <a href="http://www.jhelvy.com/">www.jhelvy.com</a>
+</li>
 <li>Date First Written: <em>Sunday, September 28, 2014</em>
 </li>
-<li>Most Recent Update: <em>Thursday, September 6, 2018</em>
+<li>Most Recent Update: <em>Thursday, Oct 22, 2020</em>
 </li>
 <li>License: GPL-3</li>
-<li>Latest Version: 1.2</li>
+<li>Latest Version: 1.2.0</li>
 </ul>
 </div>
 <div id="citation-information" class="section level1">
 <h1 class="hasAnchor">
 <a href="#citation-information" class="anchor"></a>Citation Information</h1>
 <p>If you use this package for in a publication, I would greatly appreciate it if you cited it. You can get the citation information by typing this into R:</p>
-<p><code><a href="https://rdrr.io/r/utils/citation.html">citation('logitr')</a></code></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">citation</span>(<span class="st">'logitr'</span>)</span></code></pre></div>
 </div>
 
   </div>
@@ -507,7 +227,7 @@ library('logitr')</code></pre>
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>John Helveston <br><small class="roles"> Author, maintainer, copyright holder </small>  </li>
+<li>John Helveston <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0002-2657-9191" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
 

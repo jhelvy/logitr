@@ -45,7 +45,7 @@ models with &quot;Preference&quot; space or &quot;Willingness-to-pay&quot; (WTP)
 parameterizations. The function includes an option to run a multistart
 optimization loop with random starting points in each iteration, which is
 useful for non-convex problems like MXL models or models with WTP space
-utility parameterizations. The main optimization loop uses the nloptr
+utility parameterizations. The main optimization loop uses the nloptr()
 function to minimize the negative log-likelihood function." />
 
 
@@ -78,7 +78,7 @@ function to minimize the negative log-likelihood function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -90,8 +90,29 @@ function to minimize the negative log-likelihood function." />
      
   </a>
 </li>
-<li>
-  <a href="../articles/index.html">Examples</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/utility_models.html">Utility Models in the Preference &amp; WTP Space</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mxl_models.html">Estimating mixed logit models</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../reference/index.html">Functions</a>
@@ -128,7 +149,7 @@ models with "Preference" space or "Willingness-to-pay" (WTP) space utility
 parameterizations. The function includes an option to run a multistart
 optimization loop with random starting points in each iteration, which is
 useful for non-convex problems like MXL models or models with WTP space
-utility parameterizations. The main optimization loop uses the nloptr
+utility parameterizations. The main optimization loop uses the <code>nloptr()</code>
 function to minimize the negative log-likelihood function.</p>
     </div>
 
@@ -166,7 +187,7 @@ function to minimize the negative log-likelihood function.</p>
     </tr>
     <tr>
       <th>priceName</th>
-      <td><p>The name of the column that identifies the <code>price</code> variable. Only required for WTP space models. Defaults to <code>NULL</code>.</p></td>
+      <td><p>The name of the column that identifies the price variable. Only required for WTP space models. Defaults to <code>NULL</code>.</p></td>
     </tr>
     <tr>
       <th>randPars</th>
@@ -192,7 +213,7 @@ function to minimize the negative log-likelihood function.</p>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The function returns a list object with the following names.</p><table class='table'>
+    <p>The function returns a list object containing the following objects.</p><table class='table'>
 <tr><td>Value</td><td>Description</td></tr>
 <tr><td><code>coef</code></td><td>The model coefficients at convergence.</td></tr>
 <tr><td><code>standErrs</code></td><td>The standard errors of the model coefficients at convergence.</td></tr>
@@ -207,7 +228,7 @@ function to minimize the negative log-likelihood function.</p>
 <tr><td><code>time</code></td><td>The user, system, and elapsed time to run the optimization.</td></tr>
 <tr><td><code>iterations</code></td><td>The number of iterations until convergence.</td></tr>
 <tr><td><code>message</code></td><td>A more informative message with the status of the optimization result.</td></tr>
-<tr><td><code>status</code></td><td>An integer value with the status of the optimization (positive values are successes). Type <code><a href='logitr.statusCodes.html'>logitr.statusCodes()</a></code> for a detailed description.</td></tr>
+<tr><td><code>status</code></td><td>An integer value with the status of the optimization (positive values are successes). Use <code><a href='statusCodes.html'>statusCodes()</a></code> for a detailed description.</td></tr>
 <tr><td><code>modelSpace</code></td><td>The model space (<code>'pref'</code> or <code>'wtp'</code>).</td></tr>
 <tr><td><code>standardDraws</code></td><td>The draws used during maximum simulated likelihood (for MXL models).</td></tr>
 <tr><td><code>randParSummary</code></td><td>A summary of any random parameters (for MXL models).</td></tr>
@@ -229,21 +250,32 @@ e.g. <code>options = list(...)</code>.</p><table class='table'>
 <tr><td><code>startVals</code></td><td>A vector of values to be used as starting values for the optimization. Only used for the first run if <code>numMultiStarts &gt; 1</code>.</td><td><code>NULL</code></td></tr>
 <tr><td><code>useAnalyticGrad</code></td><td>Set to <code>FALSE</code> to use numerically approximated gradients instead of analytic gradients during estimation (which is slower).</td><td><code>TRUE</code></td></tr>
 <tr><td><code>scaleInputs</code></td><td>By default each variable in <code>data</code> is scaled to be between 0 and 1 before running the optimization routine because it usually helps with stability, especially if some of the variables have very large or very small values (e.g. <code>&gt; 10^3</code> or <code>&lt; 10^-3</code>). Set to <code>FALSE</code> to turn this feature off.</td><td><code>TRUE</code></td></tr>
-<tr><td><code>standardDraws</code></td><td>By default, a new set of standard normal draws are generated during each call to <code>logitr</code> (the same draws are used during each multistart too). The user can override those draws by providing a matrix of standard normal draws if desired.</td><td><code>NULL</code></td></tr>
+<tr><td><code>standardDraws</code></td><td>By default, a new set of standard normal draws are generated during each call to <code>logitr</code> (the same draws are used during each multistart iteration). The user can override those draws by providing a matrix of standard normal draws if desired.</td><td><code>NULL</code></td></tr>
 <tr><td><code>numDraws</code></td><td>The number of draws to use for MXL models for the maximum simulated likelihood.</td><td><code>200</code></td></tr>
 <tr><td><code>drawType</code></td><td>The type of draw to use for MXL models for the maximum simulated likelihood. Set to <code>'normal'</code> to use random normal draws or <code>'halton'</code> for Halton draws.</td><td><code>'halton'</code></td></tr>
-<tr><td><code>printLevel</code></td><td>The print level of the <code>nloptr</code> optimization loop. Type <code>nloptr.print.options()</code> for more details.</td><td><code>0</code></td></tr>
-<tr><td><code>xtol_rel</code></td><td>The relative <code>x</code> tolerance for the <code>nloptr</code> optimization loop. Type <code>nloptr.print.options()</code> for more details.</td><td><code>1.0e-8</code></td></tr>
-<tr><td><code>xtol_abs</code></td><td>The absolute <code>x</code> tolerance for the <code>nloptr</code> optimization loop. Type <code>nloptr.print.options()</code> for more details.</td><td><code>1.0e-8</code></td></tr>
-<tr><td><code>ftol_rel</code></td><td>The relative <code>f</code> tolerance for the <code>nloptr</code> optimization loop. Type <code>nloptr.print.options()</code> for more details.</td><td><code>1.0e-8</code></td></tr>
-<tr><td><code>ftol_abs</code></td><td>The absolute <code>f</code> tolerance for the <code>nloptr</code> optimization loop. Type <code>nloptr.print.options()</code> for more details.</td><td><code>1.0e-8</code></td></tr>
-<tr><td><code>maxeval</code></td><td>The maximum number of function evaluations for the <code>nloptr</code> optimization loop. Type <code>nloptr.print.options()</code> for more details.</td><td><code>1000</code></td></tr>
+<tr><td><code>printLevel</code></td><td>The print level of the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>0</code></td></tr>
+<tr><td><code>xtol_rel</code></td><td>The relative <code>x</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-8</code></td></tr>
+<tr><td><code>xtol_abs</code></td><td>The absolute <code>x</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-8</code></td></tr>
+<tr><td><code>ftol_rel</code></td><td>The relative <code>f</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-8</code></td></tr>
+<tr><td><code>ftol_abs</code></td><td>The absolute <code>f</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-8</code></td></tr>
+<tr><td><code>maxeval</code></td><td>The maximum number of function evaluations for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1000</code></td></tr>
 </table>
 
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"></pre>
+    <pre class="examples"><div class='input'><span class='co'># For detailed examples, visit https://jhelvy.github.io/logitr/articles/examples.html</span>
+
+<span class='co'># Run a MNL model in the Preference Space:</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>logitr</span><span class='op'>)</span>
+
+<span class='va'>mnl_pref</span> <span class='op'>=</span> <span class='fu'>logitr</span><span class='op'>(</span>
+  data       <span class='op'>=</span> <span class='va'>yogurt</span>,
+  choiceName <span class='op'>=</span> <span class='st'>'choice'</span>,
+  obsIDName  <span class='op'>=</span> <span class='st'>'obsID'</span>,
+  parNames   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'price'</span>, <span class='st'>'feat'</span>, <span class='st'>'dannon'</span>, <span class='st'>'hiland'</span>, <span class='st'>'yoplait'</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Running Model
+#&gt; Done!</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

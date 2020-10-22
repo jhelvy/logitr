@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Returns a comparison of the WTP between a preference space and WTP space
-model. — wtpCompare • logitr</title>
+<title>Compare WTP from preference and WTP space models — wtpCompare • logitr</title>
 
 
 <!-- jquery -->
@@ -40,8 +39,7 @@ model. — wtpCompare • logitr</title>
 
 
 
-<meta property="og:title" content="Returns a comparison of the WTP between a preference space and WTP space
-model. — wtpCompare" />
+<meta property="og:title" content="Compare WTP from preference and WTP space models — wtpCompare" />
 <meta property="og:description" content="Returns a comparison of the WTP between a preference space and WTP space
 model." />
 
@@ -75,7 +73,7 @@ model." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -87,8 +85,29 @@ model." />
      
   </a>
 </li>
-<li>
-  <a href="../articles/index.html">Examples</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/utility_models.html">Utility Models in the Preference &amp; WTP Space</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mxl_models.html">Estimating mixed logit models</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../reference/index.html">Functions</a>
@@ -114,8 +133,7 @@ model." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Returns a comparison of the WTP between a preference space and WTP space
-model.</h1>
+    <h1>Compare WTP from preference and WTP space models</h1>
     
     <div class="hidden name"><code>wtpCompare.Rd</code></div>
     </div>
@@ -136,7 +154,7 @@ model.</p>
     </tr>
     <tr>
       <th>model_wtp</th>
-      <td><p>The output of a "willingness to pay space" model estimated model using the <code><a href='logitr.html'>logitr()</a></code> function.</p></td>
+      <td><p>The output of a "willingness to pay space" model estimated using the <code><a href='logitr.html'>logitr()</a></code> function.</p></td>
     </tr>
     <tr>
       <th>priceName</th>
@@ -185,8 +203,7 @@ model.</p>
 #&gt; dannon      1.749079     1.7490883  9.330e-06
 #&gt; hiland     -8.386650    -8.3866858 -3.582e-05
 #&gt; yoplait     3.752905     3.7528902 -1.480e-05
-#&gt; logLik  -2656.887878 -2656.8878780 -1.000e-08</div><div class='input'>
-</div></pre>
+#&gt; logLik  -2656.887878 -2656.8878780 -1.000e-08</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

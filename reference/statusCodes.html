@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Simulate expected shares from a set of alternatives — simulateShares • logitr</title>
+<title>View a description the nloptr status codes — statusCodes • logitr</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Simulate expected shares from a set of alternatives — simulateShares" />
-<meta property="og:description" content="Returns the expected shares of a specific set of alternatives based
-on an estimated model." />
+<meta property="og:title" content="View a description the nloptr status codes — statusCodes" />
+<meta property="og:description" content="Prints a description of the status codes from the nloptr optimization routine." />
 
 
 
@@ -133,71 +132,52 @@ on an estimated model." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Simulate expected shares from a set of alternatives</h1>
+    <h1>View a description the nloptr status codes</h1>
     
-    <div class="hidden name"><code>simulateShares.Rd</code></div>
+    <div class="hidden name"><code>statusCodes.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Returns the expected shares of a specific set of alternatives based
-on an estimated model.</p>
+    <p>Prints a description of the status codes from the nloptr optimization routine.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>simulateShares</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>alts</span>, priceName <span class='op'>=</span> <span class='cn'>NULL</span>, alpha <span class='op'>=</span> <span class='fl'>0.025</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>statusCodes</span><span class='op'>(</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>model</th>
-      <td><p>The output of a model estimated model using the <code><a href='logitr.html'>logitr()</a></code> function.</p></td>
-    </tr>
-    <tr>
-      <th>alts</th>
-      <td><p>A data frame of a set of alternatives for which to simulate shares. Each row is an alternative and each column an attribute corresponding to parameter names in the estimated model.</p></td>
-    </tr>
-    <tr>
-      <th>priceName</th>
-      <td><p>The name of the parameter that identifies price. Only required for WTP space models. Defaults to <code>NULL</code>.</p></td>
-    </tr>
-    <tr>
-      <th>alpha</th>
-      <td><p>The sensitivity of the computed confidence interval, e.g. a 90% CI is obtained with <code>alpha = 0.05</code>. Defaults to <code>alpha = 0.025</code>.</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>A data frame with the estimated shares for each alternative in <code>alts</code>.</p>
+    
+<table class='table'>
+<tr><td>Code</td><td>Description</td></tr>
+<tr><td>1</td><td>Generic success return value.</td></tr>
+<tr><td>2</td><td>Optimization stopped because stopval was reached.</td></tr>
+<tr><td>3</td><td>Optimization stopped because ftol_rel or ftol_abs was reached.</td></tr>
+<tr><td>4</td><td>Optimization stopped because xtol_rel or xtol_abs was reached.</td></tr>
+<tr><td>5</td><td>Optimization stopped because maxeval was reached.</td></tr>
+<tr><td>6</td><td>Optimization stopped because maxtime was reached.</td></tr>
+<tr><td>-1</td><td>Generic failure code.</td></tr>
+<tr><td>-2</td><td>Invalid arguments (e.g. lower bounds are bigger than upper bounds, an unknown algorithm was specified, etc.).</td></tr>
+<tr><td>-3</td><td>Ran out of memory.</td></tr>
+<tr><td>-4</td><td>Halted because roundoff errors limited progress (in this case, the optimization still typically returns a useful result.).</td></tr>
+<tr><td>-5</td><td>Halted because of a forced termination: the user called <code>nlopt_force_stop(opt)</code> on the optimization's nlopt_opt object opt the user's objective function or constraints.</td></tr>
+</table>
+
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Run a MNL model in the Preference Space:</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>logitr</span><span class='op'>)</span>
-
-<span class='va'>mnl_pref</span> <span class='op'>=</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
-  data       <span class='op'>=</span> <span class='va'>yogurt</span>,
-  choiceName <span class='op'>=</span> <span class='st'>'choice'</span>,
-  obsIDName  <span class='op'>=</span> <span class='st'>'obsID'</span>,
-  parNames   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'price'</span>, <span class='st'>'feat'</span>, <span class='st'>'dannon'</span>, <span class='st'>'hiland'</span>, <span class='st'>'yoplait'</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Running Model
-#&gt; Done!</div><div class='input'>
-<span class='co'># Create a set of alternatives for which to simulate shares:</span>
-<span class='va'>alts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>yogurt</span>, <span class='va'>obsID</span> <span class='op'>==</span> <span class='fl'>42</span>,
-       select <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'feat'</span>, <span class='st'>'price'</span>, <span class='st'>'dannon'</span>, <span class='st'>'hiland'</span>, <span class='st'>'yoplait'</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/row.names.html'>row.names</a></span><span class='op'>(</span><span class='va'>alts</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'dannon'</span>, <span class='st'>'hiland'</span>, <span class='st'>'weight'</span>, <span class='st'>'yoplait'</span><span class='op'>)</span>
-<span class='va'>alts</span>
-</div><div class='output co'>#&gt;         feat price dannon hiland yoplait
-#&gt; dannon     0   6.3      1      0       0
-#&gt; hiland     1   6.1      0      1       0
-#&gt; weight     0   7.9      0      0       0
-#&gt; yoplait    0  11.5      0      0       1</div><div class='input'>
-<span class='co'># Run the simulation using the estimated preference space MNL model:</span>
-<span class='fu'>simulateShares</span><span class='op'>(</span><span class='va'>mnl_pref</span>, <span class='va'>alts</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;              share_mean  share_low share_high
-#&gt; Alt: dannon  0.60767171 0.54711911 0.65895615
-#&gt; Alt: hiland  0.02601787 0.01848181 0.03613391
-#&gt; Alt: weight  0.17802338 0.16287337 0.19226893
-#&gt; Alt: yoplait 0.18828704 0.13865491 0.25012443</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>statusCodes</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Status codes:
+#&gt; 1:  Generic success return value.
+#&gt; 2:  Optimization stopped because stopval was reached.
+#&gt; 3:  Optimization stopped because ftol_rel or ftol_abs was reached.
+#&gt; 4:  Optimization stopped because xtol_rel or xtol_abs was reached.
+#&gt; 5:  Optimization stopped because maxeval was reached.
+#&gt; 6:  Optimization stopped because maxtime was reached.
+#&gt; -1: Generic failure code.
+#&gt; -2: Invalid arguments (e.g. lower bounds are bigger than upper bounds, an unknown algorithm was specified, etc.).
+#&gt; -3: Ran out of memory.
+#&gt; -4: Halted because roundoff errors limited progress. (In this case, the optimization still typically returns a useful result.)
+#&gt; -5: Halted because of a forced termination: the user called nlopt_force_stop(opt) on the optimization's nlopt_opt object opt from the user's objective function or constraints.</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

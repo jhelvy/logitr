@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Prints a summary of a model estimated using the 'logitr' package — summary.logitr • logitr</title>
+<title>View summary of estimated model — summary.logitr • logitr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Prints a summary of a model estimated using the 'logitr' package — summary.logitr" />
-<meta property="og:description" content="Prints a summary of a model estimated using the 'logitr' package" />
+<meta property="og:title" content="View summary of estimated model — summary.logitr" />
+<meta property="og:description" content="Prints a summary of a model estimated using the logitr() function" />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -84,8 +84,29 @@
      
   </a>
 </li>
-<li>
-  <a href="../articles/index.html">Examples</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/utility_models.html">Utility Models in the Preference &amp; WTP Space</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mxl_models.html">Estimating mixed logit models</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../reference/index.html">Functions</a>
@@ -111,13 +132,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Prints a summary of a model estimated using the 'logitr' package</h1>
+    <h1>View summary of estimated model</h1>
     
     <div class="hidden name"><code>summary.logitr.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Prints a summary of a model estimated using the 'logitr' package</p>
+    <p>Prints a summary of a model estimated using the <code><a href='logitr.html'>logitr()</a></code> function</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for logitr</span>
@@ -161,10 +182,10 @@
 #&gt; 
 #&gt;   run    logLik iterations status
 #&gt; 1   1 -2656.888         22      3
-#&gt; 2   2 -2656.888         20      3
+#&gt; 2   2 -2656.888         21      3
 #&gt; 3   3 -2656.888         21      3
-#&gt; 4   4 -2656.888         23      3
-#&gt; 5   5 -2656.888         22      3
+#&gt; 4   4 -2656.888         20      3
+#&gt; 5   5 -2656.888         21      3
 #&gt; ---
 #&gt; To view meaning of status codes, use logitr.statusCodes() 
 #&gt; 
@@ -173,18 +194,18 @@
 #&gt; MODEL SUMMARY: 
 #&gt;                           
 #&gt; Model Space:    Preference
-#&gt; Model Run:          5 of 5
+#&gt; Model Run:          1 of 5
 #&gt; Iterations:             22
-#&gt; Elapsed Time:  0h:0m:0.12s
+#&gt; Elapsed Time:  0h:0m:0.11s
 #&gt; Weights Used?:       FALSE
 #&gt; 
 #&gt; Model Coefficients: 
 #&gt;          Estimate StdError    tStat pVal signif
 #&gt; price   -0.366584 0.024366 -15.0449    0    ***
-#&gt; feat     0.491433 0.120063   4.0931    0    ***
-#&gt; dannon   0.641184 0.054498  11.7652    0    ***
-#&gt; hiland  -3.074417 0.145384 -21.1469    0    ***
-#&gt; yoplait  1.375755 0.088982  15.4611    0    ***
+#&gt; feat     0.491431 0.120063   4.0931    0    ***
+#&gt; dannon   0.641185 0.054498  11.7652    0    ***
+#&gt; hiland  -3.074415 0.145384 -21.1469    0    ***
+#&gt; yoplait  1.375756 0.088982  15.4611    0    ***
 #&gt; ---
 #&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #&gt; 

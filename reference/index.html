@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -83,8 +83,29 @@
      
   </a>
 </li>
-<li>
-  <a href="../articles/index.html">Examples</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/utility_models.html">Utility Models in the Preference &amp; WTP Space</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mxl_models.html">Estimating mixed logit models</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../reference/index.html">Functions</a>
@@ -124,8 +145,8 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-estimate-models" class="hasAnchor"><a href="#section-estimate-models" class="anchor"></a>Estimate models</h2>
+          <p class="section-desc"><p>Functions for estimating multinomial logit models with preference space and WTP space utility parameterizations.</p></p>
         </th>
       </tr>
       
@@ -136,46 +157,54 @@
       <tr>
         
         <td>
+          <p><code><a href="logitr.html">logitr()</a></code> </p>
+        </td>
+        <td><p>The main function for estimating logit models</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-view-results" class="hasAnchor"><a href="#section-view-results" class="anchor"></a>View results</h2>
+          <p class="section-desc"><p>Functions for viewing the results of estimated models.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="summary.logitr.html">summary(<i>&lt;logitr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>View summary of estimated model</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="coef.logitr.html">coef(<i>&lt;logitr&gt;</i>)</a></code> </p>
         </td>
         <td><p>Get the model coefficients</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="logitr.html">logitr()</a></code> </p>
+          <p><code><a href="statusCodes.html">statusCodes()</a></code> </p>
         </td>
-        <td><p>The main function for estimating logit models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="logitr.statusCodes.html">logitr.statusCodes()</a></code> </p>
-        </td>
-        <td><p>Prints the status codes from the nloptr optimization routine.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sampleSizer.html">sampleSizer()</a></code> </p>
-        </td>
-        <td><p>Preview standard errors from models before you collect choice data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="simulateShares.html">simulateShares()</a></code> </p>
-        </td>
-        <td><p>Simulate expected market shares</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="simulateShares.logitr.html">simulateShares(<i>&lt;logitr&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Simulate expected market shares</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="summary.logitr.html">summary(<i>&lt;logitr&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Prints a summary of a model estimated using the 'logitr' package</p></td>
-      </tr><tr>
+        <td><p>View a description the nloptr status codes</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-compute-and-compare-wtp" class="hasAnchor"><a href="#section-compute-and-compare-wtp" class="anchor"></a>Compute and compare WTP</h2>
+          <p class="section-desc"><p>Functions for computing and comparing WTP from estimated models.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
           <p><code><a href="wtp.html">wtp()</a></code> </p>
@@ -184,22 +213,28 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="wtp.logitr.html">wtp(<i>&lt;logitr&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Get WTP from a preference space model</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="wtpCompare.html">wtpCompare()</a></code> </p>
         </td>
-        <td><p>Returns a comparison of the WTP between a preference space and WTP space
-model.</p></td>
-      </tr><tr>
+        <td><p>Compare WTP from preference and WTP space models</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-simulate-shares" class="hasAnchor"><a href="#section-simulate-shares" class="anchor"></a>Simulate shares</h2>
+          <p class="section-desc"><p>Functions for simulating expected shares from a set of alternatives.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
-          <p><code><a href="wtpCompare.logitr.html">wtpCompare(<i>&lt;logitr&gt;</i>)</a></code> </p>
+          <p><code><a href="simulateShares.html">simulateShares()</a></code> </p>
         </td>
-        <td><p>Compare WTP from WTP space and preference space models</p></td>
+        <td><p>Simulate expected shares from a set of alternatives</p></td>
       </tr>
     </tbody>
     </table>
