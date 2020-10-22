@@ -43,6 +43,9 @@
      
   </a>
 </li>
+<li>
+  <a href="articles/basic_usage.html">Basic Usage</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
@@ -63,6 +66,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="articles/mnl_models.html">Estimating multinomial logit models</a>
+    </li>
+    <li>
       <a href="articles/mxl_models.html">Estimating mixed logit models</a>
     </li>
   </ul>
@@ -94,102 +100,31 @@
 <div id="logitr" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#logitr" class="anchor"></a>logitr</h1></div>
-<p><strong>logitr</strong> estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using “Preference” space or “Willingness-to-pay” (WTP) space utility parameterizations. The current version includes support for:</p>
+<p><strong>logitr</strong> estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using “Preference” space or “Willingness-to-pay” (WTP) space <a href="https://jhelvy.github.io/logitr/articles/utility_models.html">utility parameterizations</a>. The current version includes support for:</p>
 <ul>
 <li>Homogeneous multinomial logit (MNL) models</li>
 <li>Heterogeneous mixed logit (MXL) models (with normal and log-normal parameter distributions).</li>
 <li>Preference space utility parameterization.</li>
 <li>WTP space utility parameterization.</li>
 <li>An optional multistart optimization that uses different random starting points in each iteration (useful for non-convex problems like MXL models or models with WTP space parameterizations).</li>
-<li>A simulation function for computing the expected shares of a set of alternatives using an estimated model.</li>
 </ul>
-<p>MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in <a href="http://eml.berkeley.edu/~train/">Kenneth Train’s</a> book <a href="http://eml.berkeley.edu/books/choice2.html"><em>Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)</em></a>.</p>
+<p>The package also has additional functions for:</p>
+<ul>
+<li>Computing and comparing WTP from both preference space and WTP space models.</li>
+<li>Simulating the expected shares of a set of alternatives using an estimated model.</li>
+</ul>
+<p>Note: MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in <a href="http://eml.berkeley.edu/~train/">Kenneth Train’s</a> book <a href="http://eml.berkeley.edu/books/choice2.html"><em>Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)</em></a>.</p>
+<p>View the <a href="https://jhelvy.github.io/logitr/articles/basic_usage.html">basic usage</a> page for details on how to use <strong>logitr</strong> to estimate models.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>The current version is not yet on CRAN, but you can install it from Github using the <strong>devtools</strong> library:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">'jhelvy/logitr'</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"jhelvy/logitr"</span>)</span></code></pre></div>
 </div>
 <div id="required-libraries" class="section level2">
 <h2 class="hasAnchor">
 <a href="#required-libraries" class="anchor"></a>Required Libraries</h2>
 <p><strong>logitr</strong> requires the <a href="https://cran.r-project.org/web/packages/nloptr/index.html"><strong>nloptr</strong></a> library. This is because <code>nloptr()</code> allows for both the objective and gradient functions to be computed in a single function. This speeds up computation time considerably because both the objective and gradient functions require many of the same calculations (e.g. computing probabilities).</p>
-</div>
-</div>
-<div id="estimating-models" class="section level1">
-<h1 class="hasAnchor">
-<a href="#estimating-models" class="anchor"></a>Estimating models</h1>
-<p>The <code><a href="reference/logitr.html">logitr()</a></code> function estimates multinomial logit (MNL) and mixed logit (MXL) models using “Preference” space or “Willingness-to-pay (WTP)” space <a href="articles/utility_models.html">utility parameterizations</a>. The basic usage for estimating models is as follows:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/logitr.html">logitr</a></span><span class="op">(</span>
-  <span class="va">data</span>,
-  <span class="va">choiceName</span>,
-  <span class="va">obsIDName</span>,
-  <span class="va">parNames</span>,
-  priceName <span class="op">=</span> <span class="cn">NULL</span>,
-  randPars <span class="op">=</span> <span class="cn">NULL</span>,
-  randPrice <span class="op">=</span> <span class="cn">NULL</span>,
-  modelSpace <span class="op">=</span> <span class="st">"pref"</span>,
-  weightsName <span class="op">=</span> <span class="cn">NULL</span>,
-  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></pre></div>
-<div id="data-format" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data-format" class="anchor"></a>Data format</h2>
-<p>The <code>data</code> argument is set to the name of the <code>data.frame</code> storing the choice observations. The <code>data.frame</code> must be arranged such that each row is an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. each choice observation could have a different number of alternatives). The data must include columns for each of the following arguments in the <code><a href="reference/logitr.html">logitr()</a></code> function:</p>
-<ul>
-<li>
-<code>choiceName</code>: A dummy variable that identifies which alternative was chosen (<code>1</code> = chosen, <code>0</code> = not chosen).</li>
-<li>
-<code>obsIDName</code>: A sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the <code>obsID</code> variable would be <code>1, 1, 2, 2, 3, 3</code>.</li>
-<li>
-<code>parNames</code>: The names of the variables that will be used as model covariates. For WTP space models, do <strong>not</strong> include the price variable in <code>parNames</code> - this is provided separately with the <code>priceName</code> argument.</li>
-</ul>
-</div>
-<div id="preference-space-models" class="section level2">
-<h2 class="hasAnchor">
-<a href="#preference-space-models" class="anchor"></a>Preference space models</h2>
-<p>Unlike similar packages like <a href="https://cran.r-project.org/web/packages/mlogit/index.html"><strong>mlogit</strong></a>, <strong>logitr</strong> does not support the formula type input that uses a symbolic description of the model to be estimated. Parameters are simply described as a vector of the column names in the <code>data.frame</code> provided to the <code>data</code> argument.</p>
-<p>The <code><a href="reference/logitr.html">logitr()</a></code> function assumes that the deterministic part of the utility function is linear in parameters, i.e.:</p>
-<p>Accordingly, each parameter in the <code>parNames</code> argument is an additive part of <span class="math inline"><em>v</em><sub><em>j</em></sub></span>. For example, if the observed utility was <span class="math inline"><em>v</em><sub><em>j</em></sub> = <em>β</em><em>x</em><sub><em>j</em></sub> − <em>α</em><em>p</em><sub><em>j</em></sub></span>, where <span class="math inline"><em>p</em><sub><em>j</em></sub></span> is price and <span class="math inline"><em>x</em><sub><em>j</em></sub></span> is size, then the <code>parNames</code> argument should be <code><a href="https://rdrr.io/r/base/c.html">c("price", "size")</a></code>, and the <code>data.frame</code> used for the <code>data</code> argument should have columns called <code>price</code> and <code>size</code>.</p>
-</div>
-<div id="wtp-space-models" class="section level2">
-<h2 class="hasAnchor">
-<a href="#wtp-space-models" class="anchor"></a>WTP space models</h2>
-<p>For models estimated in the WTP space, the <code>modelSpace</code> argument should be set to <code>modelSpace = "wtp"</code>. The <code>parNames</code> argument should <strong>not</strong> contain the name of the column for the price attribute. This is provided separately with the <code>priceName</code> argument. For example, if the observed utility was <span class="math inline"><em>v</em><sub><em>j</em></sub> = <em>λ</em>(<em>ω</em>′<em>x</em><sub><em>j</em></sub>−<em>p</em><sub><em>j</em></sub>)</span>, where <span class="math inline"><em>p</em><sub><em>j</em></sub></span> is price and <span class="math inline"><em>x</em><sub><em>j</em></sub></span> is size, then the <code>parNames</code> argument should be <code>"size"</code>, and the <code>priceName</code> argument should be <code>"price"</code>.</p>
-<p>Since WTP space models are non-convex, it is recommended that you use a multi-start search to run the optimization loop multiple times (controlled by <code>numMultiStarts</code> in the <code>options</code> argument) to search for different local minima.</p>
-</div>
-<div id="mixed-logit-models" class="section level2">
-<h2 class="hasAnchor">
-<a href="#mixed-logit-models" class="anchor"></a>Mixed logit models</h2>
-<p>To estimate a mixed logit model, use the <code>randPars</code> argument to denote which parameters will be modeled with a distribution. The current package version supports normal and log-normal distributions. For example, if you wanted to model a covariate called <code>"size"</code> with a normal distribution, set <code>randPars = c(size = "n")</code>. Likewise, if you wanted it to be log-normally distributed, set <code>randPars = c(size = "ln")</code>.</p>
-<p>Since mixed logit models are non-convex, it is recommended that you use a multi-start search to run the optimization loop multiple times (controlled by <code>numMultiStarts</code> in the <code>options</code> argument) to search for different local minima. Note that mixed logit models can take a long time to estimate, so setting large number for <code>numMultiStarts</code> could take hours or more to complete.</p>
-</div>
-<div id="view-results" class="section level2">
-<h2 class="hasAnchor">
-<a href="#view-results" class="anchor"></a>View results</h2>
-<p>Use the <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> function to print a summary of the results from an estimated model. The function will print the following based on the model settings:</p>
-<ul>
-<li>For a single model run, it prints some summary information, including the model space (Preference or WTP), log-likelihood value at the solution, and a summary table of the model coefficients.</li>
-<li>For MXL models, the function also prints a summary of the random parameters.</li>
-<li>If you set <code>keepAllRuns = TRUE</code> in the <code>options</code> argument, <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> will print a summary of all the multistart runs followed by a summary of the best model (as determined by the largest log-likelihood value).</li>
-</ul>
-<p>Use <code><a href="reference/statusCodes.html">statusCodes()</a></code> to print a description of each status code from the <code>nloptr</code> optimization routine.</p>
-</div>
-<div id="computing-and-comparing-wtp" class="section level2">
-<h2 class="hasAnchor">
-<a href="#computing-and-comparing-wtp" class="anchor"></a>Computing and comparing WTP</h2>
-<p>For models in the preference space, you can get a summary table of the implied WTP by using:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">wtp</span>(model_pref, priceName)</span></code></pre></div>
-<p>To compare the WTP between two equivalent models in the preference space and WTP spaces, use:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">wtpCompare</span>(model_pref, model_wtp, priceName)</span></code></pre></div>
-</div>
-<div id="simulate-shares" class="section level2">
-<h2 class="hasAnchor">
-<a href="#simulate-shares" class="anchor"></a>Simulate shares</h2>
-<p>Once you have estimated a model, you can use it to simulate the expected shares of a particular set of alternatives. This can be done using the function <code><a href="reference/simulateShares.html">simulateShares()</a></code>. The simulation reports the expected share as well as a confidence interval for each alternative:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="va">shares</span> <span class="op">=</span> <span class="fu"><a href="reference/simulateShares.html">simulateShares</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">alts</span>, priceName <span class="op">=</span> <span class="cn">NULL</span>, alpha <span class="op">=</span> <span class="fl">0.025</span><span class="op">)</span></pre></div>
 </div>
 </div>
 <div id="author-version-and-license-information" class="section level1">
@@ -210,7 +145,7 @@
 <h1 class="hasAnchor">
 <a href="#citation-information" class="anchor"></a>Citation Information</h1>
 <p>If you use this package for in a publication, I would greatly appreciate it if you cited it. You can get the citation information by typing this into R:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">citation</span>(<span class="st">'logitr'</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">citation</span>(<span class="st">'logitr'</span>)</span></code></pre></div>
 </div>
 
   </div>

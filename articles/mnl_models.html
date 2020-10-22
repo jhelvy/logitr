@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Estimating mixed logit models • logitr</title>
+<title>Estimating multinomial logit models • logitr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Estimating mixed logit models">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Estimating multinomial logit models">
 <meta property="og:description" content="logitr">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -94,15 +94,15 @@
 
       
 
-      </header><script src="mxl_models_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="mxl_models_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="mxl_models_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><script src="mnl_models_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="mnl_models_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="mnl_models_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Estimating mixed logit models</h1>
+      <h1 data-toc-skip>Estimating multinomial logit models</h1>
             
       
       
-      <div class="hidden name"><code>mxl_models.Rmd</code></div>
+      <div class="hidden name"><code>mnl_models.Rmd</code></div>
 
     </div>
 
@@ -152,7 +152,7 @@
 <div id="preference-space-model" class="section level1">
 <h1 class="hasAnchor">
 <a href="#preference-space-model" class="anchor"></a>Preference space model</h1>
-<p>This example will estimate the following mixed logit model in the preference space:</p>
+<p>This example will estimate the following homogeneous multinomial logit model in the preference space:</p>
 <p><span class="math display">\[\begin{equation}
     u_{j} =
         \alpha p_{j} +
@@ -161,84 +161,72 @@
         \beta_3 x_{j}^{\mathrm{HIGHLAND}} +
         \beta_4 x_{j}^{\mathrm{YOPLAIT}}  +
         \varepsilon_{j}
-\label{eq:mxlPrefExample}
+\label{eq:mnlPrefExample}
 \end{equation}\]</span></p>
-<p>where the parameters <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span>, and <span class="math inline">\(\beta_4\)</span> have units of utility, and the parameter for <span class="math inline">\(x_{j}^{\mathrm{FEAT}}\)</span> is normally distributed.</p>
+<p>where the parameters <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span>, and <span class="math inline">\(\beta_4\)</span> have units of utility.</p>
 <p>To estimate the model, first load the <strong>logitr</strong> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">logitr</span><span class="op">)</span></pre></div>
 <p>Estimate the model using the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
+<span class="va">mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
     data       <span class="op">=</span> <span class="va">yogurt</span>,
     choiceName <span class="op">=</span> <span class="st">"choice"</span>,
     obsIDName  <span class="op">=</span> <span class="st">"obsID"</span>,
-    parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"feat"</span>, <span class="st">"dannon"</span>, <span class="st">"hiland"</span>, <span class="st">"yoplait"</span><span class="op">)</span>,
-    randPars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span>,
-    options    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-        <span class="co"># You should run a multistart for MXL models since they are non-convex,</span>
-        <span class="co"># but it can take a long time. Here I just use 1 for brevity:</span>
-        numMultiStarts <span class="op">=</span> <span class="fl">1</span>,
-        numDraws       <span class="op">=</span> <span class="fl">500</span><span class="op">)</span><span class="op">)</span></pre></div>
+    parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"feat"</span>, <span class="st">"dannon"</span>, <span class="st">"hiland"</span>, <span class="st">"yoplait"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>Running Model
 Done!</code></pre>
 <p>Print a summary of the results:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mxl_pref</span><span class="op">)</span></pre></div>
-<pre><code>=================================================
-MODEL SUMMARY: 
-                         
-Model Space:   Preference
-Model Run:         1 of 1
-Iterations:            36
-Elapsed Time:   0h:2m:39s
-Weights Used?:      FALSE
-
-Model Coefficients: 
-            Estimate StdError    tStat   pVal signif
-price      -0.392768 0.026708 -14.7061 0.0000    ***
-feat.mu     0.351933 0.204608   1.7200 0.0856      .
-dannon      0.663863 0.055794  11.8984 0.0000    ***
-hiland     -3.324270 0.164101 -20.2575 0.0000    ***
-yoplait     1.458054 0.095512  15.2656 0.0000    ***
-feat.sigma  2.360350 0.515567   4.5782 0.0000    ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Model Fit Values: 
-                                     
-Log.Likelihood.         -2645.9202707
-Null.Log.Likelihood.    -3343.7419990
-AIC.                     5303.8405000
-BIC.                     5338.5698000
-McFadden.R2.                0.2086948
-Adj..McFadden.R2            0.2069005
-Number.of.Observations.  2412.0000000
-
-Summary of 10k Draws for Random Coefficients: 
-       Min.   1st Qu.    Median      Mean  3rd Qu.     Max.
-1 -8.822073 -1.240571 0.3511815 0.3499323 1.942267 8.875534</code></pre>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span></pre></div>
+<pre><code>## =================================================
+## MODEL SUMMARY: 
+##                           
+## Model Space:    Preference
+## Model Run:          1 of 1
+## Iterations:             22
+## Elapsed Time:  0h:0m:0.16s
+## Weights Used?:       FALSE
+## 
+## Model Coefficients: 
+##          Estimate StdError    tStat pVal signif
+## price   -0.366584 0.024366 -15.0449    0    ***
+## feat     0.491431 0.120063   4.0931    0    ***
+## dannon   0.641185 0.054498  11.7652    0    ***
+## hiland  -3.074415 0.145384 -21.1469    0    ***
+## yoplait  1.375756 0.088982  15.4611    0    ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Model Fit Values: 
+##                                      
+## Log.Likelihood.         -2656.8878779
+## Null.Log.Likelihood.    -3343.7419990
+## AIC.                     5323.7758000
+## BIC.                     5352.7168000
+## McFadden.R2.                0.2054148
+## Adj..McFadden.R2            0.2039195
+## Number.of.Observations.  2412.0000000</code></pre>
 <p>View the estimated model coefficients:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mxl_pref</span><span class="op">)</span></pre></div>
-<pre><code>## NULL</code></pre>
+<span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span></pre></div>
+<pre><code>##      price       feat     dannon     hiland    yoplait 
+## -0.3665843  0.4914314  0.6411848 -3.0744146  1.3757562</code></pre>
 <p>Compute the WTP implied from the preference space model:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="va">wtp_mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mxl_pref</span>, priceName <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="va">wtp_mxl_pref</span></pre></div>
-<pre><code>##             Estimate StdError    tStat   pVal signif
-## lambda      0.392768 0.026789  14.6614 0.0000    ***
-## feat.mu     0.896034 0.538532   1.6638 0.0963      .
-## dannon      1.690218 0.195365   8.6516 0.0000    ***
-## hiland     -8.463706 0.525716 -16.0994 0.0000    ***
-## yoplait     3.712257 0.478850   7.7524 0.0000    ***
-## feat.sigma  6.009534 1.439992   4.1733 0.0000    ***</code></pre>
+<span class="va">wtp_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, priceName <span class="op">=</span>  <span class="st">"price"</span><span class="op">)</span>
+<span class="va">wtp_mnl_pref</span></pre></div>
+<pre><code>##          Estimate StdError    tStat  pVal signif
+## lambda   0.366584 0.024466  14.9833 0e+00    ***
+## feat     1.340568 0.359002   3.7341 2e-04    ***
+## dannon   1.749079 0.199874   8.7509 0e+00    ***
+## hiland  -8.386650 0.511097 -16.4091 0e+00    ***
+## yoplait  3.752905 0.472365   7.9449 0e+00    ***</code></pre>
 </div>
 <div id="wtp-space-model" class="section level1">
 <h1 class="hasAnchor">
 <a href="#wtp-space-model" class="anchor"></a>WTP space model</h1>
-<p>This example will estimate the following mixed logit model in the WTP space:</p>
+<p>This example will estimate the following homogeneous multinomial logit model in the WTP space:</p>
 <p><span class="math display">\[\begin{equation}
     u_{j} =
         \lambda (
@@ -250,90 +238,117 @@ Summary of 10k Draws for Random Coefficients:
         \varepsilon_{j}
 \label{eq:mnlWtpExample}
 \end{equation}\]</span></p>
-<p>where the parameters <span class="math inline">\(\omega_1\)</span>, <span class="math inline">\(\omega_2\)</span>, <span class="math inline">\(\omega_3\)</span>, and <span class="math inline">\(\omega_4\)</span> have units of dollars and <span class="math inline">\(\lambda\)</span> is the scale parameter, and the WTP parameter for <span class="math inline">\(x_{j}^{\mathrm{FEAT}}\)</span> is normally distributed.</p>
-<p>To estimate the model, first load the <strong>logitr</strong> package:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">logitr</span><span class="op">)</span></pre></div>
+<p>where the parameters <span class="math inline">\(\omega_1\)</span>, <span class="math inline">\(\omega_2\)</span>, <span class="math inline">\(\omega_3\)</span>, and <span class="math inline">\(\omega_4\)</span> have units of dollars and <span class="math inline">\(\lambda\)</span> is the scale parameter.</p>
 <p>Estimate the model using the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
+<div class="sourceCode" id="cb10"><pre class="downlit">
 <span class="co"># Extract the WTP computed from the preference space model</span>
 <span class="co"># to use as the initial starting values</span>
-<span class="va">startingValues</span> <span class="op">&lt;-</span> <span class="va">wtp_mxl_pref</span><span class="op">$</span><span class="va">Estimate</span>
+<span class="va">startingValues</span> <span class="op">&lt;-</span> <span class="va">wtp_mnl_pref</span><span class="op">$</span><span class="va">Estimate</span>
 
-<span class="va">mxl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
+<span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
     data       <span class="op">=</span> <span class="va">yogurt</span>,
     choiceName <span class="op">=</span> <span class="st">"choice"</span>,
     obsIDName  <span class="op">=</span> <span class="st">"obsID"</span>,
     parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"feat"</span>, <span class="st">"dannon"</span>, <span class="st">"hiland"</span>, <span class="st">"yoplait"</span><span class="op">)</span>,
     priceName  <span class="op">=</span> <span class="st">"price"</span>,
-    randPars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>feat<span class="op">=</span><span class="st">"n"</span><span class="op">)</span>,
     modelSpace <span class="op">=</span> <span class="st">"wtp"</span>,
     options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-        <span class="co"># You should run a multistart for MXL models since they are non-convex,</span>
-        <span class="co"># but it can take a long time. Here I just use 1 for brevity:</span>
-        numMultiStarts <span class="op">=</span> <span class="fl">1</span>,
+        <span class="co"># Since WTP space models are non-convex, run a multistart:</span>
+        numMultiStarts <span class="op">=</span> <span class="fl">10</span>,
+        <span class="co"># If you want to view the results from each multistart run,</span>
+        <span class="co"># set keepAllRuns = TRUE</span>
+        keepAllRuns <span class="op">=</span> <span class="cn">TRUE</span>,
         startVals   <span class="op">=</span> <span class="va">startingValues</span>,
         <span class="co"># Because the computed WTP from the preference space model has values</span>
         <span class="co"># as large as 8, I increase the boundaries of the random starting values:</span>
-        startParBounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span>,
-        numDraws       <span class="op">=</span> <span class="fl">500</span><span class="op">)</span><span class="op">)</span></pre></div>
-<pre><code>Running Model
+        startParBounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></pre></div>
+<pre><code>Running Multistart 1 of 10
 **Using User Provided Starting Values For This Run**
+Running Multistart 2 of 10
+Running Multistart 3 of 10
+Running Multistart 4 of 10
+Running Multistart 5 of 10
+Running Multistart 6 of 10
+Running Multistart 7 of 10
+Running Multistart 8 of 10
+Running Multistart 9 of 10
+Running Multistart 10 of 10
 Done!</code></pre>
 <p>Print a summary of the results:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mxl_wtp</span><span class="op">)</span></pre></div>
-<pre><code>=================================================
-MODEL SUMMARY: 
-                                 
-Model Space:   Willingness-to-Pay
-Model Run:                 1 of 1
-Iterations:                   112
-Elapsed Time:           0h:9m:41s
-Weights Used?:              FALSE
-
-Model Coefficients: 
-            Estimate StdError    tStat   pVal signif
-lambda      0.392768 0.026708  14.7062 0.0000    ***
-feat.mu     0.896032 0.534239   1.6772 0.0936      .
-dannon      1.690215 0.172674   9.7885 0.0000    ***
-hiland     -8.463701 0.517775 -16.3463 0.0000    ***
-yoplait     3.712255 0.161357  23.0065 0.0000    ***
-feat.sigma  6.009556 1.323045   4.5422 0.0000    ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Model Fit Values: 
-                                     
-Log.Likelihood.         -2645.9202707
-Null.Log.Likelihood.    -3343.7419990
-AIC.                     5303.8405000
-BIC.                     5338.5698000
-McFadden.R2.                0.2086948
-Adj..McFadden.R2            0.2069005
-Number.of.Observations.  2412.0000000
-
-Summary of 10k Draws for Random Coefficients: 
-       Min.   1st Qu.    Median      Mean  3rd Qu.    Max.
-1 -22.46139 -3.158553 0.8941192 0.8909386 4.945094 22.5975</code></pre>
+<div class="sourceCode" id="cb12"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mnl_wtp</span><span class="op">)</span></pre></div>
+<pre><code>## =================================================
+## SUMMARY OF ALL MULTISTART RUNS:
+## 
+##    run    logLik iterations status
+## 1    1 -2656.888         94      3
+## 2    2 -2804.027         95      3
+## 3    3 -2803.480        103      3
+## 4    4 -2656.888         92      3
+## 5    5 -2803.964        103      3
+## 6    6 -2803.751         89      3
+## 7    7 -2803.695         69      3
+## 8    8 -2803.699         75      3
+## 9    9 -2656.888         87      3
+## 10  10 -2854.920         55     -1
+## ---
+## To view meaning of status codes, use statusCodes() 
+## 
+## Summary of BEST model below (run with largest log-likelihood value)
+## =================================================
+## MODEL SUMMARY: 
+##                                  
+## Model Space:   Willingness-to-Pay
+## Model Run:                4 of 10
+## Iterations:                    92
+## Elapsed Time:          0h:0m:0.5s
+## Weights Used?:              FALSE
+## 
+## Model Coefficients: 
+##          Estimate StdError    tStat  pVal signif
+## lambda   0.366584 0.024366  15.0449 0e+00    ***
+## feat     1.340573 0.355865   3.7671 2e-04    ***
+## dannon   1.749076 0.179897   9.7227 0e+00    ***
+## hiland  -8.386651 0.502472 -16.6908 0e+00    ***
+## yoplait  3.752902 0.168121  22.3226 0e+00    ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Model Fit Values: 
+##                                      
+## Log.Likelihood.         -2656.8878779
+## Null.Log.Likelihood.    -3343.7419990
+## AIC.                     5323.7758000
+## BIC.                     5352.7168000
+## McFadden.R2.                0.2054148
+## Adj..McFadden.R2            0.2039195
+## Number.of.Observations.  2412.0000000</code></pre>
 <p>View the estimated model coefficients:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mxl_wtp</span><span class="op">)</span></pre></div>
-<pre><code>## NULL</code></pre>
-<p>If you want to compare the WTP from the two different model spaces, use the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit">
-<span class="va">wtp_mxl_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mxl_pref</span>, <span class="va">mxl_wtp</span>, priceName <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mnl_wtp</span><span class="op">)</span></pre></div>
+<pre><code>## **Using results for model 4 of 10,
+## the best model (largest log-likelihood) from the multistart**</code></pre>
+<pre><code>##     lambda       feat     dannon     hiland    yoplait 
+##  0.3665845  1.3405734  1.7490765 -8.3866514  3.7529017</code></pre>
+</div>
+<div id="compare-wtp-from-both-models" class="section level1">
+<h1 class="hasAnchor">
+<a href="#compare-wtp-from-both-models" class="anchor"></a>Compare WTP from both models</h1>
+<p>Since WTP space models are non-convex, you cannot be certain that the model reached a global solution, even when using a multi-start. However, homogeneous models in the <em>preference</em> space are convex, so you are guaranteed to find the global solution in that space. Therefore, it can be useful to compute the WTP from the preference space model and compare it against the WTP from the WTP space model. If the WTP values and log-likelhiood values from the two model spaces are equal, then the WTP space model is likely at a global solution.</p>
+<p>To compare the WTP and log-likelihood values between the preference space and WTP space models, use the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit">
+<span class="va">wtp_mnl_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, priceName <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span></pre></div>
+<pre><code>## **Using results for model 4 of 10,
+## the best model (largest log-likelihood) from the multistart**</code></pre>
 <div class="sourceCode" id="cb19"><pre class="downlit">
-<span class="va">wtp_mxl_comparison</span></pre></div>
-<pre><code>##                    pref           wtp difference
-## lambda         0.392768     0.3927684  3.900e-07
-## feat.mu        0.896034     0.8960325 -1.530e-06
-## dannon         1.690218     1.6902148 -3.210e-06
-## hiland        -8.463706    -8.4637009  5.070e-06
-## yoplait        3.712257     3.7122551 -1.900e-06
-## feat.sigma     6.009534     6.0095564  2.241e-05
-## logLik     -2645.920271 -2645.9202707  0.000e+00</code></pre>
-<p>Note that the WTP will not be the same between preference space and WTP space MXL models. This is because the distributional assumptions in MXL models imply different distributions on WTP depending on the model space. See Train and Weeks <span class="citation">(2005)</span> and Sonnier, Ainslie, and Otter <span class="citation">(2007)</span> for details on this topic.</p>
+<span class="va">wtp_mnl_comparison</span></pre></div>
+<pre><code>##                 pref           wtp difference
+## lambda      0.366584     0.3665845   4.60e-07
+## feat        1.340568     1.3405734   5.41e-06
+## dannon      1.749079     1.7490765  -2.55e-06
+## hiland     -8.386650    -8.3866514  -1.42e-06
+## yoplait     3.752905     3.7529017  -3.30e-06
+## logLik  -2656.887878 -2656.8878779   0.00e+00</code></pre>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">
@@ -341,12 +356,6 @@ Summary of 10k Draws for Random Coefficients:
 <div id="refs" class="references">
 <div id="ref-Jain1994">
 <p>Jain, Dipak C, Naufel J Vilcassim, and Pradeep K Chintagunta. 1994. “A Random-Coefficients Logit Brand-Choice Model Applied to Panel Data.” <em>Journal of Business &amp; Economic Statistics</em> 12 (3): 317–28.</p>
-</div>
-<div id="ref-Sonnier2007">
-<p>Sonnier, Garrett, Andrew Ainslie, and Thomas Otter. 2007. “Heterogeneity distributions of willingness-to-pay in choice models.” <em>Quant. Mark. Econ.</em> 5 (3): 313–31. <a href="https://doi.org/10.1007/s11129-007-9024-6">https://doi.org/10.1007/s11129-007-9024-6</a>.</p>
-</div>
-<div id="ref-Train2005">
-<p>Train, Kenneth E., and Melvyn Weeks. 2005. “Discrete Choice Models in Preference and Willingness-to-Pay Space.” In <em>Appl. Simul. Methods Environ. Resour. Econ.</em>, 1–16.</p>
 </div>
 </div>
 </div>
