@@ -1,0 +1,26 @@
+---
+output:
+  github_document:
+    html_preview: false
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, child=here::here('_introduction.Rmd')}
+```
+
+# Author, Version, and License Information
+
+- Author: _John Paul Helveston_ [www.jhelvy.com](http://www.jhelvy.com/)
+- Date First Written: _Sunday, September 28, 2014_
+- Most Recent Update: _`r format(Sys.time(), "%A, %b %d, %Y")`_
+- License: GPL-3
+- Latest Version: 1.2.0
+
+# Citation Information
+
+If you use this package for in a publication, I would greatly appreciate it if you cited it. You can get the citation information by typing this into R:
+
+```
+citation('logitr')
+```

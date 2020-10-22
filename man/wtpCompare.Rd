@@ -2,15 +2,14 @@
 % Please edit documentation in R/methods.R
 \name{wtpCompare}
 \alias{wtpCompare}
-\title{Returns a comparison of the WTP between a preference space and WTP space
-model.}
+\title{Compare WTP from preference and WTP space models}
 \usage{
 wtpCompare(model_pref, model_wtp, priceName)
 }
 \arguments{
 \item{model_pref}{The output of a "preference space" model estimated using the \code{logitr()} function.}
 
-\item{model_wtp}{The output of a "willingness to pay space" model estimated model using the \code{logitr()} function.}
+\item{model_wtp}{The output of a "willingness to pay space" model estimated using the \code{logitr()} function.}
 
 \item{priceName}{The name of the parameter that identifies price.}
 }
@@ -49,7 +48,6 @@ mnl_wtp = logitr(
 
 # Compare the WTP between the two spaces:
 wtpCompare(mnl_pref, mnl_wtp, priceName = 'price')
-
 }
 \keyword{logitr,}
 \keyword{wtp}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/wtp.R
 \name{wtpCompare.logitr}
 \alias{wtpCompare.logitr}
-\title{Compare WTP from WTP space and preference space models}
+\title{Compare WTP from preference and WTP space models}
 \usage{
 \method{wtpCompare}{logitr}(model_pref, model_wtp, priceName)
 }
@@ -48,7 +48,6 @@ mnl_wtp = logitr(
 
 # Compare the WTP between the two spaces:
 wtpCompare(mnl_pref, mnl_wtp, priceName = 'price')
-
 }
 \keyword{logitr,}
 \keyword{wtp}

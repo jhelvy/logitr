@@ -9,7 +9,7 @@
 #' parameterizations. The function includes an option to run a multistart
 #' optimization loop with random starting points in each iteration, which is
 #' useful for non-convex problems like MXL models or models with WTP space
-#' utility parameterizations. The main optimization loop uses the nloptr
+#' utility parameterizations. The main optimization loop uses the `nloptr()`
 #' function to minimize the negative log-likelihood function.
 #' @keywords logitr, mnl, mxl, wtp, willingness-to-pay, mixed logit, logit
 #'
@@ -17,7 +17,7 @@
 #' @param choiceName The name of the column that identifies the choice variable.
 #' @param obsIDName The name of the column that identifies the `obsID` variable.
 #' @param parNames The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in `parNames`.
-#' @param priceName The name of the column that identifies the `price` variable. Only required for WTP space models. Defaults to `NULL`.
+#' @param priceName The name of the column that identifies the price variable. Only required for WTP space models. Defaults to `NULL`.
 #' @param randPars A named vector whose names are the random parameters and values the distribution: `'n'` for normal or `'ln'` for log-normal. Defaults to `NULL`.
 #' @param randPrice The random distribution for the price parameter: `'n'` for normal or `'ln'` for log-normal. Only used for WTP space MXL models. Defaults to `NULL`.
 #' @param modelSpace Set to `'wtp'` for WTP space models. Defaults to `"pref"`.
@@ -37,18 +37,18 @@
 #' |`startVals`|A vector of values to be used as starting values for the optimization. Only used for the first run if `numMultiStarts > 1`.|`NULL`|
 #' |`useAnalyticGrad`|Set to `FALSE` to use numerically approximated gradients instead of analytic gradients during estimation (which is slower).|`TRUE`|
 #' |`scaleInputs`|By default each variable in `data` is scaled to be between 0 and 1 before running the optimization routine because it usually helps with stability, especially if some of the variables have very large or very small values (e.g. `> 10^3` or `< 10^-3`). Set to `FALSE` to turn this feature off.|`TRUE`|
-#' |`standardDraws`|By default, a new set of standard normal draws are generated during each call to `logitr` (the same draws are used during each multistart too). The user can override those draws by providing a matrix of standard normal draws if desired.|`NULL`|
+#' |`standardDraws`|By default, a new set of standard normal draws are generated during each call to `logitr` (the same draws are used during each multistart iteration). The user can override those draws by providing a matrix of standard normal draws if desired.|`NULL`|
 #' |`numDraws`|The number of draws to use for MXL models for the maximum simulated likelihood.|`200`|
 #' |`drawType`|The type of draw to use for MXL models for the maximum simulated likelihood. Set to `'normal'` to use random normal draws or `'halton'` for Halton draws.|`'halton'`|
-#' |`printLevel`|The print level of the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`0`|
-#' |`xtol_rel`|The relative `x` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1.0e-8`|
-#' |`xtol_abs`|The absolute `x` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1.0e-8`|
-#' |`ftol_rel`|The relative `f` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1.0e-8`|
-#' |`ftol_abs`|The absolute `f` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1.0e-8`|
-#' |`maxeval`|The maximum number of function evaluations for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1000`|
+#' |`printLevel`|The print level of the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`0`|
+#' |`xtol_rel`|The relative `x` tolerance for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1.0e-8`|
+#' |`xtol_abs`|The absolute `x` tolerance for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1.0e-8`|
+#' |`ftol_rel`|The relative `f` tolerance for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1.0e-8`|
+#' |`ftol_abs`|The absolute `f` tolerance for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1.0e-8`|
+#' |`maxeval`|The maximum number of function evaluations for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1000`|
 #'
 #' @return
-#' The function returns a list object with the following names.
+#' The function returns a list object containing the following objects.
 #'
 #' |    Value    |    Description    |
 #' |:------------|:------------------|
@@ -65,7 +65,7 @@
 #' |`time`|The user, system, and elapsed time to run the optimization.|
 #' |`iterations`|The number of iterations until convergence.|
 #' |`message`|A more informative message with the status of the optimization result.|
-#' |`status`|An integer value with the status of the optimization (positive values are successes). Type `logitr.statusCodes()` for a detailed description.|
+#' |`status`|An integer value with the status of the optimization (positive values are successes). Use [statusCodes()] for a detailed description.|
 #' |`modelSpace`|The model space (`'pref'` or `'wtp'`).|
 #' |`standardDraws`|The draws used during maximum simulated likelihood (for MXL models).|
 #' |`randParSummary`|A summary of any random parameters (for MXL models).|
@@ -75,8 +75,16 @@
 #'
 #' @export
 #' @examples
-#' For detailed examples, visit [https://github.com/jhelvy/logitr/tree/master/examples](https://github.com/jhelvy/logitr/tree/master/examples)
+#' # For detailed examples, visit https://jhelvy.github.io/logitr/articles/examples.html
 #'
+#' # Run a MNL model in the Preference Space:
+#' library(logitr)
+#'
+#' mnl_pref = logitr(
+#'   data       = yogurt,
+#'   choiceName = 'choice',
+#'   obsIDName  = 'obsID',
+#'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
 logitr = function(data, choiceName, obsIDName, parNames, priceName = NULL,
                   randPars = NULL, randPrice = NULL, modelSpace = 'pref',
                   weightsName = NULL, options = list()) {

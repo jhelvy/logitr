@@ -1,0 +1,10 @@
+---
+title: "Examples"
+output:
+  html_document:
+    number_sections: false
+    toc: no
+bibliography: library.bib
+---
+
+- [Estimating mixed logit models](mxl_models.html)

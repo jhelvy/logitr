@@ -1,11 +1,10 @@
-\vspace{-10pt}
 \begin{equation}
     u_{j} =
         \lambda (
         \omega_1 x_{j}^{\mathrm{FEAT}} +
         \omega_2 x_{j}^{\mathrm{DANNON}} +
         \omega_3 x_{j}^{\mathrm{HIGHLAND}} +
-        \omega_4 x_{j}^{\mathrm{YOPLAIT}} - 
+        \omega_4 x_{j}^{\mathrm{YOPLAIT}} -
         p_{j})  +
         \varepsilon_{j}
 \label{eq:mnlWtpExample}

@@ -7,10 +7,37 @@ navbar:
   left:
     - icon: fa-home fa-lg
       href: index.html
+    - text: "Articles"
+      menu:
+        - text: "Utility Models in the Preference & WTP Space"
+          href: articles/utility_models.html
     - text: "Examples"
-      href: articles/index.html
+      menu:
+        - text: "Estimating mixed logit models"
+          href: articles/mxl_models.html
     - text: "Functions"
       href: reference/index.html
   right:
    - icon: fa-github
      href: https://github.com/jhelvy/logitr
+
+reference:
+- title: "Estimate models"
+  desc: "Functions for estimating multinomial logit models with preference space and WTP space utility parameterizations." 
+  contents: 
+  - logitr
+- title: "View results"
+  desc: "Functions for viewing the results of estimated models." 
+  contents: 
+  - summary.logitr
+  - coef.logitr
+  - statusCodes
+- title: "Compute and compare WTP"
+  desc: "Functions for computing and comparing WTP from estimated models."
+  contents:
+  - wtp
+  - wtpCompare
+- title: "Simulate shares"
+  desc: "Functions for simulating expected shares from a set of alternatives."
+  contents:
+  - simulateShares

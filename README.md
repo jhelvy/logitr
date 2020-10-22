@@ -1,172 +1,197 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
 # logitr
-*logitr* estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using "Preference" space or "Willingness-to-pay (WTP)" space utility parameterizations. The current version includes support for:
-- Homogeneous multinomial logit (MNL) models
-- Heterogeneous mixed logit (MXL) models (support for normal and log-normal parameter distributions).
-- Preference space utility parameterization.
-- WTP space utility parameterization.
-- A multistart optimization loop with random starting points in each iteration (useful for non-convex problems like MXL models or models with WTP space utility parameterizations).
-- A [simulation](#simulation) function for computing the expected shares of a set of alternatives using an estimated model.
 
-MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in [Kenneth Train's](http://eml.berkeley.edu/~train/) book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)*](http://eml.berkeley.edu/books/choice2.html).
+**logitr** estimates multinomial (MNL) and mixed logit (MXL) models in
+R. Models can be estimated using “Preference” space or
+“Willingness-to-pay” (WTP) space utility parameterizations. The
+current version includes support for:
 
-# Table of Contents
-- [Installation](#installation)
-  - [Required Libraries](#required-libraries)
-- [Using `logitr()`](#using-logitr)
-  - [Arguments](#arguments)
-  - [Options](#options)
-  - [Values](#values)
-  - [Data File Setup](#data-file-setup)
-  - [Details About `parNames` Argument](#details-about-parnames-argument)
-  - [Using `summary()` with `logitr`](#using-summary-with-logitr)
-  - [Computing and Comparing WTP](#computing-and-comparing-wtp)
-- [Simulation](#simulation)
-- [Author, Version, and License Information](#author-version-and-license-information)
-- [Citation Information](#citation-information)
+  - Homogeneous multinomial logit (MNL) models
+  - Heterogeneous mixed logit (MXL) models (with normal and log-normal
+    parameter distributions).
+  - Preference space utility parameterization.
+  - WTP space utility parameterization.
+  - An optional multistart optimization that uses different random
+    starting points in each iteration (useful for non-convex problems
+    like MXL models or models with WTP space parameterizations).
+  - A simulation function for computing the expected shares of a set of
+    alternatives using an estimated model.
 
-# Installation
-1. Make sure you have the `devtools` library installed:
+MXL models assume uncorrelated heterogeneity covariances and are
+estimated using maximum simulated likelihood based on the algorithms in
+[Kenneth Train’s](http://eml.berkeley.edu/~train/) book [*Discrete
+Choice Methods with Simulation, 2nd Edition (New York: Cambridge
+University Press, 2009)*](http://eml.berkeley.edu/books/choice2.html).
 
-`install.packages('devtools')`
+## Installation
 
-2. Load the `devtools` library and install the `logitr` package:
+The current version is not yet on CRAN, but you can install it from
+Github using the **devtools** library:
 
-```
-library('devtools')
-install_github('jhelvy/logitr')
-library('logitr')
-```
+    devtools::install_github('jhelvy/logitr')
 
-### Required Libraries
-*logitr* requires the `nloptr` library.
+## Required Libraries
 
-The main optimization loop uses the `nloptr` function to minimize the negative log-likelihood function. `nloptr` is used instead of the Base R `optim` because it allows for both the objective and gradient functions to be included in one function. This speeds up computation time considerably because both the objective and gradient functions require many of the same calculations (e.g. computing the probabilities), which only have to be computed once in `nloptr` (`optim` requires separate objective and gradient functions, so many calculations are repeated within each iteration of the optimization loop).
+**logitr** requires the
+[**nloptr**](https://cran.r-project.org/web/packages/nloptr/index.html)
+library. This is because `nloptr()` allows for both the objective and
+gradient functions to be computed in a single function. This speeds up
+computation time considerably because both the objective and gradient
+functions require many of the same calculations (e.g. computing
+probabilities).
 
-# Using `logitr()`
-(For a detailed example, see the './examples/example.R' file)
+# Estimating models
 
-The main model estimation function is the `logitr()` function:
+The `logitr()` function estimates multinomial logit (MNL) and mixed
+logit (MXL) models using “Preference” space or “Willingness-to-pay
+(WTP)” space [utility
+parameterizations](articles/utility_models.html). The basic usage for
+estimating models is as follows:
 
-```
-model = logitr(data, choiceName, obsIDName, parNames, priceName=NULL,
-               randPars=NULL, randPrice=NULL, modelSpace='pref',
-               options=list(...))
-```
-
-The function returns a list of values, so assign the model output to a variable (e.g. "model") to store the output values.
-
-## Arguments
-|    Argument    |    Description    |    Default    |
-|:---------------|:------------------|:--------------|
-|`data`|The choice data, formatted as a data.frame object (see the [Data File Setup](#data-file-setup) Section for details).| -- |
-|`choiceName`|The name of the column that identifies the `choice` variable.| -- |
-|`obsIDName`|The name of the column that identifies the `obsID` variable.| -- |
-|`parNames`|The names of the parameters to be estimated in the model. Must be the same as the column names in the `data` argument. For WTP space models, do not include price in `parNames`. See the [Details About `parNames` Argument](#details-about-parnames-argument) Section for more details.| -- |
-|`priceName`|The name of the column that identifies the price variable. Only required for WTP space models.|`NULL`|
-|`randPars`|A named vector whose names are the random parameters and values the destribution: `'n'` for normal or `'ln'` for log-normal.|`NULL`|
-|`randPrice`|The random distribution for the price parameter: `'n'` for normal or `'ln'` for log-normal. Only used for WTP space MXL models.|`NULL`|
-|`modelSpace`|Set to `'wtp'` for WTP space models.|`'pref'`|
-|`options`|A list of options (see the [Options](#options) Section for details).| -- |
-
-## Options
-|    Argument    |    Description    |    Default    |
-|:---------------|:------------------|:--------------|
-|`numMultiStarts`|Number of times to run the optimization loop, each time starting from a different random starting point for each parameter between `startParBounds`. Recommended for non-convex models, such as WTP space models and MXL models.|`1`|
-|`keepAllRuns`|Set to `TRUE` to keep all the model information for each multistart run. If `TRUE`, the `logitr()` function will return a list with two values: `models` (a list of each model), and `bestModel` (the model with the largest log-likelihood value).|`FALSE`|
-|`startParBounds`|Set the `lower` and `upper` bounds for the starting parameters for each optimization run, which are generated by `runif(n, lower, upper)`.|`c(-1, 1)`|
-|`startVals`|A vector of values to be used as starting values for the optimization. Only used for the first run if `numMultiStarts > 1`.|`NULL`|
-|`useAnalyticGrad`|Set to `FALSE` to use numerically approximated gradients instead of analytic gradients during estimation (which is slower).|`TRUE`|
-|`scaleInputs`|By default each variable in `data` is scaled to be between 0 and 1 before running the optimization routine because it usually helps with stability, especially if some of the variables have very large or very small values (e.g. `> 10^3` or `< 10^-3`). Set to `FALSE` to turn this feature off.|`TRUE`|
-|`standardDraws`|By default, a new set of standard normal draws are generated during each call to `logitr` (the same draws are used during each multistart too). The user can override those draws by providing a matrix of standard normal draws if desired.|`NULL`|
-|`numDraws`|The number of draws to use for MXL models for the maximum simulated likelihood.|`200`|
-|`drawType`|The type of draw to use for MXL models for the maximum simulated likelihood. Set to `'normal'` to use random normal draws or `'halton'` for Halton draws.|`'halton'`|
-|`printLevel`|The print level of the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`0`|
-|`xtol_rel`|The relative `x` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1.0e-8`|
-|`xtol_abs`|The absolute `x` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1.0e-8`|
-|`ftol_rel`|The relative `f` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1.0e-8`|
-|`ftol_abs`|The absolute `f` tolerance for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1.0e-8`|
-|`maxeval`|The maximum number of function evaluations for the `nloptr` optimization loop. Type `nloptr.print.options()` for more details.|`1000`|
-
-## Values
-|    Value    |    Description    |
-|:------------|:------------------|
-|`coef`|The model coefficients at convergence.|
-|`standErrs`|The standard errors of the model coefficients at convergence.|
-|`logLik`|The log-likelihood value at convergence.|
-|`nullLogLik`|The null log-likelihood value (if all coefficients are 0).|
-|`gradient`|The gradient of the log-likelihood at convergence.|
-|`hessian`|The hessian of the log-likelihood at convergence.|
-|`numObs`|The number of observations.|
-|`numParams`|The number of model parameters.|
-|`startPars`|The starting values used.|
-|`multistartNumber`|The multistart run number for this model.|
-|`time`|The user, system, and elapsed time to run the optimization.|
-|`iterations`|The number of iterations until convergence.|
-|`message`|A more informative message with the status of the optimization result.|
-|`status`|An integer value with the status of the optimization (positive values are successes). Type `logitr.statusCodes()` for a detailed description.|
-|`modelSpace`|The model space (`'pref'` or `'wtp'`).|
-|`standardDraws`|The draws used during maximum simulated likelihood (for MXL models).|
-|`randParSummary`|A summary of any random parameters (for MXL models).|
-|`parSetup`|A summary of the distributional assumptions on each model parameter (`"f"`="fixed", `"n"`="normal distribution", `"ln"`="log-normal distribution").|
-|`options`|A list of all the model options.|
-|`multistartSummary`|A summary of the log-likelihood values for each multistart run.|
-
-## Data File Setup
-The data must be a `data.frame` object and arranged such that each row is an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. they could each have a different number of alternatives). The columns must include all variables that will be used as model covariates. In addition, the following variables must be included:
-
-- `obsID`: A sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the `obsID` variable would be `1,1,2,2,3,3`.
-- `choice`: A dummy variable that identifies which alternative was chosen (`1`=chosen, `0`=not chosen).
-
-**WTP space models**:
-You must include a `price` variable (entries should be the price values).
-
-## Details About `parNames` Argument:
-The model assumes that the deterministic part of the utility function is linear in parameters (*v* = *beta* ' *x*). Accordingly, each parameter in the `parNames` argument is an additive part of *v*. For example, for the utility model *u* = *beta1* * *price* + *beta2* * *size* + *error*, then the `parNames` argument should be `c('price', 'size')`, and there should be two columns of data in the `data` argument called `price` and `size`. If you wanted to add a third parameter, say *price^2*, then you should create a separate variable in the data.frame called something like `priceSquared` and your `parNames` argument would be `c('price', 'size', 'priceSquared')`.
-
-**WTP space models**:
-The `parNames` should be the WTP parameters, and the `price` parameter is denoted by the separate argument `priceName`. For example, for the utility model *u* = *lambda*(*beta1* * *size* - *price*) + *error*, then the `parNames` argument should be `c('size')` and the `priceName` argument should be `'price'`.
-
-## Using `summary()` with `logitr`
-The *logitr* package also includes a summary function that has several variations:
-- For a single model run, it prints some summary information, including the model space, log-likelihood value at the solution, and a summary table of the model coefficients.
-- For MXL models, the function also prints a summary of the random parameters.
-- If the `keepAllRuns` option is set to `TRUE`, the function will print a summary of all the multistart runs followed by a summary of the best model (as determined by the largest log-likelihood value).
-
-To understand the status code of any model, type `logitr.statusCodes()`, which prints a description of each status code from the `nloptr` optimization routine.
-
-## Computing and Comparing WTP
-For models in the preference space, you can get a summary table of the implied WTP by using:
-
-`wtp(prefSpaceModel, priceName)`
-
-To compare the WTP between two equivalent models in the preference space and WTP spaces, use:
-
-`wtpCompare(prefSpaceModel, wtpSpaceModel, priceName)`
-
-# Simulation
-After estimating a model, often times modelers want to use the results to simulate the expected shares of a particular set of alternatives. This can be done using the function `simulateShares()`. The simulation reports the expected share as well as a confidence interval for each alternative:
-
-```
-shares = simulateShares(model, alts, priceName=NULL, alpha=0.025)
+``` r
+model <- logitr(
+  data,
+  choiceName,
+  obsIDName,
+  parNames,
+  priceName = NULL,
+  randPars = NULL,
+  randPrice = NULL,
+  modelSpace = "pref",
+  weightsName = NULL,
+  options = list()
+)
 ```
 
-**Arguments:**
+## Data format
 
-|    Argument    |    Description    |    Default    |
-|:---------------|:------------------|:--------------|
-|`model`|A MNL or MXL model estimated using the `logitr` package.| -- |
-|`alts`|A data frame of the alternatives. Each row should be an alternative, and each column an attribute for which there is a corresponding coefficient in the estimated model.| -- |
-|`priceName`|The name of the column in `alts` that identifies price (only required for WTP space models).|`NULL`|
-|`alpha`|The significance level for the confidence interval (e.g. `0.025` results in a 95% CI).| `0.025` |
+The `data` argument is set to the name of the `data.frame` storing the
+choice observations. The `data.frame` must be arranged such that each
+row is an alternative from a choice observation. The choice observations
+do not have to be symmetric (i.e. each choice observation could have a
+different number of alternatives). The data must include columns for
+each of the following arguments in the `logitr()` function:
+
+  - `choiceName`: A dummy variable that identifies which alternative was
+    chosen (`1` = chosen, `0` = not chosen).
+  - `obsIDName`: A sequence of numbers that identifies each unique
+    choice occasion. For example, if the first three choice occasions
+    had 2 alternatives each, then the first 9 rows of the `obsID`
+    variable would be `1, 1, 2, 2, 3, 3`.
+  - `parNames`: The names of the variables that will be used as model
+    covariates. For WTP space models, do **not** include the price
+    variable in `parNames` - this is provided separately with the
+    `priceName` argument.
+
+## Preference space models
+
+Unlike similar packages like
+[**mlogit**](https://cran.r-project.org/web/packages/mlogit/index.html),
+**logitr** does not support the formula type input that uses a symbolic
+description of the model to be estimated. Parameters are simply
+described as a vector of the column names in the `data.frame` provided
+to the `data` argument.
+
+The `logitr()` function assumes that the deterministic part of the
+utility function is linear in parameters, i.e.:
+
+Accordingly, each parameter in the `parNames` argument is an additive
+part of \(v_{j}\). For example, if the observed utility was
+\(v_{j} = \beta x_{j} - \alpha p_{j}\), where \(p_{j}\) is price and
+\(x_{j}\) is size, then the `parNames` argument should be `c("price",
+"size")`, and the `data.frame` used for the `data` argument should have
+columns called `price` and `size`.
+
+## WTP space models
+
+For models estimated in the WTP space, the `modelSpace` argument should
+be set to `modelSpace = "wtp"`. The `parNames` argument should **not**
+contain the name of the column for the price attribute. This is provided
+separately with the `priceName` argument. For example, if the observed
+utility was \(v_{j} = \lambda \left(\omega' x_{j} - p_{j}\right)\),
+where \(p_{j}\) is price and \(x_{j}\) is size, then the `parNames`
+argument should be `"size"`, and the `priceName` argument should be
+`"price"`.
+
+Since WTP space models are non-convex, it is recommended that you use a
+multi-start search to run the optimization loop multiple times
+(controlled by `numMultiStarts` in the `options` argument) to search for
+different local minima.
+
+## Mixed logit models
+
+To estimate a mixed logit model, use the `randPars` argument to denote
+which parameters will be modeled with a distribution. The current
+package version supports normal and log-normal distributions. For
+example, if you wanted to model a covariate called `"size"` with a
+normal distribution, set `randPars = c(size = "n")`. Likewise, if you
+wanted it to be log-normally distributed, set `randPars = c(size =
+"ln")`.
+
+Since mixed logit models are non-convex, it is recommended that you use
+a multi-start search to run the optimization loop multiple times
+(controlled by `numMultiStarts` in the `options` argument) to search for
+different local minima. Note that mixed logit models can take a long
+time to estimate, so setting large number for `numMultiStarts` could
+take hours or more to complete.
+
+## View results
+
+Use the `summary()` function to print a summary of the results from an
+estimated model. The function will print the following based on the
+model settings:
+
+  - For a single model run, it prints some summary information,
+    including the model space (Preference or WTP), log-likelihood value
+    at the solution, and a summary table of the model coefficients.
+  - For MXL models, the function also prints a summary of the random
+    parameters.
+  - If you set `keepAllRuns = TRUE` in the `options` argument,
+    `summary()` will print a summary of all the multistart runs followed
+    by a summary of the best model (as determined by the largest
+    log-likelihood value).
+
+Use `statusCodes()` to print a description of each status code from the
+`nloptr` optimization routine.
+
+## Computing and comparing WTP
+
+For models in the preference space, you can get a summary table of the
+implied WTP by using:
+
+    wtp(model_pref, priceName)
+
+To compare the WTP between two equivalent models in the preference space
+and WTP spaces, use:
+
+    wtpCompare(model_pref, model_wtp, priceName)
+
+## Simulate shares
+
+Once you have estimated a model, you can use it to simulate the expected
+shares of a particular set of alternatives. This can be done using the
+function `simulateShares()`. The simulation reports the expected share
+as well as a confidence interval for each alternative:
+
+``` r
+shares = simulateShares(model, alts, priceName = NULL, alpha = 0.025)
+```
 
 # Author, Version, and License Information
-- Author: *John Paul Helveston* (www.jhelvy.com)
-- Date First Written: *Sunday, September 28, 2014*
-- Most Recent Update: *Thursday, September 6, 2018*
-- License: GPL-3
-- Latest Version: 1.2
+
+  - Author: *John Paul Helveston*
+    [www.jhelvy.com](http://www.jhelvy.com/)
+  - Date First Written: *Sunday, September 28, 2014*
+  - Most Recent Update: *Thursday, Oct 22, 2020*
+  - License: GPL-3
+  - Latest Version: 1.2.0
 
 # Citation Information
-If you use this package for in a publication, I would greatly appreciate it if you cited it. You can get the citation information by typing this into R:
 
-`citation('logitr')`
+If you use this package for in a publication, I would greatly appreciate
+it if you cited it. You can get the citation information by typing this
+into R:
+
+    citation('logitr')

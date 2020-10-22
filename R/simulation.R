@@ -2,7 +2,7 @@
 # Functions for running simulations
 # ============================================================================
 
-#' Simulate expected market shares
+#' Simulate expected shares from a set of alternatives
 #'
 #' Returns the expected shares of a specific set of alternatives based
 #' on an estimated model.
@@ -10,7 +10,7 @@
 #'
 #' @param model The output of a model estimated model using the `logitr()` function.
 #' @param alts A data frame of a set of alternatives for which to simulate shares. Each row is an alternative and each column an attribute corresponding to parameter names in the estimated model.
-#' @param priceName The name of the parameter that identifies price.
+#' @param priceName The name of the parameter that identifies price. Only required for WTP space models. Defaults to `NULL`.
 #' @param alpha The sensitivity of the computed confidence interval, e.g. a 90% CI is obtained with `alpha = 0.05`. Defaults to `alpha = 0.025`.
 #'
 #' @return A data frame with the estimated shares for each alternative in `alts`.
@@ -26,15 +26,14 @@
 #'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
 #'
 #' # Create a set of alternatives for which to simulate shares:
-#' market = subset(yogurt, obsID == 42,
-#'        select=c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
-#' row.names(market) = c('dannon', 'hiland', 'weight', 'yoplait')
-#' market
+#' alts <- subset(yogurt, obsID == 42,
+#'        select = c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
+#' row.names(alts) <- c('dannon', 'hiland', 'weight', 'yoplait')
+#' alts
 #'
 #' # Run the simulation using the estimated preference space MNL model:
-#' simulateShares(mnl_pref, market)
-#'
-simulateShares.logitr = function(model, alts, priceName = NULL,
+#' simulateShares(mnl_pref, alts)
+simulateShares = function(model, alts, priceName = NULL,
     alpha = 0.025) {
     model = allRunsCheck(model)
     if (isMxlModel(model$parSetup)) {

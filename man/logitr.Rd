@@ -26,7 +26,7 @@ logitr(
 
 \item{parNames}{The names of the parameters to be estimated in the model. Must be the same as the column names in the \code{data} argument. For WTP space models, do not include price in \code{parNames}.}
 
-\item{priceName}{The name of the column that identifies the \code{price} variable. Only required for WTP space models. Defaults to \code{NULL}.}
+\item{priceName}{The name of the column that identifies the price variable. Only required for WTP space models. Defaults to \code{NULL}.}
 
 \item{randPars}{A named vector whose names are the random parameters and values the distribution: \code{'n'} for normal or \code{'ln'} for log-normal. Defaults to \code{NULL}.}
 
@@ -39,7 +39,7 @@ logitr(
 \item{options}{A list of options.}
 }
 \value{
-The function returns a list object with the following names.\tabular{ll}{
+The function returns a list object containing the following objects.\tabular{ll}{
    Value \tab Description \cr
    \code{coef} \tab The model coefficients at convergence. \cr
    \code{standErrs} \tab The standard errors of the model coefficients at convergence. \cr
@@ -54,7 +54,7 @@ The function returns a list object with the following names.\tabular{ll}{
    \code{time} \tab The user, system, and elapsed time to run the optimization. \cr
    \code{iterations} \tab The number of iterations until convergence. \cr
    \code{message} \tab A more informative message with the status of the optimization result. \cr
-   \code{status} \tab An integer value with the status of the optimization (positive values are successes). Type \code{logitr.statusCodes()} for a detailed description. \cr
+   \code{status} \tab An integer value with the status of the optimization (positive values are successes). Use \code{\link[=statusCodes]{statusCodes()}} for a detailed description. \cr
    \code{modelSpace} \tab The model space (\code{'pref'} or \code{'wtp'}). \cr
    \code{standardDraws} \tab The draws used during maximum simulated likelihood (for MXL models). \cr
    \code{randParSummary} \tab A summary of any random parameters (for MXL models). \cr
@@ -69,7 +69,7 @@ models with "Preference" space or "Willingness-to-pay" (WTP) space utility
 parameterizations. The function includes an option to run a multistart
 optimization loop with random starting points in each iteration, which is
 useful for non-convex problems like MXL models or models with WTP space
-utility parameterizations. The main optimization loop uses the nloptr
+utility parameterizations. The main optimization loop uses the \code{nloptr()}
 function to minimize the negative log-likelihood function.
 }
 \details{
@@ -83,20 +83,28 @@ e.g. \code{options = list(...)}.\tabular{lll}{
    \code{startVals} \tab A vector of values to be used as starting values for the optimization. Only used for the first run if \code{numMultiStarts > 1}. \tab \code{NULL} \cr
    \code{useAnalyticGrad} \tab Set to \code{FALSE} to use numerically approximated gradients instead of analytic gradients during estimation (which is slower). \tab \code{TRUE} \cr
    \code{scaleInputs} \tab By default each variable in \code{data} is scaled to be between 0 and 1 before running the optimization routine because it usually helps with stability, especially if some of the variables have very large or very small values (e.g. \verb{> 10^3} or \verb{< 10^-3}). Set to \code{FALSE} to turn this feature off. \tab \code{TRUE} \cr
-   \code{standardDraws} \tab By default, a new set of standard normal draws are generated during each call to \code{logitr} (the same draws are used during each multistart too). The user can override those draws by providing a matrix of standard normal draws if desired. \tab \code{NULL} \cr
+   \code{standardDraws} \tab By default, a new set of standard normal draws are generated during each call to \code{logitr} (the same draws are used during each multistart iteration). The user can override those draws by providing a matrix of standard normal draws if desired. \tab \code{NULL} \cr
    \code{numDraws} \tab The number of draws to use for MXL models for the maximum simulated likelihood. \tab \code{200} \cr
    \code{drawType} \tab The type of draw to use for MXL models for the maximum simulated likelihood. Set to \code{'normal'} to use random normal draws or \code{'halton'} for Halton draws. \tab \code{'halton'} \cr
-   \code{printLevel} \tab The print level of the \code{nloptr} optimization loop. Type \code{nloptr.print.options()} for more details. \tab \code{0} \cr
-   \code{xtol_rel} \tab The relative \code{x} tolerance for the \code{nloptr} optimization loop. Type \code{nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
-   \code{xtol_abs} \tab The absolute \code{x} tolerance for the \code{nloptr} optimization loop. Type \code{nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
-   \code{ftol_rel} \tab The relative \code{f} tolerance for the \code{nloptr} optimization loop. Type \code{nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
-   \code{ftol_abs} \tab The absolute \code{f} tolerance for the \code{nloptr} optimization loop. Type \code{nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
-   \code{maxeval} \tab The maximum number of function evaluations for the \code{nloptr} optimization loop. Type \code{nloptr.print.options()} for more details. \tab \code{1000} \cr
+   \code{printLevel} \tab The print level of the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{0} \cr
+   \code{xtol_rel} \tab The relative \code{x} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
+   \code{xtol_abs} \tab The absolute \code{x} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
+   \code{ftol_rel} \tab The relative \code{f} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
+   \code{ftol_abs} \tab The absolute \code{f} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
+   \code{maxeval} \tab The maximum number of function evaluations for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1000} \cr
 }
 }
 \examples{
-For detailed examples, visit [https://github.com/jhelvy/logitr/tree/master/examples](https://github.com/jhelvy/logitr/tree/master/examples)
+# For detailed examples, visit https://jhelvy.github.io/logitr/articles/examples.html
 
+# Run a MNL model in the Preference Space:
+library(logitr)
+
+mnl_pref = logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
 }
 \keyword{logit}
 \keyword{logit,}

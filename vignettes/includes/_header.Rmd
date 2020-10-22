@@ -1,0 +1,8 @@
+\newcommand{\betaVec}{\mathbf{β}}
+\newcommand{\omegaVec}{\mathbf{ω}}
+\newcommand{\zetaVec}{\mathbf{ζ}}
+\newcommand{\deltaVec}{\mathbf{δ}}
+\newcommand{\gammaVec}{\mathbf{γ}}
+\newcommand{\epsilonVec}{\mathbf{ε}}
+\newcommand{\xVec}{\mathrm{\mathbf{x}}}
+\newcommand{\XVec}{\mathrm{\mathbf{X}}}
