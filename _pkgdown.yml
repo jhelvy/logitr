@@ -7,12 +7,16 @@ navbar:
   left:
     - icon: fa-home fa-lg
       href: index.html
+    - text: "Basic Usage"
+      href: articles/basic_usage.html
     - text: "Articles"
       menu:
         - text: "Utility Models in the Preference & WTP Space"
           href: articles/utility_models.html
     - text: "Examples"
       menu:
+        - text: "Estimating multinomial logit models"
+          href: articles/mnl_models.html
         - text: "Estimating mixed logit models"
           href: articles/mxl_models.html
     - text: "Functions"
@@ -23,12 +27,12 @@ navbar:
 
 reference:
 - title: "Estimate models"
-  desc: "Functions for estimating multinomial logit models with preference space and WTP space utility parameterizations." 
-  contents: 
+  desc: "Functions for estimating multinomial logit models with preference space and WTP space utility parameterizations."
+  contents:
   - logitr
 - title: "View results"
-  desc: "Functions for viewing the results of estimated models." 
-  contents: 
+  desc: "Functions for viewing the results of estimated models."
+  contents:
   - summary.logitr
   - coef.logitr
   - statusCodes

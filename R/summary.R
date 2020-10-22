@@ -11,7 +11,7 @@ printMultistartSummary = function(model) {
     cat('SUMMARY OF ALL MULTISTART RUNS:', '\n', '\n', sep='')
     print(model$multistartSummary)
     cat('---', '\n', sep='')
-    cat('To view meaning of status codes, use logitr.statusCodes()', '\n')
+    cat('To view meaning of status codes, use statusCodes()', '\n')
     cat('\n', sep='')
     cat('Summary of BEST model below (run with largest',
         'log-likelihood value)', sep=' ')
