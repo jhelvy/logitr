@@ -111,7 +111,7 @@
 <div id="the-data" class="section level1">
 <h1 class="hasAnchor">
 <a href="#the-data" class="anchor"></a>The data</h1>
-<p>This example uses the <code>Yogurt</code> data set from Jain et al. <span class="citation">(1994)</span>, reformatted for use in the <strong>logitr</strong> package. The data set contains 2,412 choice observations from a series of yogurt purchases by a panel of 100 households in Springfield, Missouri, over a roughly two-year period. The data were collected by optical scanners and contain information about the price, brand, and a “feature” variable, which identifies whether a newspaper advertisement was shown to the customer. There are four brands of yogurt: Yoplait, Dannon, Weight Watchers, and Hiland, with market shares of 34%, 40%, 23% and 3%, respectively.</p>
+<p>This example uses the <a href="https://jhelvy.github.io/logitr/reference/yogurt.html">yogurt</a> data set from Jain et al. <span class="citation">(1994)</span>. The data set contains 2,412 choice observations from a series of yogurt purchases by a panel of 100 households in Springfield, Missouri, over a roughly two-year period. The data were collected by optical scanners and contain information about the price, brand, and a “feature” variable, which identifies whether a newspaper advertisement was shown to the customer. There are four brands of yogurt: Yoplait, Dannon, Weight Watchers, and Hiland, with market shares of 34%, 40%, 23% and 3%, respectively.</p>
 <p>In the utility models described below, the data variables are represented as follows:</p>
 <div style="width:550px">
 <table class="table">
@@ -130,24 +130,23 @@
 </tr>
 <tr class="even">
 <td><span class="math inline">\(x_{j}^{\mathrm{FEAT}}\)</span></td>
-<td>A dummy variable for whether the newspaper advertisement was shown to the customer.</td>
+<td>Dummy variable for whether the newspaper advertisement was shown to the customer.</td>
 </tr>
 <tr class="odd">
 <td><span class="math inline">\(x_{j}^{\mathrm{DANNON}}\)</span></td>
-<td>A dummary variable for the “Dannon” brand.</td>
+<td>Dummy variable for the “Dannon” brand.</td>
 </tr>
 <tr class="even">
 <td><span class="math inline">\(x_{j}^{\mathrm{HIGHLAND}}\)</span></td>
-<td>A dummary variable for the “Highland” brand.</td>
+<td>Dummy variable for the “Highland” brand.</td>
 </tr>
 <tr class="odd">
 <td><span class="math inline">\(x_{j}^{\mathrm{YOPLAIT}}\)</span></td>
-<td>A dummary variable for the “Yoplait” brand.</td>
+<td>Dummy variable for the “Yoplait” brand.</td>
 </tr>
 </tbody>
 </table>
-<div>
-
+</div>
 </div>
 <div id="preference-space-model" class="section level1">
 <h1 class="hasAnchor">
@@ -186,15 +185,15 @@ Done!</code></pre>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mxl_pref</span><span class="op">)</span></pre></div>
 <pre><code>=================================================
-MODEL SUMMARY: 
-                         
+MODEL SUMMARY:
+
 Model Space:   Preference
 Model Run:         1 of 1
 Iterations:            36
 Elapsed Time:   0h:2m:39s
 Weights Used?:      FALSE
 
-Model Coefficients: 
+Model Coefficients:
             Estimate StdError    tStat   pVal signif
 price      -0.392768 0.026708 -14.7061 0.0000    ***
 feat.mu     0.351933 0.204608   1.7200 0.0856      .
@@ -205,8 +204,8 @@ feat.sigma  2.360350 0.515567   4.5782 0.0000    ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Model Fit Values: 
-                                     
+Model Fit Values:
+
 Log.Likelihood.         -2645.9202707
 Null.Log.Likelihood.    -3343.7419990
 AIC.                     5303.8405000
@@ -215,7 +214,7 @@ McFadden.R2.                0.2086948
 Adj..McFadden.R2            0.2069005
 Number.of.Observations.  2412.0000000
 
-Summary of 10k Draws for Random Coefficients: 
+Summary of 10k Draws for Random Coefficients:
        Min.   1st Qu.    Median      Mean  3rd Qu.     Max.
 1 -8.822073 -1.240571 0.3511815 0.3499323 1.942267 8.875534</code></pre>
 <p>View the estimated model coefficients:</p>
@@ -284,15 +283,15 @@ Done!</code></pre>
 <div class="sourceCode" id="cb14"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mxl_wtp</span><span class="op">)</span></pre></div>
 <pre><code>=================================================
-MODEL SUMMARY: 
-                                 
+MODEL SUMMARY:
+
 Model Space:   Willingness-to-Pay
 Model Run:                 1 of 1
 Iterations:                   112
 Elapsed Time:           0h:9m:41s
 Weights Used?:              FALSE
 
-Model Coefficients: 
+Model Coefficients:
             Estimate StdError    tStat   pVal signif
 lambda      0.392768 0.026708  14.7062 0.0000    ***
 feat.mu     0.896032 0.534239   1.6772 0.0936      .
@@ -303,8 +302,8 @@ feat.sigma  6.009556 1.323045   4.5422 0.0000    ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Model Fit Values: 
-                                     
+Model Fit Values:
+
 Log.Likelihood.         -2645.9202707
 Null.Log.Likelihood.    -3343.7419990
 AIC.                     5303.8405000
@@ -313,7 +312,7 @@ McFadden.R2.                0.2086948
 Adj..McFadden.R2            0.2069005
 Number.of.Observations.  2412.0000000
 
-Summary of 10k Draws for Random Coefficients: 
+Summary of 10k Draws for Random Coefficients:
        Min.   1st Qu.    Median      Mean  3rd Qu.    Max.
 1 -22.46139 -3.158553 0.8941192 0.8909386 4.945094 22.5975</code></pre>
 <p>View the estimated model coefficients:</p>
@@ -376,7 +375,5 @@ Summary of 10k Draws for Random Coefficients:
   
 
 
-  </div>
-</div>
-</body>
+  </body>
 </html>

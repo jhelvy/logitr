@@ -167,14 +167,16 @@
     <pre class="examples"><div class='input'><span class='co'># Run a MNL model in the Preference Space with a multistart:</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>yogurt</span><span class='op'>)</span>
 
-<span class='va'>mnl_pref</span> <span class='op'>=</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
-  data       <span class='op'>=</span> <span class='va'>yogurt</span>,
-  choiceName <span class='op'>=</span> <span class='st'>'choice'</span>,
-  obsIDName  <span class='op'>=</span> <span class='st'>'obsID'</span>,
-  parNames   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'price'</span>, <span class='st'>'feat'</span>, <span class='st'>'dannon'</span>, <span class='st'>'hiland'</span>, <span class='st'>'yoplait'</span><span class='op'>)</span>,
-  options    <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+<span class='va'>mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
+  data <span class='op'>=</span> <span class='va'>yogurt</span>,
+  choiceName <span class='op'>=</span> <span class='st'>"choice"</span>,
+  obsIDName <span class='op'>=</span> <span class='st'>"obsID"</span>,
+  parNames <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"dannon"</span>, <span class='st'>"hiland"</span>, <span class='st'>"yoplait"</span><span class='op'>)</span>,
+  options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
     numMultiStarts <span class='op'>=</span> <span class='fl'>5</span>,
-    keepAllRuns    <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
+    keepAllRuns <span class='op'>=</span> <span class='cn'>TRUE</span>
+  <span class='op'>)</span>
+<span class='op'>)</span>
 </div><div class='output co'>#&gt; Running Multistart 1 of 5 
 #&gt; Running Multistart 2 of 5 
 #&gt; Running Multistart 3 of 5 

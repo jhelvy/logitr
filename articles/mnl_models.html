@@ -111,7 +111,7 @@
 <div id="the-data" class="section level1">
 <h1 class="hasAnchor">
 <a href="#the-data" class="anchor"></a>The data</h1>
-<p>This example uses the <code>Yogurt</code> data set from Jain et al. <span class="citation">(1994)</span>, reformatted for use in the <strong>logitr</strong> package. The data set contains 2,412 choice observations from a series of yogurt purchases by a panel of 100 households in Springfield, Missouri, over a roughly two-year period. The data were collected by optical scanners and contain information about the price, brand, and a “feature” variable, which identifies whether a newspaper advertisement was shown to the customer. There are four brands of yogurt: Yoplait, Dannon, Weight Watchers, and Hiland, with market shares of 34%, 40%, 23% and 3%, respectively.</p>
+<p>This example uses the <a href="https://jhelvy.github.io/logitr/reference/yogurt.html">yogurt</a> data set from Jain et al. <span class="citation">(1994)</span>. The data set contains 2,412 choice observations from a series of yogurt purchases by a panel of 100 households in Springfield, Missouri, over a roughly two-year period. The data were collected by optical scanners and contain information about the price, brand, and a “feature” variable, which identifies whether a newspaper advertisement was shown to the customer. There are four brands of yogurt: Yoplait, Dannon, Weight Watchers, and Hiland, with market shares of 34%, 40%, 23% and 3%, respectively.</p>
 <p>In the utility models described below, the data variables are represented as follows:</p>
 <div style="width:550px">
 <table class="table">
@@ -130,24 +130,23 @@
 </tr>
 <tr class="even">
 <td><span class="math inline">\(x_{j}^{\mathrm{FEAT}}\)</span></td>
-<td>A dummy variable for whether the newspaper advertisement was shown to the customer.</td>
+<td>Dummy variable for whether the newspaper advertisement was shown to the customer.</td>
 </tr>
 <tr class="odd">
 <td><span class="math inline">\(x_{j}^{\mathrm{DANNON}}\)</span></td>
-<td>A dummary variable for the “Dannon” brand.</td>
+<td>Dummy variable for the “Dannon” brand.</td>
 </tr>
 <tr class="even">
 <td><span class="math inline">\(x_{j}^{\mathrm{HIGHLAND}}\)</span></td>
-<td>A dummary variable for the “Highland” brand.</td>
+<td>Dummy variable for the “Highland” brand.</td>
 </tr>
 <tr class="odd">
 <td><span class="math inline">\(x_{j}^{\mathrm{YOPLAIT}}\)</span></td>
-<td>A dummary variable for the “Yoplait” brand.</td>
+<td>Dummy variable for the “Yoplait” brand.</td>
 </tr>
 </tbody>
 </table>
-<div>
-
+</div>
 </div>
 <div id="preference-space-model" class="section level1">
 <h1 class="hasAnchor">
@@ -217,11 +216,11 @@ Done!</code></pre>
 <span class="va">wtp_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, priceName <span class="op">=</span>  <span class="st">"price"</span><span class="op">)</span>
 <span class="va">wtp_mnl_pref</span></pre></div>
 <pre><code>##          Estimate StdError    tStat  pVal signif
-## lambda   0.366584 0.024258  15.1120 0e+00    ***
-## feat     1.340568 0.357456   3.7503 2e-04    ***
-## dannon   1.749079 0.199047   8.7872 0e+00    ***
-## hiland  -8.386650 0.507888 -16.5128 0e+00    ***
-## yoplait  3.752905 0.468941   8.0029 0e+00    ***</code></pre>
+## lambda   0.366584 0.024360  15.0484 0e+00    ***
+## feat     1.340568 0.356854   3.7566 2e-04    ***
+## dannon   1.749079 0.199259   8.7779 0e+00    ***
+## hiland  -8.386650 0.508581 -16.4903 0e+00    ***
+## yoplait  3.752905 0.469761   7.9890 0e+00    ***</code></pre>
 </div>
 <div id="wtp-space-model" class="section level1">
 <h1 class="hasAnchor">
@@ -385,7 +384,5 @@ Done!</code></pre>
   
 
 
-  </div>
-</div>
-</body>
+  </body>
 </html>
