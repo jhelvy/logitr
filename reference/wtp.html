@@ -6,13 +6,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Returns the computed WTP from a preference space model. — wtp • logitr</title>
+<title>Get WTP from a preference space model — wtp • logitr</title>
 
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Returns the computed WTP from a preference space model. — wtp" />
+<meta property="og:title" content="Get WTP from a preference space model — wtp" />
 <meta property="og:description" content="Returns the computed WTP from a preference space model." />
 
 
@@ -87,6 +87,9 @@
 <li>
   <a href="../articles/basic_usage.html">Basic Usage</a>
 </li>
+<li>
+  <a href="../reference/index.html">Functions</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
@@ -114,9 +117,6 @@
     </li>
   </ul>
 </li>
-<li>
-  <a href="../reference/index.html">Functions</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -138,7 +138,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Returns the computed WTP from a preference space model.</h1>
+    <h1>Get WTP from a preference space model</h1>
     
     <div class="hidden name"><code>wtp.Rd</code></div>
     </div>
@@ -164,7 +164,7 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame of the WTP estimates.#'</p>
+    <p>A data frame of the WTP estimates.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Willingness to pay is computed by dividing the estimated parameters of a utility model in the "preference" space by the price parameter. Uncertainty is handled via simulation.</p>
@@ -183,11 +183,11 @@
 <span class='co'># Get the WTP implied from the preference space model</span>
 <span class='fu'>wtp</span><span class='op'>(</span><span class='va'>mnl_pref</span>, priceName <span class='op'>=</span> <span class='st'>'price'</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;          Estimate StdError    tStat  pVal signif
-#&gt; lambda   0.366584 0.024369  15.0431 0e+00    ***
-#&gt; feat     1.340568 0.358714   3.7372 2e-04    ***
-#&gt; dannon   1.749079 0.199566   8.7644 0e+00    ***
-#&gt; hiland  -8.386650 0.507765 -16.5168 0e+00    ***
-#&gt; yoplait  3.752905 0.469587   7.9919 0e+00    ***</div></pre>
+#&gt; lambda   0.366584 0.024394  15.0275 0e+00    ***
+#&gt; feat     1.340568 0.358637   3.7380 2e-04    ***
+#&gt; dannon   1.749079 0.199858   8.7516 0e+00    ***
+#&gt; hiland  -8.386650 0.507803 -16.5156 0e+00    ***
+#&gt; yoplait  3.752905 0.469803   7.9882 0e+00    ***</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
