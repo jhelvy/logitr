@@ -1,6 +1,6 @@
 template:
   params:
-    bootswatch: cosmo
+    bootswatch: flatly
 
 navbar:
   title: "logitr"
@@ -9,6 +9,8 @@ navbar:
       href: index.html
     - text: "Basic Usage"
       href: articles/basic_usage.html
+    - text: "Functions"
+      href: reference/index.html
     - text: "Articles"
       menu:
         - text: "Utility Models in the Preference & WTP Space"
@@ -19,8 +21,6 @@ navbar:
           href: articles/mnl_models.html
         - text: "Estimating mixed logit models"
           href: articles/mxl_models.html
-    - text: "Functions"
-      href: reference/index.html
   right:
    - icon: fa-github
      href: https://github.com/jhelvy/logitr

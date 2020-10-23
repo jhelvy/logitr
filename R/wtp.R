@@ -7,7 +7,8 @@
 #' Returns the computed WTP from a preference space model.
 #' @keywords logitr, wtp
 #'
-#' @param model The output of a "preference space" model estimated using the `logitr()` function.
+#' @param model The output of a "preference space" model estimated
+#' using the `logitr()` function.
 #' @param priceName The name of the parameter that identifies price.
 #'
 #' @details
@@ -19,46 +20,47 @@
 #' # Run a MNL model in the Preference Space:
 #' library(logitr)
 #'
-#' mnl_pref = logitr(
-#'   data       = yogurt,
-#'   choiceName = 'choice',
-#'   obsIDName  = 'obsID',
-#'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
+#' mnl_pref <- logitr(
+#'   data = yogurt,
+#'   choiceName = "choice",
+#'   obsIDName = "obsID",
+#'   parNames = c("price", "feat", "dannon", "hiland", "yoplait")
+#' )
 #'
 #' # Get the WTP implied from the preference space model
-#' wtp(mnl_pref, priceName = 'price')
-wtp.logitr = function(model, priceName) {
-    if (is.logitr(model) == FALSE) {
-        stop('Model must be estimated using the"logitr" package')
-    }
-    if (is.null(priceName)) {
-        stop('Must provide priceName to compute WTP')
-    }
-    model = allRunsCheck(model)
-    if (model$modelSpace == 'pref') {
-        return(getPrefSpaceWtp(model, priceName))
-    } else if (model$modelSpace == 'wtp') {
-        wtp.mean = coef(model)
-        wtp.se   = model$standErrs
-        return(getCoefTable(wtp.mean, wtp.se, model$numObs, model$numParams))
-    }
+#' wtp(mnl_pref, priceName = "price")
+wtp <- function(model, priceName) {
+  if (is.logitr(model) == FALSE) {
+    stop('Model must be estimated using the"logitr" package')
+  }
+  if (is.null(priceName)) {
+    stop("Must provide priceName to compute WTP")
+  }
+  model <- allRunsCheck(model)
+  if (model$modelSpace == "pref") {
+    return(getPrefSpaceWtp(model, priceName))
+  } else if (model$modelSpace == "wtp") {
+    wtp.mean <- coef(model)
+    wtp.se <- model$standErrs
+    return(getCoefTable(wtp.mean, wtp.se, model$numObs, model$numParams))
+  }
 }
 
-getPrefSpaceWtp = function(model, priceName) {
-    # Compute mean WTP
-    coefs             = coef(model)
-    priceID           = which(names(coefs)==priceName)
-    pricePar          = -1*coefs[priceID]
-    wtp.mean          = coefs / pricePar
-    wtp.mean[priceID] = -1*coefs[priceID]
-    names(wtp.mean)[priceID] = 'lambda'
-    # Compute standErrs using simulation (draws from the varcov matrix)
-    draws      = getUncertaintyDraws(model, 10^5)
-    priceDraws = repmatCol(-1*draws[priceName], ncol(draws))
-    wtpDraws   = draws / priceDraws
-    wtpDraws[,priceID] = draws[,priceID]
-    wtp.se = apply(wtpDraws, 2, sd)
-    return(getCoefTable(wtp.mean, wtp.se, model$numObs, model$numParams))
+getPrefSpaceWtp <- function(model, priceName) {
+  # Compute mean WTP
+  coefs <- coef(model)
+  priceID <- which(names(coefs) == priceName)
+  pricePar <- -1 * coefs[priceID]
+  wtp.mean <- coefs / pricePar
+  wtp.mean[priceID] <- -1 * coefs[priceID]
+  names(wtp.mean)[priceID] <- "lambda"
+  # Compute standErrs using simulation (draws from the varcov matrix)
+  draws <- getUncertaintyDraws(model, 10^5)
+  priceDraws <- repmatCol(-1 * draws[priceName], ncol(draws))
+  wtpDraws <- draws / priceDraws
+  wtpDraws[, priceID] <- draws[, priceID]
+  wtp.se <- apply(wtpDraws, 2, sd)
+  return(getCoefTable(wtp.mean, wtp.se, model$numObs, model$numParams))
 }
 
 #' Compare WTP from preference and WTP space models
@@ -80,40 +82,42 @@ getPrefSpaceWtp = function(model, priceName) {
 #' # Run a MNL model in the Preference Space:
 #' library(logitr)
 #'
-#' mnl_pref = logitr(
-#'   data       = yogurt,
-#'   choiceName = 'choice',
-#'   obsIDName  = 'obsID',
-#'   parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
+#' mnl_pref <- logitr(
+#'   data = yogurt,
+#'   choiceName = "choice",
+#'   obsIDName = "obsID",
+#'   parNames = c("price", "feat", "dannon", "hiland", "yoplait")
+#' )
 #'
 #' # Get the WTP implied from the preference space model
-#' wtp_mnl_pref = wtp(mnl_pref, priceName = 'price')
+#' wtp_mnl_pref <- wtp(mnl_pref, priceName = "price")
 #'
 #' # Run a MNL model in the WTP Space:
-#' mnl_wtp = logitr(
-#'   data       = yogurt,
-#'   choiceName = 'choice',
-#'   obsIDName  = 'obsID',
-#'   parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
-#'   priceName  = 'price',
-#'   modelSpace = 'wtp',
-#'   options = list(startVals = wtp_mnl_pref$Estimate))
+#' mnl_wtp <- logitr(
+#'   data = yogurt,
+#'   choiceName = "choice",
+#'   obsIDName = "obsID",
+#'   parNames = c("feat", "dannon", "hiland", "yoplait"),
+#'   priceName = "price",
+#'   modelSpace = "wtp",
+#'   options = list(startVals = wtp_mnl_pref$Estimate)
+#' )
 #'
 #' # Compare the WTP between the two spaces:
-#' wtpCompare(mnl_pref, mnl_wtp, priceName = 'price')
-wtpCompare.logitr = function(model_pref, model_wtp, priceName) {
-    if (is.logitr(model_pref)==FALSE | is.logitr(model_wtp)==FALSE) {
-        stop('Models must be estimated using the "logitr" package')
-    }
-    model_pref = allRunsCheck(model_pref)
-    model_wtp = allRunsCheck(model_wtp)
-    pref = wtp.logitr(model_pref, priceName)$Estimate
-    pref = c(pref, model_pref$logLik)
-    wtp  = coef(model_wtp)
-    wtp  = c(wtp, model_wtp$logLik)
-    names(pref)[length(pref)] = 'logLik'
-    names(wtp)[length(wtp)]   = 'logLik'
-    compare = data.frame(pref=pref, wtp=wtp)
-    compare$difference = round(compare$wtp - compare$pref, 8)
-    return(compare)
+#' wtpCompare(mnl_pref, mnl_wtp, priceName = "price")
+wtpCompare <- function(model_pref, model_wtp, priceName) {
+  if (is.logitr(model_pref) == FALSE | is.logitr(model_wtp) == FALSE) {
+    stop('Models must be estimated using the "logitr" package')
+  }
+  model_pref <- allRunsCheck(model_pref)
+  model_wtp <- allRunsCheck(model_wtp)
+  pref <- wtp(model_pref, priceName)$Estimate
+  pref <- c(pref, model_pref$logLik)
+  wtp <- coef(model_wtp)
+  wtp <- c(wtp, model_wtp$logLik)
+  names(pref)[length(pref)] <- "logLik"
+  names(wtp)[length(wtp)] <- "logLik"
+  compare <- data.frame(pref = pref, wtp = wtp)
+  compare$difference <- round(compare$wtp - compare$pref, 8)
+  return(compare)
 }

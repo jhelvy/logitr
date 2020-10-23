@@ -2,10 +2,7 @@
 
 S3method(coef,logitr)
 S3method(summary,logitr)
-S3method(wtp,logitr)
-S3method(wtpCompare,logitr)
 export(logitr)
-export(sampleSizer)
 export(simulateShares)
 export(statusCodes)
 export(wtp)

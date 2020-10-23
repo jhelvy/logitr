@@ -6,3 +6,5 @@
 ^pkgdown$
 ^\.github$
 vignettes/_includes
+^LICENSE\.md$
+^logitr\.Rproj$
