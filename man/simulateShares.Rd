@@ -26,16 +26,18 @@ on an estimated model.
 # Run a MNL model in the Preference Space:
 library(logitr)
 
-mnl_pref = logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
+mnl_pref <- logitr(
+  data = yogurt,
+  choiceName = "choice",
+  obsIDName = "obsID",
+  parNames = c("price", "feat", "dannon", "hiland", "yoplait")
+)
 
 # Create a set of alternatives for which to simulate shares:
 alts <- subset(yogurt, obsID == 42,
-       select = c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
-row.names(alts) <- c('dannon', 'hiland', 'weight', 'yoplait')
+  select = c("feat", "price", "dannon", "hiland", "yoplait")
+)
+row.names(alts) <- c("dannon", "hiland", "weight", "yoplait")
 alts
 
 # Run the simulation using the estimated preference space MNL model:

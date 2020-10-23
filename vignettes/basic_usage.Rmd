@@ -4,10 +4,10 @@ output:
   html_document:
     number_sections: false
     toc: no
-bibliography: library.bib
+bibliography: "`r here::here('vignettes', 'library.bib')`"
 ---
 
-```{r, child=here::here('vignettes', 'includes', '_header.Rmd')}
+```{r, child=here::here('vignettes', 'includes', 'header.Rmd')}
 # Imports custom latex functions for equations
 ```
 
@@ -44,7 +44,7 @@ Unlike similar packages like [**mlogit**](https://cran.r-project.org/web/package
 
 The `logitr()` function assumes that the deterministic part of the utility function is linear in parameters, i.e.:
 
-```{r, child=here::here('vignettes', 'includes', '_utilityPreferenceObserved.Rmd')}
+```{r, child=here::here('vignettes', 'includes', 'utilityPreferenceObserved.Rmd')}
 ```
 
 Accordingly, each parameter in the `parNames` argument is an additive part of $v_{j}$.

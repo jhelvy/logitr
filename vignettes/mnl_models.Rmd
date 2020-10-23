@@ -4,7 +4,7 @@ output:
   html_document:
     number_sections: false
     toc: no
-bibliography: library.bib
+bibliography: "`r here::here('vignettes', 'library.bib')`"
 ---
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -19,14 +19,14 @@ wtp_mnl_comparison <- readRDS(here::here('vignettes', 'results', 'wtp_mnl_compar
 
 # The data
 
-```{r, child=here::here('vignettes', 'includes', '_yogurtDataDescription.Rmd')}
+```{r, child=here::here('vignettes', 'includes', 'yogurtDataDescription.Rmd')}
 ```
 
 # Preference space model
 
 This example will estimate the following homogeneous multinomial logit model in the preference space:
 
-```{r, child=here::here('vignettes', 'includes', '_mnlPrefExample.Rmd')}
+```{r, child=here::here('vignettes', 'includes', 'mnlPrefExample.Rmd')}
 ```
 
 where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ have units of utility.
@@ -74,7 +74,7 @@ wtp_mnl_pref
 
 This example will estimate the following homogeneous multinomial logit model in the WTP space:
 
-```{r, child=here::here('vignettes', 'includes', '_mnlWtpExample.Rmd')}
+```{r, child=here::here('vignettes', 'includes', 'mnlWtpExample.Rmd')}
 ```
 
 where the parameters $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ have units of dollars and $\lambda$ is the scale parameter.

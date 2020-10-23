@@ -100,11 +100,12 @@ e.g. \code{options = list(...)}.\tabular{lll}{
 # Run a MNL model in the Preference Space:
 library(logitr)
 
-mnl_pref = logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
+mnl_pref <- logitr(
+  data = yogurt,
+  choiceName = "choice",
+  obsIDName = "obsID",
+  parNames = c("price", "feat", "dannon", "hiland", "yoplait")
+)
 }
 \keyword{logit}
 \keyword{logit,}

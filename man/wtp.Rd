@@ -7,7 +7,8 @@
 wtp(model, priceName)
 }
 \arguments{
-\item{model}{The output of a "preference space" model estimated using the \code{logitr()} function.}
+\item{model}{The output of a "preference space" model estimated
+using the \code{logitr()} function.}
 
 \item{priceName}{The name of the parameter that identifies price.}
 }
@@ -24,14 +25,15 @@ Willingness to pay is computed by dividing the estimated parameters of a utility
 # Run a MNL model in the Preference Space:
 library(logitr)
 
-mnl_pref = logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
+mnl_pref <- logitr(
+  data = yogurt,
+  choiceName = "choice",
+  obsIDName = "obsID",
+  parNames = c("price", "feat", "dannon", "hiland", "yoplait")
+)
 
 # Get the WTP implied from the preference space model
-wtp(mnl_pref, priceName = 'price')
+wtp(mnl_pref, priceName = "price")
 }
 \keyword{logitr,}
 \keyword{wtp}

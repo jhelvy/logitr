@@ -4,10 +4,10 @@ output:
   html_document:
     number_sections: false
     toc: no
-bibliography: library.bib
+bibliography: "`r here::here('vignettes', 'library.bib')`"
 ---
 
-```{r, child=here::here('vignettes','includes', '_header.Rmd')}
+```{r, child=here::here('vignettes','includes', 'header.Rmd')}
 # Imports custom latex functions for equations
 ```
 
@@ -24,29 +24,29 @@ The random utility model is a well-established framework in many fields for esti
 
 Adopting the same notation as in Helveston et al. [-@Helveston2018], consider the following utility model:
 
-```{r, child=here::here('vignettes', 'includes', '_utility.Rmd')}
+```{r, child=here::here('vignettes', 'includes', 'utility.Rmd')}
 ```
 
 where $\betaVec^{*}$ is the vector of coefficients for non-price attributes $\xVec_{j}$, $\alpha^{*}$ is the coefficient for price $p_{j}$, and the error term, $\varepsilon^{*}_{j}$, is an IID random variable with a Gumbel extreme value distribution of mean zero and variance $\sigma^2(\pi^2/6)$. This model is not identified since there exists an infinite set of combinations of values for $\betaVec^{*}$, $\alpha^{*}$, and $\sigma$ that produce the same choice probabilities. In order to specify an identifiable model, the modeler must normalize equation (\ref{eq:utility}). One approach is to normalize the scale of the error term by dividing equation (\ref{eq:utility}) by $\sigma$, producing the "preference space" utility specification:
 
-```{r, child=here::here('vignettes', 'includes', '_utilityPreferenceScaled.Rmd')}
+```{r, child=here::here('vignettes', 'includes', 'utilityPreferenceScaled.Rmd')}
 ```
 
 The typical preference space parameterization of the multinomial logit (MNL) model can then be written by rewriting equation (\ref{eq:utilityPreferenceScaled}) with $u_j = (u^*_j / \sigma)$, $\betaVec = (\betaVec^{*} / \sigma)$, $\alpha = (\alpha^{*} / \sigma)$, and $\varepsilon_{j} = (\varepsilon^{*}_{j} / \sigma)$:
 
-```{r, child=here::here('vignettes', 'includes', '_utilityPreference.Rmd')}
+```{r, child=here::here('vignettes', 'includes', 'utilityPreference.Rmd')}
 ```
 
 The vector $\betaVec$ represents the marginal utility for changes in each non-price attribute, and $\alpha$ represents the marginal utility obtained from price reductions. In addition, the coefficients $\betaVec$ and $\alpha$ are measured in units of *utility*, which only has relative rather than absolute meaning.
 
 The alternative normalization approach is to normalize equation (\ref{eq:utility}) by $\alpha^*$ instead of $\sigma$, producing the "willingness-to-pay (WTP) space" utility specification:
 
-```{r, child=here::here('vignettes', 'includes', '_utilityWtpScaled.Rmd')}
+```{r, child=here::here('vignettes', 'includes', 'utilityWtpScaled.Rmd')}
 ```
 
 Since the error term in equation is scaled by $\lambda^2 = \sigma^2/(\alpha^{*})^2$, we can rewrite equation (\ref{eq:utilityWtpScaled}) by multiplying both sides by $\lambda= (\alpha^{*} / \sigma$) and renaming $u_j = (\lambda u^*_j / \alpha^*)$, $\omegaVec = (\betaVec^{*} / \alpha^{*}$), and $\varepsilon_j = (\lambda \varepsilon^*_j / \alpha^*)$:
 
-```{r, child=here::here('vignettes', 'includes', '_utilityWtp.Rmd')}
+```{r, child=here::here('vignettes', 'includes', 'utilityWtp.Rmd')}
 ```
 
 Here $\omegaVec$ represents the marginal WTP for changes in each non-price attribute, and $\lambda$ represents the scale of the deterministic portion of utility relative to the standardized scale of the random error term.

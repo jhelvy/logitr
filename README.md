@@ -1,6 +1,4 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # logitr
 
 **logitr** estimates multinomial (MNL) and mixed logit (MXL) models in

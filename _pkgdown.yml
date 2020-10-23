@@ -45,3 +45,7 @@ reference:
   desc: "Functions for simulating expected shares from a set of alternatives."
   contents:
   - simulateShares
+- title: "Data"
+  desc: "Descriptions of data included with this package"
+  contents:
+  - yogurt

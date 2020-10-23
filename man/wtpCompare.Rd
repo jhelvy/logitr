@@ -27,27 +27,29 @@ Willingness to pay (WTP) is first computed from the preference space model by di
 # Run a MNL model in the Preference Space:
 library(logitr)
 
-mnl_pref = logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
+mnl_pref <- logitr(
+  data = yogurt,
+  choiceName = "choice",
+  obsIDName = "obsID",
+  parNames = c("price", "feat", "dannon", "hiland", "yoplait")
+)
 
 # Get the WTP implied from the preference space model
-wtp_mnl_pref = wtp(mnl_pref, priceName = 'price')
+wtp_mnl_pref <- wtp(mnl_pref, priceName = "price")
 
 # Run a MNL model in the WTP Space:
-mnl_wtp = logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
-  priceName  = 'price',
-  modelSpace = 'wtp',
-  options = list(startVals = wtp_mnl_pref$Estimate))
+mnl_wtp <- logitr(
+  data = yogurt,
+  choiceName = "choice",
+  obsIDName = "obsID",
+  parNames = c("feat", "dannon", "hiland", "yoplait"),
+  priceName = "price",
+  modelSpace = "wtp",
+  options = list(startVals = wtp_mnl_pref$Estimate)
+)
 
 # Compare the WTP between the two spaces:
-wtpCompare(mnl_pref, mnl_wtp, priceName = 'price')
+wtpCompare(mnl_pref, mnl_wtp, priceName = "price")
 }
 \keyword{logitr,}
 \keyword{wtp}

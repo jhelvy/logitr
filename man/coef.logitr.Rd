@@ -19,11 +19,12 @@ Returns the coefficients of an estimated model of the 'logitr' class.
 # Run a MNL model in the Preference Space:
 data(yogurt)
 
-mnl_pref = logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
+mnl_pref <- logitr(
+  data = yogurt,
+  choiceName = "choice",
+  obsIDName = "obsID",
+  parNames = c("price", "feat", "dannon", "hiland", "yoplait")
+)
 
 # Get the model coefficients:
 coef(mnl_pref)

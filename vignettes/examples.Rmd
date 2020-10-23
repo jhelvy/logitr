@@ -4,7 +4,9 @@ output:
   html_document:
     number_sections: false
     toc: no
-bibliography: library.bib
 ---
 
+- [Estimating multinomial logit models](mnl_models.html)
 - [Estimating mixed logit models](mxl_models.html)
+
+

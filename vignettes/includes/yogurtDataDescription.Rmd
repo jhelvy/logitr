@@ -1,0 +1,13 @@
+This example uses the [yogurt](https://jhelvy.github.io/logitr/reference/yogurt.html) data set from Jain et al. [-@Jain1994]. The data set contains 2,412 choice observations from a series of yogurt purchases by a panel of 100 households in Springfield, Missouri, over a roughly two-year period. The data were collected by optical scanners and contain information about the price, brand, and a "feature" variable, which identifies whether a newspaper advertisement was shown to the customer. There are four brands of yogurt: Yoplait, Dannon, Weight Watchers, and Hiland, with market shares of 34%, 40%, 23% and 3%, respectively.
+
+In the utility models described below, the data variables are represented as follows:
+
+<div style="width:550px">
+| Symbol | Variable                             |
+|--------|--------------------------------------|
+| $p$                        | The price in US dollars.       |
+| $x_{j}^{\mathrm{FEAT}}$     | Dummy variable for whether the newspaper advertisement was shown to the customer.    |
+| $x_{j}^{\mathrm{DANNON}}$   | Dummy variable for the "Dannon" brand.   |
+| $x_{j}^{\mathrm{HIGHLAND}}$ | Dummy variable for the "Highland" brand. |
+| $x_{j}^{\mathrm{YOPLAIT}}$  | Dummy variable for the "Yoplait" brand.  |
+</div>

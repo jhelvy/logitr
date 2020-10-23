@@ -19,14 +19,16 @@ Prints a summary of a model estimated using the \code{logitr()} function
 # Run a MNL model in the Preference Space with a multistart:
 data(yogurt)
 
-mnl_pref = logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
-  options    = list(
+mnl_pref <- logitr(
+  data = yogurt,
+  choiceName = "choice",
+  obsIDName = "obsID",
+  parNames = c("price", "feat", "dannon", "hiland", "yoplait"),
+  options = list(
     numMultiStarts = 5,
-    keepAllRuns    = TRUE))
+    keepAllRuns = TRUE
+  )
+)
 
 # View a summary of the model:
 summary(mnl_pref)

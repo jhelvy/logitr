@@ -4,7 +4,7 @@ output:
   html_document:
     number_sections: false
     toc: no
-bibliography: library.bib
+bibliography: "`r here::here('vignettes', 'library.bib')`"
 ---
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -19,14 +19,14 @@ wtp_mxl_comparison <- readRDS(here::here('vignettes', 'results', 'wtp_mxl_compar
 
 # The data
 
-```{r, child=here::here('vignettes', 'includes', '_yogurtDataDescription.Rmd')}
+```{r, child=here::here('vignettes', 'includes', 'yogurtDataDescription.Rmd')}
 ```
 
 # Preference space model
 
 This example will estimate the following mixed logit model in the preference space:
 
-```{r, child=here::here('vignettes', 'includes', '_mxlPrefExample.Rmd')}
+```{r, child=here::here('vignettes', 'includes', 'mxlPrefExample.Rmd')}
 ```
 
 where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ have units of utility, and the parameter for $x_{j}^{\mathrm{FEAT}}$ is normally distributed.
@@ -64,15 +64,15 @@ summary(mxl_pref)
 ```
 ```
 =================================================
-MODEL SUMMARY: 
-                         
+MODEL SUMMARY:
+
 Model Space:   Preference
 Model Run:         1 of 1
 Iterations:            36
 Elapsed Time:   0h:2m:39s
 Weights Used?:      FALSE
 
-Model Coefficients: 
+Model Coefficients:
             Estimate StdError    tStat   pVal signif
 price      -0.392768 0.026708 -14.7061 0.0000    ***
 feat.mu     0.351933 0.204608   1.7200 0.0856      .
@@ -83,8 +83,8 @@ feat.sigma  2.360350 0.515567   4.5782 0.0000    ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Model Fit Values: 
-                                     
+Model Fit Values:
+
 Log.Likelihood.         -2645.9202707
 Null.Log.Likelihood.    -3343.7419990
 AIC.                     5303.8405000
@@ -93,7 +93,7 @@ McFadden.R2.                0.2086948
 Adj..McFadden.R2            0.2069005
 Number.of.Observations.  2412.0000000
 
-Summary of 10k Draws for Random Coefficients: 
+Summary of 10k Draws for Random Coefficients:
        Min.   1st Qu.    Median      Mean  3rd Qu.     Max.
 1 -8.822073 -1.240571 0.3511815 0.3499323 1.942267 8.875534
 ```
@@ -117,7 +117,7 @@ wtp_mxl_pref
 
 This example will estimate the following mixed logit model in the WTP space:
 
-```{r, child=here::here('vignettes', 'includes', '_mxlWtpExample.Rmd')}
+```{r, child=here::here('vignettes', 'includes', 'mxlWtpExample.Rmd')}
 ```
 
 where the parameters $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ have units of dollars and $\lambda$ is the scale parameter, and the WTP parameter for $x_{j}^{\mathrm{FEAT}}$ is normally distributed.
@@ -166,15 +166,15 @@ summary(mxl_wtp)
 ```
 ```
 =================================================
-MODEL SUMMARY: 
-                                 
+MODEL SUMMARY:
+
 Model Space:   Willingness-to-Pay
 Model Run:                 1 of 1
 Iterations:                   112
 Elapsed Time:           0h:9m:41s
 Weights Used?:              FALSE
 
-Model Coefficients: 
+Model Coefficients:
             Estimate StdError    tStat   pVal signif
 lambda      0.392768 0.026708  14.7062 0.0000    ***
 feat.mu     0.896032 0.534239   1.6772 0.0936      .
@@ -185,8 +185,8 @@ feat.sigma  6.009556 1.323045   4.5422 0.0000    ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Model Fit Values: 
-                                     
+Model Fit Values:
+
 Log.Likelihood.         -2645.9202707
 Null.Log.Likelihood.    -3343.7419990
 AIC.                     5303.8405000
@@ -195,7 +195,7 @@ McFadden.R2.                0.2086948
 Adj..McFadden.R2            0.2069005
 Number.of.Observations.  2412.0000000
 
-Summary of 10k Draws for Random Coefficients: 
+Summary of 10k Draws for Random Coefficients:
        Min.   1st Qu.    Median      Mean  3rd Qu.    Max.
 1 -22.46139 -3.158553 0.8941192 0.8909386 4.945094 22.5975
 ```
