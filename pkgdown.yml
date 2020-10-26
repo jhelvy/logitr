@@ -4,22 +4,7 @@ pkgdown_sha: ~
 articles:
   basic_usage: basic_usage.html
   examples: examples.html
-  includes/WTPlogitProbability: WTPlogitProbability.html
-  includes/header: header.html
-  includes/logitProbability: logitProbability.html
-  includes/mnlPrefExample: mnlPrefExample.html
-  includes/mnlWtpExample: mnlWtpExample.html
-  includes/mxlPrefExample: mxlPrefExample.html
-  includes/mxlWtpExample: mxlWtpExample.html
-  includes/utility: utility.html
-  includes/utilityPreference: utilityPreference.html
-  includes/utilityPreferenceObserved: utilityPreferenceObserved.html
-  includes/utilityPreferenceScaled: utilityPreferenceScaled.html
-  includes/utilityWtp: utilityWtp.html
-  includes/utilityWtpScaled: utilityWtpScaled.html
-  includes/yogurtDataDescription: yogurtDataDescription.html
-  mnl_models: mnl_models.html
   mxl_models: mxl_models.html
   utility_models: utility_models.html
-last_built: 2020-10-23T13:08Z
+last_built: 2020-10-26T19:14Z
 
