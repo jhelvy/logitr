@@ -40,7 +40,7 @@ wtp <- function(model, priceName) {
   if (model$modelSpace == "pref") {
     return(getPrefSpaceWtp(model, priceName))
   } else if (model$modelSpace == "wtp") {
-    wtp.mean <- coef(model)
+    wtp.mean <- stats::coef(model)
     wtp.se <- model$standErrs
     return(getCoefTable(wtp.mean, wtp.se, model$numObs, model$numParams))
   }
@@ -48,7 +48,7 @@ wtp <- function(model, priceName) {
 
 getPrefSpaceWtp <- function(model, priceName) {
   # Compute mean WTP
-  coefs <- coef(model)
+  coefs <- stats::coef(model)
   priceID <- which(names(coefs) == priceName)
   pricePar <- -1 * coefs[priceID]
   wtp.mean <- coefs / pricePar
@@ -59,7 +59,7 @@ getPrefSpaceWtp <- function(model, priceName) {
   priceDraws <- repmatCol(-1 * draws[priceName], ncol(draws))
   wtpDraws <- draws / priceDraws
   wtpDraws[, priceID] <- draws[, priceID]
-  wtp.se <- apply(wtpDraws, 2, sd)
+  wtp.se <- apply(wtpDraws, 2, stats::sd)
   return(getCoefTable(wtp.mean, wtp.se, model$numObs, model$numParams))
 }
 
@@ -113,7 +113,7 @@ wtpCompare <- function(model_pref, model_wtp, priceName) {
   model_wtp <- allRunsCheck(model_wtp)
   pref <- wtp(model_pref, priceName)$Estimate
   pref <- c(pref, model_pref$logLik)
-  wtp <- coef(model_wtp)
+  wtp <- stats::coef(model_wtp)
   wtp <- c(wtp, model_wtp$logLik)
   names(pref)[length(pref)] <- "logLik"
   names(wtp)[length(wtp)] <- "logLik"

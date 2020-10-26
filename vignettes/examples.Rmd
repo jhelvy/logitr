@@ -1,9 +1,10 @@
 ---
 title: "Examples"
-output:
-  html_document:
-    number_sections: false
-    toc: no
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 
 - [Estimating multinomial logit models](mnl_models.html)

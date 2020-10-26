@@ -151,7 +151,7 @@ removeNAs <- function(data, choiceName, obsIDName, parNames, priceName,
   if (modelSpace == "wtp") {
     colsToSelect <- c(colsToSelect, priceName, weightsName)
   }
-  return(na.omit(data[colsToSelect]))
+  return(stats::na.omit(data[colsToSelect]))
 }
 
 # Function that scales all the variables in X to be between 0 and 1:

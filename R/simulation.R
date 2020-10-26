@@ -61,7 +61,7 @@ mnlSimulation <- function(model, alts, priceName, alpha = 0.025) {
   }
   betaUncDraws <- getUncertaintyDraws(model, numDraws)
   betaUncDraws <- selectSimDraws(betaUncDraws, model, X)
-  V <- getV(coef(model)[colnames(betaUncDraws)], X, price)
+  V <- getV(stats::coef(model)[colnames(betaUncDraws)], X, price)
   meanShare <- getMnlLogit(V, obsID)
   VUncDraws <- getVUncDraws(betaUncDraws, X, price)
   logitUncDraws <- getMxlLogit(VUncDraws, obsID)
@@ -85,7 +85,7 @@ mxlSimulation <- function(model, alts, priceName, alpha = 0.025) {
     getVDraws <- getMxlV.wtp
   }
   betaUncDraws <- getUncertaintyDraws(model, numDraws)
-  meanShare <- getSimPHat(coef(model), model, X, price, obsID, getVDraws)
+  meanShare <- getSimPHat(stats::coef(model), model, X, price, obsID, getVDraws)
   logitUncDraws <- matrix(0, nrow = nrow(X), ncol = nrow(betaUncDraws))
   for (i in 1:nrow(betaUncDraws)) {
     pars <- betaUncDraws[i, ]

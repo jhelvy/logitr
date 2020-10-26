@@ -1,14 +1,13 @@
 ---
 title: "Basic Usage"
-output:
-  html_document:
-    number_sections: false
-    toc: no
-bibliography: "`r here::here('vignettes', 'library.bib')`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Basic Usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 
-```{r, child=here::here('vignettes', 'includes', 'header.Rmd')}
-# Imports custom latex functions for equations
+```{r, child=here::here('man', 'rmdchunks', 'header.Rmd')}
 ```
 
 # Estimating models
@@ -44,7 +43,7 @@ Unlike similar packages like [**mlogit**](https://cran.r-project.org/web/package
 
 The `logitr()` function assumes that the deterministic part of the utility function is linear in parameters, i.e.:
 
-```{r, child=here::here('vignettes', 'includes', 'utilityPreferenceObserved.Rmd')}
+```{r, child=here::here('man', 'rmdchunks', 'utilityPreferenceObserved.Rmd')}
 ```
 
 Accordingly, each parameter in the `parNames` argument is an additive part of $v_{j}$.

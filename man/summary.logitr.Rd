@@ -4,10 +4,12 @@
 \alias{summary.logitr}
 \title{View summary of estimated model}
 \usage{
-\method{summary}{logitr}(model)
+\method{summary}{logitr}(object, ...)
 }
 \arguments{
-\item{model}{The output of a model estimated model using the \code{logitr()} function.}
+\item{object}{The output of a model estimated model using the \code{logitr()} function.}
+
+\item{...}{other arguments}
 }
 \value{
 Prints a summary of the model results to the console.

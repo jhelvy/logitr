@@ -4,10 +4,12 @@
 \alias{coef.logitr}
 \title{Get the model coefficients}
 \usage{
-\method{coef}{logitr}(model)
+\method{coef}{logitr}(object, ...)
 }
 \arguments{
-\item{model}{The output of a model estimated using the \code{logitr()} function.}
+\item{object}{The output of a model estimated using the \code{logitr()} function.}
+
+\item{...}{other arguments}
 }
 \value{
 A vector of the coefficients from a model estimated using the \code{logitr()} function.

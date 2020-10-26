@@ -49,14 +49,14 @@ getStandardDraws <- function(parSetup, numDraws, drawType = "halton") {
 # Returns a matrix of numDraws x numBetas random standard normal draws
 getNormalDraws <- function(numDraws, numBetas) {
   N <- numDraws * numBetas
-  draws <- rnorm(N, 0, 1)
-  badDraws <- which(pnorm(draws) < 0.001 | pnorm(draws) > 0.999)
+  draws <- stats::rnorm(N, 0, 1)
+  badDraws <- which(stats::pnorm(draws) < 0.001 | stats::pnorm(draws) > 0.999)
   # Make sure that none of the draws are too extreme in the tail. It
   # causes the likelihood function to crash because the utility value
   # becomes too close to zero, and then taking log(0) crashes.
   while (length(badDraws) > 0) {
-    draws[badDraws] <- rnorm(length(badDraws), 0, 1)
-    badDraws <- which(pnorm(draws) < 0.001 | pnorm(draws) > 0.999)
+    draws[badDraws] <- stats::rnorm(length(badDraws), 0, 1)
+    badDraws <- which(stats::pnorm(draws) < 0.001 | stats::pnorm(draws) > 0.999)
   }
   drawsMatrix <- matrix(draws, ncol = numBetas)
   return(drawsMatrix)
@@ -97,11 +97,11 @@ getHaltonDraws <- function(R, Ka, halton = NA) {
     random.nb <- numeric(0)
     i <- 0
     for (i in 1:Ka) {
-      random.nb <- cbind(random.nb, qnorm(halton(prime[i], R, drop.halton[i])))
+      random.nb <- cbind(random.nb, stats::qnorm(halton(prime[i], R, drop.halton[i])))
     }
   }
   else {
-    random.nb <- matrix(rnorm(R * Ka), ncol = Ka, nrow = R)
+    random.nb <- matrix(stats::rnorm(R * Ka), ncol = Ka, nrow = R)
   }
   return(random.nb)
 }
@@ -131,7 +131,7 @@ mvrnorm <- function(n = 1, mu, Sigma, tol = 1e-6, empirical = FALSE, EISPACK = F
   eS <- eigen(Sigma, symmetric = TRUE)
   ev <- eS$values
   if (!all(ev >= -tol * abs(ev[1L]))) stop("'Sigma' is not positive definite")
-  X <- matrix(rnorm(p * n), n)
+  X <- matrix(stats::rnorm(p * n), n)
   if (empirical) {
     X <- scale(X, TRUE, FALSE) # remove means
     X <- X %*% svd(X, nu = 0)$v # rotate to PCs

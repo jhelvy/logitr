@@ -71,8 +71,8 @@ getRandomStartPars <- function(modelInputs) {
   lower <- bounds[1]
   upper <- bounds[2]
   # For mxl models, need both '.mu' and '.sigma' parameters
-  pars.mu <- runif(length(parNameList$mu), lower, upper)
-  pars.sigma <- runif(length(parNameList$sigma), lower, upper)
+  pars.mu <- stats::runif(length(parNameList$mu), lower, upper)
+  pars.sigma <- stats::runif(length(parNameList$sigma), lower, upper)
   startPars <- c(pars.mu, pars.sigma)
   names(startPars) <- parNameList$all
   return(startPars)

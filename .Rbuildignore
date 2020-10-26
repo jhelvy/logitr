@@ -5,6 +5,9 @@
 ^docs$
 ^pkgdown$
 ^\.github$
-vignettes/_includes
+vignettes/children
 ^LICENSE\.md$
 ^logitr\.Rproj$
+^doc$
+^Meta$
+build.R

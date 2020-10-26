@@ -6,7 +6,8 @@
 #'
 #' Returns the coefficients of an estimated model of the 'logitr' class.
 #' @keywords logitr, coef
-#' @param model The output of a model estimated using the `logitr()` function.
+#' @param object The output of a model estimated using the `logitr()` function.
+#' @param ... other arguments
 #' @return A vector of the coefficients from a model estimated using the `logitr()` function.
 #' @export
 #' @examples
@@ -22,16 +23,17 @@
 #'
 #' # Get the model coefficients:
 #' coef(mnl_pref)
-coef.logitr <- function(model) {
-  model <- allRunsCheck(model)
-  return(model$coef)
+coef.logitr <- function(object, ...) {
+  object <- allRunsCheck(object)
+  return(object$coef)
 }
 
 #' View summary of estimated model
 #'
 #' Prints a summary of a model estimated using the `logitr()` function
 #' @keywords logitr, summary, logitr.multistart
-#' @param model The output of a model estimated model using the `logitr()` function.
+#' @param object The output of a model estimated model using the `logitr()` function.
+#' @param ... other arguments
 #' @return Prints a summary of the model results to the console.
 #' @export
 #' @examples
@@ -51,17 +53,17 @@ coef.logitr <- function(model) {
 #'
 #' # View a summary of the model:
 #' summary(mnl_pref)
-summary.logitr <- function(model) {
-  if (is.logitr(model) == FALSE) {
+summary.logitr <- function(object, ...) {
+  if (is.logitr(object) == FALSE) {
     stop('Model must be estimated using the "logitr" package')
   }
-  if (is.logitr.multistart(model)) {
-    printMultistartSummary(model)
+  if (is.logitr.multistart(object)) {
+    printMultistartSummary(object)
   }
-  if (is.logitr.allRuns(model)) {
-    printModelSummary(model$bestModel)
+  if (is.logitr.allRuns(object)) {
+    printModelSummary(object$bestModel)
   } else {
-    printModelSummary(model)
+    printModelSummary(object)
   }
 }
 
@@ -141,7 +143,7 @@ getCoefTable <- function(coef, se, numObs, numParams) {
   if (sum(is.na(se)) == 0) {
     tStat <- as.numeric(coef / se)
     dof <- numObs - numParams
-    pVal <- 2 * (1 - pt(abs(tStat), dof))
+    pVal <- 2 * (1 - stats::pt(abs(tStat), dof))
     signif <- getSignifCodes(pVal)
   }
   coefTable <- data.frame(
