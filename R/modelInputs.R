@@ -8,6 +8,8 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
                            priceName, randPrice, modelSpace, weightsName,
                            options) {
   # Setup pars
+  runInputChecks(choiceName, obsIDName, parNames, randPars, priceName,
+                 randPrice, modelSpace, weightsName)
   parSetup <- getParSetup(parNames, priceName, randPars, randPrice)
   parNameList <- getParNameList(parSetup)
   options <- runOptionsChecks(options, parNameList)
@@ -17,11 +19,11 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
     modelSpace, weightsName
   )
   X <- as.matrix(data[parNames])
-  obsID <- data[, which(names(data) == obsIDName)]
-  choice <- data[, which(names(data) == choiceName)]
+  obsID <- as.matrix(data[, which(names(data) == obsIDName)])
+  choice <- as.matrix(data[, which(names(data) == choiceName)])
   price <- NA
   if (modelSpace == "wtp") {
-    price <- -1 * data[, which(names(data) == priceName)]
+    price <- -1 * as.matrix(data[, which(names(data) == priceName)])
   }
   # Setup weights
   weights <- matrix(1, nrow(data))
@@ -55,6 +57,15 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
     modelInputs$modelType, options$useAnalyticGrad
   )
   return(modelInputs)
+}
+
+runInputChecks <- function(choiceName, obsIDName, parNames, randPars, priceName,
+                 randPrice, modelSpace, weightsName) {
+  if (! is.null(priceName)) {
+    if (priceName %in% parNames) {
+      stop('The value you provided for the "priceName" argument is also included in your "parNames" argument. If you are estimating a WTP space model, you should NOT include the price column name in your "parNames" argument as it is provided separately with the "priceName" argument.')
+    }
+  }
 }
 
 getParSetup <- function(parNames, priceName, randPars, randPrice) {
