@@ -70,22 +70,22 @@ getRandomStartPars <- function(modelInputs) {
   bounds <- modelInputs$options$startParBounds
   lower <- bounds[1]
   upper <- bounds[2]
-  # For mxl models, need both '.mu' and '.sigma' parameters
-  pars.mu <- stats::runif(length(parNameList$mu), lower, upper)
-  pars.sigma <- stats::runif(length(parNameList$sigma), lower, upper)
-  startPars <- c(pars.mu, pars.sigma)
+  # For mxl models, need both '_mu' and '_sigma' parameters
+  pars_mu <- stats::runif(length(parNameList$mu), lower, upper)
+  pars_sigma <- stats::runif(length(parNameList$sigma), lower, upper)
+  startPars <- c(pars_mu, pars_sigma)
   names(startPars) <- parNameList$all
   return(startPars)
 }
 
-# For mxl models in the WTP space, lambda.mu can't be zero
+# For mxl models in the WTP space, lambda_mu can't be zero
 checkStartPars <- function(startPars, modelInputs) {
   if (modelInputs$modelSpace == "wtp" &
-    "lambda.mu" %in% modelInputs$parNameList$mu) {
-    if (startPars["lambda.mu"] <= 0) {
-      startPars["lambda.mu"] <- 0.01
-      cat("Warning: lambda.mu must be > 0...", "\n", sep = "")
-      cat("...setting starting point for lambda.mu to 0.01 ", "\n", sep = "")
+    "lambda_mu" %in% modelInputs$parNameList$mu) {
+    if (startPars["lambda_mu"] <= 0) {
+      startPars["lambda_mu"] <- 0.01
+      cat("Warning: lambda_mu must be > 0...", "\n", sep = "")
+      cat("...setting starting point for lambda_mu to 0.01 ", "\n", sep = "")
     }
   }
   return(startPars)

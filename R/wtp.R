@@ -30,7 +30,7 @@
 #' # Get the WTP implied from the preference space model
 #' wtp(mnl_pref, priceName = "price")
 wtp <- function(model, priceName) {
-  if (is.logitr(model) == FALSE) {
+  if (is_logitr(model) == FALSE) {
     stop('Model must be estimated using the"logitr" package')
   }
   if (is.null(priceName)) {
@@ -40,9 +40,9 @@ wtp <- function(model, priceName) {
   if (model$modelSpace == "pref") {
     return(getPrefSpaceWtp(model, priceName))
   } else if (model$modelSpace == "wtp") {
-    wtp.mean <- stats::coef(model)
-    wtp.se <- model$standErrs
-    return(getCoefTable(wtp.mean, wtp.se, model$numObs, model$numParams))
+    wtp_mean <- stats::coef(model)
+    wtp_se <- model$standErrs
+    return(getCoefTable(wtp_mean, wtp_se, model$numObs, model$numParams))
   }
 }
 
@@ -51,16 +51,16 @@ getPrefSpaceWtp <- function(model, priceName) {
   coefs <- stats::coef(model)
   priceID <- which(names(coefs) == priceName)
   pricePar <- -1 * coefs[priceID]
-  wtp.mean <- coefs / pricePar
-  wtp.mean[priceID] <- -1 * coefs[priceID]
-  names(wtp.mean)[priceID] <- "lambda"
+  wtp_mean <- coefs / pricePar
+  wtp_mean[priceID] <- -1 * coefs[priceID]
+  names(wtp_mean)[priceID] <- "lambda"
   # Compute standErrs using simulation (draws from the varcov matrix)
   draws <- getUncertaintyDraws(model, 10^5)
   priceDraws <- repmatCol(-1 * draws[priceName], ncol(draws))
   wtpDraws <- draws / priceDraws
   wtpDraws[, priceID] <- draws[, priceID]
-  wtp.se <- apply(wtpDraws, 2, stats::sd)
-  return(getCoefTable(wtp.mean, wtp.se, model$numObs, model$numParams))
+  wtp_se <- apply(wtpDraws, 2, stats::sd)
+  return(getCoefTable(wtp_mean, wtp_se, model$numObs, model$numParams))
 }
 
 #' Compare WTP from preference and WTP space models
@@ -106,7 +106,7 @@ getPrefSpaceWtp <- function(model, priceName) {
 #' # Compare the WTP between the two spaces:
 #' wtpCompare(mnl_pref, mnl_wtp, priceName = "price")
 wtpCompare <- function(model_pref, model_wtp, priceName) {
-  if (is.logitr(model_pref) == FALSE | is.logitr(model_wtp) == FALSE) {
+  if (is_logitr(model_pref) == FALSE | is_logitr(model_wtp) == FALSE) {
     stop('Models must be estimated using the "logitr" package')
   }
   model_pref <- allRunsCheck(model_pref)

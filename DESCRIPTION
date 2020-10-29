@@ -18,10 +18,11 @@ Depends:
     R (>= 3.5.0)
 Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
+    here,
+    ggplot2
 Imports:
     nloptr,
-    stats,
-    here
+    stats
 
 

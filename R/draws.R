@@ -17,18 +17,18 @@ makeBetaDraws <- function(pars, parSetup, numDraws, standardDraws) {
 }
 
 getMuMat <- function(pars, parSetup, numDraws) {
-  pars.mu <- as.numeric(pars[1:length(parSetup)])
-  muMat <- matrix(rep(pars.mu, numDraws), ncol = length(pars.mu), byrow = T)
+  pars_mu <- as.numeric(pars[1:length(parSetup)])
+  muMat <- matrix(rep(pars_mu, numDraws), ncol = length(pars_mu), byrow = T)
   return(muMat)
 }
 
 getSigmaMat <- function(pars, parSetup, numDraws) {
   numPars <- length(parSetup)
-  pars.sigma <- rep(0, length(parSetup))
+  pars_sigma <- rep(0, length(parSetup))
   randParIDs <- getRandParIDs(parSetup)
-  pars.sigma[randParIDs] <- as.numeric(pars[(numPars + 1):length(pars)])
-  sigmaMat <- matrix(rep(pars.sigma, numDraws),
-    ncol = length(pars.sigma),
+  pars_sigma[randParIDs] <- as.numeric(pars[(numPars + 1):length(pars)])
+  sigmaMat <- matrix(rep(pars_sigma, numDraws),
+    ncol = length(pars_sigma),
     byrow = T
   )
   return(sigmaMat)
@@ -63,20 +63,19 @@ getNormalDraws <- function(numDraws, numBetas) {
 }
 
 # Returns a matrix of numDraws x numBetas random standard normal draws
-# approximated using Halton draws
-# *Function coped and modified from the mlogit package on CRAN
+# approximated using Halton draws. Modified from the mlogit package on CRAN.
 getHaltonDraws <- function(R, Ka, halton = NA) {
   # R = numDraws, Ka = numBetas
   # Create the matrix of random numbers
   if (!is.null(halton)) {
-    length.halton <- rep(R, Ka)
+    length_halton <- rep(R, Ka)
     prime <- c(
       2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43,
       47, 53, 59, 61, 71, 73, 79, 83, 89, 97, 101, 103,
       107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167,
       173, 179, 181, 191, 193, 197, 199
     )
-    drop.halton <- rep(100, Ka)
+    drop_halton <- rep(100, Ka)
     if (!is.na(halton) && !is.null(halton$prime)) {
       if (length(halton$prime) != Ka) {
         stop("wrong number of prime numbers indicated")
@@ -87,23 +86,23 @@ getHaltonDraws <- function(R, Ka, halton = NA) {
       if (!is.na(halton) && !is.null(halton$drop)) {
         if (!length(halton$drop) %in% c(1, Ka)) stop("wrong number of drop indicated")
         if (length(halton$drop) == 1) {
-          drop.halton <- rep(halton$drop, Ka)
+          drop_halton <- rep(halton$drop, Ka)
         }
         else {
-          drop.halton <- halton$drop
+          drop_halton <- halton$drop
         }
       }
     }
-    random.nb <- numeric(0)
+    random_nb <- numeric(0)
     i <- 0
     for (i in 1:Ka) {
-      random.nb <- cbind(random.nb, stats::qnorm(halton(prime[i], R, drop.halton[i])))
+      random_nb <- cbind(random_nb, stats::qnorm(halton(prime[i], R, drop_halton[i])))
     }
   }
   else {
-    random.nb <- matrix(stats::rnorm(R * Ka), ncol = Ka, nrow = R)
+    random_nb <- matrix(stats::rnorm(R * Ka), ncol = Ka, nrow = R)
   }
-  return(random.nb)
+  return(random_nb)
 }
 
 halton <- function(prime = 3, length = 100, drop = 10) {

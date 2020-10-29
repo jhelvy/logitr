@@ -11,7 +11,7 @@ head(yogurt)
 # Estimate homogeneous MNL models
 
 # Run a MNL model in the Preference Space:
-mnl_pref = logitr(
+mnl_pref <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
@@ -24,11 +24,11 @@ summary(mnl_pref)
 coef(mnl_pref)
 
 # Get the WTP implied from the preference space model
-wtp_mnl_pref = wtp(mnl_pref, priceName = 'price')
+wtp_mnl_pref <- wtp(mnl_pref, priceName = 'price')
 wtp_mnl_pref
 
 # Run a MNL model in the WTP Space using a multistart:
-mnl_wtp = logitr(
+mnl_wtp <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
@@ -105,7 +105,7 @@ w$w <- sample(c(0.25, 0.5, 1, 2, 4), nrow(w), replace = TRUE)
 yogurt_w <- merge(yogurt, w, by = "id")
 
 # Run a MNL model in the Preference Space with weights:
-mnl_pref_w = logitr(
+mnl_pref_w <- logitr(
   data       = yogurt_w,
   choiceName = 'choice',
   obsIDName  = 'obsID',
@@ -117,11 +117,13 @@ summary(mnl_pref_w)
 
 # Compare the coefficients and log-likelihood from the weighted model to
 # those of the unweighted model:
-mnl_pref <- readRDS(here::here('examples', 'results', 'mnl_pref_w.Rds'))
+mnl_pref <- readRDS(here::here('inst', 'extdata', 'mnl_pref_w.Rds'))
 coef_compare <- data.frame(
   Unweighted = coef(mnl_pref),
   Weighted   = coef(mnl_pref_w))
-logLik_compare <- c("Unweighted" = mnl_pref$logLik, "Weighted" = mnl_pref_w$logLik)
+logLik_compare <- c(
+  "Unweighted" = mnl_pref$logLik,
+  "Weighted" = mnl_pref_w$logLik)
 coef_compare
 logLik_compare
 
@@ -132,7 +134,7 @@ saveRDS(mnl_pref_w, here::here('inst', 'extdata', 'mnl_pref_w.Rds'))
 # Estimate heterogeneous MXL models
 
 # Multistart MXL model in the Preference Space:
-mxl_pref = logitr(
+mxl_pref <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
@@ -148,11 +150,11 @@ mxl_pref = logitr(
 summary(mxl_pref)
 
 # Get the WTP implied from the preference space model
-wtp_mxl_pref = wtp(mxl_pref, priceName = 'price')
+wtp_mxl_pref <- wtp(mxl_pref, priceName = 'price')
 wtp_mxl_pref
 
 # Multistart MXL model in the WTP Space:
-mxl_wtp = logitr(
+mxl_wtp <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
@@ -211,13 +213,13 @@ mxl_wtp  <- readRDS(here::here('inst', 'extdata', 'mxl_wtp.Rds'))
 # Create a set of alternatives for which to simulate shares. Each row is an
 # alternative and each column an attribute. In this example, I just use one
 # of the choice observations from the yogurt dataset:
-alts = subset(yogurt, obsID == 42,
+alts <- subset(yogurt, obsID == 42,
               select = c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
-row.names(alts) = c('dannon', 'hiland', 'weight', 'yoplait')
+row.names(alts) <- c('dannon', 'hiland', 'weight', 'yoplait')
 alts
 
 # Run the simulation using the preference space MNL model:
-sim_mnl_pref = simulateShares(mnl_pref, alts, alpha = 0.025)
+sim_mnl_pref <- simulateShares(mnl_pref, alts, alpha = 0.025)
 sim_mnl_pref
 
 # The results show the expected shares for each alternative.
@@ -226,7 +228,7 @@ sim_mnl_pref
 # value (e.g. a 90% CI is obtained with alpha = 0.05).
 
 # Run the simulation using the WTP space MNL model:
-sim_mnl_wtp = simulateShares(mnl_wtp, alts, priceName = 'price')
+sim_mnl_wtp <- simulateShares(mnl_wtp, alts, priceName = 'price')
 sim_mnl_wtp
 
 # Since these two models are equivalent except in different spaces, the
@@ -235,15 +237,15 @@ sim_mnl_wtp
 # WTP space models.
 
 # Simulations can also be run using MXL models in either space:
-sim_mxl_pref = simulateShares(mxl_pref, alts)
+sim_mxl_pref <- simulateShares(mxl_pref, alts)
 sim_mxl_pref
 
-sim_mxl_wtp = simulateShares(mxl_wtp, alts, priceName = 'price')
+sim_mxl_wtp <- simulateShares(mxl_wtp, alts, priceName = 'price')
 sim_mxl_wtp
 
 # Plot simulation results from preference space MNL model:
 library(ggplot2)
-mnl_pref_simulation$alt = row.names(mnl_pref_simulation)
+mnl_pref_simulation$alt <- row.names(mnl_pref_simulation)
 ggplot(mnl_pref_simulation, aes(x = alt, y = share_mean)) +
     geom_bar(stat = 'identity', width = 0.7, fill = "dodgerblue") +
     geom_errorbar(aes(ymin = share_low, ymax = share_high), width = 0.2) +

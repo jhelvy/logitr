@@ -77,17 +77,17 @@ getParSetup <- function(parNames, priceName, randPars, randPrice) {
 }
 
 getParNameList <- function(parSetup) {
-  # For mxl models, need both '.mu' and '.sigma' parameters
+  # For mxl models, need both '_mu' and '_sigma' parameters
   randParIDs <- getRandParIDs(parSetup)
   names <- names(parSetup)
-  names.mu <- names
-  names.sigma <- names[randParIDs]
+  names_mu <- names
+  names_sigma <- names[randParIDs]
   if (length(randParIDs) > 0) {
-    names.mu[randParIDs] <- paste(names[randParIDs], "mu", sep = ".")
-    names.sigma <- paste(names.sigma, "sigma", sep = ".")
+    names_mu[randParIDs] <- paste(names[randParIDs], "mu", sep = "_")
+    names_sigma <- paste(names_sigma, "sigma", sep = "_")
   }
-  names.all <- c(names.mu, names.sigma)
-  return(list(mu = names.mu, sigma = names.sigma, all = names.all))
+  names_all <- c(names_mu, names_sigma)
+  return(list(mu = names_mu, sigma = names_sigma, all = names_all))
 }
 
 runOptionsChecks <- function(options, parNameList) {
@@ -189,20 +189,20 @@ setLogitFunctions <- function(modelSpace) {
   logitFuncs <- list(
     getMnlLogit = getMnlLogit,
     mnlNegLL = mnlNegLL,
-    getMnlV = getMnlV.pref,
-    mnlNegGradLL = mnlNegGradLL.pref,
-    mnlHessLL = mnlHessLL.pref,
+    getMnlV = getMnlV_pref,
+    mnlNegGradLL = mnlNegGradLL_pref,
+    mnlHessLL = mnlHessLL_pref,
     getMxlLogit = getMxlLogit,
     mxlNegLL = mxlNegLL,
-    getMxlV = getMxlV.pref,
-    mxlNegGradLL = mxlNegGradLL.pref
+    getMxlV = getMxlV_pref,
+    mxlNegGradLL = mxlNegGradLL_pref
   )
   if (modelSpace == "wtp") {
-    logitFuncs$getMnlV <- getMnlV.wtp
-    logitFuncs$mnlNegGradLL <- mnlNegGradLL.wtp
-    logitFuncs$mnlHessLL <- mnlHessLL.wtp
-    logitFuncs$getMxlV <- getMxlV.wtp
-    logitFuncs$mxlNegGradLL <- mxlNegGradLL.wtp
+    logitFuncs$getMnlV <- getMnlV_wtp
+    logitFuncs$mnlNegGradLL <- mnlNegGradLL_wtp
+    logitFuncs$mnlHessLL <- mnlHessLL_wtp
+    logitFuncs$getMxlV <- getMxlV_wtp
+    logitFuncs$mxlNegGradLL <- mxlNegGradLL_wtp
   }
   return(logitFuncs)
 }

@@ -11,7 +11,7 @@
 # # Logit fraction using data.table package (faster, but requires data.table)
 # # Returns the logit fraction for mnl (homogeneous) models
 # getMnlLogit = function(V, obsID) {
-#     data = data.table(V=V, obsID=obsID)
+#     data = data.table::data.table(V=V, obsID=obsID)
 #     data[, expV:=exp(V.V1)]
 #     data[, sumExpV:=sum(expV), by=obsID]
 #     data[, logit:=expV/sumExpV]
@@ -205,28 +205,28 @@ getNumericHessLL <- function(pars, modelInputs) {
 # Preference Space Logit Functions - MNL models
 # ============================================================================
 
-getMnlV.pref <- function(pars, X, p) {
+getMnlV_pref <- function(pars, X, p) {
   V <- X %*% as.numeric(pars)
   return(V)
 }
 
-mnlNegGradLL.pref <- function(p, X, pars, choice, logit, weights) {
+mnlNegGradLL_pref <- function(p, X, pars, choice, logit, weights) {
   weightedLogit <- weights * (choice - logit)
   negGradLL <- -1 * (t(X) %*% weightedLogit)
   return(negGradLL)
 }
 
 # Returns the hessian of the log-likelihood at the given pars
-mnlHessLL.pref <- function(pars, modelInputs) {
+mnlHessLL_pref <- function(pars, modelInputs) {
   X <- modelInputs$X
   p <- modelInputs$p
   obsID <- modelInputs$obsID
   choice <- modelInputs$choice
   weights <- modelInputs$weights
   parSetup <- modelInputs$parSetup
-  V <- getMnlV.pref(pars, X, p)
+  V <- getMnlV_pref(pars, X, p)
   logit <- getMnlLogit(V, obsID)
-  diffMat <- getDiffMatByObsID.pref(logit, X, obsID)
+  diffMat <- getDiffMatByObsID_pref(logit, X, obsID)
   logitMat <- repmat(matrix(logit), 1, ncol(X))
   weightsMat <- matrix(rep(weights, length(parSetup)),
     ncol = ncol(X), byrow = F
@@ -236,7 +236,7 @@ mnlHessLL.pref <- function(pars, modelInputs) {
 }
 
 # Used in computing the hessian
-getDiffMatByObsID.pref <- function(logit, X, obsID) {
+getDiffMatByObsID_pref <- function(logit, X, obsID) {
   diffMat <- matrix(0, nrow = length(obsID), ncol = ncol(X))
   for (id in sort(unique(obsID))) {
     indices <- which(obsID == id)
@@ -252,13 +252,13 @@ getDiffMatByObsID.pref <- function(logit, X, obsID) {
 # ============================================================================
 
 # Returns the observed utility
-getMxlV.pref <- function(betaDraws, X, p) {
+getMxlV_pref <- function(betaDraws, X, p) {
   VDraws <- X %*% t(betaDraws)
   return(VDraws)
 }
 
 # Computes the gradient of the negative likelihood for a mixed logit model.
-mxlNegGradLL.pref <- function(X, parSetup, obsID, choice, standardDraws,
+mxlNegGradLL_pref <- function(X, parSetup, obsID, choice, standardDraws,
                               betaDraws, VDraws, logitDraws, pHat, weights) {
   randParIDs <- getRandParIDs(parSetup)
   numDraws <- nrow(standardDraws)
@@ -280,9 +280,9 @@ mxlNegGradLL.pref <- function(X, parSetup, obsID, choice, standardDraws,
       Xtemp[, logNormParIDs] <- Xtemp[, logNormParIDs] *
         betaMat[, logNormParIDs]
     }
-    partial.mu <- Xtemp
-    partial.sigma <- Xtemp * drawsMat
-    partial <- cbind(partial.mu, partial.sigma)
+    partial_mu <- Xtemp
+    partial_sigma <- Xtemp * drawsMat
+    partial <- cbind(partial_mu, partial_sigma)
     temp <- rowsum(logitMat * partial, group = obsID)
     tempMat <- matrix(rep(temp, times = repTimes),
       ncol = ncol(partial),
@@ -307,7 +307,7 @@ mxlNegGradLL.pref <- function(X, parSetup, obsID, choice, standardDraws,
 # ============================================================================
 
 # Returns the observed utility
-getMnlV.wtp <- function(pars, X, p) {
+getMnlV_wtp <- function(pars, X, p) {
   lambda <- as.numeric(pars[1])
   beta <- as.numeric(pars[2:length(pars)])
   V <- lambda * (p + (X %*% beta))
@@ -315,7 +315,7 @@ getMnlV.wtp <- function(pars, X, p) {
 }
 
 # Returns the negative gradient of the log-likelihood
-mnlNegGradLL.wtp <- function(p, X, pars, choice, logit, weights) {
+mnlNegGradLL_wtp <- function(p, X, pars, choice, logit, weights) {
   lambda <- as.numeric(pars[1])
   beta <- as.numeric(pars[2:length(pars)])
   weightedLogit <- weights * (choice - logit)
@@ -326,7 +326,7 @@ mnlNegGradLL.wtp <- function(p, X, pars, choice, logit, weights) {
 }
 
 # Returns the negative hessian of the log-likelihood
-mnlHessLL.wtp <- function(pars, modelInputs) {
+mnlHessLL_wtp <- function(pars, modelInputs) {
   lambda <- as.numeric(pars[1])
   beta <- as.numeric(pars[2:length(pars)])
   X <- modelInputs$X
@@ -335,9 +335,9 @@ mnlHessLL.wtp <- function(pars, modelInputs) {
   obsID <- modelInputs$obsID
   weights <- modelInputs$weights
   parSetup <- modelInputs$parSetup
-  V <- getMnlV.wtp(pars, X, p)
+  V <- getMnlV_wtp(pars, X, p)
   logit <- getMnlLogit(V, obsID)
-  diffMat <- getDiffMatByObsID.wtp(lambda, beta, p, X, logit, obsID)
+  diffMat <- getDiffMatByObsID_wtp(lambda, beta, p, X, logit, obsID)
   logitMat <- repmat(matrix(logit), 1, ncol(diffMat))
   weightsMat <- matrix(rep(weights, length(parSetup)),
     ncol = ncol(X), byrow = F
@@ -347,7 +347,7 @@ mnlHessLL.wtp <- function(pars, modelInputs) {
 }
 
 # Used in computing the hessian
-getDiffMatByObsID.wtp <- function(lambda, beta, p, X, logit, obsID) {
+getDiffMatByObsID_wtp <- function(lambda, beta, p, X, logit, obsID) {
   diffMatLambda <- matrix(0, nrow = length(obsID), ncol = 1)
   diffMatBeta <- matrix(0, nrow = length(obsID), ncol = ncol(X))
   for (id in sort(unique(obsID))) {
@@ -371,7 +371,7 @@ getDiffMatByObsID.wtp <- function(lambda, beta, p, X, logit, obsID) {
 # ============================================================================
 
 # Returns the observed utility
-getMxlV.wtp <- function(betaDraws, X, p) {
+getMxlV_wtp <- function(betaDraws, X, p) {
   numDraws <- nrow(betaDraws)
   lambdaDraws <- matrix(rep(betaDraws[, 1], nrow(X)), ncol = numDraws, byrow = T)
   gammaDraws <- matrix(betaDraws[, 2:ncol(betaDraws)], nrow = numDraws)
@@ -379,10 +379,10 @@ getMxlV.wtp <- function(betaDraws, X, p) {
   return(lambdaDraws * (pMat + X %*% t(gammaDraws)))
 }
 
-mxlNegGradLL.wtp <- function(X, parSetup, obsID, choice, standardDraws,
+mxlNegGradLL_wtp <- function(X, parSetup, obsID, choice, standardDraws,
                              betaDraws, VDraws, logitDraws, pHat, weights) {
-  stdDraws.lambda <- standardDraws[, 1]
-  stdDraws.gamma <- standardDraws[, 2:ncol(standardDraws)]
+  stdDraws_lambda <- standardDraws[, 1]
+  stdDraws_gamma <- standardDraws[, 2:ncol(standardDraws)]
   randParIDs <- getRandParIDs(parSetup)
   numDraws <- nrow(standardDraws)
   numBetas <- ncol(X)
@@ -398,12 +398,12 @@ mxlNegGradLL.wtp <- function(X, parSetup, obsID, choice, standardDraws,
     Xtemp <- X
     lambda <- lambdaDraws[, i]
     v <- VDraws[, i]
-    draws.lambda <- stdDraws.lambda[i]
-    draws.gamma <- stdDraws.gamma[i, ]
+    draws_lambda <- stdDraws_lambda[i]
+    draws_gamma <- stdDraws_gamma[i, ]
     logit <- logitDraws[, i]
     lambdaMat <- matrix(rep(lambda, numBetas), ncol = numBetas, byrow = T)
-    drawsMat.lambda <- matrix(rep(draws.lambda, nrow(X)), ncol = 1, byrow = T)
-    drawsMat.gamma <- matrix(rep(draws.gamma, nrow(X)), ncol = numBetas, byrow = T)
+    drawsMat_lambda <- matrix(rep(draws_lambda, nrow(X)), ncol = 1, byrow = T)
+    drawsMat_gamma <- matrix(rep(draws_gamma, nrow(X)), ncol = numBetas, byrow = T)
     logitMat <- matrix(rep(logit, numPars), ncol = numPars, byrow = F)
     logitMat <- cbind(logitMat, logitMat)
     if (length(xLogNormIDs) > 0) {
@@ -411,16 +411,16 @@ mxlNegGradLL.wtp <- function(X, parSetup, obsID, choice, standardDraws,
       gammaMat <- matrix(rep(gamma, nrow(X)), ncol = numBetas, byrow = T)
       Xtemp[, xLogNormIDs] <- Xtemp[, xLogNormIDs] * gammaMat[, xLogNormIDs]
     }
-    gamma.partial.mu <- lambdaMat * Xtemp
-    gamma.partial.sigma <- gamma.partial.mu * drawsMat.gamma
-    lambda.partial.mu <- v / lambda
+    gamma_partial_mu <- lambdaMat * Xtemp
+    gamma_partial_sigma <- gamma_partial_mu * drawsMat_gamma
+    lambda_partial_mu <- v / lambda
     if (parSetup["lambda"] == "ln") {
-      lambda.partial.mu <- v
+      lambda_partial_mu <- v
     }
-    lambda.partial.sigma <- lambda.partial.mu * drawsMat.lambda
-    partial.mu <- cbind(lambda.partial.mu, gamma.partial.mu)
-    partial.sigma <- cbind(lambda.partial.sigma, gamma.partial.sigma)
-    partial <- cbind(partial.mu, partial.sigma)
+    lambda_partial_sigma <- lambda_partial_mu * drawsMat_lambda
+    partial_mu <- cbind(lambda_partial_mu, gamma_partial_mu)
+    partial_sigma <- cbind(lambda_partial_sigma, gamma_partial_sigma)
+    partial <- cbind(partial_mu, partial_sigma)
     temp <- rowsum(logitMat * partial, group = obsID)
     tempMat <- matrix(rep(temp, times = repTimes),
       ncol = ncol(partial),

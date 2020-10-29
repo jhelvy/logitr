@@ -54,13 +54,13 @@ coef.logitr <- function(object, ...) {
 #' # View a summary of the model:
 #' summary(mnl_pref)
 summary.logitr <- function(object, ...) {
-  if (is.logitr(object) == FALSE) {
+  if (is_logitr(object) == FALSE) {
     stop('Model must be estimated using the "logitr" package')
   }
-  if (is.logitr.multistart(object)) {
+  if (is_logitr_multistart(object)) {
     printMultistartSummary(object)
   }
-  if (is.logitr.allRuns(object)) {
+  if (is_logitr_allRuns(object)) {
     printModelSummary(object$bestModel)
   } else {
     printModelSummary(object)
@@ -107,7 +107,7 @@ printModelSummary <- function(model) {
   cat("\n")
   cat("Model Fit Values:", "\n")
   print(statTable)
-  if (sum(grepl(".sigma", names(model$coef))) > 0) {
+  if (sum(grepl("_sigma", names(model$coef))) > 0) {
     cat("\n")
     cat("Summary of 10k Draws for Random Coefficients:", "\n")
     print(model$randParSummary)

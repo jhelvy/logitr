@@ -47,8 +47,8 @@ simulateShares <- function(model, alts, priceName = NULL,
 
 mnlSimulation <- function(model, alts, priceName, alpha = 0.025) {
   numDraws <- 10^4
-  getVUncDraws <- getMxlV.pref
-  getV <- getMnlV.pref
+  getVUncDraws <- getMxlV_pref
+  getV <- getMnlV_pref
   attNames <- colnames(alts)
   X <- as.matrix(alts[attNames])
   price <- NA
@@ -56,8 +56,8 @@ mnlSimulation <- function(model, alts, priceName, alpha = 0.025) {
   if (model$modelSpace == "wtp") {
     price <- -1 * alts[, which(colnames(alts) == priceName)]
     X <- as.matrix(alts[attNames[which(attNames != "price")]])
-    getVUncDraws <- getMxlV.wtp
-    getV <- getMnlV.wtp
+    getVUncDraws <- getMxlV_wtp
+    getV <- getMnlV_wtp
   }
   betaUncDraws <- getUncertaintyDraws(model, numDraws)
   betaUncDraws <- selectSimDraws(betaUncDraws, model, X)
@@ -74,7 +74,7 @@ mnlSimulation <- function(model, alts, priceName, alpha = 0.025) {
 
 mxlSimulation <- function(model, alts, priceName, alpha = 0.025) {
   numDraws <- 10^4
-  getVDraws <- getMxlV.pref
+  getVDraws <- getMxlV_pref
   attNames <- colnames(alts)
   X <- as.matrix(alts[attNames])
   price <- NA
@@ -82,7 +82,7 @@ mxlSimulation <- function(model, alts, priceName, alpha = 0.025) {
   if (model$modelSpace == "wtp") {
     price <- -1 * alts[, which(colnames(alts) == priceName)]
     X <- as.matrix(alts[attNames[which(attNames != "price")]])
-    getVDraws <- getMxlV.wtp
+    getVDraws <- getMxlV_wtp
   }
   betaUncDraws <- getUncertaintyDraws(model, numDraws)
   meanShare <- getSimPHat(stats::coef(model), model, X, price, obsID, getVDraws)
