@@ -44,10 +44,10 @@
   </a>
 </li>
 <li>
-  <a href="../articles/basic_usage.html">Basic Usage</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../reference/index.html">Functions</a>
+  <a href="../articles/basic_usage.html">Basic Usage</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -76,6 +76,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -101,7 +104,7 @@
       <h1 data-toc-skip>Estimating mixed logit models</h1>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/jhelvy/logitr/blob/master/vignettes/mxl_models.Rmd"><code>vignettes/mxl_models.Rmd</code></a></small>
       <div class="hidden name"><code>mxl_models.Rmd</code></div>
 
     </div>
@@ -165,7 +168,7 @@
 <p>where the parameters <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span>, and <span class="math inline">\(\beta_4\)</span> have units of utility, and the parameter for <span class="math inline">\(x_{j}^{\mathrm{FEAT}}\)</span> is normally distributed.</p>
 <p>To estimate the model, first load the <strong>logitr</strong> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">logitr</span><span class="op">)</span></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr">logitr</a></span><span class="op">)</span></pre></div>
 <p>Estimate the model using the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="va">mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
@@ -252,7 +255,7 @@ Summary of 10k Draws for Random Coefficients:
 <p>where the parameters <span class="math inline">\(\omega_1\)</span>, <span class="math inline">\(\omega_2\)</span>, <span class="math inline">\(\omega_3\)</span>, and <span class="math inline">\(\omega_4\)</span> have units of dollars and <span class="math inline">\(\lambda\)</span> is the scale parameter, and the WTP parameter for <span class="math inline">\(x_{j}^{\mathrm{FEAT}}\)</span> is normally distributed.</p>
 <p>To estimate the model, first load the <strong>logitr</strong> package:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">logitr</span><span class="op">)</span></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr">logitr</a></span><span class="op">)</span></pre></div>
 <p>Estimate the model using the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit">
 <span class="co"># Extract the WTP computed from the preference space model</span>
