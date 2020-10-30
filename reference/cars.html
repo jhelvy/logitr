@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Choice observations of yogurt purchases by 100 households — yogurt • logitr</title>
+<title>Stated car choice observations by US and Chinese car buyers — cars • logitr</title>
 
 
 <!-- jquery -->
@@ -39,15 +39,14 @@
 
 
 
-<meta property="og:title" content="Choice observations of yogurt purchases by 100 households — yogurt" />
-<meta property="og:description" content="Data from Jain et al. (1994) containing 2,412 choice observations from a
-series of yogurt purchases by a panel of 100 households in Springfield,
-Missouri, over a roughly two-year period. The data were collected by
-optical scanners and contain information about the price, brand, and a
-&quot;feature&quot; variable, which identifies whether a newspaper advertisement was
-shown to the customer. There are four brands of yogurt: Yoplait, Dannon,
-Weight Watchers, and Hiland, with market shares of 34%, 40%, 23% and 3%,
-respectively." />
+<meta property="og:title" content="Stated car choice observations by US and Chinese car buyers — cars" />
+<meta property="og:description" content="Data from Helveston et al. (2015) containing 448 stated choice observations
+from Chinese car buyers and 384 stated choice observations from US car
+buyers. Conjoint surveys were fielded in 2012 in four major Chinese cities
+(Beijing, Shanghai, Shenzhen, and Chengdu), online in the US on Amazon
+Mechanical Turk, and in person at the Pittsburgh Auto show. Participants
+were asked to select a vehicle from a set of three alternatives. Each
+participant answered 15 choice questions." />
 
 
 
@@ -145,23 +144,22 @@ respectively." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Choice observations of yogurt purchases by 100 households</h1>
+    <h1>Stated car choice observations by US and Chinese car buyers</h1>
     
-    <div class="hidden name"><code>yogurt.Rd</code></div>
+    <div class="hidden name"><code>cars.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Data from Jain et al. (1994) containing 2,412 choice observations from a
-series of yogurt purchases by a panel of 100 households in Springfield,
-Missouri, over a roughly two-year period. The data were collected by
-optical scanners and contain information about the price, brand, and a
-"feature" variable, which identifies whether a newspaper advertisement was
-shown to the customer. There are four brands of yogurt: Yoplait, Dannon,
-Weight Watchers, and Hiland, with market shares of 34%, 40%, 23% and 3%,
-respectively.</p>
+    <p>Data from Helveston et al. (2015) containing 448 stated choice observations
+from Chinese car buyers and 384 stated choice observations from US car
+buyers. Conjoint surveys were fielded in 2012 in four major Chinese cities
+(Beijing, Shanghai, Shenzhen, and Chengdu), online in the US on Amazon
+Mechanical Turk, and in person at the Pittsburgh Auto show. Participants
+were asked to select a vehicle from a set of three alternatives. Each
+participant answered 15 choice questions.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>yogurt</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
@@ -169,44 +167,36 @@ respectively.</p>
     
 <table class='table'>
 <tr><td>Variable</td><td>Description</td></tr>
-<tr><td><code>id</code></td><td>individual identifiers</td></tr>
-<tr><td><code>obsID</code></td><td>identifier for unique choice observation</td></tr>
-<tr><td><code>alt</code></td><td>alternative in each choice observation</td></tr>
-<tr><td><code>choice</code></td><td>dummy code for choice (1 or 0)</td></tr>
-<tr><td><code>price</code></td><td>price of yogurt</td></tr>
-<tr><td><code>feat</code></td><td>dummy for whether a newspaper advertisement was shown to the customer (<code>1</code> or <code>0</code>)</td></tr>
-<tr><td><code>brand</code></td><td>yogurt brand: <code>"yoplait"</code>, <code>"dannon"</code>, <code>"hiland"</code>, or <code>"weight"</code> (for weight watcher)</td></tr>
-<tr><td><code>dannon</code></td><td>dummy variable for the <code>"dannon"</code> brand (<code>1</code> or <code>0</code>)</td></tr>
-<tr><td><code>hiland</code></td><td>dummy variable for the <code>"hiland"</code> brand (<code>1</code> or <code>0</code>)</td></tr>
-<tr><td><code>weight</code></td><td>dummy variable for the <code>"weight"</code> brand (<code>1</code> or <code>0</code>)</td></tr>
-<tr><td><code>yoplait</code></td><td>dummy variable for the <code>"yoplait"</code> brand (<code>1</code> or <code>0</code>)</td></tr>
 </table>
 
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p>Raw data downloaded from the package mlogit v0.3-0 by Yves
-Croissant <a href='https://www.rdocumentation.org/packages/mlogit/versions/0.3-0/topics/Yogurt'>archive</a></p>
+    <p>Raw data downloaded from <a href='https://github.com/jhelvy/tra2015'>this repo</a></p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Jain, Dipak C., Naufel J. Vilcassim and Pradeep K. Chintagunta
-(1994) "A random–coefficients logit brand–choice model applied to panel
-data", Journal of Business and Economics Statistics, 12(3), 317.
-(<a href='https://www.jstor.org/stable/1392088'>jstor</a>)</p>
+    <p>Helveston, J. P., Liu, Y., Feit, E. M., Fuchs, E. R. H.,
+Klampfl, E., &amp; Michalek, J. J. (2015). "Will Subsidies Drive Electric
+Vehicle Adoption? Measuring Consumer Preferences in the U.S. and China."
+Transportation Research Part A: Policy and Practice, 73, 96–112.
+https://doi.org/10.1016/j.tra.2015.01.002</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>yogurt</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>yogurt</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 6 x 11</span><span>
-#&gt;      id obsID   alt choice price  feat brand   dannon hiland weight yoplait
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'>1</span><span>     1     1     1      0  8.1      0 dannon       1      0      0       0
-#&gt; </span><span style='color: #555555;'>2</span><span>     1     1     2      0  6.10     0 hiland       0      1      0       0
-#&gt; </span><span style='color: #555555;'>3</span><span>     1     1     3      1  7.90     0 weight       0      0      1       0
-#&gt; </span><span style='color: #555555;'>4</span><span>     1     1     4      0 10.8      0 yoplait      0      0      0       1
-#&gt; </span><span style='color: #555555;'>5</span><span>     1     2     1      1  9.80     0 dannon       1      0      0       0
-#&gt; </span><span style='color: #555555;'>6</span><span>     1     2     2      0  6.40     0 hiland       0      1      0       0</div></span></pre>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 6 x 21</span><span>
+#&gt;   country    id obsnum choice   hev phev10 phev20 phev40 bev75 bev100 bev150
+#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span> china       1      1      1     0      0      0      0     1      0      0
+#&gt; </span><span style='color: #555555;'>2</span><span> china       1      1      0     0      0      0      0     0      0      0
+#&gt; </span><span style='color: #555555;'>3</span><span> china       1      1      0     0      1      0      0     0      0      0
+#&gt; </span><span style='color: #555555;'>4</span><span> china       1      2      0     0      1      0      0     0      0      0
+#&gt; </span><span style='color: #555555;'>5</span><span> china       1      2      1     0      0      0      1     0      0      0
+#&gt; </span><span style='color: #555555;'>6</span><span> china       1      2      0     1      0      0      0     0      0      0
+#&gt; </span><span style='color: #555555;'># … with 10 more variables: phevFastcharge </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, bevFastcharge </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   price </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, opCost </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, accelTime </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, american </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, japanese </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   chinese </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, skorean </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, weights </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
