@@ -42,16 +42,7 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
   if (options$scaleInputs) {
     modelInputs <- scaleInputs(modelInputs)
   }
-  if (isMxlModel(parSetup)) {
-    modelInputs$modelType <- "mxl"
-    modelInputs$standardDraws <- options$standardDraws
-    if (is.null(options$standardDraws)) {
-      modelInputs$standardDraws <- getStandardDraws(
-        parSetup,
-        options$numDraws, options$drawType
-      )
-    }
-  }
+  modelInputs <- addDraws(modelInputs, parSetup)
   modelInputs$logitFuncs <- setLogitFunctions(modelSpace)
   modelInputs$evalFuncs <- setEvalFunctions(
     modelInputs$modelType, options$useAnalyticGrad
@@ -63,7 +54,7 @@ runInputChecks <- function(choiceName, obsIDName, parNames, randPars, priceName,
                  randPrice, modelSpace, weightsName) {
   if (! is.null(priceName)) {
     if (priceName %in% parNames) {
-      stop('The value you provided for the "priceName" argument is also included in your "parNames" argument. If you are estimating a WTP space model, you should NOT include the price column name in your "parNames" argument as it is provided separately with the "priceName" argument.')
+      stop('The value you provided for the "priceName" argument is also included in your "parNames" argument. If you are estimating a WTP space model, you should remove the price column name from your "parNames" argument and provid it separately with the "priceName" argument.')
     }
   }
 }
@@ -193,6 +184,28 @@ scaleInputs <- function(modelInputs) {
   modelInputs$X <- scaledX
   modelInputs$price <- scaledPrice
   modelInputs$scaleFactors <- scaleFactors
+  return(modelInputs)
+}
+
+addDraws <- function(modelInputs, parSetup) {
+  options <- modelInputs$options
+  if (isMxlModel(parSetup)) {
+    modelInputs$modelType <- "mxl"
+  }
+  userDraws <- options$standardDraws
+  standardDraws <- getStandardDraws(
+      parSetup, options$numDraws, options$drawType
+  )
+  if (is.null(userDraws)) {
+    modelInputs$standardDraws <- standardDraws
+    return(modelInputs)
+  }
+  # If the user provides their own draws, make sure there are enough
+  # columns
+  if (ncol(userDraws) != ncol(standardDraws)) {
+    stop("The user-provided draws do not match the dimensions of the number of parameters")
+  }
+  modelInputs$standardDraws <- userDraws
   return(modelInputs)
 }
 

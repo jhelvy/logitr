@@ -1,6 +1,15 @@
 
 # logitr
 
+<!-- badges: start -->
+
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/logitr)](https://CRAN.R-project.org/package=logitr)
+
+<!-- badges: end -->
+
 **logitr** estimates multinomial (MNL) and mixed logit (MXL) models in
 R. Models can be estimated using “Preference” space or
 “Willingness-to-pay” (WTP) space [utility

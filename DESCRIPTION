@@ -1,5 +1,6 @@
 Package: logitr
 Title: Random utility logit models with preference and willingness to pay space parameterizations
+Date: 2020-10-30
 Version: 1.2.0
 Authors@R: c(
     person(given   = "John",
@@ -24,5 +25,5 @@ Suggests:
 Imports:
     nloptr,
     stats
-
-
+URL: https://github.com/jhelvy/logitr
+BugReports: https://github.com/jhelvy/logitr/issues
