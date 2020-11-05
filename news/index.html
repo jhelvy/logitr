@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>View summary of estimated model — summary.logitr • logitr</title>
+<title>Changelog • logitr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,7 @@
 
 
 
-<meta property="og:title" content="View summary of estimated model — summary.logitr" />
-<meta property="og:description" content="Prints a summary of a model estimated using the logitr() function" />
+<meta property="og:title" content="Changelog" />
 
 
 
@@ -59,7 +58,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-topic">
+    <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -141,104 +140,37 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>View summary of estimated model</h1>
-    <small class="dont-index">Source: <a href='https://github.com/jhelvy/logitr/blob/master/R/summary.R'><code>R/summary.R</code></a></small>
-    <div class="hidden name"><code>summary.logitr.Rd</code></div>
+      <h1 data-toc-skip>Changelog <small></small></h1>
+      <small>Source: <a href='https://github.com/jhelvy/logitr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div class="ref-description">
-    <p>Prints a summary of a model estimated using the <code><a href='logitr.html'>logitr()</a></code> function</p>
-    </div>
-
-    <pre class="usage"><span class='co'># S3 method for logitr</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span></pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>object</th>
-      <td><p>The output of a model estimated model using the <code><a href='logitr.html'>logitr()</a></code> function.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>other arguments</p></td>
-    </tr>
-    </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>Prints a summary of the model results to the console.</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Run a MNL model in the Preference Space with a multistart:</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>yogurt</span><span class='op'>)</span>
-
-<span class='va'>mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
-  data <span class='op'>=</span> <span class='va'>yogurt</span>,
-  choiceName <span class='op'>=</span> <span class='st'>"choice"</span>,
-  obsIDName <span class='op'>=</span> <span class='st'>"obsID"</span>,
-  parNames <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"dannon"</span>, <span class='st'>"hiland"</span>, <span class='st'>"yoplait"</span><span class='op'>)</span>,
-  options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-    numMultiStarts <span class='op'>=</span> <span class='fl'>5</span>,
-    keepAllRuns <span class='op'>=</span> <span class='cn'>TRUE</span>
-  <span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; Running Multistart 1 of 5 
-#&gt; Running Multistart 2 of 5 
-#&gt; Running Multistart 3 of 5 
-#&gt; Running Multistart 4 of 5 
-#&gt; Running Multistart 5 of 5 
-#&gt; Done!</div><div class='input'>
-<span class='co'># View a summary of the model:</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mnl_pref</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; =================================================
-#&gt; SUMMARY OF ALL MULTISTART RUNS:
-#&gt; 
-#&gt;   run    logLik iterations status
-#&gt; 1   1 -2656.888         22      3
-#&gt; 2   2 -2656.888         20      3
-#&gt; 3   3 -2656.888         24      3
-#&gt; 4   4 -2656.888         22      3
-#&gt; 5   5 -2656.888         19      3
-#&gt; ---
-#&gt; To view meaning of status codes, use statusCodes() 
-#&gt; 
-#&gt; Summary of BEST model below (run with largest log-likelihood value)
-#&gt; =================================================
-#&gt; MODEL SUMMARY: 
-#&gt;                           
-#&gt; Model Space:    Preference
-#&gt; Model Run:          1 of 5
-#&gt; Iterations:             22
-#&gt; Elapsed Time:  0h:0m:0.13s
-#&gt; Weights Used?:       FALSE
-#&gt; 
-#&gt; Model Coefficients: 
-#&gt;          Estimate StdError    tStat pVal signif
-#&gt; price   -0.366584 0.024366 -15.0449    0    ***
-#&gt; feat     0.491431 0.120063   4.0931    0    ***
-#&gt; dannon   0.641185 0.054498  11.7652    0    ***
-#&gt; hiland  -3.074415 0.145384 -21.1469    0    ***
-#&gt; yoplait  1.375756 0.088982  15.4611    0    ***
-#&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#&gt; 
-#&gt; Model Fit Values: 
-#&gt;                                      
-#&gt; Log.Likelihood.         -2656.8878779
-#&gt; Null.Log.Likelihood.    -3343.7419990
-#&gt; AIC.                     5323.7758000
-#&gt; BIC.                     5352.7168000
-#&gt; McFadden.R2.                0.2054148
-#&gt; Adj..McFadden.R2            0.2039195
-#&gt; Number.of.Observations.  2412.0000000</div></pre>
+    <div id="logitr-120" class="section level1">
+<h1 class="page-header" data-toc-text="1.2.0">
+<a href="#logitr-120" class="anchor"></a>logitr 1.2.0</h1>
+<div id="summary-of-larger-updates" class="section level2">
+<h2 class="hasAnchor">
+<a href="#summary-of-larger-updates" class="anchor"></a>Summary of larger updates:</h2>
+<ul>
+<li>Added support for simulating shares for a set of alternatives given an estimated model: <code><a href="../reference/simulateShares.html">simulateShares()</a></code>. This is similar to the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> function in mlogit.</li>
+<li>Removed support for using an estimated preference space model as an input in the <code><a href="https://rdrr.io/r/base/options.html">options()</a></code> function. I found this just far too confusing, and instead encourage users to supply a WTP space model with the computed WTP from a preference space model as starting parameters.</li>
+</ul>
+</div>
+<div id="summary-of-smaller-updates" class="section level2">
+<h2 class="hasAnchor">
+<a href="#summary-of-smaller-updates" class="anchor"></a>Summary of smaller updates:</h2>
+<ul>
+<li>Updated the <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> and main <code><a href="../reference/logitr.html">logitr()</a></code> functions to keep the basic information (run #, log-likelihood value, number of iterations, and output status) whenever <code>numMultistarts</code> &gt; 1. Previously this information was only kept if <code>keepAllRuns</code> was set to <code>TRUE</code>.</li>
+</ul>
+</div>
+</div>
   </div>
+
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
+
 </div>
 
 
