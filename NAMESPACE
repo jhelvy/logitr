@@ -2,6 +2,7 @@
 
 S3method(coef,logitr)
 S3method(summary,logitr)
+export(dummyCode)
 export(logitr)
 export(simulateShares)
 export(statusCodes)

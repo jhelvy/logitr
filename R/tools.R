@@ -2,6 +2,100 @@
 # Other functions
 # ============================================================================
 
+#' Creates dummy-coded variables.
+#'
+#' Use this function to create dummy-coded variables in a data frame.
+#' @param df A data frame.
+#' @param vars The variables in the data frame for which you want to
+#' create new dummy coded variables.
+#' @export
+#' @examples
+#' # Create an example data frame:
+#' df <- data.frame(
+#'     animal   = c("dog", "goldfish", "bird", "dog", "goldfish"),
+#'     numLegs  = c(4, 0, 2, 4, 0),
+#'     lifeSpan = c(10, 10, 5, 10, 10))
+#'
+#' # Create dummy coded variables for the variables "animal" and "numLegs":
+#' df_dummy <- dummyCode(df, vars = c("animal", "numLegs"))
+#' df_dummy
+#'
+dummyCode = function(df, vars) {
+    df = as.data.frame(df)
+    nonVars = colnames(df)[which(! colnames(df) %in% vars)]
+    # Keep the original variables and the order to restore later after merging
+    df$order = seq(nrow(df))
+    for (i in 1:length(vars)) {
+        var      = vars[i]
+        colIndex = which(colnames(df) == var)
+        levels   = sort(unique(df[,colIndex]))
+        mergeMat = as.data.frame(diag(length(levels)))
+        mergeMat = cbind(levels, mergeMat)
+        colnames(mergeMat) = c(var, paste(var, levels, sep='_'))
+        df = merge(df, mergeMat)
+    }
+    # Restore the original column order
+    new = colnames(df)[which(! colnames(df) %in% c(vars, nonVars))]
+    df = df[c(nonVars, vars, new)]
+    # Restore the original row order
+    df = df[order(df$order),]
+    row.names(df) = df$order
+    df$order <- NULL
+    return(df)
+}
+
+#' View a description the nloptr status codes
+#'
+#' Prints a description of the status codes from the nloptr optimization routine.
+#' @keywords logitr, nloptr, status codes
+#' @details
+#' Code | Description
+#' ---|------------------------------------------------------
+#' 1 |  Generic success return value.
+#' 2 |  Optimization stopped because stopval was reached.
+#' 3 |  Optimization stopped because ftol_rel or ftol_abs was reached.
+#' 4 |  Optimization stopped because xtol_rel or xtol_abs was reached.
+#' 5 |  Optimization stopped because maxeval was reached.
+#' 6 |  Optimization stopped because maxtime was reached.
+#' -1 | Generic failure code.
+#' -2 | Invalid arguments (e.g. lower bounds are bigger than upper bounds, an unknown algorithm was specified, etc.).
+#' -3 | Ran out of memory.
+#' -4 | Halted because roundoff errors limited progress (in this case, the optimization still typically returns a useful result.).
+#' -5 | Halted because of a forced termination: the user called `nlopt_force_stop(opt)` on the optimization's nlopt_opt object opt the user's objective function or constraints.
+#' @export
+#' @examples
+#' statusCodes()
+statusCodes <- function() {
+  cat("Status codes:", "\n", sep = "")
+  cat("1:  Generic success return value.", "\n", sep = "")
+  cat("2:  Optimization stopped because stopval was reached.", "\n", sep = "")
+  cat("3:  Optimization stopped because ftol_rel or ftol_abs was reached.",
+    "\n",
+    sep = ""
+  )
+  cat("4:  Optimization stopped because xtol_rel or xtol_abs was reached.",
+    "\n",
+    sep = ""
+  )
+  cat("5:  Optimization stopped because maxeval was reached.", "\n", sep = "")
+  cat("6:  Optimization stopped because maxtime was reached.", "\n", sep = "")
+  cat("-1: Generic failure code.", "\n", sep = "")
+  cat("-2: Invalid arguments (e.g. lower bounds are bigger than upper ",
+    "bounds, an unknown algorithm was specified, etc.).", "\n",
+    sep = ""
+  )
+  cat("-3: Ran out of memory.", "\n", sep = "")
+  cat("-4: Halted because roundoff errors limited progress. (In this case, ",
+    "the optimization still typically returns a useful result.)", "\n",
+    sep = ""
+  )
+  cat("-5: Halted because of a forced termination: the user called ",
+    "nlopt_force_stop(opt) on the optimization's nlopt_opt object opt ",
+    "from the user's objective function or constraints.", "\n",
+    sep = ""
+  )
+}
+
 # R equivalent of matlab's repmat function
 repmat <- function(X, m, n) {
   mx <- dim(X)[1]

@@ -65,15 +65,9 @@ usethis::use_data(yogurt, overwrite = TRUE)
 # skorean        = dummy code for whether S. Korean brand (1 or 0)
 # weights        = weights for each individual computed so that the sample age and income demographics matched with those of the general car-buying population
 
-# Combine data into single data frame
-cars_china$country <- "china"
-cars_us$country <- "us"
-cars <- rbind(cars_china, cars_us)
-cars <- select(cars, country, everything())
-
-# Save the formatted datasets
-usethis::use_data(cars, overwrite = TRUE)
-
+# Save the datasets
+usethis::use_data(cars_us, overwrite = TRUE)
+usethis::use_data(cars_china, overwrite = TRUE)
 
 
 

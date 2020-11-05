@@ -4,7 +4,7 @@ home:
 
 template:
  params:
-    bootswatch: flatly
+    bootswatch: cosmo
 twitter:
     creator: "@JohnHelveston"
     card: summary_large_image
@@ -35,6 +35,10 @@ navbar:
      href: https://github.com/jhelvy/logitr
 
 reference:
+- title: "Prepare data"
+  desc: "Functions for prepping data prior to model estimation."
+  contents:
+  - dummyCode
 - title: "Estimate models"
   desc: "Functions for estimating multinomial logit models with preference space and WTP space utility parameterizations."
   contents:
@@ -58,3 +62,5 @@ reference:
   desc: "Descriptions of data included with this package"
   contents:
   - yogurt
+  - cars_us
+  - cars_china
