@@ -4,7 +4,9 @@ pkgdown_sha: ~
 articles:
   basic_usage: basic_usage.html
   examples: examples.html
+  mnl_models: mnl_models.html
   mxl_models: mxl_models.html
   utility_models: utility_models.html
-last_built: 2020-11-05T22:12Z
+  weighted_models: weighted_models.html
+last_built: 2020-11-06T22:05Z
 
