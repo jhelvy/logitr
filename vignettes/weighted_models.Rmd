@@ -1,0 +1,218 @@
+---
+title: "Weighted logit models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Weighted logit models}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+bibliography: "`r here::here('vignettes', 'library.bib')`"
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Read in results from already estimated models  so that the
+# examples aren't actually run when building this page, otherwise it'll
+# take much longer to build
+model_unweighted <- readRDS(here::here('inst', 'extdata', 'model_unweighted.Rds'))
+model_weighted <- readRDS(here::here('inst', 'extdata', 'model_weighted.Rds'))
+```
+
+# The data
+
+```{r, child=here::here('man', 'rmdchunks', 'carsDataDescription.Rmd')}
+```
+
+# The utility model
+
+In this example, we'll estimate two versions of the following utility model in the WTP space (one without weights and one with weights). Notation is taken from Helveston et al. [-@Helveston2015]:
+
+```{r, child=here::here('man', 'rmdchunks', 'mnlWtpCarsExample.Rmd')}
+```
+
+where all the $\omega$ parameters have units of dollars and $\lambda$ is the scale parameter.
+
+# Unweighted model 
+
+To estimate the model, first load the **logitr** package:
+
+```{r eval=FALSE}
+library(logitr)
+```
+
+Estimate the unweighted model using the `logitr()` function:
+
+```{r eval=FALSE}
+model_unweighted <- logitr(
+  data       = cars_us,
+  choiceName = 'choice',
+  obsIDName  = 'obsnum',
+  parNames   = c(
+    'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100', 'bev150',
+    'american', 'japanese', 'chinese', 'skorean', 'phevFastcharge',
+    'bevFastcharge','opCost', 'accelTime'),
+  priceName = 'price',
+  modelSpace = 'wtp'
+)
+```
+```
+Running Model
+Done!
+```
+
+```{r, eval=FALSE}
+summary(model_unweighted)
+```
+```
+=================================================
+MODEL SUMMARY: 
+                                 
+Model Space:   Willingness-to-Pay
+Model Run:                 1 of 1
+Iterations:                    22
+Elapsed Time:         0h:0m:0.46s
+Weights Used?:              FALSE
+
+Model Coefficients: 
+                 Estimate StdError    tStat   pVal signif
+lambda           0.073878 0.002049  36.0603 0.0000    ***
+hev              0.807012 0.996791   0.8096 0.4182       
+phev10           1.166265 1.065825   1.0942 0.2739       
+phev20           1.648111 1.078481   1.5282 0.1265       
+phev40           2.580054 1.070707   2.4097 0.0160      *
+bev75          -16.046891 1.215348 -13.2035 0.0000    ***
+bev100         -13.004007 1.197003 -10.8638 0.0000    ***
+bev150          -9.574175 1.151488  -8.3146 0.0000    ***
+american         2.344890 0.796190   2.9451 0.0032     **
+japanese        -0.373936 0.792080  -0.4721 0.6369       
+chinese        -10.268165 0.869678 -11.8069 0.0000    ***
+skorean         -6.030398 0.832709  -7.2419 0.0000    ***
+phevFastcharge   2.878999 0.812206   3.5447 0.0004    ***
+bevFastcharge    2.919568 0.906771   3.2197 0.0013     **
+opCost          -1.636070 0.066915 -24.4501 0.0000    ***
+accelTime       -1.697051 0.159494 -10.6402 0.0000    ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Model Fit Values: 
+                                     
+Log.Likelihood.         -4616.9517801
+Null.Log.Likelihood.    -6328.0067827
+AIC.                     9265.9036000
+BIC.                     9372.4426000
+McFadden.R2.                0.2703940
+Adj..McFadden.R2            0.2678655
+Number.of.Observations.  5760.0000000
+```
+
+# Weighted model 
+
+To estimate the weighted model, simply add the `weightsName` argument to the call to  `logitr()`:
+
+```{r eval=FALSE}
+model_weighted <- logitr(
+  data       = cars_us,
+  choiceName = 'choice',
+  obsIDName  = 'obsnum',
+  parNames   = c(
+    'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100', 'bev150',
+    'american', 'japanese', 'chinese', 'skorean', 'phevFastcharge',
+    'bevFastcharge','opCost', 'accelTime'),
+  priceName = 'price',
+  modelSpace = 'wtp',
+  weightsName = 'weights' # This is the key argument for enabling weights
+)
+```
+```
+Running Model
+Done!
+```
+
+Print a summary of the results:
+
+```{r, eval=FALSE}
+summary(model_weighted)
+```
+```
+=================================================
+MODEL SUMMARY: 
+                                 
+Model Space:   Willingness-to-Pay
+Model Run:                 1 of 1
+Iterations:                    23
+Elapsed Time:         0h:0m:0.46s
+Weights Used?:               TRUE
+
+Model Coefficients: 
+                 Estimate StdError    tStat   pVal signif
+lambda           0.052281 0.002092  24.9852 0.0000    ***
+hev             -1.175955 1.611434  -0.7298 0.4656       
+phev10           0.027103 1.782148   0.0152 0.9879       
+phev20           1.694523 1.751352   0.9676 0.3333       
+phev40           2.649386 1.774488   1.4930 0.1355       
+bev75          -20.136581 1.978156 -10.1795 0.0000    ***
+bev100         -19.496534 1.984186  -9.8260 0.0000    ***
+bev150         -13.691559 1.959034  -6.9889 0.0000    ***
+american         8.187945 1.288591   6.3542 0.0000    ***
+japanese         0.934436 1.289073   0.7249 0.4685       
+chinese        -19.007428 1.549724 -12.2650 0.0000    ***
+skorean         -9.510244 1.397954  -6.8030 0.0000    ***
+phevFastcharge   3.943585 1.330178   2.9647 0.0030     **
+bevFastcharge    3.342545 1.478102   2.2614 0.0238      *
+opCost          -1.597541 0.106367 -15.0192 0.0000    ***
+accelTime       -1.171835 0.255440  -4.5875 0.0000    ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Model Fit Values: 
+                                     
+Log.Likelihood.         -3425.6302846
+Null.Log.Likelihood.    -4360.5909275
+AIC.                     6883.2606000
+BIC.                     6989.7997000
+McFadden.R2.                0.2144115
+Adj..McFadden.R2            0.2107422
+Number.of.Observations.  5760.0000000
+```
+
+# Compare results 
+
+Compare the coefficients between the weighted and unweighted models:
+
+```{r, eval=FALSE}
+coef_compare <- data.frame(
+  Unweighted = coef(model_unweighted),
+  Weighted   = coef(model_weighted))
+coef_compare
+```
+```
+                 Unweighted     Weighted
+lambda           0.0738776   0.05228080
+hev              0.8070122  -1.17595492
+phev10           1.1662650   0.02710318
+phev20           1.6481111   1.69452318
+phev40           2.5800543   2.64938633
+bev75          -16.0468907 -20.13658132
+bev100         -13.0040067 -19.49653390
+bev150          -9.5741749 -13.69155933
+american         2.3448898   8.18794451
+japanese        -0.3739364   0.93443554
+chinese        -10.2681653 -19.00742780
+skorean         -6.0303980  -9.51024358
+phevFastcharge   2.8789985   3.94358501
+bevFastcharge    2.9195682   3.34254493
+opCost          -1.6360701  -1.59754080
+accelTime       -1.6970511  -1.17183470
+```
+
+Compare the log-likelihood between the weighted and unweighted models:
+```{r, eval=FALSE}
+logLik_compare <- c(
+  "Unweighted" = model_unweighted$logLik,
+  "Weighted" = model_weighted$logLik)
+logLik_compare
+```
+```
+Unweighted   Weighted 
+ -4616.952  -3425.630 
+```
+
+# References

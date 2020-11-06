@@ -1,8 +1,8 @@
 ---
-title: "Estimating mixed logit models"
+title: "Mixed logit models"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Estimating mixed logit models}
+  %\VignetteIndexEntry{Mixed logit models}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 bibliography: "`r here::here('vignettes', 'library.bib')`"

@@ -1,0 +1,24 @@
+This example uses the [cars_us](https://jhelvy.github.io/logitr/reference/cars_us.html) data set from Helveston et al. [-@Helveston2015] containing 384 stated choice observations from US car buyers. Conjoint surveys were fielded in 2012 online in the US on Amazon Mechanical Turk and in person at the 2013 Pittsburgh Auto show. Participants were asked to select a vehicle from a set of three alternatives. Each participant answered 15 choice questions.
+
+In the utility models described below, the data variables are represented as follows:
+
+<div style="width:550px">
+| Symbol | Variable                             |
+|--------|--------------------------------------|
+| $p$                        | The price in US dollars.       |
+| $x_{j}^{\mathrm{hev}}$ | Dummy variable for HEV vehicle type |
+| $x_{j}^{\mathrm{phev10}}$ | Dummy variable for PHEV10 vehicle type |
+| $x_{j}^{\mathrm{phev20}}$ | Dummy variable for PHEV20 vehicle type |
+| $x_{j}^{\mathrm{phev40}}$ | Dummy variable for PHEV40 vehicle type |
+| $x_{j}^{\mathrm{bev75}}$ | Dummy variable for BEV75 vehicle type |
+| $x_{j}^{\mathrm{bev100}}$ | Dummy variable for BEV100 vehicle type |
+| $x_{j}^{\mathrm{bev150}}$ | Dummy variable for BEV150 vehicle type |
+| $x_{j}^{\mathrm{phevFastcharge}}$ | Dummy variable for if the PHEV has a fast charging capability |
+| $x_{j}^{\mathrm{bevFastcharge}}$ | Dummy variable for if the BEV has a fast charging capability |
+| $x_{j}^{\mathrm{opCost}}$ | The vehicle operating costs (cents / mile) |
+| $x_{j}^{\mathrm{accelTime}}$ | The vehicle 0-60mph acceleration time |
+| $x_{j}^{\mathrm{american}}$ | Dummy variable for an American brand |
+| $x_{j}^{\mathrm{japanese}}$ | Dummy variable for a Japanese brand |
+| $x_{j}^{\mathrm{chinese}}$ | Dummy variable for a Chinese brand |
+| $x_{j}^{\mathrm{skorean}}$ | Dummy variable for a S. Korean brand |
+</div>
