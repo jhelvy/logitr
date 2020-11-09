@@ -31,11 +31,13 @@ model <- logitr(
 
 ## Data format
 
-The `data` argument is set to the name of the `data.frame` storing the choice observations. The `data.frame` must be arranged such that each row is an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. each choice observation could have a different number of alternatives). The data must include columns for each of the following arguments in the `logitr()` function:
+The `data.frame` provided to the `data` argument must be arranged in a particular way (i.e. "long" format). Each row should be an alternative from a choice observation, and the choice observations do not have to be symmetric (i.e. each choice observation could have a different number of alternatives). The data must include columns for each of the following arguments in the `logitr()` function:
 
-- `choiceName`: A dummy variable that identifies which alternative was chosen (`1` = chosen, `0` = not chosen).
-- `obsIDName`: A sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the `obsID` variable would be `1, 1, 2, 2, 3, 3`.
-- `parNames`: The names of the variables that will be used as model covariates. For WTP space models, do **not** include the price variable in `parNames` - this is provided separately with the `priceName` argument.
+1. `choiceName`: A dummy variable that identifies which alternative was chosen (`1` = chosen, `0` = not chosen).
+2. `obsIDName`: A sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the `obsID` variable would be .
+3. `parNames`: The names of the variables that will be used as model covariates. For WTP space models, do **not** include the price variable in `parNames` - this is provided separately with the `priceName` argument.
+
+The data sets included in this package all follow this format (e.g. the [yogurt](https://jhelvy.github.io/logitr/reference/yogurt.html) data set).
 
 ## Preference space models
 
