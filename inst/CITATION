@@ -1,4 +1,4 @@
-citHeader("To cite hockeystick in publications use:")
+citHeader("To cite logitr in publications use:")
 
 citEntry(
   entry    = "Manual",
