@@ -170,11 +170,11 @@
 \end{equation}\]</span></p>
 <p>where the parameters <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span>, and <span class="math inline">\(\beta_4\)</span> have units of utility, and the parameter for <span class="math inline">\(x_{j}^{\mathrm{FEAT}}\)</span> is normally distributed.</p>
 <p>To estimate the model, first load the <strong>logitr</strong> package:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr">logitr</a></span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr">logitr</a></span><span class="op">)</span></code></pre></div>
 <p>Estimate the model using the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
     data       <span class="op">=</span> <span class="va">yogurt</span>,
     choiceName <span class="op">=</span> <span class="st">"choice"</span>,
     obsIDName  <span class="op">=</span> <span class="st">"obsID"</span>,
@@ -184,12 +184,12 @@
         <span class="co"># You should run a multistart for MXL models since they are non-convex,</span>
         <span class="co"># but it can take a long time. Here I just use 1 for brevity:</span>
         numMultiStarts <span class="op">=</span> <span class="fl">1</span>,
-        numDraws       <span class="op">=</span> <span class="fl">500</span><span class="op">)</span><span class="op">)</span></pre></div>
+        numDraws       <span class="op">=</span> <span class="fl">500</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>Running Model
 Done!</code></pre>
 <p>Print a summary of the results:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mxl_pref</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mxl_pref</span><span class="op">)</span></code></pre></div>
 <pre><code>=================================================
 MODEL SUMMARY:
 
@@ -224,14 +224,14 @@ Summary of 10k Draws for Random Coefficients:
        Min.   1st Qu.    Median      Mean  3rd Qu.     Max.
 1 -8.822073 -1.240571 0.3511815 0.3499323 1.942267 8.875534</code></pre>
 <p>View the estimated model coefficients:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mxl_pref</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mxl_pref</span><span class="op">)</span></code></pre></div>
 <pre><code>## NULL</code></pre>
 <p>Compute the WTP implied from the preference space model:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="va">wtp_mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mxl_pref</span>, priceName <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="va">wtp_mxl_pref</span></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">wtp_mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mxl_pref</span>, priceName <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">wtp_mxl_pref</span></code></pre></div>
 <pre><code>##             Estimate StdError    tStat   pVal signif
 ## lambda      0.392768 0.026789  14.6614 0.0000    ***
 ## feat.mu     0.896034 0.538532   1.6638 0.0963      .
@@ -257,11 +257,11 @@ Summary of 10k Draws for Random Coefficients:
 \end{equation}\]</span></p>
 <p>where the parameters <span class="math inline">\(\omega_1\)</span>, <span class="math inline">\(\omega_2\)</span>, <span class="math inline">\(\omega_3\)</span>, and <span class="math inline">\(\omega_4\)</span> have units of dollars and <span class="math inline">\(\lambda\)</span> is the scale parameter, and the WTP parameter for <span class="math inline">\(x_{j}^{\mathrm{FEAT}}\)</span> is normally distributed.</p>
 <p>To estimate the model, first load the <strong>logitr</strong> package:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr">logitr</a></span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr">logitr</a></span><span class="op">)</span></code></pre></div>
 <p>Estimate the model using the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="co"># Extract the WTP computed from the preference space model</span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Extract the WTP computed from the preference space model</span>
 <span class="co"># to use as the initial starting values</span>
 <span class="va">startingValues</span> <span class="op">&lt;-</span> <span class="va">wtp_mxl_pref</span><span class="op">$</span><span class="va">Estimate</span>
 
@@ -281,13 +281,13 @@ Summary of 10k Draws for Random Coefficients:
         <span class="co"># Because the computed WTP from the preference space model has values</span>
         <span class="co"># as large as 8, I increase the boundaries of the random starting values:</span>
         startParBounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span>,
-        numDraws       <span class="op">=</span> <span class="fl">500</span><span class="op">)</span><span class="op">)</span></pre></div>
+        numDraws       <span class="op">=</span> <span class="fl">500</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>Running Model
 **Using User Provided Starting Values For This Run**
 Done!</code></pre>
 <p>Print a summary of the results:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mxl_wtp</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mxl_wtp</span><span class="op">)</span></code></pre></div>
 <pre><code>=================================================
 MODEL SUMMARY:
 
@@ -322,14 +322,14 @@ Summary of 10k Draws for Random Coefficients:
        Min.   1st Qu.    Median      Mean  3rd Qu.    Max.
 1 -22.46139 -3.158553 0.8941192 0.8909386 4.945094 22.5975</code></pre>
 <p>View the estimated model coefficients:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mxl_wtp</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mxl_wtp</span><span class="op">)</span></code></pre></div>
 <pre><code>## NULL</code></pre>
 <p>If you want to compare the WTP from the two different model spaces, use the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit">
-<span class="va">wtp_mxl_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mxl_pref</span>, <span class="va">mxl_wtp</span>, priceName <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb19"><pre class="downlit">
-<span class="va">wtp_mxl_comparison</span></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">wtp_mxl_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mxl_pref</span>, <span class="va">mxl_wtp</span>, priceName <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">wtp_mxl_comparison</span></code></pre></div>
 <pre><code>##                    pref           wtp difference
 ## lambda         0.392768     0.3927684  3.900e-07
 ## feat.mu        0.896034     0.8960325 -1.530e-06
