@@ -67,9 +67,8 @@ runInputChecks <- function(choiceName, obsIDName, parNames, randPars, priceName,
 }
 
 getCatVars <- function(df, parNames) {
-    tempDf <- df[parNames]
-    types <- sapply(tempDf, typeof)
-    categoricalIDs <- which(types == "character")
+    types <- sapply(df[parNames], class)
+    categoricalIDs <- which(types %in% c("character", "factor"))
     if (length(categoricalIDs) == 0) {
       return(NULL)
     }
@@ -119,7 +118,7 @@ dummyCode = function(df, vars) {
 
 getDummyCodedParNames <- function(df, parNames) {
   # Create a new set of parNames with the dummy-coded names
-  catVars <- getCatVars(data, parNames)
+  catVars <- getCatVars(df, parNames)
   nonCatVars <- setdiff(parNames, catVars)
   allVars <- names(df)
   keepDummyVars <- c()
