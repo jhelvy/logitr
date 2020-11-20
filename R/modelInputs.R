@@ -10,6 +10,13 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
   # Setup pars
   runInputChecks(choiceName, obsIDName, parNames, randPars, priceName,
                  randPrice, modelSpace, weightsName)
+  # Dummy code categorical variables
+  catVars <- getCatVars(data, parNames)
+  if (!is.null(catVars)) {
+    data <- dummyCode(data, catVars)
+    parNames <- getDummyCodedParNames(data, parNames)
+  }
+  # Set up the parameters
   parSetup <- getParSetup(parNames, priceName, randPars, randPrice)
   parNameList <- getParNameList(parSetup)
   options <- runOptionsChecks(options, parNameList)
@@ -57,6 +64,72 @@ runInputChecks <- function(choiceName, obsIDName, parNames, randPars, priceName,
       stop('The value you provided for the "priceName" argument is also included in your "parNames" argument. If you are estimating a WTP space model, you should remove the price column name from your "parNames" argument and provid it separately with the "priceName" argument.')
     }
   }
+}
+
+getCatVars <- function(df, parNames) {
+    tempDf <- df[parNames]
+    types <- sapply(tempDf, typeof)
+    categoricalIDs <- which(types == "character")
+    if (length(categoricalIDs) == 0) {
+      return(NULL)
+    }
+    return(parNames[categoricalIDs])
+}
+
+#' Creates dummy-coded variables.
+#'
+#' Use this function to create dummy-coded variables in a data frame.
+#' @param df A data frame.
+#' @param vars The variables in the data frame for which you want to
+#' create new dummy coded variables.
+#' @export
+#' @examples
+#' # Create an example data frame:
+#' df <- data.frame(
+#'     animal   = c("dog", "goldfish", "bird", "dog", "goldfish"),
+#'     numLegs  = c(4, 0, 2, 4, 0),
+#'     lifeSpan = c(10, 10, 5, 10, 10))
+#'
+#' # Create dummy coded variables for the variables "animal" and "numLegs":
+#' df_dummy <- dummyCode(df, vars = c("animal", "numLegs"))
+#' df_dummy
+dummyCode = function(df, vars) {
+    df = as.data.frame(df)
+    nonVars = colnames(df)[which(! colnames(df) %in% vars)]
+    # Keep the original variables and the order to restore later after merging
+    df$order = seq(nrow(df))
+    for (i in 1:length(vars)) {
+        var      = vars[i]
+        colIndex = which(colnames(df) == var)
+        levels   = sort(unique(df[,colIndex]))
+        mergeMat = as.data.frame(diag(length(levels)))
+        mergeMat = cbind(levels, mergeMat)
+        colnames(mergeMat) = c(var, paste(var, levels, sep='_'))
+        df = merge(df, mergeMat)
+    }
+    # Restore the original column order
+    new = colnames(df)[which(! colnames(df) %in% c(vars, nonVars))]
+    df = df[c(nonVars, vars, new)]
+    # Restore the original row order
+    df = df[order(df$order),]
+    row.names(df) = df$order
+    df$order <- NULL
+    return(df)
+}
+
+getDummyCodedParNames <- function(df, parNames) {
+  # Create a new set of parNames with the dummy-coded names
+  catVars <- getCatVars(data, parNames)
+  nonCatVars <- setdiff(parNames, catVars)
+  allVars <- names(df)
+  keepDummyVars <- c()
+  for (i in 1:length(catVars)) {
+    tempMatches <- which(grepl(paste0(catVars[i], "_"), allVars))
+    tempDummyVars <- allVars[tempMatches]
+    keepDummyVars <- c(keepDummyVars, tempDummyVars[2:length(tempDummyVars)])
+  }
+  codedParNames <- c(nonCatVars, keepDummyVars)
+  return(codedParNames)
 }
 
 getParSetup <- function(parNames, priceName, randPars, randPrice) {
