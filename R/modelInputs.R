@@ -14,7 +14,7 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
   catVars <- getCatVars(data, parNames)
   if (!is.null(catVars)) {
     data <- dummyCode(data, catVars)
-    parNames <- getDummyCodedParNames(data, parNames)
+    parNames <- getDummyCodedParNames(data, parNames, catVars)
   }
   # Set up the parameters
   parSetup <- getParSetup(parNames, priceName, randPars, randPrice)
@@ -119,9 +119,8 @@ dummyCode = function(df, vars) {
     return(df)
 }
 
-getDummyCodedParNames <- function(df, parNames) {
+getDummyCodedParNames <- function(df, parNames, catVars) {
   # Create a new set of parNames with the dummy-coded names
-  catVars <- getCatVars(df, parNames)
   nonCatVars <- setdiff(parNames, catVars)
   allVars <- names(df)
   keepDummyVars <- c()
