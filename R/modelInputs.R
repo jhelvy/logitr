@@ -61,8 +61,11 @@ runInputChecks <- function(choiceName, obsIDName, parNames, randPars, priceName,
                  randPrice, modelSpace, weightsName) {
   if (! is.null(priceName)) {
     if (priceName %in% parNames) {
-      stop('The value you provided for the "priceName" argument is also included in your "parNames" argument. If you are estimating a WTP space model, you should remove the price column name from your "parNames" argument and provid it separately with the "priceName" argument.')
+      stop('The value you provided for the "priceName" argument is also included in your "parNames" argument. If you are estimating a WTP space model, you should remove the price column name from your "parNames" argument and provide it separately with the "priceName" argument.')
     }
+  }
+  if ((modelSpace == 'wtp') & is.null(priceName)) {
+    stop('You are estimating a WTP space model but have not provided a "priceName" argument. Please provide the name of the column in your data frame that represents "price" for the "priceName" argument.')
   }
 }
 
@@ -165,7 +168,10 @@ getParNameList <- function(parSetup) {
 }
 
 runOptionsChecks <- function(options, parNameList) {
-  # Run checks for all inputs
+  # Run checks for all options
+  if (is.null(options$message)) {
+    options$message <- TRUE
+  }
   if (is.null(options$numMultiStarts)) {
     options$numMultiStarts <- 1
   }
@@ -173,13 +179,13 @@ runOptionsChecks <- function(options, parNameList) {
     options$numMultiStarts <- 1
   }
   if (is.null(options$keepAllRuns)) {
-    options$keepAllRuns <- F
+    options$keepAllRuns <- FALSE
   }
   if (is.null(options$useAnalyticGrad)) {
-    options$useAnalyticGrad <- T
+    options$useAnalyticGrad <- TRUE
   }
   if (is.null(options$scaleInputs)) {
-    options$scaleInputs <- T
+    options$scaleInputs <- TRUE
   }
   if (is.null(options$startParBounds)) {
     options$startParBounds <- c(-1, 1)

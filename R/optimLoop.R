@@ -3,14 +3,17 @@
 # ============================================================================
 
 runMultistart <- function(modelInputs) {
+  message <- modelInputs$options$message
   # Setup lists for storing results
   numMultiStarts <- modelInputs$options$numMultiStarts
   models <- list()
   for (i in 1:numMultiStarts) {
     if (numMultiStarts == 1) {
-      cat("Running Model", "\n", sep = "")
+      if (message) { cat("Running Model", "\n", sep = "") }
     } else {
-      cat("Running Multistart", i, "of", numMultiStarts, "\n", sep = " ")
+      if (message) {
+        cat("Running Multistart", i, "of", numMultiStarts, "\n", sep = " ")
+      }
     }
     logLik <- NA
     noFirstRunErr <- TRUE
@@ -23,18 +26,19 @@ runMultistart <- function(modelInputs) {
           model$multistartNumber <- i
         },
         error = function(e) {
-          cat("ERROR: failed to converge...restarting search", "\n",
-            sep = ""
-          )
+          if (message) {
+            cat("ERROR: failed to converge...restarting search", "\n", sep = "")
+          }
         }
       )
       if (i == 1 & is.na(logLik) &
         is.null(modelInputs$options$startVals) == F) {
         noFirstRunErr <- FALSE
-        cat("**User provided starting values did not converge, ",
-          "using random values now**", "\n",
-          sep = ""
-        )
+        if (message) {
+          cat(
+            "**User provided starting values did not converge, ",
+            "using random values now**", "\n", sep = "")
+        }
       }
     }
     models[[i]] <- model
@@ -46,10 +50,11 @@ getStartPars <- function(modelInputs, i, noFirstRunErr) {
   startPars <- getRandomStartPars(modelInputs)
   if (i == 1) {
     if (noFirstRunErr & (is.null(modelInputs$options$startVals) == F)) {
-      cat("**Using User Provided Starting Values For This Run**",
-        "\n",
-        sep = ""
-      )
+      if (modelInputs$options$message) {
+        cat(
+          "**Using User Provided Starting Values For This Run**",
+          "\n", sep = "")
+      }
       startPars <- modelInputs$options$startVals
     } else if (noFirstRunErr) {
       startPars <- 0 * startPars
@@ -84,8 +89,10 @@ checkStartPars <- function(startPars, modelInputs) {
     "lambda_mu" %in% modelInputs$parNameList$mu) {
     if (startPars["lambda_mu"] <= 0) {
       startPars["lambda_mu"] <- 0.01
-      cat("Warning: lambda_mu must be > 0...", "\n", sep = "")
-      cat("...setting starting point for lambda_mu to 0.01 ", "\n", sep = "")
+      if (modelInputs$options$message) {
+        cat("Warning: lambda_mu must be > 0...", "\n", sep = "")
+        cat("...setting starting point for lambda_mu to 0.01 ", "\n", sep = "")
+      }
     }
   }
   return(startPars)
