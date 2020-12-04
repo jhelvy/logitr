@@ -15,7 +15,7 @@ mnl_pref <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'))
+  parNames   = c('price', 'feat', 'hiland', 'weight', 'yoplait'))
 
 # Print a summary of the results:
 summary(mnl_pref)
@@ -32,7 +32,7 @@ mnl_wtp <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
-  parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
+  parNames   = c('feat', 'hiland', 'weight', 'yoplait'),
   priceName  = 'price',
   modelSpace = 'wtp',
   options = list(
@@ -51,7 +51,7 @@ mnl_wtp <- logitr(
 # Print a summary of all multistart runs and a summary of the best model:
 summary(mnl_wtp)
 
-# Print a summary of only the third model run:
+# Print a summary of only the third model run (not the optimal solution):
 summary(mnl_wtp$models[[3]])
 
 # Print a summary of the best model:
@@ -86,7 +86,7 @@ mxl_pref <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'dannon', 'hiland', 'yoplait'),
+  parNames   = c('price', 'feat', 'hiland', 'weight', 'yoplait'),
   randPars   = c(feat = 'n'),
   options    = list(
   # You should run a multistart for MXL models since they are non-convex,
@@ -106,7 +106,7 @@ mxl_wtp <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
-  parNames   = c('feat', 'dannon', 'hiland', 'yoplait'),
+  parNames   = c('feat', 'hiland', 'weight', 'yoplait'),
   priceName  = 'price',
   randPars   = c(feat = 'n'),
   # randPrice  = 'ln',
@@ -162,7 +162,7 @@ mxl_wtp  <- readRDS(here::here('inst', 'extdata', 'mxl_wtp.Rds'))
 # alternative and each column an attribute. In this example, I just use one
 # of the choice observations from the yogurt dataset:
 alts <- subset(yogurt, obsID == 42,
-              select = c('feat', 'price', 'dannon', 'hiland', 'yoplait'))
+               select = c('feat', 'price', 'hiland', 'weight', 'yoplait'))
 row.names(alts) <- c('dannon', 'hiland', 'weight', 'yoplait')
 alts
 
@@ -193,8 +193,8 @@ sim_mxl_wtp
 
 # Plot simulation results from preference space MNL model:
 library(ggplot2)
-mnl_pref_simulation$alt <- row.names(mnl_pref_simulation)
-ggplot(mnl_pref_simulation, aes(x = alt, y = share_mean)) +
+sim_mnl_pref$alt <- row.names(sim_mnl_pref)
+ggplot(sim_mnl_pref, aes(x = alt, y = share_mean)) +
     geom_bar(stat = 'identity', width = 0.7, fill = "dodgerblue") +
     geom_errorbar(aes(ymin = share_low, ymax = share_high), width = 0.2) +
     scale_y_continuous(limits = c(0, 1)) +

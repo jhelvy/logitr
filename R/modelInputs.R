@@ -10,12 +10,10 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
   # Setup pars
   runInputChecks(choiceName, obsIDName, parNames, randPars, priceName,
                  randPrice, modelSpace, weightsName)
-  # Dummy code categorical variables
-  catVars <- getCatVars(data, parNames)
-  if (!is.null(catVars)) {
-    data <- dummyCode(data, catVars)
-    parNames <- getDummyCodedParNames(data, parNames, catVars)
-  }
+  # Recode categorical variables and interactions
+  recoded <- recodeData(data, parNames)
+  data <- recoded$data
+  parNames <- recoded$parNames
   # Set up the parameters
   parSetup <- getParSetup(parNames, priceName, randPars, randPrice)
   parNameList <- getParNameList(parSetup)
@@ -57,8 +55,8 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
   return(modelInputs)
 }
 
-runInputChecks <- function(choiceName, obsIDName, parNames, randPars, priceName,
-                 randPrice, modelSpace, weightsName) {
+runInputChecks <- function(choiceName, obsIDName, parNames, randPars,
+  priceName, randPrice, modelSpace, weightsName) {
   if (! is.null(priceName)) {
     if (priceName %in% parNames) {
       stop('The value you provided for the "priceName" argument is also included in your "parNames" argument. If you are estimating a WTP space model, you should remove the price column name from your "parNames" argument and provide it separately with the "priceName" argument.')
@@ -67,6 +65,20 @@ runInputChecks <- function(choiceName, obsIDName, parNames, randPars, priceName,
   if ((modelSpace == 'wtp') & is.null(priceName)) {
     stop('You are estimating a WTP space model but have not provided a "priceName" argument. Please provide the name of the column in your data frame that represents "price" for the "priceName" argument.')
   }
+}
+
+recodeData <- function(data, parNames) {
+  # Dummy code categorical variables
+  catVars <- getCatVars(data, parNames)
+  if (!is.null(catVars)) {
+    data <- dummyCode(data, catVars)
+    parNames <- getDummyCodedParNames(data, parNames, catVars)
+  }
+  # Create interactions (if any exist)
+  if (any(grepl("*", parNames))) {
+    parNames <- parNames
+  }
+  return(list(data = data, parNames = parNames))
 }
 
 getCatVars <- function(df, parNames) {
