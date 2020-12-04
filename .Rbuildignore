@@ -11,5 +11,7 @@ vignettes/children
 ^logitr\.Rproj$
 ^doc$
 ^Meta$
+^next_release.md$
 build.R
 data-raw
+
