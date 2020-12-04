@@ -147,31 +147,60 @@
       <small>Source: <a href='https://github.com/jhelvy/logitr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="logitr-003-new-simulation-functionality" class="section level1">
-<h1 class="page-header" data-toc-text="0.0.3">
-<a href="#logitr-003-new-simulation-functionality" class="anchor"></a>logitr 0.0.3: New simulation functionality</h1>
+    <div id="logitr-004" class="section level1">
+<h1 class="page-header" data-toc-text="0.0.4">
+<a href="#logitr-004" class="anchor"></a>logitr 0.0.4</h1>
+<p>Weighted models, new dataset, new encoding features</p>
 <div id="summary-of-larger-updates" class="section level2">
 <h2 class="hasAnchor">
 <a href="#summary-of-larger-updates" class="anchor"></a>Summary of larger updates:</h2>
 <ul>
-<li>Added support for simulating shares for a set of alternatives given an estimated model: <code><a href="../reference/simulateShares.html">simulateShares()</a></code>. This is similar to the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> function in mlogit.</li>
-<li>Removed support for using an estimated preference space model as an input in the <code><a href="https://rdrr.io/r/base/options.html">options()</a></code> function. I found this just far too confusing, and instead encourage users to supply a WTP space model with the computed WTP from a preference space model as starting parameters.</li>
+<li>Added support for estimating weighted regressions</li>
+<li>Added and improved documentation for new datasets: <code>yogurt</code>, <code>cars_china</code>, <code>cars_us</code>
+</li>
+<li>Exported the <code><a href="../reference/dummyCode.html">dummyCode()</a></code> function for automatically creating dummy-coded variables in a data frame.</li>
+<li>Added support for auto dummy-coding categorical variables prior to model estimation</li>
+<li>Major overhaul of documentation using {pkgdown}</li>
 </ul>
 </div>
 <div id="summary-of-smaller-updates" class="section level2">
 <h2 class="hasAnchor">
 <a href="#summary-of-smaller-updates" class="anchor"></a>Summary of smaller updates:</h2>
 <ul>
+<li>Changed license to MIT (after doing a bit of reading up on this)</li>
+<li>Fixed dimension-matching issue with user-provided draws for mixed logit models</li>
+<li>Fixed bug in <code>modelInputs</code> where <code>obsID</code> was not a vector for tibble inputs</li>
+<li>Added placeholder hex sticker</li>
+</ul>
+</div>
+</div>
+    <div id="logitr-003" class="section level1">
+<h1 class="page-header" data-toc-text="0.0.3">
+<a href="#logitr-003" class="anchor"></a>logitr 0.0.3</h1>
+<p>New simulation functionality</p>
+<div id="summary-of-larger-updates-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#summary-of-larger-updates-1" class="anchor"></a>Summary of larger updates:</h2>
+<ul>
+<li>Added support for simulating shares for a set of alternatives given an estimated model: <code><a href="../reference/simulateShares.html">simulateShares()</a></code>. This is similar to the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> function in mlogit.</li>
+<li>Removed support for using an estimated preference space model as an input in the <code><a href="https://rdrr.io/r/base/options.html">options()</a></code> function. I found this just far too confusing, and instead encourage users to supply a WTP space model with the computed WTP from a preference space model as starting parameters.</li>
+</ul>
+</div>
+<div id="summary-of-smaller-updates-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#summary-of-smaller-updates-1" class="anchor"></a>Summary of smaller updates:</h2>
+<ul>
 <li>Updated the <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> and main <code><a href="../reference/logitr.html">logitr()</a></code> functions to keep the basic information (run #, log-likelihood value, number of iterations, and output status) whenever <code>numMultistarts</code> &gt; 1. Previously this information was only kept if <code>keepAllRuns</code> was set to <code>TRUE</code>.</li>
 </ul>
 </div>
 </div>
-    <div id="logitr-002-updates-to-options-and-a-few-small-bug-fixes" class="section level1">
+    <div id="logitr-002" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.2">
-<a href="#logitr-002-updates-to-options-and-a-few-small-bug-fixes" class="anchor"></a>logitr 0.0.2: Updates to options and a few small bug fixes</h1>
-<div id="summary-of-larger-updates-1" class="section level2">
+<a href="#logitr-002" class="anchor"></a>logitr 0.0.2</h1>
+<p>Updates to options and a few small bug fixes</p>
+<div id="summary-of-larger-updates-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-larger-updates-1" class="anchor"></a>Summary of larger updates:</h2>
+<a href="#summary-of-larger-updates-2" class="anchor"></a>Summary of larger updates:</h2>
 <ul>
 <li>I got rid of the <code>logitr.summary()</code> function and instead added the <code>logitr</code> class to all the models and renamed the summary function to <code><a href="../reference/summary.logitr.html">summary.logitr()</a></code>. Now you can just use the standard <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> function to summarize model results.</li>
 <li>I finally fixed the analytic gradient for WTP space MXL models. I tested analytic versus numeric for WTP space and Preference Space MXL models and they are all identical, including variations of using normally and log-normally distributed parameters.</li>
@@ -199,9 +228,10 @@
 </ul>
 </div>
 </div>
-    <div id="logitr-001-full-reboot-of-logitr" class="section level1">
+    <div id="logitr-001" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.1">
-<a href="#logitr-001-full-reboot-of-logitr" class="anchor"></a>logitr 0.0.1: Full reboot of logitr!</h1>
+<a href="#logitr-001" class="anchor"></a>logitr 0.0.1</h1>
+<p>Full reboot of logitr!</p>
 <p>Long overdue, I decided to give the logitr program a full overhaul. This is the first version that is compiled as a proper R package that can be directly installed from Github. This version is much more robust and flexible than the prior, clunky collection of R files that I had previously been using to estimate logit models.</p>
 </div>
   </div>

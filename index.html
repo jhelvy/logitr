@@ -103,12 +103,12 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<div id="logitr" class="section level1">
+<div id="logitr-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#logitr" class="anchor"></a>logitr</h1></div>
+<a href="#logitr-" class="anchor"></a>logitr <a href="https://jhelvy.github.io/logitr/"><img src="reference/figures/logitr-hex.png" align="right" height="139"></a>
+</h1></div>
 <!-- badges: start -->
 
-<!-- badges: end -->
 <p><strong>logitr</strong> estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using “Preference” space or “Willingness-to-pay” (WTP) space <a href="https://jhelvy.github.io/logitr/articles/utility_models.html">utility parameterizations</a>. The current version includes support for:</p>
 <ul>
 <li>Homogeneous multinomial logit (MNL) models</li>
@@ -128,33 +128,54 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>The current version is not yet on CRAN, but you can install it from Github using the <strong>devtools</strong> library:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"jhelvy/logitr"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"jhelvy/logitr"</span><span class="op">)</span></code></pre></div>
+<p>Load the library with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr">logitr</a></span><span class="op">)</span></code></pre></div>
 </div>
 <div id="required-libraries" class="section level2">
 <h2 class="hasAnchor">
 <a href="#required-libraries" class="anchor"></a>Required Libraries</h2>
 <p><strong>logitr</strong> requires the <a href="https://cran.r-project.org/web/packages/nloptr/index.html"><strong>nloptr</strong></a> library. This is because <code>nloptr()</code> allows for both the objective and gradient functions to be computed in a single function. This speeds up computation time considerably because both the objective and gradient functions require many of the same calculations (e.g. computing probabilities).</p>
 </div>
-</div>
-<div id="author-version-and-license-information" class="section level1">
-<h1 class="hasAnchor">
-<a href="#author-version-and-license-information" class="anchor"></a>Author, Version, and License Information</h1>
+<div id="author-version-and-license-information" class="section level2">
+<h2 class="hasAnchor">
+<a href="#author-version-and-license-information" class="anchor"></a>Author, Version, and License Information</h2>
 <ul>
 <li>Author: <em>John Paul Helveston</em> <a href="http://www.jhelvy.com/">www.jhelvy.com</a>
 </li>
 <li>Date First Written: <em>Sunday, September 28, 2014</em>
 </li>
-<li>Most Recent Update: <em>Thursday, Oct 22, 2020</em>
+<li>Most Recent Update: December 04 2020</li>
+<li>License: <a href="https://github.com/jhelvy/logitr/blob/master/LICENSE.md">MIT</a>
 </li>
-<li>License: GPL-3</li>
-<li>Latest Version: 1.2.0</li>
+<li>
+<a href="https://github.com/jhelvy/logitr/releases/latest">Latest Release</a>: 0.0.4</li>
 </ul>
+</div>
 </div>
 <div id="citation-information" class="section level1">
 <h1 class="hasAnchor">
 <a href="#citation-information" class="anchor"></a>Citation Information</h1>
-<p>If you use this package for in a publication, I would greatly appreciate it if you cited it. You can get the citation information by typing this into R:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">citation</span>(<span class="st">'logitr'</span>)</span></code></pre></div>
+<p>If you use this package for in a publication, I would greatly appreciate it if you cited it. You can get the citation information by typing <code><a href="https://rdrr.io/r/utils/citation.html">citation("logitr")</a></code> into R:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span><span class="op">(</span><span class="st">"logitr"</span><span class="op">)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; To cite logitr in publications use:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   John Paul Helveston. logitr: Random utility logit models with</span>
+<span class="co">#&gt;   preference and willingness to pay space parameterizations (2020)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; A BibTeX entry for LaTeX users is</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   @Manual{,</span>
+<span class="co">#&gt;     title = {logitr: Random utility logit models with preference and willingness to pay space parameterizations},</span>
+<span class="co">#&gt;     author = {John Paul Helveston},</span>
+<span class="co">#&gt;     year = {2020},</span>
+<span class="co">#&gt;     note = {R package version 0.0.4},</span>
+<span class="co">#&gt;     url = {https://jhelvy.github.io/logitr/},</span>
+<span class="co">#&gt;   }</span></code></pre></div>
 </div>
 
   </div>
@@ -173,7 +194,7 @@
 <h2>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></small></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
 <div class="citation">
