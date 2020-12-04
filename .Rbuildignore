@@ -6,6 +6,7 @@
 ^pkgdown$
 ^\.github$
 vignettes/children
+^README\.Rmd$
 ^LICENSE\.md$
 ^logitr\.Rproj$
 ^doc$

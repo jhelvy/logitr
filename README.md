@@ -1,5 +1,7 @@
 
-# logitr
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# logitr <a href='https://jhelvy.github.io/logitr/'><img src='man/figures/logitr-hex.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
@@ -7,7 +9,6 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/logitr)](https://CRAN.R-project.org/package=logitr)
-
 <!-- badges: end -->
 
 **logitr** estimates multinomial (MNL) and mixed logit (MXL) models in
@@ -47,7 +48,15 @@ for details on how to use **logitr** to estimate models.
 The current version is not yet on CRAN, but you can install it from
 Github using the **devtools** library:
 
-    devtools::install_github("jhelvy/logitr")
+``` r
+devtools::install_github("jhelvy/logitr")
+```
+
+Load the library with:
+
+``` r
+library(logitr)
+```
 
 ## Required Libraries
 
@@ -59,19 +68,38 @@ computation time considerably because both the objective and gradient
 functions require many of the same calculations (e.g. computing
 probabilities).
 
-# Author, Version, and License Information
+## Author, Version, and License Information
 
   - Author: *John Paul Helveston*
     [www.jhelvy.com](http://www.jhelvy.com/)
   - Date First Written: *Sunday, September 28, 2014*
-  - Most Recent Update: *Thursday, Oct 22, 2020*
-  - License: GPL-3
-  - Latest Version: 1.2.0
+  - Most Recent Update: December 04 2020
+  - License:
+    [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
+  - [Latest Release](https://github.com/jhelvy/logitr/releases/latest):
+    0.0.4
 
 # Citation Information
 
 If you use this package for in a publication, I would greatly appreciate
-it if you cited it. You can get the citation information by typing this
-into R:
+it if you cited it. You can get the citation information by typing
+`citation("logitr")` into R:
 
-    citation('logitr')
+``` r
+citation("logitr")
+#> 
+#> To cite logitr in publications use:
+#> 
+#>   John Paul Helveston. logitr: Random utility logit models with
+#>   preference and willingness to pay space parameterizations (2020)
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Manual{,
+#>     title = {logitr: Random utility logit models with preference and willingness to pay space parameterizations},
+#>     author = {John Paul Helveston},
+#>     year = {2020},
+#>     note = {R package version 0.0.4},
+#>     url = {https://jhelvy.github.io/logitr/},
+#>   }
+```
