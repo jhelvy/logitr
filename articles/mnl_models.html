@@ -189,17 +189,17 @@ Done!</code></pre>
 ##                           
 ## Model Space:    Preference
 ## Model Run:          1 of 1
-## Iterations:             22
-## Elapsed Time:  0h:0m:0.14s
+## Iterations:             23
+## Elapsed Time:  0h:0m:0.21s
 ## Weights Used?:       FALSE
 ## 
 ## Model Coefficients: 
 ##          Estimate StdError    tStat pVal signif
 ## price   -0.366584 0.024366 -15.0449    0    ***
-## feat     0.491431 0.120063   4.0931    0    ***
-## dannon   0.641185 0.054498  11.7652    0    ***
-## hiland  -3.074415 0.145384 -21.1469    0    ***
-## yoplait  1.375756 0.088982  15.4611    0    ***
+## feat     0.491436 0.120063   4.0931    0    ***
+## hiland  -3.715600 0.145419 -25.5510    0    ***
+## weight  -0.641184 0.054498 -11.7652    0    ***
+## yoplait  0.734572 0.080644   9.1088    0    ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -215,19 +215,19 @@ Done!</code></pre>
 <p>View the estimated model coefficients:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span></code></pre></div>
-<pre><code>##      price       feat     dannon     hiland    yoplait 
-## -0.3665843  0.4914314  0.6411848 -3.0744146  1.3757562</code></pre>
+<pre><code>##      price       feat     hiland     weight    yoplait 
+## -0.3665844  0.4914358 -3.7156003 -0.6411840  0.7345717</code></pre>
 <p>Compute the WTP implied from the preference space model:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wtp_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, priceName <span class="op">=</span>  <span class="st">"price"</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wtp_mnl_pref</span></code></pre></div>
-<pre><code>##          Estimate StdError    tStat  pVal signif
-## lambda   0.366584 0.024287  15.0939 0e+00    ***
-## feat     1.340568 0.359166   3.7324 2e-04    ***
-## dannon   1.749079 0.199171   8.7818 0e+00    ***
-## hiland  -8.386650 0.505962 -16.5757 0e+00    ***
-## yoplait  3.752905 0.469167   7.9991 0e+00    ***</code></pre>
+<pre><code>##           Estimate StdError    tStat  pVal signif
+## lambda    0.366584 0.024397  15.0259 0e+00    ***
+## feat      1.340580 0.360407   3.7196 2e-04    ***
+## hiland  -10.135730 0.583499 -17.3706 0e+00    ***
+## weight   -1.749076 0.180996  -9.6636 0e+00    ***
+## yoplait   2.003827 0.340626   5.8828 0e+00    ***</code></pre>
 </div>
 <div id="wtp-space-model" class="section level1">
 <h1 class="hasAnchor">
@@ -287,16 +287,16 @@ Done!</code></pre>
 ## SUMMARY OF ALL MULTISTART RUNS:
 ## 
 ##    run    logLik iterations status
-## 1    1 -2656.888         94      3
-## 2    2 -2804.027         95      3
-## 3    3 -2656.888         73      3
-## 4    4 -2801.297         79      3
-## 5    5 -2803.694         90      3
-## 6    6 -2656.888         73      3
-## 7    7 -2656.888         80      3
-## 8    8 -2803.545         94      3
-## 9    9 -2803.407        116      3
-## 10  10 -2805.205         50      3
+## 1    1 -2656.888         91      3
+## 2    2 -2803.584         86      3
+## 3    3 -2803.721         99      3
+## 4    4 -2656.888         62      3
+## 5    5 -2656.888         66      3
+## 6    6 -2804.222         69      3
+## 7    7 -2656.888         84      3
+## 8    8 -2656.888         75      3
+## 9    9 -2656.888         93      3
+## 10  10 -2656.888         79      3
 ## ---
 ## To view meaning of status codes, use statusCodes() 
 ## 
@@ -305,18 +305,18 @@ Done!</code></pre>
 ## MODEL SUMMARY: 
 ##                                  
 ## Model Space:   Willingness-to-Pay
-## Model Run:                3 of 10
-## Iterations:                    73
-## Elapsed Time:         0h:0m:0.36s
+## Model Run:                5 of 10
+## Iterations:                    66
+## Elapsed Time:          0h:0m:0.5s
 ## Weights Used?:              FALSE
 ## 
 ## Model Coefficients: 
-##          Estimate StdError    tStat  pVal signif
-## lambda   0.366585 0.024366  15.0449 0e+00    ***
-## feat     1.340574 0.355865   3.7671 2e-04    ***
-## dannon   1.749076 0.179897   9.7227 0e+00    ***
-## hiland  -8.386650 0.502472 -16.6908 0e+00    ***
-## yoplait  3.752901 0.168121  22.3226 0e+00    ***
+##           Estimate StdError    tStat  pVal signif
+## lambda    0.366584 0.024366  15.0449 0e+00    ***
+## feat      1.340573 0.355865   3.7671 2e-04    ***
+## hiland  -10.135728 0.576083 -17.5942 0e+00    ***
+## weight   -1.749077 0.179897  -9.7227 0e+00    ***
+## yoplait   2.003825 0.142377  14.0741 0e+00    ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -332,10 +332,10 @@ Done!</code></pre>
 <p>View the estimated model coefficients:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mnl_wtp</span><span class="op">)</span></code></pre></div>
-<pre><code>## **Using results for model 3 of 10,
+<pre><code>## **Using results for model 5 of 10,
 ## the best model (largest log-likelihood) from the multistart**</code></pre>
-<pre><code>##     lambda       feat     dannon     hiland    yoplait 
-##  0.3665845  1.3405735  1.7490761 -8.3866500  3.7529015</code></pre>
+<pre><code>##      lambda        feat      hiland      weight     yoplait 
+##   0.3665845   1.3405734 -10.1357279  -1.7490767   2.0038251</code></pre>
 </div>
 <div id="compare-wtp-from-both-models" class="section level1">
 <h1 class="hasAnchor">
@@ -347,11 +347,11 @@ Done!</code></pre>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wtp_mnl_comparison</span></code></pre></div>
 <pre><code>##                 pref           wtp difference
-## lambda      0.366584     0.3665845   5.00e-07
-## feat        1.340568     1.3405735   5.52e-06
-## dannon      1.749079     1.7490761  -2.86e-06
-## hiland     -8.386650    -8.3866500  -2.00e-08
-## yoplait     3.752905     3.7529015  -3.52e-06
+## lambda      0.366584     0.3665845   4.60e-07
+## feat        1.340580     1.3405734  -6.63e-06
+## hiland    -10.135730   -10.1357279   2.08e-06
+## weight     -1.749076    -1.7490767  -6.70e-07
+## yoplait     2.003827     2.0038251  -1.91e-06
 ## logLik  -2656.887878 -2656.8878779   0.00e+00</code></pre>
 </div>
 <div id="references" class="section level1 unnumbered">
