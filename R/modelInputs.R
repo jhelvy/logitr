@@ -68,15 +68,24 @@ runInputChecks <- function(choiceName, obsIDName, parNames, randPars,
 }
 
 recodeData <- function(data, parNames) {
+  # Separate out interactions
+  ints <- grepl("\\*", parNames)
+  if (any(ints)) {
+    intNames <- parNames[ints == TRUE]
+    parNames <- parNames[ints == FALSE]
+  }
   # Dummy code categorical variables
   catVars <- getCatVars(data, parNames)
   if (!is.null(catVars)) {
-    data <- dummyCode(data, catVars)
-    parNames <- getDummyCodedParNames(data, parNames, catVars)
+    dummyList <- addDummyVars(data, parNames, catVars)
+    data <- dummyList$data
+    parNames <- dummyList$parNames
   }
   # Create interactions (if any exist)
-  if (any(grepl("*", parNames))) {
-    parNames <- parNames
+  if (any(ints)) {
+    intsList <- addIntVars(data, parNames, intNames, catVars)
+    data <- intsList$data
+    parNames <- intsList$parNames
   }
   return(list(data = data, parNames = parNames))
 }
@@ -90,59 +99,53 @@ getCatVars <- function(df, parNames) {
     return(parNames[categoricalIDs])
 }
 
-#' Creates dummy-coded variables.
-#'
-#' Use this function to create dummy-coded variables in a data frame.
-#' @param df A data frame.
-#' @param vars The variables in the data frame for which you want to
-#' create new dummy coded variables.
-#' @export
-#' @examples
-#' # Create an example data frame:
-#' df <- data.frame(
-#'     animal   = c("dog", "goldfish", "bird", "dog", "goldfish"),
-#'     numLegs  = c(4, 0, 2, 4, 0),
-#'     lifeSpan = c(10, 10, 5, 10, 10))
-#'
-#' # Create dummy coded variables for the variables "animal" and "numLegs":
-#' df_dummy <- dummyCode(df, vars = c("animal", "numLegs"))
-#' df_dummy
-dummyCode = function(df, vars) {
-    df = as.data.frame(df)
-    nonVars = colnames(df)[which(! colnames(df) %in% vars)]
-    # Keep the original variables and the order to restore later after merging
-    df$order = seq(nrow(df))
-    for (i in 1:length(vars)) {
-        var      = vars[i]
-        colIndex = which(colnames(df) == var)
-        levels   = sort(unique(df[,colIndex]))
-        mergeMat = as.data.frame(diag(length(levels)))
-        mergeMat = cbind(levels, mergeMat)
-        colnames(mergeMat) = c(var, paste(var, levels, sep='_'))
-        df = merge(df, mergeMat)
-    }
-    # Restore the original column order
-    new = colnames(df)[which(! colnames(df) %in% c(vars, nonVars))]
-    df = df[c(nonVars, vars, new)]
-    # Restore the original row order
-    df = df[order(df$order),]
-    row.names(df) = df$order
-    df$order <- NULL
-    return(df)
-}
-
-getDummyCodedParNames <- function(df, parNames, catVars) {
+addDummyVars <- function(data, parNames, catVars) {
+  data <- dummyCode(data, catVars)
   # Create a new set of parNames with the dummy-coded names
   nonCatVars <- setdiff(parNames, catVars)
-  allVars <- names(df)
-  keepDummyVars <- c()
+  dummyVars <- c()
   for (i in 1:length(catVars)) {
-    tempMatches <- which(grepl(paste0(catVars[i], "_"), allVars))
-    tempDummyVars <- allVars[tempMatches]
-    keepDummyVars <- c(keepDummyVars, tempDummyVars[2:length(tempDummyVars)])
+    dummyVars <- c(dummyVars, getCatVarDummyNames(data, catVars[i]))
   }
-  codedParNames <- c(nonCatVars, keepDummyVars)
-  return(codedParNames)
+  parNames <- c(nonCatVars, dummyVars)
+  return(list(data = data, parNames = parNames))
+}
+
+getCatVarDummyNames <- function(data, catVar) {
+  allVars <- names(data)
+  tempMatches <- which(grepl(paste0(catVar, "_"), allVars))
+  return(allVars[tempMatches][-1])
+}
+
+addIntVars <- function(data, parNames, intNames, catVars) {
+  intList <- strsplit(intNames, "\\*")
+  allIntVars <- list()
+  for (i in 1:length(intList)) {
+    intVars1 <- intList[[i]][1]
+    intVars2 <- intList[[i]][2]
+    # Get dummy coded variable names for categorical vars
+    if (intVars1 %in% catVars) {
+      intVars1 <- getCatVarDummyNames(data, intVars1)
+    }
+    if (intVars2 %in% catVars) {
+      intVars2 <- getCatVarDummyNames(data, intVars2)
+    }
+    intVars <- list()
+    index <- 1
+    for (intVar1 in intVars1) {
+      for (intVar2 in intVars2) {
+        int <- data[intVar1] * data[intVar2]
+        names(int) <- paste0(intVar1, "*", intVar2)
+        intVars[[index]] <- int
+        index <- index + 1
+      }
+    }
+    allIntVars[[i]] <- do.call(cbind, intVars)
+  }
+  allIntVars <- do.call(cbind, allIntVars)
+  data <- cbind(data, allIntVars)
+  parNames <- c(parNames, names(allIntVars))
+  return(list(data = data, parNames = parNames))
 }
 
 getParSetup <- function(parNames, priceName, randPars, randPrice) {
