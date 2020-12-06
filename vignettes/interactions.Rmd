@@ -7,20 +7,67 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-```{r, child=here::here('man', 'rmdchunks', 'header.Rmd')}
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.retina = 3,
+  comment = "#>"
+)
+library(logitr)
+# Read in results from already estimated models  so that the
+# examples aren't actually run when building this page, otherwise it'll
+# take much longer to build
+model_price_feat <- readRDS(
+  here::here('inst', 'extdata', 'int_model_price_feat.Rds'))
+model_price_brand <- readRDS(
+  here::here('inst', 'extdata', 'int_model_price_brand.Rds'))
 ```
 
+To add interactions between coefficients in your model, you can add additional arguments in the `parNames` vector in the `logitr()` function separated by the `*` symbol. For example, let's say we want to interact `price` with `feat` in the following model:
 
-# Adding interactions across attributes
-
-
-data <- data.frame(
-  price   = c(1, 2, 3),
-  discount = c("80%", "50%", "25%"),
-  brand   = c("hiland", "yoplait", "dannon")
+```{r, eval=FALSE}
+model <- logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'brand')
 )
+```
 
-dummyCode(data, c("discount", "brand"))
+To do so, I could add `"price*feat"` to the `parNames` vector:
 
-parNames   = c('price', 'feat', 'brand', 'discount*price', 'price*brand', 'discount*brand')
-parNames
+```{r, eval=FALSE}
+model_price_feat <- logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'brand', 'price*feat')
+)
+```
+
+The model now has an estimated coefficient for the `price*feat` effect:
+
+```{r}
+summary(model_price_feat)
+```
+
+In the above example, both `price` and `feat` were continuous variables, so only a single interaction coefficient was needed. 
+
+In the case of interacting _discrete_ variables, multiple interactions coefficients will be estimated according to the number of levels in the discrete attribue. For example, the interaction of `price` with `brand` will require three new interactions - one for each level of the `brand` variable except the first "baseline" level: 
+
+```{r, eval=FALSE}
+model_price_brand <- logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'brand', 'price*brand')
+)
+```
+
+The model now has three estimated coefficients for the `price*brand` effect:
+
+```{r}
+summary(model_price_brand)
+```

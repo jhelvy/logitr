@@ -5,3 +5,8 @@
 - Added support for creating interactions amongst variables
 
 ## Summary of smaller updates:
+
+- Added new documentation for prepping data:
+    - overall structure
+    - dummyCode() function
+    - handling interactions

@@ -9,9 +9,9 @@
 ^LICENSE\.md$
 ^logitr\.Rproj$
 ^todo\.md$
+^next_release\.md$
 ^doc$
 ^Meta$
-^next_release.md$
 build.R
 data-raw
 
