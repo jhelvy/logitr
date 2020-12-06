@@ -123,21 +123,102 @@
 
     
     
-
-<div id="adding-interactions-across-attributes" class="section level1">
-<h1 class="hasAnchor">
-<a href="#adding-interactions-across-attributes" class="anchor"></a>Adding interactions across attributes</h1>
-<p>data &lt;- data.frame( price = c(1, 2, 3), discount = c(“80%”, “50%”, “25%”), brand = c(“hiland”, “yoplait”, “dannon”) )</p>
-<p>dummyCode(data, c(“discount”, “brand”))</p>
-<p>parNames = c(‘price’, ‘feat’, ‘brand’, ‘discount<em>price’, ’price</em>brand’, ’discount*brand’) parNames</p>
-</div>
+<p>To add interactions between coefficients in your model, you can add additional arguments in the <code>parNames</code> vector in the <code><a href="../reference/logitr.html">logitr()</a></code> function separated by the <code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code> symbol. For example, let’s say we want to interact <code>price</code> with <code>feat</code> in the following model:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
+  data       <span class="op">=</span> <span class="va">yogurt</span>,
+  choiceName <span class="op">=</span> <span class="st">'choice'</span>,
+  obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
+  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<p>To do so, I could add <code>"price*feat"</code> to the <code>parNames</code> vector:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model_price_feat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
+  data       <span class="op">=</span> <span class="va">yogurt</span>,
+  choiceName <span class="op">=</span> <span class="st">'choice'</span>,
+  obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
+  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price*feat'</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<p>The model now has an estimated coefficient for the <code>price*feat</code> effect:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_price_feat</span><span class="op">)</span>
+<span class="co">#&gt; =================================================</span>
+<span class="co">#&gt; MODEL SUMMARY: </span>
+<span class="co">#&gt;                           </span>
+<span class="co">#&gt; Model Space:    Preference</span>
+<span class="co">#&gt; Model Run:          1 of 1</span>
+<span class="co">#&gt; Iterations:             28</span>
+<span class="co">#&gt; Elapsed Time:  0h:0m:0.25s</span>
+<span class="co">#&gt; Weights Used?:       FALSE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Model Coefficients: </span>
+<span class="co">#&gt;                Estimate StdError    tStat   pVal signif</span>
+<span class="co">#&gt; price         -0.358469 0.024733 -14.4936 0.0000    ***</span>
+<span class="co">#&gt; feat           1.090151 0.378956   2.8767 0.0041     **</span>
+<span class="co">#&gt; brand_hiland  -3.725143 0.146424 -25.4407 0.0000    ***</span>
+<span class="co">#&gt; brand_weight  -0.640131 0.054541 -11.7368 0.0000    ***</span>
+<span class="co">#&gt; brand_yoplait  0.727363 0.080410   9.0457 0.0000    ***</span>
+<span class="co">#&gt; price*feat    -0.078128 0.047287  -1.6522 0.0986      .</span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Model Fit Values: </span>
+<span class="co">#&gt;                                      </span>
+<span class="co">#&gt; Log.Likelihood.         -2655.5245489</span>
+<span class="co">#&gt; Null.Log.Likelihood.    -3343.7419990</span>
+<span class="co">#&gt; AIC.                     5323.0491000</span>
+<span class="co">#&gt; BIC.                     5357.7784000</span>
+<span class="co">#&gt; McFadden.R2.                0.2058225</span>
+<span class="co">#&gt; Adj..McFadden.R2            0.2040281</span>
+<span class="co">#&gt; Number.of.Observations.  2412.0000000</span></code></pre></div>
+<p>In the above example, both <code>price</code> and <code>feat</code> were continuous variables, so only a single interaction coefficient was needed.</p>
+<p>In the case of interacting <em>discrete</em> variables, multiple interactions coefficients will be estimated according to the number of levels in the discrete attribue. For example, the interaction of <code>price</code> with <code>brand</code> will require three new interactions - one for each level of the <code>brand</code> variable except the first “baseline” level:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model_price_brand</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
+  data       <span class="op">=</span> <span class="va">yogurt</span>,
+  choiceName <span class="op">=</span> <span class="st">'choice'</span>,
+  obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
+  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price*brand'</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<p>The model now has three estimated coefficients for the <code>price*brand</code> effect:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_price_brand</span><span class="op">)</span>
+<span class="co">#&gt; =================================================</span>
+<span class="co">#&gt; MODEL SUMMARY: </span>
+<span class="co">#&gt;                           </span>
+<span class="co">#&gt; Model Space:    Preference</span>
+<span class="co">#&gt; Model Run:          1 of 1</span>
+<span class="co">#&gt; Iterations:             41</span>
+<span class="co">#&gt; Elapsed Time:  0h:0m:0.34s</span>
+<span class="co">#&gt; Weights Used?:       FALSE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Model Coefficients: </span>
+<span class="co">#&gt;                      Estimate StdError   tStat   pVal signif</span>
+<span class="co">#&gt; price               -0.389508 0.045247 -8.6086 0.0000    ***</span>
+<span class="co">#&gt; feat                 0.421870 0.122578  3.4416 0.0006    ***</span>
+<span class="co">#&gt; brand_hiland        -1.691724 0.623148 -2.7148 0.0067     **</span>
+<span class="co">#&gt; brand_weight        -2.228267 0.561636 -3.9675 0.0001    ***</span>
+<span class="co">#&gt; brand_yoplait        0.438702 0.450425  0.9740 0.3302       </span>
+<span class="co">#&gt; price*brand_hiland  -0.434289 0.115531 -3.7591 0.0002    ***</span>
+<span class="co">#&gt; price*brand_weight   0.199893 0.069829  2.8626 0.0042     **</span>
+<span class="co">#&gt; price*brand_yoplait  0.033236 0.050372  0.6598 0.5094       </span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Model Fit Values: </span>
+<span class="co">#&gt;                                      </span>
+<span class="co">#&gt; Log.Likelihood.         -2643.2046773</span>
+<span class="co">#&gt; Null.Log.Likelihood.    -3343.7419990</span>
+<span class="co">#&gt; AIC.                     5302.4094000</span>
+<span class="co">#&gt; BIC.                     5348.7150000</span>
+<span class="co">#&gt; McFadden.R2.                0.2095070</span>
+<span class="co">#&gt; Adj..McFadden.R2            0.2071145</span>
+<span class="co">#&gt; Number.of.Observations.  2412.0000000</span></code></pre></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 
