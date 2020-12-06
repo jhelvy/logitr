@@ -1,10 +1,10 @@
 \begin{equation}
     u_{j} =
         \lambda (
-        \omega_1 x_{j}^{\mathrm{FEAT}} +
-        \omega_2 x_{j}^{\mathrm{DANNON}} +
-        \omega_3 x_{j}^{\mathrm{HIGHLAND}} +
-        \omega_4 x_{j}^{\mathrm{YOPLAIT}} -
+        \omega_1 x_{j}^{\mathrm{Feat}} +
+        \omega_2 x_{j}^{\mathrm{Hiland}} +
+        \omega_3 x_{j}^{\mathrm{Yoplait}} +
+        \omega_4 x_{j}^{\mathrm{Dannon}} -
         p_{j})  +
         \varepsilon_{j}
 \label{eq:mnlWtpExample}

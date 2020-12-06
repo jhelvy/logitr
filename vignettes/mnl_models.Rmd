@@ -32,6 +32,18 @@ wtp_mnl_comparison <- readRDS(here::here('inst', 'extdata',
 ```{r, child=here::here('man', 'rmdchunks', 'yogurtDataDescription.Rmd')}
 ```
 
+In the utility models described below, the data variables are represented as follows:
+
+<div style="width:550px">
+| Symbol | Variable                             |
+|--------|--------------------------------------|
+| $p$                        | The price in US dollars.       |
+| $x_{j}^{\mathrm{Feat}}$     | Dummy variable for whether the newspaper advertisement was shown to the customer.    |
+| $x_{j}^{\mathrm{Hiland}}$ | Dummy variable for the "Highland" brand. |
+| $x_{j}^{\mathrm{Yoplait}}$  | Dummy variable for the "Yoplait" brand.  |
+| $x_{j}^{\mathrm{Dannon}}$   | Dummy variable for the "Dannon" brand.   |
+</div>
+
 # Preference space model
 
 This example will estimate the following homogeneous multinomial logit model in the preference space:

@@ -1,0 +1,31 @@
+---
+title: "Data Formatting and Encoding"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Data Formatting and Encoding}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, child=here::here('man', 'rmdchunks', 'header.Rmd')}
+```
+
+# Basic required format
+
+```{r, child=here::here('man', 'rmdchunks', 'dataFormat.Rmd')}
+```
+
+# Continuous and discrete variables
+
+## Default settings
+
+Numeric variables by default are estimated with a single covariate. For example, consider a data frame that contains a `price` variable with three levels `c(10, 15, 20)`. Adding `price` to the `parNames` argument in the main `logitr()` function would estimate a single `price` covariate for the "slope" of the change in price between the values of `10` and `20`.
+
+Categorical variables (i.e. "character" or "factor" type variables) are estimated with a single covariate for every unique "level" except for the first level (the baseline or `"0"` level) using "dummy" encoding (`0` for `FALSE` and `1` for `TRUE`). For example, consider a data frame that contains a `brand` variable with four levels `c("dannon", "hiland", "weight", "yoplait")`. Adding `brand` to the `parNames` argument in the main `logitr()` function would estimate three covariates: `brand_hiland`, `brand_weight`, and `brand_yoplait`, with `brand_dannon` serving as the "dummied out" baseline level.
+
+## Dummy coding variables
+
+To model a continuous variable as a discrete variable with a covariate for all but the first "level", there are two options:
+
+1. Convert the variable to a "character" or "factor" type.
+2. Create dummy coded variables using the `dummyCode()` function.

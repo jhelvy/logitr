@@ -1,10 +1,10 @@
 \begin{equation}
     u_{j} =
         \alpha p_{j} +
-        \beta_1 x_{j}^{\mathrm{FEAT}} +
-        \beta_2 x_{j}^{\mathrm{DANNON}} +
-        \beta_3 x_{j}^{\mathrm{HIGHLAND}} +
-        \beta_4 x_{j}^{\mathrm{YOPLAIT}}  +
+        \beta_1 x_{j}^{\mathrm{Feat}} +
+        \beta_2 x_{j}^{\mathrm{Hiland}} +
+        \beta_3 x_{j}^{\mathrm{Yoplait}} +
+        \beta_4 x_{j}^{\mathrm{Dannon}}  +
         \varepsilon_{j}
 \label{eq:mxlPrefExample}
 \end{equation}

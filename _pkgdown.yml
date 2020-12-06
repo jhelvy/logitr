@@ -22,6 +22,10 @@ navbar:
       menu:
         - text: "Utility Models in the Preference & WTP Space"
           href: articles/utility_models.html
+        - text: "Data Formatting and Encoding"
+          href: articles/data_formatting.html
+        - text: "Models with Interactions"
+          href: articles/interactions.html
     - text: "Examples"
       menu:
         - text: "Estimating multinomial logit models"
@@ -39,30 +43,30 @@ navbar:
      href: https://github.com/jhelvy/logitr
 
 reference:
-- title: "Prepare data"
-  desc: "Functions for prepping data prior to model estimation."
+- title: "Encoding data"
+  desc: "Functions for encoding data prior to model estimation."
   contents:
   - dummyCode
-- title: "Estimate models"
+- title: "Estimating models"
   desc: "Functions for estimating multinomial logit models with preference space and WTP space utility parameterizations."
   contents:
   - logitr
-- title: "View results"
+- title: "Viewing results"
   desc: "Functions for viewing the results of estimated models."
   contents:
   - summary.logitr
   - coef.logitr
   - statusCodes
-- title: "Compute and compare WTP"
+- title: "Computing and comparing WTP"
   desc: "Functions for computing and comparing WTP from estimated models."
   contents:
   - wtp
   - wtpCompare
-- title: "Simulate shares"
+- title: "Simulating shares"
   desc: "Functions for simulating expected shares from a set of alternatives."
   contents:
   - simulateShares
-- title: "Data"
+- title: "Example data sets"
   desc: "Descriptions of data included with this package"
   contents:
   - yogurt

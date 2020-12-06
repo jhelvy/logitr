@@ -1,0 +1,26 @@
+---
+title: "Models with Interactions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Models with Interactions}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, child=here::here('man', 'rmdchunks', 'header.Rmd')}
+```
+
+
+# Adding interactions across attributes
+
+
+data <- data.frame(
+  price   = c(1, 2, 3),
+  discount = c("80%", "50%", "25%"),
+  brand   = c("hiland", "yoplait", "dannon")
+)
+
+dummyCode(data, c("discount", "brand"))
+
+parNames   = c('price', 'feat', 'brand', 'discount*price', 'price*brand', 'discount*brand')
+parNames

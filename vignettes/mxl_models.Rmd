@@ -32,6 +32,18 @@ wtp_mxl_comparison <- readRDS(
 ```{r, child=here::here('man', 'rmdchunks', 'yogurtDataDescription.Rmd')}
 ```
 
+In the utility models described below, the data variables are represented as follows:
+
+<div style="width:550px">
+| Symbol | Variable                             |
+|--------|--------------------------------------|
+| $p$                        | The price in US dollars.       |
+| $x_{j}^{\mathrm{Feat}}$     | Dummy variable for whether the newspaper advertisement was shown to the customer.    |
+| $x_{j}^{\mathrm{Hiland}}$ | Dummy variable for the "Highland" brand. |
+| $x_{j}^{\mathrm{Yoplait}}$  | Dummy variable for the "Yoplait" brand.  |
+| $x_{j}^{\mathrm{Dannon}}$   | Dummy variable for the "Dannon" brand.   |
+</div>
+
 # Preference space model
 
 This example will estimate the following mixed logit model in the preference space:
@@ -39,7 +51,7 @@ This example will estimate the following mixed logit model in the preference spa
 ```{r, child=here::here('man', 'rmdchunks', 'mxlPrefExample.Rmd')}
 ```
 
-where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ have units of utility, and the parameter for $x_{j}^{\mathrm{FEAT}}$ is normally distributed.
+where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ have units of utility, and the parameters for $x_{j}^{\mathrm{Feat}}$, $x_{j}^{\mathrm{Hiland}}$, $x_{j}^{\mathrm{Yoplait}}$ and $x_{j}^{\mathrm{Dannon}}$ are normally distributed.
 
 To estimate the model, first load the **logitr** package:
 

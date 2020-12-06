@@ -67,6 +67,3 @@ saveRDS(wtp_mxl_pref,
         here::here('inst', 'extdata', 'wtp_mxl_pref.Rds'))
 saveRDS(wtp_mxl_comparison,
         here::here('inst', 'extdata', 'wtp_mxl_comparison.Rds'))
-
-
-
