@@ -59,6 +59,12 @@
 <li>
       <a href="../articles/utility_models.html">Utility Models in the Preference &amp; WTP Space</a>
     </li>
+    <li>
+      <a href="../articles/data_formatting.html">Data Formatting and Encoding</a>
+    </li>
+    <li>
+      <a href="../articles/interactions.html">Models with Interactions</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -138,20 +144,20 @@
 <td>The price in US dollars.</td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(x_{j}^{\mathrm{FEAT}}\)</span></td>
+<td><span class="math inline">\(x_{j}^{\mathrm{Feat}}\)</span></td>
 <td>Dummy variable for whether the newspaper advertisement was shown to the customer.</td>
 </tr>
 <tr class="odd">
-<td><span class="math inline">\(x_{j}^{\mathrm{DANNON}}\)</span></td>
-<td>Dummy variable for the “Dannon” brand.</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(x_{j}^{\mathrm{HIGHLAND}}\)</span></td>
+<td><span class="math inline">\(x_{j}^{\mathrm{Hiland}}\)</span></td>
 <td>Dummy variable for the “Highland” brand.</td>
 </tr>
-<tr class="odd">
-<td><span class="math inline">\(x_{j}^{\mathrm{YOPLAIT}}\)</span></td>
+<tr class="even">
+<td><span class="math inline">\(x_{j}^{\mathrm{Yoplait}}\)</span></td>
 <td>Dummy variable for the “Yoplait” brand.</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(x_{j}^{\mathrm{Dannon}}\)</span></td>
+<td>Dummy variable for the “Dannon” brand.</td>
 </tr>
 </tbody>
 </table>
@@ -164,10 +170,10 @@
 <p><span class="math display">\[\begin{equation}
     u_{j} =
         \alpha p_{j} +
-        \beta_1 x_{j}^{\mathrm{FEAT}} +
-        \beta_2 x_{j}^{\mathrm{DANNON}} +
-        \beta_3 x_{j}^{\mathrm{HIGHLAND}} +
-        \beta_4 x_{j}^{\mathrm{YOPLAIT}}  +
+        \beta_1 x_{j}^{\mathrm{Feat}} +
+        \beta_2 x_{j}^{\mathrm{Hiland}} +
+        \beta_3 x_{j}^{\mathrm{Yoplait}} +
+        \beta_4 x_{j}^{\mathrm{Dannon}}  +
         \varepsilon_{j}
 \label{eq:mnlPrefExample}
 \end{equation}\]</span></p>
@@ -194,7 +200,7 @@
 <span class="co">#&gt; Model Space:    Preference</span>
 <span class="co">#&gt; Model Run:          1 of 1</span>
 <span class="co">#&gt; Iterations:             22</span>
-<span class="co">#&gt; Elapsed Time:  0h:0m:0.14s</span>
+<span class="co">#&gt; Elapsed Time:  0h:0m:0.11s</span>
 <span class="co">#&gt; Weights Used?:       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
@@ -227,11 +233,11 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wtp_mnl_pref</span>
 <span class="co">#&gt;          Estimate StdError    tStat  pVal signif</span>
-<span class="co">#&gt; lambda   0.366584 0.024317  15.0750 0e+00    ***</span>
-<span class="co">#&gt; feat     1.340568 0.359292   3.7311 2e-04    ***</span>
-<span class="co">#&gt; hiland  -8.386650 0.508316 -16.4989 0e+00    ***</span>
-<span class="co">#&gt; yoplait  3.752905 0.470391   7.9783 0e+00    ***</span>
-<span class="co">#&gt; dannon   1.749079 0.199771   8.7554 0e+00    ***</span></code></pre></div>
+<span class="co">#&gt; lambda   0.366584 0.024436  15.0017 0e+00    ***</span>
+<span class="co">#&gt; feat     1.340568 0.361483   3.7085 2e-04    ***</span>
+<span class="co">#&gt; hiland  -8.386650 0.508436 -16.4950 0e+00    ***</span>
+<span class="co">#&gt; yoplait  3.752905 0.471646   7.9570 0e+00    ***</span>
+<span class="co">#&gt; dannon   1.749079 0.199978   8.7464 0e+00    ***</span></code></pre></div>
 </div>
 <div id="wtp-space-model" class="section level1">
 <h1 class="hasAnchor">
@@ -240,10 +246,10 @@
 <p><span class="math display">\[\begin{equation}
     u_{j} =
         \lambda (
-        \omega_1 x_{j}^{\mathrm{FEAT}} +
-        \omega_2 x_{j}^{\mathrm{DANNON}} +
-        \omega_3 x_{j}^{\mathrm{HIGHLAND}} +
-        \omega_4 x_{j}^{\mathrm{YOPLAIT}} -
+        \omega_1 x_{j}^{\mathrm{Feat}} +
+        \omega_2 x_{j}^{\mathrm{Hiland}} +
+        \omega_3 x_{j}^{\mathrm{Yoplait}} +
+        \omega_4 x_{j}^{\mathrm{Dannon}} -
         p_{j})  +
         \varepsilon_{j}
 \label{eq:mnlWtpExample}
@@ -292,17 +298,17 @@
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; SUMMARY OF ALL MULTISTART RUNS:</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;    run     logLik iterations status</span>
-<span class="co">#&gt; 1    1  -2656.888         94      3</span>
-<span class="co">#&gt; 2    2  -2804.027         95      3</span>
-<span class="co">#&gt; 3    3  -2656.888        123      3</span>
-<span class="co">#&gt; 4    4  -2803.704        113      3</span>
-<span class="co">#&gt; 5    5  -2656.888        103      3</span>
-<span class="co">#&gt; 6    6  -2803.453        104      3</span>
-<span class="co">#&gt; 7    7  -2801.360         75      3</span>
-<span class="co">#&gt; 8    8  -2656.888         73      3</span>
-<span class="co">#&gt; 9    9  -2803.365        126      3</span>
-<span class="co">#&gt; 10  10 -53033.894         12     -1</span>
+<span class="co">#&gt;    run      logLik iterations status</span>
+<span class="co">#&gt; 1    1   -2656.888         94      3</span>
+<span class="co">#&gt; 2    2   -2804.027         95      3</span>
+<span class="co">#&gt; 3    3   -2838.351         67     -1</span>
+<span class="co">#&gt; 4    4   -2656.888        117      3</span>
+<span class="co">#&gt; 5    5 -111779.078         12     -1</span>
+<span class="co">#&gt; 6    6  -29789.111         12     -1</span>
+<span class="co">#&gt; 7    7   -2803.664        101      3</span>
+<span class="co">#&gt; 8    8   -2656.888         93      3</span>
+<span class="co">#&gt; 9    9   -2839.617         55     -1</span>
+<span class="co">#&gt; 10  10   -3037.138         52     -1</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; To view meaning of status codes, use statusCodes() </span>
 <span class="co">#&gt; </span>
@@ -311,24 +317,24 @@
 <span class="co">#&gt; MODEL SUMMARY: </span>
 <span class="co">#&gt;                                  </span>
 <span class="co">#&gt; Model Space:   Willingness-to-Pay</span>
-<span class="co">#&gt; Model Run:                5 of 10</span>
-<span class="co">#&gt; Iterations:                   103</span>
-<span class="co">#&gt; Elapsed Time:         0h:0m:0.54s</span>
+<span class="co">#&gt; Model Run:                1 of 10</span>
+<span class="co">#&gt; Iterations:                    94</span>
+<span class="co">#&gt; Elapsed Time:         0h:0m:0.46s</span>
 <span class="co">#&gt; Weights Used?:              FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
 <span class="co">#&gt;          Estimate StdError    tStat  pVal signif</span>
-<span class="co">#&gt; lambda   0.366584 0.024366  15.0449 0e+00    ***</span>
-<span class="co">#&gt; feat     1.340574 0.355865   3.7671 2e-04    ***</span>
-<span class="co">#&gt; hiland  -8.386651 0.502472 -16.6908 0e+00    ***</span>
-<span class="co">#&gt; yoplait  3.752902 0.168121  22.3226 0e+00    ***</span>
-<span class="co">#&gt; dannon   1.749077 0.179897   9.7227 0e+00    ***</span>
+<span class="co">#&gt; lambda   0.366583 0.024366  15.0448 0e+00    ***</span>
+<span class="co">#&gt; feat     1.340586 0.355867   3.7671 2e-04    ***</span>
+<span class="co">#&gt; hiland  -8.386686 0.502478 -16.6907 0e+00    ***</span>
+<span class="co">#&gt; yoplait  3.752890 0.168121  22.3225 0e+00    ***</span>
+<span class="co">#&gt; dannon   1.749088 0.179898   9.7227 0e+00    ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Fit Values: </span>
 <span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log.Likelihood.         -2656.8878779</span>
+<span class="co">#&gt; Log.Likelihood.         -2656.8878780</span>
 <span class="co">#&gt; Null.Log.Likelihood.    -3343.7419990</span>
 <span class="co">#&gt; AIC.                     5323.7758000</span>
 <span class="co">#&gt; BIC.                     5352.7168000</span>
@@ -338,10 +344,10 @@
 <p>View the estimated model coefficients:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mnl_wtp</span><span class="op">)</span>
-<span class="co">#&gt; **Using results for model 5 of 10,</span>
+<span class="co">#&gt; **Using results for model 1 of 10,</span>
 <span class="co">#&gt; the best model (largest log-likelihood) from the multistart**</span>
 <span class="co">#&gt;     lambda       feat     hiland    yoplait     dannon </span>
-<span class="co">#&gt;  0.3665844  1.3405742 -8.3866505  3.7529018  1.7490768</span></code></pre></div>
+<span class="co">#&gt;  0.3665834  1.3405856 -8.3866858  3.7528902  1.7490883</span></code></pre></div>
 </div>
 <div id="compare-wtp-from-both-models" class="section level1">
 <h1 class="hasAnchor">
@@ -353,12 +359,12 @@
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wtp_mnl_comparison</span>
 <span class="co">#&gt;                 pref           wtp difference</span>
-<span class="co">#&gt; lambda      0.366584     0.3665844   4.40e-07</span>
-<span class="co">#&gt; feat        1.340568     1.3405742   6.20e-06</span>
-<span class="co">#&gt; hiland     -8.386650    -8.3866505  -5.10e-07</span>
-<span class="co">#&gt; yoplait     3.752905     3.7529018  -3.23e-06</span>
-<span class="co">#&gt; dannon      1.749079     1.7490768  -2.20e-06</span>
-<span class="co">#&gt; logLik  -2656.887878 -2656.8878779   0.00e+00</span></code></pre></div>
+<span class="co">#&gt; lambda      0.366584     0.3665834 -6.200e-07</span>
+<span class="co">#&gt; feat        1.340568     1.3405856  1.757e-05</span>
+<span class="co">#&gt; hiland     -8.386650    -8.3866858 -3.582e-05</span>
+<span class="co">#&gt; yoplait     3.752905     3.7528902 -1.480e-05</span>
+<span class="co">#&gt; dannon      1.749079     1.7490883  9.330e-06</span>
+<span class="co">#&gt; logLik  -2656.887878 -2656.8878780 -1.000e-08</span></code></pre></div>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">

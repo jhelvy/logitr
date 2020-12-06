@@ -59,6 +59,12 @@
 <li>
       <a href="../articles/utility_models.html">Utility Models in the Preference &amp; WTP Space</a>
     </li>
+    <li>
+      <a href="../articles/data_formatting.html">Data Formatting and Encoding</a>
+    </li>
+    <li>
+      <a href="../articles/interactions.html">Models with Interactions</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -138,20 +144,20 @@
 <td>The price in US dollars.</td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(x_{j}^{\mathrm{FEAT}}\)</span></td>
+<td><span class="math inline">\(x_{j}^{\mathrm{Feat}}\)</span></td>
 <td>Dummy variable for whether the newspaper advertisement was shown to the customer.</td>
 </tr>
 <tr class="odd">
-<td><span class="math inline">\(x_{j}^{\mathrm{DANNON}}\)</span></td>
-<td>Dummy variable for the “Dannon” brand.</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(x_{j}^{\mathrm{HIGHLAND}}\)</span></td>
+<td><span class="math inline">\(x_{j}^{\mathrm{Hiland}}\)</span></td>
 <td>Dummy variable for the “Highland” brand.</td>
 </tr>
-<tr class="odd">
-<td><span class="math inline">\(x_{j}^{\mathrm{YOPLAIT}}\)</span></td>
+<tr class="even">
+<td><span class="math inline">\(x_{j}^{\mathrm{Yoplait}}\)</span></td>
 <td>Dummy variable for the “Yoplait” brand.</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(x_{j}^{\mathrm{Dannon}}\)</span></td>
+<td>Dummy variable for the “Dannon” brand.</td>
 </tr>
 </tbody>
 </table>
@@ -164,14 +170,14 @@
 <p><span class="math display">\[\begin{equation}
     u_{j} =
         \alpha p_{j} +
-        \beta_1 x_{j}^{\mathrm{FEAT}} +
-        \beta_2 x_{j}^{\mathrm{DANNON}} +
-        \beta_3 x_{j}^{\mathrm{HIGHLAND}} +
-        \beta_4 x_{j}^{\mathrm{YOPLAIT}}  +
+        \beta_1 x_{j}^{\mathrm{Feat}} +
+        \beta_2 x_{j}^{\mathrm{Hiland}} +
+        \beta_3 x_{j}^{\mathrm{Yoplait}} +
+        \beta_4 x_{j}^{\mathrm{Dannon}}  +
         \varepsilon_{j}
 \label{eq:mxlPrefExample}
 \end{equation}\]</span></p>
-<p>where the parameters <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span>, and <span class="math inline">\(\beta_4\)</span> have units of utility, and the parameter for <span class="math inline">\(x_{j}^{\mathrm{FEAT}}\)</span> is normally distributed.</p>
+<p>where the parameters <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span>, and <span class="math inline">\(\beta_4\)</span> have units of utility, and the parameters for <span class="math inline">\(x_{j}^{\mathrm{Feat}}\)</span>, <span class="math inline">\(x_{j}^{\mathrm{Hiland}}\)</span>, <span class="math inline">\(x_{j}^{\mathrm{Yoplait}}\)</span> and <span class="math inline">\(x_{j}^{\mathrm{Dannon}}\)</span> are normally distributed.</p>
 <p>To estimate the model, first load the <strong>logitr</strong> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr">logitr</a></span><span class="op">)</span></code></pre></div>
@@ -283,10 +289,10 @@
 <p><span class="math display">\[\begin{equation}
     u_{j} =
         \lambda (
-        \omega_1 x_{j}^{\mathrm{FEAT}} +
-        \omega_2 x_{j}^{\mathrm{DANNON}} +
-        \omega_3 x_{j}^{\mathrm{HIGHLAND}} +
-        \omega_4 x_{j}^{\mathrm{YOPLAIT}} -
+        \omega_1 x_{j}^{\mathrm{Feat}} +
+        \omega_2 x_{j}^{\mathrm{Hiland}} +
+        \omega_3 x_{j}^{\mathrm{Yoplait}} +
+        \omega_4 x_{j}^{\mathrm{Dannon}} -
         p_{j})  +
         \varepsilon_{j}
 \label{eq:mnlWtpExample}

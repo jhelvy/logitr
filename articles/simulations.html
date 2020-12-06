@@ -59,6 +59,12 @@
 <li>
       <a href="../articles/utility_models.html">Utility Models in the Preference &amp; WTP Space</a>
     </li>
+    <li>
+      <a href="../articles/data_formatting.html">Data Formatting and Encoding</a>
+    </li>
+    <li>
+      <a href="../articles/interactions.html">Models with Interactions</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -121,41 +127,6 @@
 <h1 class="hasAnchor">
 <a href="#the-data" class="anchor"></a>The data</h1>
 <p>This example uses the <a href="https://jhelvy.github.io/logitr/reference/yogurt.html">yogurt</a> data set from Jain et al. <span class="citation">(1994)</span>. The data set contains 2,412 choice observations from a series of yogurt purchases by a panel of 100 households in Springfield, Missouri, over a roughly two-year period. The data were collected by optical scanners and contain information about the price, brand, and a “feature” variable, which identifies whether a newspaper advertisement was shown to the customer. There are four brands of yogurt: Yoplait, Dannon, Weight Watchers, and Hiland, with market shares of 34%, 40%, 23% and 3%, respectively.</p>
-<p>In the utility models described below, the data variables are represented as follows:</p>
-<div style="width:550px">
-<table class="table">
-<colgroup>
-<col width="17%">
-<col width="82%">
-</colgroup>
-<thead><tr class="header">
-<th>Symbol</th>
-<th>Variable</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(p\)</span></td>
-<td>The price in US dollars.</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(x_{j}^{\mathrm{FEAT}}\)</span></td>
-<td>Dummy variable for whether the newspaper advertisement was shown to the customer.</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(x_{j}^{\mathrm{DANNON}}\)</span></td>
-<td>Dummy variable for the “Dannon” brand.</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(x_{j}^{\mathrm{HIGHLAND}}\)</span></td>
-<td>Dummy variable for the “Highland” brand.</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(x_{j}^{\mathrm{YOPLAIT}}\)</span></td>
-<td>Dummy variable for the “Yoplait” brand.</td>
-</tr>
-</tbody>
-</table>
-</div>
 </div>
 <div id="simulating-shares-from-estimated-models" class="section level1">
 <h1 class="hasAnchor">
@@ -163,24 +134,24 @@
 <p>Once a model has been estimated, it can be used to simulate the predicted shares for a set of alternatives. To do so, you first need to create a set of alternatives where each row is an alternative and each column an attribute. In this example, I’ll just use one of the choice observations from the <code>yogurt</code> dataset:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">alts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">yogurt</span>, <span class="va">obsID</span> <span class="op">==</span> <span class="fl">42</span>,
-               select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'price'</span>, <span class="st">'hiland'</span>, <span class="st">'yoplait'</span>, <span class="st">'dannon'</span><span class="op">)</span><span class="op">)</span>
+               select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'price'</span>, <span class="st">'hiland'</span>, <span class="st">'weight'</span>, <span class="st">'yoplait'</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/row.names.html">row.names</a></span><span class="op">(</span><span class="va">alts</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'dannon'</span>, <span class="st">'hiland'</span>, <span class="st">'weight'</span>, <span class="st">'yoplait'</span><span class="op">)</span>
 <span class="va">alts</span>
-<span class="co">#&gt;         feat price hiland yoplait dannon</span>
-<span class="co">#&gt; dannon     0   6.3      0       0      1</span>
-<span class="co">#&gt; hiland     1   6.1      1       0      0</span>
-<span class="co">#&gt; weight     0   7.9      0       0      0</span>
-<span class="co">#&gt; yoplait    0  11.5      0       1      0</span></code></pre></div>
+<span class="co">#&gt;         feat price hiland weight yoplait</span>
+<span class="co">#&gt; dannon     0   6.3      0      0       0</span>
+<span class="co">#&gt; hiland     1   6.1      1      0       0</span>
+<span class="co">#&gt; weight     0   7.9      0      1       0</span>
+<span class="co">#&gt; yoplait    0  11.5      0      0       1</span></code></pre></div>
 <p>Let’s say we have estimated a preference space MNL model called <code>mnl_pref</code>. We can use the <code><a href="../reference/simulateShares.html">simulateShares()</a></code> function with the <code>mnl_pref</code> model to predict the shares for our <code>alts</code> set of alternatives:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">alts</span>, alpha <span class="op">=</span> <span class="fl">0.025</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mnl_pref</span>
 <span class="co">#&gt;              share_mean  share_low share_high          alt</span>
-<span class="co">#&gt; Alt: dannon  0.60767171 0.54959124 0.65901821  Alt: dannon</span>
-<span class="co">#&gt; Alt: hiland  0.02601787 0.01854575 0.03605032  Alt: hiland</span>
-<span class="co">#&gt; Alt: weight  0.17802338 0.16294282 0.19276873  Alt: weight</span>
-<span class="co">#&gt; Alt: yoplait 0.18828704 0.13963329 0.24851031 Alt: yoplait</span></code></pre></div>
+<span class="co">#&gt; Alt: dannon  0.60767171 0.54763361 0.65923995  Alt: dannon</span>
+<span class="co">#&gt; Alt: hiland  0.02601787 0.01856504 0.03616471  Alt: hiland</span>
+<span class="co">#&gt; Alt: weight  0.17802338 0.16332126 0.19259199  Alt: weight</span>
+<span class="co">#&gt; Alt: yoplait 0.18828704 0.13961236 0.24948749 Alt: yoplait</span></code></pre></div>
 <p>The results show the expected shares for each alternative. The low and high values show a 95% confidence interval, estimated using simulation. You can change the CI level by setting alpha to a different value (e.g. a 90% CI is obtained with alpha = 0.05).</p>
 <p>You can also use WTP space models to simulate shares, but you must provide the additional <code>priceName</code> argument to the <code><a href="../reference/simulateShares.html">simulateShares()</a></code> function. For example, here are the results from an equivalent model but in the WTP space:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -188,10 +159,10 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mnl_wtp</span>
 <span class="co">#&gt;              share_mean  share_low share_high</span>
-<span class="co">#&gt; Alt: dannon  0.60767174 0.55544938 0.65789266</span>
-<span class="co">#&gt; Alt: hiland  0.02601792 0.01828005 0.03764027</span>
-<span class="co">#&gt; Alt: weight  0.17802345 0.14795078 0.20776052</span>
-<span class="co">#&gt; Alt: yoplait 0.18828689 0.16428676 0.21164941</span></code></pre></div>
+<span class="co">#&gt; Alt: dannon  0.60767246 0.55458497 0.65954977</span>
+<span class="co">#&gt; Alt: hiland  0.02601785 0.01803257 0.03755193</span>
+<span class="co">#&gt; Alt: weight  0.17802354 0.14769439 0.20871879</span>
+<span class="co">#&gt; Alt: yoplait 0.18828616 0.16374635 0.21183043</span></code></pre></div>
 <p>Since these two models are equivalent except in different spaces, the simulation results should be the same.</p>
 <p>Simulations also work with mixed logit models, and they account for how heterogeneity is modeled by simulating draws from the population estimates of the estimated model:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -199,20 +170,20 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mxl_pref</span>
 <span class="co">#&gt;              share_mean  share_low share_high</span>
-<span class="co">#&gt; Alt: dannon  0.58411865 0.49483358  0.6419639</span>
-<span class="co">#&gt; Alt: hiland  0.08747807 0.03336576  0.1679889</span>
-<span class="co">#&gt; Alt: weight  0.16058669 0.14147577  0.1848766</span>
-<span class="co">#&gt; Alt: yoplait 0.16781659 0.12384464  0.2370422</span></code></pre></div>
+<span class="co">#&gt; Alt: dannon  0.58411865 0.49594424  0.6389909</span>
+<span class="co">#&gt; Alt: hiland  0.08747807 0.03414739  0.1675460</span>
+<span class="co">#&gt; Alt: weight  0.16058669 0.14161430  0.1844981</span>
+<span class="co">#&gt; Alt: yoplait 0.16781659 0.12455355  0.2358050</span></code></pre></div>
 <p>Likewise, mixed logit WTP space models can also be used to simulate shares:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mxl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span><span class="va">mxl_wtp</span>, <span class="va">alts</span>, priceName <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mxl_wtp</span>
 <span class="co">#&gt;              share_mean  share_low share_high</span>
-<span class="co">#&gt; Alt: dannon  0.58411198 0.51502520  0.6238352</span>
-<span class="co">#&gt; Alt: hiland  0.08697541 0.03481736  0.1734634</span>
-<span class="co">#&gt; Alt: weight  0.16083006 0.12767500  0.1968682</span>
-<span class="co">#&gt; Alt: yoplait 0.16808255 0.14308239  0.2044884</span></code></pre></div>
+<span class="co">#&gt; Alt: dannon  0.58411198 0.51590744  0.6237239</span>
+<span class="co">#&gt; Alt: hiland  0.08697541 0.03370986  0.1716068</span>
+<span class="co">#&gt; Alt: weight  0.16083006 0.12810592  0.1976961</span>
+<span class="co">#&gt; Alt: yoplait 0.16808255 0.14398905  0.2052043</span></code></pre></div>
 <div id="refs" class="references">
 <div id="ref-Jain1994">
 <p>Jain, Dipak C, Naufel J Vilcassim, and Pradeep K Chintagunta. 1994. “A Random-Coefficients Logit Brand-Choice Model Applied to Panel Data.” <em>Journal of Business &amp; Economic Statistics</em> 12 (3): 317–28.</p>
