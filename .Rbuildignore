@@ -9,6 +9,7 @@ vignettes/children
 ^README\.Rmd$
 ^LICENSE\.md$
 ^logitr\.Rproj$
+^todo\.md$
 ^doc$
 ^Meta$
 ^next_release.md$

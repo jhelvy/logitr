@@ -1,0 +1,154 @@
+---
+title: "Weighted logit models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Weighted logit models}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+bibliography: "`r here::here('vignettes', 'library.bib')`"
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.retina = 3,
+  comment = "#>"
+)
+library(logitr)
+# Read in results from already estimated models  so that the
+# examples aren't actually run when building this page, otherwise it'll
+# take much longer to build
+mnl_wtp_unweighted <- readRDS(
+  here::here('inst', 'extdata', 'mnl_wtp_unweighted.Rds'))
+mnl_wtp_weighted <- readRDS(
+  here::here('inst', 'extdata', 'mnl_wtp_weighted.Rds'))
+```
+
+# The data
+
+```{r, child=here::here('man', 'rmdchunks', 'carsDataDescription.Rmd')}
+```
+
+# The utility model
+
+In this example, we'll estimate two versions of the following utility model in the WTP space (one without weights and one with weights). Notation is taken from Helveston et al. [-@Helveston2015]:
+
+```{r, child=here::here('man', 'rmdchunks', 'mnlWtpCarsExample.Rmd')}
+```
+
+where all the $\omega$ parameters have units of dollars and $\lambda$ is the scale parameter.
+
+# Unweighted model
+
+To estimate the model, first load the **logitr** package:
+
+```{r eval=FALSE}
+library(logitr)
+```
+
+Estimate the unweighted model using the `logitr()` function:
+
+```{r eval=FALSE}
+mnl_wtp_unweighted <- logitr(
+  data       = cars_us,
+  choiceName = 'choice',
+  obsIDName  = 'obsnum',
+  parNames   = c(
+    'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100', 'bev150',
+    'american', 'japanese', 'chinese', 'skorean', 'phevFastcharge',
+    'bevFastcharge','opCost', 'accelTime'),
+  priceName = 'price',
+  modelSpace = 'wtp',
+  options = list(
+    # Since WTP space models are non-convex, run a multistart:
+    numMultiStarts = 10,
+    # Because the computed WTP from the preference space model has values
+    # as large as 8, I increase the boundaries of the random starting values:
+    startParBounds = c(-10, 10))
+)
+```
+```
+#> Running Multistart 1 of 10
+#> Running Multistart 2 of 10
+#> Running Multistart 3 of 10
+#> Running Multistart 4 of 10
+#> Running Multistart 5 of 10
+#> Running Multistart 6 of 10
+#> Running Multistart 7 of 10
+#> Running Multistart 8 of 10
+#> Running Multistart 9 of 10
+#> Running Multistart 10 of 10
+#> Done!
+```
+
+```{r}
+summary(mnl_wtp_unweighted)
+```
+
+# Weighted model
+
+To estimate the weighted model, simply add the `weightsName` argument to the call to  `logitr()`:
+
+```{r eval=FALSE}
+mnl_wtp_weighted <- logitr(
+  data       = cars_us,
+  choiceName = 'choice',
+  obsIDName  = 'obsnum',
+  parNames   = c(
+    'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100', 'bev150',
+    'american', 'japanese', 'chinese', 'skorean', 'phevFastcharge',
+    'bevFastcharge','opCost', 'accelTime'),
+  priceName = 'price',
+  modelSpace = 'wtp',
+  weightsName = 'weights', # This is the key argument for enabling weights
+  options = list(
+    # Since WTP space models are non-convex, run a multistart:
+    numMultiStarts = 10,
+    # Because the computed WTP from the preference space model has values
+    # as large as 8, I increase the boundaries of the random starting values:
+    startParBounds = c(-10, 10))
+)
+```
+```
+#> Running Multistart 1 of 10
+#> Running Multistart 2 of 10
+#> Running Multistart 3 of 10
+#> Running Multistart 4 of 10
+#> Running Multistart 5 of 10
+#> Running Multistart 6 of 10
+#> Running Multistart 7 of 10
+#> Running Multistart 8 of 10
+#> Running Multistart 9 of 10
+#> Running Multistart 10 of 10
+#> Done!
+```
+
+Print a summary of the results:
+
+```{r}
+summary(mnl_wtp_weighted)
+```
+
+# Compare results
+
+Compare the coefficients between the weighted and unweighted models:
+
+```{r}
+coef_compare <- data.frame(
+  Unweighted = coef(mnl_wtp_unweighted),
+  Weighted   = coef(mnl_wtp_weighted))
+coef_compare
+```
+
+Compare the log-likelihood between the weighted and unweighted models:
+
+```{r}
+logLik_compare <- c(
+  "Unweighted" = mnl_wtp_unweighted$logLik,
+  "Weighted" = mnl_wtp_weighted$logLik)
+logLik_compare
+```
+
+# References

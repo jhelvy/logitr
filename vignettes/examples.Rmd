@@ -10,5 +10,4 @@ vignette: >
 - [Multinomial logit models](mnl_models.html)
 - [Mixed logit models](mxl_models.html)
 - [Weighted logit models](weighted_models.html)
-
-
+- [Simulating shares](simulations.html)

@@ -8,7 +8,14 @@ vignette: >
 bibliography: "`r here::here('vignettes', 'library.bib')`"
 ---
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.retina = 3,
+  comment = "#>"
+)
 library(logitr)
 # Read in results from already estimated models  so that the
 # examples aren't actually run when building this page, otherwise it'll
@@ -36,22 +43,23 @@ where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ ha
 
 To estimate the model, first load the **logitr** package:
 
-```{r eval=FALSE}
+```{r, eval=FALSE}
 library(logitr)
 ```
 
 Estimate the model using the `logitr()` function:
 
-```{r eval=FALSE}
+```{r, eval=FALSE}
 mnl_pref <- logitr(
-    data       = yogurt,
-    choiceName = "choice",
-    obsIDName  = "obsID",
-    parNames   = c("price", "feat", "dannon", "hiland", "yoplait"))
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'hiland', 'yoplait', 'dannon')
+)
 ```
 ```
-Running Model
-Done!
+#> Running Model
+#> Done!
 ```
 
 Print a summary of the results:
@@ -92,36 +100,38 @@ Estimate the model using the `logitr()` function:
 startingValues <- wtp_mnl_pref$Estimate
 
 mnl_wtp <- logitr(
-    data       = yogurt,
-    choiceName = "choice",
-    obsIDName  = "obsID",
-    parNames   = c("feat", "dannon", "hiland", "yoplait"),
-    priceName  = "price",
-    modelSpace = "wtp",
-    options = list(
-        # Since WTP space models are non-convex, run a multistart:
-        numMultiStarts = 10,
-        # If you want to view the results from each multistart run,
-        # set keepAllRuns = TRUE
-        keepAllRuns = TRUE,
-        startVals   = startingValues,
-        # Because the computed WTP from the preference space model has values
-        # as large as 8, I increase the boundaries of the random starting values:
-        startParBounds = c(-5, 5)))
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('feat', 'hiland', 'yoplait', 'dannon'),
+  priceName  = 'price',
+  modelSpace = 'wtp',
+  options = list(
+    # Since WTP space models are non-convex, run a multistart:
+    numMultiStarts = 10,
+    # If you want to view the results from each multistart run,
+    # set keepAllRuns=TRUE:
+    keepAllRuns = TRUE,
+    # Use the computed WTP from the preference space model as the starting
+    # values for the first run:
+    startVals = startingValues,
+    # Because the computed WTP from the preference space model has values
+    # as large as 8, I increase the boundaries of the random starting values:
+    startParBounds = c(-10, 10)))
 ```
 ```
-Running Multistart 1 of 10
-**Using User Provided Starting Values For This Run**
-Running Multistart 2 of 10
-Running Multistart 3 of 10
-Running Multistart 4 of 10
-Running Multistart 5 of 10
-Running Multistart 6 of 10
-Running Multistart 7 of 10
-Running Multistart 8 of 10
-Running Multistart 9 of 10
-Running Multistart 10 of 10
-Done!
+#> Running Multistart 1 of 10
+#> **Using User Provided Starting Values For This Run**
+#> Running Multistart 2 of 10
+#> Running Multistart 3 of 10
+#> Running Multistart 4 of 10
+#> Running Multistart 5 of 10
+#> Running Multistart 6 of 10
+#> Running Multistart 7 of 10
+#> Running Multistart 8 of 10
+#> Running Multistart 9 of 10
+#> Running Multistart 10 of 10
+#> Done!
 ```
 
 Print a summary of the results:

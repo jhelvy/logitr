@@ -8,15 +8,23 @@ vignette: >
 bibliography: "`r here::here('vignettes', 'library.bib')`"
 ---
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.retina = 3,
+  comment = "#>"
+)
+library(logitr)
 # Read in results from already estimated models  so that the
 # examples aren't actually run when building this page, otherwise it'll
 # take much longer to build
 mxl_pref <- readRDS(here::here('inst', 'extdata', 'mxl_pref.Rds'))
 mxl_wtp  <- readRDS(here::here('inst', 'extdata', 'mxl_wtp.Rds'))
 wtp_mxl_pref <- readRDS(here::here('inst', 'extdata', 'wtp_mxl_pref.Rds'))
-wtp_mxl_comparison <- readRDS(here::here('inst', 'extdata',
-    'wtp_mxl_comparison.Rds'))
+wtp_mxl_comparison <- readRDS(
+    here::here('inst', 'extdata', 'wtp_mxl_comparison.Rds'))
 ```
 
 # The data
@@ -43,61 +51,29 @@ Estimate the model using the `logitr()` function:
 
 ```{r eval=FALSE}
 mxl_pref <- logitr(
-    data       = yogurt,
-    choiceName = "choice",
-    obsIDName  = "obsID",
-    parNames   = c("price", "feat", "dannon", "hiland", "yoplait"),
-    randPars   = c(feat = "n"),
-    options    = list(
-        # You should run a multistart for MXL models since they are non-convex,
-        # but it can take a long time. Here I just use 1 for brevity:
-        numMultiStarts = 1,
-        numDraws       = 500))
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'hiland', 'yoplait', 'dannon'),
+  randPars   = c(feat = 'n', hiland = 'n', yoplait = 'n', dannon = 'n'),
+  # You should run a multistart for MXL models since they are non-convex,
+  # but it can take a long time. Here I just use 5 starts for brevity:
+  options    = list(numMultiStarts = 5)
+)
 ```
 ```
-Running Model
-Done!
+#> Running Multistart 1 of 5
+#> Running Multistart 2 of 5
+#> Running Multistart 3 of 5
+#> Running Multistart 4 of 5
+#> Running Multistart 5 of 5
+#> Done!
 ```
 
 Print a summary of the results:
 
-```{r, eval=FALSE}
+```{r}
 summary(mxl_pref)
-```
-```
-=================================================
-MODEL SUMMARY:
-
-Model Space:   Preference
-Model Run:         1 of 1
-Iterations:            36
-Elapsed Time:   0h:2m:39s
-Weights Used?:      FALSE
-
-Model Coefficients:
-            Estimate StdError    tStat   pVal signif
-price      -0.392768 0.026708 -14.7061 0.0000    ***
-feat.mu     0.351933 0.204608   1.7200 0.0856      .
-dannon      0.663863 0.055794  11.8984 0.0000    ***
-hiland     -3.324270 0.164101 -20.2575 0.0000    ***
-yoplait     1.458054 0.095512  15.2656 0.0000    ***
-feat.sigma  2.360350 0.515567   4.5782 0.0000    ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Model Fit Values:
-
-Log.Likelihood.         -2645.9202707
-Null.Log.Likelihood.    -3343.7419990
-AIC.                     5303.8405000
-BIC.                     5338.5698000
-McFadden.R2.                0.2086948
-Adj..McFadden.R2            0.2069005
-Number.of.Observations.  2412.0000000
-
-Summary of 10k Draws for Random Coefficients:
-       Min.   1st Qu.    Median      Mean  3rd Qu.     Max.
-1 -8.822073 -1.240571 0.3511815 0.3499323 1.942267 8.875534
 ```
 
 View the estimated model coefficients:
@@ -138,68 +114,38 @@ Estimate the model using the `logitr()` function:
 startingValues <- wtp_mxl_pref$Estimate
 
 mxl_wtp <- logitr(
-    data       = yogurt,
-    choiceName = "choice",
-    obsIDName  = "obsID",
-    parNames   = c("feat", "dannon", "hiland", "yoplait"),
-    priceName  = "price",
-    randPars   = c(feat="n"),
-    modelSpace = "wtp",
-    options = list(
-        # You should run a multistart for MXL models since they are non-convex,
-        # but it can take a long time. Here I just use 1 for brevity:
-        numMultiStarts = 1,
-        startVals   = startingValues,
-        # Because the computed WTP from the preference space model has values
-        # as large as 8, I increase the boundaries of the random starting values:
-        startParBounds = c(-5, 5),
-        numDraws       = 500))
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('feat', 'hiland', 'yoplait', 'dannon'),
+  priceName  = 'price',
+  randPars   = c(feat = 'n', hiland = 'n', yoplait = 'n', dannon = 'n'),
+  modelSpace = 'wtp',
+  options    = list(
+    # You should run a multistart for MXL models since they are non-convex,
+    # but it can take a long time. Here I just use 5 starts for brevity:
+    numMultiStarts = 5,
+    # Use the computed WTP from the preference space model as the starting
+    # values for the first run:
+    startVals = startingValues,
+    # Because the computed WTP from the preference space model has values
+    # as large as 8, I increase the boundaries of the random starting values:
+    startParBounds = c(-10, 10)))
 ```
 ```
-Running Model
-**Using User Provided Starting Values For This Run**
-Done!
+#> Running Multistart 1 of 5
+#> **Using User Provided Starting Values For This Run**
+#> Running Multistart 2 of 5
+#> Running Multistart 3 of 5
+#> Running Multistart 4 of 5
+#> Running Multistart 5 of 5
+#> Done!
 ```
 
 Print a summary of the results:
 
-```{r, eval=FALSE}
+```{r}
 summary(mxl_wtp)
-```
-```
-=================================================
-MODEL SUMMARY:
-
-Model Space:   Willingness-to-Pay
-Model Run:                 1 of 1
-Iterations:                   112
-Elapsed Time:           0h:9m:41s
-Weights Used?:              FALSE
-
-Model Coefficients:
-            Estimate StdError    tStat   pVal signif
-lambda      0.392768 0.026708  14.7062 0.0000    ***
-feat.mu     0.896032 0.534239   1.6772 0.0936      .
-dannon      1.690215 0.172674   9.7885 0.0000    ***
-hiland     -8.463701 0.517775 -16.3463 0.0000    ***
-yoplait     3.712255 0.161357  23.0065 0.0000    ***
-feat.sigma  6.009556 1.323045   4.5422 0.0000    ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Model Fit Values:
-
-Log.Likelihood.         -2645.9202707
-Null.Log.Likelihood.    -3343.7419990
-AIC.                     5303.8405000
-BIC.                     5338.5698000
-McFadden.R2.                0.2086948
-Adj..McFadden.R2            0.2069005
-Number.of.Observations.  2412.0000000
-
-Summary of 10k Draws for Random Coefficients:
-       Min.   1st Qu.    Median      Mean  3rd Qu.    Max.
-1 -22.46139 -3.158553 0.8941192 0.8909386 4.945094 22.5975
 ```
 
 View the estimated model coefficients:

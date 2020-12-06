@@ -1,0 +1,82 @@
+---
+title: "Simulating shares"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Simulating shares}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+bibliography: "`r here::here('vignettes', 'library.bib')`"
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.retina = 3,
+  comment = "#>"
+)
+library(logitr)
+# Read in results from already estimated models  so that the
+# examples aren't actually run when building this page, otherwise it'll
+# take much longer to build
+sim_mnl_pref <- readRDS(here::here('inst', 'extdata', 'sim_mnl_pref.Rds'))
+sim_mnl_wtp <- readRDS(here::here('inst', 'extdata', 'sim_mnl_wtp.Rds'))
+sim_mxl_pref <- readRDS(here::here('inst', 'extdata', 'sim_mxl_pref.Rds'))
+sim_mxl_wtp <- readRDS(here::here('inst', 'extdata', 'sim_mxl_wtp.Rds'))
+```
+
+# The data
+
+```{r, child=here::here('man', 'rmdchunks', 'yogurtDataDescription.Rmd')}
+```
+
+# Simulating shares from estimated models
+
+Once a model has been estimated, it can be used to simulate the predicted shares for a set of alternatives. To do so, you first need to create a set of alternatives where each row is an alternative and each column an attribute. In this example, I'll just use one of the choice observations from the `yogurt` dataset:
+```{r}
+alts <- subset(yogurt, obsID == 42,
+               select = c('feat', 'price', 'hiland', 'yoplait', 'dannon'))
+row.names(alts) <- c('dannon', 'hiland', 'weight', 'yoplait')
+alts
+```
+
+Let's say we have estimated a preference space MNL model called `mnl_pref`. We can use the `simulateShares()` function with the `mnl_pref` model to predict the shares for our `alts` set of alternatives:
+
+```{r, eval=FALSE}
+sim_mnl_pref <- simulateShares(mnl_pref, alts, alpha = 0.025)
+```
+```{r}
+sim_mnl_pref
+```
+
+The results show the expected shares for each alternative. The low and high values show a 95% confidence interval, estimated using simulation. You can change the CI level by setting alpha to a different value (e.g. a 90% CI is obtained with alpha = 0.05).
+
+You can also use WTP space models to simulate shares, but you must provide the additional `priceName` argument to the `simulateShares()` function. For example, here are the results from an equivalent model but in the WTP space:
+
+```{r, eval=FALSE}
+sim_mnl_wtp <- simulateShares(mnl_wtp, alts, priceName = 'price')
+```
+```{r}
+sim_mnl_wtp
+```
+
+Since these two models are equivalent except in different spaces, the simulation results should be the same.
+
+Simulations also work with mixed logit models, and they account for how heterogeneity is modeled by simulating draws from the population estimates of the estimated model:
+
+```{r, eval=FALSE}
+sim_mxl_pref <- simulateShares(mxl_pref, alts)
+```
+```{r}
+sim_mxl_pref
+```
+
+Likewise, mixed logit WTP space models can also be used to simulate shares:
+
+```{r, eval=FALSE}
+sim_mxl_wtp <- simulateShares(mxl_wtp, alts, priceName = 'price')
+```
+```{r}
+sim_mxl_wtp
+```

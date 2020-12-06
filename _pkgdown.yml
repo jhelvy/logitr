@@ -30,6 +30,8 @@ navbar:
           href: articles/mxl_models.html
         - text: "Estimating weighted logit models"
           href: articles/weighted_models.html
+        - text: "Simulating shares"
+          href: articles/simulations.html
     - text: "Changelog"
       href: news/index.html
   right:
