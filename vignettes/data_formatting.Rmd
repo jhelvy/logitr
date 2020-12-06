@@ -7,6 +7,26 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.retina = 3,
+  comment = "#>"
+)
+library(logitr)
+# Read in results from already estimated models  so that the
+# examples aren't actually run when building this page, otherwise it'll
+# take much longer to build
+model_default <- readRDS(
+  here::here('inst', 'extdata', 'encoding_model_default.Rds'))
+model_character_price <- readRDS(
+  here::here('inst', 'extdata', 'encoding_model_character_price.Rds'))
+model_dummy_price <- readRDS(
+  here::here('inst', 'extdata', 'encoding_model_dummy_price.Rds'))
+```
+
 ```{r, child=here::here('man', 'rmdchunks', 'header.Rmd')}
 ```
 
@@ -17,15 +37,97 @@ vignette: >
 
 # Continuous and discrete variables
 
-## Default settings
+**Numeric variables** are by default estimated with a single "slope" coefficient.
 
-Numeric variables by default are estimated with a single covariate. For example, consider a data frame that contains a `price` variable with three levels `c(10, 15, 20)`. Adding `price` to the `parNames` argument in the main `logitr()` function would estimate a single `price` covariate for the "slope" of the change in price between the values of `10` and `20`.
+> Example: Consider a data frame that contains a `price` variable with the following three levels: `c(10, 15, 20)`. Adding `price` to the `parNames` argument in the main `logitr()` function would result in a single `price` coefficient for the "slope" of the change in price.
 
-Categorical variables (i.e. "character" or "factor" type variables) are estimated with a single covariate for every unique "level" except for the first level (the baseline or `"0"` level) using "dummy" encoding (`0` for `FALSE` and `1` for `TRUE`). For example, consider a data frame that contains a `brand` variable with four levels `c("dannon", "hiland", "weight", "yoplait")`. Adding `brand` to the `parNames` argument in the main `logitr()` function would estimate three covariates: `brand_hiland`, `brand_weight`, and `brand_yoplait`, with `brand_dannon` serving as the "dummied out" baseline level.
+**Categorical variables** (i.e. "character" or "factor" type variables) are by default estimated with a coefficient for all but the first "level", which serves as the "baseline" or `"0"` level. Categorical variables are automatically "dummy" coded: `0` for `FALSE` and `1` for `TRUE`.
 
-## Dummy coding variables
+> Example: Consider a data frame that contains a `brand` variable with the following four levels: `c("dannon", "hiland", "weight", "yoplait")`. Adding `brand` to the `parNames` argument in the main `logitr()` function would result in three covariates: `brand_hiland`, `brand_weight`, and `brand_yoplait`, with `brand_dannon` serving as the "dummied out" baseline level.
 
-To model a continuous variable as a discrete variable with a covariate for all but the first "level", there are two options:
+# Creating dummy coded variables
 
-1. Convert the variable to a "character" or "factor" type.
+To model a continuous variable as a discrete variable with a coefficient for all but the first level, there are two options:
+
+1. Convert the variable to a `"character"` or `"factor"` type.
 2. Create dummy coded variables using the `dummyCode()` function.
+
+Details for each approach are provided below.
+
+## 1) Convert variable types
+
+For the first option, just convert the column in the data frame to a `"character"` or `"factor"` type prior to estimating the model. For example, consider the following model:
+
+```{r, eval=FALSE}
+model_default <- logitr(
+  data       = cars_us,
+  choiceName = 'choice',
+  obsIDName  = 'obsnum',
+  parNames   = c(
+    'price', 'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100',
+    'bev150', 'american', 'japanese', 'chinese', 'skorean',
+    'phevFastcharge', 'bevFastcharge','opCost', 'accelTime'))
+```
+
+In this model, since the `price` variable is a `"double"` variable type, it is modeled as a continuous variable by default:
+
+```{r}
+typeof(cars_us$price)
+summary(model_default)
+```
+
+To model `price` as a categorical variable, simple change it to a `"character"` or `"factor"` type:
+
+```{r}
+cars_us$price <- as.character(cars_us$price)
+typeof(cars_us$price)
+```
+
+Now re-estimate the model:
+
+```{r, eval=FALSE}
+model_character_price <- logitr(
+  data       = cars_us,
+  choiceName = 'choice',
+  obsIDName  = 'obsnum',
+  parNames   = c(
+    'price', 'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100',
+    'bev150', 'american', 'japanese', 'chinese', 'skorean',
+    'phevFastcharge', 'bevFastcharge','opCost', 'accelTime'))
+```
+
+Now `price` is modeled with a coefficient for all but the first level:
+
+```{r}
+typeof(cars_us$price)
+summary(model_character_price)
+```
+
+## 2) Create dummy-coded variables
+
+For the second option, you can use the `dummyCode()` function to create new dummy-coded variables for all the levels of a continuous variable and then use those variables in the model:
+
+```{r}
+cars_us_dummy <- dummyCode(df = cars_us, vars = "price")
+names(cars_us_dummy)
+```
+
+The new `cars_us_dummy` data frame now contains new variables for each level of the `price` column. This approach allows the modeler to specify the baselne level. In this example, I'll use the `price_50` level as the baseline:
+
+```{r, eval=FALSE}
+model_dummy_price <- logitr(
+  data       = cars_us_dummy,
+  choiceName = 'choice',
+  obsIDName  = 'obsnum',
+  parNames   = c(
+    "price_15", "price_18", "price_23", "price_32",
+    'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100',
+    'bev150', 'american', 'japanese', 'chinese', 'skorean',
+    'phevFastcharge', 'bevFastcharge','opCost', 'accelTime'))
+```
+
+Now `price` is modeled with a specified coefficient for all but the `price_50` level:
+
+```{r}
+summary(model_dummy_price)
+```
