@@ -73,13 +73,13 @@ probabilities).
   - Author: *John Paul Helveston*
     [www.jhelvy.com](http://www.jhelvy.com/)
   - Date First Written: *Sunday, September 28, 2014*
-  - Most Recent Update: December 04 2020
+  - Most Recent Update: December 06 2020
   - License:
     [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
   - [Latest Release](https://github.com/jhelvy/logitr/releases/latest):
     0.0.4
 
-# Citation Information
+## Citation Information
 
 If you use this package for in a publication, I would greatly appreciate
 it if you cited it. You can get the citation information by typing

@@ -71,7 +71,7 @@ library(logitr)
 - License: [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
 - [Latest Release](https://github.com/jhelvy/logitr/releases/latest): 0.0.4
 
-# Citation Information
+## Citation Information
 
 If you use this package for in a publication, I would greatly appreciate it if you cited it. You can get the citation information by typing `citation("logitr")` into R:
 
