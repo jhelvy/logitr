@@ -10,3 +10,5 @@
     - overall structure
     - dummyCode() function
     - handling interactions
+- All vignettes proof-read with lots of small changes to examples
+- Added a hex sticker

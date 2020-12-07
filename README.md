@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+experimental](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/logitr)](https://CRAN.R-project.org/package=logitr)
 <!-- badges: end -->
@@ -73,7 +73,7 @@ probabilities).
   - Author: *John Paul Helveston*
     [www.jhelvy.com](http://www.jhelvy.com/)
   - Date First Written: *Sunday, September 28, 2014*
-  - Most Recent Update: December 06 2020
+  - Most Recent Update: December 07 2020
   - License:
     [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
   - [Latest Release](https://github.com/jhelvy/logitr/releases/latest):
