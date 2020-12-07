@@ -54,6 +54,7 @@ reference:
   contents:
   - summary.logitr
   - coef.logitr
+  - getCoefTable
   - statusCodes
 - title: "Computing and Comparing WTP"
   desc: "Functions for computing and comparing WTP from estimated models."

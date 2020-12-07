@@ -4,6 +4,7 @@
 ## Summary of larger updates:
 
 - Added support for auto creating interactions amongst variables
+- exported `getCoefTable()` function
 
 ## Summary of smaller updates:
 

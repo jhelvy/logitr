@@ -13,6 +13,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   warning = FALSE,
   message = FALSE,
+  fig.path   = "figs/",
   fig.retina = 3,
   comment = "#>"
 )
@@ -60,6 +61,10 @@ You can also use WTP space models to simulate shares, but you must provide the a
 ```{r, eval=FALSE}
 sim_mnl_wtp <- simulateShares(mnl_wtp, alts, priceName = 'price')
 ```
+```
+#> **Using results for model 1 of 10,
+#> the best model (largest log-likelihood) from the multistart**
+```
 ```{r}
 sim_mnl_wtp
 ```
@@ -83,3 +88,24 @@ sim_mxl_wtp <- simulateShares(mxl_wtp, alts, priceName = 'price')
 ```{r}
 sim_mxl_wtp
 ```
+
+Here is a bar plot of the results from each model:
+
+```{r, fig.width=6, fig.height=4}
+library(ggplot2)
+
+sims <- rbind(sim_mnl_pref, sim_mnl_wtp, sim_mxl_pref, sim_mxl_wtp)
+sims$model <- c(rep("mnl_pref", 4), rep("mnl_wtp", 4),
+                rep("mxl_pref", 4), rep("mxl_wtp", 4))
+sims$alt <- rep(row.names(alts), 4)
+
+ggplot(sims, aes(x = alt, y = share_mean, fill = model)) +
+    geom_bar(stat = 'identity', width = 0.7, position = "dodge") +
+    geom_errorbar(aes(ymin = share_low, ymax = share_high),
+                  width = 0.2, position = position_dodge(width = 0.7)) +
+    scale_y_continuous(limits = c(0, 1)) +
+    labs(x = 'Alternative', y = 'Expected Share') +
+    theme_bw()
+```
+
+# References

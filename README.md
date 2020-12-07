@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# logitr <a href='https://jhelvy.github.io/logitr/'><img src='man/figures/logitr-hex.png' align="right" height="139" /></a>
+# logitr <a href='https://jhelvy.github.io/logitr/'><img src='man/figs/logitr-hex.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
@@ -88,8 +88,8 @@ citation("logitr")
 #> 
 #> To cite logitr in publications use:
 #> 
-#>   John Paul Helveston. logitr: Random utility logit models with
-#>   preference and willingness to pay space parameterizations (2020)
+#>   John Paul Helveston (2020). logitr: Random utility logit models with
+#>   preference and willingness to pay space parameterizations.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -97,7 +97,7 @@ citation("logitr")
 #>     title = {logitr: Random utility logit models with preference and willingness to pay space parameterizations},
 #>     author = {John Paul Helveston},
 #>     year = {2020},
-#>     note = {R package version 0.0.4},
+#>     note = {R package version 0.0.5},
 #>     url = {https://jhelvy.github.io/logitr/},
 #>   }
 ```

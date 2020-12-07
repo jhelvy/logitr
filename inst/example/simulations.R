@@ -49,16 +49,6 @@ sim_mxl_pref
 sim_mxl_wtp <- simulateShares(mxl_wtp, alts, priceName = 'price')
 sim_mxl_wtp
 
-# Plot simulation results from preference space MNL model:
-library(ggplot2)
-sim_mnl_pref$alt <- row.names(sim_mnl_pref)
-ggplot(sim_mnl_pref, aes(x = alt, y = share_mean)) +
-    geom_bar(stat = 'identity', width = 0.7, fill = "dodgerblue") +
-    geom_errorbar(aes(ymin = share_low, ymax = share_high), width = 0.2) +
-    scale_y_continuous(limits = c(0, 1)) +
-    labs(x = 'Alternative', y = 'Expected Share') +
-    theme_bw()
-
 # Save results
 saveRDS(sim_mnl_pref,
         here::here('inst', 'extdata', 'sim_mnl_pref.Rds'))
@@ -68,3 +58,19 @@ saveRDS(sim_mxl_pref,
         here::here('inst', 'extdata', 'sim_mxl_pref.Rds'))
 saveRDS(sim_mxl_wtp,
         here::here('inst', 'extdata', 'sim_mxl_wtp.Rds'))
+
+# Plot simulation results from each model:
+library(ggplot2)
+
+sims <- rbind(sim_mnl_pref, sim_mnl_wtp, sim_mxl_pref, sim_mxl_wtp)
+sims$model <- c(rep("mnl_pref", 4), rep("mnl_wtp", 4),
+                rep("mxl_pref", 4), rep("mxl_wtp", 4))
+sims$alt <- rep(row.names(alts), 4)
+
+ggplot(sims, aes(x = alt, y = share_mean, fill = model)) +
+    geom_bar(stat = 'identity', width = 0.7, position = "dodge") +
+    geom_errorbar(aes(ymin = share_low, ymax = share_high),
+                  width = 0.2, position = position_dodge(width = 0.7)) +
+    scale_y_continuous(limits = c(0, 1)) +
+    labs(x = 'Alternative', y = 'Expected Share') +
+    theme_bw()

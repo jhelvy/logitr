@@ -158,7 +158,7 @@ summary(mnl_wtp_weighted)
 
 # Compare results
 
-Here is a comparison of the coefficients between the weighted and unweighted models. All of the significant coefficients:
+Here is a comparison of the coefficients between the weighted and unweighted models. All of the significant coefficients have the same sign, but the magnitudes shift some based on the differential weighting of each individual choice in the weighted model:
 
 ```{r}
 coef_compare <- data.frame(
@@ -167,7 +167,7 @@ coef_compare <- data.frame(
 coef_compare
 ```
 
-Compare the log-likelihood between the weighted and unweighted models:
+Here is a comparison of the log-likelihood for the weighted and unweighted models:
 
 ```{r}
 logLik_compare <- c(

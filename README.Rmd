@@ -10,12 +10,12 @@ knitr::opts_chunk$set(
   warning    = FALSE,
   message    = FALSE,
   comment    = "#>",
-  fig.path   = "man/figures/",
+  fig.path   = "man/figs/",
   fig.retina = 3
 )
 ```
 
-# logitr <a href='https://jhelvy.github.io/logitr/'><img src='man/figures/logitr-hex.png' align="right" height="139" /></a>
+# logitr <a href='https://jhelvy.github.io/logitr/'><img src='man/figs/logitr-hex.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 [![Lifecycle:
