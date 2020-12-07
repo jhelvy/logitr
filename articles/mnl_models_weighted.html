@@ -422,7 +422,7 @@
 <div id="compare-results" class="section level1">
 <h1 class="hasAnchor">
 <a href="#compare-results" class="anchor"></a>Compare results</h1>
-<p>Here is a comparison of the coefficients between the weighted and unweighted models. All of the significant coefficients:</p>
+<p>Here is a comparison of the coefficients between the weighted and unweighted models. All of the significant coefficients have the same sign, but the magnitudes shift some based on the differential weighting of each individual choice in the weighted model:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">coef_compare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   Unweighted <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mnl_wtp_unweighted</span><span class="op">)</span>,
@@ -445,7 +445,7 @@
 <span class="co">#&gt; bevFastcharge    2.9195682   3.34254493</span>
 <span class="co">#&gt; opCost          -1.6360701  -1.59754080</span>
 <span class="co">#&gt; accelTime       -1.6970511  -1.17183470</span></code></pre></div>
-<p>Compare the log-likelihood between the weighted and unweighted models:</p>
+<p>Here is a comparison of the log-likelihood for the weighted and unweighted models:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">logLik_compare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
   <span class="st">"Unweighted"</span> <span class="op">=</span> <span class="va">mnl_wtp_unweighted</span><span class="op">$</span><span class="va">logLik</span>,
