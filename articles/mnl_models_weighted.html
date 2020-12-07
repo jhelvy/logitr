@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weighted logit models • logitr</title>
+<title>Estimating Weighted Logit Models • logitr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Weighted logit models">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Estimating Weighted Logit Models">
 <meta property="og:description" content="logitr">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
       </span>
     </div>
 
@@ -63,28 +63,19 @@
       <a href="../articles/data_formatting.html">Data Formatting and Encoding</a>
     </li>
     <li>
-      <a href="../articles/interactions.html">Models with Interactions</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Examples
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/mnl_models.html">Estimating multinomial logit models</a>
+      <a href="../articles/mnl_models.html">Estimating Multinomial Logit Models</a>
     </li>
     <li>
-      <a href="../articles/mxl_models.html">Estimating mixed logit models</a>
+      <a href="../articles/mxl_models.html">Estimating Mixed Logit Models</a>
     </li>
     <li>
-      <a href="../articles/weighted_models.html">Estimating weighted logit models</a>
+      <a href="../articles/interactions.html">Estimating Models with Interactions</a>
     </li>
     <li>
-      <a href="../articles/simulations.html">Simulating shares</a>
+      <a href="../articles/weighted_models.html">Estimating Weighted Logit Models</a>
+    </li>
+    <li>
+      <a href="../articles/simulations.html">Simulating Shares from Estimated Models</a>
     </li>
   </ul>
 </li>
@@ -113,7 +104,7 @@
 <script src="mnl_models_weighted_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Weighted logit models</h1>
+      <h1 data-toc-skip>Estimating Weighted Logit Models</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/jhelvy/logitr/blob/master/vignettes/mnl_models_weighted.Rmd"><code>vignettes/mnl_models_weighted.Rmd</code></a></small>
@@ -123,6 +114,7 @@
 
     
     
+<p>This vignette demonstrates an example of how to use the <code><a href="../reference/logitr.html">logitr()</a></code> function with the <code>weightsName</code> argument to estimate weighted logit models.</p>
 <div id="the-data" class="section level1">
 <h1 class="hasAnchor">
 <a href="#the-data" class="anchor"></a>The data</h1>
@@ -210,27 +202,27 @@
 <div id="the-utility-model" class="section level1">
 <h1 class="hasAnchor">
 <a href="#the-utility-model" class="anchor"></a>The utility model</h1>
-<p>In this example, we’ll estimate two versions of the following utility model in the WTP space (one without weights and one with weights). Notation is taken from Helveston et al. <span class="citation">(2015)</span>:</p>
+<p>In this example, we’ll estimate two versions of the following utility model in the WTP space: one without weights and one with weights. Notation is taken from Helveston et al. <span class="citation">(2015)</span>:</p>
 <p><span class="math display">\[\begin{equation}
-    u_{j} =
-        \lambda (
-        \omega_1 x_{j}^{\mathrm{hev}} +
-        \omega_2 x_{j}^{\mathrm{phev10}} +
-        \omega_3 x_{j}^{\mathrm{phev20}} +
-        \omega_4 x_{j}^{\mathrm{phev40}} +\\
-        \omega_5 x_{j}^{\mathrm{bev75}} +
-        \omega_6 x_{j}^{\mathrm{bev100}} +
-        \omega_7 x_{j}^{\mathrm{bev150}} +\\
-        \omega_8 x_{j}^{\mathrm{phevFastcharge}} +
-        \omega_9 x_{j}^{\mathrm{bevFastcharge}} +
-        \omega_{10} x_{j}^{\mathrm{opCost}} +
-        \omega_{11} x_{j}^{\mathrm{accelTime}} +\\
-        \omega_{12} x_{j}^{\mathrm{american}} +
-        \omega_{13} x_{j}^{\mathrm{japanese}} +
-        \omega_{14} x_{j}^{\mathrm{chinese}} +
-        \omega_{15} x_{j}^{\mathrm{skorean}} -
-        p_{j})  +
-        \varepsilon_{j}
+\begin{split}
+&amp;u_{j} = \lambda (\\
+&amp;\omega_1 x_{j}^{\mathrm{hev}} +
+ \omega_2 x_{j}^{\mathrm{phev10}} +
+ \omega_3 x_{j}^{\mathrm{phev20}} +
+ \omega_4 x_{j}^{\mathrm{phev40}} +\\
+&amp;\omega_5 x_{j}^{\mathrm{bev75}} +
+ \omega_6 x_{j}^{\mathrm{bev100}} +
+ \omega_7 x_{j}^{\mathrm{bev150}} +\\
+&amp;\omega_8 x_{j}^{\mathrm{phevFastcharge}} +
+ \omega_9 x_{j}^{\mathrm{bevFastcharge}} +
+ \omega_{10} x_{j}^{\mathrm{opCost}} +
+ \omega_{11} x_{j}^{\mathrm{accelTime}} +\\
+&amp;\omega_{12} x_{j}^{\mathrm{american}} +
+ \omega_{13} x_{j}^{\mathrm{japanese}} +
+ \omega_{14} x_{j}^{\mathrm{chinese}} +
+ \omega_{15} x_{j}^{\mathrm{skorean}} - p_{j}\\
+&amp;) +\varepsilon_{j}
+\end{split}
 \label{eq:mnlWtpCarsExample}
 \end{equation}\]</span></p>
 <p>where all the <span class="math inline">\(\omega\)</span> parameters have units of dollars and <span class="math inline">\(\lambda\)</span> is the scale parameter.</p>
@@ -334,8 +326,12 @@
 <div id="weighted-model" class="section level1">
 <h1 class="hasAnchor">
 <a href="#weighted-model" class="anchor"></a>Weighted model</h1>
-<p>To estimate the weighted model, simply add the <code>weightsName</code> argument to the call to <code><a href="../reference/logitr.html">logitr()</a></code>:</p>
+<p>To estimate the weighted model, simply add the <code>weightsName</code> argument to the call to <code><a href="../reference/logitr.html">logitr()</a></code>, referring to the column of weights that will be used to weight each choice observation. In this example, the weights used in the <code>weights</code> column range from 0.2 to 5:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">cars_us</span><span class="op">$</span><span class="va">weights</span><span class="op">)</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;  0.2000  0.2000  0.2000  0.6891  0.2000  5.0000</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mnl_wtp_weighted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   data       <span class="op">=</span> <span class="va">cars_us</span>,
   choiceName <span class="op">=</span> <span class="st">'choice'</span>,
@@ -348,10 +344,7 @@
   modelSpace <span class="op">=</span> <span class="st">'wtp'</span>,
   weightsName <span class="op">=</span> <span class="st">'weights'</span>, <span class="co"># This is the key argument for enabling weights</span>
   options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-    <span class="co"># Since WTP space models are non-convex, run a multistart:</span>
     numMultiStarts <span class="op">=</span> <span class="fl">10</span>,
-    <span class="co"># Because the computed WTP from the preference space model has values</span>
-    <span class="co"># as large as 8, I increase the boundaries of the random starting values:</span>
     startParBounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 <pre><code>#&gt; Running Multistart 1 of 10
@@ -366,7 +359,7 @@
 #&gt; Running Multistart 10 of 10
 #&gt; Done!</code></pre>
 <p>Print a summary of the results:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mnl_wtp_weighted</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; SUMMARY OF ALL MULTISTART RUNS:</span>
@@ -429,8 +422,8 @@
 <div id="compare-results" class="section level1">
 <h1 class="hasAnchor">
 <a href="#compare-results" class="anchor"></a>Compare results</h1>
-<p>Compare the coefficients between the weighted and unweighted models:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p>Here is a comparison of the coefficients between the weighted and unweighted models. All of the significant coefficients:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">coef_compare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   Unweighted <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mnl_wtp_unweighted</span><span class="op">)</span>,
   Weighted   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mnl_wtp_weighted</span><span class="op">)</span><span class="op">)</span>
@@ -453,7 +446,7 @@
 <span class="co">#&gt; opCost          -1.6360701  -1.59754080</span>
 <span class="co">#&gt; accelTime       -1.6970511  -1.17183470</span></code></pre></div>
 <p>Compare the log-likelihood between the weighted and unweighted models:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">logLik_compare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
   <span class="st">"Unweighted"</span> <span class="op">=</span> <span class="va">mnl_wtp_unweighted</span><span class="op">$</span><span class="va">logLik</span>,
   <span class="st">"Weighted"</span> <span class="op">=</span> <span class="va">mnl_wtp_weighted</span><span class="op">$</span><span class="va">logLik</span><span class="op">)</span>

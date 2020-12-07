@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
       </span>
     </div>
 
@@ -63,28 +63,19 @@
       <a href="../articles/data_formatting.html">Data Formatting and Encoding</a>
     </li>
     <li>
-      <a href="../articles/interactions.html">Models with Interactions</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Examples
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/mnl_models.html">Estimating multinomial logit models</a>
+      <a href="../articles/mnl_models.html">Estimating Multinomial Logit Models</a>
     </li>
     <li>
-      <a href="../articles/mxl_models.html">Estimating mixed logit models</a>
+      <a href="../articles/mxl_models.html">Estimating Mixed Logit Models</a>
     </li>
     <li>
-      <a href="../articles/weighted_models.html">Estimating weighted logit models</a>
+      <a href="../articles/interactions.html">Estimating Models with Interactions</a>
     </li>
     <li>
-      <a href="../articles/simulations.html">Simulating shares</a>
+      <a href="../articles/weighted_models.html">Estimating Weighted Logit Models</a>
+    </li>
+    <li>
+      <a href="../articles/simulations.html">Simulating Shares from Estimated Models</a>
     </li>
   </ul>
 </li>
@@ -160,7 +151,13 @@
 <h2 class="hasAnchor">
 <a href="#preference-space-models" class="anchor"></a>Preference space models</h2>
 <p>Unlike similar packages like <a href="https://cran.r-project.org/web/packages/mlogit/index.html"><strong>mlogit</strong></a>, <strong>logitr</strong> does not support the formula type input that uses a symbolic description of the model to be estimated. Parameters are simply described as a vector of the column names in the <code>data.frame</code> provided to the <code>data</code> argument.</p>
-<p>The <code><a href="../reference/logitr.html">logitr()</a></code> function assumes that the deterministic part of the utility function is linear in parameters, i.e.:</p>
+<p>The <code><a href="../reference/logitr.html">logitr()</a></code> function assumes that the deterministic part of the utility function, <span class="math inline">\(v_{j}\)</span>, is linear in parameters, i.e.:</p>
+<p><span class="math display">\[\begin{equation}
+    u_{j} = v_{j} + \varepsilon_{j}
+        \hspace{0.5in}
+        \varepsilon_{j} \sim \textrm{Gumbel}\left(0,\frac{\pi^2}{6}\right)
+\label{eq:utilityComponents}
+\end{equation}\]</span></p>
 <p><span class="math display">\[\begin{equation}
     v_{j} =
         \mathbf{β}' \mathrm{\mathbf{x}}_{j} -
@@ -168,7 +165,7 @@
         \hspace{0.5in}
 \label{eq:utilityPreferenceObserved}
 \end{equation}\]</span></p>
-<p>Accordingly, each parameter in the <code>parNames</code> argument is an additive part of <span class="math inline">\(v_{j}\)</span>.</p>
+<p>where <span class="math inline">\(\mathbf{β}\)</span> is the vector of coefficients for non-price attributes <span class="math inline">\(\mathrm{\mathbf{x}}_{j}\)</span>, <span class="math inline">\(\alpha\)</span> is the coefficient for price <span class="math inline">\(p_{j}\)</span>. Accordingly, each parameter in the <code>parNames</code> argument is an additive part of <span class="math inline">\(v_{j}\)</span>.</p>
 <p>For example, if the observed utility was <span class="math inline">\(v_{j} = \beta x_{j} - \alpha p_{j}\)</span>, where <span class="math inline">\(p_{j}\)</span> is “price” and <span class="math inline">\(x_{j}\)</span> is “size”, then the <code>parNames</code> argument should be <code><a href="https://rdrr.io/r/base/c.html">c("price", "size")</a></code>. Such an example could be estimated with the following code, where the <code>data</code> object is a <code>data.frame</code> with columns named <code>"choice"</code>, <code>"obsID"</code>, <code>"price"</code>, and <code>"size"</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>mnl_pref &lt;-<span class="st"> </span><span class="kw">logitr</span>(</span>
 <span id="cb2-2"><a href="#cb2-2"></a>    <span class="dt">data       =</span> data,</span>

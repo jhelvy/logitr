@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
       </span>
     </div>
 
@@ -63,28 +63,19 @@
       <a href="articles/data_formatting.html">Data Formatting and Encoding</a>
     </li>
     <li>
-      <a href="articles/interactions.html">Models with Interactions</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Examples
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="articles/mnl_models.html">Estimating multinomial logit models</a>
+      <a href="articles/mnl_models.html">Estimating Multinomial Logit Models</a>
     </li>
     <li>
-      <a href="articles/mxl_models.html">Estimating mixed logit models</a>
+      <a href="articles/mxl_models.html">Estimating Mixed Logit Models</a>
     </li>
     <li>
-      <a href="articles/weighted_models.html">Estimating weighted logit models</a>
+      <a href="articles/interactions.html">Estimating Models with Interactions</a>
     </li>
     <li>
-      <a href="articles/simulations.html">Simulating shares</a>
+      <a href="articles/weighted_models.html">Estimating Weighted Logit Models</a>
+    </li>
+    <li>
+      <a href="articles/simulations.html">Simulating Shares from Estimated Models</a>
     </li>
   </ul>
 </li>
@@ -117,16 +108,13 @@
 </h1></div>
 <!-- badges: start -->
 
-<p><strong>logitr</strong> estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using “Preference” space or “Willingness-to-pay” (WTP) space <a href="https://jhelvy.github.io/logitr/articles/utility_models.html">utility parameterizations</a>. The current version includes support for:</p>
+<p><strong>logitr</strong> estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using “Preference” space or “Willingness-to-pay” (WTP) space <a href="https://jhelvy.github.io/logitr/articles/utility_models.html">utility parameterizations</a>. The latest version includes support for:</p>
 <ul>
 <li>Homogeneous multinomial logit (MNL) models</li>
 <li>Heterogeneous mixed logit (MXL) models (with normal and log-normal parameter distributions).</li>
 <li>Preference space utility parameterization.</li>
 <li>WTP space utility parameterization.</li>
-<li>An optional multistart optimization that uses different random starting points in each iteration (useful for non-convex problems like MXL models or models with WTP space parameterizations).</li>
-</ul>
-<p>The package also has additional functions for:</p>
-<ul>
+<li>An option to run a multistart optimization loop that uses different random starting points in each iteration (useful for non-convex problems like MXL models or models with WTP space parameterizations).</li>
 <li>Computing and comparing WTP from both preference space and WTP space models.</li>
 <li>Simulating the expected shares of a set of alternatives using an estimated model.</li>
 </ul>
@@ -159,13 +147,13 @@
 <li>License: <a href="https://github.com/jhelvy/logitr/blob/master/LICENSE.md">MIT</a>
 </li>
 <li>
-<a href="https://github.com/jhelvy/logitr/releases/latest">Latest Release</a>: 0.0.4</li>
+<a href="https://github.com/jhelvy/logitr/releases/latest">Latest Release</a>: 0.0.5</li>
 </ul>
 </div>
 <div id="citation-information" class="section level2">
 <h2 class="hasAnchor">
 <a href="#citation-information" class="anchor"></a>Citation Information</h2>
-<p>If you use this package for in a publication, I would greatly appreciate it if you cited it. You can get the citation information by typing <code><a href="https://rdrr.io/r/utils/citation.html">citation("logitr")</a></code> into R:</p>
+<p>If you use this package for in a publication, I would greatly appreciate it if you cited it - you can get the citation by typing <code><a href="https://rdrr.io/r/utils/citation.html">citation("logitr")</a></code> into R:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span><span class="op">(</span><span class="st">"logitr"</span><span class="op">)</span>
 <span class="co">#&gt; </span>

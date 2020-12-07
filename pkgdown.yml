@@ -4,12 +4,11 @@ pkgdown_sha: ~
 articles:
   basic_usage: basic_usage.html
   data_formatting: data_formatting.html
-  examples: examples.html
   interactions: interactions.html
   mnl_models: mnl_models.html
   mnl_models_weighted: mnl_models_weighted.html
   mxl_models: mxl_models.html
   simulations: simulations.html
   utility_models: utility_models.html
-last_built: 2020-12-07T13:11Z
+last_built: 2020-12-07T16:12Z
 
