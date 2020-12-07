@@ -86,10 +86,7 @@ printMultistartSummary <- function(model) {
 }
 
 printModelSummary <- function(model) {
-  coefTable <- getCoefTable(
-    model$coef, model$standErrs, model$numObs,
-    model$numParams
-  )
+  coefTable <- getCoefTable(model)
   statTable <- getStatTable(
     model$logLik, model$nullLogLik, model$numObs,
     model$numParams
@@ -136,7 +133,37 @@ getBasicInfoTable <- function(model) {
   return(basicInfoSummary)
 }
 
-getCoefTable <- function(coef, se, numObs, numParams) {
+#' Get the coefficient summary table as a data frame
+#'
+#' Returns a data frame of the coefficient summary table of a model estimated using the `logitr()` function.
+#' @keywords logitr, summary, coefTable
+#' @param object The output of a model estimated model using the `logitr()` function.
+#' @return Returns a data frame of the coefficient summary table of a model estimated using the `logitr()` function.
+#' @export
+#' @examples
+#' library(logitr)
+#'
+#' # Run a MNL model in the preference space
+#' mnl_pref <- logitr(
+#'   data = yogurt,
+#'   choiceName = "choice",
+#'   obsIDName = "obsID",
+#'   parNames = c("price", "feat", "dannon", "hiland", "yoplait")
+#' )
+#'
+#' # Get the coefficient summary table as a data frame
+#' getCoefTable(mnl_pref)
+getCoefTable <- function(object) {
+  coefTable <- getCoefSummaryTable(
+    coef      = object$coef,
+    se        = object$standErrs,
+    numObs    = object$numObs,
+    numParams = object$numParams
+  )
+  return(coefTable)
+}
+
+getCoefSummaryTable <- function(coef, se, numObs, numParams) {
   tStat <- rep(NA, length(coef))
   pVal <- rep(NA, length(coef))
   signif <- rep("", length(coef))

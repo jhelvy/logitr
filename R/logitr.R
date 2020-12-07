@@ -76,17 +76,30 @@
 #'
 #' @export
 #' @examples
-#' # For detailed examples, visit https://jhelvy.github.io/logitr/articles/examples.html
+#' \dontrun{
+#' # For more detailed examples, visit
+#' https://jhelvy.github.io/logitr/articles/
 #'
-#' # Run a MNL model in the Preference Space:
 #' library(logitr)
 #'
+#' # Run a MNL model in the Preference Space:
 #' mnl_pref <- logitr(
 #'   data = yogurt,
 #'   choiceName = "choice",
 #'   obsIDName = "obsID",
 #'   parNames = c("price", "feat", "dannon", "hiland", "yoplait")
 #' )
+#'
+#' # Run a MNL model in the WTP Space:
+#' mnl_wtp <- logitr(
+#'   data = yogurt,
+#'   choiceName = "choice",
+#'   obsIDName = "obsID",
+#'   parNames = c("feat", "dannon", "hiland", "yoplait"),
+#'   priceName = "price",
+#'   modelSpace = "wtp"
+#' )
+#' }
 logitr <- function(data, choiceName, obsIDName, parNames, priceName = NULL,
                    randPars = NULL, randPrice = NULL, modelSpace = "pref",
                    weightsName = NULL, options = list()) {

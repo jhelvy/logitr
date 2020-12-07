@@ -4,8 +4,8 @@ devtools::document()
 # Install the package
 devtools::install(force = TRUE)
 
-# Build the pkgdown site
-pkgdown::build_site()
+# # Build the pkgdown site
+# pkgdown::build_site()
 
 # Check package
 devtools::check()

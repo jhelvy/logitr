@@ -39,11 +39,11 @@ model_dummy_price <- readRDS(
 
 **Numeric variables** are by default estimated with a single "slope" coefficient.
 
-> Example: Consider a data frame that contains a `price` variable with the following three levels: `c(10, 15, 20)`. Adding `price` to the `parNames` argument in the main `logitr()` function would result in a single `price` coefficient for the "slope" of the change in price.
+_Example_: Consider a data frame that contains a `price` variable with the following three levels: `c(10, 15, 20)`. Adding `price` to the `parNames` argument in the main `logitr()` function would result in a single `price` coefficient for the "slope" of the change in price.
 
 **Categorical variables** (i.e. "character" or "factor" type variables) are by default estimated with a coefficient for all but the first "level", which serves as the "baseline" or `"0"` level. Categorical variables are automatically "dummy" coded: `0` for `FALSE` and `1` for `TRUE`.
 
-> Example: Consider a data frame that contains a `brand` variable with the following four levels: `c("dannon", "hiland", "weight", "yoplait")`. Adding `brand` to the `parNames` argument in the main `logitr()` function would result in three covariates: `brand_hiland`, `brand_weight`, and `brand_yoplait`, with `brand_dannon` serving as the "dummied out" baseline level.
+_Example_: Consider a data frame that contains a `brand` variable with the following four levels: `c("dannon", "hiland", "weight", "yoplait")`. Adding `brand` to the `parNames` argument in the main `logitr()` function would result in three covariates: `brand_hiland`, `brand_weight`, and `brand_yoplait`, with `brand_dannon` serving as the "dummied out" baseline level.
 
 # Creating dummy coded variables
 
@@ -52,11 +52,13 @@ To model a continuous variable as a discrete variable with a coefficient for all
 1. Convert the variable to a `"character"` or `"factor"` type.
 2. Create dummy coded variables using the `dummyCode()` function.
 
+The second approach of using the `dummyCode()` function allows the modeler to specify the baseline level. It can also be used to create dummy-coded variables of a categorical variable.
+
 Details for each approach are provided below.
 
 ## 1) Convert variable types
 
-For the first option, just convert the column in the data frame to a `"character"` or `"factor"` type prior to estimating the model. For example, consider the following model:
+The simplest way to model a continuous variable as a discrete variable is to convert the column in the data frame to a `"character"` or `"factor"` type prior to estimating the model. For example, consider the following model:
 
 ```{r, eval=FALSE}
 model_default <- logitr(
@@ -70,7 +72,7 @@ model_default <- logitr(
 )
 ```
 
-In this model, since the `price` variable is a `"double"` variable type, it is modeled as a continuous variable by default:
+In this model, since the `price` variable is a `"double"` variable type, it is by default modeled as a continuous variable with a single "slope" coefficient:
 
 ```{r}
 typeof(cars_us$price)
@@ -98,7 +100,7 @@ model_character_price <- logitr(
 )
 ```
 
-Now `price` is modeled with a coefficient for all but the first level:
+Now `price` is modeled as a categorical variable with a coefficient for all but the first level:
 
 ```{r}
 typeof(cars_us$price)
@@ -114,7 +116,7 @@ cars_us_dummy <- dummyCode(df = cars_us, vars = "price")
 names(cars_us_dummy)
 ```
 
-The new `cars_us_dummy` data frame now contains new variables for each level of the `price` column. This approach allows the modeler to specify the baselne level. In this example, I'll use the `price_50` level as the baseline:
+The new `cars_us_dummy` data frame now contains variables for each level of the `price` column. This approach allows the modeler to specify the baseline level. In this example, I'll use the `price_50` level as the baseline:
 
 ```{r, eval=FALSE}
 model_dummy_price <- logitr(

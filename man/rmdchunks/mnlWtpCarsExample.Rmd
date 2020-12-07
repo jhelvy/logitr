@@ -1,22 +1,22 @@
 \begin{equation}
-    u_{j} =
-        \lambda (
-        \omega_1 x_{j}^{\mathrm{hev}} +
-        \omega_2 x_{j}^{\mathrm{phev10}} +
-        \omega_3 x_{j}^{\mathrm{phev20}} +
-        \omega_4 x_{j}^{\mathrm{phev40}} +\\
-        \omega_5 x_{j}^{\mathrm{bev75}} +
-        \omega_6 x_{j}^{\mathrm{bev100}} +
-        \omega_7 x_{j}^{\mathrm{bev150}} +\\
-        \omega_8 x_{j}^{\mathrm{phevFastcharge}} +
-        \omega_9 x_{j}^{\mathrm{bevFastcharge}} +
-        \omega_{10} x_{j}^{\mathrm{opCost}} +
-        \omega_{11} x_{j}^{\mathrm{accelTime}} +\\
-        \omega_{12} x_{j}^{\mathrm{american}} +
-        \omega_{13} x_{j}^{\mathrm{japanese}} +
-        \omega_{14} x_{j}^{\mathrm{chinese}} +
-        \omega_{15} x_{j}^{\mathrm{skorean}} -
-        p_{j})  +
-        \varepsilon_{j}
+\begin{split}
+&u_{j} = \lambda (\\
+&\omega_1 x_{j}^{\mathrm{hev}} +
+ \omega_2 x_{j}^{\mathrm{phev10}} +
+ \omega_3 x_{j}^{\mathrm{phev20}} +
+ \omega_4 x_{j}^{\mathrm{phev40}} +\\
+&\omega_5 x_{j}^{\mathrm{bev75}} +
+ \omega_6 x_{j}^{\mathrm{bev100}} +
+ \omega_7 x_{j}^{\mathrm{bev150}} +\\
+&\omega_8 x_{j}^{\mathrm{phevFastcharge}} +
+ \omega_9 x_{j}^{\mathrm{bevFastcharge}} +
+ \omega_{10} x_{j}^{\mathrm{opCost}} +
+ \omega_{11} x_{j}^{\mathrm{accelTime}} +\\
+&\omega_{12} x_{j}^{\mathrm{american}} +
+ \omega_{13} x_{j}^{\mathrm{japanese}} +
+ \omega_{14} x_{j}^{\mathrm{chinese}} +
+ \omega_{15} x_{j}^{\mathrm{skorean}} - p_{j}\\
+&) +\varepsilon_{j}
+\end{split}
 \label{eq:mnlWtpCarsExample}
 \end{equation}

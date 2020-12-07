@@ -40,12 +40,15 @@ You can read more details in the ["Data Formatting and Encoding"](data_formattin
 
 Unlike similar packages like [**mlogit**](https://cran.r-project.org/web/packages/mlogit/index.html), **logitr** does not support the formula type input that uses a symbolic description of the model to be estimated. Parameters are simply described as a vector of the column names in the `data.frame` provided to the `data` argument.
 
-The `logitr()` function assumes that the deterministic part of the utility function is linear in parameters, i.e.:
+The `logitr()` function assumes that the deterministic part of the utility function, $v_{j}$, is linear in parameters, i.e.:
+
+```{r, child=here::here('man', 'rmdchunks', 'utilityComponents.Rmd')}
+```
 
 ```{r, child=here::here('man', 'rmdchunks', 'utilityPreferenceObserved.Rmd')}
 ```
 
-Accordingly, each parameter in the `parNames` argument is an additive part of $v_{j}$.
+where $\betaVec$ is the vector of coefficients for non-price attributes $\xVec_{j}$, $\alpha$ is the coefficient for price $p_{j}$. Accordingly, each parameter in the `parNames` argument is an additive part of $v_{j}$.
 
 For example, if the observed utility was $v_{j} = \beta x_{j} - \alpha p_{j}$, where $p_{j}$ is "price" and $x_{j}$ is "size", then the `parNames` argument should be `c("price", "size")`. Such an example could be estimated with the following code, where the `data` object is a `data.frame` with columns named `"choice"`, `"obsID"`, `"price"`, and `"size"`:
 

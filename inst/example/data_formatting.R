@@ -53,6 +53,8 @@ model_dummy_price <- logitr(
     'bev150', 'american', 'japanese', 'chinese', 'skorean',
     'phevFastcharge', 'bevFastcharge','opCost', 'accelTime'))
 
+summary(model_dummy_price)
+
 # Save results
 saveRDS(model_default,
   here::here('inst', 'extdata', 'encoding_model_default.Rds'))

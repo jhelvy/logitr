@@ -1,0 +1,6 @@
+\begin{equation}
+    u_{j} = v_{j} + \varepsilon_{j}
+        \hspace{0.5in}
+        \varepsilon_{j} \sim \textrm{Gumbel}\left(0,\frac{\pi^2}{6}\right)
+\label{eq:utilityComponents}
+\end{equation}

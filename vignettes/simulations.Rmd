@@ -1,8 +1,8 @@
 ---
-title: "Simulating shares"
+title: "Simulating Shares from Estimated Models"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Simulating shares}
+  %\VignetteIndexEntry{Simulating Shares from Estimated Models}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 bibliography: "`r here::here('vignettes', 'library.bib')`"
@@ -26,6 +26,8 @@ sim_mxl_pref <- readRDS(here::here('inst', 'extdata', 'sim_mxl_pref.Rds'))
 sim_mxl_wtp <- readRDS(here::here('inst', 'extdata', 'sim_mxl_wtp.Rds'))
 ```
 
+Once a model has been estimated, it can be used to simulate the predicted shares for a set of alternatives. This vignette demonstrates examples of how to so using the `simulateShares()` function along with the results of an estimated model.
+
 # The data
 
 ```{r, child=here::here('man', 'rmdchunks', 'yogurtDataDescription.Rmd')}
@@ -33,7 +35,8 @@ sim_mxl_wtp <- readRDS(here::here('inst', 'extdata', 'sim_mxl_wtp.Rds'))
 
 # Simulating shares from estimated models
 
-Once a model has been estimated, it can be used to simulate the predicted shares for a set of alternatives. To do so, you first need to create a set of alternatives where each row is an alternative and each column an attribute. In this example, I'll just use one of the choice observations from the `yogurt` dataset:
+ To simulate shares, you first need to create a set of alternatives where each row is an alternative and each column an attribute. In this example, I'll just use one of the choice observations from the `yogurt` dataset:
+
 ```{r}
 alts <- subset(yogurt, obsID == 42,
                select = c('feat', 'price', 'hiland', 'weight', 'yoplait'))

@@ -15,19 +15,17 @@ status](https://www.r-pkg.org/badges/version/logitr)](https://CRAN.R-project.org
 R. Models can be estimated using “Preference” space or
 “Willingness-to-pay” (WTP) space [utility
 parameterizations](https://jhelvy.github.io/logitr/articles/utility_models.html).
-The current version includes support for:
+The latest version includes support for:
 
   - Homogeneous multinomial logit (MNL) models
   - Heterogeneous mixed logit (MXL) models (with normal and log-normal
     parameter distributions).
   - Preference space utility parameterization.
   - WTP space utility parameterization.
-  - An optional multistart optimization that uses different random
-    starting points in each iteration (useful for non-convex problems
-    like MXL models or models with WTP space parameterizations).
-
-The package also has additional functions for:
-
+  - An option to run a multistart optimization loop that uses different
+    random starting points in each iteration (useful for non-convex
+    problems like MXL models or models with WTP space
+    parameterizations).
   - Computing and comparing WTP from both preference space and WTP space
     models.
   - Simulating the expected shares of a set of alternatives using an
@@ -77,12 +75,12 @@ probabilities).
   - License:
     [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
   - [Latest Release](https://github.com/jhelvy/logitr/releases/latest):
-    0.0.4
+    0.0.5
 
 ## Citation Information
 
 If you use this package for in a publication, I would greatly appreciate
-it if you cited it. You can get the citation information by typing
+it if you cited it - you can get the citation by typing
 `citation("logitr")` into R:
 
 ``` r

@@ -42,7 +42,8 @@ wtp <- function(model, priceName) {
   } else if (model$modelSpace == "wtp") {
     wtp_mean <- stats::coef(model)
     wtp_se <- model$standErrs
-    return(getCoefTable(wtp_mean, wtp_se, model$numObs, model$numParams))
+    return(getCoefSummaryTable(
+      wtp_mean, wtp_se, model$numObs, model$numParams))
   }
 }
 
@@ -60,7 +61,7 @@ getPrefSpaceWtp <- function(model, priceName) {
   wtpDraws <- draws / priceDraws
   wtpDraws[, priceID] <- draws[, priceID]
   wtp_se <- apply(wtpDraws, 2, stats::sd)
-  return(getCoefTable(wtp_mean, wtp_se, model$numObs, model$numParams))
+  return(getCoefSummaryTable(wtp_mean, wtp_se, model$numObs, model$numParams))
 }
 
 #' Compare WTP from preference and WTP space models

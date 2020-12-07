@@ -24,17 +24,15 @@ navbar:
           href: articles/utility_models.html
         - text: "Data Formatting and Encoding"
           href: articles/data_formatting.html
-        - text: "Models with Interactions"
-          href: articles/interactions.html
-    - text: "Examples"
-      menu:
-        - text: "Estimating multinomial logit models"
+        - text: "Estimating Multinomial Logit Models"
           href: articles/mnl_models.html
-        - text: "Estimating mixed logit models"
+        - text: "Estimating Mixed Logit Models"
           href: articles/mxl_models.html
-        - text: "Estimating weighted logit models"
+        - text: "Estimating Models with Interactions"
+          href: articles/interactions.html
+        - text: "Estimating Weighted Logit Models"
           href: articles/weighted_models.html
-        - text: "Simulating shares"
+        - text: "Simulating Shares from Estimated Models"
           href: articles/simulations.html
     - text: "Changelog"
       href: news/index.html
@@ -43,30 +41,30 @@ navbar:
      href: https://github.com/jhelvy/logitr
 
 reference:
-- title: "Encoding data"
+- title: "Encoding Data"
   desc: "Functions for encoding data prior to model estimation."
   contents:
   - dummyCode
-- title: "Estimating models"
+- title: "Estimating Models"
   desc: "Functions for estimating multinomial logit models with preference space and WTP space utility parameterizations."
   contents:
   - logitr
-- title: "Viewing results"
+- title: "Viewing Results"
   desc: "Functions for viewing the results of estimated models."
   contents:
   - summary.logitr
   - coef.logitr
   - statusCodes
-- title: "Computing and comparing WTP"
+- title: "Computing and Comparing WTP"
   desc: "Functions for computing and comparing WTP from estimated models."
   contents:
   - wtp
   - wtpCompare
-- title: "Simulating shares"
+- title: "Simulating Shares from Estimated Models"
   desc: "Functions for simulating expected shares from a set of alternatives."
   contents:
   - simulateShares
-- title: "Example data sets"
+- title: "Example Data Sets"
   desc: "Descriptions of data included with this package"
   contents:
   - yogurt

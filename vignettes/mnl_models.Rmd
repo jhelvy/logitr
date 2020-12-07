@@ -1,8 +1,8 @@
 ---
-title: "Multinomial logit models"
+title: "Estimating Multinomial Logit Models"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Multinomial logit models}
+  %\VignetteIndexEntry{Estimating Multinomial Logit Models}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 bibliography: "`r here::here('vignettes', 'library.bib')`"
@@ -26,6 +26,8 @@ wtp_mnl_pref <- readRDS(here::here('inst', 'extdata', 'wtp_mnl_pref.Rds'))
 wtp_mnl_comparison <- readRDS(here::here('inst', 'extdata',
     'wtp_mnl_comparison.Rds'))
 ```
+
+This vignette demonstrates an example of how to use the `logitr()` function to estimate multinomial logit (MNL) models with preference space and WTP space utility parameterizations.
 
 # The data
 

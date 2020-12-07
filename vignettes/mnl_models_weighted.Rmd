@@ -1,8 +1,8 @@
 ---
-title: "Weighted logit models"
+title: "Estimating Weighted Logit Models"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Weighted logit models}
+  %\VignetteIndexEntry{Estimating Weighted Logit Models}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 bibliography: "`r here::here('vignettes', 'library.bib')`"
@@ -25,6 +25,8 @@ mnl_wtp_unweighted <- readRDS(
 mnl_wtp_weighted <- readRDS(
   here::here('inst', 'extdata', 'mnl_wtp_weighted.Rds'))
 ```
+
+This vignette demonstrates an example of how to use the `logitr()` function with the `weightsName` argument to estimate weighted logit models.
 
 # The data
 
@@ -56,7 +58,7 @@ In the utility models described below, the data variables are represented as fol
 
 # The utility model
 
-In this example, we'll estimate two versions of the following utility model in the WTP space (one without weights and one with weights). Notation is taken from Helveston et al. [-@Helveston2015]:
+In this example, we'll estimate two versions of the following utility model in the WTP space: one without weights and one with weights. Notation is taken from Helveston et al. [-@Helveston2015]:
 
 ```{r, child=here::here('man', 'rmdchunks', 'mnlWtpCarsExample.Rmd')}
 ```
@@ -112,8 +114,11 @@ summary(mnl_wtp_unweighted)
 
 # Weighted model
 
-To estimate the weighted model, simply add the `weightsName` argument to the call to  `logitr()`:
+To estimate the weighted model, simply add the `weightsName` argument to the call to  `logitr()`, referring to the column of weights that will be used to weight each choice observation. In this example, the weights used in the `weights` column range from 0.2 to 5:
 
+```{r}
+summary(cars_us$weights)
+```
 ```{r eval=FALSE}
 mnl_wtp_weighted <- logitr(
   data       = cars_us,
@@ -127,10 +132,7 @@ mnl_wtp_weighted <- logitr(
   modelSpace = 'wtp',
   weightsName = 'weights', # This is the key argument for enabling weights
   options = list(
-    # Since WTP space models are non-convex, run a multistart:
     numMultiStarts = 10,
-    # Because the computed WTP from the preference space model has values
-    # as large as 8, I increase the boundaries of the random starting values:
     startParBounds = c(-10, 10))
 )
 ```
@@ -156,7 +158,7 @@ summary(mnl_wtp_weighted)
 
 # Compare results
 
-Compare the coefficients between the weighted and unweighted models:
+Here is a comparison of the coefficients between the weighted and unweighted models. All of the significant coefficients:
 
 ```{r}
 coef_compare <- data.frame(
