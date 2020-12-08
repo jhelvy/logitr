@@ -15,6 +15,9 @@
 - All vignettes proof-read with lots of small changes to examples
 - Added a hex sticker
 
+
+
+
 # logitr 0.0.4
 
 Weighted models, new dataset, new encoding features
@@ -33,6 +36,7 @@ Weighted models, new dataset, new encoding features
 - Fixed dimension-matching issue with user-provided draws for mixed logit models
 - Fixed bug in `modelInputs` where `obsID` was not a vector for tibble inputs
 - Added placeholder hex sticker
+
 
 
 # logitr 0.0.3
