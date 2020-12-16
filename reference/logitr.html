@@ -86,7 +86,7 @@ function to minimize the negative log-likelihood function." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -133,7 +133,7 @@ function to minimize the negative log-likelihood function." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/jhelvy/logitr">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -264,13 +264,12 @@ e.g. <code>options = list(...)</code>.</p><table class='table'>
 <tr><td><code>useAnalyticGrad</code></td><td>Set to <code>FALSE</code> to use numerically approximated gradients instead of analytic gradients during estimation (which is slower).</td><td><code>TRUE</code></td></tr>
 <tr><td><code>scaleInputs</code></td><td>By default each variable in <code>data</code> is scaled to be between 0 and 1 before running the optimization routine because it usually helps with stability, especially if some of the variables have very large or very small values (e.g. <code>&gt; 10^3</code> or <code>&lt; 10^-3</code>). Set to <code>FALSE</code> to turn this feature off.</td><td><code>TRUE</code></td></tr>
 <tr><td><code>standardDraws</code></td><td>By default, a new set of standard normal draws are generated during each call to <code>logitr</code> (the same draws are used during each multistart iteration). The user can override those draws by providing a matrix of standard normal draws if desired.</td><td><code>NULL</code></td></tr>
-<tr><td><code>numDraws</code></td><td>The number of draws to use for MXL models for the maximum simulated likelihood.</td><td><code>200</code></td></tr>
-<tr><td><code>drawType</code></td><td>The type of draw to use for MXL models for the maximum simulated likelihood. Set to <code>'normal'</code> to use random normal draws or <code>'halton'</code> for Halton draws.</td><td><code>'halton'</code></td></tr>
+<tr><td><code>numDraws</code></td><td>The number of draws to use for MXL models for the maximum simulated likelihood.</td><td><code>50</code></td></tr>
 <tr><td><code>printLevel</code></td><td>The print level of the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>0</code></td></tr>
-<tr><td><code>xtol_rel</code></td><td>The relative <code>x</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-8</code></td></tr>
-<tr><td><code>xtol_abs</code></td><td>The absolute <code>x</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-8</code></td></tr>
-<tr><td><code>ftol_rel</code></td><td>The relative <code>f</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-8</code></td></tr>
-<tr><td><code>ftol_abs</code></td><td>The absolute <code>f</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-8</code></td></tr>
+<tr><td><code>xtol_rel</code></td><td>The relative <code>x</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-6</code></td></tr>
+<tr><td><code>xtol_abs</code></td><td>The absolute <code>x</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-6</code></td></tr>
+<tr><td><code>ftol_rel</code></td><td>The relative <code>f</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-6</code></td></tr>
+<tr><td><code>ftol_abs</code></td><td>The absolute <code>f</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-6</code></td></tr>
 <tr><td><code>maxeval</code></td><td>The maximum number of function evaluations for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1000</code></td></tr>
 </table>
 
