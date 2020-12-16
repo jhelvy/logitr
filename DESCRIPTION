@@ -24,6 +24,8 @@ Suggests:
     ggplot2
 Imports:
     nloptr,
-    stats
+    stats,
+    randtoolbox,
+    MASS
 URL: https://github.com/jhelvy/logitr
 BugReports: https://github.com/jhelvy/logitr/issues

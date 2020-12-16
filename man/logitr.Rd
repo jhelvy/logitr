@@ -85,13 +85,12 @@ e.g. \code{options = list(...)}.\tabular{lll}{
    \code{useAnalyticGrad} \tab Set to \code{FALSE} to use numerically approximated gradients instead of analytic gradients during estimation (which is slower). \tab \code{TRUE} \cr
    \code{scaleInputs} \tab By default each variable in \code{data} is scaled to be between 0 and 1 before running the optimization routine because it usually helps with stability, especially if some of the variables have very large or very small values (e.g. \verb{> 10^3} or \verb{< 10^-3}). Set to \code{FALSE} to turn this feature off. \tab \code{TRUE} \cr
    \code{standardDraws} \tab By default, a new set of standard normal draws are generated during each call to \code{logitr} (the same draws are used during each multistart iteration). The user can override those draws by providing a matrix of standard normal draws if desired. \tab \code{NULL} \cr
-   \code{numDraws} \tab The number of draws to use for MXL models for the maximum simulated likelihood. \tab \code{200} \cr
-   \code{drawType} \tab The type of draw to use for MXL models for the maximum simulated likelihood. Set to \code{'normal'} to use random normal draws or \code{'halton'} for Halton draws. \tab \code{'halton'} \cr
+   \code{numDraws} \tab The number of draws to use for MXL models for the maximum simulated likelihood. \tab \code{50} \cr
    \code{printLevel} \tab The print level of the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{0} \cr
-   \code{xtol_rel} \tab The relative \code{x} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
-   \code{xtol_abs} \tab The absolute \code{x} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
-   \code{ftol_rel} \tab The relative \code{f} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
-   \code{ftol_abs} \tab The absolute \code{f} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-8} \cr
+   \code{xtol_rel} \tab The relative \code{x} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-6} \cr
+   \code{xtol_abs} \tab The absolute \code{x} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-6} \cr
+   \code{ftol_rel} \tab The relative \code{f} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-6} \cr
+   \code{ftol_abs} \tab The absolute \code{f} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-6} \cr
    \code{maxeval} \tab The maximum number of function evaluations for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1000} \cr
 }
 }

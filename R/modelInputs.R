@@ -208,25 +208,22 @@ runOptionsChecks <- function(options, parNameList) {
     options$standardDraws <- NULL
   }
   if (is.null(options$numDraws)) {
-    options$numDraws <- 200
-  }
-  if (is.null(options$drawType)) {
-    options$drawType <- "halton"
+    options$numDraws <- 50
   }
   if (is.null(options$printLevel)) {
     options$printLevel <- 0
   }
   if (is.null(options$xtol_rel)) {
-    options$xtol_rel <- 1.0e-8
+    options$xtol_rel <- 1.0e-6
   }
   if (is.null(options$xtol_abs)) {
-    options$xtol_abs <- 1.0e-8
+    options$xtol_abs <- 1.0e-6
   }
   if (is.null(options$ftol_rel)) {
-    options$ftol_rel <- 1.0e-8
+    options$ftol_rel <- 1.0e-6
   }
   if (is.null(options$ftol_abs)) {
-    options$ftol_abs <- 1.0e-8
+    options$ftol_abs <- 1.0e-6
   }
   if (is.null(options$maxeval)) {
     options$maxeval <- 1000
@@ -285,9 +282,7 @@ addDraws <- function(modelInputs, parSetup) {
     modelInputs$modelType <- "mxl"
   }
   userDraws <- options$standardDraws
-  standardDraws <- getStandardDraws(
-      parSetup, options$numDraws, options$drawType
-  )
+  standardDraws <- getStandardDraws(parSetup, options$numDraws)
   if (is.null(userDraws)) {
     modelInputs$standardDraws <- standardDraws
     return(modelInputs)
@@ -303,14 +298,14 @@ addDraws <- function(modelInputs, parSetup) {
 
 setLogitFunctions <- function(modelSpace) {
   logitFuncs <- list(
-    getMnlLogit = getMnlLogit,
-    mnlNegLL = mnlNegLL,
-    getMnlV = getMnlV_pref,
+    getMnlLogit  = getMnlLogit,
+    mnlNegLL     = mnlNegLL,
+    getMnlV      = getMnlV_pref,
     mnlNegGradLL = mnlNegGradLL_pref,
-    mnlHessLL = mnlHessLL_pref,
-    getMxlLogit = getMxlLogit,
-    mxlNegLL = mxlNegLL,
-    getMxlV = getMxlV_pref,
+    mnlHessLL    = mnlHessLL_pref,
+    getMxlLogit  = getMxlLogit,
+    mxlNegLL     = mxlNegLL,
+    getMxlV      = getMxlV_pref,
     mxlNegGradLL = mxlNegGradLL_pref
   )
   if (modelSpace == "wtp") {
@@ -326,9 +321,9 @@ setLogitFunctions <- function(modelSpace) {
 setEvalFunctions <- function(modelType, useAnalyticGrad) {
   evalFuncs <- list(
     objective = mnlNegLLAndNumericGradLL,
-    negLL = getMnlNegLL,
+    negLL     = getMnlNegLL,
     negGradLL = getNumericNegGradLL,
-    hessLL = getNumericHessLL
+    hessLL    = getNumericHessLL
   )
   if (useAnalyticGrad) {
     evalFuncs$objective <- mnlNegLLAndGradLL

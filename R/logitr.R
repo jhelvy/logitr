@@ -39,13 +39,12 @@
 #' |`useAnalyticGrad`|Set to `FALSE` to use numerically approximated gradients instead of analytic gradients during estimation (which is slower).|`TRUE`|
 #' |`scaleInputs`|By default each variable in `data` is scaled to be between 0 and 1 before running the optimization routine because it usually helps with stability, especially if some of the variables have very large or very small values (e.g. `> 10^3` or `< 10^-3`). Set to `FALSE` to turn this feature off.|`TRUE`|
 #' |`standardDraws`|By default, a new set of standard normal draws are generated during each call to `logitr` (the same draws are used during each multistart iteration). The user can override those draws by providing a matrix of standard normal draws if desired.|`NULL`|
-#' |`numDraws`|The number of draws to use for MXL models for the maximum simulated likelihood.|`200`|
-#' |`drawType`|The type of draw to use for MXL models for the maximum simulated likelihood. Set to `'normal'` to use random normal draws or `'halton'` for Halton draws.|`'halton'`|
+#' |`numDraws`|The number of draws to use for MXL models for the maximum simulated likelihood.|`50`|
 #' |`printLevel`|The print level of the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`0`|
-#' |`xtol_rel`|The relative `x` tolerance for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1.0e-8`|
-#' |`xtol_abs`|The absolute `x` tolerance for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1.0e-8`|
-#' |`ftol_rel`|The relative `f` tolerance for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1.0e-8`|
-#' |`ftol_abs`|The absolute `f` tolerance for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1.0e-8`|
+#' |`xtol_rel`|The relative `x` tolerance for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1.0e-6`|
+#' |`xtol_abs`|The absolute `x` tolerance for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1.0e-6`|
+#' |`ftol_rel`|The relative `f` tolerance for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1.0e-6`|
+#' |`ftol_abs`|The absolute `f` tolerance for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1.0e-6`|
 #' |`maxeval`|The maximum number of function evaluations for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1000`|
 #'
 #' @return

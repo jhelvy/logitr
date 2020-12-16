@@ -13,26 +13,26 @@ appendModelInfo <- function(model, modelInputs) {
   numObs <- sum(modelInputs$choice)
   options <- append(modelInputs$options, model$options)
   result <- structure(list(
-    coef = coef,
-    standErrs = se,
-    logLik = logLik,
-    nullLogLik = nullLogLik,
-    gradient = gradient,
-    hessian = hessian,
-    numObs = numObs,
-    numParams = length(coef),
-    startPars = model$startPars,
+    coef             = coef,
+    standErrs        = se,
+    logLik           = logLik,
+    nullLogLik       = nullLogLik,
+    gradient         = gradient,
+    hessian          = hessian,
+    numObs           = numObs,
+    numParams        = length(coef),
+    startPars        = model$startPars,
     multistartNumber = model$multistartNumber,
-    time = model$time,
-    iterations = model$iterations,
-    message = model$message,
-    status = model$status,
-    modelSpace = modelInputs$modelSpace,
-    standardDraws = NA,
-    randParSummary = NA,
-    parSetup = modelInputs$parSetup,
-    weightsUsed = modelInputs$weightsUsed,
-    options = options
+    time             = model$time,
+    iterations       = model$iterations,
+    message          = model$message,
+    status           = model$status,
+    modelSpace       = modelInputs$modelSpace,
+    standardDraws    = NA,
+    randParSummary   = NA,
+    parSetup         = modelInputs$parSetup,
+    weightsUsed      = modelInputs$weightsUsed,
+    options          = options
   ),
   class = "logitr"
   )
@@ -129,7 +129,7 @@ getRandParSummary <- function(coef, modelInputs) {
   parSetup <- modelInputs$parSetup
   numDraws <- 10^4
   randParIDs <- getRandParIDs(parSetup)
-  standardDraws <- getStandardDraws(parSetup, numDraws, "halton")
+  standardDraws <- getStandardDraws(parSetup, numDraws)
   betaDraws <- makeBetaDraws(coef, parSetup, 10^4, standardDraws)
   randParSummary <- apply(betaDraws, 2, summary)
   # Add names to summary
