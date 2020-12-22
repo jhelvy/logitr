@@ -1,6 +1,5 @@
 Package: logitr
 Title: Random utility logit models with preference and willingness to pay space parameterizations
-Date: 2020-12-07
 Version: 0.0.5
 Authors@R: c(
     person(given   = "John",

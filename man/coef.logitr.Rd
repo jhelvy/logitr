@@ -12,7 +12,8 @@
 \item{...}{other arguments}
 }
 \value{
-A vector of the coefficients from a model estimated using the \code{logitr()} function.
+A vector of the coefficients from a model estimated using the
+\code{logitr()} function.
 }
 \description{
 Returns the coefficients of an estimated model of the 'logitr' class.

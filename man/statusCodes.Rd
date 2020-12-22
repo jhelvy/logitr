@@ -19,10 +19,14 @@ Prints a description of the status codes from the nloptr optimization routine.
    5 \tab Optimization stopped because maxeval was reached. \cr
    6 \tab Optimization stopped because maxtime was reached. \cr
    -1 \tab Generic failure code. \cr
-   -2 \tab Invalid arguments (e.g. lower bounds are bigger than upper bounds, an unknown algorithm was specified, etc.). \cr
+   -2 \tab Invalid arguments (e.g. lower bounds are bigger than upper bounds, \cr
+   an unknown algorithm was specified, etc.). \tab  \cr
    -3 \tab Ran out of memory. \cr
-   -4 \tab Halted because roundoff errors limited progress (in this case, the optimization still typically returns a useful result.). \cr
-   -5 \tab Halted because of a forced termination: the user called \code{nlopt_force_stop(opt)} on the optimization's nlopt_opt object opt the user's objective function or constraints. \cr
+   -4 \tab Halted because roundoff errors limited progress (in this case, the \cr
+   optimization still typically returns a useful result.). \tab  \cr
+   -5 \tab Halted because of a forced termination: the user called \cr
+   \code{nlopt_force_stop(opt)} on the optimization's nlopt_opt object opt the \tab  \cr
+   user's objective function or constraints. \tab  \cr
 }
 }
 \examples{

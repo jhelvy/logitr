@@ -45,7 +45,7 @@ View the [basic usage](https://jhelvy.github.io/logitr/articles/basic_usage.html
 ## Installation
 
 The current version is not yet on CRAN, but you can install it from
-Github using the **devtools** library:
+GitHub using the **devtools** library:
 
 ```{r, eval=FALSE}
 devtools::install_github("jhelvy/logitr")

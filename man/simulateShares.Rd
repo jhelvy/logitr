@@ -7,16 +7,22 @@
 simulateShares(model, alts, priceName = NULL, alpha = 0.025)
 }
 \arguments{
-\item{model}{The output of a model estimated model using the \code{logitr()} function.}
+\item{model}{The output of a model estimated model using the \code{logitr()}
+function.}
 
-\item{alts}{A data frame of a set of alternatives for which to simulate shares. Each row is an alternative and each column an attribute corresponding to parameter names in the estimated model.}
+\item{alts}{A data frame of a set of alternatives for which to simulate
+shares. Each row is an alternative and each column an attribute
+corresponding to parameter names in the estimated model.}
 
-\item{priceName}{The name of the parameter that identifies price. Only required for WTP space models. Defaults to \code{NULL}.}
+\item{priceName}{The name of the parameter that identifies price. Only
+required for WTP space models. Defaults to \code{NULL}.}
 
-\item{alpha}{The sensitivity of the computed confidence interval, e.g. a 90\% CI is obtained with \code{alpha = 0.05}. Defaults to \code{alpha = 0.025}.}
+\item{alpha}{The sensitivity of the computed confidence interval, e.g. a
+90\% CI is obtained with \code{alpha = 0.05}. Defaults to \code{alpha = 0.025}.}
 }
 \value{
-A data frame with the estimated shares for each alternative in \code{alts}.
+A data frame with the estimated shares for each alternative in
+\code{alts}.
 }
 \description{
 Returns the expected shares of a specific set of alternatives based

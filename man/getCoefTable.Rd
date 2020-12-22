@@ -7,13 +7,16 @@
 getCoefTable(object)
 }
 \arguments{
-\item{object}{The output of a model estimated model using the \code{logitr()} function.}
+\item{object}{The output of a model estimated model using the \code{logitr()}
+function.}
 }
 \value{
-Returns a data frame of the coefficient summary table of a model estimated using the \code{logitr()} function.
+Returns a data frame of the coefficient summary table of a model
+estimated using the \code{logitr()} function.
 }
 \description{
-Returns a data frame of the coefficient summary table of a model estimated using the \code{logitr()} function.
+Returns a data frame of the coefficient summary table of a model estimated
+using the \code{logitr()} function.
 }
 \examples{
 library(logitr)

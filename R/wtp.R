@@ -12,7 +12,9 @@
 #' @param priceName The name of the parameter that identifies price.
 #'
 #' @details
-#' Willingness to pay is computed by dividing the estimated parameters of a utility model in the "preference" space by the price parameter. Uncertainty is handled via simulation.
+#' Willingness to pay is computed by dividing the estimated parameters of a
+#' utility model in the "preference" space by the price parameter.
+#' Uncertainty is handled via simulation.
 #'
 #' @return A data frame of the WTP estimates.
 #' @export
@@ -70,14 +72,20 @@ getPrefSpaceWtp <- function(model, priceName) {
 #' model.
 #' @keywords logitr, wtp
 #'
-#' @param model_pref The output of a "preference space" model estimated using the `logitr()` function.
-#' @param model_wtp The output of a "willingness to pay space" model estimated using the `logitr()` function.
+#' @param model_pref The output of a "preference space" model estimated using
+#' the `logitr()` function.
+#' @param model_wtp The output of a "willingness to pay space" model estimated
+#' using the `logitr()` function.
 #' @param priceName The name of the parameter that identifies price.
 #'
 #' @details
-#' Willingness to pay (WTP) is first computed from the preference space model by dividing the estimated parameters by the price parameter. Then those estimates are compared against the WTP values directly estimated from the "WTP" space model. Uncertainty is handled via simulation.
+#' Willingness to pay (WTP) is first computed from the preference space model
+#' by dividing the estimated parameters by the price parameter. Then those
+#' estimates are compared against the WTP values directly estimated from the
+#' "WTP" space model. Uncertainty is handled via simulation.
 #'
-#' @return A data frame comparing the WTP estimates from preference space and WTP space models.
+#' @return A data frame comparing the WTP estimates from preference space and
+#' WTP space models.
 #' @export
 #' @examples
 #' # Run a MNL model in the Preference Space:

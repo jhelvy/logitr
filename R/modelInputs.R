@@ -91,7 +91,7 @@ recodeData <- function(data, parNames) {
 }
 
 getCatVars <- function(df, parNames) {
-    types <- sapply(df[parNames], class)
+    types <- unlist(lapply(df[parNames], class))
     categoricalIDs <- which(types %in% c("character", "factor"))
     if (length(categoricalIDs) == 0) {
       return(NULL)
@@ -104,7 +104,7 @@ addDummyVars <- function(data, parNames, catVars) {
   # Create a new set of parNames with the dummy-coded names
   nonCatVars <- setdiff(parNames, catVars)
   dummyVars <- c()
-  for (i in 1:length(catVars)) {
+  for (i in seq_len(length(catVars))) {
     dummyVars <- c(dummyVars, getCatVarDummyNames(data, catVars[i]))
   }
   parNames <- c(nonCatVars, dummyVars)
@@ -120,7 +120,7 @@ getCatVarDummyNames <- function(data, catVar) {
 addIntVars <- function(data, parNames, intNames, catVars) {
   intList <- strsplit(intNames, "\\*")
   allIntVars <- list()
-  for (i in 1:length(intList)) {
+  for (i in seq_len(length(intList))) {
     intVars1 <- intList[[i]][1]
     intVars2 <- intList[[i]][2]
     # Get dummy coded variable names for categorical vars
@@ -150,7 +150,7 @@ addIntVars <- function(data, parNames, intNames, catVars) {
 
 getParSetup <- function(parNames, priceName, randPars, randPrice) {
   parSetup <- rep("f", length(parNames))
-  for (i in 1:length(parNames)) {
+  for (i in seq_len(length(parNames))) {
     name <- parNames[i]
     if (name %in% names(randPars)) {
       parSetup[i] <- randPars[name]
@@ -253,7 +253,7 @@ scaleInputs <- function(modelInputs) {
   scaledPrice <- price
   # Scale X data
   scaleFactorsX <- rep(0, ncol(scaledX))
-  for (col in 1:ncol(scaledX)) {
+  for (col in seq_len(ncol(scaledX))) {
     var <- X[, col]
     vals <- unique(var)
     scalingFactor <- abs(max(vals) - min(vals))

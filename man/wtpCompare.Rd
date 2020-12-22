@@ -7,21 +7,27 @@
 wtpCompare(model_pref, model_wtp, priceName)
 }
 \arguments{
-\item{model_pref}{The output of a "preference space" model estimated using the \code{logitr()} function.}
+\item{model_pref}{The output of a "preference space" model estimated using
+the \code{logitr()} function.}
 
-\item{model_wtp}{The output of a "willingness to pay space" model estimated using the \code{logitr()} function.}
+\item{model_wtp}{The output of a "willingness to pay space" model estimated
+using the \code{logitr()} function.}
 
 \item{priceName}{The name of the parameter that identifies price.}
 }
 \value{
-A data frame comparing the WTP estimates from preference space and WTP space models.
+A data frame comparing the WTP estimates from preference space and
+WTP space models.
 }
 \description{
 Returns a comparison of the WTP between a preference space and WTP space
 model.
 }
 \details{
-Willingness to pay (WTP) is first computed from the preference space model by dividing the estimated parameters by the price parameter. Then those estimates are compared against the WTP values directly estimated from the "WTP" space model. Uncertainty is handled via simulation.
+Willingness to pay (WTP) is first computed from the preference space model
+by dividing the estimated parameters by the price parameter. Then those
+estimates are compared against the WTP values directly estimated from the
+"WTP" space model. Uncertainty is handled via simulation.
 }
 \examples{
 # Run a MNL model in the Preference Space:

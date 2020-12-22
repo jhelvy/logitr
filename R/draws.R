@@ -17,7 +17,7 @@ makeBetaDraws <- function(pars, parSetup, numDraws, standardDraws) {
 }
 
 getMuMat <- function(pars, parSetup, numDraws) {
-  pars_mu <- as.numeric(pars[1:length(parSetup)])
+  pars_mu <- as.numeric(pars[seq_len(length(parSetup))])
   muMat <- matrix(rep(pars_mu, numDraws), ncol = length(pars_mu), byrow = T)
   return(muMat)
 }

@@ -19,26 +19,26 @@
 #' # Create dummy coded variables for the variables "animal" and "numLegs":
 #' df_dummy <- dummyCode(df, vars = c("animal", "numLegs"))
 #' df_dummy
-dummyCode = function(df, vars) {
-    df = as.data.frame(df)
-    nonVars = colnames(df)[which(! colnames(df) %in% vars)]
+dummyCode <- function(df, vars) {
+    df <- as.data.frame(df)
+    nonVars <- colnames(df)[which(! colnames(df) %in% vars)]
     # Keep the original variables and the order to restore later after merging
-    df$order = seq(nrow(df))
-    for (i in 1:length(vars)) {
-        var      = vars[i]
-        colIndex = which(colnames(df) == var)
-        levels   = sort(unique(df[,colIndex]))
-        mergeMat = as.data.frame(diag(length(levels)))
-        mergeMat = cbind(levels, mergeMat)
-        colnames(mergeMat) = c(var, paste(var, levels, sep='_'))
-        df = merge(df, mergeMat)
+    df$order <- seq(nrow(df))
+    for (i in seq_len(length(vars))) {
+        var <- vars[i]
+        colIndex <- which(colnames(df) == var)
+        levels <- sort(unique(df[,colIndex]))
+        mergeMat <- as.data.frame(diag(length(levels)))
+        mergeMat <- cbind(levels, mergeMat)
+        colnames(mergeMat) <- c(var, paste(var, levels, sep='_'))
+        df <- merge(df, mergeMat)
     }
     # Restore the original column order
-    new = colnames(df)[which(! colnames(df) %in% c(vars, nonVars))]
-    df = df[c(nonVars, vars, new)]
+    new <- colnames(df)[which(! colnames(df) %in% c(vars, nonVars))]
+    df <- df[c(nonVars, vars, new)]
     # Restore the original row order
-    df = df[order(df$order),]
-    row.names(df) = df$order
+    df <- df[order(df$order),]
+    row.names(df) <- df$order
     df$order <- NULL
     return(df)
 }
@@ -57,10 +57,14 @@ dummyCode = function(df, vars) {
 #' 5 |  Optimization stopped because maxeval was reached.
 #' 6 |  Optimization stopped because maxtime was reached.
 #' -1 | Generic failure code.
-#' -2 | Invalid arguments (e.g. lower bounds are bigger than upper bounds, an unknown algorithm was specified, etc.).
+#' -2 | Invalid arguments (e.g. lower bounds are bigger than upper bounds,
+#' an unknown algorithm was specified, etc.).
 #' -3 | Ran out of memory.
-#' -4 | Halted because roundoff errors limited progress (in this case, the optimization still typically returns a useful result.).
-#' -5 | Halted because of a forced termination: the user called `nlopt_force_stop(opt)` on the optimization's nlopt_opt object opt the user's objective function or constraints.
+#' -4 | Halted because roundoff errors limited progress (in this case, the
+#' optimization still typically returns a useful result.).
+#' -5 | Halted because of a forced termination: the user called
+#' `nlopt_force_stop(opt)` on the optimization's nlopt_opt object opt the
+#' user's objective function or constraints.
 #' @export
 #' @examples
 #' statusCodes()

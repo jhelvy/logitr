@@ -24,17 +24,25 @@ logitr(
 
 \item{obsIDName}{The name of the column that identifies the \code{obsID} variable.}
 
-\item{parNames}{The names of the parameters to be estimated in the model. Must be the same as the column names in the \code{data} argument. For WTP space models, do not include price in \code{parNames}.}
+\item{parNames}{The names of the parameters to be estimated in the model.
+Must be the same as the column names in the \code{data} argument. For WTP space
+models, do not include price in \code{parNames}.}
 
-\item{priceName}{The name of the column that identifies the price variable. Only required for WTP space models. Defaults to \code{NULL}.}
+\item{priceName}{The name of the column that identifies the price variable.
+Only required for WTP space models. Defaults to \code{NULL}.}
 
-\item{randPars}{A named vector whose names are the random parameters and values the distribution: \code{'n'} for normal or \code{'ln'} for log-normal. Defaults to \code{NULL}.}
+\item{randPars}{A named vector whose names are the random parameters and
+values the distribution: \code{'n'} for normal or \code{'ln'} for log-normal.
+Defaults to \code{NULL}.}
 
-\item{randPrice}{The random distribution for the price parameter: \code{'n'} for normal or \code{'ln'} for log-normal. Only used for WTP space MXL models. Defaults to \code{NULL}.}
+\item{randPrice}{The random distribution for the price parameter: \code{'n'} for
+normal or \code{'ln'} for log-normal. Only used for WTP space MXL models.
+Defaults to \code{NULL}.}
 
 \item{modelSpace}{Set to \code{'wtp'} for WTP space models. Defaults to \code{"pref"}.}
 
-\item{weightsName}{The name of the column that identifies the weights to be used in model estimation. Optional. Defaults to \code{NULL}.}
+\item{weightsName}{The name of the column that identifies the weights to be
+used in model estimation. Optional. Defaults to \code{NULL}.}
 
 \item{options}{A list of options.}
 }
@@ -53,14 +61,20 @@ The function returns a list object containing the following objects.\tabular{ll}
    \code{multistartNumber} \tab The multistart run number for this model. \cr
    \code{time} \tab The user, system, and elapsed time to run the optimization. \cr
    \code{iterations} \tab The number of iterations until convergence. \cr
-   \code{message} \tab A more informative message with the status of the optimization result. \cr
-   \code{status} \tab An integer value with the status of the optimization (positive values are successes). Use \code{\link[=statusCodes]{statusCodes()}} for a detailed description. \cr
+   \code{message} \tab A more informative message with the status of the optimization \cr
+   result. \tab  \cr
+   \code{status} \tab An integer value with the status of the optimization (positive \cr
+   values are successes). Use \code{\link[=statusCodes]{statusCodes()}} for a detailed description. \tab  \cr
    \code{modelSpace} \tab The model space (\code{'pref'} or \code{'wtp'}). \cr
-   \code{standardDraws} \tab The draws used during maximum simulated likelihood (for MXL models). \cr
+   \code{standardDraws} \tab The draws used during maximum simulated likelihood (for \cr
+   MXL models). \tab  \cr
    \code{randParSummary} \tab A summary of any random parameters (for MXL models). \cr
-   \code{parSetup} \tab A summary of the distributional assumptions on each model parameter (\code{"f"}="fixed", \code{"n"}="normal distribution", \code{"ln"}="log-normal distribution"). \cr
+   \code{parSetup} \tab A summary of the distributional assumptions on each model \cr
+   parameter (\code{"f"}="fixed", \code{"n"}="normal distribution", \code{"ln"}="log-normal \tab  \cr
+   distribution"). \tab  \cr
    \code{options} \tab A list of all the model options. \cr
-   \code{multistartSummary} \tab A summary of the log-likelihood values for each multistart run. \cr
+   \code{multistartSummary} \tab A summary of the log-likelihood values for each \cr
+   multistart run. \tab  \cr
 }
 }
 \description{
@@ -77,27 +91,54 @@ The following options control the detailed behavior of the optimization
 algorithm. They must be provided as a named list to the \code{options} argument,
 e.g. \code{options = list(...)}.\tabular{lll}{
    Argument \tab Description \tab Default \cr
-   \code{message} \tab Set to \code{FALSE} to not display any messages during model estimation. \tab \code{TRUE} \cr
-   \code{numMultiStarts} \tab Number of times to run the optimization loop, each time starting from a different random starting point for each parameter between \code{startParBounds}. Recommended for non-convex models, such as WTP space models and MXL models. \tab \code{1} \cr
-   \code{keepAllRuns} \tab Set to \code{TRUE} to keep all the model information for each multistart run. If \code{TRUE}, the \code{logitr()} function will return a list with two values: \code{models} (a list of each model), and \code{bestModel} (the model with the largest log-likelihood value). \tab \code{FALSE} \cr
-   \code{startParBounds} \tab Set the \code{lower} and \code{upper} bounds for the starting parameters for each optimization run, which are generated by \code{runif(n, lower, upper)}. \tab \code{c(-1, 1)} \cr
-   \code{startVals} \tab A vector of values to be used as starting values for the optimization. Only used for the first run if \code{numMultiStarts > 1}. \tab \code{NULL} \cr
-   \code{useAnalyticGrad} \tab Set to \code{FALSE} to use numerically approximated gradients instead of analytic gradients during estimation (which is slower). \tab \code{TRUE} \cr
-   \code{scaleInputs} \tab By default each variable in \code{data} is scaled to be between 0 and 1 before running the optimization routine because it usually helps with stability, especially if some of the variables have very large or very small values (e.g. \verb{> 10^3} or \verb{< 10^-3}). Set to \code{FALSE} to turn this feature off. \tab \code{TRUE} \cr
-   \code{standardDraws} \tab By default, a new set of standard normal draws are generated during each call to \code{logitr} (the same draws are used during each multistart iteration). The user can override those draws by providing a matrix of standard normal draws if desired. \tab \code{NULL} \cr
-   \code{numDraws} \tab The number of draws to use for MXL models for the maximum simulated likelihood. \tab \code{50} \cr
-   \code{printLevel} \tab The print level of the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{0} \cr
-   \code{xtol_rel} \tab The relative \code{x} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-6} \cr
-   \code{xtol_abs} \tab The absolute \code{x} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-6} \cr
-   \code{ftol_rel} \tab The relative \code{f} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-6} \cr
-   \code{ftol_abs} \tab The absolute \code{f} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-6} \cr
-   \code{maxeval} \tab The maximum number of function evaluations for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1000} \cr
+   \code{message} \tab Set to \code{FALSE} to not display any messages during model \tab  \cr
+   estimation. \tab \code{TRUE} \tab  \cr
+   \code{numMultiStarts} \tab Number of times to run the optimization loop, each time \tab  \cr
+   starting from a different random starting point for each parameter between \tab  \tab  \cr
+   \code{startParBounds}. Recommended for non-convex models, such as WTP space models \tab  \tab  \cr
+   and MXL models. \tab \code{1} \tab  \cr
+   \code{keepAllRuns} \tab Set to \code{TRUE} to keep all the model information for each \tab  \cr
+   multistart run. If \code{TRUE}, the \code{logitr()} function will return a list with \tab  \tab  \cr
+   two values: \code{models} (a list of each model), and \code{bestModel} (the model with \tab  \tab  \cr
+   the largest log-likelihood value). \tab \code{FALSE} \tab  \cr
+   \code{startParBounds} \tab Set the \code{lower} and \code{upper} bounds for the starting \tab  \cr
+   parameters for each optimization run, which are generated by \tab  \tab  \cr
+   \code{runif(n, lower, upper)}. \tab \code{c(-1, 1)} \tab  \cr
+   \code{startVals} \tab A vector of values to be used as starting values for the \tab  \cr
+   optimization. Only used for the first run if \code{numMultiStarts > 1}. \tab \code{NULL} \tab  \cr
+   \code{useAnalyticGrad} \tab Set to \code{FALSE} to use numerically approximated gradients \tab  \cr
+   instead of analytic gradients during estimation (which is slower). \tab \code{TRUE} \tab  \cr
+   \code{scaleInputs} \tab By default each variable in \code{data} is scaled to be between 0 \tab  \cr
+   and 1 before running the optimization routine because it usually helps with \tab  \tab  \cr
+   stability, especially if some of the variables have very large or very small \tab  \tab  \cr
+   values (e.g. \verb{> 10^3} or \verb{< 10^-3}). Set to \code{FALSE} to turn this feature \tab  \tab  \cr
+   off. \tab \code{TRUE} \tab  \cr
+   \code{standardDraws} \tab By default, a new set of standard normal draws are \tab  \cr
+   generated during each call to \code{logitr} (the same draws are used during each \tab  \tab  \cr
+   multistart iteration). The user can override those draws by providing a \tab  \tab  \cr
+   matrix of standard normal draws if desired. \tab \code{NULL} \tab  \cr
+   \code{numDraws} \tab The number of draws to use for MXL models for the maximum \tab  \cr
+   simulated likelihood. \tab \code{50} \tab  \cr
+   \code{printLevel} \tab The print level of the \code{nloptr} optimization loop. Use \tab  \cr
+   \code{nloptr::nloptr.print.options()} for more details. \tab \code{0} \tab  \cr
+   \code{xtol_rel} \tab The relative \code{x} tolerance for the \code{nloptr} optimization loop. \tab  \cr
+   Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-6} \tab  \cr
+   \code{xtol_abs} \tab The absolute \code{x} tolerance for the \code{nloptr} optimization loop. \tab  \cr
+   Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-6} \tab  \cr
+   \code{ftol_rel} \tab The relative \code{f} tolerance for the \code{nloptr} optimization loop. \tab  \cr
+   Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-6} \tab  \cr
+   \code{ftol_abs} \tab The absolute \code{f} tolerance for the \code{nloptr} optimization loop. \tab  \cr
+   Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-6} \tab  \cr
+   \code{maxeval} \tab The maximum number of function evaluations for the \code{nloptr} \tab  \cr
+   optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab  \tab  \cr
+   \code{1000} \tab  \tab  \cr
 }
 }
 \examples{
 \dontrun{
+
 # For more detailed examples, visit
-https://jhelvy.github.io/logitr/articles/
+# https://jhelvy.github.io/logitr/articles/
 
 library(logitr)
 

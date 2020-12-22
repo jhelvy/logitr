@@ -103,7 +103,7 @@ getModelScaleFactors <- function(model, modelInputs) {
   } else {
     parNames <- c(modelInputs$parNameList$mu, modelInputs$parNameList$sigma)
     mxlScaleFactors <- rep(0, length(parNames))
-    for (i in 1:length(scaleFactors)) {
+    for (i in seq_len(length(scaleFactors))) {
       scaleFactor <- scaleFactors[i]
       factorIDs <- which(grepl(names(scaleFactor), parNames))
       mxlScaleFactors[factorIDs] <- scaleFactor

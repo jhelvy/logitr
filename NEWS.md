@@ -3,7 +3,7 @@
 
 ## Summary of larger updates:
 
-- Added support for auto creating interactions amongst variables
+- Added support for auto creating interactions among variables
 - exported `getCoefTable()` function
 
 ## Summary of smaller updates:
@@ -87,4 +87,4 @@ getting the right logLik value too.
 
 Full reboot of logitr!
 
-Long overdue, I decided to give the logitr program a full overhaul. This is the first version that is compiled as a proper R package that can be directly installed from Github. This version is much more robust and flexible than the prior, clunky collection of R files that I had previously been using to estimate logit models.
+Long overdue, I decided to give the logitr program a full overhaul. This is the first version that is compiled as a proper R package that can be directly installed from GitHub. This version is much more robust and flexible than the prior, clunky collection of R files that I had previously been using to estimate logit models.

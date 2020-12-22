@@ -8,7 +8,8 @@
 #' @keywords logitr, coef
 #' @param object The output of a model estimated using the `logitr()` function.
 #' @param ... other arguments
-#' @return A vector of the coefficients from a model estimated using the `logitr()` function.
+#' @return A vector of the coefficients from a model estimated using the
+#' `logitr()` function.
 #' @export
 #' @examples
 #' # Run a MNL model in the Preference Space:
@@ -32,7 +33,8 @@ coef.logitr <- function(object, ...) {
 #'
 #' Prints a summary of a model estimated using the `logitr()` function
 #' @keywords logitr, summary, logitr.multistart
-#' @param object The output of a model estimated model using the `logitr()` function.
+#' @param object The output of a model estimated model using the `logitr()`
+#' function.
 #' @param ... other arguments
 #' @return Prints a summary of the model results to the console.
 #' @export
@@ -135,10 +137,13 @@ getBasicInfoTable <- function(model) {
 
 #' Get the coefficient summary table as a data frame
 #'
-#' Returns a data frame of the coefficient summary table of a model estimated using the `logitr()` function.
+#' Returns a data frame of the coefficient summary table of a model estimated
+#' using the `logitr()` function.
 #' @keywords logitr, summary, coefTable
-#' @param object The output of a model estimated model using the `logitr()` function.
-#' @return Returns a data frame of the coefficient summary table of a model estimated using the `logitr()` function.
+#' @param object The output of a model estimated model using the `logitr()`
+#' function.
+#' @return Returns a data frame of the coefficient summary table of a model
+#' estimated using the `logitr()` function.
 #' @export
 #' @examples
 #' library(logitr)

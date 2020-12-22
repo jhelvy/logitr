@@ -19,7 +19,9 @@ A data frame of the WTP estimates.
 Returns the computed WTP from a preference space model.
 }
 \details{
-Willingness to pay is computed by dividing the estimated parameters of a utility model in the "preference" space by the price parameter. Uncertainty is handled via simulation.
+Willingness to pay is computed by dividing the estimated parameters of a
+utility model in the "preference" space by the price parameter.
+Uncertainty is handled via simulation.
 }
 \examples{
 # Run a MNL model in the Preference Space:

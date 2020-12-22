@@ -8,12 +8,18 @@
 #' on an estimated model.
 #' @keywords logitr, simluation
 #'
-#' @param model The output of a model estimated model using the `logitr()` function.
-#' @param alts A data frame of a set of alternatives for which to simulate shares. Each row is an alternative and each column an attribute corresponding to parameter names in the estimated model.
-#' @param priceName The name of the parameter that identifies price. Only required for WTP space models. Defaults to `NULL`.
-#' @param alpha The sensitivity of the computed confidence interval, e.g. a 90% CI is obtained with `alpha = 0.05`. Defaults to `alpha = 0.025`.
+#' @param model The output of a model estimated model using the `logitr()`
+#' function.
+#' @param alts A data frame of a set of alternatives for which to simulate
+#' shares. Each row is an alternative and each column an attribute
+#' corresponding to parameter names in the estimated model.
+#' @param priceName The name of the parameter that identifies price. Only
+#' required for WTP space models. Defaults to `NULL`.
+#' @param alpha The sensitivity of the computed confidence interval, e.g. a
+#' 90% CI is obtained with `alpha = 0.05`. Defaults to `alpha = 0.025`.
 #'
-#' @return A data frame with the estimated shares for each alternative in `alts`.
+#' @return A data frame with the estimated shares for each alternative in
+#' `alts`.
 #' @export
 #' @examples
 #' # Run a MNL model in the Preference Space:
@@ -87,7 +93,7 @@ mxlSimulation <- function(model, alts, priceName, alpha = 0.025) {
   betaUncDraws <- getUncertaintyDraws(model, numDraws)
   meanShare <- getSimPHat(stats::coef(model), model, X, price, obsID, getVDraws)
   logitUncDraws <- matrix(0, nrow = nrow(X), ncol = nrow(betaUncDraws))
-  for (i in 1:nrow(betaUncDraws)) {
+  for (i in seq_len(nrow(betaUncDraws))) {
     pars <- betaUncDraws[i, ]
     logitUncDraws[, i] <- getSimPHat(pars, model, X, price, obsID, getVDraws)
   }

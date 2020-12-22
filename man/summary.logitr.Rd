@@ -7,7 +7,8 @@
 \method{summary}{logitr}(object, ...)
 }
 \arguments{
-\item{object}{The output of a model estimated model using the \code{logitr()} function.}
+\item{object}{The output of a model estimated model using the \code{logitr()}
+function.}
 
 \item{...}{other arguments}
 }

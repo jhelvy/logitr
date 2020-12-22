@@ -373,7 +373,8 @@ getDiffMatByObsID_wtp <- function(lambda, beta, p, X, logit, obsID) {
 # Returns the observed utility
 getMxlV_wtp <- function(betaDraws, X, p) {
   numDraws <- nrow(betaDraws)
-  lambdaDraws <- matrix(rep(betaDraws[, 1], nrow(X)), ncol = numDraws, byrow = T)
+  lambdaDraws <- matrix(
+    rep(betaDraws[, 1], nrow(X)), ncol = numDraws, byrow = T)
   gammaDraws <- matrix(betaDraws[, 2:ncol(betaDraws)], nrow = numDraws)
   pMat <- matrix(rep(p, numDraws), ncol = numDraws, byrow = F)
   return(lambdaDraws * (pMat + X %*% t(gammaDraws)))
@@ -390,7 +391,8 @@ mxlNegGradLL_wtp <- function(X, parSetup, obsID, choice, standardDraws,
   xParSetup <- parSetup[which(names(parSetup) != "lambda")]
   xLogNormIDs <- which(xParSetup == "ln")
   repTimes <- rep(as.numeric(table(obsID)), each = 2 * numPars)
-  lambdaDraws <- matrix(rep(betaDraws[, 1], nrow(X)), ncol = numDraws, byrow = T)
+  lambdaDraws <- matrix(
+    rep(betaDraws[, 1], nrow(X)), ncol = numDraws, byrow = T)
   gammaDraws <- matrix(betaDraws[, 2:ncol(betaDraws)], nrow = numDraws)
   # Compute the gradient of V for all parameters
   grad <- matrix(0, nrow = nrow(X), ncol = 2 * numPars)
@@ -403,7 +405,8 @@ mxlNegGradLL_wtp <- function(X, parSetup, obsID, choice, standardDraws,
     logit <- logitDraws[, i]
     lambdaMat <- matrix(rep(lambda, numBetas), ncol = numBetas, byrow = T)
     drawsMat_lambda <- matrix(rep(draws_lambda, nrow(X)), ncol = 1, byrow = T)
-    drawsMat_gamma <- matrix(rep(draws_gamma, nrow(X)), ncol = numBetas, byrow = T)
+    drawsMat_gamma <- matrix(
+      rep(draws_gamma, nrow(X)), ncol = numBetas, byrow = T)
     logitMat <- matrix(rep(logit, numPars), ncol = numPars, byrow = F)
     logitMat <- cbind(logitMat, logitMat)
     if (length(xLogNormIDs) > 0) {
