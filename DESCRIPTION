@@ -20,7 +20,8 @@ Suggests:
     knitr,
     rmarkdown,
     here,
-    ggplot2
+    ggplot2,
+    testthat
 Imports:
     nloptr,
     stats,
