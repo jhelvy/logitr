@@ -162,25 +162,31 @@ on an estimated model.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>model</th>
-      <td><p>The output of a model estimated model using the <code><a href='logitr.html'>logitr()</a></code> function.</p></td>
+      <td><p>The output of a model estimated model using the <code><a href='logitr.html'>logitr()</a></code>
+function.</p></td>
     </tr>
     <tr>
       <th>alts</th>
-      <td><p>A data frame of a set of alternatives for which to simulate shares. Each row is an alternative and each column an attribute corresponding to parameter names in the estimated model.</p></td>
+      <td><p>A data frame of a set of alternatives for which to simulate
+shares. Each row is an alternative and each column an attribute
+corresponding to parameter names in the estimated model.</p></td>
     </tr>
     <tr>
       <th>priceName</th>
-      <td><p>The name of the parameter that identifies price. Only required for WTP space models. Defaults to <code>NULL</code>.</p></td>
+      <td><p>The name of the parameter that identifies price. Only
+required for WTP space models. Defaults to <code>NULL</code>.</p></td>
     </tr>
     <tr>
       <th>alpha</th>
-      <td><p>The sensitivity of the computed confidence interval, e.g. a 90% CI is obtained with <code>alpha = 0.05</code>. Defaults to <code>alpha = 0.025</code>.</p></td>
+      <td><p>The sensitivity of the computed confidence interval, e.g. a
+90% CI is obtained with <code>alpha = 0.05</code>. Defaults to <code>alpha = 0.025</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame with the estimated shares for each alternative in <code>alts</code>.</p>
+    <p>A data frame with the estimated shares for each alternative in
+<code>alts</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Run a MNL model in the Preference Space:</span>

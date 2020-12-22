@@ -162,7 +162,7 @@
 <span class="co">#&gt; Adj..McFadden.R2            0.2040281</span>
 <span class="co">#&gt; Number.of.Observations.  2412.0000000</span></code></pre></div>
 <p>In the above example, both <code>price</code> and <code>feat</code> were continuous variables, so only a single interaction coefficient was needed.</p>
-<p>In the case of interacting <em>discrete</em> variables, multiple interactions coefficients will be estimated according to the number of levels in the discrete attribue. For example, the interaction of <code>price</code> with <code>brand</code> will require three new interactions - one for each level of the <code>brand</code> variable except the first “baseline” level:</p>
+<p>In the case of interacting <em>discrete</em> variables, multiple interactions coefficients will be estimated according to the number of levels in the discrete attribute. For example, the interaction of <code>price</code> with <code>brand</code> will require three new interactions - one for each level of the <code>brand</code> variable except the first “baseline” level:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_price_brand</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   data       <span class="op">=</span> <span class="va">yogurt</span>,
