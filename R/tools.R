@@ -60,11 +60,8 @@ dummyCode <- function(df, vars) {
 #' -2 | Invalid arguments (e.g. lower bounds are bigger than upper bounds,
 #' an unknown algorithm was specified, etc.).
 #' -3 | Ran out of memory.
-#' -4 | Halted because roundoff errors limited progress (in this case, the
-#' optimization still typically returns a useful result.).
-#' -5 | Halted because of a forced termination: the user called
-#' `nlopt_force_stop(opt)` on the optimization's nlopt_opt object opt the
-#' user's objective function or constraints.
+#' -4 | Halted because roundoff errors limited progress (in this case, the optimization still typically returns a useful result.).
+#' -5 | Halted because of a forced termination: the user called `nlopt_force_stop(opt)` on the optimization's nlopt_opt object opt the user's objective function or constraints.
 #' @export
 #' @examples
 #' statusCodes()
