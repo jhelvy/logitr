@@ -68,6 +68,30 @@ runInputChecks <- function(choiceName, obsIDName, parNames, randPars,
   }
 }
 
+#' Returns a list of a dataframe, parNames, and randPars with discrete
+#' (categorical) variables and interaction variables added to the dataframe.
+#' @param data The choice data, formatted as a `data.frame` object.
+#' @param parNames The names of the parameters to be estimated in the model.
+#' Must be the same as the column names in the `data` argument. For WTP space
+#' models, do not include price in `parNames`.
+#' @param randPars A named vector whose names are the random parameters and
+#' values the distribution: `'n'` for normal or `'ln'` for log-normal.
+#' Defaults to `NULL`.
+#' @return A list of a dataframe, parNames, and randPars with discrete
+#' (categorical) variables and interaction variables added to the dataframe.
+#' @export
+#' @examples
+#' data(yogurt)
+#'
+#' result <- recodeData(
+#'     data = yogurt,
+#'     parNames = c("price", "feat", "brand", "price*brand"),
+#'     randPars = c(feat = "n", brand = "n")
+#' )
+#'
+#' result$parNames
+#' result$randPars
+#' head(result$data)
 recodeData <- function(data, parNames, randPars) {
   # Separate out interactions
   ints <- grepl("\\*", parNames)
