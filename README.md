@@ -11,10 +11,11 @@ experimental](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https:/
 status](https://www.r-pkg.org/badges/version/logitr)](https://CRAN.R-project.org/package=logitr)
 <!-- badges: end -->
 
-**logitr** estimates multinomial (MNL) and mixed logit (MXL) models in
+This package estimates multinomial (MNL) and mixed logit (MXL) models in
 R. Models can be estimated using “Preference” space or
 “Willingness-to-pay” (WTP) space [utility
 parameterizations](https://jhelvy.github.io/logitr/articles/utility_models.html).
+
 The latest version includes support for:
 
   - Homogeneous multinomial logit (MNL) models
@@ -87,14 +88,15 @@ citation("logitr")
 #> 
 #> To cite logitr in publications use:
 #> 
-#>   John Paul Helveston (2020). logitr: Random utility logit
-#>   models with preference and willingness to pay space
+#>   John Paul Helveston (2020). logitr:
+#>   Random utility logit models with
+#>   preference and willingness to pay space
 #>   parameterizations.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
 #>   @Manual{,
-#>     title = {logitr: Random Utility Logit Models with Preference and Willingness to Pay Space Parameterizations},
+#>     title = {logitr: Random utility logit models with preference and willingness to pay space parameterizations},
 #>     author = {John Paul Helveston},
 #>     year = {2020},
 #>     note = {R package version 0.0.5},
