@@ -130,10 +130,9 @@ mnl_wtp <- logitr(
 }
 }
 \keyword{logit}
-\keyword{logit,}
-\keyword{logitr,}
+\keyword{logitr}
 \keyword{mixed}
-\keyword{mnl,}
-\keyword{mxl,}
-\keyword{willingness-to-pay,}
-\keyword{wtp,}
+\keyword{mnl}
+\keyword{mxl}
+\keyword{willingness-to-pay}
+\keyword{wtp}

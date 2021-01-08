@@ -14,4 +14,4 @@
 ^Meta$
 build.R
 data-raw
-
+^cran-comments\.md$

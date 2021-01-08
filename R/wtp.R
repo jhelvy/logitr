@@ -5,7 +5,7 @@
 #' Get WTP from a preference space model
 #'
 #' Returns the computed WTP from a preference space model.
-#' @keywords logitr, wtp
+#' @keywords logitr wtp
 #'
 #' @param model The output of a "preference space" model estimated
 #' using the `logitr()` function.
@@ -70,7 +70,7 @@ getPrefSpaceWtp <- function(model, priceName) {
 #'
 #' Returns a comparison of the WTP between a preference space and WTP space
 #' model.
-#' @keywords logitr, wtp
+#' @keywords logitr wtp
 #'
 #' @param model_pref The output of a "preference space" model estimated using
 #' the `logitr()` function.

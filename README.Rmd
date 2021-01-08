@@ -38,7 +38,7 @@ The latest version includes support for:
 - Computing and comparing WTP from both preference space and WTP space models.
 - Simulating the expected shares of a set of alternatives using an estimated model.
 
-Note: MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in [Kenneth Train’s](http://eml.berkeley.edu/~train/) book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)*](http://eml.berkeley.edu/books/choice2.html).
+Note: MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in Kenneth Train's book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)*](https://eml.berkeley.edu/books/choice2.html).
 
 View the [basic usage](https://jhelvy.github.io/logitr/articles/basic_usage.html) page for details on how to use **logitr** to estimate models.
 
@@ -59,7 +59,7 @@ library(logitr)
 
 ## Required Libraries
 
-**logitr** requires the [**nloptr**](https://cran.r-project.org/web/packages/nloptr/index.html) library. This is because `nloptr()` allows for both the objective and gradient functions to be computed in a single function. This speeds up computation time considerably because both the objective and gradient functions require many of the same calculations (e.g. computing probabilities).
+**logitr** requires the [**nloptr**](https://cran.r-project.org/package=nloptr) library. This is because `nloptr()` allows for both the objective and gradient functions to be computed in a single function. This speeds up computation time considerably because both the objective and gradient functions require many of the same calculations (e.g. computing probabilities).
 
 ## Author, Version, and License Information
 

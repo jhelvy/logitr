@@ -57,5 +57,5 @@ mnl_wtp <- logitr(
 # Compare the WTP between the two spaces:
 wtpCompare(mnl_pref, mnl_wtp, priceName = "price")
 }
-\keyword{logitr,}
+\keyword{logitr}
 \keyword{wtp}

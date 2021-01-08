@@ -49,5 +49,5 @@ alts
 # Run the simulation using the estimated preference space MNL model:
 simulateShares(mnl_pref, alts)
 }
-\keyword{logitr,}
+\keyword{logitr}
 \keyword{simluation}

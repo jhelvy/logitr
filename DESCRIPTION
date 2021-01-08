@@ -1,5 +1,5 @@
 Package: logitr
-Title: Random utility logit models with preference and willingness to pay space parameterizations
+Title: Random Utility Logit Models with Preference and Willingness to Pay Space Parameterizations
 Version: 0.0.5
 Authors@R: c(
     person(given   = "John",
@@ -7,7 +7,7 @@ Authors@R: c(
            role    = c("aut", "cre", "cph"),
            email   = "john.helveston@gmail.com",
            comment = c(ORCID = "0000-0002-2657-9191")))
-Description: logitr estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using "Preference" space or "Willingness-to-pay" (WTP) space utility parameterizations. The program includes an option to run a multistart optimization loop with random starting points in each iteration, which is useful for non-convex problems like MXL models or models with WTP space utility parameterizations. The main optimization loop uses the {nloptr} package to minimize the negative log-likelihood function. The package has additional functions for computing and comparing WTP from both preference space and WTP space models and for simulating the expected shares of a set of alternatives using an estimated model.
+Description: This package estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using "Preference" space or "Willingness-to-pay" (WTP) space utility parameterizations. The program includes an option to run a multistart optimization loop with random starting points in each iteration, which is useful for non-convex problems like MXL models or models with WTP space utility parameterizations. The main optimization loop uses the {nloptr} package to minimize the negative log-likelihood function. The package has additional functions for computing and comparing WTP from both preference space and WTP space models and for simulating the expected shares of a set of alternatives using an estimated model.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -20,8 +20,7 @@ Suggests:
     knitr,
     rmarkdown,
     here,
-    ggplot2,
-    testthat
+    ggplot2
 Imports:
     nloptr,
     stats,

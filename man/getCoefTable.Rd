@@ -33,5 +33,5 @@ mnl_pref <- logitr(
 getCoefTable(mnl_pref)
 }
 \keyword{coefTable}
-\keyword{logitr,}
-\keyword{summary,}
+\keyword{logitr}
+\keyword{summary}

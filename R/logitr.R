@@ -11,7 +11,7 @@
 #' useful for non-convex problems like MXL models or models with WTP space
 #' utility parameterizations. The main optimization loop uses the `nloptr()`
 #' function to minimize the negative log-likelihood function.
-#' @keywords logitr, mnl, mxl, wtp, willingness-to-pay, mixed logit, logit
+#' @keywords logitr mnl mxl wtp willingness-to-pay mixed logit
 #'
 #' @param data The choice data, formatted as a `data.frame` object.
 #' @param choiceName The name of the column that identifies the choice variable.
@@ -155,7 +155,7 @@ appendAllModelsInfo <- function(allModels, modelInputs) {
 getMultistartSummary <- function(models) {
   summary <- as.data.frame(matrix(0, ncol = 4, nrow = length(models)))
   colnames(summary) <- c("run", "logLik", "iterations", "status")
-  for (i in 1:length(models)) {
+  for (i in seq_len(length(models))) {
     summary[i, 1] <- i
     summary[i, 2] <- round(models[[i]]$logLik, 5)
     summary[i, 3] <- models[[i]]$iterations
@@ -173,7 +173,7 @@ getBestModel <- function(models, modelInputs) {
 
 getLogLikVals <- function(models) {
   logLikVals <- matrix(0)
-  for (i in 1:length(models)) {
+  for (i in seq_len(length(models))) {
     logLikVals[i] <- models[[i]]$logLik
   }
   return(logLikVals)

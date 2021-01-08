@@ -30,6 +30,6 @@ Prints a description of the status codes from the nloptr optimization routine.
 statusCodes()
 }
 \keyword{codes}
-\keyword{logitr,}
-\keyword{nloptr,}
+\keyword{logitr}
+\keyword{nloptr}
 \keyword{status}

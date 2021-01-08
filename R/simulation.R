@@ -6,7 +6,7 @@
 #'
 #' Returns the expected shares of a specific set of alternatives based
 #' on an estimated model.
-#' @keywords logitr, simluation
+#' @keywords logitr simluation
 #'
 #' @param model The output of a model estimated model using the `logitr()`
 #' function.

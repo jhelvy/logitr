@@ -33,4 +33,4 @@ mnl_pref <- logitr(
 coef(mnl_pref)
 }
 \keyword{coef}
-\keyword{logitr,}
+\keyword{logitr}

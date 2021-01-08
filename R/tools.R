@@ -46,7 +46,7 @@ dummyCode <- function(df, vars) {
 #' View a description the nloptr status codes
 #'
 #' Prints a description of the status codes from the nloptr optimization routine.
-#' @keywords logitr, nloptr, status codes
+#' @keywords logitr nloptr status codes
 #' @details
 #' Code | Description
 #' ---|------------------------------------------------------

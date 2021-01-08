@@ -37,5 +37,5 @@ mnl_pref <- logitr(
 # Get the WTP implied from the preference space model
 wtp(mnl_pref, priceName = "price")
 }
-\keyword{logitr,}
+\keyword{logitr}
 \keyword{wtp}

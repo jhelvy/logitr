@@ -33,9 +33,9 @@ The latest version includes support for:
 
 Note: MXL models assume uncorrelated heterogeneity covariances and are
 estimated using maximum simulated likelihood based on the algorithms in
-[Kenneth Train’s](http://eml.berkeley.edu/~train/) book [*Discrete
-Choice Methods with Simulation, 2nd Edition (New York: Cambridge
-University Press, 2009)*](http://eml.berkeley.edu/books/choice2.html).
+Kenneth Train’s book [*Discrete Choice Methods with Simulation, 2nd
+Edition (New York: Cambridge University
+Press, 2009)*](https://eml.berkeley.edu/books/choice2.html).
 
 View the [basic
 usage](https://jhelvy.github.io/logitr/articles/basic_usage.html) page
@@ -44,7 +44,7 @@ for details on how to use **logitr** to estimate models.
 ## Installation
 
 The current version is not yet on CRAN, but you can install it from
-Github using the **devtools** library:
+GitHub using the **devtools** library:
 
 ``` r
 devtools::install_github("jhelvy/logitr")
@@ -59,19 +59,18 @@ library(logitr)
 ## Required Libraries
 
 **logitr** requires the
-[**nloptr**](https://cran.r-project.org/web/packages/nloptr/index.html)
-library. This is because `nloptr()` allows for both the objective and
-gradient functions to be computed in a single function. This speeds up
-computation time considerably because both the objective and gradient
-functions require many of the same calculations (e.g. computing
-probabilities).
+[**nloptr**](https://cran.r-project.org/package=nloptr) library. This is
+because `nloptr()` allows for both the objective and gradient functions
+to be computed in a single function. This speeds up computation time
+considerably because both the objective and gradient functions require
+many of the same calculations (e.g. computing probabilities).
 
 ## Author, Version, and License Information
 
   - Author: *John Paul Helveston*
     [www.jhelvy.com](http://www.jhelvy.com/)
   - Date First Written: *Sunday, September 28, 2014*
-  - Most Recent Update: December 07 2020
+  - Most Recent Update: January 08 2021
   - License:
     [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
   - [Latest Release](https://github.com/jhelvy/logitr/releases/latest):
@@ -88,13 +87,14 @@ citation("logitr")
 #> 
 #> To cite logitr in publications use:
 #> 
-#>   John Paul Helveston (2020). logitr: Random utility logit models with
-#>   preference and willingness to pay space parameterizations.
+#>   John Paul Helveston (2020). logitr: Random utility logit
+#>   models with preference and willingness to pay space
+#>   parameterizations.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
 #>   @Manual{,
-#>     title = {logitr: Random utility logit models with preference and willingness to pay space parameterizations},
+#>     title = {logitr: Random Utility Logit Models with Preference and Willingness to Pay Space Parameterizations},
 #>     author = {John Paul Helveston},
 #>     year = {2020},
 #>     note = {R package version 0.0.5},

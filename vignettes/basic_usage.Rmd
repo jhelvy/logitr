@@ -12,7 +12,7 @@ vignette: >
 
 # Estimating models
 
-The `logitr()` function estimates multinomial logit (MNL) and mixed logit (MXL) models using "Preference" space or "Willingness-to-pay (WTP)" space [utility parameterizations](articles/utility_models.html). The basic usage for estimating models is as follows:
+The `logitr()` function estimates multinomial logit (MNL) and mixed logit (MXL) models using "Preference" space or "Willingness-to-pay (WTP)" space [utility parameterizations](utility_models.html). The basic usage for estimating models is as follows:
 
 ```{r, eval=FALSE}
 model <- logitr(
@@ -38,7 +38,7 @@ You can read more details in the ["Data Formatting and Encoding"](data_formattin
 
 ## Preference space models
 
-Unlike similar packages like [**mlogit**](https://cran.r-project.org/web/packages/mlogit/index.html), **logitr** does not support the formula type input that uses a symbolic description of the model to be estimated. Parameters are simply described as a vector of the column names in the `data.frame` provided to the `data` argument.
+Unlike similar packages like [**mlogit**](https://cran.r-project.org/package=mlogit), **logitr** does not support the formula type input that uses a symbolic description of the model to be estimated. Parameters are simply described as a vector of the column names in the `data.frame` provided to the `data` argument.
 
 The `logitr()` function assumes that the deterministic part of the utility function, $v_{j}$, is linear in parameters, i.e.:
 

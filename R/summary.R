@@ -5,7 +5,7 @@
 #' Get the model coefficients
 #'
 #' Returns the coefficients of an estimated model of the 'logitr' class.
-#' @keywords logitr, coef
+#' @keywords logitr coef
 #' @param object The output of a model estimated using the `logitr()` function.
 #' @param ... other arguments
 #' @return A vector of the coefficients from a model estimated using the
@@ -32,7 +32,7 @@ coef.logitr <- function(object, ...) {
 #' View summary of estimated model
 #'
 #' Prints a summary of a model estimated using the `logitr()` function
-#' @keywords logitr, summary, logitr.multistart
+#' @keywords logitr summary logitr.multistart
 #' @param object The output of a model estimated model using the `logitr()`
 #' function.
 #' @param ... other arguments
@@ -139,7 +139,7 @@ getBasicInfoTable <- function(model) {
 #'
 #' Returns a data frame of the coefficient summary table of a model estimated
 #' using the `logitr()` function.
-#' @keywords logitr, summary, coefTable
+#' @keywords logitr summary coefTable
 #' @param object The output of a model estimated model using the `logitr()`
 #' function.
 #' @return Returns a data frame of the coefficient summary table of a model

@@ -36,6 +36,6 @@ mnl_pref <- logitr(
 # View a summary of the model:
 summary(mnl_pref)
 }
-\keyword{logitr,}
+\keyword{logitr}
 \keyword{logitr.multistart}
-\keyword{summary,}
+\keyword{summary}
