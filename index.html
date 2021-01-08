@@ -118,12 +118,12 @@
 <li>Computing and comparing WTP from both preference space and WTP space models.</li>
 <li>Simulating the expected shares of a set of alternatives using an estimated model.</li>
 </ul>
-<p>Note: MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in <a href="http://eml.berkeley.edu/~train/">Kenneth Train’s</a> book <a href="http://eml.berkeley.edu/books/choice2.html"><em>Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)</em></a>.</p>
+<p>Note: MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in Kenneth Train’s book <a href="https://eml.berkeley.edu/books/choice2.html"><em>Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)</em></a>.</p>
 <p>View the <a href="https://jhelvy.github.io/logitr/articles/basic_usage.html">basic usage</a> page for details on how to use <strong>logitr</strong> to estimate models.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>The current version is not yet on CRAN, but you can install it from Github using the <strong>devtools</strong> library:</p>
+<p>The current version is not yet on CRAN, but you can install it from GitHub using the <strong>devtools</strong> library:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"jhelvy/logitr"</span><span class="op">)</span></code></pre></div>
 <p>Load the library with:</p>
@@ -133,7 +133,7 @@
 <div id="required-libraries" class="section level2">
 <h2 class="hasAnchor">
 <a href="#required-libraries" class="anchor"></a>Required Libraries</h2>
-<p><strong>logitr</strong> requires the <a href="https://cran.r-project.org/web/packages/nloptr/index.html"><strong>nloptr</strong></a> library. This is because <code>nloptr()</code> allows for both the objective and gradient functions to be computed in a single function. This speeds up computation time considerably because both the objective and gradient functions require many of the same calculations (e.g. computing probabilities).</p>
+<p><strong>logitr</strong> requires the <a href="https://cran.r-project.org/package=nloptr"><strong>nloptr</strong></a> library. This is because <code>nloptr()</code> allows for both the objective and gradient functions to be computed in a single function. This speeds up computation time considerably because both the objective and gradient functions require many of the same calculations (e.g. computing probabilities).</p>
 </div>
 <div id="author-version-and-license-information" class="section level2">
 <h2 class="hasAnchor">
@@ -143,7 +143,7 @@
 </li>
 <li>Date First Written: <em>Sunday, September 28, 2014</em>
 </li>
-<li>Most Recent Update: December 07 2020</li>
+<li>Most Recent Update: January 08 2021</li>
 <li>License: <a href="https://github.com/jhelvy/logitr/blob/master/LICENSE.md">MIT</a>
 </li>
 <li>
@@ -159,13 +159,14 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; To cite logitr in publications use:</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;   John Paul Helveston (2020). logitr: Random utility logit models with</span>
-<span class="co">#&gt;   preference and willingness to pay space parameterizations.</span>
+<span class="co">#&gt;   John Paul Helveston (2020). logitr: Random utility logit</span>
+<span class="co">#&gt;   models with preference and willingness to pay space</span>
+<span class="co">#&gt;   parameterizations.</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; A BibTeX entry for LaTeX users is</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;   @Manual{,</span>
-<span class="co">#&gt;     title = {logitr: Random utility logit models with preference and willingness to pay space parameterizations},</span>
+<span class="co">#&gt;     title = {logitr: Random Utility Logit Models with Preference and Willingness to Pay Space Parameterizations},</span>
 <span class="co">#&gt;     author = {John Paul Helveston},</span>
 <span class="co">#&gt;     year = {2020},</span>
 <span class="co">#&gt;     note = {R package version 0.0.5},</span>

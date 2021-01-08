@@ -117,7 +117,7 @@
 <div id="estimating-models" class="section level1">
 <h1 class="hasAnchor">
 <a href="#estimating-models" class="anchor"></a>Estimating models</h1>
-<p>The <code><a href="../reference/logitr.html">logitr()</a></code> function estimates multinomial logit (MNL) and mixed logit (MXL) models using “Preference” space or “Willingness-to-pay (WTP)” space <a href="articles/utility_models.html">utility parameterizations</a>. The basic usage for estimating models is as follows:</p>
+<p>The <code><a href="../reference/logitr.html">logitr()</a></code> function estimates multinomial logit (MNL) and mixed logit (MXL) models using “Preference” space or “Willingness-to-pay (WTP)” space <a href="utility_models.html">utility parameterizations</a>. The basic usage for estimating models is as follows:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   <span class="va">data</span>,
@@ -149,7 +149,7 @@
 <div id="preference-space-models" class="section level2">
 <h2 class="hasAnchor">
 <a href="#preference-space-models" class="anchor"></a>Preference space models</h2>
-<p>Unlike similar packages like <a href="https://cran.r-project.org/web/packages/mlogit/index.html"><strong>mlogit</strong></a>, <strong>logitr</strong> does not support the formula type input that uses a symbolic description of the model to be estimated. Parameters are simply described as a vector of the column names in the <code>data.frame</code> provided to the <code>data</code> argument.</p>
+<p>Unlike similar packages like <a href="https://cran.r-project.org/package=mlogit"><strong>mlogit</strong></a>, <strong>logitr</strong> does not support the formula type input that uses a symbolic description of the model to be estimated. Parameters are simply described as a vector of the column names in the <code>data.frame</code> provided to the <code>data</code> argument.</p>
 <p>The <code><a href="../reference/logitr.html">logitr()</a></code> function assumes that the deterministic part of the utility function, <span class="math inline">\(v_{j}\)</span>, is linear in parameters, i.e.:</p>
 <p><span class="math display">\[\begin{equation}
     u_{j} = v_{j} + \varepsilon_{j}
