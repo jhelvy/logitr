@@ -33,7 +33,7 @@
 #' @references Jain, Dipak C., Naufel J. Vilcassim and Pradeep K. Chintagunta
 #' (1994) "A random–coefficients logit brand–choice model applied to panel
 #' data", Journal of Business and Economics Statistics, 12(3), 317.
-#' (\href{https://www.jstor.org/stable/1392088}{jstor})
+#' (\doi{10.2307/1392088})
 #'
 #' @source Raw data downloaded from the package mlogit v0.3-0 by Yves
 #' Croissant \href{https://www.rdocumentation.org/packages/mlogit/versions/0.3-0/topics/Yogurt}{archive}
@@ -89,7 +89,7 @@
 #' Klampfl, E., & Michalek, J. J. (2015). "Will Subsidies Drive Electric
 #' Vehicle Adoption? Measuring Consumer Preferences in the U.S. and China."
 #' Transportation Research Part A: Policy and Practice, 73, 96–112.
-#' \href{https://doi.org/10.1016/j.tra.2015.01.002}{https://doi.org/10.1016/j.tra.2015.01.002}
+#' \doi{10.1016/j.tra.2015.01.002}
 #'
 #' @source Raw data downloaded from \href{https://github.com/jhelvy/tra2015}{this repo}
 #'
@@ -144,7 +144,7 @@
 #' Klampfl, E., & Michalek, J. J. (2015). "Will Subsidies Drive Electric
 #' Vehicle Adoption? Measuring Consumer Preferences in the U.S. and China."
 #' Transportation Research Part A: Policy and Practice, 73, 96–112.
-#' \href{https://doi.org/10.1016/j.tra.2015.01.002}{https://doi.org/10.1016/j.tra.2015.01.002}
+#' \doi{10.1016/j.tra.2015.01.002}
 #'
 #' @source Raw data downloaded from \href{https://github.com/jhelvy/tra2015}{this repo}
 #'

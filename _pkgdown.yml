@@ -45,6 +45,7 @@ reference:
   desc: "Functions for encoding data prior to model estimation."
   contents:
   - dummyCode
+  - recodeData
 - title: "Estimating Models"
   desc: "Functions for estimating multinomial logit models with preference space and WTP space utility parameterizations."
   contents:

@@ -46,6 +46,6 @@ head(yogurt)
 Jain, Dipak C., Naufel J. Vilcassim and Pradeep K. Chintagunta
 (1994) "A random–coefficients logit brand–choice model applied to panel
 data", Journal of Business and Economics Statistics, 12(3), 317.
-(\href{https://www.jstor.org/stable/1392088}{jstor})
+(\doi{10.2307/1392088})
 }
 \keyword{datasets}
