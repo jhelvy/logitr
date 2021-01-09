@@ -11,6 +11,7 @@ pkgdown::build_site()
 devtools::check()
 devtools::check_win_release()
 devtools::check_win_devel()
+devtools::check_rhub()
 
 # Load the package and view the summary
 library(logitr)

@@ -30,10 +30,8 @@
 #'
 #' @keywords datasets
 #'
-#' @references Jain, Dipak C., Naufel J. Vilcassim and Pradeep K. Chintagunta
-#' (1994) "A random–coefficients logit brand–choice model applied to panel
-#' data", Journal of Business and Economics Statistics, 12(3), 317.
-#' (\doi{10.2307/1392088})
+#' @references Dipak C. Jain, Naufel J. Vilcassim & Pradeep K. Chintagunta (1994) A Random-Coefficients Logit Brand-Choice Model Applied to Panel Data, Journal of Business & Economic Statistics, 12:3, 317-328,
+#' \doi{10.1080/07350015.1994.10524547}
 #'
 #' @source Raw data downloaded from the package mlogit v0.3-0 by Yves
 #' Croissant \href{https://www.rdocumentation.org/packages/mlogit/versions/0.3-0/topics/Yogurt}{archive}
