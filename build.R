@@ -1,6 +1,3 @@
-# Build README.md
-rmarkdown::render(input = 'README.Rmd', output_format = 'github_document')
-
 # Create the documentation for the package
 devtools::document()
 

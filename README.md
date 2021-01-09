@@ -9,6 +9,8 @@
 experimental](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/logitr)](https://CRAN.R-project.org/package=logitr)
+[![Travis build
+status](https://travis-ci.com/jhelvy/logitr.svg?branch=master)](https://travis-ci.com/jhelvy/logitr)
 <!-- badges: end -->
 
 This package estimates multinomial (MNL) and mixed logit (MXL) models in
@@ -71,7 +73,7 @@ many of the same calculations (e.g. computing probabilities).
   - Author: *John Paul Helveston*
     [www.jhelvy.com](http://www.jhelvy.com/)
   - Date First Written: *Sunday, September 28, 2014*
-  - Most Recent Update: January 08 2021
+  - Most Recent Update: January 09 2021
   - License:
     [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
   - [Latest Release](https://github.com/jhelvy/logitr/releases/latest):
@@ -88,15 +90,13 @@ citation("logitr")
 #> 
 #> To cite logitr in publications use:
 #> 
-#>   John Paul Helveston (2020). logitr:
-#>   Random utility logit models with
-#>   preference and willingness to pay space
-#>   parameterizations.
+#>   John Paul Helveston (2020). logitr: Random utility logit models with
+#>   preference and willingness to pay space parameterizations.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
 #>   @Manual{,
-#>     title = {logitr: Random utility logit models with preference and willingness to pay space parameterizations},
+#>     title = {logitr: Random Utility Logit Models with Preference and Willingness to Pay Space Parameterizations},
 #>     author = {John Paul Helveston},
 #>     year = {2020},
 #>     note = {R package version 0.0.5},

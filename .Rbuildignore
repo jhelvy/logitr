@@ -15,3 +15,4 @@
 build.R
 data-raw
 ^cran-comments\.md$
+^\.travis\.yml$
