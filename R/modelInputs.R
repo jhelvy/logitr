@@ -126,7 +126,7 @@ getParTypes <- function(df, parNames) {
       return(list(cont = NULL, dist = parNames))
     }
     return(list(
-      cont = parNames[seq(length(parNames)) != discIDs],
+      cont = parNames[setdiff(seq(length(parNames)), discIDs)],
       dist = parNames[discIDs])
     )
 }
