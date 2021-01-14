@@ -20,25 +20,25 @@ parameterizations](https://jhelvy.github.io/logitr/articles/utility_models.html)
 
 The latest version includes support for:
 
-  - Homogeneous multinomial logit (MNL) models
-  - Heterogeneous mixed logit (MXL) models (with normal and log-normal
+-   Homogeneous multinomial logit (MNL) models
+-   Heterogeneous mixed logit (MXL) models (with normal and log-normal
     parameter distributions).
-  - Preference space utility parameterization.
-  - WTP space utility parameterization.
-  - An option to run a multistart optimization loop that uses different
+-   Preference space utility parameterization.
+-   WTP space utility parameterization.
+-   An option to run a multistart optimization loop that uses different
     random starting points in each iteration (useful for non-convex
     problems like MXL models or models with WTP space
     parameterizations).
-  - Computing and comparing WTP from both preference space and WTP space
+-   Computing and comparing WTP from both preference space and WTP space
     models.
-  - Simulating the expected shares of a set of alternatives using an
+-   Simulating the expected shares of a set of alternatives using an
     estimated model.
 
 Note: MXL models assume uncorrelated heterogeneity covariances and are
 estimated using maximum simulated likelihood based on the algorithms in
 Kenneth Train’s book [*Discrete Choice Methods with Simulation, 2nd
-Edition (New York: Cambridge University
-Press, 2009)*](https://eml.berkeley.edu/books/choice2.html).
+Edition (New York: Cambridge University Press,
+2009)*](https://eml.berkeley.edu/books/choice2.html).
 
 View the [basic
 usage](https://jhelvy.github.io/logitr/articles/basic_usage.html) page
@@ -70,14 +70,12 @@ many of the same calculations (e.g. computing probabilities).
 
 ## Author, Version, and License Information
 
-  - Author: *John Paul Helveston*
+-   Author: *John Paul Helveston*
     [www.jhelvy.com](http://www.jhelvy.com/)
-  - Date First Written: *Sunday, September 28, 2014*
-  - Most Recent Update: January 09 2021
-  - License:
+-   Date First Written: *Sunday, September 28, 2014*
+-   Most Recent Update: January 14 2021
+-   License:
     [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
-  - [Latest Release](https://github.com/jhelvy/logitr/releases/latest):
-    0.0.5
 
 ## Citation Information
 
@@ -90,8 +88,9 @@ citation("logitr")
 #> 
 #> To cite logitr in publications use:
 #> 
-#>   John Paul Helveston (2020). logitr: Random utility logit models with
-#>   preference and willingness to pay space parameterizations.
+#>   John Paul Helveston (2021). logitr: Random utility logit models with
+#>   preference and willingness to pay space parameterizations. R package
+#>   version 0.1.0.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -99,7 +98,7 @@ citation("logitr")
 #>     title = {logitr: Random Utility Logit Models with Preference and Willingness to Pay Space Parameterizations},
 #>     author = {John Paul Helveston},
 #>     year = {2020},
-#>     note = {R package version 0.0.5},
+#>     note = {R package version 0.1.0},
 #>     url = {https://jhelvy.github.io/logitr/},
 #>   }
 ```
