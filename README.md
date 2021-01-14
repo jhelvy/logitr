@@ -40,10 +40,6 @@ Kenneth Train’s book [*Discrete Choice Methods with Simulation, 2nd
 Edition (New York: Cambridge University Press,
 2009)*](https://eml.berkeley.edu/books/choice2.html).
 
-View the [basic
-usage](https://jhelvy.github.io/logitr/articles/basic_usage.html) page
-for details on how to use **logitr** to estimate models.
-
 ## Installation
 
 The current version is not yet on CRAN, but you can install it from
@@ -59,21 +55,18 @@ Load the library with:
 library(logitr)
 ```
 
-## Required Libraries
+## Basic Usage
 
-**logitr** requires the
-[**nloptr**](https://cran.r-project.org/package=nloptr) library. This is
-because `nloptr()` allows for both the objective and gradient functions
-to be computed in a single function. This speeds up computation time
-considerably because both the objective and gradient functions require
-many of the same calculations (e.g. computing probabilities).
+View the [basic
+usage](https://jhelvy.github.io/logitr/articles/basic_usage.html) page
+for details on how to use **logitr** to estimate models.
 
 ## Author, Version, and License Information
 
 -   Author: *John Paul Helveston*
     [www.jhelvy.com](http://www.jhelvy.com/)
 -   Date First Written: *Sunday, September 28, 2014*
--   Most Recent Update: January 14 2021
+-   Most Recent Update: January 14, 2021
 -   License:
     [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
 
