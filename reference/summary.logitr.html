@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -172,7 +172,8 @@ function.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Prints a summary of the model results to the console.</p>
+    <p>No return value; prints a summary of the model results to the
+console.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Run a MNL model in the Preference Space with a multistart:</span>
@@ -188,12 +189,7 @@ function.</p></td>
     keepAllRuns <span class='op'>=</span> <span class='cn'>TRUE</span>
   <span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; Running Multistart 1 of 5 
-#&gt; Running Multistart 2 of 5 
-#&gt; Running Multistart 3 of 5 
-#&gt; Running Multistart 4 of 5 
-#&gt; Running Multistart 5 of 5 
-#&gt; Done!</div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>Running Multistart 1 of 5...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 2 of 5...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 3 of 5...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 4 of 5...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 5 of 5...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
 <span class='co'># View a summary of the model:</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mnl_pref</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; =================================================
@@ -206,16 +202,17 @@ function.</p></td>
 #&gt; 4   4 -2656.888         21      3
 #&gt; 5   5 -2656.888         19      3
 #&gt; ---
-#&gt; To view meaning of status codes, use statusCodes() 
+#&gt; Use statusCodes() to view the meaning of the status codes
 #&gt; 
-#&gt; Summary of BEST model below (run with largest log-likelihood value)
+#&gt; Below is the summary of run 5 of 5 multistart runs
+#&gt; (the run with the largest log-likelihood value)
 #&gt; =================================================
 #&gt; MODEL SUMMARY: 
 #&gt;                           
 #&gt; Model Space:    Preference
 #&gt; Model Run:          5 of 5
 #&gt; Iterations:             19
-#&gt; Elapsed Time:  0h:0m:0.11s
+#&gt; Elapsed Time:  0h:0m:0.33s
 #&gt; Weights Used?:       FALSE
 #&gt; 
 #&gt; Model Coefficients: 

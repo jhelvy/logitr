@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -160,8 +160,10 @@
     <span class="st">'bev150'</span>, <span class="st">'american'</span>, <span class="st">'japanese'</span>, <span class="st">'chinese'</span>, <span class="st">'skorean'</span>,
     <span class="st">'phevFastcharge'</span>, <span class="st">'bevFastcharge'</span>,<span class="st">'opCost'</span>, <span class="st">'accelTime'</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
+<pre><code>#&gt; Running Model...
+#&gt; Done!</code></pre>
 <p>In this model, since the <code>price</code> variable is a <code>"double"</code> variable type, it is by default modeled as a continuous variable with a single “slope” coefficient:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/typeof.html">typeof</a></span><span class="op">(</span><span class="va">cars_us</span><span class="op">$</span><span class="va">price</span><span class="op">)</span>
 <span class="co">#&gt; [1] "double"</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_default</span><span class="op">)</span>
@@ -170,47 +172,47 @@
 <span class="co">#&gt;                           </span>
 <span class="co">#&gt; Model Space:    Preference</span>
 <span class="co">#&gt; Model Run:          1 of 1</span>
-<span class="co">#&gt; Iterations:             22</span>
-<span class="co">#&gt; Elapsed Time:  0h:0m:0.51s</span>
+<span class="co">#&gt; Iterations:             20</span>
+<span class="co">#&gt; Elapsed Time:  0h:0m:0.47s</span>
 <span class="co">#&gt; Weights Used?:       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
 <span class="co">#&gt;                 Estimate StdError    tStat   pVal signif</span>
-<span class="co">#&gt; price          -0.073878 0.002049 -36.0605 0.0000    ***</span>
-<span class="co">#&gt; hev             0.059599 0.073667   0.8090 0.4185       </span>
-<span class="co">#&gt; phev10          0.086150 0.078724   1.0943 0.2739       </span>
-<span class="co">#&gt; phev20          0.121744 0.079618   1.5291 0.1263       </span>
-<span class="co">#&gt; phev40          0.190593 0.079012   2.4122 0.0159      *</span>
-<span class="co">#&gt; bev75          -1.185484 0.087261 -13.5855 0.0000    ***</span>
-<span class="co">#&gt; bev100         -0.960682 0.086752 -11.0739 0.0000    ***</span>
-<span class="co">#&gt; bev150         -0.707297 0.084202  -8.4000 0.0000    ***</span>
-<span class="co">#&gt; american        0.173178 0.058838   2.9433 0.0033     **</span>
-<span class="co">#&gt; japanese       -0.027680 0.058506  -0.4731 0.6362       </span>
-<span class="co">#&gt; chinese        -0.758648 0.062304 -12.1766 0.0000    ***</span>
-<span class="co">#&gt; skorean        -0.445558 0.060899  -7.3164 0.0000    ***</span>
-<span class="co">#&gt; phevFastcharge  0.212698 0.059930   3.5491 0.0004    ***</span>
-<span class="co">#&gt; bevFastcharge   0.215655 0.066997   3.2189 0.0013     **</span>
-<span class="co">#&gt; opCost         -0.120869 0.004428 -27.2938 0.0000    ***</span>
-<span class="co">#&gt; accelTime      -0.125374 0.011587 -10.8204 0.0000    ***</span>
+<span class="co">#&gt; price          -0.073882 0.002049 -36.0612 0.0000    ***</span>
+<span class="co">#&gt; hev             0.059741 0.073667   0.8110 0.4174       </span>
+<span class="co">#&gt; phev10          0.086141 0.078725   1.0942 0.2739       </span>
+<span class="co">#&gt; phev20          0.121737 0.079619   1.5290 0.1263       </span>
+<span class="co">#&gt; phev40          0.190580 0.079013   2.4120 0.0159      *</span>
+<span class="co">#&gt; bev75          -1.185508 0.087262 -13.5856 0.0000    ***</span>
+<span class="co">#&gt; bev100         -0.960710 0.086753 -11.0740 0.0000    ***</span>
+<span class="co">#&gt; bev150         -0.707314 0.084204  -8.4000 0.0000    ***</span>
+<span class="co">#&gt; american        0.173212 0.058839   2.9438 0.0033     **</span>
+<span class="co">#&gt; japanese       -0.027662 0.058507  -0.4728 0.6364       </span>
+<span class="co">#&gt; chinese        -0.758692 0.062305 -12.1771 0.0000    ***</span>
+<span class="co">#&gt; skorean        -0.445575 0.060899  -7.3166 0.0000    ***</span>
+<span class="co">#&gt; phevFastcharge  0.212802 0.059931   3.5508 0.0004    ***</span>
+<span class="co">#&gt; bevFastcharge   0.215705 0.066998   3.2196 0.0013     **</span>
+<span class="co">#&gt; opCost         -0.120876 0.004429 -27.2948 0.0000    ***</span>
+<span class="co">#&gt; accelTime      -0.125380 0.011587 -10.8207 0.0000    ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Fit Values: </span>
 <span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log.Likelihood.         -4616.9517792</span>
+<span class="co">#&gt; Log.Likelihood.         -4616.9517861</span>
 <span class="co">#&gt; Null.Log.Likelihood.    -6328.0067827</span>
 <span class="co">#&gt; AIC.                     9265.9036000</span>
-<span class="co">#&gt; BIC.                     9372.4426000</span>
+<span class="co">#&gt; BIC.                     9372.4427000</span>
 <span class="co">#&gt; McFadden.R2.                0.2703940</span>
 <span class="co">#&gt; Adj..McFadden.R2            0.2678655</span>
 <span class="co">#&gt; Number.of.Observations.  5760.0000000</span></code></pre></div>
 <p>To model <code>price</code> as a categorical variable, simple change it to a <code>"character"</code> or <code>"factor"</code> type:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cars_us</span><span class="op">$</span><span class="va">price</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">cars_us</span><span class="op">$</span><span class="va">price</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/typeof.html">typeof</a></span><span class="op">(</span><span class="va">cars_us</span><span class="op">$</span><span class="va">price</span><span class="op">)</span>
 <span class="co">#&gt; [1] "character"</span></code></pre></div>
 <p>Now re-estimate the model:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_character_price</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   data       <span class="op">=</span> <span class="va">cars_us</span>,
   choiceName <span class="op">=</span> <span class="st">'choice'</span>,
@@ -220,49 +222,51 @@
     <span class="st">'bev150'</span>, <span class="st">'american'</span>, <span class="st">'japanese'</span>, <span class="st">'chinese'</span>, <span class="st">'skorean'</span>,
     <span class="st">'phevFastcharge'</span>, <span class="st">'bevFastcharge'</span>,<span class="st">'opCost'</span>, <span class="st">'accelTime'</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
+<pre><code>#&gt; Running Model...
+#&gt; Done!</code></pre>
 <p>Now <code>price</code> is modeled as a categorical variable with a coefficient for all but the first level:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/typeof.html">typeof</a></span><span class="op">(</span><span class="va">cars_us</span><span class="op">$</span><span class="va">price</span><span class="op">)</span>
 <span class="co">#&gt; [1] "character"</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_character_price</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; MODEL SUMMARY: </span>
-<span class="co">#&gt;                           </span>
-<span class="co">#&gt; Model Space:    Preference</span>
-<span class="co">#&gt; Model Run:          1 of 1</span>
-<span class="co">#&gt; Iterations:             24</span>
-<span class="co">#&gt; Elapsed Time:  0h:0m:0.68s</span>
-<span class="co">#&gt; Weights Used?:       FALSE</span>
+<span class="co">#&gt;                          </span>
+<span class="co">#&gt; Model Space:   Preference</span>
+<span class="co">#&gt; Model Run:         1 of 1</span>
+<span class="co">#&gt; Iterations:            22</span>
+<span class="co">#&gt; Elapsed Time:  0h:0m:0.6s</span>
+<span class="co">#&gt; Weights Used?:      FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
 <span class="co">#&gt;                 Estimate StdError    tStat   pVal signif</span>
-<span class="co">#&gt; hev             0.062152 0.073723   0.8430 0.3992       </span>
-<span class="co">#&gt; phev10          0.087907 0.078788   1.1157 0.2646       </span>
-<span class="co">#&gt; phev20          0.121000 0.079658   1.5190 0.1288       </span>
-<span class="co">#&gt; phev40          0.192690 0.079087   2.4364 0.0149      *</span>
-<span class="co">#&gt; bev75          -1.189445 0.087338 -13.6189 0.0000    ***</span>
-<span class="co">#&gt; bev100         -0.962527 0.086845 -11.0833 0.0000    ***</span>
-<span class="co">#&gt; bev150         -0.711653 0.084281  -8.4438 0.0000    ***</span>
-<span class="co">#&gt; american        0.173933 0.058863   2.9549 0.0031     **</span>
-<span class="co">#&gt; japanese       -0.024605 0.058549  -0.4202 0.6743       </span>
-<span class="co">#&gt; chinese        -0.758295 0.062363 -12.1594 0.0000    ***</span>
-<span class="co">#&gt; skorean        -0.445463 0.060922  -7.3120 0.0000    ***</span>
-<span class="co">#&gt; phevFastcharge  0.211880 0.059978   3.5326 0.0004    ***</span>
-<span class="co">#&gt; bevFastcharge   0.217601 0.067060   3.2449 0.0012     **</span>
-<span class="co">#&gt; opCost         -0.121130 0.004435 -27.3112 0.0000    ***</span>
-<span class="co">#&gt; accelTime      -0.125437 0.011593 -10.8205 0.0000    ***</span>
-<span class="co">#&gt; price_18       -0.191598 0.054849  -3.4932 0.0005    ***</span>
-<span class="co">#&gt; price_23       -0.657620 0.057072 -11.5226 0.0000    ***</span>
-<span class="co">#&gt; price_32       -1.317407 0.060379 -21.8191 0.0000    ***</span>
-<span class="co">#&gt; price_50       -2.546522 0.077092 -33.0321 0.0000    ***</span>
+<span class="co">#&gt; hev             0.062222 0.073722   0.8440 0.3987       </span>
+<span class="co">#&gt; phev10          0.088042 0.078788   1.1175 0.2638       </span>
+<span class="co">#&gt; phev20          0.121140 0.079657   1.5208 0.1284       </span>
+<span class="co">#&gt; phev40          0.192805 0.079087   2.4379 0.0148      *</span>
+<span class="co">#&gt; bev75          -1.189301 0.087337 -13.6175 0.0000    ***</span>
+<span class="co">#&gt; bev100         -0.962399 0.086843 -11.0820 0.0000    ***</span>
+<span class="co">#&gt; bev150         -0.711546 0.084280  -8.4426 0.0000    ***</span>
+<span class="co">#&gt; american        0.174072 0.058863   2.9573 0.0031     **</span>
+<span class="co">#&gt; japanese       -0.024672 0.058548  -0.4214 0.6735       </span>
+<span class="co">#&gt; chinese        -0.758227 0.062362 -12.1585 0.0000    ***</span>
+<span class="co">#&gt; skorean        -0.445432 0.060921  -7.3116 0.0000    ***</span>
+<span class="co">#&gt; phevFastcharge  0.211813 0.059977   3.5316 0.0004    ***</span>
+<span class="co">#&gt; bevFastcharge   0.217633 0.067059   3.2454 0.0012     **</span>
+<span class="co">#&gt; opCost         -0.121119 0.004435 -27.3095 0.0000    ***</span>
+<span class="co">#&gt; accelTime      -0.125424 0.011592 -10.8196 0.0000    ***</span>
+<span class="co">#&gt; price_18       -0.191639 0.054849  -3.4939 0.0005    ***</span>
+<span class="co">#&gt; price_23       -0.657617 0.057072 -11.5227 0.0000    ***</span>
+<span class="co">#&gt; price_32       -1.317372 0.060378 -21.8188 0.0000    ***</span>
+<span class="co">#&gt; price_50       -2.546410 0.077090 -33.0317 0.0000    ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Fit Values: </span>
 <span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log.Likelihood.         -4614.4422123</span>
+<span class="co">#&gt; Log.Likelihood.         -4614.4422294</span>
 <span class="co">#&gt; Null.Log.Likelihood.    -6328.0067827</span>
-<span class="co">#&gt; AIC.                     9266.8844000</span>
+<span class="co">#&gt; AIC.                     9266.8845000</span>
 <span class="co">#&gt; BIC.                     9393.3996000</span>
 <span class="co">#&gt; McFadden.R2.                0.2707906</span>
 <span class="co">#&gt; Adj..McFadden.R2            0.2677880</span>
@@ -272,7 +276,7 @@
 <h2 class="hasAnchor">
 <a href="#create-dummy-coded-variables" class="anchor"></a>2) Create dummy-coded variables</h2>
 <p>For the second option, you can use the <code><a href="../reference/dummyCode.html">dummyCode()</a></code> function to create new dummy-coded variables for all the levels of a continuous variable and then use those variables in the model:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cars_us_dummy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dummyCode.html">dummyCode</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">cars_us</span>, vars <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">cars_us_dummy</span><span class="op">)</span>
 <span class="co">#&gt;  [1] "id"             "obsnum"         "choice"         "hev"           </span>
@@ -283,7 +287,7 @@
 <span class="co">#&gt; [21] "price_15"       "price_18"       "price_23"       "price_32"      </span>
 <span class="co">#&gt; [25] "price_50"</span></code></pre></div>
 <p>The new <code>cars_us_dummy</code> data frame now contains variables for each level of the <code>price</code> column. This approach allows the modeler to specify the baseline level. In this example, I’ll use the <code>price_50</code> level as the baseline:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_dummy_price</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   data       <span class="op">=</span> <span class="va">cars_us_dummy</span>,
   choiceName <span class="op">=</span> <span class="st">'choice'</span>,
@@ -294,47 +298,49 @@
     <span class="st">'bev150'</span>, <span class="st">'american'</span>, <span class="st">'japanese'</span>, <span class="st">'chinese'</span>, <span class="st">'skorean'</span>,
     <span class="st">'phevFastcharge'</span>, <span class="st">'bevFastcharge'</span>,<span class="st">'opCost'</span>, <span class="st">'accelTime'</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
+<pre><code>#&gt; Running Model...
+#&gt; Done!</code></pre>
 <p>Now <code>price</code> is modeled with a specified coefficient for all but the <code>price_50</code> level:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_dummy_price</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; MODEL SUMMARY: </span>
 <span class="co">#&gt;                          </span>
 <span class="co">#&gt; Model Space:   Preference</span>
 <span class="co">#&gt; Model Run:         1 of 1</span>
-<span class="co">#&gt; Iterations:            25</span>
-<span class="co">#&gt; Elapsed Time:  0h:0m:0.6s</span>
+<span class="co">#&gt; Iterations:            23</span>
+<span class="co">#&gt; Elapsed Time:  0h:0m:0.7s</span>
 <span class="co">#&gt; Weights Used?:      FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
 <span class="co">#&gt;                 Estimate StdError    tStat   pVal signif</span>
-<span class="co">#&gt; price_15        2.546554 0.077093  33.0323 0.0000    ***</span>
-<span class="co">#&gt; price_18        2.354938 0.076785  30.6693 0.0000    ***</span>
-<span class="co">#&gt; price_23        1.888923 0.075126  25.1435 0.0000    ***</span>
-<span class="co">#&gt; price_32        1.229125 0.074532  16.4912 0.0000    ***</span>
-<span class="co">#&gt; hev             0.062133 0.073723   0.8428 0.3994       </span>
-<span class="co">#&gt; phev10          0.087854 0.078789   1.1151 0.2649       </span>
-<span class="co">#&gt; phev20          0.120941 0.079658   1.5183 0.1290       </span>
-<span class="co">#&gt; phev40          0.192632 0.079088   2.4357 0.0149      *</span>
-<span class="co">#&gt; bev75          -1.189408 0.087338 -13.6185 0.0000    ***</span>
-<span class="co">#&gt; bev100         -0.962481 0.086844 -11.0828 0.0000    ***</span>
-<span class="co">#&gt; bev150         -0.711611 0.084281  -8.4433 0.0000    ***</span>
-<span class="co">#&gt; american        0.173891 0.058863   2.9541 0.0031     **</span>
-<span class="co">#&gt; japanese       -0.024683 0.058549  -0.4216 0.6733       </span>
-<span class="co">#&gt; chinese        -0.758358 0.062363 -12.1604 0.0000    ***</span>
-<span class="co">#&gt; skorean        -0.445546 0.060922  -7.3133 0.0000    ***</span>
-<span class="co">#&gt; phevFastcharge  0.211940 0.059978   3.5336 0.0004    ***</span>
-<span class="co">#&gt; bevFastcharge   0.217523 0.067060   3.2437 0.0012     **</span>
-<span class="co">#&gt; opCost         -0.121131 0.004435 -27.3114 0.0000    ***</span>
-<span class="co">#&gt; accelTime      -0.125437 0.011593 -10.8205 0.0000    ***</span>
+<span class="co">#&gt; price_15        2.546463 0.077091  33.0321 0.0000    ***</span>
+<span class="co">#&gt; price_18        2.354811 0.076783  30.6686 0.0000    ***</span>
+<span class="co">#&gt; price_23        1.888845 0.075124  25.1431 0.0000    ***</span>
+<span class="co">#&gt; price_32        1.229120 0.074531  16.4915 0.0000    ***</span>
+<span class="co">#&gt; hev             0.062127 0.073722   0.8427 0.3994       </span>
+<span class="co">#&gt; phev10          0.087935 0.078787   1.1161 0.2644       </span>
+<span class="co">#&gt; phev20          0.121048 0.079657   1.5196 0.1287       </span>
+<span class="co">#&gt; phev40          0.192727 0.079086   2.4369 0.0148      *</span>
+<span class="co">#&gt; bev75          -1.189114 0.087334 -13.6157 0.0000    ***</span>
+<span class="co">#&gt; bev100         -0.962333 0.086842 -11.0814 0.0000    ***</span>
+<span class="co">#&gt; bev150         -0.711515 0.084279  -8.4424 0.0000    ***</span>
+<span class="co">#&gt; american        0.173844 0.058862   2.9534 0.0032     **</span>
+<span class="co">#&gt; japanese       -0.024653 0.058548  -0.4211 0.6737       </span>
+<span class="co">#&gt; chinese        -0.758252 0.062361 -12.1590 0.0000    ***</span>
+<span class="co">#&gt; skorean        -0.445564 0.060921  -7.3138 0.0000    ***</span>
+<span class="co">#&gt; phevFastcharge  0.211886 0.059977   3.5328 0.0004    ***</span>
+<span class="co">#&gt; bevFastcharge   0.217423 0.067058   3.2423 0.0012     **</span>
+<span class="co">#&gt; opCost         -0.121112 0.004435 -27.3084 0.0000    ***</span>
+<span class="co">#&gt; accelTime      -0.125420 0.011592 -10.8193 0.0000    ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Fit Values: </span>
 <span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log.Likelihood.         -4614.4422100</span>
+<span class="co">#&gt; Log.Likelihood.         -4614.4422281</span>
 <span class="co">#&gt; Null.Log.Likelihood.    -6328.0067827</span>
-<span class="co">#&gt; AIC.                     9266.8844000</span>
+<span class="co">#&gt; AIC.                     9266.8845000</span>
 <span class="co">#&gt; BIC.                     9393.3996000</span>
 <span class="co">#&gt; McFadden.R2.                0.2707906</span>
 <span class="co">#&gt; Adj..McFadden.R2            0.2677880</span>

@@ -73,7 +73,7 @@ on an estimated model." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -198,8 +198,7 @@ required for WTP space models. Defaults to <code>NULL</code>.</p></td>
   obsIDName <span class='op'>=</span> <span class='st'>"obsID"</span>,
   parNames <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"dannon"</span>, <span class='st'>"hiland"</span>, <span class='st'>"yoplait"</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; Running Model
-#&gt; Done!</div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
 <span class='co'># Create a set of alternatives for which to simulate shares:</span>
 <span class='va'>alts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>yogurt</span>, <span class='va'>obsID</span> <span class='op'>==</span> <span class='fl'>42</span>,
   select <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"feat"</span>, <span class='st'>"price"</span>, <span class='st'>"dannon"</span>, <span class='st'>"hiland"</span>, <span class='st'>"yoplait"</span><span class='op'>)</span>

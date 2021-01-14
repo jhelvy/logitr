@@ -73,7 +73,7 @@ model." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -197,8 +197,7 @@ estimates are compared against the WTP values directly estimated from the
   obsIDName <span class='op'>=</span> <span class='st'>"obsID"</span>,
   parNames <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"dannon"</span>, <span class='st'>"hiland"</span>, <span class='st'>"yoplait"</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; Running Model
-#&gt; Done!</div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
 <span class='co'># Get the WTP implied from the preference space model</span>
 <span class='va'>wtp_mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'><a href='wtp.html'>wtp</a></span><span class='op'>(</span><span class='va'>mnl_pref</span>, priceName <span class='op'>=</span> <span class='st'>"price"</span><span class='op'>)</span>
 
@@ -212,18 +211,10 @@ estimates are compared against the WTP values directly estimated from the
   modelSpace <span class='op'>=</span> <span class='st'>"wtp"</span>,
   options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>startVals <span class='op'>=</span> <span class='va'>wtp_mnl_pref</span><span class='op'>$</span><span class='va'>Estimate</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; Running Model
-#&gt; **Using User Provided Starting Values For This Run**
-#&gt; Done!</div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in definePrice(data, priceName, modelSpace): Please make sure the price column in your data defined by the "priceName" argument is encoded as a numeric data type. Price must be numeric for WTP space models.</span></div><div class='input'>
 <span class='co'># Compare the WTP between the two spaces:</span>
 <span class='fu'>wtpCompare</span><span class='op'>(</span><span class='va'>mnl_pref</span>, <span class='va'>mnl_wtp</span>, priceName <span class='op'>=</span> <span class='st'>"price"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                 pref           wtp   difference
-#&gt; lambda      0.366581  1.366292e-02   -0.3529181
-#&gt; feat        1.340593  6.498375e+01   63.6431564
-#&gt; dannon      1.749066  4.226469e+01   40.5156211
-#&gt; hiland     -8.386654 -1.569365e+02 -148.5498511
-#&gt; yoplait     3.752975  3.096075e+01   27.2077725
-#&gt; logLik  -2656.887878 -2.791167e+03 -134.2786383</div></pre>
+</div><div class='output co'>#&gt; <span class='error'>Error in is_logitr(model_wtp): object 'mnl_wtp' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

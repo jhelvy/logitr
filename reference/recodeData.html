@@ -6,8 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Returns a list of a dataframe, parNames, and randPars with discrete
-(categorical) variables and interaction variables added to the dataframe. — recodeData • logitr</title>
+<title>Recode a data frame to create dummy-coded categorical and interaction
+variables. — recodeData • logitr</title>
 
 
 <!-- jquery -->
@@ -40,10 +40,13 @@
 
 
 
-<meta property="og:title" content="Returns a list of a dataframe, parNames, and randPars with discrete
-(categorical) variables and interaction variables added to the dataframe. — recodeData" />
-<meta property="og:description" content="Returns a list of a dataframe, parNames, and randPars with discrete
-(categorical) variables and interaction variables added to the dataframe." />
+<meta property="og:title" content="Recode a data frame to create dummy-coded categorical and interaction
+variables. — recodeData" />
+<meta property="og:description" content="Recodes a list of a dataframe (data) and two vectors (parNames and
+randPars) with discrete (categorical) variables and interaction variables
+added to the data frame as well as the parNames and randPars. This
+function is used internally inside the main logitr() function but is also
+exported for use in other libraries." />
 
 
 
@@ -75,7 +78,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -147,15 +150,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Returns a list of a dataframe, parNames, and randPars with discrete
-(categorical) variables and interaction variables added to the dataframe.</h1>
+    <h1>Recode a data frame to create dummy-coded categorical and interaction
+variables.</h1>
     <small class="dont-index">Source: <a href='https://github.com/jhelvy/logitr/blob/master/R/modelInputs.R'><code>R/modelInputs.R</code></a></small>
     <div class="hidden name"><code>recodeData.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Returns a list of a dataframe, parNames, and randPars with discrete
-(categorical) variables and interaction variables added to the dataframe.</p>
+    <p>Recodes a list of a dataframe (<code>data</code>) and two vectors (<code>parNames</code> and
+<code>randPars</code>) with discrete (categorical) variables and interaction variables
+added to the data frame as well as the <code>parNames</code> and <code>randPars</code>. This
+function is used internally inside the main <code><a href='logitr.html'>logitr()</a></code> function but is also
+exported for use in other libraries.</p>
     </div>
 
     <pre class="usage"><span class='fu'>recodeData</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>parNames</span>, <span class='va'>randPars</span><span class='op'>)</span></pre>
@@ -183,8 +189,9 @@ Defaults to <code>NULL</code>.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of a dataframe, parNames, and randPars with discrete
-(categorical) variables and interaction variables added to the dataframe.</p>
+    <p>A list of a dataframe (<code>data</code>) and two vectors (<code>parNames</code> and
+<code>randPars</code>) with discrete (categorical) variables and interaction variables
+added.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>yogurt</span><span class='op'>)</span>

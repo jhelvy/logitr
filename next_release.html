@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -152,14 +152,30 @@
 <h2 class="hasAnchor">
 <a href="#summary-of-larger-updates" class="anchor"></a>Summary of larger updates:</h2>
 <ul>
-<li>Submitted to CRAN.</li>
+<li>logitr 0.1.0 now on CRAN.</li>
 </ul>
 </div>
 <div id="summary-of-smaller-updates" class="section level2">
 <h2 class="hasAnchor">
 <a href="#summary-of-smaller-updates" class="anchor"></a>Summary of smaller updates:</h2>
 <ul>
-<li>fixed tiny bug in getParTypes() function - previously was not returning the correct parNames for continuous vs. discrete variables.</li>
+<li>Reduced the length of the title in DESCRIPTION to less than 65 characters.</li>
+<li>Changed package names in title and description to single quotes, e.g: {nloptr} -&gt; ‘nloptr’</li>
+<li>Added reference in description with doi to Train (2009) “Discrete Choice Methods with Simulation, 2nd Edition” <a href="doi:10.1017/CBO9780511805271" class="uri">doi:10.1017/CBO9780511805271</a>.</li>
+<li>Added \value statements to dummyCode.Rd and statusCodes.Rd</li>
+<li>Added \value statements to dummyCode.Rd and statusCodes.Rd.</li>
+<li>Updated \value description for summary.logitr.Rd.</li>
+<li>Modified multiple functions to use message()/warning() instead of print()/cat().</li>
+<li>Added <code>algorithm</code> to the <code>options</code> input, with the default being set to <code>"NLOPT_LD_LBFGS"</code>.</li>
+</ul>
+</div>
+<div id="bugs" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bugs" class="anchor"></a>Bugs</h2>
+<ul>
+<li>Fixed tiny bug in <code>getParTypes()</code> function - previously was not returning the correct <code>parNames</code> for continuous vs. discrete variables.</li>
+<li>Added an input check to make sure the modelSpace argument is either <code>"pref"</code> or <code>"wtp"</code>.</li>
+<li>Added an input check to make sure the <code>priceName</code> argument is only used when the <code>modelSpace</code> argument is set to <code>"wtp"</code>.</li>
 </ul>
 </div>
 </div>

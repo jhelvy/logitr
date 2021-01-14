@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -139,23 +139,23 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mnl_pref</span>
 <span class="co">#&gt;              share_mean  share_low share_high</span>
-<span class="co">#&gt; Alt: dannon  0.60767171 0.54778417 0.65904545</span>
-<span class="co">#&gt; Alt: hiland  0.02601787 0.01848737 0.03612937</span>
-<span class="co">#&gt; Alt: weight  0.17802338 0.16306331 0.19259497</span>
-<span class="co">#&gt; Alt: yoplait 0.18828704 0.13851221 0.24972594</span></code></pre></div>
+<span class="co">#&gt; Alt: dannon  0.60766441 0.54666931 0.66116286</span>
+<span class="co">#&gt; Alt: hiland  0.02601869 0.01849724 0.03641177</span>
+<span class="co">#&gt; Alt: weight  0.17802424 0.16324761 0.19255476</span>
+<span class="co">#&gt; Alt: yoplait 0.18829266 0.13721551 0.25067896</span></code></pre></div>
 <p>The results show the expected shares for each alternative. The low and high values show a 95% confidence interval, estimated using simulation. You can change the CI level by setting alpha to a different value (e.g. a 90% CI is obtained with alpha = 0.05).</p>
 <p>You can also use WTP space models to simulate shares, but you must provide the additional <code>priceName</code> argument to the <code><a href="../reference/simulateShares.html">simulateShares()</a></code> function. For example, here are the results from an equivalent model but in the WTP space:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span><span class="va">mnl_wtp</span>, <span class="va">alts</span>, priceName <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span></code></pre></div>
-<pre><code>#&gt; **Using results for model 1 of 10,
-#&gt; the best model (largest log-likelihood) from the multistart**</code></pre>
+<pre><code>#&gt; NOTE: Using results from run 6 of 10 multistart runs
+#&gt; (the run with the largest log-likelihood value)</code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mnl_wtp</span>
 <span class="co">#&gt;              share_mean  share_low share_high</span>
-<span class="co">#&gt; Alt: dannon  0.60767246 0.55591435  0.6600439</span>
-<span class="co">#&gt; Alt: hiland  0.02601785 0.01799451  0.0373110</span>
-<span class="co">#&gt; Alt: weight  0.17802354 0.14713652  0.2081698</span>
-<span class="co">#&gt; Alt: yoplait 0.18828616 0.16441116  0.2116506</span></code></pre></div>
+<span class="co">#&gt; Alt: dannon  0.60767403 0.55551255  0.6593344</span>
+<span class="co">#&gt; Alt: hiland  0.02601652 0.01790205  0.0372950</span>
+<span class="co">#&gt; Alt: weight  0.17802391 0.14731657  0.2082626</span>
+<span class="co">#&gt; Alt: yoplait 0.18828554 0.16406714  0.2118064</span></code></pre></div>
 <p>Since these two models are equivalent except in different spaces, the simulation results should be the same.</p>
 <p>Simulations also work with mixed logit models, and they account for how heterogeneity is modeled by simulating draws from the population estimates of the estimated model:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -163,20 +163,20 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mxl_pref</span>
 <span class="co">#&gt;              share_mean  share_low share_high</span>
-<span class="co">#&gt; Alt: dannon  0.58411865 0.49584600  0.6405035</span>
-<span class="co">#&gt; Alt: hiland  0.08747807 0.03313204  0.1695304</span>
-<span class="co">#&gt; Alt: weight  0.16058669 0.14144154  0.1843865</span>
-<span class="co">#&gt; Alt: yoplait 0.16781659 0.12400901  0.2323886</span></code></pre></div>
+<span class="co">#&gt; Alt: dannon  0.58853780 0.49963606  0.6423508</span>
+<span class="co">#&gt; Alt: hiland  0.08172329 0.03379753  0.1574826</span>
+<span class="co">#&gt; Alt: weight  0.16135077 0.14406118  0.1850985</span>
+<span class="co">#&gt; Alt: yoplait 0.16838815 0.12658930  0.2362842</span></code></pre></div>
 <p>Likewise, mixed logit WTP space models can also be used to simulate shares:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mxl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span><span class="va">mxl_wtp</span>, <span class="va">alts</span>, priceName <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mxl_wtp</span>
 <span class="co">#&gt;              share_mean  share_low share_high</span>
-<span class="co">#&gt; Alt: dannon  0.58411198 0.51454546  0.6230344</span>
-<span class="co">#&gt; Alt: hiland  0.08697541 0.03478437  0.1726387</span>
-<span class="co">#&gt; Alt: weight  0.16083006 0.12827940  0.1974396</span>
-<span class="co">#&gt; Alt: yoplait 0.16808255 0.14388407  0.2050745</span></code></pre></div>
+<span class="co">#&gt; Alt: dannon  0.58876362 0.51704108  0.6273589</span>
+<span class="co">#&gt; Alt: hiland  0.08138807 0.03551802  0.1658617</span>
+<span class="co">#&gt; Alt: weight  0.16137402 0.13099899  0.1957457</span>
+<span class="co">#&gt; Alt: yoplait 0.16847429 0.14492007  0.2053679</span></code></pre></div>
 <p>Here is a bar plot of the results from each model:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
