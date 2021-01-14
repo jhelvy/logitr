@@ -62,8 +62,8 @@ You can also use WTP space models to simulate shares, but you must provide the a
 sim_mnl_wtp <- simulateShares(mnl_wtp, alts, priceName = 'price')
 ```
 ```
-#> **Using results for model 1 of 10,
-#> the best model (largest log-likelihood) from the multistart**
+#> NOTE: Using results from run 6 of 10 multistart runs
+#> (the run with the largest log-likelihood value)
 ```
 ```{r}
 sim_mnl_wtp

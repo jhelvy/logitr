@@ -36,7 +36,8 @@ coef.logitr <- function(object, ...) {
 #' @param object The output of a model estimated model using the `logitr()`
 #' function.
 #' @param ... other arguments
-#' @return Prints a summary of the model results to the console.
+#' @return No return value; prints a summary of the model results to the
+#' console.
 #' @export
 #' @examples
 #' # Run a MNL model in the Preference Space with a multistart:
@@ -75,16 +76,18 @@ printLine <- function() {
 
 printMultistartSummary <- function(model) {
   printLine()
-  cat("SUMMARY OF ALL MULTISTART RUNS:", "\n", "\n", sep = "")
+  cat("SUMMARY OF ALL MULTISTART RUNS:\n\n")
   print(model$multistartSummary)
-  cat("---", "\n", sep = "")
-  cat("To view meaning of status codes, use statusCodes()", "\n")
-  cat("\n", sep = "")
-  cat("Summary of BEST model below (run with largest",
-    "log-likelihood value)",
-    sep = " "
+  cat("---\n")
+  cat("Use statusCodes() to view the meaning of the status codes\n\n")
+  if (is_logitr_allRuns(model)) {
+    model <- model$bestModel
+  }
+  cat(
+    "Below is the summary of run", model$multistartNumber, "of",
+    model$options$numMultiStarts,
+    "multistart runs\n(the run with the largest log-likelihood value)\n"
   )
-  cat("\n", sep = "")
 }
 
 printModelSummary <- function(model) {

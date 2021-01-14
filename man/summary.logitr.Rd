@@ -13,7 +13,8 @@ function.}
 \item{...}{other arguments}
 }
 \value{
-Prints a summary of the model results to the console.
+No return value; prints a summary of the model results to the
+console.
 }
 \description{
 Prints a summary of a model estimated using the \code{logitr()} function

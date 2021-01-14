@@ -2,8 +2,8 @@
 % Please edit documentation in R/modelInputs.R
 \name{recodeData}
 \alias{recodeData}
-\title{Returns a list of a dataframe, parNames, and randPars with discrete
-(categorical) variables and interaction variables added to the dataframe.}
+\title{Recode a data frame to create dummy-coded categorical and interaction
+variables.}
 \usage{
 recodeData(data, parNames, randPars)
 }
@@ -19,12 +19,16 @@ values the distribution: \code{'n'} for normal or \code{'ln'} for log-normal.
 Defaults to \code{NULL}.}
 }
 \value{
-A list of a dataframe, parNames, and randPars with discrete
-(categorical) variables and interaction variables added to the dataframe.
+A list of a dataframe (\code{data}) and two vectors (\code{parNames} and
+\code{randPars}) with discrete (categorical) variables and interaction variables
+added.
 }
 \description{
-Returns a list of a dataframe, parNames, and randPars with discrete
-(categorical) variables and interaction variables added to the dataframe.
+Recodes a list of a dataframe (\code{data}) and two vectors (\code{parNames} and
+\code{randPars}) with discrete (categorical) variables and interaction variables
+added to the data frame as well as the \code{parNames} and \code{randPars}. This
+function is used internally inside the main \code{logitr()} function but is also
+exported for use in other libraries.
 }
 \examples{
 data(yogurt)

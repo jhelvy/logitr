@@ -27,10 +27,8 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
   X <- as.matrix(data[parNames])
   obsID <- as.matrix(data[, which(names(data) == obsIDName)])
   choice <- as.matrix(data[, which(names(data) == choiceName)])
-  price <- NA
-  if (modelSpace == "wtp") {
-    price <- -1 * as.matrix(data[, which(names(data) == priceName)])
-  }
+  # Define price for WTP space models (price must be numeric type)
+  price <- definePrice(data, priceName, modelSpace)
   # Setup weights
   weights <- matrix(1, nrow(data))
   weightsUsed <- FALSE
@@ -60,16 +58,44 @@ runInputChecks <- function(choiceName, obsIDName, parNames, randPars,
   priceName, randPrice, modelSpace, weightsName) {
   if (! is.null(priceName)) {
     if (priceName %in% parNames) {
-      stop('The value you provided for the "priceName" argument is also included in your "parNames" argument. If you are estimating a WTP space model, you should remove the price column name from your "parNames" argument and provide it separately with the "priceName" argument.')
+      stop(
+        'The value you provided for the "priceName" argument is also included ',
+        'in your "parNames" argument. If you are estimating a WTP space model',
+        ', you should remove the price name from your "parNames" argument and ',
+        'provide it separately with the "priceName" argument.'
+      )
+    }
+    if (modelSpace != "wtp") {
+      stop(
+        'The "priceName" argument should only be used for WTP space models. ',
+        'Please either set the "modelSpace" argument to "wtp" or remove the ',
+        '"priceName" argument.'
+      )
     }
   }
+  if (! modelSpace %in% c('pref', 'wtp')) {
+    stop(
+      'The modelSpace argument must be set to either "pref" or "wtp", all ',
+      'lower case (defaults to "pref").'
+    )
+  }
   if ((modelSpace == 'wtp') & is.null(priceName)) {
-    stop('You are estimating a WTP space model but have not provided a "priceName" argument. Please provide the name of the column in your data frame that represents "price" for the "priceName" argument.')
+    stop(
+      'You are estimating a WTP space model but have not provided a ',
+      '"priceName" argument. Please set "priceName" equal to the name of the ',
+      'column in your data frame that represents "price".'
+    )
   }
 }
 
-#' Returns a list of a dataframe, parNames, and randPars with discrete
-#' (categorical) variables and interaction variables added to the dataframe.
+#' Recode a data frame to create dummy-coded categorical and interaction
+#' variables.
+#'
+#' Recodes a list of a dataframe (`data`) and two vectors (`parNames` and
+#' `randPars`) with discrete (categorical) variables and interaction variables
+#' added to the data frame as well as the `parNames` and `randPars`. This
+#' function is used internally inside the main `logitr()` function but is also
+#' exported for use in other libraries.
 #' @param data The choice data, formatted as a `data.frame` object.
 #' @param parNames The names of the parameters to be estimated in the model.
 #' Must be the same as the column names in the `data` argument. For WTP space
@@ -77,8 +103,9 @@ runInputChecks <- function(choiceName, obsIDName, parNames, randPars,
 #' @param randPars A named vector whose names are the random parameters and
 #' values the distribution: `'n'` for normal or `'ln'` for log-normal.
 #' Defaults to `NULL`.
-#' @return A list of a dataframe, parNames, and randPars with discrete
-#' (categorical) variables and interaction variables added to the dataframe.
+#' @return A list of a dataframe (`data`) and two vectors (`parNames` and
+#' `randPars`) with discrete (categorical) variables and interaction variables
+#' added.
 #' @export
 #' @examples
 #' data(yogurt)
@@ -149,6 +176,49 @@ addDummyPars <- function(data, parNames, randPars, parTypes) {
   }
   parNames <- c(parTypes$cont, dummyPars)
   return(list(data = data, parNames = parNames, randPars = randPars))
+}
+
+#' Creates dummy-coded variables.
+#'
+#' This function adds dummy-coded variables to a data frame based on a
+#' vector of column names.
+#' @param df A data frame.
+#' @param vars The variables in the data frame for which you want to
+#' create new dummy coded variables.
+#' @return A a dataframe with new dummy-coded variables added.
+#' @export
+#' @examples
+#' # Create an example data frame:
+#' df <- data.frame(
+#'     animal   = c("dog", "goldfish", "bird", "dog", "goldfish"),
+#'     numLegs  = c(4, 0, 2, 4, 0),
+#'     lifeSpan = c(10, 10, 5, 10, 10))
+#'
+#' # Create dummy coded variables for the variables "animal" and "numLegs":
+#' df_dummy <- dummyCode(df, vars = c("animal", "numLegs"))
+#' df_dummy
+dummyCode <- function(df, vars) {
+    df <- as.data.frame(df)
+    nonVars <- colnames(df)[which(! colnames(df) %in% vars)]
+    # Keep the original variables and the order to restore later after merging
+    df$order <- seq(nrow(df))
+    for (i in seq_len(length(vars))) {
+        var <- vars[i]
+        colIndex <- which(colnames(df) == var)
+        levels <- sort(unique(df[,colIndex]))
+        mergeMat <- as.data.frame(diag(length(levels)))
+        mergeMat <- cbind(levels, mergeMat)
+        colnames(mergeMat) <- c(var, paste(var, levels, sep='_'))
+        df <- merge(df, mergeMat)
+    }
+    # Restore the original column order
+    new <- colnames(df)[which(! colnames(df) %in% c(vars, nonVars))]
+    df <- df[c(nonVars, vars, new)]
+    # Restore the original row order
+    df <- df[order(df$order),]
+    row.names(df) <- df$order
+    df$order <- NULL
+    return(df)
 }
 
 addIntPars <- function(data, parNames, intNames, parTypes) {
@@ -223,9 +293,6 @@ getParNameList <- function(parSetup) {
 
 runOptionsChecks <- function(options, parNameList) {
   # Run checks for all options
-  if (is.null(options$message)) {
-    options$message <- TRUE
-  }
   if (is.null(options$numMultiStarts)) {
     options$numMultiStarts <- 1
   }
@@ -268,6 +335,9 @@ runOptionsChecks <- function(options, parNameList) {
   if (is.null(options$maxeval)) {
     options$maxeval <- 1000
   }
+  if (is.null(options$algorithm)) {
+    options$algorithm <- "NLOPT_LD_LBFGS"
+  }
   if (is.null(options$startVals)) {
     options$startVals <- NULL
   } else {
@@ -283,6 +353,21 @@ removeNAs <- function(data, choiceName, obsIDName, parNames, priceName,
     colsToSelect <- c(colsToSelect, priceName, weightsName)
   }
   return(stats::na.omit(data[colsToSelect]))
+}
+
+definePrice <- function(data, priceName, modelSpace) {
+  price <- NA
+  if (modelSpace == "wtp") {
+    price <- data[, which(names(data) == priceName)]
+    if (! typeof(price) %in% c("integer", "double")) {
+      stop(
+        'Please make sure the price column in your data defined by the ',
+        '"priceName" argument is encoded as a numeric data type. Price must ',
+        'be numeric for WTP space models.'
+      )
+    }
+  }
+  return(-1*as.matrix(price))
 }
 
 # Function that scales all the variables in X to be between 0 and 1:

@@ -76,11 +76,11 @@ mxl_pref <- logitr(
 )
 ```
 ```
-#> Running Multistart 1 of 5
-#> Running Multistart 2 of 5
-#> Running Multistart 3 of 5
-#> Running Multistart 4 of 5
-#> Running Multistart 5 of 5
+#> Running Multistart 1 of 5...
+#> Running Multistart 2 of 5...
+#> Running Multistart 3 of 5...
+#> Running Multistart 4 of 5...
+#> Running Multistart 5 of 5...
 #> Done!
 ```
 
@@ -143,12 +143,12 @@ mxl_wtp <- logitr(
     startParBounds = c(-10, 10)))
 ```
 ```
-#> Running Multistart 1 of 5
-#> **Using User Provided Starting Values For This Run**
-#> Running Multistart 2 of 5
-#> Running Multistart 3 of 5
-#> Running Multistart 4 of 5
-#> Running Multistart 5 of 5
+#> Running Multistart 1 of 5...
+#> NOTE: Using user-provided starting values for this run
+#> Running Multistart 2 of 5...
+#> Running Multistart 3 of 5...
+#> Running Multistart 4 of 5...
+#> Running Multistart 5 of 5...
 #> Done!
 ```
 

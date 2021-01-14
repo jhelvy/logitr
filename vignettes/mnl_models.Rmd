@@ -72,7 +72,7 @@ mnl_pref <- logitr(
 )
 ```
 ```
-#> Running Model
+#> Running Model...
 #> Done!
 ```
 
@@ -134,17 +134,17 @@ mnl_wtp <- logitr(
     startParBounds = c(-10, 10)))
 ```
 ```
-#> Running Multistart 1 of 10
-#> **Using User Provided Starting Values For This Run**
-#> Running Multistart 2 of 10
-#> Running Multistart 3 of 10
-#> Running Multistart 4 of 10
-#> Running Multistart 5 of 10
-#> Running Multistart 6 of 10
-#> Running Multistart 7 of 10
-#> Running Multistart 8 of 10
-#> Running Multistart 9 of 10
-#> Running Multistart 10 of 10
+#> Running Multistart 1 of 10...
+#> NOTE: Using user-provided starting values for this run
+#> Running Multistart 2 of 10...
+#> Running Multistart 3 of 10...
+#> Running Multistart 4 of 10...
+#> Running Multistart 5 of 10...
+#> Running Multistart 6 of 10...
+#> Running Multistart 7 of 10...
+#> Running Multistart 8 of 10...
+#> Running Multistart 9 of 10...
+#> Running Multistart 10 of 10...
 #> Done!
 ```
 

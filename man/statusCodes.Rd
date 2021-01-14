@@ -6,6 +6,10 @@
 \usage{
 statusCodes()
 }
+\value{
+No return value; prints a summary of the \code{nloptr} status codes to
+the console.
+}
 \description{
 Prints a description of the status codes from the nloptr optimization routine.
 }

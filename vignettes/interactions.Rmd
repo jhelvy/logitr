@@ -23,7 +23,11 @@ model_price_feat <- readRDS(
   here::here('inst', 'extdata', 'int_model_price_feat.Rds'))
 model_price_brand <- readRDS(
   here::here('inst', 'extdata', 'int_model_price_brand.Rds'))
+model_price_feat_mxl <- readRDS(
+  here::here('inst', 'extdata', 'model_price_feat_mxl.Rds'))
 ```
+
+# Interactions with continuous variables
 
 To add interactions between coefficients in your model, you can add additional arguments in the `parNames` vector in the `logitr()` function separated by the `*` symbol. For example, let's say we want to interact `price` with `feat` in the following model:
 
@@ -46,12 +50,18 @@ model_price_feat <- logitr(
   parNames   = c('price', 'feat', 'brand', 'price*feat')
 )
 ```
+```
+#> Running Model...
+#> Done!
+```
 
 The model now has an estimated coefficient for the `price*feat` effect:
 
 ```{r}
 summary(model_price_feat)
 ```
+
+# Interactions with discrete variables
 
 In the above example, both `price` and `feat` were continuous variables, so only a single interaction coefficient was needed.
 
@@ -65,9 +75,38 @@ model_price_brand <- logitr(
   parNames   = c('price', 'feat', 'brand', 'price*brand')
 )
 ```
+```
+#> Running Model...
+#> Done!
+```
 
 The model now has three estimated coefficients for the `price*brand` effect:
 
 ```{r}
 summary(model_price_brand)
 ```
+
+# Interactions in mixed logit models
+
+Suppose I want to include an interaction between two variables and I also want one of those variables to be modeled as normally distributed across the population. The example below illustrates this cases, where a `price*feat` interaction is specified and the `feat` parameter is modeled as normally distributed by setting `randPars = c(feat = "n")`:randPars   = c(feat = "n")
+
+```{r, eval=FALSE}
+model_price_feat_mxl <- logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'brand', 'price*feat'),
+  randPars   = c(feat = "n")
+)
+```
+```
+#> Running Model...
+#> Done!
+```
+
+In this case, the `price*feat` interaction parameter is interpreted as a difference in the `feat_mu` parameter and price; that is, it an interaction in the _mean_ `feat` parameter and `price`:
+
+```{r}
+summary(model_price_brand)
+```
+

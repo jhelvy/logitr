@@ -32,10 +32,25 @@ model_price_brand <- logitr(
 # The model now has three estimated coefficients for the `price*brand` effect:
 summary(model_price_brand)
 
+# ============================================================================
+# Estimate heterogeneous MXL models with interactions
+
+model_price_feat_mxl <- logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'brand', 'price*feat'),
+  randPars   = c(feat = "n")
+)
+
+# The interaction term of price*feat is interpreted as a difference in the
+# feat_mu value depending on price
+summary(model_price_feat_mxl)
+
 # Save results
 saveRDS(model_price_feat,
   here::here('inst', 'extdata', 'int_model_price_feat.Rds'))
 saveRDS(model_price_brand,
   here::here('inst', 'extdata', 'int_model_price_brand.Rds'))
-
-
+saveRDS(model_price_feat_mxl,
+  here::here('inst', 'extdata', 'model_price_feat_mxl.Rds'))

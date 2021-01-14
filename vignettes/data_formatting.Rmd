@@ -71,6 +71,10 @@ model_default <- logitr(
     'phevFastcharge', 'bevFastcharge','opCost', 'accelTime')
 )
 ```
+```
+#> Running Model...
+#> Done!
+```
 
 In this model, since the `price` variable is a `"double"` variable type, it is by default modeled as a continuous variable with a single "slope" coefficient:
 
@@ -98,6 +102,10 @@ model_character_price <- logitr(
     'bev150', 'american', 'japanese', 'chinese', 'skorean',
     'phevFastcharge', 'bevFastcharge','opCost', 'accelTime')
 )
+```
+```
+#> Running Model...
+#> Done!
 ```
 
 Now `price` is modeled as a categorical variable with a coefficient for all but the first level:
@@ -129,6 +137,10 @@ model_dummy_price <- logitr(
     'bev150', 'american', 'japanese', 'chinese', 'skorean',
     'phevFastcharge', 'bevFastcharge','opCost', 'accelTime')
 )
+```
+```
+#> Running Model...
+#> Done!
 ```
 
 Now `price` is modeled with a specified coefficient for all but the `price_50` level:

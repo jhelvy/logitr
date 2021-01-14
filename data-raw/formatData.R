@@ -68,6 +68,3 @@ usethis::use_data(yogurt, overwrite = TRUE)
 # Save the datasets
 usethis::use_data(cars_us, overwrite = TRUE)
 usethis::use_data(cars_china, overwrite = TRUE)
-
-
-
