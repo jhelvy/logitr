@@ -8,7 +8,7 @@
 
 * Reduced the length of the title in DESCRIPTION to less than 65 characters.
 * Changed package names in title and description to single quotes, e.g:  {nloptr} -> 'nloptr'
-* Added reference in description with doi to Train (2009) "Discrete Choice Methods with Simulation, 2nd Edition" <doi:10.1017/CBO9780511805271>.
+* Added reference in description with doi to Train (2009) "Discrete Choice Methods with Simulation, 2nd Edition".
 * Added \value statements to dummyCode.Rd and statusCodes.Rd
 * Added \value statements to dummyCode.Rd and statusCodes.Rd.
 * Updated \value description for summary.logitr.Rd.
