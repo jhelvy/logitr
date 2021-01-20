@@ -107,6 +107,6 @@ model_price_feat_mxl <- logitr(
 In this case, the `price*feat` interaction parameter is interpreted as a difference in the `feat_mu` parameter and price; that is, it an interaction in the _mean_ `feat` parameter and `price`:
 
 ```{r}
-summary(model_price_brand)
+summary(model_price_feat_mxl)
 ```
 
