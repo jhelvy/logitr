@@ -1,0 +1,18 @@
+You can install {logitr} from CRAN:
+
+```r
+install.packages("logitr")
+```
+
+or you can install the development version of {logitr} from [GitHub](https://github.com/jhelvy/logitr):
+
+```r
+# install.packages("remotes")
+remotes::install_github("jhelvy/logitr")
+```
+
+Load the library with:
+
+```{r, eval=FALSE}
+library(logitr)
+```

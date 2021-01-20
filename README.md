@@ -13,9 +13,8 @@ status](https://www.r-pkg.org/badges/version/logitr)](https://CRAN.R-project.org
 status](https://travis-ci.com/jhelvy/logitr.svg?branch=master)](https://travis-ci.com/jhelvy/logitr)
 <!-- badges: end -->
 
-This package estimates multinomial (MNL) and mixed logit (MXL) models in
-R. Models can be estimated using “Preference” space or
-“Willingness-to-pay” (WTP) space [utility
+Estimation of multinomial (MNL) and mixed logit (MXL) models in R with
+“Preference” space or “Willingness-to-pay” (WTP) space [utility
 parameterizations](https://jhelvy.github.io/logitr/articles/utility_models.html).
 
 The latest version includes support for:
@@ -42,11 +41,18 @@ Edition (New York: Cambridge University Press,
 
 ## Installation
 
-The current version is not yet on CRAN, but you can install it from
-GitHub using the **devtools** library:
+You can install {logitr} from CRAN:
 
 ``` r
-devtools::install_github("jhelvy/logitr")
+install.packages("logitr")
+```
+
+or you can install the development version of {logitr} from
+[GitHub](https://github.com/jhelvy/logitr):
+
+``` r
+# install.packages("remotes")
+remotes::install_github("jhelvy/logitr")
 ```
 
 Load the library with:
@@ -66,7 +72,7 @@ for details on how to use **logitr** to estimate models.
 -   Author: *John Paul Helveston*
     [www.jhelvy.com](http://www.jhelvy.com/)
 -   Date First Written: *Sunday, September 28, 2014*
--   Most Recent Update: January 14, 2021
+-   Most Recent Update: January 20, 2021
 -   License:
     [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
 
