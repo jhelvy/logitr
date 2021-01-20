@@ -232,38 +232,41 @@
 #&gt; Done!</code></pre>
 <p>In this case, the <code>price*feat</code> interaction parameter is interpreted as a difference in the <code>feat_mu</code> parameter and price; that is, it an interaction in the <em>mean</em> <code>feat</code> parameter and <code>price</code>:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_price_brand</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_price_feat_mxl</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; MODEL SUMMARY: </span>
-<span class="co">#&gt;                           </span>
-<span class="co">#&gt; Model Space:    Preference</span>
-<span class="co">#&gt; Model Run:          1 of 1</span>
-<span class="co">#&gt; Iterations:             39</span>
-<span class="co">#&gt; Elapsed Time:  0h:0m:0.32s</span>
-<span class="co">#&gt; Weights Used?:       FALSE</span>
+<span class="co">#&gt;                          </span>
+<span class="co">#&gt; Model Space:   Preference</span>
+<span class="co">#&gt; Model Run:         1 of 1</span>
+<span class="co">#&gt; Iterations:            33</span>
+<span class="co">#&gt; Elapsed Time:   0h:0m:23s</span>
+<span class="co">#&gt; Weights Used?:      FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
-<span class="co">#&gt;                      Estimate StdError   tStat   pVal signif</span>
-<span class="co">#&gt; price               -0.389516 0.045247 -8.6087 0.0000    ***</span>
-<span class="co">#&gt; feat                 0.421915 0.122579  3.4420 0.0006    ***</span>
-<span class="co">#&gt; brand_hiland        -1.692200 0.623159 -2.7155 0.0067     **</span>
-<span class="co">#&gt; brand_weight        -2.228626 0.561644 -3.9680 0.0001    ***</span>
-<span class="co">#&gt; brand_yoplait        0.438687 0.450428  0.9739 0.3302       </span>
-<span class="co">#&gt; price*brand_hiland  -0.434193 0.115532 -3.7582 0.0002    ***</span>
-<span class="co">#&gt; price*brand_weight   0.199939 0.069830  2.8632 0.0042     **</span>
-<span class="co">#&gt; price*brand_yoplait  0.033239 0.050372  0.6599 0.5094       </span>
+<span class="co">#&gt;                Estimate StdError    tStat   pVal signif</span>
+<span class="co">#&gt; price         -0.388106 0.027025 -14.3609 0.0000    ***</span>
+<span class="co">#&gt; feat_mu        0.829946 0.552190   1.5030 0.1330       </span>
+<span class="co">#&gt; brand_hiland  -3.991534 0.165896 -24.0605 0.0000    ***</span>
+<span class="co">#&gt; brand_weight  -0.662058 0.055779 -11.8693 0.0000    ***</span>
+<span class="co">#&gt; brand_yoplait  0.787710 0.086231   9.1349 0.0000    ***</span>
+<span class="co">#&gt; price*feat    -0.960618 0.888264  -1.0815 0.2796       </span>
+<span class="co">#&gt; feat_sigma     2.341117 0.493312   4.7457 0.0000    ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Fit Values: </span>
 <span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log.Likelihood.         -2643.2046779</span>
+<span class="co">#&gt; Log.Likelihood.         -2645.2196914</span>
 <span class="co">#&gt; Null.Log.Likelihood.    -3343.7419990</span>
-<span class="co">#&gt; AIC.                     5302.4094000</span>
-<span class="co">#&gt; BIC.                     5348.7150000</span>
-<span class="co">#&gt; McFadden.R2.                0.2095070</span>
-<span class="co">#&gt; Adj..McFadden.R2            0.2071145</span>
-<span class="co">#&gt; Number.of.Observations.  2412.0000000</span></code></pre></div>
+<span class="co">#&gt; AIC.                     5304.4394000</span>
+<span class="co">#&gt; BIC.                     5344.9569000</span>
+<span class="co">#&gt; McFadden.R2.                0.2089044</span>
+<span class="co">#&gt; Adj..McFadden.R2            0.2068109</span>
+<span class="co">#&gt; Number.of.Observations.  2412.0000000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Summary of 10k Draws for Random Coefficients: </span>
+<span class="co">#&gt;        Min.    1st Qu.    Median      Mean 3rd Qu.     Max.</span>
+<span class="co">#&gt; 1 -8.269304 -0.7507041 0.8281574 0.8266687 2.40648 9.284091</span></code></pre></div>
 </div>
   </div>
 
