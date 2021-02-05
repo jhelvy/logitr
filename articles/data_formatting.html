@@ -117,16 +117,16 @@
 <div id="basic-required-format" class="section level1">
 <h1 class="hasAnchor">
 <a href="#basic-required-format" class="anchor"></a>Basic required format</h1>
-<p>The <code>data.frame</code> provided to the <code>data</code> argument must be arranged in a particular way (i.e. “long” or <a href="https://r4ds.had.co.nz/tidy-data.html">“tidy”</a> format). Each row should be an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. each choice observation could have a different number of alternatives). The data must include columns for each of the following arguments in the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
-<ol style="list-style-type: decimal">
+<p>The <code>data</code> argument must be provided a <code>data.frame</code> arranged in “long” or “tidy” format <span class="citation">[@Wickham2014]</span>. Each row should be an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. each choice observation could have a different number of alternatives). The data must also include variables for each of the following arguments in the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
+<ul>
 <li>
-<code>choiceName</code>: A dummy variable that identifies which alternative was chosen (<code>1</code> = chosen, <code>0</code> = not chosen).</li>
+<code>choiceName</code>: A dummy variable that identifies which alternative was chosen (1<code>is chosen,</code>0` is not chosen). Only one alternative should be chosen per choice observation.</li>
 <li>
-<code>obsIDName</code>: A sequence of numbers that identifies each unique choice occasion. For example, if the first three choice occasions had 2 alternatives each, then the first 9 rows of the <code>obsID</code> variable would be .</li>
+<code>obsIDName</code>: A sequence of repeated numbers that identifies each unique choice observation For example, if the first three choice observations had 2 alternatives each, then the first 6 rows of the <code>obsID</code> variable would be <code>1, 1, 2, 2, 3, 3</code>.</li>
 <li>
-<code>parNames</code>: The names of the variables that will be used as model covariates. For WTP space models, do <strong>not</strong> include the price variable in <code>parNames</code> - this is provided separately with the <code>priceName</code> argument.</li>
-</ol>
-<p>The data sets included in this package all follow this format (e.g. the <a href="https://jhelvy.github.io/logitr/reference/yogurt.html">yogurt</a> data set).</p>
+<code>parNames</code>: The names of the variables that will be used as model covariates. For WTP space models, the price variable should <strong>not</strong> be included in <code>parNames</code> as it is provided separately with the <code>priceName</code> argument.</li>
+</ul>
+<p>The {logitr} package contains several example data sets that illustrate this data structure.</p>
 </div>
 <div id="continuous-and-discrete-variables" class="section level1">
 <h1 class="hasAnchor">
