@@ -8,6 +8,7 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
                            priceName, randPrice, modelSpace, weightsName,
                            options) {
   # Setup pars
+  data <- as.data.frame(data)
   runInputChecks(choiceName, obsIDName, parNames, randPars, priceName,
                  randPrice, modelSpace, weightsName)
   # Recode discrete (categorical) variables and interactions

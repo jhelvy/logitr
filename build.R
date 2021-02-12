@@ -1,4 +1,3 @@
-
 # Create the documentation for the package
 devtools::document()
 
