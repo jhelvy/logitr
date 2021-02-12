@@ -159,6 +159,9 @@
 <div id="bugs" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bugs" class="anchor"></a>Bugs</h2>
+<ul>
+<li>If tidyverse library is loaded, data frames were getting converted to tibbles, which broke some things. Fixed this by forcing the input data to be a data.frame()</li>
+</ul>
 </div>
 </div>
 
