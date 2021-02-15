@@ -15,7 +15,8 @@ mnl_pref <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'hiland', 'yoplait', 'dannon'))
+  parNames   = c('price', 'feat', 'hiland', 'yoplait', 'dannon')
+)
 
 # Print a summary of the results:
 summary(mnl_pref)
@@ -46,10 +47,8 @@ mnl_wtp <- logitr(
     keepAllRuns = TRUE,
     # Use the computed WTP from the preference space model as the starting
     # values for the first run:
-    startVals = startingValues,
-    # Because the computed WTP from the preference space model has values
-    # as large as 8, I increase the boundaries of the random starting values:
-    startParBounds = c(-10, 10)))
+    startVals = startingValues)
+)
 
 # Print a summary of all multistart runs and a summary of the best model:
 summary(mnl_wtp)

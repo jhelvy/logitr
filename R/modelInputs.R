@@ -357,7 +357,9 @@ removeNAs <- function(data, choiceName, obsIDName, parNames, priceName,
 }
 
 definePrice <- function(data, priceName, modelSpace) {
-  price <- NA
+  if (modelSpace == "pref") {
+    return(NA)
+  }
   if (modelSpace == "wtp") {
     price <- data[, which(names(data) == priceName)]
     if (! typeof(price) %in% c("integer", "double")) {
@@ -368,7 +370,7 @@ definePrice <- function(data, priceName, modelSpace) {
       )
     }
   }
-  return(-1*as.matrix(price))
+  return(as.matrix(price))
 }
 
 # Function that scales all the variables in X to be between 0 and 1:

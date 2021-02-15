@@ -19,7 +19,8 @@ mxl_pref <- logitr(
   randPars   = c(feat = 'n', hiland = 'n', yoplait = 'n', dannon = 'n'),
   # You should run a multistart for MXL models since they are non-convex,
   # but it can take a long time. Here I just use 5 starts for brevity:
-  options    = list(numMultiStarts = 5))
+  options    = list(numMultiStarts = 5)
+)
 
 # View summary of model
 summary(mxl_pref)
@@ -46,10 +47,8 @@ mxl_wtp <- logitr(
     numMultiStarts = 5,
     # Use the computed WTP from the preference space model as the starting
     # values for the first run:
-    startVals = startingValues,
-    # Because the computed WTP from the preference space model has values
-    # as large as 8, I increase the boundaries of the random starting values:
-    startParBounds = c(-10, 10)))
+    startVals = startingValues)
+)
 
 # View summary of model
 summary(mxl_wtp)

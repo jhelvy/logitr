@@ -17,7 +17,8 @@ model_default <- logitr(
   parNames   = c(
     'price', 'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100',
     'bev150', 'american', 'japanese', 'chinese', 'skorean',
-    'phevFastcharge', 'bevFastcharge','opCost', 'accelTime'))
+    'phevFastcharge', 'bevFastcharge','opCost', 'accelTime')
+)
 
 # In this model, since the price variable is a "double" variable type,
 # it is modeled as a continuous variable by default:
@@ -35,7 +36,8 @@ model_character_price <- logitr(
   parNames   = c(
     'price', 'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100',
     'bev150', 'american', 'japanese', 'chinese', 'skorean',
-    'phevFastcharge', 'bevFastcharge','opCost', 'accelTime'))
+    'phevFastcharge', 'bevFastcharge','opCost', 'accelTime')
+)
 
 # Now price is modeled with a coefficient for all but the first level:
 typeof(cars_us$price)
@@ -51,7 +53,8 @@ model_dummy_price <- logitr(
     "price_15", "price_18", "price_23", "price_32",
     'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100',
     'bev150', 'american', 'japanese', 'chinese', 'skorean',
-    'phevFastcharge', 'bevFastcharge','opCost', 'accelTime'))
+    'phevFastcharge', 'bevFastcharge','opCost', 'accelTime')
+)
 
 summary(model_dummy_price)
 

@@ -310,7 +310,7 @@ mxlNegGradLL_pref <- function(X, parSetup, obsID, choice, standardDraws,
 getMnlV_wtp <- function(pars, X, p) {
   lambda <- as.numeric(pars[1])
   beta <- as.numeric(pars[2:length(pars)])
-  V <- lambda * (p + (X %*% beta))
+  V <- lambda * ((X %*% beta) - p)
   return(V)
 }
 
@@ -319,7 +319,7 @@ mnlNegGradLL_wtp <- function(p, X, pars, choice, logit, weights) {
   lambda <- as.numeric(pars[1])
   beta <- as.numeric(pars[2:length(pars)])
   weightedLogit <- weights * (choice - logit)
-  gradLLLambda <- t(p + (X %*% beta)) %*% weightedLogit
+  gradLLLambda <- t((X %*% beta) - p) %*% weightedLogit
   gradLLBeta <- lambda * (t(X) %*% weightedLogit)
   negGradLL <- -1 * c(gradLLLambda, gradLLBeta)
   return(negGradLL)
@@ -355,13 +355,15 @@ getDiffMatByObsID_wtp <- function(lambda, beta, p, X, logit, obsID) {
     tempP <- as.matrix(p[indices])
     tempX <- as.matrix(X[indices, ])
     tempLogit <- logit[indices]
-    tempMat <- tempP + (tempX %*% beta)
+    tempMat <- (tempX %*% beta) - tempP
     diffMatLambda[indices, ] <- tempMat - repmat(
       t(tempLogit) %*% tempMat,
       nrow(tempP), 1
     )
-    diffMatBeta[indices, ] <- lambda * tempX - repmat(t(tempLogit) %*% (lambda *
-      tempX), nrow(tempX), 1)
+    diffMatBeta[indices, ] <- lambda * tempX - repmat(
+      t(tempLogit) %*% (lambda * tempX),
+      nrow(tempX), 1
+    )
   }
   return(cbind(diffMatLambda, diffMatBeta))
 }
@@ -377,7 +379,7 @@ getMxlV_wtp <- function(betaDraws, X, p) {
     rep(betaDraws[, 1], nrow(X)), ncol = numDraws, byrow = T)
   gammaDraws <- matrix(betaDraws[, 2:ncol(betaDraws)], nrow = numDraws)
   pMat <- matrix(rep(p, numDraws), ncol = numDraws, byrow = F)
-  return(lambdaDraws * (pMat + X %*% t(gammaDraws)))
+  return(lambdaDraws * (X %*% t(gammaDraws) - pMat))
 }
 
 mxlNegGradLL_wtp <- function(X, parSetup, obsID, choice, standardDraws,

@@ -23,10 +23,8 @@ mnl_wtp_unweighted <- logitr(
   modelSpace = 'wtp',
   options = list(
     # Since WTP space models are non-convex, run a multistart:
-    numMultiStarts = 10,
-    # Because the computed WTP from the preference space model has values
-    # as large as 8, I increase the boundaries of the random starting values:
-    startParBounds = c(-10, 10)))
+    numMultiStarts = 10)
+)
 
 # Print a summary of all multistart runs and a summary of the best model
 summary(mnl_wtp_unweighted)
@@ -45,10 +43,8 @@ mnl_wtp_weighted <- logitr(
   weightsName = 'weights', # This is the key argument for enabling weights
   options = list(
     # Since WTP space models are non-convex, run a multistart:
-    numMultiStarts = 10,
-    # Because the computed WTP from the preference space model has values
-    # as large as 8, I increase the boundaries of the random starting values:
-    startParBounds = c(-10, 10)))
+    numMultiStarts = 10)
+)
 
 # Print a summary of all multistart runs and a summary of the best model:
 summary(mnl_wtp_weighted)
