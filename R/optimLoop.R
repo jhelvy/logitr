@@ -6,6 +6,7 @@ runMultistart <- function(modelInputs) {
   # Setup lists for storing results
   numMultiStarts <- modelInputs$options$numMultiStarts
   models <- list()
+  didUserProvidePars <- ! (is.null(modelInputs$options$startVals))
   for (i in 1:numMultiStarts) {
     if (numMultiStarts == 1) {
       message("Running Model...")
@@ -17,18 +18,19 @@ runMultistart <- function(modelInputs) {
     while (is.na(logLik)) {
       tryCatch(
         {
-          startPars <- getStartPars(modelInputs, i, noFirstRunErr)
+          startPars <- getStartPars(
+            modelInputs, i, noFirstRunErr, didUserProvidePars)
           model <- runModel(modelInputs, startPars)
           logLik <- model$logLik
           model$multistartNumber <- i
         },
         error = function(e) {
-          warning("ERROR: failed to converge...restarting search")
+          warning("ERROR: failed to converge...restarting search", failCount)
         }
       )
       if ((i == 1) &
           is.na(logLik) &
-          (is.null(modelInputs$options$startVals) == FALSE)) {
+          didUserProvidePars) {
         noFirstRunErr <- FALSE
         warning(
           "NOTE: User provided starting values did not converge...",
@@ -41,19 +43,23 @@ runMultistart <- function(modelInputs) {
   return(models)
 }
 
-getStartPars <- function(modelInputs, i, noFirstRunErr) {
+getStartPars <- function(modelInputs, i, noFirstRunErr, didUserProvidePars) {
   startPars <- getRandomStartPars(modelInputs)
   if (i == 1) {
-    if (noFirstRunErr & (is.null(modelInputs$options$startVals) == F)) {
+    if (didUserProvidePars &
+        noFirstRunErr) {
       message("NOTE: Using user-provided starting values for this run")
-      startPars <- modelInputs$options$startVals
+      userStartPars <- modelInputs$options$startVals
+      if (length(userStartPars) != length(startPars)) {
+        stop(paste0(
+          "Number of user-provided starting values do not match number ",
+          "of model parameters."
+        ))
+      }
+      return(startPars)
     } else if (noFirstRunErr) {
       startPars <- 0 * startPars
     }
-  }
-  if ((i == 2) & noFirstRunErr &
-    (is.null(modelInputs$options$startVals) == F)) {
-    startPars <- 0 * startPars
   }
   startPars <- checkStartPars(startPars, modelInputs)
   return(startPars)
@@ -74,17 +80,24 @@ getRandomStartPars <- function(modelInputs) {
   return(startPars)
 }
 
-# For mxl models in the WTP space, lambda_mu can't be zero
+# For lambda and logN parameters must start with positive numbers
 checkStartPars <- function(startPars, modelInputs) {
-  if (modelInputs$modelSpace == "wtp" &
-    "lambda_mu" %in% modelInputs$parNameList$mu) {
-    if (startPars["lambda_mu"] <= 0) {
-      startPars["lambda_mu"] <- 0.01
-      warning(
-        "lambda_mu must be > 0...",
-        "setting starting point for lambda_mu to 0.01"
-      )
+  lambdaParIDs <- NULL
+  if (modelInputs$modelSpace == "wtp") {
+    lambdaParIDs <- which(grepl("lambda", modelInputs$parNameList$all))
+  }
+  logNParNames <- names(getLogNormParIDs(modelInputs$parSetup))
+  logNParIDs <- c()
+  if (length(logNParNames) > 0) {
+    for (parName in logNParNames) {
+      logNParIDs <- c(logNParIDs,
+                      which(grepl(parName, modelInputs$parNameList$all)))
     }
+  }
+  positiveParIDs <- unique(c(lambdaParIDs, logNParIDs))
+  if (length(positiveParIDs) > 0) {
+    startPars[positiveParIDs] <- stats::runif(
+      length(positiveParIDs), 0.01, 0.1)
   }
   return(startPars)
 }

@@ -72,7 +72,7 @@ for details on how to use **logitr** to estimate models.
 -   Author: *John Paul Helveston*
     [www.jhelvy.com](http://www.jhelvy.com/)
 -   Date First Written: *Sunday, September 28, 2014*
--   Most Recent Update: January 20, 2021
+-   Most Recent Update: February 15, 2021
 -   License:
     [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
 

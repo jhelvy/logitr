@@ -257,7 +257,7 @@ getMxlV_pref <- function(betaDraws, X, p) {
   return(VDraws)
 }
 
-# Computes the gradient of the negative likelihood for a mixed logit model.
+# Computes the gradient of the negative likelihood for a mixed logit model
 mxlNegGradLL_pref <- function(X, parSetup, obsID, choice, standardDraws,
                               betaDraws, VDraws, logitDraws, pHat, weights) {
   randParIDs <- getRandParIDs(parSetup)
