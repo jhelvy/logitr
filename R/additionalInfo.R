@@ -3,6 +3,10 @@
 # ============================================================================
 
 appendModelInfo <- function(model, modelInputs) {
+  if (is_logitr_fail(model)) {
+    # This run failed to converge - return the "blank" model summary
+    return(model)
+  }
   # Compute variables
   coef <- getModelCoefs(model, modelInputs)
   gradient <- getModelGradient(model, modelInputs)

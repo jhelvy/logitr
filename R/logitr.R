@@ -112,9 +112,8 @@ logitr <- function(data, choiceName, obsIDName, parNames, priceName = NULL,
                    randPars = NULL, randPrice = NULL, modelSpace = "pref",
                    weightsName = NULL, options = list()) {
   modelInputs <- getModelInputs(
-    data, choiceName, obsIDName, parNames,
-    randPars, priceName, randPrice, modelSpace, weightsName,
-    options
+    data, choiceName, obsIDName, parNames, randPars, priceName, randPrice,
+    modelSpace, weightsName, options
   )
   allModels <- runMultistart(modelInputs)
   if (modelInputs$options$keepAllRuns) {
@@ -148,21 +147,9 @@ appendAllModelsInfo <- function(allModels, modelInputs) {
   return(result)
 }
 
-getMultistartSummary <- function(models) {
-  summary <- as.data.frame(matrix(0, ncol = 4, nrow = length(models)))
-  colnames(summary) <- c("run", "logLik", "iterations", "status")
-  for (i in seq_len(length(models))) {
-    summary[i, 1] <- i
-    summary[i, 2] <- round(models[[i]]$logLik, 5)
-    summary[i, 3] <- models[[i]]$iterations
-    summary[i, 4] <- models[[i]]$status
-  }
-  return(summary)
-}
-
 getBestModel <- function(models, modelInputs) {
   logLikVals <- getLogLikVals(models)
-  bestModel <- models[[which(logLikVals == max(logLikVals))[1]]]
+  bestModel <- models[[which(logLikVals == max(logLikVals, na.rm = TRUE))[1]]]
   bestModel <- appendModelInfo(bestModel, modelInputs)
   return(bestModel)
 }
@@ -173,4 +160,16 @@ getLogLikVals <- function(models) {
     logLikVals[i] <- models[[i]]$logLik
   }
   return(logLikVals)
+}
+
+getMultistartSummary <- function(models) {
+  summary <- as.data.frame(matrix(0, ncol = 4, nrow = length(models)))
+  colnames(summary) <- c("run", "logLik", "iterations", "status")
+  for (i in seq_len(length(models))) {
+    summary[i, 1] <- i
+    summary[i, 2] <- round(models[[i]]$logLik, 5)
+    summary[i, 3] <- models[[i]]$iterations
+    summary[i, 4] <- models[[i]]$status
+  }
+  return(summary)
 }

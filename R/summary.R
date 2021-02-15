@@ -128,12 +128,12 @@ getBasicInfoTable <- function(model) {
   modelTime <- convertTime(model$time)
   basicInfoSummary <- data.frame(c(
     modelSpace, modelRun, model$iterations,
-    modelTime, model$weightsUsed
+    modelTime, model$status, model$weightsUsed
   ))
   colnames(basicInfoSummary) <- ""
   row.names(basicInfoSummary) <- c(
-    "Model Space:", "Model Run:",
-    "Iterations:", "Elapsed Time:", "Weights Used?:"
+    "Model Space:", "Model Run:", "Iterations:",
+    "Elapsed Time:", "Exit Status:", "Weights Used?:"
   )
   return(basicInfoSummary)
 }
