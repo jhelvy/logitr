@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1.9000</span>
       </span>
     </div>
 
@@ -189,6 +189,7 @@
 #&gt; Running Multistart 3 of 5...
 #&gt; Running Multistart 4 of 5...
 #&gt; Running Multistart 5 of 5...
+#&gt; ERROR: failed to converge
 #&gt; Done!</code></pre>
 <p>Print a summary of the results:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -198,10 +199,10 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt;   run    logLik iterations status</span>
 <span class="co">#&gt; 1   1 -2645.786         32      3</span>
-<span class="co">#&gt; 2   2 -2645.707         34      3</span>
-<span class="co">#&gt; 3   3 -2645.792         23      3</span>
-<span class="co">#&gt; 4   4 -2645.785         37      3</span>
-<span class="co">#&gt; 5   5 -2645.785         32      3</span>
+<span class="co">#&gt; 2   2 -2645.707         40      3</span>
+<span class="co">#&gt; 3   3 -2645.785         33      3</span>
+<span class="co">#&gt; 4   4 -2645.709         39      3</span>
+<span class="co">#&gt; 5   5        NA         NA     -1</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Use statusCodes() to view the meaning of the status codes</span>
 <span class="co">#&gt; </span>
@@ -212,28 +213,28 @@
 <span class="co">#&gt;                          </span>
 <span class="co">#&gt; Model Space:   Preference</span>
 <span class="co">#&gt; Model Run:         2 of 5</span>
-<span class="co">#&gt; Iterations:            34</span>
-<span class="co">#&gt; Elapsed Time:   0h:0m:17s</span>
+<span class="co">#&gt; Iterations:            40</span>
+<span class="co">#&gt; Elapsed Time:   0h:0m:18s</span>
 <span class="co">#&gt; Exit Status:            3</span>
 <span class="co">#&gt; Weights Used?:      FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
 <span class="co">#&gt;                Estimate StdError    tStat   pVal signif</span>
-<span class="co">#&gt; price         -0.393542 0.026743 -14.7158 0.0000    ***</span>
-<span class="co">#&gt; feat_mu        0.451993 0.204956   2.2053 0.0275      *</span>
-<span class="co">#&gt; hiland_mu     -3.330309 0.176886 -18.8274 0.0000    ***</span>
-<span class="co">#&gt; yoplait_mu     1.459630 0.098044  14.8875 0.0000    ***</span>
-<span class="co">#&gt; dannon_mu      0.668941 0.165877   4.0327 0.0001    ***</span>
-<span class="co">#&gt; feat_sigma     2.518184 0.518427   4.8574 0.0000    ***</span>
-<span class="co">#&gt; hiland_sigma   0.030126 0.655151   0.0460 0.9633       </span>
-<span class="co">#&gt; yoplait_sigma  0.002743 0.295444   0.0093 0.9926       </span>
-<span class="co">#&gt; dannon_sigma   0.026812 0.887933   0.0302 0.9759       </span>
+<span class="co">#&gt; price         -0.393721 0.026792 -14.6955 0.0000    ***</span>
+<span class="co">#&gt; feat_mu        0.453395 0.204522   2.2169 0.0267      *</span>
+<span class="co">#&gt; hiland_mu     -3.329861 0.176410 -18.8757 0.0000    ***</span>
+<span class="co">#&gt; yoplait_mu     1.460091 0.098116  14.8813 0.0000    ***</span>
+<span class="co">#&gt; dannon_mu      0.670715 0.167510   4.0040 0.0001    ***</span>
+<span class="co">#&gt; feat_sigma     2.512248 0.516887   4.8603 0.0000    ***</span>
+<span class="co">#&gt; hiland_sigma   0.027402 0.652845   0.0420 0.9665       </span>
+<span class="co">#&gt; yoplait_sigma  0.004235 0.295811   0.0143 0.9886       </span>
+<span class="co">#&gt; dannon_sigma   0.036710 0.903632   0.0406 0.9676       </span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Fit Values: </span>
 <span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log.Likelihood.         -2645.7072660</span>
+<span class="co">#&gt; Log.Likelihood.         -2645.7072395</span>
 <span class="co">#&gt; Null.Log.Likelihood.    -3343.7419990</span>
 <span class="co">#&gt; AIC.                     5309.4145000</span>
 <span class="co">#&gt; BIC.                     5361.5084000</span>
@@ -243,15 +244,15 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Summary of 10k Draws for Random Coefficients: </span>
 <span class="co">#&gt;                        Min.    1st Qu.     Median       Mean    3rd Qu.</span>
-<span class="co">#&gt; feat (normal)    -9.3354677 -1.2482076  0.4500692  0.4484679  2.1477663</span>
-<span class="co">#&gt; hiland (normal)  -3.4457012 -3.3506395 -3.3303186 -3.3303369 -3.3100042</span>
-<span class="co">#&gt; yoplait (normal)  1.4490729  1.4577780  1.4596275  1.4596256  1.4614776</span>
-<span class="co">#&gt; dannon (normal)   0.5666744  0.6508196  0.6688955  0.6688725  0.6869768</span>
+<span class="co">#&gt; feat (normal)    -9.3109918 -1.2427979  0.4514751  0.4498775  2.1451698</span>
+<span class="co">#&gt; hiland (normal)  -3.4348199 -3.3483533 -3.3298697 -3.3298863 -3.3113921</span>
+<span class="co">#&gt; yoplait (normal)  1.4437935  1.4572319  1.4600870  1.4600840  1.4629430</span>
+<span class="co">#&gt; dannon (normal)   0.5306929  0.6459028  0.6706520  0.6706205  0.6954086</span>
 <span class="co">#&gt;                        Max.</span>
-<span class="co">#&gt; feat (normal)     9.5455575</span>
-<span class="co">#&gt; hiland (normal)  -3.2233350</span>
-<span class="co">#&gt; yoplait (normal)  1.4692148</span>
-<span class="co">#&gt; dannon (normal)   0.7600028</span></code></pre></div>
+<span class="co">#&gt; feat (normal)     9.5255202</span>
+<span class="co">#&gt; hiland (normal)  -3.2325591</span>
+<span class="co">#&gt; yoplait (normal)  1.4748872</span>
+<span class="co">#&gt; dannon (normal)   0.7953944</span></code></pre></div>
 <p>The above summary table prints summaries of the estimated coefficients as well as a summary table of the distribution of 10,000 population draws for each normally-distributed model coefficient. The results show that the <code>feat</code> attribute has a significant standard deviation coefficient, suggesting that there is considerable heterogeneity across the population for this attribute. In contrast, the <code>brand</code> coefficients have small and insignificant standard deviation coefficients.</p>
 <p>Compute the WTP implied from the preference space model:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -259,15 +260,15 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wtp_mxl_pref</span>
 <span class="co">#&gt;                Estimate StdError    tStat   pVal signif</span>
-<span class="co">#&gt; lambda         0.393542 0.026714  14.7319 0.0000    ***</span>
-<span class="co">#&gt; feat_mu        1.148528 0.542814   2.1159 0.0345      *</span>
-<span class="co">#&gt; hiland_mu     -8.462407 0.550438 -15.3740 0.0000    ***</span>
-<span class="co">#&gt; yoplait_mu     3.708960 0.479558   7.7341 0.0000    ***</span>
-<span class="co">#&gt; dannon_mu      1.699799 0.452152   3.7594 0.0002    ***</span>
-<span class="co">#&gt; feat_sigma     6.398776 1.452274   4.4060 0.0000    ***</span>
-<span class="co">#&gt; hiland_sigma   0.076552 1.676844   0.0457 0.9636       </span>
-<span class="co">#&gt; yoplait_sigma  0.006971 0.756063   0.0092 0.9926       </span>
-<span class="co">#&gt; dannon_sigma   0.068130 2.284655   0.0298 0.9762</span></code></pre></div>
+<span class="co">#&gt; lambda         0.393721 0.026821  14.6793 0.0000    ***</span>
+<span class="co">#&gt; feat_mu        1.151564 0.544671   2.1142 0.0346      *</span>
+<span class="co">#&gt; hiland_mu     -8.457413 0.549183 -15.4000 0.0000    ***</span>
+<span class="co">#&gt; yoplait_mu     3.708440 0.480497   7.7179 0.0000    ***</span>
+<span class="co">#&gt; dannon_mu      1.703528 0.457223   3.7258 0.0002    ***</span>
+<span class="co">#&gt; feat_sigma     6.380782 1.437252   4.4396 0.0000    ***</span>
+<span class="co">#&gt; hiland_sigma   0.069599 1.675687   0.0415 0.9669       </span>
+<span class="co">#&gt; yoplait_sigma  0.010756 0.756921   0.0142 0.9887       </span>
+<span class="co">#&gt; dannon_sigma   0.093239 2.310064   0.0404 0.9678</span></code></pre></div>
 </div>
 <div id="wtp-space-model" class="section level1">
 <h1 class="hasAnchor">
@@ -290,11 +291,7 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr">logitr</a></span><span class="op">)</span></code></pre></div>
 <p>Estimate the model using the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Extract the WTP computed from the preference space model</span>
-<span class="co"># to use as the initial starting values</span>
-<span class="va">startingValues</span> <span class="op">&lt;-</span> <span class="va">wtp_mxl_pref</span><span class="op">$</span><span class="va">Estimate</span>
-
-<span class="va">mxl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
+<code class="sourceCode R"><span class="va">mxl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   data       <span class="op">=</span> <span class="va">yogurt</span>,
   choiceName <span class="op">=</span> <span class="st">'choice'</span>,
   obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
@@ -308,16 +305,15 @@
     numMultiStarts <span class="op">=</span> <span class="fl">5</span>,
     <span class="co"># Use the computed WTP from the preference space model as the starting</span>
     <span class="co"># values for the first run:</span>
-    startVals <span class="op">=</span> <span class="va">startingValues</span>,
-    <span class="co"># Because the computed WTP from the preference space model has values</span>
-    <span class="co"># as large as 8, I increase the boundaries of the random starting values:</span>
-    startParBounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    startVals <span class="op">=</span> <span class="va">wtp_mxl_pref</span><span class="op">$</span><span class="va">Estimate</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
 <pre><code>#&gt; Running Multistart 1 of 5...
 #&gt; NOTE: Using user-provided starting values for this run
 #&gt; Running Multistart 2 of 5...
 #&gt; Running Multistart 3 of 5...
 #&gt; Running Multistart 4 of 5...
 #&gt; Running Multistart 5 of 5...
+#&gt; ERROR: failed to converge
 #&gt; Done!</code></pre>
 <p>Print a summary of the results:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -326,72 +322,72 @@
 <span class="co">#&gt; SUMMARY OF ALL MULTISTART RUNS:</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;   run    logLik iterations status</span>
-<span class="co">#&gt; 1   1 -2663.066         85      3</span>
-<span class="co">#&gt; 2   2 -3343.742          1      1</span>
-<span class="co">#&gt; 3   3 -2792.486         74     -1</span>
-<span class="co">#&gt; 4   4 -2645.707        223      3</span>
-<span class="co">#&gt; 5   5 -2773.808         89      3</span>
+<span class="co">#&gt; 1   1 -2792.474         60      3</span>
+<span class="co">#&gt; 2   2 -2645.707         62      3</span>
+<span class="co">#&gt; 3   3 -2803.675         85      4</span>
+<span class="co">#&gt; 4   4 -2798.568         75      3</span>
+<span class="co">#&gt; 5   5        NA         NA     -1</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Use statusCodes() to view the meaning of the status codes</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Below is the summary of run 4 of 5 multistart runs</span>
+<span class="co">#&gt; Below is the summary of run 2 of 5 multistart runs</span>
 <span class="co">#&gt; (the run with the largest log-likelihood value)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; MODEL SUMMARY: </span>
 <span class="co">#&gt;                                  </span>
 <span class="co">#&gt; Model Space:   Willingness-to-Pay</span>
-<span class="co">#&gt; Model Run:                 4 of 5</span>
-<span class="co">#&gt; Iterations:                   223</span>
-<span class="co">#&gt; Elapsed Time:           0h:2m:20s</span>
+<span class="co">#&gt; Model Run:                 2 of 5</span>
+<span class="co">#&gt; Iterations:                    62</span>
+<span class="co">#&gt; Elapsed Time:           0h:0m:35s</span>
 <span class="co">#&gt; Exit Status:                    3</span>
 <span class="co">#&gt; Weights Used?:              FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
 <span class="co">#&gt;                Estimate StdError    tStat   pVal signif</span>
-<span class="co">#&gt; lambda         0.393461 0.026710  14.7309 0.0000    ***</span>
-<span class="co">#&gt; feat_mu        1.150828 0.536881   2.1435 0.0322      *</span>
-<span class="co">#&gt; hiland_mu     -8.456990 0.541362 -15.6217 0.0000    ***</span>
-<span class="co">#&gt; yoplait_mu     3.710111 0.170756  21.7276 0.0000    ***</span>
-<span class="co">#&gt; dannon_mu      1.699060 0.426544   3.9833 0.0001    ***</span>
-<span class="co">#&gt; feat_sigma     6.376141 1.328550   4.7993 0.0000    ***</span>
-<span class="co">#&gt; hiland_sigma   0.072426 1.635049   0.0443 0.9647       </span>
-<span class="co">#&gt; yoplait_sigma  0.009802 0.750255   0.0131 0.9896       </span>
-<span class="co">#&gt; dannon_sigma   0.056342 2.239134   0.0252 0.9799       </span>
+<span class="co">#&gt; lambda         0.393674 0.026718  14.7341 0.0000    ***</span>
+<span class="co">#&gt; feat_mu        1.150365 0.536727   2.1433 0.0322      *</span>
+<span class="co">#&gt; hiland_mu     -8.456476 0.540516 -15.6452 0.0000    ***</span>
+<span class="co">#&gt; yoplait_mu     3.709530 0.170614  21.7422 0.0000    ***</span>
+<span class="co">#&gt; dannon_mu      1.694468 0.431976   3.9226 0.0001    ***</span>
+<span class="co">#&gt; feat_sigma     6.374339 1.327662   4.8012 0.0000    ***</span>
+<span class="co">#&gt; hiland_sigma   0.058817 1.659790   0.0354 0.9717       </span>
+<span class="co">#&gt; yoplait_sigma  0.007095 0.750781   0.0095 0.9925       </span>
+<span class="co">#&gt; dannon_sigma   0.037492 2.251990   0.0166 0.9867       </span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Fit Values: </span>
 <span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log.Likelihood.         -2645.7071209</span>
+<span class="co">#&gt; Log.Likelihood.         -2645.7071630</span>
 <span class="co">#&gt; Null.Log.Likelihood.    -3343.7419990</span>
-<span class="co">#&gt; AIC.                     5309.4142000</span>
-<span class="co">#&gt; BIC.                     5361.5081000</span>
+<span class="co">#&gt; AIC.                     5309.4143000</span>
+<span class="co">#&gt; BIC.                     5361.5082000</span>
 <span class="co">#&gt; McFadden.R2.                0.2087586</span>
 <span class="co">#&gt; Adj..McFadden.R2            0.2060670</span>
 <span class="co">#&gt; Number.of.Observations.  2412.0000000</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Summary of 10k Draws for Random Coefficients: </span>
 <span class="co">#&gt;                        Min.   1st Qu.    Median      Mean   3rd Qu.      Max.</span>
-<span class="co">#&gt; feat (normal)    -23.631405 -3.154147  1.145956  1.141902  5.444592 24.176088</span>
-<span class="co">#&gt; hiland (normal)   -8.734401 -8.505866 -8.457013 -8.457057 -8.408176 -8.199817</span>
-<span class="co">#&gt; yoplait (normal)   3.672391  3.703495  3.710103  3.710096  3.716713  3.744358</span>
-<span class="co">#&gt; dannon (normal)    1.484156  1.660979  1.698963  1.698915  1.736959  1.890416</span></code></pre></div>
+<span class="co">#&gt; feat (normal)    -23.624863 -3.153394  1.145494  1.141441  5.442914 24.169115</span>
+<span class="co">#&gt; hiland (normal)   -8.681763 -8.496169 -8.456495 -8.456531 -8.416834 -8.247625</span>
+<span class="co">#&gt; yoplait (normal)   3.682226  3.704740  3.709524  3.709519  3.714309  3.734320</span>
+<span class="co">#&gt; dannon (normal)    1.551464  1.669127  1.694403  1.694371  1.719687  1.821802</span></code></pre></div>
 <p>If you want to compare the WTP from the two different model spaces, use the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wtp_mxl_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mxl_pref</span>, <span class="va">mxl_wtp</span>, priceName <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wtp_mxl_comparison</span>
 <span class="co">#&gt;                       pref           wtp  difference</span>
-<span class="co">#&gt; lambda            0.393542  3.934614e-01 -0.00008057</span>
-<span class="co">#&gt; feat_mu           1.148528  1.150828e+00  0.00230045</span>
-<span class="co">#&gt; hiland_mu        -8.462407 -8.456990e+00  0.00541739</span>
-<span class="co">#&gt; yoplait_mu        3.708960  3.710111e+00  0.00115111</span>
-<span class="co">#&gt; dannon_mu         1.699799  1.699060e+00 -0.00073916</span>
-<span class="co">#&gt; feat_sigma        6.398776  6.376141e+00 -0.02263500</span>
-<span class="co">#&gt; hiland_sigma      0.076552  7.242592e-02 -0.00412608</span>
-<span class="co">#&gt; yoplait_sigma     0.006971  9.801947e-03  0.00283095</span>
-<span class="co">#&gt; dannon_sigma      0.068130  5.634243e-02 -0.01178757</span>
-<span class="co">#&gt; logLik        -2645.707266 -2.645707e+03  0.00014510</span></code></pre></div>
+<span class="co">#&gt; lambda            0.393721  3.936740e-01 -0.00004697</span>
+<span class="co">#&gt; feat_mu           1.151564  1.150365e+00 -0.00119930</span>
+<span class="co">#&gt; hiland_mu        -8.457413 -8.456476e+00  0.00093691</span>
+<span class="co">#&gt; yoplait_mu        3.708440  3.709530e+00  0.00108961</span>
+<span class="co">#&gt; dannon_mu         1.703528  1.694468e+00 -0.00906044</span>
+<span class="co">#&gt; feat_sigma        6.380782  6.374339e+00 -0.00644347</span>
+<span class="co">#&gt; hiland_sigma      0.069599  5.881743e-02 -0.01078157</span>
+<span class="co">#&gt; yoplait_sigma     0.010756  7.095252e-03 -0.00366075</span>
+<span class="co">#&gt; dannon_sigma      0.093239  3.749206e-02 -0.05574694</span>
+<span class="co">#&gt; logLik        -2645.707239 -2.645707e+03  0.00007647</span></code></pre></div>
 <p>Note that the WTP will not necessarily be the same between preference space and WTP space MXL models. This is because the distributional assumptions in MXL models imply different distributions on WTP depending on the model space. See Train and Weeks <span class="citation">(2005)</span> and Sonnier, Ainslie, and Otter <span class="citation">(2007)</span> for details on this topic.</p>
 </div>
 <div id="references" class="section level1 unnumbered">
