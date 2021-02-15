@@ -16,9 +16,6 @@ runMultistart <- function(modelInputs) {
     model <- makeBlankModel(modelInputs)
     startPars <- getStartPars(modelInputs, i)
     tryCatch({
-      if (i == 5) {
-        "a" + 1
-      }
       model <- runModel(modelInputs, startPars)
       },
       error = function(e) { message("ERROR: failed to converge") }
