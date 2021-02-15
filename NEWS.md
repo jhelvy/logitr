@@ -1,3 +1,17 @@
+# logitr 0.1.1
+
+## Summary of larger updates:
+
+- Changed how failures to converge are handled. Previously would continue to run a while loop. Now it fails and records the failure, along with appropriate changes in summary() and coef().
+
+## Summary of smaller updates:
+
+- Re-defined the wtp space utility models as B*X - p. Before it was p + B*X and p was re-defined as -1*p.
+
+## Bugs
+
+- If tidyverse library is loaded, data frames were getting converted to tibbles, which broke some things. Fixed this by forcing the input data to be a data.frame()
+
 # logitr 0.1.0
 
 ## Summary of larger updates:

@@ -30,9 +30,6 @@ wtp_mxl_pref <- wtp(mxl_pref, priceName = 'price')
 wtp_mxl_pref
 
 # Multistart MXL model in the WTP Space
-# Extract the WTP computed from the preference space model
-# to use as the initial starting values
-startingValues <- wtp_mxl_pref$Estimate
 mxl_wtp <- logitr(
   data       = yogurt,
   choiceName = 'choice',
@@ -47,7 +44,7 @@ mxl_wtp <- logitr(
     numMultiStarts = 5,
     # Use the computed WTP from the preference space model as the starting
     # values for the first run:
-    startVals = startingValues)
+    startVals = wtp_mxl_pref$Estimate)
 )
 
 # View summary of model

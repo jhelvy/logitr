@@ -29,9 +29,6 @@ wtp_mnl_pref <- wtp(mnl_pref, priceName = 'price')
 wtp_mnl_pref
 
 # Run a MNL model in the WTP Space using a multistart:
-# Extract the WTP computed from the preference space model
-# to use as the initial starting values
-startingValues <- wtp_mnl_pref$Estimate
 mnl_wtp <- logitr(
   data       = yogurt,
   choiceName = 'choice',
@@ -47,7 +44,7 @@ mnl_wtp <- logitr(
     keepAllRuns = TRUE,
     # Use the computed WTP from the preference space model as the starting
     # values for the first run:
-    startVals = startingValues)
+    startVals = wtp_mnl_pref$Estimate)
 )
 
 # Print a summary of all multistart runs and a summary of the best model:

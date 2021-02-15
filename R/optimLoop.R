@@ -21,7 +21,7 @@ runMultistart <- function(modelInputs) {
       }
       model <- runModel(modelInputs, startPars)
       },
-      error = function(e) { warning("ERROR: failed to converge") }
+      error = function(e) { message("ERROR: failed to converge") }
     )
     model$startPars <- startPars
     model$multistartNumber <- i

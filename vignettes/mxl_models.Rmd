@@ -81,6 +81,7 @@ mxl_pref <- logitr(
 #> Running Multistart 3 of 5...
 #> Running Multistart 4 of 5...
 #> Running Multistart 5 of 5...
+#> ERROR: failed to converge
 #> Done!
 ```
 
@@ -119,10 +120,6 @@ library(logitr)
 Estimate the model using the `logitr()` function:
 
 ```{r eval=FALSE}
-# Extract the WTP computed from the preference space model
-# to use as the initial starting values
-startingValues <- wtp_mxl_pref$Estimate
-
 mxl_wtp <- logitr(
   data       = yogurt,
   choiceName = 'choice',
@@ -137,10 +134,8 @@ mxl_wtp <- logitr(
     numMultiStarts = 5,
     # Use the computed WTP from the preference space model as the starting
     # values for the first run:
-    startVals = startingValues,
-    # Because the computed WTP from the preference space model has values
-    # as large as 8, I increase the boundaries of the random starting values:
-    startParBounds = c(-10, 10)))
+    startVals = wtp_mxl_pref$Estimate)
+)
 ```
 ```
 #> Running Multistart 1 of 5...
@@ -149,6 +144,7 @@ mxl_wtp <- logitr(
 #> Running Multistart 3 of 5...
 #> Running Multistart 4 of 5...
 #> Running Multistart 5 of 5...
+#> ERROR: failed to converge
 #> Done!
 ```
 

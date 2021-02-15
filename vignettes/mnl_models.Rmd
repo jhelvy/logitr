@@ -109,10 +109,6 @@ where the parameters $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ have uni
 Estimate the model using the `logitr()` function:
 
 ```{r eval=FALSE}
-# Extract the WTP computed from the preference space model
-# to use as the initial starting values
-startingValues <- wtp_mnl_pref$Estimate
-
 mnl_wtp <- logitr(
   data       = yogurt,
   choiceName = 'choice',
@@ -128,10 +124,8 @@ mnl_wtp <- logitr(
     keepAllRuns = TRUE,
     # Use the computed WTP from the preference space model as the starting
     # values for the first run:
-    startVals = startingValues,
-    # Because the computed WTP from the preference space model has values
-    # as large as 8, I increase the boundaries of the random starting values:
-    startParBounds = c(-10, 10)))
+    startVals = wtp_mnl_pref$Estimate)
+)
 ```
 ```
 #> Running Multistart 1 of 10...
@@ -140,6 +134,7 @@ mnl_wtp <- logitr(
 #> Running Multistart 3 of 10...
 #> Running Multistart 4 of 10...
 #> Running Multistart 5 of 10...
+#> ERROR: failed to converge
 #> Running Multistart 6 of 10...
 #> Running Multistart 7 of 10...
 #> Running Multistart 8 of 10...
