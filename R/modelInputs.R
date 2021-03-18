@@ -47,7 +47,7 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
   if (options$scaleInputs) {
     modelInputs <- scaleInputs(modelInputs)
   }
-  modelInputs <- addDraws(modelInputs, parSetup)
+  modelInputs <- addDraws(modelInputs)
   modelInputs$logitFuncs <- setLogitFunctions(modelSpace)
   modelInputs$evalFuncs <- setEvalFunctions(
     modelInputs$modelType, options$useAnalyticGrad
@@ -404,13 +404,13 @@ scaleInputs <- function(modelInputs) {
   return(modelInputs)
 }
 
-addDraws <- function(modelInputs, parSetup) {
+addDraws <- function(modelInputs) {
   options <- modelInputs$options
-  if (isMxlModel(parSetup)) {
+  if (isMxlModel(modelInputs$parSetup)) {
     modelInputs$modelType <- "mxl"
   }
   userDraws <- options$standardDraws
-  standardDraws <- getStandardDraws(parSetup, options$numDraws)
+  standardDraws <- getStandardDraws(modelInputs$parSetup, options$numDraws)
   if (is.null(userDraws)) {
     modelInputs$standardDraws <- standardDraws
     return(modelInputs)

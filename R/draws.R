@@ -36,7 +36,7 @@ getSigmaMat <- function(pars, parSetup, numDraws) {
 
 getStandardDraws <- function(parSetup, numDraws) {
   numBetas <- length(parSetup)
-  draws <- randtoolbox::halton(numDraws, numBetas, normal = TRUE)
+  draws <- as.matrix(randtoolbox::halton(numDraws, numBetas, normal = TRUE))
   fixedParIDs <- getFixedParIDs(parSetup)
   draws[, fixedParIDs] <- rep(0, numDraws)
   return(draws)

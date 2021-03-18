@@ -1,4 +1,4 @@
-# logitr 0.1.2.9000
+# logitr 0.1.3.9000
 
 ## Summary of larger updates:
 

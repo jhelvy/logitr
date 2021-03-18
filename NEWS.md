@@ -1,3 +1,15 @@
+# logitr 0.1.2.9000
+
+## Summary of larger updates:
+
+
+## Summary of smaller updates:
+
+
+## Bugs
+
+- Fixed bug where model with single variable would error due to a matrix being converted to a vector in the `standardDraws()` function
+
 # logitr 0.1.1
 
 ## Summary of larger updates:
