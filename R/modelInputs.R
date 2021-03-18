@@ -254,9 +254,9 @@ addIntPars <- function(data, parNames, intNames, parTypes) {
 }
 
 getCatVarDummyNames <- function(data, discPar) {
-  allVars <- names(data)
-  matches <- which(grepl(paste0(discPar, "_"), allVars))
-  return(allVars[matches][-1])
+  levels <- as.vector(as.matrix(unique(data[discPar])))
+  varNames <- sort(paste(discPar, levels, sep = "_"))
+  return(varNames[-1])
 }
 
 getParSetup <- function(parNames, priceName, randPars, randPrice) {

@@ -9,6 +9,7 @@
 ## Bugs
 
 - Fixed bug where model with single variable would error due to a matrix being converted to a vector in the `standardDraws()` function
+- Fixed bug in `getCatVarDummyNames()` - previously used string matching, which can accidentally match with other similarly-named variables.
 
 # logitr 0.1.1
 
