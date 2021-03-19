@@ -21,7 +21,7 @@
 # Returns the logit fraction for mnl (homogeneous) models
 getMnlLogit <- function(V, obsID) {
   expV <- exp(V)
-  sumExpV <- rowsum(expV, group = obsID)
+  sumExpV <- rowsum(expV, group = obsID, reorder = FALSE)
   repTimes <- as.numeric(table(obsID))
   sumExpVMat <- matrix(rep(sumExpV, times = repTimes), ncol = 1)
   logit <- expV / sumExpVMat
@@ -90,7 +90,7 @@ getMnlHessLL <- function(pars, modelInputs) {
 getMxlLogit <- function(VDraws, obsID) {
   numDraws <- ncol(VDraws)
   expVDraws <- exp(VDraws)
-  sumExpVDraws <- rowsum(expVDraws, group = obsID)
+  sumExpVDraws <- rowsum(expVDraws, group = obsID, reorder = FALSE)
   repTimes <- rep(as.numeric(table(obsID)), each = numDraws)
   sumExpVDrawsMat <- matrix(rep(sumExpVDraws, times = repTimes),
     ncol = numDraws, byrow = FALSE
@@ -283,7 +283,7 @@ mxlNegGradLL_pref <- function(X, parSetup, obsID, choice, standardDraws,
     partial_mu <- Xtemp
     partial_sigma <- Xtemp * drawsMat
     partial <- cbind(partial_mu, partial_sigma)
-    temp <- rowsum(logitMat * partial, group = obsID)
+    temp <- rowsum(logitMat * partial, group = obsID, reorder = FALSE)
     tempMat <- matrix(rep(temp, times = repTimes),
       ncol = ncol(partial),
       byrow = F
@@ -426,7 +426,7 @@ mxlNegGradLL_wtp <- function(X, parSetup, obsID, choice, standardDraws,
     partial_mu <- cbind(lambda_partial_mu, gamma_partial_mu)
     partial_sigma <- cbind(lambda_partial_sigma, gamma_partial_sigma)
     partial <- cbind(partial_mu, partial_sigma)
-    temp <- rowsum(logitMat * partial, group = obsID)
+    temp <- rowsum(logitMat * partial, group = obsID, reorder = FALSE)
     tempMat <- matrix(rep(temp, times = repTimes),
       ncol = ncol(partial),
       byrow = F

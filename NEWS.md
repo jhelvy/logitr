@@ -1,15 +1,10 @@
 # logitr 0.1.2.9000
 
-## Summary of larger updates:
-
-
-## Summary of smaller updates:
-
-
 ## Bugs
 
 - Fixed bug where model with single variable would error due to a matrix being converted to a vector in the `standardDraws()` function
 - Fixed bug in `getCatVarDummyNames()` - previously used string matching, which can accidentally match with other similarly-named variables.
+- Fixed bug in `rowsum()` where the `reorder` argument was set to `TRUE`, which resulted in wrong logit calculations unless the `obsID` happened to be already sorted.
 
 # logitr 0.1.1
 
