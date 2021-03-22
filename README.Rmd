@@ -23,6 +23,7 @@ experimental](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https:/
 [![CRAN
 status](https://www.r-pkg.org/badges/version/logitr)](https://CRAN.R-project.org/package=logitr)
 [![Travis build status](https://travis-ci.com/jhelvy/logitr.svg?branch=master)](https://travis-ci.com/jhelvy/logitr)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/logitr?color=blue)](https://cran.r-project.org/package=logitr)
 <!-- badges: end -->
 
 Estimation of multinomial (MNL) and mixed logit (MXL) models in R with "Preference" space or "Willingness-to-pay" (WTP) space [utility parameterizations](https://jhelvy.github.io/logitr/articles/utility_models.html).
