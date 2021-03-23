@@ -10,6 +10,7 @@
 ^logitr\.Rproj$
 ^todo\.md$
 ^next_release\.md$
+^foo\.R$
 ^doc$
 ^Meta$
 build.R
