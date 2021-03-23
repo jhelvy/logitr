@@ -44,7 +44,7 @@ recodeData <- function(data, parNames, randPars) {
   # Dummy code categorical variables (if any exist)
   parTypes <- getParTypes(data, parNames)
   if (!is.null(parTypes$discrete)) {
-    dummyLevels <- getDummyLevels(parTypes)
+    dummyLevels <- getDummyLevels(data, parTypes)
     parNames <- c(parTypes$continuous, unlist(dummyLevels))
     names(parNames) <- NULL
     randPars <- updateRandPars(randPars, dummyLevels)
@@ -70,7 +70,7 @@ getParTypes <- function(df, parNames) {
   return(list(continuous = continuousNames, discrete = discreteNames))
 }
 
-getDummyLevels <- function(parTypes) {
+getDummyLevels <- function(data, parTypes) {
   discreteNames <- parTypes$discrete
   levels <- lapply(data[discreteNames], unique)
   parNames <- list()
