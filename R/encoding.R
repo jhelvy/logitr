@@ -34,65 +34,95 @@
 #' result$randPars
 #' head(result$data)
 recodeData <- function(data, parNames, randPars) {
+  # Get design matrix
+  X <- model.matrix(data = data, object = parsToFormula(parNames))
   # Separate out interactions
   ints <- grepl("\\*", parNames)
   if (any(ints)) {
     intNames <- parNames[ints == TRUE]
     parNames <- parNames[ints == FALSE]
   }
-  # Dummy code categorical variables
+  # Dummy code categorical variables (if any exist)
   parTypes <- getParTypes(data, parNames)
-  if (!is.null(parTypes$dist)) {
-    dummyList <- addDummyPars(data, parNames, randPars, parTypes)
-    data <- dummyList$data
-    parNames <- dummyList$parNames
-    randPars <- dummyList$randPars
+  if (!is.null(parTypes$discrete)) {
+    dummyLevels <- getDummyLevels(parTypes)
+    parNames <- c(parTypes$continuous, unlist(dummyLevels))
+    names(parNames) <- NULL
+    randPars <- updateRandPars(randPars, dummyLevels)
   }
   # Create interactions (if any exist)
   if (any(ints)) {
-    intsList <- addIntPars(data, parNames, intNames, parTypes)
-    data <- intsList$data
-    parNames <- intsList$parNames
+    parNames <- addIntPars(parNames, intNames, dummyLevels)
   }
-  return(list(data = data, parNames = parNames, randPars = randPars))
+  return(list(X = X, parNames = parNames, randPars = randPars))
 }
 
 getParTypes <- function(df, parNames) {
-    types <- unlist(lapply(df[parNames], class))
-    discIDs <- which(types %in% c("character", "factor"))
-    if (length(discIDs) == 0) {
-      return(list(cont = parNames, dist = NULL))
-    }
-    if (length(discIDs) == length(parNames)) {
-      return(list(cont = NULL, dist = parNames))
-    }
-    return(list(
-      cont = parNames[setdiff(seq(length(parNames)), discIDs)],
-      dist = parNames[discIDs])
-    )
+  types <- unlist(lapply(df[parNames], class))
+  discIDs <- which(types %in% c("character", "factor"))
+  continuousNames <- parNames[setdiff(seq_len(length(parNames)), discIDs)]
+  if (length(continuousNames) == 0) {
+    continuousNames <- NULL
+  }
+  discreteNames <- parNames[discIDs]
+  if (length(discreteNames) == 0) {
+    discreteNames <- NULL
+  }
+  return(list(continuous = continuousNames, discrete = discreteNames))
 }
 
-addDummyPars <- function(data, parNames, randPars, parTypes) {
-  data <- dummyCode(data, parTypes$dist)
-  dummyPars <- c()
-  for (discPar in parTypes$dist) {
-    newNames <- getCatVarDummyNames(data, discPar)
-    # Update randPars with new dummy coded pars
-    if (discPar %in% names(randPars)) {
-      matchID <- which(names(randPars) == discPar)
-      dist <- randPars[matchID]
-      newRandPars <- rep(dist, length(newNames))
-      names(newRandPars) <- newNames
+getDummyLevels <- function(parTypes) {
+  discreteNames <- parTypes$discrete
+  levels <- lapply(data[discreteNames], unique)
+  parNames <- list()
+  for (i in seq_len(length(discreteNames))) {
+    name <- discreteNames[i]
+    dummyNames <- paste0(name, levels[[name]])[-1]
+    parNames[[i]] <- dummyNames
+  }
+  names(parNames) <- discreteNames
+  return(parNames)
+}
+
+updateRandPars <- function(randPars, dummyLevels) {
+  for (i in seq_len(length(dummyLevels))) {
+    name <- names(dummyLevels)[i]
+    dummyNames <- dummyLevels[[name]]
+    if (name %in% names(randPars)) {
+      matchID <- which(names(randPars) == name)
+      newRandPars <- rep(randPars[matchID], length(dummyNames))
+      names(newRandPars) <- dummyNames
       randPars <- randPars[-matchID]
       randPars <- c(randPars, newRandPars)
     }
-    dummyPars <- c(dummyPars, newNames)
   }
-  parNames <- c(parTypes$cont, dummyPars)
-  return(list(data = data, parNames = parNames, randPars = randPars))
+  return(randPars)
 }
 
-#' Creates dummy-coded variables.
+addIntPars <- function(parNames, intNames, dummyLevels) {
+  intList <- strsplit(intNames, "\\*")
+  allIntNames <- list()
+  for (i in seq_len(length(intList))) {
+    intPars1 <- intList[[i]][1]
+    intPars2 <- intList[[i]][2]
+    # Get dummy coded variable names for categorical vars
+    if (intPars1 %in% names(dummyLevels)) {
+      intPars1 <- dummyLevels[[intPars1]]
+    }
+    if (intPars2 %in% names(dummyLevels)) {
+      intPars2 <- dummyLevels[[intPars2]]
+    }
+    allIntNames[[i]] <- getIntNames(intPars1, intPars2)
+  }
+  return(c(parNames, unlist(allIntNames)))
+}
+
+getIntNames <- function(intPars1, intPars2) {
+  df <- expand.grid(intPars1, intPars2)
+  return(paste(df$Var1, df$Var2, sep = ":"))
+}
+
+#' Adds dummy-coded variables to data frame.
 #'
 #' This function adds dummy-coded variables to a data frame based on a
 #' vector of column names.
@@ -112,62 +142,10 @@ addDummyPars <- function(data, parNames, randPars, parTypes) {
 #' df_dummy <- dummyCode(df, vars = c("animal", "numLegs"))
 #' df_dummy
 dummyCode <- function(df, vars) {
-    df <- as.data.frame(df)
-    nonVars <- colnames(df)[which(! colnames(df) %in% vars)]
-    # Keep the original variables and the order to restore later after merging
-    df$order <- seq(nrow(df))
-    for (i in seq_len(length(vars))) {
-        var <- vars[i]
-        colIndex <- which(colnames(df) == var)
-        levels <- sort(unique(df[,colIndex]))
-        mergeMat <- as.data.frame(diag(length(levels)))
-        mergeMat <- cbind(levels, mergeMat)
-        colnames(mergeMat) <- c(var, paste(var, levels, sep='_'))
-        df <- merge(df, mergeMat)
-    }
-    # Restore the original column order
-    new <- colnames(df)[which(! colnames(df) %in% c(vars, nonVars))]
-    df <- df[c(nonVars, vars, new)]
-    # Restore the original row order
-    df <- df[order(df$order),]
-    row.names(df) <- df$order
-    df$order <- NULL
-    return(df)
+  dummies <- model.matrix(data = df, object = parsToFormula(vars))
+  return(cbind(df, dummies))
 }
 
-addIntPars <- function(data, parNames, intNames, parTypes) {
-  intList <- strsplit(intNames, "\\*")
-  allIntPars <- list()
-  for (i in seq_len(length(intList))) {
-    intPars1 <- intList[[i]][1]
-    intPars2 <- intList[[i]][2]
-    # Get dummy coded variable names for categorical vars
-    if (intPars1 %in% parTypes$dist) {
-      intPars1 <- getCatVarDummyNames(data, intPars1)
-    }
-    if (intPars2 %in% parTypes$dist) {
-      intPars2 <- getCatVarDummyNames(data, intPars2)
-    }
-    intPars <- list()
-    index <- 1
-    for (intPar1 in intPars1) {
-      for (intPar2 in intPars2) {
-        int <- data[intPar1] * data[intPar2]
-        names(int) <- paste0(intPar1, "*", intPar2)
-        intPars[[index]] <- int
-        index <- index + 1
-      }
-    }
-    allIntPars[[i]] <- do.call(cbind, intPars)
-  }
-  allIntPars <- do.call(cbind, allIntPars)
-  data <- cbind(data, allIntPars)
-  parNames <- c(parNames, names(allIntPars))
-  return(list(data = data, parNames = parNames))
-}
-
-getCatVarDummyNames <- function(data, discPar) {
-  levels <- as.vector(as.matrix(unique(data[discPar])))
-  varNames <- sort(paste(discPar, levels, sep = "_"))
-  return(varNames[-1])
+parsToFormula <- function(pars) {
+  return(as.formula(paste0("~ ", paste(pars, collapse = " + "), "-1")))
 }

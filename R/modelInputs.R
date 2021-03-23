@@ -11,23 +11,25 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
   data <- as.data.frame(data)
   runInputChecks(choiceName, obsIDName, parNames, randPars, priceName,
                  randPrice, modelSpace, weightsName)
-  # Recode discrete (categorical) variables and interactions
+  # Remove rows with missing data
+  data <- removeNAs(
+    data, choiceName, obsIDName, parNames, priceName, modelSpace,
+    weightsName
+  )
+  # Get the design matrix and recode parameters that are categorical
+  # or have interactions
   recoded <- recodeData(data, parNames, randPars)
-  data <- recoded$data
+  X <- recoded$X
   parNames <- recoded$parNames
   randPars <- recoded$randPars
   # Set up the parameters
   parSetup <- getParSetup(parNames, priceName, randPars, randPrice)
   parNameList <- getParNameList(parSetup)
   options <- runOptionsChecks(options, parNameList)
-  # Separate data elements
-  data <- removeNAs(
-    data, choiceName, obsIDName, parNames, priceName,
-    modelSpace, weightsName
-  )
+
   X <- as.matrix(data[parNames])
-  obsID <- as.matrix(data[, which(names(data) == obsIDName)])
-  choice <- as.matrix(data[, which(names(data) == choiceName)])
+  obsID <- as.matrix(data[obsIDName])
+  choice <- as.matrix(data[choiceName])
   # Define price for WTP space models (price must be numeric type)
   price <- definePrice(data, priceName, modelSpace)
   # Setup weights
@@ -87,6 +89,16 @@ runInputChecks <- function(choiceName, obsIDName, parNames, randPars,
       'column in your data frame that represents "price".'
     )
   }
+}
+
+removeNAs <- function(data, choiceName, obsIDName, parNames, priceName,
+                      modelSpace, weightsName) {
+  parNames <- parNames[!grepl("\\*", parNames)] # Remove interactions
+  cols <- c(choiceName, obsIDName, parNames, weightsName)
+  if (modelSpace == "wtp") {
+    cols <- c(cols, priceName)
+  }
+  return(stats::na.omit(data[cols]))
 }
 
 getParSetup <- function(parNames, priceName, randPars, randPrice) {
@@ -175,15 +187,6 @@ runOptionsChecks <- function(options, parNameList) {
     names(options$startVals) <- parNameList$all
   }
   return(options)
-}
-
-removeNAs <- function(data, choiceName, obsIDName, parNames, priceName,
-                      modelSpace, weightsName) {
-  colsToSelect <- c(choiceName, obsIDName, parNames, weightsName)
-  if (modelSpace == "wtp") {
-    colsToSelect <- c(colsToSelect, priceName, weightsName)
-  }
-  return(stats::na.omit(data[colsToSelect]))
 }
 
 definePrice <- function(data, priceName, modelSpace) {
