@@ -53,7 +53,7 @@ recodeData <- function(data, parNames, randPars) {
   if (any(ints)) {
     parNames <- addIntPars(parNames, intNames, dummyLevels)
   }
-  return(list(X = X, parNames = parNames, randPars = randPars))
+  return(list(X = X[,parNames], parNames = parNames, randPars = randPars))
 }
 
 getParTypes <- function(df, parNames) {
