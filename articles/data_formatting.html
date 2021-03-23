@@ -284,10 +284,10 @@
 <span class="co">#&gt;  [1] "id"             "obsnum"         "choice"         "hev"           </span>
 <span class="co">#&gt;  [5] "phev10"         "phev20"         "phev40"         "bev75"         </span>
 <span class="co">#&gt;  [9] "bev100"         "bev150"         "phevFastcharge" "bevFastcharge" </span>
-<span class="co">#&gt; [13] "opCost"         "accelTime"      "american"       "japanese"      </span>
-<span class="co">#&gt; [17] "chinese"        "skorean"        "weights"        "price"         </span>
-<span class="co">#&gt; [21] "price_15"       "price_18"       "price_23"       "price_32"      </span>
-<span class="co">#&gt; [25] "price_50"</span></code></pre></div>
+<span class="co">#&gt; [13] "price"          "opCost"         "accelTime"      "american"      </span>
+<span class="co">#&gt; [17] "japanese"       "chinese"        "skorean"        "weights"       </span>
+<span class="co">#&gt; [21] "price15"        "price18"        "price23"        "price32"       </span>
+<span class="co">#&gt; [25] "price50"</span></code></pre></div>
 <p>The new <code>cars_us_dummy</code> data frame now contains variables for each level of the <code>price</code> column. This approach allows the modeler to specify the baseline level. In this example, I’ll use the <code>price_50</code> level as the baseline:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_dummy_price</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>

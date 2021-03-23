@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Creates dummy-coded variables. — dummyCode • logitr</title>
+<title>Adds dummy-coded variables to data frame. — dummyCode • logitr</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Creates dummy-coded variables. — dummyCode" />
+<meta property="og:title" content="Adds dummy-coded variables to data frame. — dummyCode" />
 <meta property="og:description" content="This function adds dummy-coded variables to a data frame based on a
 vector of column names." />
 
@@ -145,8 +145,8 @@ vector of column names." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Creates dummy-coded variables.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/jhelvy/logitr/blob/master/R/modelInputs.R'><code>R/modelInputs.R</code></a></small>
+    <h1>Adds dummy-coded variables to data frame.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/jhelvy/logitr/blob/master/R/encoding.R'><code>R/encoding.R</code></a></small>
     <div class="hidden name"><code>dummyCode.Rd</code></div>
     </div>
 
@@ -185,18 +185,12 @@ create new dummy coded variables.</p></td>
 <span class='co'># Create dummy coded variables for the variables "animal" and "numLegs":</span>
 <span class='va'>df_dummy</span> <span class='op'>&lt;-</span> <span class='fu'>dummyCode</span><span class='op'>(</span><span class='va'>df</span>, vars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"animal"</span>, <span class='st'>"numLegs"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>df_dummy</span>
-</div><div class='output co'>#&gt;   lifeSpan   animal numLegs animal_bird animal_dog animal_goldfish numLegs_0
-#&gt; 1       10      dog       4           0          1               0         0
-#&gt; 2       10 goldfish       0           0          0               1         1
-#&gt; 3        5     bird       2           1          0               0         0
-#&gt; 4       10      dog       4           0          1               0         0
-#&gt; 5       10 goldfish       0           0          0               1         1
-#&gt;   numLegs_2 numLegs_4
-#&gt; 1         0         1
-#&gt; 2         0         0
-#&gt; 3         1         0
-#&gt; 4         0         1
-#&gt; 5         0         0</div></pre>
+</div><div class='output co'>#&gt;     animal numLegs lifeSpan animalbird animaldog animalgoldfish numLegs
+#&gt; 1      dog       4       10          0         1              0       4
+#&gt; 2 goldfish       0       10          0         0              1       0
+#&gt; 3     bird       2        5          1         0              0       2
+#&gt; 4      dog       4       10          0         1              0       4
+#&gt; 5 goldfish       0       10          0         0              1       0</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

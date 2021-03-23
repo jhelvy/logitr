@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Recode a data frame to create dummy-coded categorical and interaction
+<title>Returns a list of the design matrix X and updated parNames and
+randPars to include any dummy-coded categorical or interaction
 variables. — recodeData • logitr</title>
 
 
@@ -40,13 +41,12 @@ variables. — recodeData • logitr</title>
 
 
 
-<meta property="og:title" content="Recode a data frame to create dummy-coded categorical and interaction
+<meta property="og:title" content="Returns a list of the design matrix X and updated parNames and
+randPars to include any dummy-coded categorical or interaction
 variables. — recodeData" />
-<meta property="og:description" content="Recodes a list of a dataframe (data) and two vectors (parNames and
+<meta property="og:description" content="Recodes a list of the design matrix (X) and two vectors (parNames and
 randPars) with discrete (categorical) variables and interaction variables
-added to the data frame as well as the parNames and randPars. This
-function is used internally inside the main logitr() function but is also
-exported for use in other libraries." />
+added to X, parNames, and randPars." />
 
 
 
@@ -150,18 +150,17 @@ exported for use in other libraries." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Recode a data frame to create dummy-coded categorical and interaction
+    <h1>Returns a list of the design matrix <code>X</code> and updated <code>parNames</code> and
+<code>randPars</code> to include any dummy-coded categorical or interaction
 variables.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/jhelvy/logitr/blob/master/R/modelInputs.R'><code>R/modelInputs.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jhelvy/logitr/blob/master/R/encoding.R'><code>R/encoding.R</code></a></small>
     <div class="hidden name"><code>recodeData.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Recodes a list of a dataframe (<code>data</code>) and two vectors (<code>parNames</code> and
+    <p>Recodes a list of the design matrix (<code>X</code>) and two vectors (<code>parNames</code> and
 <code>randPars</code>) with discrete (categorical) variables and interaction variables
-added to the data frame as well as the <code>parNames</code> and <code>randPars</code>. This
-function is used internally inside the main <code><a href='logitr.html'>logitr()</a></code> function but is also
-exported for use in other libraries.</p>
+added to <code>X</code>, <code>parNames</code>, and <code>randPars</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>recodeData</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>parNames</span>, <span class='va'>randPars</span><span class='op'>)</span></pre>
@@ -189,7 +188,7 @@ Defaults to <code>NULL</code>.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of a dataframe (<code>data</code>) and two vectors (<code>parNames</code> and
+    <p>A list of the design matrix (<code>X</code>) and two vectors (<code>parNames</code> and
 <code>randPars</code>) with discrete (categorical) variables and interaction variables
 added.</p>
 
@@ -203,32 +202,25 @@ added.</p>
 <span class='op'>)</span>
 
 <span class='va'>result</span><span class='op'>$</span><span class='va'>parNames</span>
-</div><div class='output co'>#&gt; [1] "price"               "feat"                "brand_hiland"       
-#&gt; [4] "brand_weight"        "brand_yoplait"       "price*brand_hiland" 
-#&gt; [7] "price*brand_weight"  "price*brand_yoplait"</div><div class='input'><span class='va'>result</span><span class='op'>$</span><span class='va'>randPars</span>
-</div><div class='output co'>#&gt;          feat  brand_hiland  brand_weight brand_yoplait 
-#&gt;           "n"           "n"           "n"           "n" </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>result</span><span class='op'>$</span><span class='va'>data</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;   id obsID alt choice price feat dannon hiland weight yoplait   brand
-#&gt; 1  1     1   1      0   8.1    0      1      0      0       0  dannon
-#&gt; 2  1     1   2      0   6.1    0      0      1      0       0  hiland
-#&gt; 3  1     1   3      1   7.9    0      0      0      1       0  weight
-#&gt; 4  1     1   4      0  10.8    0      0      0      0       1 yoplait
-#&gt; 5  1     2   1      1   9.8    0      1      0      0       0  dannon
-#&gt; 6  1     2   2      0   6.4    0      0      1      0       0  hiland
-#&gt;   brand_dannon brand_hiland brand_weight brand_yoplait price*brand_hiland
-#&gt; 1            1            0            0             0                0.0
-#&gt; 2            0            1            0             0                6.1
-#&gt; 3            0            0            1             0                0.0
-#&gt; 4            0            0            0             1                0.0
-#&gt; 5            1            0            0             0                0.0
-#&gt; 6            0            1            0             0                6.4
-#&gt;   price*brand_weight price*brand_yoplait
-#&gt; 1                0.0                 0.0
-#&gt; 2                0.0                 0.0
-#&gt; 3                7.9                 0.0
-#&gt; 4                0.0                10.8
-#&gt; 5                0.0                 0.0
-#&gt; 6                0.0                 0.0</div></pre>
+</div><div class='output co'>#&gt; [1] "price"              "feat"               "brandhiland"       
+#&gt; [4] "brandweight"        "brandyoplait"       "price:brandhiland" 
+#&gt; [7] "price:brandweight"  "price:brandyoplait"</div><div class='input'><span class='va'>result</span><span class='op'>$</span><span class='va'>randPars</span>
+</div><div class='output co'>#&gt;         feat  brandhiland  brandweight brandyoplait 
+#&gt;          "n"          "n"          "n"          "n" </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>result</span><span class='op'>$</span><span class='va'>X</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   price feat branddannon brandhiland brandweight brandyoplait price:brandhiland
+#&gt; 1   8.1    0           1           0           0            0               0.0
+#&gt; 2   6.1    0           0           1           0            0               6.1
+#&gt; 3   7.9    0           0           0           1            0               0.0
+#&gt; 4  10.8    0           0           0           0            1               0.0
+#&gt; 5   9.8    0           1           0           0            0               0.0
+#&gt; 6   6.4    0           0           1           0            0               6.4
+#&gt;   price:brandweight price:brandyoplait
+#&gt; 1               0.0                0.0
+#&gt; 2               0.0                0.0
+#&gt; 3               7.9                0.0
+#&gt; 4               0.0               10.8
+#&gt; 5               0.0                0.0
+#&gt; 6               0.0                0.0</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
