@@ -5,7 +5,7 @@ citEntry(
   title    = "logitr: Random Utility Logit Models with Preference and Willingness to Pay Space Parameterizations",
   author   = "John Paul Helveston",
   year     = "2020",
-  note     = "R package version 0.1.2",
+  note     = "R package version 0.1.3",
   url      = "https://jhelvy.github.io/logitr/",
-  textVersion = "John Paul Helveston (2021). logitr: Random utility logit models with preference and willingness to pay space parameterizations. R package version 0.1.2."
+  textVersion = "John Paul Helveston (2021). logitr: Random utility logit models with preference and willingness to pay space parameterizations. R package version 0.1.3."
 )

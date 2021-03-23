@@ -5,8 +5,7 @@
 
 <!-- badges: start -->
 
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![](https://lifecycle.r-lib.org/articles/figures/lifecycle-stable.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/logitr)](https://CRAN.R-project.org/package=logitr)
 [![Travis build
@@ -73,7 +72,7 @@ for details on how to use **logitr** to estimate models.
 -   Author: *John Paul Helveston*
     [www.jhelvy.com](http://www.jhelvy.com/)
 -   Date First Written: *Sunday, September 28, 2014*
--   Most Recent Update: March 22, 2021
+-   Most Recent Update: March 23, 2021
 -   License:
     [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
 

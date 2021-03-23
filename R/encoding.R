@@ -34,7 +34,7 @@
 #' head(result$X)
 recodeData <- function(data, parNames, randPars) {
   # Get design matrix
-  X <- model.matrix(data = data, object = parsToFormula(parNames))
+  X <- stats::model.matrix(data = data, object = parsToFormula(parNames))
   # Separate out interactions
   ints <- grepl("\\*", parNames)
   if (any(ints)) {
@@ -141,10 +141,10 @@ getIntNames <- function(intPars1, intPars2) {
 #' df_dummy <- dummyCode(df, vars = c("animal", "numLegs"))
 #' df_dummy
 dummyCode <- function(df, vars) {
-  dummies <- model.matrix(data = df, object = parsToFormula(vars))
+  dummies <- stats::model.matrix(data = df, object = parsToFormula(vars))
   return(cbind(df, dummies))
 }
 
 parsToFormula <- function(pars) {
-  return(as.formula(paste0("~ ", paste(pars, collapse = " + "), "-1")))
+  return(stats::as.formula(paste0("~ ", paste(pars, collapse = " + "), "-1")))
 }

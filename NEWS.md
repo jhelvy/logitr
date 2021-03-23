@@ -1,3 +1,9 @@
+# logitr 0.1.3.9000
+
+## Summary of larger updates:
+
+- Modified the `recodeData()` and `dummyCode()` functions for improved speed.
+
 # logitr 0.1.2.9000
 
 ## Bugs
