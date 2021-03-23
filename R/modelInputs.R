@@ -26,8 +26,6 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
   parSetup <- getParSetup(parNames, priceName, randPars, randPrice)
   parNameList <- getParNameList(parSetup)
   options <- runOptionsChecks(options, parNameList)
-
-  X <- as.matrix(data[parNames])
   obsID <- as.matrix(data[obsIDName])
   choice <- as.matrix(data[choiceName])
   # Define price for WTP space models (price must be numeric type)

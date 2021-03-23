@@ -2,14 +2,13 @@
 # Functions for encoding the data to prep for estimation
 # ============================================================================
 
-#' Recode a data frame to create dummy-coded categorical and interaction
+#' Returns a list of the design matrix `X` and updated `parNames` and
+#' `randPars` to include any dummy-coded categorical or interaction
 #' variables.
 #'
-#' Recodes a list of a dataframe (`data`) and two vectors (`parNames` and
+#' Recodes a list of the design matrix (`X`) and two vectors (`parNames` and
 #' `randPars`) with discrete (categorical) variables and interaction variables
-#' added to the data frame as well as the `parNames` and `randPars`. This
-#' function is used internally inside the main `logitr()` function but is also
-#' exported for use in other libraries.
+#' added to `X`, `parNames`, and `randPars`.
 #' @param data The choice data, formatted as a `data.frame` object.
 #' @param parNames The names of the parameters to be estimated in the model.
 #' Must be the same as the column names in the `data` argument. For WTP space
@@ -17,7 +16,7 @@
 #' @param randPars A named vector whose names are the random parameters and
 #' values the distribution: `'n'` for normal or `'ln'` for log-normal.
 #' Defaults to `NULL`.
-#' @return A list of a dataframe (`data`) and two vectors (`parNames` and
+#' @return A list of the design matrix (`X`) and two vectors (`parNames` and
 #' `randPars`) with discrete (categorical) variables and interaction variables
 #' added.
 #' @export
@@ -32,7 +31,7 @@
 #'
 #' result$parNames
 #' result$randPars
-#' head(result$data)
+#' head(result$X)
 recodeData <- function(data, parNames, randPars) {
   # Get design matrix
   X <- model.matrix(data = data, object = parsToFormula(parNames))
