@@ -55,6 +55,7 @@ The function returns a list object containing the following objects.\tabular{ll}
    \code{nullLogLik} \tab The null log-likelihood value (if all coefficients are 0). \cr
    \code{gradient} \tab The gradient of the log-likelihood at convergence. \cr
    \code{hessian} \tab The hessian of the log-likelihood at convergence. \cr
+   \code{covariance} \tab The covariance matrix at convergence. \cr
    \code{numObs} \tab The number of observations. \cr
    \code{numParams} \tab The number of model parameters. \cr
    \code{startPars} \tab The starting values used. \cr

@@ -4,6 +4,10 @@
 
 - Modified the `recodeData()` and `dummyCode()` functions for improved speed.
 
+## Summary of smaller updates:
+
+- Added covariance matrix to model export
+
 # logitr 0.1.2.9000
 
 ## Bugs

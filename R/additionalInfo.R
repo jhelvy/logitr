@@ -11,7 +11,8 @@ appendModelInfo <- function(model, modelInputs) {
   coef <- getModelCoefs(model, modelInputs)
   gradient <- getModelGradient(model, modelInputs)
   hessian <- getModelHessian(model, modelInputs)
-  se <- getModelStandErrs(coef, hessian)
+  covariance <- solve(hessian)
+  se <- getModelStandErrs(covariance)
   logLik <- as.numeric(model$logLik)
   nullLogLik <- -1 * modelInputs$evalFuncs$negLL(coef * 0, modelInputs)
   numObs <- sum(modelInputs$choice)
@@ -23,6 +24,7 @@ appendModelInfo <- function(model, modelInputs) {
     nullLogLik       = nullLogLik,
     gradient         = gradient,
     hessian          = hessian,
+    covariance       = covariance,
     numObs           = numObs,
     numParams        = length(coef),
     startPars        = model$startPars,
@@ -117,15 +119,15 @@ getModelScaleFactors <- function(model, modelInputs) {
   }
 }
 
-getModelStandErrs <- function(coef, hessian) {
-  se <- rep(NA, length(coef))
+getModelStandErrs <- function(covariance) {
+  se <- rep(NA, ncol(covariance))
   tryCatch(
     {
-      se <- diag(sqrt(abs(solve(hessian))))
+      se <- diag(sqrt(covariance))
     },
     error = function(e) {}
   )
-  names(se) <- names(coef)
+  names(se) <- colnames(covariance)
   return(se)
 }
 

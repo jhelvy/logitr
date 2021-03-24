@@ -66,6 +66,7 @@
 #' |`nullLogLik`|The null log-likelihood value (if all coefficients are 0).|
 #' |`gradient`|The gradient of the log-likelihood at convergence.|
 #' |`hessian`|The hessian of the log-likelihood at convergence.|
+#' |`covariance`|The covariance matrix at convergence.|
 #' |`numObs`|The number of observations.|
 #' |`numParams`|The number of model parameters.|
 #' |`startPars`|The starting values used.|

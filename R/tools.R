@@ -65,6 +65,7 @@ makeBlankModel <- function(modelInputs) {
     nullLogLik       = NA,
     gradient         = NA,
     hessian          = NA,
+    covariance       = NA,
     numObs           = NA,
     numParams        = NA,
     iterations       = NA,
