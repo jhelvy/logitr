@@ -164,6 +164,13 @@
 <li>Modified the <code><a href="../reference/recodeData.html">recodeData()</a></code> and <code><a href="../reference/dummyCode.html">dummyCode()</a></code> functions for improved speed.</li>
 </ul>
 </div>
+<div id="summary-of-smaller-updates" class="section level2">
+<h2 class="hasAnchor">
+<a href="#summary-of-smaller-updates" class="anchor"></a>Summary of smaller updates:</h2>
+<ul>
+<li>Added covariance matrix to model export</li>
+</ul>
+</div>
 </div>
     <div id="logitr-0129000" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.2.9000">
@@ -190,9 +197,9 @@
 <li>Changed how failures to converge are handled. Previously would continue to run a while loop. Now it fails and records the failure, along with appropriate changes in summary() and coef().</li>
 </ul>
 </div>
-<div id="summary-of-smaller-updates" class="section level2">
+<div id="summary-of-smaller-updates-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-smaller-updates" class="anchor"></a>Summary of smaller updates:</h2>
+<a href="#summary-of-smaller-updates-1" class="anchor"></a>Summary of smaller updates:</h2>
 <ul>
 <li>Re-defined the wtp space utility models as B<em>X - p. Before it was p + B</em>X and p was re-defined as -1*p.</li>
 </ul>
@@ -216,9 +223,9 @@
 <li>v0.1.0 Submitted to CRAN!</li>
 </ul>
 </div>
-<div id="summary-of-smaller-updates-1" class="section level2">
+<div id="summary-of-smaller-updates-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-smaller-updates-1" class="anchor"></a>Summary of smaller updates:</h2>
+<a href="#summary-of-smaller-updates-2" class="anchor"></a>Summary of smaller updates:</h2>
 <ul>
 <li>Reduced the length of the title in DESCRIPTION to less than 65 characters.</li>
 <li>Changed package names in title and description to single quotes, e.g: {nloptr} -&gt; ‘nloptr’</li>
@@ -252,9 +259,9 @@
 <li>exported <code><a href="../reference/getCoefTable.html">getCoefTable()</a></code> function</li>
 </ul>
 </div>
-<div id="summary-of-smaller-updates-2" class="section level2">
+<div id="summary-of-smaller-updates-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-smaller-updates-2" class="anchor"></a>Summary of smaller updates:</h2>
+<a href="#summary-of-smaller-updates-3" class="anchor"></a>Summary of smaller updates:</h2>
 <ul>
 <li>Added new documentation for prepping data:
 <ul>
@@ -285,9 +292,9 @@
 <li>Major overhaul of documentation using {pkgdown}</li>
 </ul>
 </div>
-<div id="summary-of-smaller-updates-3" class="section level2">
+<div id="summary-of-smaller-updates-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-smaller-updates-3" class="anchor"></a>Summary of smaller updates:</h2>
+<a href="#summary-of-smaller-updates-4" class="anchor"></a>Summary of smaller updates:</h2>
 <ul>
 <li>Changed license to MIT (after doing a bit of reading up on this)</li>
 <li>Fixed dimension-matching issue with user-provided draws for mixed logit models</li>
@@ -309,9 +316,9 @@
 <li>Removed support for using an estimated preference space model as an input in the <code><a href="https://rdrr.io/r/base/options.html">options()</a></code> function. I found this just far too confusing, and instead encourage users to supply a WTP space model with the computed WTP from a preference space model as starting parameters.</li>
 </ul>
 </div>
-<div id="summary-of-smaller-updates-4" class="section level2">
+<div id="summary-of-smaller-updates-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-smaller-updates-4" class="anchor"></a>Summary of smaller updates:</h2>
+<a href="#summary-of-smaller-updates-5" class="anchor"></a>Summary of smaller updates:</h2>
 <ul>
 <li>Updated the <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> and main <code><a href="../reference/logitr.html">logitr()</a></code> functions to keep the basic information (run #, log-likelihood value, number of iterations, and output status) whenever <code>numMultistarts</code> &gt; 1. Previously this information was only kept if <code>keepAllRuns</code> was set to <code>TRUE</code>.</li>
 </ul>
