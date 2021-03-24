@@ -123,7 +123,7 @@ getModelStandErrs <- function(covariance) {
   se <- rep(NA, ncol(covariance))
   tryCatch(
     {
-      se <- diag(sqrt(covariance))
+      se <- diag(sqrt(abs(covariance)))
     },
     error = function(e) {}
   )
