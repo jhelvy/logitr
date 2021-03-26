@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3.9001</span>
       </span>
     </div>
 
@@ -153,9 +153,9 @@
       <small>Source: <a href='https://github.com/jhelvy/logitr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="logitr-0139000" class="section level1">
-<h1 class="page-header" data-toc-text="0.1.3.9000">
-<a href="#logitr-0139000" class="anchor"></a>logitr 0.1.3.9000<small> Unreleased </small>
+    <div id="logitr-0139001" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.3.9001">
+<a href="#logitr-0139001" class="anchor"></a>logitr 0.1.3.9001<small> Unreleased </small>
 </h1>
 <div id="summary-of-larger-updates" class="section level2">
 <h2 class="hasAnchor">
@@ -171,14 +171,23 @@
 <li>Added covariance matrix to model export</li>
 </ul>
 </div>
+<div id="bugs" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bugs" class="anchor"></a>Bugs</h2>
+<ul>
+<li>When simulating shares from a WTP model, only accepted a price named “price” rather than something else such as “Price” - fixed this.</li>
+<li>
+<code><a href="../reference/simulateShares.html">simulateShares()</a></code> had another small bug - the shares were not correctly computed with a WTP space model because price was still being multiplied by -1. This has been corrected.</li>
+</ul>
+</div>
 </div>
     <div id="logitr-0129000" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.2.9000">
 <a href="#logitr-0129000" class="anchor"></a>logitr 0.1.2.9000<small> Unreleased </small>
 </h1>
-<div id="bugs" class="section level2">
+<div id="bugs-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bugs" class="anchor"></a>Bugs</h2>
+<a href="#bugs-1" class="anchor"></a>Bugs</h2>
 <ul>
 <li>Fixed bug where model with single variable would error due to a matrix being converted to a vector in the <code>standardDraws()</code> function</li>
 <li>Fixed bug in <code>getCatVarDummyNames()</code> - previously used string matching, which can accidentally match with other similarly-named variables.</li>
@@ -204,9 +213,9 @@
 <li>Re-defined the wtp space utility models as B<em>X - p. Before it was p + B</em>X and p was re-defined as -1*p.</li>
 </ul>
 </div>
-<div id="bugs-1" class="section level2">
+<div id="bugs-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bugs-1" class="anchor"></a>Bugs</h2>
+<a href="#bugs-2" class="anchor"></a>Bugs</h2>
 <ul>
 <li>If tidyverse library is loaded, data frames were getting converted to tibbles, which broke some things. Fixed this by forcing the input data to be a data.frame()</li>
 </ul>
@@ -237,9 +246,9 @@
 <li>Added <code>algorithm</code> to the <code>options</code> input, with the default being set to <code>"NLOPT_LD_LBFGS"</code>.</li>
 </ul>
 </div>
-<div id="bugs-2" class="section level2">
+<div id="bugs-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bugs-2" class="anchor"></a>Bugs</h2>
+<a href="#bugs-3" class="anchor"></a>Bugs</h2>
 <ul>
 <li>Fixed tiny bug in <code>getParTypes()</code> function - previously was not returning the correct <code>parNames</code> for continuous vs. discrete variables.</li>
 <li>Added an input check to make sure the modelSpace argument is either <code>"pref"</code> or <code>"wtp"</code>.</li>
