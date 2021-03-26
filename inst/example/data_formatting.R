@@ -50,7 +50,7 @@ model_dummy_price <- logitr(
   choiceName = 'choice',
   obsIDName  = 'obsnum',
   parNames   = c(
-    "price_15", "price_18", "price_23", "price_32",
+    "price15", "price18", "price23", "price32",
     'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100',
     'bev150', 'american', 'japanese', 'chinese', 'skorean',
     'phevFastcharge', 'bevFastcharge','opCost', 'accelTime')

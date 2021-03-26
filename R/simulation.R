@@ -60,8 +60,8 @@ mnlSimulation <- function(model, alts, priceName, alpha = 0.025) {
   price <- NA
   obsID <- rep(1, nrow(X))
   if (model$modelSpace == "wtp") {
-    price <- -1 * alts[, which(colnames(alts) == priceName)]
-    X <- as.matrix(alts[attNames[which(attNames != "price")]])
+    price <- alts[, which(colnames(alts) == priceName)]
+    X <- as.matrix(alts[attNames[which(attNames != priceName)]])
     getVUncDraws <- getMxlV_wtp
     getV <- getMnlV_wtp
   }
@@ -86,8 +86,8 @@ mxlSimulation <- function(model, alts, priceName, alpha = 0.025) {
   price <- NA
   obsID <- rep(1, nrow(X))
   if (model$modelSpace == "wtp") {
-    price <- -1 * alts[, which(colnames(alts) == priceName)]
-    X <- as.matrix(alts[attNames[which(attNames != "price")]])
+    price <- alts[, which(colnames(alts) == priceName)]
+    X <- as.matrix(alts[attNames[which(attNames != priceName)]])
     getVDraws <- getMxlV_wtp
   }
   betaUncDraws <- getUncertaintyDraws(model, numDraws)

@@ -1,4 +1,4 @@
-# logitr 0.1.3.9000
+# logitr 0.1.3.9001
 
 ## Summary of larger updates:
 
@@ -7,6 +7,11 @@
 ## Summary of smaller updates:
 
 - Added covariance matrix to model export
+
+## Bugs
+
+- When simulating shares from a WTP model, only accepted a price named "price" rather than something else such as "Price" - fixed this.
+- `simulateShares()` had another small bug - the shares were not correctly computed with a WTP space model because price was still being multiplied by -1. This has been corrected.
 
 # logitr 0.1.2.9000
 
