@@ -72,11 +72,16 @@ getParTypes <- function(df, parNames) {
 
 getDummyLevels <- function(data, parTypes) {
   discreteNames <- parTypes$discrete
-  levels <- lapply(data[discreteNames], unique)
   parNames <- list()
   for (i in seq_len(length(discreteNames))) {
     name <- discreteNames[i]
-    dummyNames <- paste0(name, levels[[name]])[-1]
+    var <- data[,name]
+    if (is.factor(var)) {
+      parLevels <- levels(var)
+    } else {
+      parLevels <- unique(var)
+    }
+    dummyNames <- paste0(name, parLevels)[-1]
     parNames[[i]] <- dummyNames
   }
   names(parNames) <- discreteNames
