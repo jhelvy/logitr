@@ -12,6 +12,7 @@
 
 - When simulating shares from a WTP model, only accepted a price named "price" rather than something else such as "Price" - fixed this.
 - `simulateShares()` had another small bug - the shares were not correctly computed with a WTP space model because price was still being multiplied by -1. This has been corrected.
+- Changes to automatic dummy coding were accidentally ignoring factor levels - that's been fixed.
 
 # logitr 0.1.2.9000
 
