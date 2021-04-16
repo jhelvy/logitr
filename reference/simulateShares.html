@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Simulate expected shares from a set of alternatives — simulateShares • logitr</title>
+<title>Simulate expected shares — simulateShares • logitr</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="Simulate expected shares from a set of alternatives — simulateShares" />
-<meta property="og:description" content="Returns the expected shares of a specific set of alternatives based
-on an estimated model." />
+<meta property="og:title" content="Simulate expected shares — simulateShares" />
+<meta property="og:description" content="Returns the expected shares for a set of one or more alternatives based
+on the results from an estimated model." />
 
 
 
@@ -151,17 +151,17 @@ on an estimated model." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Simulate expected shares from a set of alternatives</h1>
+    <h1>Simulate expected shares</h1>
     <small class="dont-index">Source: <a href='https://github.com/jhelvy/logitr/blob/master/R/simulation.R'><code>R/simulation.R</code></a></small>
     <div class="hidden name"><code>simulateShares.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Returns the expected shares of a specific set of alternatives based
-on an estimated model.</p>
+    <p>Returns the expected shares for a set of one or more alternatives based
+on the results from an estimated model.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>simulateShares</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>alts</span>, priceName <span class='op'>=</span> <span class='cn'>NULL</span>, alpha <span class='op'>=</span> <span class='fl'>0.025</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>simulateShares</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>alts</span>, obsIDName <span class='op'>=</span> <span class='cn'>NULL</span>, priceName <span class='op'>=</span> <span class='cn'>NULL</span>, alpha <span class='op'>=</span> <span class='fl'>0.025</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -176,6 +176,12 @@ function.</p></td>
       <td><p>A data frame of a set of alternatives for which to simulate
 shares. Each row is an alternative and each column an attribute
 corresponding to parameter names in the estimated model.</p></td>
+    </tr>
+    <tr>
+      <th>obsIDName</th>
+      <td><p>The name of the column that identifies each set of
+alternatives. Required if simulating results for more than one set of
+alternatives. Defaults to <code>NULL</code> (for a single set of alternatives).</p></td>
     </tr>
     <tr>
       <th>priceName</th>
