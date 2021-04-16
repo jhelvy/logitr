@@ -74,6 +74,9 @@ makeBlankModel <- function(modelInputs) {
     randParSummary   = NA,
     status           = -1,
     modelSpace       = modelInputs$modelSpace,
+    priceName        = modelInputs$priceName,
+    parNames         = modelInputs$parNames,
+    randPars         = modelInputs$randPars,
     parSetup         = modelInputs$parSetup,
     weightsUsed      = modelInputs$weightsUsed,
     options          = modelInputs$options

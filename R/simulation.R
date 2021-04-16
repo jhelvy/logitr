@@ -2,10 +2,10 @@
 # Functions for running simulations
 # ============================================================================
 
-#' Simulate expected shares from a set of alternatives
+#' Simulate expected shares
 #'
-#' Returns the expected shares of a specific set of alternatives based
-#' on an estimated model.
+#' Returns the expected shares for a set of one or more alternatives based
+#' on the results from an estimated model.
 #' @keywords logitr simluation
 #'
 #' @param model The output of a model estimated model using the `logitr()`
@@ -13,6 +13,9 @@
 #' @param alts A data frame of a set of alternatives for which to simulate
 #' shares. Each row is an alternative and each column an attribute
 #' corresponding to parameter names in the estimated model.
+#' @param obsIDName The name of the column that identifies each set of
+#' alternatives. Required if simulating results for more than one set of
+#' alternatives. Defaults to `NULL` (for a single set of alternatives).
 #' @param priceName The name of the parameter that identifies price. Only
 #' required for WTP space models. Defaults to `NULL`.
 #' @param alpha The sensitivity of the computed confidence interval, e.g. a
@@ -41,34 +44,48 @@
 #'
 #' # Run the simulation using the estimated preference space MNL model:
 #' simulateShares(mnl_pref, alts)
-simulateShares <- function(model, alts, priceName = NULL,
-                           alpha = 0.025) {
+simulateShares <- function(
+  model,
+  alts,
+  obsIDName = NULL,
+  priceName = NULL,
+  alpha = 0.025
+) {
   model <- allRunsCheck(model)
   if (isMxlModel(model$parSetup)) {
-    return(mxlSimulation(model, alts, priceName, alpha))
+    return(mxlSimulation(model, alts, obsIDName, priceName, alpha))
   } else {
-    return(mnlSimulation(model, alts, priceName, alpha))
+    return(mnlSimulation(model, alts, obsIDName, priceName, alpha))
   }
 }
 
-mnlSimulation <- function(model, alts, priceName, alpha = 0.025) {
+mnlSimulation <- function(model, alts, obsIDName, priceName, alpha = 0.025) {
   numDraws <- 10^4
   getVUncDraws <- getMxlV_pref
   getV <- getMnlV_pref
-  attNames <- colnames(alts)
-  X <- as.matrix(alts[attNames])
+  modelSpace <- model$modelSpace
+  recoded <- recodeData(alts, model$parNames, model$randPars)
+  X <- recoded$X
+  parNames <- recoded$parNames
+  randPars <- recoded$randPars
   price <- NA
-  obsID <- rep(1, nrow(X))
-  if (model$modelSpace == "wtp") {
-    price <- alts[, which(colnames(alts) == priceName)]
-    X <- as.matrix(alts[attNames[which(attNames != priceName)]])
+  if (is.null(obsIDName)) {
+    obsID <- rep(1, nrow(X))
+  } else {
+    obsID <- as.matrix(alts[obsIDName])
+  }
+  if (modelSpace == "wtp") {
+    price <- X[, which(colnames(X) == priceName)]
+    X <- X[, which(colnames(X) != priceName)]
     getVUncDraws <- getMxlV_wtp
     getV <- getMnlV_wtp
   }
-  betaUncDraws <- getUncertaintyDraws(model, numDraws)
-  betaUncDraws <- selectSimDraws(betaUncDraws, model, X)
-  V <- getV(stats::coef(model)[colnames(betaUncDraws)], X, price)
+  # Compute mean shares
+  V <- getV(stats::coef(model), X, price)
   meanShare <- getMnlLogit(V, obsID)
+  # Compute uncertainty with simulation
+  betaUncDraws <- getUncertaintyDraws(model, numDraws)
+  betaUncDraws <- selectSimDraws(betaUncDraws, modelSpace, X)
   VUncDraws <- getVUncDraws(betaUncDraws, X, price)
   logitUncDraws <- getMxlLogit(VUncDraws, obsID)
   shares <- as.data.frame(t(apply(logitUncDraws, 1, ci, alpha)))
@@ -78,16 +95,23 @@ mnlSimulation <- function(model, alts, priceName, alpha = 0.025) {
   return(shares)
 }
 
-mxlSimulation <- function(model, alts, priceName, alpha = 0.025) {
+mxlSimulation <- function(model, alts, obsIDName, priceName, alpha = 0.025) {
   numDraws <- 10^4
   getVDraws <- getMxlV_pref
-  attNames <- colnames(alts)
-  X <- as.matrix(alts[attNames])
+  modelSpace <- model$modelSpace
+  recoded <- recodeData(alts, model$parNames, model$randPars)
+  X <- recoded$X
+  parNames <- recoded$parNames
+  randPars <- recoded$randPars
   price <- NA
-  obsID <- rep(1, nrow(X))
-  if (model$modelSpace == "wtp") {
-    price <- alts[, which(colnames(alts) == priceName)]
-    X <- as.matrix(alts[attNames[which(attNames != priceName)]])
+  if (is.null(obsIDName)) {
+    obsID <- rep(1, nrow(X))
+  } else {
+    obsID <- as.matrix(alts[obsIDName])
+  }
+  if (modelSpace == "wtp") {
+    price <- X[, which(colnames(X) == priceName)]
+    X <- X[, which(colnames(X) != priceName)]
     getVDraws <- getMxlV_wtp
   }
   betaUncDraws <- getUncertaintyDraws(model, numDraws)
@@ -104,9 +128,9 @@ mxlSimulation <- function(model, alts, priceName, alpha = 0.025) {
   return(shares)
 }
 
-selectSimDraws <- function(betaDraws, model, X) {
+selectSimDraws <- function(betaDraws, modelSpace, X) {
   betaDraws <- as.data.frame(betaDraws)
-  if (model$modelSpace == "wtp") {
+  if (modelSpace == "wtp") {
     lambdaDraws <- betaDraws["lambda"]
     gammaDraws <- betaDraws[colnames(X)]
     betaDraws <- cbind(lambdaDraws, gammaDraws)
@@ -122,7 +146,7 @@ getSimPHat <- function(pars, model, X, price, obsID, getVDraws) {
     model$standardDraws
   )
   colnames(betaDraws) <- names(model$parSetup)
-  betaDraws <- selectSimDraws(betaDraws, model, X)
+  betaDraws <- selectSimDraws(betaDraws, model$modelSpace, X)
   VDraws <- getVDraws(betaDraws, X, price)
   logitDraws <- getMxlLogit(VDraws, obsID)
   pHat <- rowMeans(logitDraws, na.rm = T)

@@ -45,8 +45,7 @@ recodeData <- function(data, parNames, randPars) {
   parTypes <- getParTypes(data, parNames)
   if (!is.null(parTypes$discrete)) {
     dummyLevels <- getDummyLevels(data, parTypes)
-    parNames <- c(parTypes$continuous, unlist(dummyLevels))
-    names(parNames) <- NULL
+    parNames <- updateParNames(parTypes, dummyLevels)
     randPars <- updateRandPars(randPars, dummyLevels)
   }
   # Create interactions (if any exist)
@@ -85,6 +84,12 @@ getDummyLevels <- function(data, parTypes) {
     parNames[[i]] <- dummyNames
   }
   names(parNames) <- discreteNames
+  return(parNames)
+}
+
+updateParNames <- function(parTypes, dummyLevels) {
+  parNames <- c(parTypes$continuous, unlist(dummyLevels))
+  names(parNames) <- NULL
   return(parNames)
 }
 

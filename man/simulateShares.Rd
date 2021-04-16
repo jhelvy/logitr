@@ -2,9 +2,9 @@
 % Please edit documentation in R/simulation.R
 \name{simulateShares}
 \alias{simulateShares}
-\title{Simulate expected shares from a set of alternatives}
+\title{Simulate expected shares}
 \usage{
-simulateShares(model, alts, priceName = NULL, alpha = 0.025)
+simulateShares(model, alts, obsIDName = NULL, priceName = NULL, alpha = 0.025)
 }
 \arguments{
 \item{model}{The output of a model estimated model using the \code{logitr()}
@@ -13,6 +13,10 @@ function.}
 \item{alts}{A data frame of a set of alternatives for which to simulate
 shares. Each row is an alternative and each column an attribute
 corresponding to parameter names in the estimated model.}
+
+\item{obsIDName}{The name of the column that identifies each set of
+alternatives. Required if simulating results for more than one set of
+alternatives. Defaults to \code{NULL} (for a single set of alternatives).}
 
 \item{priceName}{The name of the parameter that identifies price. Only
 required for WTP space models. Defaults to \code{NULL}.}
@@ -25,8 +29,8 @@ A data frame with the estimated shares for each alternative in
 \code{alts}.
 }
 \description{
-Returns the expected shares of a specific set of alternatives based
-on an estimated model.
+Returns the expected shares for a set of one or more alternatives based
+on the results from an estimated model.
 }
 \examples{
 # Run a MNL model in the Preference Space:

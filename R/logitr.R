@@ -109,9 +109,18 @@
 #'   modelSpace = "wtp"
 #' )
 #' }
-logitr <- function(data, choiceName, obsIDName, parNames, priceName = NULL,
-                   randPars = NULL, randPrice = NULL, modelSpace = "pref",
-                   weightsName = NULL, options = list()) {
+logitr <- function(
+  data,
+  choiceName,
+  obsIDName,
+  parNames,
+  priceName = NULL,
+  randPars = NULL,
+  randPrice = NULL,
+  modelSpace = "pref",
+  weightsName = NULL,
+  options = list()
+) {
   modelInputs <- getModelInputs(
     data, choiceName, obsIDName, parNames, randPars, priceName, randPrice,
     modelSpace, weightsName, options

@@ -18,6 +18,8 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
   )
   # Get the design matrix and recode parameters that are categorical
   # or have interactions
+  parNames_orig <- parNames
+  randPars_orig <- randPars
   recoded <- recodeData(data, parNames, randPars)
   X <- recoded$X
   parNames <- recoded$parNames
@@ -40,9 +42,10 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
   # Create the modelInputs list
   modelInputs <- list(
     price = price, X = X, choice = choice, obsID = obsID,
-    weights = weights, priceName = priceName, parNameList = parNameList,
-    parSetup = parSetup, scaleFactors = NA, modelSpace = modelSpace,
-    modelType = "mnl", weightsUsed = weightsUsed, options = options
+    weights = weights, priceName = priceName, parNames = parNames_orig,
+    randPars = randPars_orig, parNameList = parNameList, parSetup = parSetup,
+    scaleFactors = NA, modelSpace = modelSpace, modelType = "mnl",
+    weightsUsed = weightsUsed, options = options
   )
   if (options$scaleInputs) {
     modelInputs <- scaleInputs(modelInputs)

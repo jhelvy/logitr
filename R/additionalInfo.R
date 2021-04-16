@@ -34,10 +34,13 @@ appendModelInfo <- function(model, modelInputs) {
     message          = model$message,
     status           = model$status,
     modelSpace       = modelInputs$modelSpace,
-    standardDraws    = NA,
-    randParSummary   = NA,
+    priceName        = modelInputs$priceName,
+    parNames         = modelInputs$parNames,
+    randPars         = modelInputs$randPars,
     parSetup         = modelInputs$parSetup,
     weightsUsed      = modelInputs$weightsUsed,
+    standardDraws    = NA,
+    randParSummary   = NA,
     options          = options
   ),
   class = "logitr"
