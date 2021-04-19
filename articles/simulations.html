@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3.9002</span>
       </span>
     </div>
 
@@ -128,72 +128,113 @@
 <div id="simulating-shares-from-estimated-models" class="section level1">
 <h1 class="hasAnchor">
 <a href="#simulating-shares-from-estimated-models" class="anchor"></a>Simulating shares from estimated models</h1>
-<p>To simulate shares, you first need to create a set of alternatives where each row is an alternative and each column an attribute. In this example, I’ll just use one of the choice observations from the <code>yogurt</code> dataset:</p>
+<p>To simulate shares, you first need to create a set of alternatives where each row is an alternative and each column an attribute. In this example, I just use a couple of the choice observations from the yogurt dataset (note that if you include more than one set of alternatives you also have to specify an <code>obsID</code>):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">alts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">yogurt</span>, <span class="va">obsID</span> <span class="op">==</span> <span class="fl">42</span>, select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'price'</span>, <span class="st">'brand'</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/row.names.html">row.names</a></span><span class="op">(</span><span class="va">alts</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'dannon'</span>, <span class="st">'hiland'</span>, <span class="st">'weight'</span>, <span class="st">'yoplait'</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">alts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">yogurt</span>, <span class="va">obsID</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">13</span><span class="op">)</span>,
+               select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span><span class="op">)</span>
+<span class="va">alts</span><span class="op">$</span><span class="va">obsID</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>
 <span class="va">alts</span>
-<span class="co">#&gt;         feat price   brand</span>
-<span class="co">#&gt; dannon     0   6.3  dannon</span>
-<span class="co">#&gt; hiland     1   6.1  hiland</span>
-<span class="co">#&gt; weight     0   7.9  weight</span>
-<span class="co">#&gt; yoplait    0  11.5 yoplait</span></code></pre></div>
+<span class="co">#&gt;     price feat   brand obsID</span>
+<span class="co">#&gt; 49    8.1    0  dannon     1</span>
+<span class="co">#&gt; 50    5.0    0  hiland     1</span>
+<span class="co">#&gt; 51    8.6    0  weight     1</span>
+<span class="co">#&gt; 52   10.8    0 yoplait     1</span>
+<span class="co">#&gt; 165   6.3    0  dannon     2</span>
+<span class="co">#&gt; 166   6.1    1  hiland     2</span>
+<span class="co">#&gt; 167   7.9    0  weight     2</span>
+<span class="co">#&gt; 168  11.5    0 yoplait     2</span></code></pre></div>
 <p>Let’s say we have estimated a preference space MNL model called <code>mnl_pref</code>. We can use the <code><a href="../reference/simulateShares.html">simulateShares()</a></code> function with the <code>mnl_pref</code> model to predict the shares for our <code>alts</code> set of alternatives:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sim_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">alts</span>, alpha <span class="op">=</span> <span class="fl">0.025</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">sim_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span>
+  model     <span class="op">=</span> <span class="va">mnl_pref</span>,
+  alts      <span class="op">=</span> <span class="va">alts</span>,
+  obsIDName <span class="op">=</span> <span class="st">"obsID"</span>,
+  alpha     <span class="op">=</span> <span class="fl">0.025</span>
+<span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mnl_pref</span>
-<span class="co">#&gt;              share_mean share_low share_high</span>
-<span class="co">#&gt; Alt: dannon  0.60766441 0.5472419 0.66030831</span>
-<span class="co">#&gt; Alt: hiland  0.02601869 0.0185838 0.03647575</span>
-<span class="co">#&gt; Alt: weight  0.17802424 0.1631124 0.19244809</span>
-<span class="co">#&gt; Alt: yoplait 0.18829266 0.1381660 0.24990247</span></code></pre></div>
-<p>The results show the expected shares for each alternative. The low and high values show a 95% confidence interval, estimated using simulation. You can change the CI level by setting alpha to a different value (e.g. a 90% CI is obtained with alpha = 0.05).</p>
+<span class="co">#&gt;   obsID       mean        low       high</span>
+<span class="co">#&gt; 1     1 0.43685490 0.39269490 0.47718441</span>
+<span class="co">#&gt; 2     1 0.03313009 0.02507738 0.04332101</span>
+<span class="co">#&gt; 3     1 0.19154770 0.17108211 0.21127280</span>
+<span class="co">#&gt; 4     1 0.33846731 0.28309482 0.40121059</span>
+<span class="co">#&gt; 5     2 0.60766441 0.54771166 0.65807364</span>
+<span class="co">#&gt; 6     2 0.02601869 0.01862508 0.03638610</span>
+<span class="co">#&gt; 7     2 0.17802424 0.16318391 0.19230676</span>
+<span class="co">#&gt; 8     2 0.18829266 0.13953699 0.25015029</span></code></pre></div>
+<p>The results show the expected shares for each alternative. The low and high values show a 95% confidence interval, estimated using simulation. You can change the CI level by setting <code>alpha</code> to a different value (e.g. a 90% CI is obtained with alpha = 0.05).</p>
 <p>You can also use WTP space models to simulate shares, but you must provide the additional <code>priceName</code> argument to the <code><a href="../reference/simulateShares.html">simulateShares()</a></code> function. For example, here are the results from an equivalent model but in the WTP space:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sim_mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span><span class="va">mnl_wtp</span>, <span class="va">alts</span>, priceName <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span></code></pre></div>
-<pre><code>#&gt; NOTE: Using results from run 6 of 10 multistart runs
+<code class="sourceCode R"><span class="va">sim_mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span>
+  model     <span class="op">=</span> <span class="va">mnl_wtp</span>,
+  alts      <span class="op">=</span> <span class="va">alts</span>,
+  obsIDName <span class="op">=</span> <span class="st">"obsID"</span>,
+  priceName <span class="op">=</span> <span class="st">'price'</span>
+<span class="op">)</span></code></pre></div>
+<pre><code>#&gt; NOTE: Using results from run 5 of 10 multistart runs
 #&gt; (the run with the largest log-likelihood value)</code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mnl_wtp</span>
-<span class="co">#&gt;              share_mean  share_low share_high</span>
-<span class="co">#&gt; Alt: dannon  0.60767258 0.55591219 0.65925460</span>
-<span class="co">#&gt; Alt: hiland  0.02601745 0.01794113 0.03751283</span>
-<span class="co">#&gt; Alt: weight  0.17802316 0.14697347 0.20794889</span>
-<span class="co">#&gt; Alt: yoplait 0.18828681 0.16364556 0.21140463</span></code></pre></div>
+<span class="co">#&gt;   obsID       mean        low       high</span>
+<span class="co">#&gt; 1     1 0.43686158 0.40414664 0.47272560</span>
+<span class="co">#&gt; 2     1 0.03312949 0.02477828 0.04461200</span>
+<span class="co">#&gt; 3     1 0.19154781 0.16401864 0.21764956</span>
+<span class="co">#&gt; 4     1 0.33846113 0.31764229 0.35918809</span>
+<span class="co">#&gt; 5     2 0.60767258 0.55572520 0.66047164</span>
+<span class="co">#&gt; 6     2 0.02601745 0.01808077 0.03814392</span>
+<span class="co">#&gt; 7     2 0.17802316 0.14679338 0.20825615</span>
+<span class="co">#&gt; 8     2 0.18828681 0.16377254 0.21154487</span></code></pre></div>
 <p>Since these two models are equivalent except in different spaces, the simulation results should be the same.</p>
 <p>Simulations also work with mixed logit models, and they account for how heterogeneity is modeled by simulating draws from the population estimates of the estimated model:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sim_mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span><span class="va">mxl_pref</span>, <span class="va">alts</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">sim_mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span>
+  model     <span class="op">=</span> <span class="va">mxl_pref</span>,
+  alts      <span class="op">=</span> <span class="va">alts</span>,
+  obsIDName <span class="op">=</span> <span class="st">"obsID"</span>
+<span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mxl_pref</span>
-<span class="co">#&gt;              share_mean  share_low share_high</span>
-<span class="co">#&gt; Alt: dannon  0.58810362 0.49864816  0.6429203</span>
-<span class="co">#&gt; Alt: hiland  0.08255453 0.03570544  0.1616451</span>
-<span class="co">#&gt; Alt: weight  0.16123072 0.14316804  0.1856815</span>
-<span class="co">#&gt; Alt: yoplait 0.16811113 0.12543528  0.2357032</span></code></pre></div>
+<span class="co">#&gt;   obsID       mean        low       high</span>
+<span class="co">#&gt; 1     1 0.44440022 0.39966373 0.48914020</span>
+<span class="co">#&gt; 2     1 0.02783352 0.02116582 0.06187557</span>
+<span class="co">#&gt; 3     1 0.18789792 0.16198756 0.20579225</span>
+<span class="co">#&gt; 4     1 0.33986833 0.27689355 0.39963978</span>
+<span class="co">#&gt; 5     2 0.58810362 0.49936984 0.64238818</span>
+<span class="co">#&gt; 6     2 0.08255453 0.03391665 0.16133241</span>
+<span class="co">#&gt; 7     2 0.16123072 0.14417806 0.18581767</span>
+<span class="co">#&gt; 8     2 0.16811113 0.12548015 0.23389506</span></code></pre></div>
 <p>Likewise, mixed logit WTP space models can also be used to simulate shares:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sim_mxl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span><span class="va">mxl_wtp</span>, <span class="va">alts</span>, priceName <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">sim_mxl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span>
+  model     <span class="op">=</span> <span class="va">mxl_wtp</span>,
+  alts      <span class="op">=</span> <span class="va">alts</span>,
+  obsIDName <span class="op">=</span> <span class="st">"obsID"</span>,
+  priceName <span class="op">=</span> <span class="st">'price'</span>
+<span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mxl_wtp</span>
-<span class="co">#&gt;              share_mean  share_low share_high</span>
-<span class="co">#&gt; Alt: dannon  0.58896563 0.51580423  0.6265984</span>
-<span class="co">#&gt; Alt: hiland  0.08109878 0.03457787  0.1663751</span>
-<span class="co">#&gt; Alt: weight  0.16145224 0.13075271  0.1961839</span>
-<span class="co">#&gt; Alt: yoplait 0.16848336 0.14478248  0.2058806</span></code></pre></div>
+<span class="co">#&gt;   obsID       mean        low       high</span>
+<span class="co">#&gt; 1     1 0.44442847 0.40996671 0.48075307</span>
+<span class="co">#&gt; 2     1 0.02765020 0.02141526 0.06119315</span>
+<span class="co">#&gt; 3     1 0.18785342 0.15638187 0.21016546</span>
+<span class="co">#&gt; 4     1 0.34006792 0.30974220 0.36556140</span>
+<span class="co">#&gt; 5     2 0.58896563 0.51730111 0.62677611</span>
+<span class="co">#&gt; 6     2 0.08109878 0.03443025 0.16413172</span>
+<span class="co">#&gt; 7     2 0.16145224 0.12992764 0.19598211</span>
+<span class="co">#&gt; 8     2 0.16848336 0.14435121 0.20628739</span></code></pre></div>
 <p>Here is a bar plot of the results from each model:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 
 <span class="va">sims</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">sim_mnl_pref</span>, <span class="va">sim_mnl_wtp</span>, <span class="va">sim_mxl_pref</span>, <span class="va">sim_mxl_wtp</span><span class="op">)</span>
+<span class="va">sims</span> <span class="op">&lt;-</span> <span class="va">sims</span><span class="op">[</span><span class="va">sims</span><span class="op">$</span><span class="va">obsID</span> <span class="op">==</span> <span class="fl">1</span>,<span class="op">]</span>
 <span class="va">sims</span><span class="op">$</span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"mnl_pref"</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"mnl_wtp"</span>, <span class="fl">4</span><span class="op">)</span>,
                 <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"mxl_pref"</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"mxl_wtp"</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>
-<span class="va">sims</span><span class="op">$</span><span class="va">alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/row.names.html">row.names</a></span><span class="op">(</span><span class="va">alts</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span>
+<span class="va">sims</span><span class="op">$</span><span class="va">alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"dannon"</span>, <span class="st">"hiland"</span>, <span class="st">"weight"</span>, <span class="st">"yoplait"</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span>
 
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">sims</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">alt</span>, y <span class="op">=</span> <span class="va">share_mean</span>, fill <span class="op">=</span> <span class="va">model</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">sims</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">alt</span>, y <span class="op">=</span> <span class="va">mean</span>, fill <span class="op">=</span> <span class="va">model</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">'identity'</span>, width <span class="op">=</span> <span class="fl">0.7</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html">geom_errorbar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">share_low</span>, ymax <span class="op">=</span> <span class="va">share_high</span><span class="op">)</span>,
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html">geom_errorbar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">low</span>, ymax <span class="op">=</span> <span class="va">high</span><span class="op">)</span>,
                   width <span class="op">=</span> <span class="fl">0.2</span>, position <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html">position_dodge</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'Alternative'</span>, y <span class="op">=</span> <span class="st">'Expected Share'</span><span class="op">)</span> <span class="op">+</span>
