@@ -144,11 +144,11 @@
 <code class="sourceCode R"><span class="va">sim_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">alts</span>, alpha <span class="op">=</span> <span class="fl">0.025</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mnl_pref</span>
-<span class="co">#&gt;              share_mean  share_low share_high</span>
-<span class="co">#&gt; Alt: dannon  0.60766441 0.54836639 0.65995577</span>
-<span class="co">#&gt; Alt: hiland  0.02601869 0.01837099 0.03621579</span>
-<span class="co">#&gt; Alt: weight  0.17802424 0.16319840 0.19229173</span>
-<span class="co">#&gt; Alt: yoplait 0.18829266 0.13827150 0.25008502</span></code></pre></div>
+<span class="co">#&gt;              share_mean share_low share_high</span>
+<span class="co">#&gt; Alt: dannon  0.60766441 0.5472419 0.66030831</span>
+<span class="co">#&gt; Alt: hiland  0.02601869 0.0185838 0.03647575</span>
+<span class="co">#&gt; Alt: weight  0.17802424 0.1631124 0.19244809</span>
+<span class="co">#&gt; Alt: yoplait 0.18829266 0.1381660 0.24990247</span></code></pre></div>
 <p>The results show the expected shares for each alternative. The low and high values show a 95% confidence interval, estimated using simulation. You can change the CI level by setting alpha to a different value (e.g. a 90% CI is obtained with alpha = 0.05).</p>
 <p>You can also use WTP space models to simulate shares, but you must provide the additional <code>priceName</code> argument to the <code><a href="../reference/simulateShares.html">simulateShares()</a></code> function. For example, here are the results from an equivalent model but in the WTP space:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -158,10 +158,10 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mnl_wtp</span>
 <span class="co">#&gt;              share_mean  share_low share_high</span>
-<span class="co">#&gt; Alt: dannon  0.60766846 0.55472992 0.65902879</span>
-<span class="co">#&gt; Alt: hiland  0.02601828 0.01825605 0.03741908</span>
-<span class="co">#&gt; Alt: weight  0.17802441 0.14780843 0.20856614</span>
-<span class="co">#&gt; Alt: yoplait 0.18828885 0.16397936 0.21237008</span></code></pre></div>
+<span class="co">#&gt; Alt: dannon  0.60767258 0.55591219 0.65925460</span>
+<span class="co">#&gt; Alt: hiland  0.02601745 0.01794113 0.03751283</span>
+<span class="co">#&gt; Alt: weight  0.17802316 0.14697347 0.20794889</span>
+<span class="co">#&gt; Alt: yoplait 0.18828681 0.16364556 0.21140463</span></code></pre></div>
 <p>Since these two models are equivalent except in different spaces, the simulation results should be the same.</p>
 <p>Simulations also work with mixed logit models, and they account for how heterogeneity is modeled by simulating draws from the population estimates of the estimated model:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -169,20 +169,20 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mxl_pref</span>
 <span class="co">#&gt;              share_mean  share_low share_high</span>
-<span class="co">#&gt; Alt: dannon  0.58862481 0.49891158  0.6408820</span>
-<span class="co">#&gt; Alt: hiland  0.08156525 0.03407536  0.1575700</span>
-<span class="co">#&gt; Alt: weight  0.16132297 0.14404022  0.1851814</span>
-<span class="co">#&gt; Alt: yoplait 0.16848698 0.12651578  0.2375648</span></code></pre></div>
+<span class="co">#&gt; Alt: dannon  0.58810362 0.49864816  0.6429203</span>
+<span class="co">#&gt; Alt: hiland  0.08255453 0.03570544  0.1616451</span>
+<span class="co">#&gt; Alt: weight  0.16123072 0.14316804  0.1856815</span>
+<span class="co">#&gt; Alt: yoplait 0.16811113 0.12543528  0.2357032</span></code></pre></div>
 <p>Likewise, mixed logit WTP space models can also be used to simulate shares:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mxl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span><span class="va">mxl_wtp</span>, <span class="va">alts</span>, priceName <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mxl_wtp</span>
 <span class="co">#&gt;              share_mean  share_low share_high</span>
-<span class="co">#&gt; Alt: dannon  0.59211603 0.51409206  0.6310785</span>
-<span class="co">#&gt; Alt: hiland  0.06818846 0.02841473  0.1568899</span>
-<span class="co">#&gt; Alt: weight  0.16610430 0.13087019  0.1999209</span>
-<span class="co">#&gt; Alt: yoplait 0.17359121 0.14553146  0.2159783</span></code></pre></div>
+<span class="co">#&gt; Alt: dannon  0.58896563 0.51580423  0.6265984</span>
+<span class="co">#&gt; Alt: hiland  0.08109878 0.03457787  0.1663751</span>
+<span class="co">#&gt; Alt: weight  0.16145224 0.13075271  0.1961839</span>
+<span class="co">#&gt; Alt: yoplait 0.16848336 0.14478248  0.2058806</span></code></pre></div>
 <p>Here is a bar plot of the results from each model:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>

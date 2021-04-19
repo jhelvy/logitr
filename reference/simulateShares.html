@@ -161,7 +161,14 @@ on the results from an estimated model." />
 on the results from an estimated model.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>simulateShares</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>alts</span>, obsIDName <span class='op'>=</span> <span class='cn'>NULL</span>, priceName <span class='op'>=</span> <span class='cn'>NULL</span>, alpha <span class='op'>=</span> <span class='fl'>0.025</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>simulateShares</span><span class='op'>(</span>
+  <span class='va'>model</span>,
+  <span class='va'>alts</span>,
+  obsIDName <span class='op'>=</span> <span class='cn'>NULL</span>,
+  priceName <span class='op'>=</span> <span class='cn'>NULL</span>,
+  alpha <span class='op'>=</span> <span class='fl'>0.025</span>,
+  numDraws <span class='op'>=</span> <span class='fl'>10</span><span class='op'>^</span><span class='fl'>4</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -192,6 +199,11 @@ required for WTP space models. Defaults to <code>NULL</code>.</p></td>
       <th>alpha</th>
       <td><p>The sensitivity of the computed confidence interval, e.g. a
 90% CI is obtained with <code>alpha = 0.05</code>. Defaults to <code>alpha = 0.025</code>.</p></td>
+    </tr>
+    <tr>
+      <th>numDraws</th>
+      <td><p>The number of draws to use in simulating uncertainty
+for the computed confidence interval.</p></td>
     </tr>
     </table>
 
