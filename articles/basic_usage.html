@@ -143,14 +143,13 @@
 <p>The <code>data</code> argument must be provided a <code>data.frame</code> arranged in “long” or “tidy” format <span class="citation">[@Wickham2014]</span>. Each row should be an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. each choice observation could have a different number of alternatives). The data must also include variables for each of the following arguments in the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
 <ul>
 <li>
-<code>choiceName</code>: A dummy variable that identifies which alternative was chosen (1<code>is chosen,</code>0` is not chosen). Only one alternative should be chosen per choice observation.</li>
+<code>choiceName</code>: A dummy variable that identifies which alternative was chosen (<code>1</code> is chosen, <code>0</code> is not chosen). Only one alternative should be chosen per choice observation.</li>
 <li>
 <code>obsIDName</code>: A sequence of repeated numbers that identifies each unique choice observation For example, if the first three choice observations had 2 alternatives each, then the first 6 rows of the <code>obsID</code> variable would be <code>1, 1, 2, 2, 3, 3</code>.</li>
 <li>
 <code>parNames</code>: The names of the variables that will be used as model covariates. For WTP space models, the price variable should <strong>not</strong> be included in <code>parNames</code> as it is provided separately with the <code>priceName</code> argument.</li>
 </ul>
-<p>The {logitr} package contains several example data sets that illustrate this data structure.</p>
-<p>You can read more details in the <a href="data_formatting.html">“Data Formatting and Encoding”</a> vignette.</p>
+<p>The <a href="data_formatting.html">“Data Formatting and Encoding”</a> vignette has more details about the required data format.</p>
 </div>
 <div id="preference-space-models" class="section level2">
 <h2 class="hasAnchor">
@@ -165,13 +164,13 @@
 \end{equation}\]</span></p>
 <p><span class="math display">\[\begin{equation}
     v_{j} =
-        \mathbf{β}' \mathrm{\mathbf{x}}_{j} -
+        \mathbf{β}' \mathrm{\mathbf{x}}_{j} +
         \alpha p_{j}
         \hspace{0.5in}
 \label{eq:utilityPreferenceObserved}
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(\mathbf{β}\)</span> is the vector of coefficients for non-price attributes <span class="math inline">\(\mathrm{\mathbf{x}}_{j}\)</span>, <span class="math inline">\(\alpha\)</span> is the coefficient for price <span class="math inline">\(p_{j}\)</span>. Accordingly, each parameter in the <code>parNames</code> argument is an additive part of <span class="math inline">\(v_{j}\)</span>.</p>
-<p>For example, if the observed utility was <span class="math inline">\(v_{j} = \beta x_{j} - \alpha p_{j}\)</span>, where <span class="math inline">\(p_{j}\)</span> is “price” and <span class="math inline">\(x_{j}\)</span> is “size”, then the <code>parNames</code> argument should be <code><a href="https://rdrr.io/r/base/c.html">c("price", "size")</a></code>. Such an example could be estimated with the following code, where the <code>data</code> object is a <code>data.frame</code> with columns named <code>"choice"</code>, <code>"obsID"</code>, <code>"price"</code>, and <code>"size"</code>:</p>
+<p>For example, if the observed utility was <span class="math inline">\(v_{j} = \beta x_{j} + \alpha p_{j}\)</span>, where <span class="math inline">\(p_{j}\)</span> is “price” and <span class="math inline">\(x_{j}\)</span> is “size”, then the <code>parNames</code> argument should be <code><a href="https://rdrr.io/r/base/c.html">c("price", "size")</a></code>. Such an example could be estimated with the following code, where the <code>data</code> object is a <code>data.frame</code> with columns named <code>"choice"</code>, <code>"obsID"</code>, <code>"price"</code>, and <code>"size"</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>mnl_pref &lt;-<span class="st"> </span><span class="kw">logitr</span>(</span>
 <span id="cb2-2"><a href="#cb2-2"></a>    <span class="dt">data       =</span> data,</span>
 <span id="cb2-3"><a href="#cb2-3"></a>    <span class="dt">choiceName =</span> <span class="st">"choice"</span>,</span>
@@ -200,7 +199,7 @@
 <h2 class="hasAnchor">
 <a href="#mixed-logit-models" class="anchor"></a>Mixed logit models</h2>
 <p>To estimate a mixed logit model, use the <code>randPars</code> argument to denote which parameters will be modeled with a distribution. The current package version supports normal and log-normal distributions.</p>
-<p>For example, if the observed utility was <span class="math inline">\(v_{j} = \beta x_{j} - \alpha p_{j}\)</span>, where <span class="math inline">\(p_{j}\)</span> is “price” and <span class="math inline">\(x_{j}\)</span> is “size” and you wanted to model the <code>"size"</code> parameter, <span class="math inline">\(\beta\)</span>, with a normal or log-normal distribution, set <code>randPars = c(size = "n")</code> or <code>randPars = c(size = "ln")</code>:</p>
+<p>For example, if the observed utility was <span class="math inline">\(v_{j} = \beta x_{j} + \alpha p_{j}\)</span>, where <span class="math inline">\(p_{j}\)</span> is “price” and <span class="math inline">\(x_{j}\)</span> is “size” and you wanted to model the <code>"size"</code> parameter, <span class="math inline">\(\beta\)</span>, with a normal or log-normal distribution, set <code>randPars = c(size = "n")</code> or <code>randPars = c(size = "ln")</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
     data       <span class="op">=</span> <span class="va">data</span>,

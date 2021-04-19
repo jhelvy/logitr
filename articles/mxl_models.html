@@ -184,8 +184,8 @@
   data       <span class="op">=</span> <span class="va">yogurt</span>,
   choiceName <span class="op">=</span> <span class="st">'choice'</span>,
   obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
-  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'hiland'</span>, <span class="st">'yoplait'</span>, <span class="st">'dannon'</span><span class="op">)</span>,
-  randPars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">'n'</span>, hiland <span class="op">=</span> <span class="st">'n'</span>, yoplait <span class="op">=</span> <span class="st">'n'</span>, dannon <span class="op">=</span> <span class="st">'n'</span><span class="op">)</span>,
+  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>,
+  randPars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">'n'</span>, brand <span class="op">=</span> <span class="st">'n'</span><span class="op">)</span>,
   <span class="co"># You should run a multistart for MXL models since they are non-convex,</span>
   <span class="co"># but it can take a long time. Here I just use 5 starts for brevity:</span>
   options    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>numMultiStarts <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
@@ -300,9 +300,9 @@
   data       <span class="op">=</span> <span class="va">yogurt</span>,
   choiceName <span class="op">=</span> <span class="st">'choice'</span>,
   obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
-  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'hiland'</span>, <span class="st">'yoplait'</span>, <span class="st">'dannon'</span><span class="op">)</span>,
+  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>,
   priceName  <span class="op">=</span> <span class="st">'price'</span>,
-  randPars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">'n'</span>, hiland <span class="op">=</span> <span class="st">'n'</span>, yoplait <span class="op">=</span> <span class="st">'n'</span>, dannon <span class="op">=</span> <span class="st">'n'</span><span class="op">)</span>,
+  randPars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">'n'</span>, brand <span class="op">=</span> <span class="st">'n'</span><span class="op">)</span>,
   modelSpace <span class="op">=</span> <span class="st">'wtp'</span>,
   options    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
     <span class="co"># You should run a multistart for MXL models since they are non-convex,</span>

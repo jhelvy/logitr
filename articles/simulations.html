@@ -130,15 +130,14 @@
 <a href="#simulating-shares-from-estimated-models" class="anchor"></a>Simulating shares from estimated models</h1>
 <p>To simulate shares, you first need to create a set of alternatives where each row is an alternative and each column an attribute. In this example, I’ll just use one of the choice observations from the <code>yogurt</code> dataset:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">alts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">yogurt</span>, <span class="va">obsID</span> <span class="op">==</span> <span class="fl">42</span>,
-               select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'price'</span>, <span class="st">'hiland'</span>, <span class="st">'weight'</span>, <span class="st">'yoplait'</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">alts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">yogurt</span>, <span class="va">obsID</span> <span class="op">==</span> <span class="fl">42</span>, select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'price'</span>, <span class="st">'brand'</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/row.names.html">row.names</a></span><span class="op">(</span><span class="va">alts</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'dannon'</span>, <span class="st">'hiland'</span>, <span class="st">'weight'</span>, <span class="st">'yoplait'</span><span class="op">)</span>
 <span class="va">alts</span>
-<span class="co">#&gt;         feat price hiland weight yoplait</span>
-<span class="co">#&gt; dannon     0   6.3      0      0       0</span>
-<span class="co">#&gt; hiland     1   6.1      1      0       0</span>
-<span class="co">#&gt; weight     0   7.9      0      1       0</span>
-<span class="co">#&gt; yoplait    0  11.5      0      0       1</span></code></pre></div>
+<span class="co">#&gt;         feat price   brand</span>
+<span class="co">#&gt; dannon     0   6.3  dannon</span>
+<span class="co">#&gt; hiland     1   6.1  hiland</span>
+<span class="co">#&gt; weight     0   7.9  weight</span>
+<span class="co">#&gt; yoplait    0  11.5 yoplait</span></code></pre></div>
 <p>Let’s say we have estimated a preference space MNL model called <code>mnl_pref</code>. We can use the <code><a href="../reference/simulateShares.html">simulateShares()</a></code> function with the <code>mnl_pref</code> model to predict the shares for our <code>alts</code> set of alternatives:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">alts</span>, alpha <span class="op">=</span> <span class="fl">0.025</span><span class="op">)</span></code></pre></div>

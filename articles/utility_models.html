@@ -133,7 +133,7 @@
 <p>Adopting the same notation as in Helveston et al. <span class="citation">(2018)</span>, consider the following utility model:</p>
 <p><span class="math display">\[\begin{equation}
     u^*_{j} =
-        \mathbf{β}^{*'} \mathrm{\mathbf{x}}_{j} - 
+        \mathbf{β}^{*'} \mathrm{\mathbf{x}}_{j} +
         \alpha^{*} p_{j} +
         \varepsilon^{*}_{j},
         \quad\quad
@@ -143,7 +143,7 @@
 <p>where <span class="math inline">\(\mathbf{β}^{*}\)</span> is the vector of coefficients for non-price attributes <span class="math inline">\(\mathrm{\mathbf{x}}_{j}\)</span>, <span class="math inline">\(\alpha^{*}\)</span> is the coefficient for price <span class="math inline">\(p_{j}\)</span>, and the error term, <span class="math inline">\(\varepsilon^{*}_{j}\)</span>, is an IID random variable with a Gumbel extreme value distribution of mean zero and variance <span class="math inline">\(\sigma^2(\pi^2/6)\)</span>. This model is not identified since there exists an infinite set of combinations of values for <span class="math inline">\(\mathbf{β}^{*}\)</span>, <span class="math inline">\(\alpha^{*}\)</span>, and <span class="math inline">\(\sigma\)</span> that produce the same choice probabilities. In order to specify an identifiable model, the modeler must normalize equation (). One approach is to normalize the scale of the error term by dividing equation () by <span class="math inline">\(\sigma\)</span>, producing the “preference space” utility specification:</p>
 <p><span class="math display">\[\begin{equation}
     \left(\frac{u^*_{j}}{\sigma}\right) =
-        \left( \frac{\mathbf{β}^{*}}{\sigma} \right)' \mathrm{\mathbf{x}}_{j} -
+        \left( \frac{\mathbf{β}^{*}}{\sigma} \right)' \mathrm{\mathbf{x}}_{j} +
         \left( \frac{\alpha^{*}}{\sigma} \right) p_{j} +
         \left( \frac{\varepsilon^{*}_{j}}{\sigma} \right),
         \quad\quad
@@ -153,7 +153,7 @@
 <p>The typical preference space parameterization of the multinomial logit (MNL) model can then be written by rewriting equation () with <span class="math inline">\(u_j = (u^*_j / \sigma)\)</span>, <span class="math inline">\(\mathbf{β}= (\mathbf{β}^{*} / \sigma)\)</span>, <span class="math inline">\(\alpha = (\alpha^{*} / \sigma)\)</span>, and <span class="math inline">\(\varepsilon_{j} = (\varepsilon^{*}_{j} / \sigma)\)</span>:</p>
 <p><span class="math display">\[\begin{equation}
     u_{j} =
-        \mathbf{β}' \mathrm{\mathbf{x}}_{j} -
+        \mathbf{β}' \mathrm{\mathbf{x}}_{j} +
         \alpha p_{j} +
         \varepsilon_{j}
         \hspace{0.5in}
@@ -161,17 +161,17 @@
 \label{eq:utilityPreference}
 \end{equation}\]</span></p>
 <p>The vector <span class="math inline">\(\mathbf{β}\)</span> represents the marginal utility for changes in each non-price attribute, and <span class="math inline">\(\alpha\)</span> represents the marginal utility obtained from price reductions. In addition, the coefficients <span class="math inline">\(\mathbf{β}\)</span> and <span class="math inline">\(\alpha\)</span> are measured in units of <em>utility</em>, which only has relative rather than absolute meaning.</p>
-<p>The alternative normalization approach is to normalize equation () by <span class="math inline">\(\alpha^*\)</span> instead of <span class="math inline">\(\sigma\)</span>, producing the “willingness-to-pay (WTP) space” utility specification:</p>
+<p>The alternative normalization approach is to normalize equation () by <span class="math inline">\(- \alpha^*\)</span> instead of <span class="math inline">\(\sigma\)</span>, producing the “willingness-to-pay (WTP) space” utility specification:</p>
 <p><span class="math display">\[\begin{equation}
-    \left(\frac{u^*_{j}}{\alpha^*}\right) =
-        \left(\frac{\mathbf{β}^{*}}{\alpha^{*}}\right)' \mathrm{\mathbf{x}}_{j} -
-        p_{j} +
-        \left(\frac{\varepsilon^{*}_{j}}{\alpha^{*}}\right),
+    \left(\frac{u^*_{j}}{- \alpha^*}\right) =
+        \left(\frac{\mathbf{β}^{*}}{- \alpha^{*}}\right)' \mathrm{\mathbf{x}}_{j} +
+        \left(\frac{\alpha^{*}}{- \alpha^{*}}\right) p_{j} +
+        \left(\frac{\varepsilon^{*}_{j}}{- \alpha^{*}}\right),
         \quad\quad
-        \left(\frac{\varepsilon^{*}_{j}}{\alpha^{*}}\right) \sim \textrm{Gumbel} \left(0, \frac{\sigma^2}{(\alpha^{*})^2}\frac{\pi^2}{6} \right)
+        \left(\frac{\varepsilon^{*}_{j}}{- \alpha^{*}}\right) \sim \textrm{Gumbel} \left(0, \frac{\sigma^2}{(- \alpha^{*})^2}\frac{\pi^2}{6} \right)
 \label{eq:utilityWtpScaled}
 \end{equation}\]</span></p>
-<p>Since the error term in equation is scaled by <span class="math inline">\(\lambda^2 = \sigma^2/(\alpha^{*})^2\)</span>, we can rewrite equation () by multiplying both sides by <span class="math inline">\(\lambda= (\alpha^{*} / \sigma\)</span>) and renaming <span class="math inline">\(u_j = (\lambda u^*_j / \alpha^*)\)</span>, <span class="math inline">\(\mathbf{ω}= (\mathbf{β}^{*} / \alpha^{*}\)</span>), and <span class="math inline">\(\varepsilon_j = (\lambda \varepsilon^*_j / \alpha^*)\)</span>:</p>
+<p>Since the error term in equation is scaled by <span class="math inline">\(\lambda^2 = \sigma^2/(- \alpha^{*})^2\)</span>, we can rewrite equation () by multiplying both sides by <span class="math inline">\(\lambda= (- \alpha^{*} / \sigma\)</span>) and renaming <span class="math inline">\(u_j = (\lambda u^*_j /- \alpha^*)\)</span>, <span class="math inline">\(\mathbf{ω}= (\mathbf{β}^{*} /- \alpha^{*}\)</span>), and <span class="math inline">\(\varepsilon_j = (\lambda \varepsilon^*_j / - \alpha^*)\)</span>:</p>
 <p><span class="math display">\[\begin{equation}
     u_{j} =
         \lambda \left(
@@ -183,7 +183,7 @@
 \label{eq:utilityWtp}
 \end{equation}\]</span></p>
 <p>Here <span class="math inline">\(\mathbf{ω}\)</span> represents the marginal WTP for changes in each non-price attribute, and <span class="math inline">\(\lambda\)</span> represents the scale of the deterministic portion of utility relative to the standardized scale of the random error term.</p>
-<p>The utility models in equations  and  represent the preference space and WTP space utility specifications, respectively. In equation , WTP is estimated as <span class="math inline">\(\hat{\mathbf{β}} / \hat{\alpha}\)</span>; in equation , WTP is simply <span class="math inline">\(\hat{\mathbf{ω}}\)</span>.</p>
+<p>The utility models in equations  and  represent the preference space and WTP space utility specifications, respectively. In equation , WTP is estimated as <span class="math inline">\(\hat{\mathbf{β}} / \hat{- \alpha}\)</span>; in equation , WTP is simply <span class="math inline">\(\hat{\mathbf{ω}}\)</span>.</p>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">
