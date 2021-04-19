@@ -1,6 +1,6 @@
 \begin{equation}
     \left(\frac{u^*_{j}}{\sigma}\right) =
-        \left( \frac{\betaVec^{*}}{\sigma} \right)' \xVec_{j} -
+        \left( \frac{\betaVec^{*}}{\sigma} \right)' \xVec_{j} +
         \left( \frac{\alpha^{*}}{\sigma} \right) p_{j} +
         \left( \frac{\varepsilon^{*}_{j}}{\sigma} \right),
         \quad\quad

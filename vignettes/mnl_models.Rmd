@@ -68,7 +68,7 @@ mnl_pref <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'hiland', 'yoplait', 'dannon')
+  parNames   = c('price', 'feat', 'brand')
 )
 ```
 ```
@@ -113,7 +113,7 @@ mnl_wtp <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
-  parNames   = c('feat', 'hiland', 'yoplait', 'dannon'),
+  parNames   = c('feat', 'brand'),
   priceName  = 'price',
   modelSpace = 'wtp',
   options = list(

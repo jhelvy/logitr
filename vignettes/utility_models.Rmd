@@ -39,18 +39,18 @@ The typical preference space parameterization of the multinomial logit (MNL) mod
 
 The vector $\betaVec$ represents the marginal utility for changes in each non-price attribute, and $\alpha$ represents the marginal utility obtained from price reductions. In addition, the coefficients $\betaVec$ and $\alpha$ are measured in units of *utility*, which only has relative rather than absolute meaning.
 
-The alternative normalization approach is to normalize equation (\ref{eq:utility}) by $\alpha^*$ instead of $\sigma$, producing the "willingness-to-pay (WTP) space" utility specification:
+The alternative normalization approach is to normalize equation (\ref{eq:utility}) by $- \alpha^*$ instead of $\sigma$, producing the "willingness-to-pay (WTP) space" utility specification:
 
 ```{r, child=here::here('man', 'rmdchunks', 'utilityWtpScaled.Rmd')}
 ```
 
-Since the error term in equation is scaled by $\lambda^2 = \sigma^2/(\alpha^{*})^2$, we can rewrite equation (\ref{eq:utilityWtpScaled}) by multiplying both sides by $\lambda= (\alpha^{*} / \sigma$) and renaming $u_j = (\lambda u^*_j / \alpha^*)$, $\omegaVec = (\betaVec^{*} / \alpha^{*}$), and $\varepsilon_j = (\lambda \varepsilon^*_j / \alpha^*)$:
+Since the error term in equation is scaled by $\lambda^2 = \sigma^2/(- \alpha^{*})^2$, we can rewrite equation (\ref{eq:utilityWtpScaled}) by multiplying both sides by $\lambda= (- \alpha^{*} / \sigma$) and renaming $u_j = (\lambda u^*_j /- \alpha^*)$, $\omegaVec = (\betaVec^{*} /- \alpha^{*}$), and $\varepsilon_j = (\lambda \varepsilon^*_j / - \alpha^*)$:
 
 ```{r, child=here::here('man', 'rmdchunks', 'utilityWtp.Rmd')}
 ```
 
 Here $\omegaVec$ represents the marginal WTP for changes in each non-price attribute, and $\lambda$ represents the scale of the deterministic portion of utility relative to the standardized scale of the random error term.
 
-The utility models in equations \ref{eq:utilityPreference} and \ref{eq:utilityWtp} represent the preference space and WTP space utility specifications, respectively. In equation \ref{eq:utilityPreference}, WTP is estimated as $\hat{\betaVec} / \hat{\alpha}$; in equation \ref{eq:utilityWtp}, WTP is simply $\hat{\omegaVec}$.
+The utility models in equations \ref{eq:utilityPreference} and \ref{eq:utilityWtp} represent the preference space and WTP space utility specifications, respectively. In equation \ref{eq:utilityPreference}, WTP is estimated as $\hat{\betaVec} / \hat{- \alpha}$; in equation \ref{eq:utilityWtp}, WTP is simply $\hat{\omegaVec}$.
 
 # References

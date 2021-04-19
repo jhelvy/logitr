@@ -34,7 +34,7 @@ model <- logitr(
 ```{r, child=here::here('man', 'rmdchunks', 'dataFormat.Rmd')}
 ```
 
-You can read more details in the ["Data Formatting and Encoding"](data_formatting.html) vignette.
+The ["Data Formatting and Encoding"](data_formatting.html) vignette has more details about the required data format.
 
 ## Preference space models
 
@@ -50,7 +50,7 @@ The `logitr()` function assumes that the deterministic part of the utility funct
 
 where $\betaVec$ is the vector of coefficients for non-price attributes $\xVec_{j}$, $\alpha$ is the coefficient for price $p_{j}$. Accordingly, each parameter in the `parNames` argument is an additive part of $v_{j}$.
 
-For example, if the observed utility was $v_{j} = \beta x_{j} - \alpha p_{j}$, where $p_{j}$ is "price" and $x_{j}$ is "size", then the `parNames` argument should be `c("price", "size")`. Such an example could be estimated with the following code, where the `data` object is a `data.frame` with columns named `"choice"`, `"obsID"`, `"price"`, and `"size"`:
+For example, if the observed utility was $v_{j} = \beta x_{j} + \alpha p_{j}$, where $p_{j}$ is "price" and $x_{j}$ is "size", then the `parNames` argument should be `c("price", "size")`. Such an example could be estimated with the following code, where the `data` object is a `data.frame` with columns named `"choice"`, `"obsID"`, `"price"`, and `"size"`:
 
 ```{r, eval=FALSE}
 mnl_pref <- logitr(
@@ -85,7 +85,7 @@ Since WTP space models are non-convex, it is recommended that you use a multi-st
 
 To estimate a mixed logit model, use the `randPars` argument to denote which parameters will be modeled with a distribution. The current package version supports normal and log-normal distributions.
 
-For example, if the observed utility was $v_{j} = \beta x_{j} - \alpha p_{j}$, where $p_{j}$ is "price" and $x_{j}$ is "size" and you wanted to model the `"size"` parameter, $\beta$, with a normal or log-normal distribution, set `randPars = c(size = "n")` or `randPars = c(size = "ln")`:
+For example, if the observed utility was $v_{j} = \beta x_{j} + \alpha p_{j}$, where $p_{j}$ is "price" and $x_{j}$ is "size" and you wanted to model the `"size"` parameter, $\beta$, with a normal or log-normal distribution, set `randPars = c(size = "n")` or `randPars = c(size = "ln")`:
 
 ```{r, eval=FALSE}
 mxl_pref <- logitr(

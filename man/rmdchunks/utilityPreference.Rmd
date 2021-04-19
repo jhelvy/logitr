@@ -1,6 +1,6 @@
 \begin{equation}
     u_{j} =
-        \betaVec' \xVec_{j} -
+        \betaVec' \xVec_{j} +
         \alpha p_{j} +
         \varepsilon_{j}
         \hspace{0.5in}

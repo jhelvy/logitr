@@ -19,12 +19,12 @@ library(logitr)
 # Read in results from already estimated models  so that the
 # examples aren't actually run when building this page, otherwise it'll
 # take much longer to build
-model_default <- readRDS(
-  here::here('inst', 'extdata', 'encoding_model_default.Rds'))
-model_character_price <- readRDS(
-  here::here('inst', 'extdata', 'encoding_model_character_price.Rds'))
-model_dummy_price <- readRDS(
-  here::here('inst', 'extdata', 'encoding_model_dummy_price.Rds'))
+mnl_pref_dannon <- readRDS(
+  here::here('inst', 'extdata', 'mnl_pref_dannon.Rds'))
+mnl_pref_weight <- readRDS(
+  here::here('inst', 'extdata', 'mnl_pref_weight.Rds'))
+mnl_pref_dummies <- readRDS(
+  here::here('inst', 'extdata', 'mnl_pref_dummies.Rds'))
 ```
 
 ```{r, child=here::here('man', 'rmdchunks', 'header.Rmd')}
@@ -35,7 +35,15 @@ model_dummy_price <- readRDS(
 ```{r, child=here::here('man', 'rmdchunks', 'dataFormat.Rmd')}
 ```
 
-# Continuous and discrete variables
+The {logitr} package contains several example data sets that illustrate this data structure. For example, in the `yogurt` data set, each row is an alternative from a choice observation. Choice is identified by the `choice` column, the observation ID is identified by the `obsID` column, and the columns `price`, `feat`, and `brand` can be used as model covariates (brand is also broken out into additional dummy-coded columns):
+
+```{r}
+head(yogurt)
+```
+
+# Continuous versus discrete variables
+
+Variables will be modeled as either continuous or discrete based on their data _type_. 
 
 **Numeric variables** are by default estimated with a single "slope" coefficient.
 
@@ -43,108 +51,84 @@ _Example_: Consider a data frame that contains a `price` variable with the follo
 
 **Categorical variables** (i.e. "character" or "factor" type variables) are by default estimated with a coefficient for all but the first "level", which serves as the "baseline" or `"0"` level. Categorical variables are automatically "dummy" coded: `0` for `FALSE` and `1` for `TRUE`.
 
-_Example_: Consider a data frame that contains a `brand` variable with the following four levels: `c("dannon", "hiland", "weight", "yoplait")`. Adding `brand` to the `parNames` argument in the main `logitr()` function would result in three covariates: `brand_hiland`, `brand_weight`, and `brand_yoplait`, with `brand_dannon` serving as the "dummied out" baseline level.
+_Example_: Consider a data frame that contains a `brand` variable with the following four levels: `c("dannon", "hiland", "weight", "yoplait")`. Adding `brand` to the `parNames` argument in the main `logitr()` function would result in three covariates: `brand_hiland`, `brand_weight`, and `brand_yoplait`, with `brand_dannon` serving as the reference level.
+
+# Changing the reference level
+
+If you include a factor or character type variable in a model, it will by default be modeled as a discrete variable, and the default reference level is usually the alphabetically first level. For example, in the `yogurt` data, the `brand` variable has four levels: `"dannon"`, `"weight"`, `"hiland"`, and `"yoplait"`. Since `"dannon"` is alphabetically first, it will be set as the reference level:
+
+```{r, eval=FALSE}
+mnl_pref_dannon <- logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'brand')
+)
+```
+```
+Running Model...
+Done!
+```
+```{r}
+summary(mnl_pref_dannon)
+```
+
+If you want to modify that so that a different level is set as the reference, you need to modify the factor levels for that variable. The first level will be set as the reference level. For example, in the code below I set `"weight"` as the reference level for `brand`:
+
+```{r, eval=FALSE}
+yogurt$brand <- factor(yogurt$brand, levels = c(
+  "weight", "hiland", "yoplait", "dannon"))
+```
+
+Now when the model is estimated, `"weight"` will be the reference level for `brand`:
+
+```{r, eval=FALSE}
+mnl_pref_weight <- logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'brand')
+)
+```
+```
+Running Model...
+Done!
+```
+```{r}
+summary(mnl_pref_weight)
+```
+
+Note how how the reference level is the `"weight"` brand whereas before it was the `"dannon"` brand.
 
 # Creating dummy coded variables
 
-To model a continuous variable as a discrete variable with a coefficient for all but the first level, there are two options:
+The `dummyCode()` function can be used to create dummy-coded variables from a discrete variable. In the code below, I create dummy-coded columns for the `brand` variable and then use those variables as covariates in a model: 
 
-1. Convert the variable to a `"character"` or `"factor"` type.
-2. Create dummy coded variables using the `dummyCode()` function.
+```{r}
+yogurt <- dummyCode(yogurt, "brand")
+```
 
-The second approach of using the `dummyCode()` function allows the modeler to specify the baseline level. It can also be used to create dummy-coded variables of a categorical variable.
+The `yogurt` data frame now has new dummy-coded columns for brand (it actually already had these, but now there are additional ones):
 
-Details for each approach are provided below.
+```{r}
+head(yogurt)
+```
 
-## 1) Convert variable types
-
-The simplest way to model a continuous variable as a discrete variable is to convert the column in the data frame to a `"character"` or `"factor"` type prior to estimating the model. For example, consider the following model:
+Now I can use those columns as covariates:
 
 ```{r, eval=FALSE}
-model_default <- logitr(
-  data       = cars_us,
+mnl_pref_dummies <- logitr(
+  data       = yogurt,
   choiceName = 'choice',
-  obsIDName  = 'obsnum',
+  obsIDName  = 'obsID',
   parNames   = c(
-    'price', 'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100',
-    'bev150', 'american', 'japanese', 'chinese', 'skorean',
-    'phevFastcharge', 'bevFastcharge','opCost', 'accelTime')
+    'price', 'feat', 'brandyoplait', 'branddannon', 'brandweight')
 )
 ```
 ```
-#> Running Model...
-#> Done!
+Running Model...
+Done!
 ```
-
-In this model, since the `price` variable is a `"double"` variable type, it is by default modeled as a continuous variable with a single "slope" coefficient:
-
 ```{r}
-typeof(cars_us$price)
-summary(model_default)
-```
-
-To model `price` as a categorical variable, simple change it to a `"character"` or `"factor"` type:
-
-```{r}
-cars_us$price <- as.character(cars_us$price)
-typeof(cars_us$price)
-```
-
-Now re-estimate the model:
-
-```{r, eval=FALSE}
-model_character_price <- logitr(
-  data       = cars_us,
-  choiceName = 'choice',
-  obsIDName  = 'obsnum',
-  parNames   = c(
-    'price', 'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100',
-    'bev150', 'american', 'japanese', 'chinese', 'skorean',
-    'phevFastcharge', 'bevFastcharge','opCost', 'accelTime')
-)
-```
-```
-#> Running Model...
-#> Done!
-```
-
-Now `price` is modeled as a categorical variable with a coefficient for all but the first level:
-
-```{r}
-typeof(cars_us$price)
-summary(model_character_price)
-```
-
-## 2) Create dummy-coded variables
-
-For the second option, you can use the `dummyCode()` function to create new dummy-coded variables for all the levels of a continuous variable and then use those variables in the model:
-
-```{r}
-cars_us_dummy <- dummyCode(df = cars_us, vars = "price")
-names(cars_us_dummy)
-```
-
-The new `cars_us_dummy` data frame now contains variables for each level of the `price` column. This approach allows the modeler to specify the baseline level. In this example, I'll use the `price_50` level as the baseline:
-
-```{r, eval=FALSE}
-model_dummy_price <- logitr(
-  data       = cars_us_dummy,
-  choiceName = 'choice',
-  obsIDName  = 'obsnum',
-  parNames   = c(
-    "price_15", "price_18", "price_23", "price_32",
-    'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100',
-    'bev150', 'american', 'japanese', 'chinese', 'skorean',
-    'phevFastcharge', 'bevFastcharge','opCost', 'accelTime')
-)
-```
-```
-#> Running Model...
-#> Done!
-```
-
-Now `price` is modeled with a specified coefficient for all but the `price_50` level:
-
-```{r}
-summary(model_dummy_price)
+summary(mnl_pref_dummies)
 ```
