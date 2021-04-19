@@ -7,6 +7,10 @@ library('logitr')
 # Preview the yogurt data
 head(yogurt)
 
+# Set the factors for "brand" so that "weight" is the reference level
+yogurt$brand <- factor(yogurt$brand, levels = c(
+  "weight", "hiland", "yoplait", "dannon"))
+
 # ============================================================================
 # Estimate homogeneous MNL models with interactions
 

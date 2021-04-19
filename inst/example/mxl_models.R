@@ -7,6 +7,10 @@ library('logitr')
 # Preview the yogurt data
 head(yogurt)
 
+# Set the factors for "brand" so that "weight" is the reference level
+yogurt$brand <- factor(yogurt$brand, levels = c(
+  "weight", "hiland", "yoplait", "dannon"))
+
 # ============================================================================
 # Estimate heterogeneous MXL models
 
@@ -15,8 +19,8 @@ mxl_pref <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'hiland', 'yoplait', 'dannon'),
-  randPars   = c(feat = 'n', hiland = 'n', yoplait = 'n', dannon = 'n'),
+  parNames   = c('price', 'feat', 'brand'),
+  randPars   = c(feat = 'n', brand = 'n'),
   # You should run a multistart for MXL models since they are non-convex,
   # but it can take a long time. Here I just use 5 starts for brevity:
   options    = list(numMultiStarts = 5)
@@ -34,9 +38,9 @@ mxl_wtp <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
-  parNames   = c('feat', 'hiland', 'yoplait', 'dannon'),
+  parNames   = c('feat', 'brand'),
   priceName  = 'price',
-  randPars   = c(feat = 'n', hiland = 'n', yoplait = 'n', dannon = 'n'),
+  randPars   = c(feat = 'n', brand = 'n'),
   modelSpace = 'wtp',
   options    = list(
     # You should run a multistart for MXL models since they are non-convex,

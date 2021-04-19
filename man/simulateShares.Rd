@@ -4,7 +4,14 @@
 \alias{simulateShares}
 \title{Simulate expected shares}
 \usage{
-simulateShares(model, alts, obsIDName = NULL, priceName = NULL, alpha = 0.025)
+simulateShares(
+  model,
+  alts,
+  obsIDName = NULL,
+  priceName = NULL,
+  alpha = 0.025,
+  numDraws = 10^4
+)
 }
 \arguments{
 \item{model}{The output of a model estimated model using the \code{logitr()}
@@ -23,6 +30,9 @@ required for WTP space models. Defaults to \code{NULL}.}
 
 \item{alpha}{The sensitivity of the computed confidence interval, e.g. a
 90\% CI is obtained with \code{alpha = 0.05}. Defaults to \code{alpha = 0.025}.}
+
+\item{numDraws}{The number of draws to use in simulating uncertainty
+for the computed confidence interval.}
 }
 \value{
 A data frame with the estimated shares for each alternative in

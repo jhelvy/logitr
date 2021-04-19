@@ -4,9 +4,6 @@
 # Load logitr package
 library('logitr')
 
-# Preview the yogurt data
-head(yogurt)
-
 # ============================================================================
 # Estimate MNL models with different encodings
 

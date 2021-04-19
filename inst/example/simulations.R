@@ -7,6 +7,10 @@ library('logitr')
 # Preview the yogurt data
 head(yogurt)
 
+# Set the factors for "brand" so that "weight" is the reference level
+yogurt$brand <- factor(yogurt$brand, levels = c(
+  "weight", "hiland", "yoplait", "dannon"))
+
 # ============================================================================
 # Run Market Simulation Using Estimated Models
 
@@ -19,8 +23,7 @@ mxl_wtp  <- readRDS(here::here('inst', 'extdata', 'mxl_wtp.Rds'))
 # Create a set of alternatives for which to simulate shares. Each row is an
 # alternative and each column an attribute. In this example, I just use one
 # of the choice observations from the yogurt dataset:
-alts <- subset(yogurt, obsID == 42,
-               select = c('feat', 'price', 'hiland', 'yoplait', 'dannon'))
+alts <- subset(yogurt, obsID == 42, select = c('price', 'feat', 'brand'))
 row.names(alts) <- c('dannon', 'hiland', 'weight', 'yoplait')
 alts
 

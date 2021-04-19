@@ -73,6 +73,7 @@ makeBlankModel <- function(modelInputs) {
     standardDraws    = NA,
     randParSummary   = NA,
     status           = -1,
+    modelType        = modelInputs$modelType,
     modelSpace       = modelInputs$modelSpace,
     priceName        = modelInputs$priceName,
     parNames         = modelInputs$parNames,

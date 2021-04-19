@@ -7,6 +7,10 @@ library('logitr')
 # Preview the yogurt data
 head(yogurt)
 
+# Set the factors for "brand" so that "weight" is the reference level
+yogurt$brand <- factor(yogurt$brand, levels = c(
+  "weight", "hiland", "yoplait", "dannon"))
+
 # ============================================================================
 # Estimate homogeneous MNL models
 
@@ -15,7 +19,7 @@ mnl_pref <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'hiland', 'yoplait', 'dannon')
+  parNames   = c('price', 'feat', 'brand')
 )
 
 # Print a summary of the results:
@@ -33,7 +37,7 @@ mnl_wtp <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
-  parNames   = c('feat', 'hiland', 'yoplait', 'dannon'),
+  parNames   = c('feat', 'brand'),
   priceName  = 'price',
   modelSpace = 'wtp',
   options = list(
@@ -76,3 +80,4 @@ saveRDS(wtp_mnl_pref,
         here::here('inst', 'extdata', 'wtp_mnl_pref.Rds'))
 saveRDS(wtp_mnl_comparison,
         here::here('inst', 'extdata', 'wtp_mnl_comparison.Rds'))
+

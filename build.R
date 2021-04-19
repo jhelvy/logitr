@@ -1,10 +1,12 @@
+# For restarting
+rm(list = ls())
+.rs.restartR()
+
 # Create the documentation for the package
 devtools::document()
 
 # Install the package
 devtools::install(force = TRUE)
-rm(list = ls())
-.rs.restartR()
 
 # Run all examples to save results
 source(here::here("inst", "example", "mnl_models.R"))
@@ -13,8 +15,6 @@ source(here::here("inst", "example", "interactions.R"))
 source(here::here("inst", "example", "mxl_models.R"))
 source(here::here("inst", "example", "simulations.R"))
 source(here::here("inst", "example", "data_formatting.R"))
-rm(list = ls())
-.rs.restartR()
 
 # Build the pkgdown site
 pkgdown::build_site()

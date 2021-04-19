@@ -33,6 +33,7 @@ appendModelInfo <- function(model, modelInputs) {
     iterations       = model$iterations,
     message          = model$message,
     status           = model$status,
+    modelType        = modelInputs$modelType,
     modelSpace       = modelInputs$modelSpace,
     priceName        = modelInputs$priceName,
     parNames         = modelInputs$parNames,
