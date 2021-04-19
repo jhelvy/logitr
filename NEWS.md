@@ -1,13 +1,14 @@
-# logitr 0.1.3.9001
+# logitr 0.1.3.9002
 
 ## Summary of larger updates:
 
 - Modified the `recodeData()` and `dummyCode()` functions for improved speed.
+- Updated `simulateShares()` to work with the automatic dummy coding from the revised `recodeData()` and `dummyCode()` functions.
+- Added support for `simulateShares()` to compute shares for multiple sets of alternatives.
 
 ## Summary of smaller updates:
 
 - Added covariance matrix to model export
-- Updated `simulateShares()` to work with the automatic dummy coding from the revised `recodeData()` and `dummyCode()` functions.
 
 ## Bugs
 

@@ -113,11 +113,7 @@ mnlSimulation <- function(alts, model, X, price, obsID, numDraws, alpha,
   betaUncDraws <- selectSimDraws(betaUncDraws, model$modelSpace, X)
   VUncDraws <- getVDraws(betaUncDraws, X, price)
   logitUncDraws <- getMxlLogit(VUncDraws, obsID)
-  shares <- as.data.frame(t(apply(logitUncDraws, 1, ci, alpha)))
-  shares$mean <- as.numeric(meanShare)
-  row.names(shares) <- paste("Alt: ", row.names(alts), sep = "")
-  colnames(shares) <- c("share_mean", "share_low", "share_high")
-  return(shares)
+  return(summarizeShares(meanShare, logitUncDraws, obsID, alpha))
 }
 
 mxlSimulation <- function(alts, model, X, price, obsID, numDraws, alpha,
@@ -130,11 +126,7 @@ mxlSimulation <- function(alts, model, X, price, obsID, numDraws, alpha,
     pars <- betaUncDraws[i, ]
     logitUncDraws[, i] <- getSimPHat(pars, model, X, price, obsID, getVDraws)
   }
-  shares <- as.data.frame(t(apply(logitUncDraws, 1, ci, alpha)))
-  shares$mean <- meanShare
-  row.names(shares) <- paste("Alt: ", row.names(alts), sep = "")
-  colnames(shares) <- c("share_mean", "share_low", "share_high")
-  return(shares)
+  return(summarizeShares(meanShare, logitUncDraws, obsID, alpha))
 }
 
 selectSimDraws <- function(betaDraws, modelSpace, X) {
@@ -158,4 +150,12 @@ getSimPHat <- function(pars, model, X, price, obsID, getVDraws) {
   logitDraws <- getMxlLogit(VDraws, obsID)
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(pHat)
+}
+
+summarizeShares <- function(meanShare, logitUncDraws, obsID, alpha) {
+  shares <- as.data.frame(t(apply(logitUncDraws, 1, ci, alpha)))
+  shares$mean <- as.numeric(meanShare)
+  names <- c("obsID", colnames(shares))
+  shares$obsID <- obsID
+  return(shares[names])
 }

@@ -36,32 +36,43 @@ Once a model has been estimated, it can be used to simulate the predicted shares
 
 # Simulating shares from estimated models
 
- To simulate shares, you first need to create a set of alternatives where each row is an alternative and each column an attribute. In this example, I'll just use one of the choice observations from the `yogurt` dataset:
+To simulate shares, you first need to create a set of alternatives where each row is an alternative and each column an attribute. In this example, I just use a couple of the choice observations from the yogurt dataset (note that if you include more than one set of alternatives you also have to specify an `obsID`):
 
 ```{r}
-alts <- subset(yogurt, obsID == 42, select = c('feat', 'price', 'brand'))
-row.names(alts) <- c('dannon', 'hiland', 'weight', 'yoplait')
+alts <- subset(yogurt, obsID %in% c(42, 13),
+               select = c('price', 'feat', 'brand'))
+alts$obsID <- c(rep(1, 4), rep(2, 4))
 alts
 ```
 
 Let's say we have estimated a preference space MNL model called `mnl_pref`. We can use the `simulateShares()` function with the `mnl_pref` model to predict the shares for our `alts` set of alternatives:
 
 ```{r, eval=FALSE}
-sim_mnl_pref <- simulateShares(mnl_pref, alts, alpha = 0.025)
+sim_mnl_pref <- simulateShares(
+  model     = mnl_pref,
+  alts      = alts,
+  obsIDName = "obsID",
+  alpha     = 0.025
+)
 ```
 ```{r}
 sim_mnl_pref
 ```
 
-The results show the expected shares for each alternative. The low and high values show a 95% confidence interval, estimated using simulation. You can change the CI level by setting alpha to a different value (e.g. a 90% CI is obtained with alpha = 0.05).
+The results show the expected shares for each alternative. The low and high values show a 95% confidence interval, estimated using simulation. You can change the CI level by setting `alpha` to a different value (e.g. a 90% CI is obtained with alpha = 0.05).
 
 You can also use WTP space models to simulate shares, but you must provide the additional `priceName` argument to the `simulateShares()` function. For example, here are the results from an equivalent model but in the WTP space:
 
 ```{r, eval=FALSE}
-sim_mnl_wtp <- simulateShares(mnl_wtp, alts, priceName = 'price')
+sim_mnl_wtp <- simulateShares(
+  model     = mnl_wtp,
+  alts      = alts,
+  obsIDName = "obsID",
+  priceName = 'price'
+)
 ```
 ```
-#> NOTE: Using results from run 6 of 10 multistart runs
+#> NOTE: Using results from run 5 of 10 multistart runs
 #> (the run with the largest log-likelihood value)
 ```
 ```{r}
@@ -73,7 +84,11 @@ Since these two models are equivalent except in different spaces, the simulation
 Simulations also work with mixed logit models, and they account for how heterogeneity is modeled by simulating draws from the population estimates of the estimated model:
 
 ```{r, eval=FALSE}
-sim_mxl_pref <- simulateShares(mxl_pref, alts)
+sim_mxl_pref <- simulateShares(
+  model     = mxl_pref,
+  alts      = alts,
+  obsIDName = "obsID"
+)
 ```
 ```{r}
 sim_mxl_pref
@@ -82,7 +97,12 @@ sim_mxl_pref
 Likewise, mixed logit WTP space models can also be used to simulate shares:
 
 ```{r, eval=FALSE}
-sim_mxl_wtp <- simulateShares(mxl_wtp, alts, priceName = 'price')
+sim_mxl_wtp <- simulateShares(
+  model     = mxl_wtp,
+  alts      = alts,
+  obsIDName = "obsID",
+  priceName = 'price'
+)
 ```
 ```{r}
 sim_mxl_wtp
@@ -94,13 +114,14 @@ Here is a bar plot of the results from each model:
 library(ggplot2)
 
 sims <- rbind(sim_mnl_pref, sim_mnl_wtp, sim_mxl_pref, sim_mxl_wtp)
+sims <- sims[sims$obsID == 1,]
 sims$model <- c(rep("mnl_pref", 4), rep("mnl_wtp", 4),
                 rep("mxl_pref", 4), rep("mxl_wtp", 4))
-sims$alt <- rep(row.names(alts), 4)
+sims$alt <- rep(c("dannon", "hiland", "weight", "yoplait"), 4)
 
-ggplot(sims, aes(x = alt, y = share_mean, fill = model)) +
+ggplot(sims, aes(x = alt, y = mean, fill = model)) +
     geom_bar(stat = 'identity', width = 0.7, position = "dodge") +
-    geom_errorbar(aes(ymin = share_low, ymax = share_high),
+    geom_errorbar(aes(ymin = low, ymax = high),
                   width = 0.2, position = position_dodge(width = 0.7)) +
     scale_y_continuous(limits = c(0, 1)) +
     labs(x = 'Alternative', y = 'Expected Share') +
