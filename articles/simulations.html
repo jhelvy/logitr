@@ -154,14 +154,14 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mnl_pref</span>
 <span class="co">#&gt;     obsID       mean        low       high</span>
-<span class="co">#&gt; 49      1 0.43685490 0.39187632 0.47763838</span>
-<span class="co">#&gt; 50      1 0.03313009 0.02497072 0.04350059</span>
-<span class="co">#&gt; 51      1 0.19154770 0.17134737 0.21157170</span>
-<span class="co">#&gt; 52      1 0.33846731 0.28162629 0.40137757</span>
-<span class="co">#&gt; 165     2 0.60766441 0.54722292 0.65886805</span>
-<span class="co">#&gt; 166     2 0.02601869 0.01857250 0.03627355</span>
-<span class="co">#&gt; 167     2 0.17802424 0.16313898 0.19256605</span>
-<span class="co">#&gt; 168     2 0.18829266 0.13927550 0.25101296</span></code></pre></div>
+<span class="co">#&gt; 49      1 0.43684871 0.39136665 0.48061482</span>
+<span class="co">#&gt; 50      1 0.03313009 0.02544458 0.04248441</span>
+<span class="co">#&gt; 51      1 0.19155738 0.17190636 0.21072775</span>
+<span class="co">#&gt; 52      1 0.33846382 0.28238171 0.39999934</span>
+<span class="co">#&gt; 165     2 0.60763975 0.54578946 0.66190785</span>
+<span class="co">#&gt; 166     2 0.02602079 0.01862992 0.03584242</span>
+<span class="co">#&gt; 167     2 0.17803594 0.16277692 0.19330757</span>
+<span class="co">#&gt; 168     2 0.18830353 0.13954874 0.25003071</span></code></pre></div>
 <p>The results show the expected shares for each alternative. The low and high values show a 95% confidence interval, estimated using simulation. You can change the CI level by setting <code>alpha</code> to a different value (e.g. a 90% CI is obtained with alpha = 0.05).</p>
 <p>You can also use WTP space models to simulate shares, but you must provide the additional <code>priceName</code> argument to the <code><a href="../reference/simulateShares.html">simulateShares()</a></code> function. For example, here are the results from an equivalent model but in the WTP space:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -176,14 +176,14 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mnl_wtp</span>
 <span class="co">#&gt;     obsID       mean        low       high</span>
-<span class="co">#&gt; 49      1 0.43686158 0.40425630 0.47253377</span>
-<span class="co">#&gt; 50      1 0.03312949 0.02478818 0.04405400</span>
-<span class="co">#&gt; 51      1 0.19154781 0.16455402 0.21754417</span>
-<span class="co">#&gt; 52      1 0.33846113 0.31714210 0.35875059</span>
-<span class="co">#&gt; 165     2 0.60767258 0.55539467 0.65908481</span>
-<span class="co">#&gt; 166     2 0.02601745 0.01816073 0.03750886</span>
-<span class="co">#&gt; 167     2 0.17802316 0.14752230 0.20788385</span>
-<span class="co">#&gt; 168     2 0.18828681 0.16397130 0.21196339</span></code></pre></div>
+<span class="co">#&gt; 49      1 0.43685988 0.41502668 0.45772869</span>
+<span class="co">#&gt; 50      1 0.03312953 0.02652709 0.04224523</span>
+<span class="co">#&gt; 51      1 0.19154714 0.17653897 0.20768167</span>
+<span class="co">#&gt; 52      1 0.33846344 0.31900018 0.35868245</span>
+<span class="co">#&gt; 165     2 0.60767025 0.57517744 0.63699716</span>
+<span class="co">#&gt; 166     2 0.02601826 0.01871991 0.03752242</span>
+<span class="co">#&gt; 167     2 0.17802280 0.16165909 0.19514758</span>
+<span class="co">#&gt; 168     2 0.18828870 0.16697409 0.21003305</span></code></pre></div>
 <p>Since these two models are equivalent except in different spaces, the simulation results should be the same.</p>
 <p>Simulations also work with mixed logit models, and they account for how heterogeneity is modeled by simulating draws from the population estimates of the estimated model:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -195,14 +195,14 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mxl_pref</span>
 <span class="co">#&gt;   obsID       mean        low       high</span>
-<span class="co">#&gt; 1     1 0.44440022 0.39889617 0.48891393</span>
-<span class="co">#&gt; 2     1 0.02783352 0.02114213 0.06383667</span>
-<span class="co">#&gt; 3     1 0.18789792 0.16138097 0.20589033</span>
-<span class="co">#&gt; 4     1 0.33986833 0.27671293 0.40065549</span>
-<span class="co">#&gt; 5     2 0.58810362 0.49854667 0.64147472</span>
-<span class="co">#&gt; 6     2 0.08255453 0.03385625 0.16146649</span>
-<span class="co">#&gt; 7     2 0.16123072 0.14385862 0.18601364</span>
-<span class="co">#&gt; 8     2 0.16811113 0.12504514 0.23455135</span></code></pre></div>
+<span class="co">#&gt; 1     1 0.45230084 0.34692003 0.53611954</span>
+<span class="co">#&gt; 2     1 0.02782708 0.02121263 0.09068614</span>
+<span class="co">#&gt; 3     1 0.21027296 0.07368142 0.33291838</span>
+<span class="co">#&gt; 4     1 0.30959912 0.25054344 0.37987432</span>
+<span class="co">#&gt; 5     2 0.60391759 0.43716559 0.72944635</span>
+<span class="co">#&gt; 6     2 0.06797893 0.02809841 0.14520803</span>
+<span class="co">#&gt; 7     2 0.18726035 0.05949211 0.31162156</span>
+<span class="co">#&gt; 8     2 0.14084313 0.10485354 0.21745455</span></code></pre></div>
 <p>Likewise, mixed logit WTP space models can also be used to simulate shares:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mxl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span>
@@ -214,14 +214,14 @@
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_mxl_wtp</span>
 <span class="co">#&gt;   obsID       mean        low       high</span>
-<span class="co">#&gt; 1     1 0.44442847 0.40969393 0.48218352</span>
-<span class="co">#&gt; 2     1 0.02765020 0.02159564 0.06293539</span>
-<span class="co">#&gt; 3     1 0.18785342 0.15679165 0.20978838</span>
-<span class="co">#&gt; 4     1 0.34006792 0.30887493 0.36613727</span>
-<span class="co">#&gt; 5     2 0.58896563 0.51649237 0.62878908</span>
-<span class="co">#&gt; 6     2 0.08109878 0.03529794 0.16540018</span>
-<span class="co">#&gt; 7     2 0.16145224 0.13061407 0.19634434</span>
-<span class="co">#&gt; 8     2 0.16848336 0.14423586 0.20575654</span></code></pre></div>
+<span class="co">#&gt; 1     1 0.44009485 0.36526063 0.50036019</span>
+<span class="co">#&gt; 2     1 0.02680642 0.02095894 0.07081931</span>
+<span class="co">#&gt; 3     1 0.20352286 0.08358964 0.31619038</span>
+<span class="co">#&gt; 4     1 0.32957587 0.27765122 0.38830854</span>
+<span class="co">#&gt; 5     2 0.58694687 0.47246092 0.67198248</span>
+<span class="co">#&gt; 6     2 0.08160428 0.03351561 0.16713249</span>
+<span class="co">#&gt; 7     2 0.18184019 0.06951804 0.29285299</span>
+<span class="co">#&gt; 8     2 0.14960865 0.11743353 0.20219031</span></code></pre></div>
 <p>Here is a bar plot of the results from each model:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>

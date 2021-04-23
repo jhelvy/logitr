@@ -217,10 +217,16 @@ estimates are compared against the WTP values directly estimated from the
   modelSpace <span class='op'>=</span> <span class='st'>"wtp"</span>,
   options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>startVals <span class='op'>=</span> <span class='va'>wtp_mnl_pref</span><span class='op'>$</span><span class='va'>Estimate</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in definePrice(data, priceName, modelSpace): Please make sure the price column in your data defined by the "priceName" argument is encoded as a numeric data type. Price must be numeric for WTP space models.</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>NOTE: Using user-provided starting values for this run</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
 <span class='co'># Compare the WTP between the two spaces:</span>
 <span class='fu'>wtpCompare</span><span class='op'>(</span><span class='va'>mnl_pref</span>, <span class='va'>mnl_wtp</span>, priceName <span class='op'>=</span> <span class='st'>"price"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in is_logitr(model_wtp): object 'mnl_wtp' not found</span></div></pre>
+</div><div class='output co'>#&gt;                 pref           wtp difference
+#&gt; lambda      0.366581     0.3665846  3.560e-06
+#&gt; feat        1.340593     1.3405590 -3.398e-05
+#&gt; dannon      1.749066     1.7490755  9.480e-06
+#&gt; hiland     -8.386654    -8.3866570 -2.990e-06
+#&gt; yoplait     3.752975     3.7529069 -6.813e-05
+#&gt; logLik  -2656.887878 -2656.8878779  2.400e-07</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

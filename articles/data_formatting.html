@@ -152,10 +152,10 @@
 <p><strong>Categorical variables</strong> (i.e. “character” or “factor” type variables) are by default estimated with a coefficient for all but the first “level”, which serves as the “baseline” or <code>"0"</code> level. Categorical variables are automatically “dummy” coded: <code>0</code> for <code>FALSE</code> and <code>1</code> for <code>TRUE</code>.</p>
 <p><em>Example</em>: Consider a data frame that contains a <code>brand</code> variable with the following four levels: <code><a href="https://rdrr.io/r/base/c.html">c("dannon", "hiland", "weight", "yoplait")</a></code>. Adding <code>brand</code> to the <code>parNames</code> argument in the main <code><a href="../reference/logitr.html">logitr()</a></code> function would result in three covariates: <code>brand_hiland</code>, <code>brand_weight</code>, and <code>brand_yoplait</code>, with <code>brand_dannon</code> serving as the reference level.</p>
 </div>
-<div id="changing-the-reference-level" class="section level1">
+<div id="changing-the-reference-level-for-categorical-variables" class="section level1">
 <h1 class="hasAnchor">
-<a href="#changing-the-reference-level" class="anchor"></a>Changing the reference level</h1>
-<p>If you include a factor or character type variable in a model, it will by default be modeled as a discrete variable, and the default reference level is usually the alphabetically first level. For example, in the <code>yogurt</code> data, the <code>brand</code> variable has four levels: <code>"dannon"</code>, <code>"weight"</code>, <code>"hiland"</code>, and <code>"yoplait"</code>. Since <code>"dannon"</code> is alphabetically first, it will be set as the reference level:</p>
+<a href="#changing-the-reference-level-for-categorical-variables" class="anchor"></a>Changing the reference level for categorical variables</h1>
+<p>If you include a categorical (factor or character type) variable in a model, it will by default be modeled as a categorical / discrete variable, and the default reference level is usually the alphabetically first level. For example, in the <code>yogurt</code> data, the <code>brand</code> variable has four levels: <code>"dannon"</code>, <code>"weight"</code>, <code>"hiland"</code>, and <code>"yoplait"</code>. Since <code>"dannon"</code> is alphabetically first, it will be set as the reference level:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mnl_pref_dannon</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   data       <span class="op">=</span> <span class="va">yogurt</span>,
@@ -173,7 +173,7 @@ Done!</code></pre>
 <span class="co">#&gt; Model Space:    Preference</span>
 <span class="co">#&gt; Model Run:          1 of 1</span>
 <span class="co">#&gt; Iterations:             21</span>
-<span class="co">#&gt; Elapsed Time:  0h:0m:0.14s</span>
+<span class="co">#&gt; Elapsed Time:  0h:0m:0.12s</span>
 <span class="co">#&gt; Exit Status:             3</span>
 <span class="co">#&gt; Weights Used?:       FALSE</span>
 <span class="co">#&gt; </span>
@@ -181,8 +181,8 @@ Done!</code></pre>
 <span class="co">#&gt;               Estimate StdError    tStat pVal signif</span>
 <span class="co">#&gt; price        -0.366543 0.024365 -15.0439    0    ***</span>
 <span class="co">#&gt; feat          0.491433 0.120061   4.0932    0    ***</span>
-<span class="co">#&gt; brandweight  -0.641128 0.054498 -11.7643    0    ***</span>
 <span class="co">#&gt; brandhiland  -3.715428 0.145416 -25.5504    0    ***</span>
+<span class="co">#&gt; brandweight  -0.641128 0.054498 -11.7643    0    ***</span>
 <span class="co">#&gt; brandyoplait  0.734496 0.080642   9.1082    0    ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
@@ -218,7 +218,7 @@ Done!</code></pre>
 <span class="co">#&gt; Model Space:    Preference</span>
 <span class="co">#&gt; Model Run:          1 of 1</span>
 <span class="co">#&gt; Iterations:             21</span>
-<span class="co">#&gt; Elapsed Time:  0h:0m:0.16s</span>
+<span class="co">#&gt; Elapsed Time:  0h:0m:0.12s</span>
 <span class="co">#&gt; Exit Status:             3</span>
 <span class="co">#&gt; Weights Used?:       FALSE</span>
 <span class="co">#&gt; </span>
@@ -278,13 +278,13 @@ Done!</code></pre>
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mnl_pref_dummies</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; MODEL SUMMARY: </span>
-<span class="co">#&gt;                          </span>
-<span class="co">#&gt; Model Space:   Preference</span>
-<span class="co">#&gt; Model Run:         1 of 1</span>
-<span class="co">#&gt; Iterations:            18</span>
-<span class="co">#&gt; Elapsed Time:  0h:0m:0.1s</span>
-<span class="co">#&gt; Exit Status:            3</span>
-<span class="co">#&gt; Weights Used?:      FALSE</span>
+<span class="co">#&gt;                           </span>
+<span class="co">#&gt; Model Space:    Preference</span>
+<span class="co">#&gt; Model Run:          1 of 1</span>
+<span class="co">#&gt; Iterations:             18</span>
+<span class="co">#&gt; Elapsed Time:  0h:0m:0.11s</span>
+<span class="co">#&gt; Exit Status:             3</span>
+<span class="co">#&gt; Weights Used?:       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
 <span class="co">#&gt;                Estimate StdError    tStat pVal signif</span>
