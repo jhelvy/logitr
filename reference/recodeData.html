@@ -44,9 +44,10 @@ variables. — recodeData • logitr</title>
 <meta property="og:title" content="Returns a list of the design matrix X and updated parNames and
 randPars to include any dummy-coded categorical or interaction
 variables. — recodeData" />
-<meta property="og:description" content="Recodes a list of the design matrix (X) and two vectors (parNames and
-randPars) with discrete (categorical) variables and interaction variables
-added to X, parNames, and randPars." />
+<meta property="og:description" content="Recodes the data and returns a list of the encoded design matrix (X) as
+well as two vectors (parNames and randPars) with discrete (categorical)
+variables and interaction variables added to X, parNames, and
+randPars." />
 
 
 
@@ -164,9 +165,10 @@ variables.</h1>
     </div>
 
     <div class="ref-description">
-    <p>Recodes a list of the design matrix (<code>X</code>) and two vectors (<code>parNames</code> and
-<code>randPars</code>) with discrete (categorical) variables and interaction variables
-added to <code>X</code>, <code>parNames</code>, and <code>randPars</code>.</p>
+    <p>Recodes the data and returns a list of the encoded design matrix (<code>X</code>) as
+well as two vectors (<code>parNames</code> and <code>randPars</code>) with discrete (categorical)
+variables and interaction variables added to <code>X</code>, <code>parNames</code>, and
+<code>randPars</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>recodeData</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>parNames</span>, <span class='va'>randPars</span><span class='op'>)</span></pre>
@@ -208,16 +210,25 @@ added.</p>
 <span class='op'>)</span>
 
 <span class='va'>result</span><span class='op'>$</span><span class='va'>parNames</span>
-</div><div class='output co'>#&gt; [1] "price" "feat" </div><div class='input'><span class='va'>result</span><span class='op'>$</span><span class='va'>randPars</span>
-</div><div class='output co'>#&gt; feat 
-#&gt;  "n" </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>result</span><span class='op'>$</span><span class='va'>X</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;   price feat
-#&gt; 1   8.1    0
-#&gt; 2   6.1    0
-#&gt; 3   7.9    0
-#&gt; 4  10.8    0
-#&gt; 5   9.8    0
-#&gt; 6   6.4    0</div></pre>
+</div><div class='output co'>#&gt; [1] "price"              "feat"               "brandhiland"       
+#&gt; [4] "brandweight"        "brandyoplait"       "price:brandhiland" 
+#&gt; [7] "price:brandweight"  "price:brandyoplait"</div><div class='input'><span class='va'>result</span><span class='op'>$</span><span class='va'>randPars</span>
+</div><div class='output co'>#&gt;         feat  brandhiland  brandweight brandyoplait 
+#&gt;          "n"          "n"          "n"          "n" </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>result</span><span class='op'>$</span><span class='va'>X</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   price feat brandhiland brandweight brandyoplait price:brandhiland
+#&gt; 1   8.1    0           0           0            0               0.0
+#&gt; 2   6.1    0           1           0            0               6.1
+#&gt; 3   7.9    0           0           1            0               0.0
+#&gt; 4  10.8    0           0           0            1               0.0
+#&gt; 5   9.8    0           0           0            0               0.0
+#&gt; 6   6.4    0           1           0            0               6.4
+#&gt;   price:brandweight price:brandyoplait
+#&gt; 1               0.0                0.0
+#&gt; 2               0.0                0.0
+#&gt; 3               7.9                0.0
+#&gt; 4               0.0               10.8
+#&gt; 5               0.0                0.0
+#&gt; 6               0.0                0.0</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

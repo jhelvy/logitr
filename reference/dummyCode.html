@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Adds dummy-coded variables to data frame. — dummyCode • logitr</title>
+<title>Add dummy-coded variables to data frame. — dummyCode • logitr</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Adds dummy-coded variables to data frame. — dummyCode" />
-<meta property="og:description" content="This function adds dummy-coded variables to a data frame based on a
-vector of column names." />
+<meta property="og:title" content="Add dummy-coded variables to data frame. — dummyCode" />
+<meta property="og:description" content="This function is depreciated. Use fastDummies::dummy_cols() instead." />
 
 
 
@@ -151,14 +150,13 @@ vector of column names." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Adds dummy-coded variables to data frame.</h1>
+    <h1>Add dummy-coded variables to data frame.</h1>
     <small class="dont-index">Source: <a href='https://github.com/jhelvy/logitr/blob/master/R/encoding.R'><code>R/encoding.R</code></a></small>
     <div class="hidden name"><code>dummyCode.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function adds dummy-coded variables to a data frame based on a
-vector of column names.</p>
+    <p>This function is depreciated. Use fastDummies::dummy_cols() instead.</p>
     </div>
 
     <pre class="usage"><span class='fu'>dummyCode</span><span class='op'>(</span><span class='va'>df</span>, <span class='va'>vars</span><span class='op'>)</span></pre>
@@ -181,22 +179,6 @@ create new dummy coded variables.</p></td>
 
     <p>A a dataframe with new dummy-coded variables added.</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Create an example data frame:</span>
-<span class='va'>df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
-    animal   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"dog"</span>, <span class='st'>"goldfish"</span>, <span class='st'>"bird"</span>, <span class='st'>"dog"</span>, <span class='st'>"goldfish"</span><span class='op'>)</span>,
-    numLegs  <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>0</span><span class='op'>)</span>,
-    lifeSpan <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>10</span>, <span class='fl'>5</span>, <span class='fl'>10</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='co'># Create dummy coded variables for the variables "animal" and "numLegs":</span>
-<span class='va'>df_dummy</span> <span class='op'>&lt;-</span> <span class='fu'>dummyCode</span><span class='op'>(</span><span class='va'>df</span>, vars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"animal"</span>, <span class='st'>"numLegs"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>df_dummy</span>
-</div><div class='output co'>#&gt;     animal numLegs lifeSpan animalbird animaldog animalgoldfish numLegs
-#&gt; 1      dog       4       10          0         1              0       4
-#&gt; 2 goldfish       0       10          0         0              1       0
-#&gt; 3     bird       2        5          1         0              0       2
-#&gt; 4      dog       4       10          0         1              0       4
-#&gt; 5 goldfish       0       10          0         0              1       0</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -173,7 +173,7 @@ Done!</code></pre>
 <span class="co">#&gt; Model Space:    Preference</span>
 <span class="co">#&gt; Model Run:          1 of 1</span>
 <span class="co">#&gt; Iterations:             21</span>
-<span class="co">#&gt; Elapsed Time:  0h:0m:0.15s</span>
+<span class="co">#&gt; Elapsed Time:  0h:0m:0.14s</span>
 <span class="co">#&gt; Exit Status:             3</span>
 <span class="co">#&gt; Weights Used?:       FALSE</span>
 <span class="co">#&gt; </span>
@@ -218,7 +218,7 @@ Done!</code></pre>
 <span class="co">#&gt; Model Space:    Preference</span>
 <span class="co">#&gt; Model Run:          1 of 1</span>
 <span class="co">#&gt; Iterations:             21</span>
-<span class="co">#&gt; Elapsed Time:  0h:0m:0.14s</span>
+<span class="co">#&gt; Elapsed Time:  0h:0m:0.16s</span>
 <span class="co">#&gt; Exit Status:             3</span>
 <span class="co">#&gt; Weights Used?:       FALSE</span>
 <span class="co">#&gt; </span>
@@ -246,26 +246,23 @@ Done!</code></pre>
 <div id="creating-dummy-coded-variables" class="section level1">
 <h1 class="hasAnchor">
 <a href="#creating-dummy-coded-variables" class="anchor"></a>Creating dummy coded variables</h1>
-<p>The <code><a href="../reference/dummyCode.html">dummyCode()</a></code> function can be used to create dummy-coded variables from a discrete variable. In the code below, I create dummy-coded columns for the <code>brand</code> variable and then use those variables as covariates in a model:</p>
+<p>If you wish to make dummy-coded variables yourself to use them in a model, I recommend using the <code>dummy_cols()</code> function from the <a href="https://github.com/jacobkap/fastDummies">{fastDummies}</a> package. For example, in the code below, I create dummy-coded columns for the <code>brand</code> variable and then use those variables as covariates in a model:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">yogurt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dummyCode.html">dummyCode</a></span><span class="op">(</span><span class="va">yogurt</span>, <span class="st">"brand"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">yogurt</span> <span class="op">&lt;-</span> <span class="fu">fastDummies</span><span class="fu">::</span><span class="fu"><a href="https://jacobkap.github.io/fastDummies/reference/dummy_cols.html">dummy_cols</a></span><span class="op">(</span><span class="va">yogurt</span>, <span class="st">"brand"</span><span class="op">)</span></code></pre></div>
 <p>The <code>yogurt</code> data frame now has new dummy-coded columns for brand (it actually already had these, but now there are additional ones):</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">yogurt</span><span class="op">)</span>
-<span class="co">#&gt;   id obsID alt choice price feat   brand dannon hiland weight yoplait</span>
-<span class="co">#&gt; 1  1     1   1      0   8.1    0  dannon      1      0      0       0</span>
-<span class="co">#&gt; 2  1     1   2      0   6.1    0  hiland      0      1      0       0</span>
-<span class="co">#&gt; 3  1     1   3      1   7.9    0  weight      0      0      1       0</span>
-<span class="co">#&gt; 4  1     1   4      0  10.8    0 yoplait      0      0      0       1</span>
-<span class="co">#&gt; 5  1     2   1      1   9.8    0  dannon      1      0      0       0</span>
-<span class="co">#&gt; 6  1     2   2      0   6.4    0  hiland      0      1      0       0</span>
-<span class="co">#&gt;   branddannon brandhiland brandweight brandyoplait</span>
-<span class="co">#&gt; 1           1           0           0            0</span>
-<span class="co">#&gt; 2           0           1           0            0</span>
-<span class="co">#&gt; 3           0           0           1            0</span>
-<span class="co">#&gt; 4           0           0           0            1</span>
-<span class="co">#&gt; 5           1           0           0            0</span>
-<span class="co">#&gt; 6           0           1           0            0</span></code></pre></div>
+<span class="co">#&gt; # A tibble: 6 x 15</span>
+<span class="co">#&gt;      id obsID   alt choice price  feat brand   dannon hiland weight yoplait</span>
+<span class="co">#&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     1     1     1      0  8.1      0 dannon       1      0      0       0</span>
+<span class="co">#&gt; 2     1     1     2      0  6.10     0 hiland       0      1      0       0</span>
+<span class="co">#&gt; 3     1     1     3      1  7.90     0 weight       0      0      1       0</span>
+<span class="co">#&gt; 4     1     1     4      0 10.8      0 yoplait      0      0      0       1</span>
+<span class="co">#&gt; 5     1     2     1      1  9.80     0 dannon       1      0      0       0</span>
+<span class="co">#&gt; 6     1     2     2      0  6.40     0 hiland       0      1      0       0</span>
+<span class="co">#&gt; # … with 4 more variables: brand_dannon &lt;int&gt;, brand_hiland &lt;int&gt;,</span>
+<span class="co">#&gt; #   brand_weight &lt;int&gt;, brand_yoplait &lt;int&gt;</span></code></pre></div>
 <p>Now I can use those columns as covariates:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mnl_pref_dummies</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
@@ -273,7 +270,7 @@ Done!</code></pre>
   choiceName <span class="op">=</span> <span class="st">'choice'</span>,
   obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
   parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
-    <span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brandyoplait'</span>, <span class="st">'branddannon'</span>, <span class="st">'brandweight'</span><span class="op">)</span>
+    <span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand_yoplait'</span>, <span class="st">'brand_dannon'</span>, <span class="st">'brand_weight'</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 <pre><code>Running Model...
 Done!</code></pre>
@@ -281,21 +278,21 @@ Done!</code></pre>
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mnl_pref_dummies</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; MODEL SUMMARY: </span>
-<span class="co">#&gt;                           </span>
-<span class="co">#&gt; Model Space:    Preference</span>
-<span class="co">#&gt; Model Run:          1 of 1</span>
-<span class="co">#&gt; Iterations:             18</span>
-<span class="co">#&gt; Elapsed Time:  0h:0m:0.12s</span>
-<span class="co">#&gt; Exit Status:             3</span>
-<span class="co">#&gt; Weights Used?:       FALSE</span>
+<span class="co">#&gt;                          </span>
+<span class="co">#&gt; Model Space:   Preference</span>
+<span class="co">#&gt; Model Run:         1 of 1</span>
+<span class="co">#&gt; Iterations:            18</span>
+<span class="co">#&gt; Elapsed Time:  0h:0m:0.1s</span>
+<span class="co">#&gt; Exit Status:            3</span>
+<span class="co">#&gt; Weights Used?:      FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
-<span class="co">#&gt;               Estimate StdError    tStat pVal signif</span>
-<span class="co">#&gt; price        -0.366581 0.024366 -15.0447    0    ***</span>
-<span class="co">#&gt; feat          0.491412 0.120063   4.0930    0    ***</span>
-<span class="co">#&gt; brandyoplait  4.450197 0.187118  23.7828    0    ***</span>
-<span class="co">#&gt; branddannon   3.715575 0.145419  25.5508    0    ***</span>
-<span class="co">#&gt; brandweight   3.074399 0.145384  21.1467    0    ***</span>
+<span class="co">#&gt;                Estimate StdError    tStat pVal signif</span>
+<span class="co">#&gt; price         -0.366581 0.024366 -15.0447    0    ***</span>
+<span class="co">#&gt; feat           0.491412 0.120063   4.0930    0    ***</span>
+<span class="co">#&gt; brand_yoplait  4.450197 0.187118  23.7828    0    ***</span>
+<span class="co">#&gt; brand_dannon   3.715575 0.145419  25.5508    0    ***</span>
+<span class="co">#&gt; brand_weight   3.074399 0.145384  21.1467    0    ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt; </span>
