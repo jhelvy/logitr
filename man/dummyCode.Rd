@@ -2,7 +2,7 @@
 % Please edit documentation in R/encoding.R
 \name{dummyCode}
 \alias{dummyCode}
-\title{Adds dummy-coded variables to data frame.}
+\title{Add dummy-coded variables to data frame.}
 \usage{
 dummyCode(df, vars)
 }
@@ -16,17 +16,5 @@ create new dummy coded variables.}
 A a dataframe with new dummy-coded variables added.
 }
 \description{
-This function adds dummy-coded variables to a data frame based on a
-vector of column names.
-}
-\examples{
-# Create an example data frame:
-df <- data.frame(
-    animal   = c("dog", "goldfish", "bird", "dog", "goldfish"),
-    numLegs  = c(4, 0, 2, 4, 0),
-    lifeSpan = c(10, 10, 5, 10, 10))
-
-# Create dummy coded variables for the variables "animal" and "numLegs":
-df_dummy <- dummyCode(df, vars = c("animal", "numLegs"))
-df_dummy
+This function is depreciated. Use fastDummies::dummy_cols() instead.
 }

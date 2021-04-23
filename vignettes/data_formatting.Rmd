@@ -102,10 +102,10 @@ Note how how the reference level is the `"weight"` brand whereas before it was t
 
 # Creating dummy coded variables
 
-The `dummyCode()` function can be used to create dummy-coded variables from a discrete variable. In the code below, I create dummy-coded columns for the `brand` variable and then use those variables as covariates in a model: 
+If you wish to make dummy-coded variables yourself to use them in a model, I recommend using the `dummy_cols()` function from the [{fastDummies}](https://github.com/jacobkap/fastDummies) package. For example, in the code below, I create dummy-coded columns for the `brand` variable and then use those variables as covariates in a model: 
 
 ```{r}
-yogurt <- dummyCode(yogurt, "brand")
+yogurt <- fastDummies::dummy_cols(yogurt, "brand")
 ```
 
 The `yogurt` data frame now has new dummy-coded columns for brand (it actually already had these, but now there are additional ones):
@@ -122,7 +122,7 @@ mnl_pref_dummies <- logitr(
   choiceName = 'choice',
   obsIDName  = 'obsID',
   parNames   = c(
-    'price', 'feat', 'brandyoplait', 'branddannon', 'brandweight')
+    'price', 'feat', 'brand_yoplait', 'brand_dannon', 'brand_weight')
 )
 ```
 ```

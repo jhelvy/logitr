@@ -17,10 +17,12 @@ VignetteBuilder: knitr
 Depends:
     R (>= 3.5.0)
 Suggests:
+    fastDummies,
     knitr,
     rmarkdown,
     here,
-    ggplot2
+    ggplot2,
+    testthat
 Imports:
     nloptr,
     stats,

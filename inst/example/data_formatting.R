@@ -26,14 +26,14 @@ mnl_pref_weight <- logitr(
   parNames   = c('price', 'feat', 'brand')
 )
 
-yogurt <- dummyCode(yogurt, "brand")
+yogurt <- fastDummies::dummy_cols(yogurt, "brand")
 
 mnl_pref_dummies <- logitr(
   data       = yogurt,
   choiceName = 'choice',
   obsIDName  = 'obsID',
   parNames   = c(
-    'price', 'feat', 'brandyoplait', 'branddannon', 'brandweight')
+    'price', 'feat', 'brand_yoplait', 'brand_dannon', 'brand_weight')
 )
 
 # Save results

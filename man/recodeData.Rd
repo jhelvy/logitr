@@ -25,9 +25,10 @@ A list of the design matrix (\code{X}) and two vectors (\code{parNames} and
 added.
 }
 \description{
-Recodes a list of the design matrix (\code{X}) and two vectors (\code{parNames} and
-\code{randPars}) with discrete (categorical) variables and interaction variables
-added to \code{X}, \code{parNames}, and \code{randPars}.
+Recodes the data and returns a list of the encoded design matrix (\code{X}) as
+well as two vectors (\code{parNames} and \code{randPars}) with discrete (categorical)
+variables and interaction variables added to \code{X}, \code{parNames}, and
+\code{randPars}.
 }
 \examples{
 data(yogurt)

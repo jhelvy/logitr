@@ -1,6 +1,8 @@
 # For restarting
 rm(list = ls())
 .rs.restartR()
+devtools::load_all()
+devtools::test()
 
 # Create the documentation for the package
 devtools::document()
