@@ -7,6 +7,7 @@
 getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
                            priceName, randPrice, modelSpace, weightsName,
                            options) {
+  data <- as.data.frame(data) # tibbles break things
   # Setup pars
   runInputChecks(
     data, choiceName, obsIDName, parNames, randPars, priceName,

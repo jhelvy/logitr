@@ -8,6 +8,7 @@
 
 ## Summary of smaller updates:
 
+- Added tests for encoding functions
 - Added covariance matrix to model export
 
 ## Bugs

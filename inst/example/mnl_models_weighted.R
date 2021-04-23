@@ -4,9 +4,6 @@
 # Load logitr package
 library('logitr')
 
-# Preview the cars_us data
-head(cars_us)
-
 # ============================================================================
 # Estimate weighted and unweighted homogeneous MNL models
 
