@@ -1,3 +1,15 @@
+# logitr 0.1.4.9000
+
+## Summary of larger updates:
+
+- Added `predictChoices()` function.
+
+## Summary of smaller updates:
+
+
+## Bugs
+
+
 # logitr 0.1.3.9002
 
 ## Summary of larger updates:

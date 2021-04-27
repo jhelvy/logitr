@@ -17,8 +17,7 @@ mxl_wtp  <- readRDS(here::here('inst', 'extdata', 'mxl_wtp.Rds'))
 # alternative and each column an attribute. In this example, I just use a
 # couple of the choice observations from the yogurt dataset:
 alts <- subset(yogurt, obsID %in% c(42, 13),
-               select = c('price', 'feat', 'brand'))
-alts$obsID <- c(rep(1, 4), rep(2, 4))
+               select = c('obsID', 'price', 'feat', 'brand'))
 alts
 
 # Run the simulation using the preference space MNL model:
@@ -83,9 +82,9 @@ sims$model <- c(rep("mnl_pref", 4), rep("mnl_wtp", 4),
                 rep("mxl_pref", 4), rep("mxl_wtp", 4))
 sims$alt <- rep(c("dannon", "hiland", "weight", "yoplait"), 4)
 
-ggplot(sims, aes(x = alt, y = mean, fill = model)) +
+ggplot(sims, aes(x = alt, y = share_mean, fill = model)) +
     geom_bar(stat = 'identity', width = 0.7, position = "dodge") +
-    geom_errorbar(aes(ymin = low, ymax = high),
+    geom_errorbar(aes(ymin = share_low, ymax = share_high),
                   width = 0.2, position = position_dodge(width = 0.7)) +
     scale_y_continuous(limits = c(0, 1)) +
     labs(x = 'Alternative', y = 'Expected Share') +

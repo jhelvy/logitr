@@ -31,23 +31,30 @@ Once a model has been estimated, it can be used to simulate the predicted shares
 
 # The data
 
-```{r, child=here::here('man', 'rmdchunks', 'yogurtDataDescription.Rmd')}
-```
-
-# Simulating shares from estimated models
-
-To simulate shares, you first need to create a set of alternatives where each row is an alternative and each column an attribute. In this example, I just use a couple of the choice observations from the yogurt dataset (note that if you include more than one set of alternatives you also have to specify an `obsID`):
+To simulate shares, you first need to create a set of alternatives where each row is an alternative and each column an attribute. In this example, I just use a couple of the choice observations from the `yogurt` dataset (note that if you include more than one set of alternatives you also have to specify an `obsID`):
 
 ```{r}
 alts <- subset(yogurt, obsID %in% c(42, 13),
-               select = c('price', 'feat', 'brand'))
-alts$obsID <- c(rep(1, 4), rep(2, 4))
+               select = c('obsID', 'price', 'feat', 'brand'))
 alts
 ```
 
-Let's say we have estimated a preference space MNL model called `mnl_pref`. We can use the `simulateShares()` function with the `mnl_pref` model to predict the shares for our `alts` set of alternatives:
+# Simulating shares with multinomial logit models
+
+## Preference space parameterization
+
+In the example below, I estimate a preference space MNL model called `mnl_pref`. I can then use the `simulateShares()` function with the `mnl_pref` model to predict the shares for each set of alternatives in the `alts` data frame:
 
 ```{r, eval=FALSE}
+# Estimate the model
+mnl_pref <- logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'brand')
+)
+
+# Simulate shares
 sim_mnl_pref <- simulateShares(
   model     = mnl_pref,
   alts      = alts,
@@ -59,11 +66,25 @@ sim_mnl_pref <- simulateShares(
 sim_mnl_pref
 ```
 
-The results show the expected shares for each alternative. The low and high values show a 95% confidence interval, estimated using simulation. You can change the CI level by setting `alpha` to a different value (e.g. a 90% CI is obtained with alpha = 0.05).
+The results show the expected shares for each alternative. The low and high values show a 95% confidence interval, estimated using simulation. You can change the CI level by setting `alpha` to a different value (e.g. a 90% CI is obtained with `alpha = 0.05`).
+
+## WTP space parameterization
 
 You can also use WTP space models to simulate shares, but you must provide the additional `priceName` argument to the `simulateShares()` function. For example, here are the results from an equivalent model but in the WTP space:
 
 ```{r, eval=FALSE}
+# Estimate the model
+mnl_wtp <- logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('feat', 'brand'),
+  priceName  = 'price',
+  modelSpace = 'wtp',
+  options = list(numMultiStarts = 10)
+)
+
+# Simulate shares
 sim_mnl_wtp <- simulateShares(
   model     = mnl_wtp,
   alts      = alts,
@@ -72,7 +93,7 @@ sim_mnl_wtp <- simulateShares(
 )
 ```
 ```
-#> NOTE: Using results from run 5 of 10 multistart runs
+#> NOTE: Using results from run 8 of 10 multistart runs
 #> (the run with the largest log-likelihood value)
 ```
 ```{r}
@@ -81,9 +102,24 @@ sim_mnl_wtp
 
 Since these two models are equivalent except in different spaces, the simulation results should be the same.
 
-Simulations also work with mixed logit models, and they account for how heterogeneity is modeled by simulating draws from the population estimates of the estimated model:
+# Predicting with mixed logit models
+
+## Preference space parameterization
+
+You can also use mixed logit models to simulate shares. Heterogeneity is modeled by simulating draws from the population estimates of the estimated model. Here is an example using a preference space mixed logit model:
 
 ```{r, eval=FALSE}
+# Estimate the model
+mxl_pref <- logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('price', 'feat', 'brand'),
+  randPars   = c(feat = 'n', brand = 'n'),
+  options    = list(numMultiStarts = 5)
+)
+
+# Simulate shares
 sim_mxl_pref <- simulateShares(
   model     = mxl_pref,
   alts      = alts,
@@ -94,9 +130,24 @@ sim_mxl_pref <- simulateShares(
 sim_mxl_pref
 ```
 
+## WTP space parameterization
+
 Likewise, mixed logit WTP space models can also be used to simulate shares:
 
 ```{r, eval=FALSE}
+# Estimate the model
+mxl_wtp <- logitr(
+  data       = yogurt,
+  choiceName = 'choice',
+  obsIDName  = 'obsID',
+  parNames   = c('feat', 'brand'),
+  priceName  = 'price',
+  randPars   = c(feat = 'n', brand = 'n'),
+  modelSpace = 'wtp',
+  options    = list(numMultiStarts = 5)
+)
+
+# Simulate shares
 sim_mxl_wtp <- simulateShares(
   model     = mxl_wtp,
   alts      = alts,
@@ -108,7 +159,9 @@ sim_mxl_wtp <- simulateShares(
 sim_mxl_wtp
 ```
 
-Here is a bar plot of the results from each model:
+# Compare results
+
+Here is a bar plot comparing the simulated shares from each model:
 
 ```{r, fig.width=6, fig.height=4}
 library(ggplot2)
@@ -119,9 +172,9 @@ sims$model <- c(rep("mnl_pref", 4), rep("mnl_wtp", 4),
                 rep("mxl_pref", 4), rep("mxl_wtp", 4))
 sims$alt <- rep(c("dannon", "hiland", "weight", "yoplait"), 4)
 
-ggplot(sims, aes(x = alt, y = mean, fill = model)) +
+ggplot(sims, aes(x = alt, y = share_mean, fill = model)) +
     geom_bar(stat = 'identity', width = 0.7, position = "dodge") +
-    geom_errorbar(aes(ymin = low, ymax = high),
+    geom_errorbar(aes(ymin = share_low, ymax = share_high),
                   width = 0.2, position = position_dodge(width = 0.7)) +
     scale_y_continuous(limits = c(0, 1)) +
     labs(x = 'Alternative', y = 'Expected Share') +

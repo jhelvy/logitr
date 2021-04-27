@@ -1,6 +1,83 @@
 # ============================================================================
-# Functions for running simulations
+# Functions for predicting choices and expected shares
 # ============================================================================
+
+#' Predict choices
+#'
+#' Returns the expected choices for a set of one or more alternatives based
+#' on the results from an estimated model.
+#' @keywords logitr simluation
+#'
+#' @param model The output of a model estimated model using the `logitr()`
+#' function.
+#' @param choiceName The name of the column that identifies the choice variable.
+#' Include if you want to compare true choices from actual observations (e.g.
+#' hold outs) to the predicted choices.
+#' @param alts A data frame of a set of alternatives for which to predict
+#' choices. Each row is an alternative and each column an attribute
+#' corresponding to parameter names in the estimated model.
+#' @param obsIDName The name of the column that identifies each set of
+#' alternatives. Required if simulating results for more than one set of
+#' alternatives. Defaults to `NULL` (for a single set of alternatives).
+#' @param priceName The name of the parameter that identifies price. Only
+#' required for WTP space models. Defaults to `NULL`.
+#'
+#' @return A data frame with the predicted choices for each alternative in
+#' `alts`.
+#' @export
+#' @examples
+#' \dontrun{
+#' # Run a MNL model in the Preference Space:
+#' library(logitr)
+#'
+#' mnl_pref <- logitr(
+#'   data = yogurt,
+#'   choiceName = "choice",
+#'   obsIDName = "obsID",
+#'   parNames = c("price", "feat", "brand")
+#' )
+#'
+#' # Create a set of alternatives for which to simulate shares. Each row is an
+#' # alternative and each column an attribute. In this example, I just use a
+#' # couple of the choice observations from the yogurt dataset:
+#' alts <- subset(yogurt, obsID %in% c(42, 13),
+#'                select = c('price', 'feat', 'brand'))
+#' alts$obsID <- c(rep(1, 4), rep(2, 4))
+#' alts
+#'
+#' # Predict choices using the estimated preference space MNL model:
+#' predictChoices(mnl_pref, alts, obsIDName = "obsID")
+#' }
+predictChoices <- function(
+  model,
+  alts,
+  choiceName = NULL,
+  obsIDName = NULL,
+  priceName = NULL
+) {
+  shares <- simulateShares(
+    model, alts, obsIDName = obsIDName, priceName = priceName,
+    computeCI = FALSE)
+  if (is.null(obsIDName)) {
+    obsIDName <- "obsID"
+  }
+  if (!is.null(choiceName)) {
+    shares[choiceName] <- alts[choiceName]
+  }
+  choices <- split(shares, shares[obsIDName])
+  choices <- lapply(choices, simChoice)
+  result <- do.call(rbind, choices)
+  result$share_mean <- NULL
+  return(result)
+}
+
+simChoice <- function(df) {
+  choices <- seq_len(nrow(df))
+  result <- 0*choices
+  result[sample(x = choices, size = 1, prob = df$share_mean)] <- 1
+  df$choice_predict <- result
+  return(df)
+}
 
 #' Simulate expected shares
 #'
@@ -18,8 +95,10 @@
 #' alternatives. Defaults to `NULL` (for a single set of alternatives).
 #' @param priceName The name of the parameter that identifies price. Only
 #' required for WTP space models. Defaults to `NULL`.
-#' @param alpha The sensitivity of the computed confidence interval, e.g. a
-#' 90% CI is obtained with `alpha = 0.05`. Defaults to `alpha = 0.025`.
+#' @param computeCI Should a confidence interval be computed?
+#' Defaults to `TRUE`.
+#' @param alpha The sensitivity of the computed confidence interval.
+#' Defaults to `alpha = 0.025`, reflecting a 95% CI.
 #' @param numDraws The number of draws to use in simulating uncertainty
 #' for the computed confidence interval.
 #'
@@ -27,6 +106,7 @@
 #' `alts`.
 #' @export
 #' @examples
+#' \dontrun{
 #' # Run a MNL model in the Preference Space:
 #' library(logitr)
 #'
@@ -34,23 +114,26 @@
 #'   data = yogurt,
 #'   choiceName = "choice",
 #'   obsIDName = "obsID",
-#'   parNames = c("price", "feat", "dannon", "hiland", "yoplait")
+#'   parNames = c("price", "feat", "brand")
 #' )
 #'
-#' # Create a set of alternatives for which to simulate shares:
-#' alts <- subset(yogurt, obsID == 42,
-#'   select = c("feat", "price", "dannon", "hiland", "yoplait")
-#' )
-#' row.names(alts) <- c("dannon", "hiland", "weight", "yoplait")
+#' # Create a set of alternatives for which to simulate shares. Each row is an
+#' # alternative and each column an attribute. In this example, I just use a
+#' # couple of the choice observations from the yogurt dataset:
+#' alts <- subset(yogurt, obsID %in% c(42, 13),
+#'                select = c('price', 'feat', 'brand'))
+#' alts$obsID <- c(rep(1, 4), rep(2, 4))
 #' alts
 #'
 #' # Run the simulation using the estimated preference space MNL model:
-#' simulateShares(mnl_pref, alts)
+#' simulateShares(mnl_pref, alts, obsIDName = "obsID")
+#' }
 simulateShares <- function(
   model,
   alts,
   obsIDName = NULL,
   priceName = NULL,
+  computeCI = TRUE,
   alpha = 0.025,
   numDraws = 10^4
 ) {
@@ -70,15 +153,20 @@ simulateShares <- function(
   }
   if (is.null(obsIDName)) {
     obsID <- rep(1, nrow(X))
+    obsIDName <- "obsID"
   } else {
-    obsID <- as.matrix(alts[obsIDName])
+    obsID <- alts[,obsIDName]
   }
   if (model$modelType == "mxl") {
-    return(mxlSimulation(
-      alts, model, X, price, obsID, numDraws, alpha, getV, getVDraws))
+    return(
+      mxlSimulation(
+        alts, model, X, price, obsID, obsIDName, numDraws, alpha, getV,
+        getVDraws, computeCI))
   } else {
-    return(mnlSimulation(
-      alts, model, X, price, obsID, numDraws, alpha, getV, getVDraws))
+    return(
+      mnlSimulation(
+        alts, model, X, price, obsID, obsIDName, numDraws, alpha, getV,
+        getVDraws, computeCI))
   }
 }
 
@@ -103,30 +191,20 @@ checkParNames <- function(model, X) {
   }
 }
 
-mnlSimulation <- function(alts, model, X, price, obsID, numDraws, alpha,
-  getV, getVDraws) {
+mnlSimulation <- function(alts, model, X, price, obsID, obsIDName,
+                          numDraws, alpha, getV, getVDraws, computeCI) {
   # Compute mean shares
   V <- getV(stats::coef(model), X, price)
   meanShare <- getMnlLogit(V, obsID)
+  if (computeCI == FALSE) {
+    return(summarizeMeanShares(meanShare, obsID, obsIDName))
+  }
   # Compute uncertainty with simulation
   betaUncDraws <- getUncertaintyDraws(model, numDraws)
   betaUncDraws <- selectSimDraws(betaUncDraws, model$modelSpace, X)
   VUncDraws <- getVDraws(betaUncDraws, X, price)
   logitUncDraws <- getMxlLogit(VUncDraws, obsID)
-  return(summarizeShares(meanShare, logitUncDraws, obsID, alpha))
-}
-
-mxlSimulation <- function(alts, model, X, price, obsID, numDraws, alpha,
-  getV, getVDraws) {
-  betaUncDraws <- getUncertaintyDraws(model, numDraws)
-  meanShare <- getSimPHat(
-    stats::coef(model), model, X, price, obsID, getVDraws)
-  logitUncDraws <- matrix(0, nrow = nrow(X), ncol = nrow(betaUncDraws))
-  for (i in seq_len(nrow(betaUncDraws))) {
-    pars <- betaUncDraws[i, ]
-    logitUncDraws[, i] <- getSimPHat(pars, model, X, price, obsID, getVDraws)
-  }
-  return(summarizeShares(meanShare, logitUncDraws, obsID, alpha))
+  return(summarizeUncShares(meanShare, logitUncDraws, obsID, obsIDName, alpha))
 }
 
 selectSimDraws <- function(betaDraws, modelSpace, X) {
@@ -141,6 +219,24 @@ selectSimDraws <- function(betaDraws, modelSpace, X) {
   return(as.matrix(betaDraws))
 }
 
+mxlSimulation <- function(alts, model, X, price, obsID, obsIDName,
+                          numDraws, alpha, getV, getVDraws, computeCI) {
+  # Compute mean shares
+  meanShare <- getSimPHat(
+    stats::coef(model), model, X, price, obsID, getVDraws)
+  if (computeCI == FALSE) {
+    return(summarizeMeanShares(meanShare, obsID, obsIDName))
+  }
+  # Compute uncertainty with simulation
+  betaUncDraws <- getUncertaintyDraws(model, numDraws)
+  logitUncDraws <- matrix(0, nrow = nrow(X), ncol = nrow(betaUncDraws))
+  for (i in seq_len(nrow(betaUncDraws))) {
+    pars <- betaUncDraws[i, ]
+    logitUncDraws[, i] <- getSimPHat(pars, model, X, price, obsID, getVDraws)
+  }
+  return(summarizeUncShares(meanShare, logitUncDraws, obsID, obsIDName, alpha))
+}
+
 getSimPHat <- function(pars, model, X, price, obsID, getVDraws) {
   betaDraws <- makeBetaDraws(
     pars, model$parSetup, model$options$numDraws, model$standardDraws)
@@ -152,10 +248,20 @@ getSimPHat <- function(pars, model, X, price, obsID, getVDraws) {
   return(pHat)
 }
 
-summarizeShares <- function(meanShare, logitUncDraws, obsID, alpha) {
+summarizeMeanShares <- function(meanShare, obsID, obsIDName) {
+  shares <- as.data.frame(meanShare)
+  colnames(shares) <- "share_mean"
+  shares[obsIDName] <- obsID
+  names <- c(obsIDName, "share_mean")
+  return(shares[names])
+}
+
+summarizeUncShares <- function(meanShare, logitUncDraws, obsID,
+                               obsIDName, alpha) {
   shares <- as.data.frame(t(apply(logitUncDraws, 1, ci, alpha)))
   shares$mean <- as.numeric(meanShare)
-  names <- c("obsID", colnames(shares))
-  shares$obsID <- obsID
+  colnames(shares) <- paste0("share_", colnames(shares))
+  names <- c(obsIDName, colnames(shares))
+  shares[obsIDName] <- obsID
   return(shares[names])
 }

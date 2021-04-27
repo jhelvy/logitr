@@ -34,6 +34,8 @@ navbar:
           href: articles/weighted_models.html
         - text: "Simulating Shares from Estimated Models"
           href: articles/simulations.html
+        - text: "Predicting Choices from Estimated Models"
+          href: articles/predictions.html
     - text: "Changelog"
       href: news/index.html
     - icon: fa-github
@@ -44,7 +46,6 @@ reference:
   desc: "Functions for encoding data prior to model estimation."
   contents:
   - recodeData
-  - getDesignMatrix
 - title: "Estimating Models"
   desc: "Functions for estimating multinomial logit models with preference space and WTP space utility parameterizations."
   contents:
@@ -61,9 +62,10 @@ reference:
   contents:
   - wtp
   - wtpCompare
-- title: "Simulating Shares from Estimated Models"
-  desc: "Functions for simulating expected shares from a set of alternatives."
+- title: "Predicting Choices & Market Shares"
+  desc: "Functions for predicting choices and simulating expected shares from a set of alternatives."
   contents:
+  - predictChoices
   - simulateShares
 - title: "Example Data Sets"
   desc: "Descriptions of data included with this package"
