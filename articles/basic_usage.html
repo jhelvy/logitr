@@ -75,10 +75,10 @@
       <a href="../articles/weighted_models.html">Estimating Weighted Logit Models</a>
     </li>
     <li>
-      <a href="../articles/simulations.html">Simulating Shares from Estimated Models</a>
+      <a href="../articles/predict_shares.html">Predicting Shares from Estimated Models</a>
     </li>
     <li>
-      <a href="../articles/predictions.html">Predicting Choices from Estimated Models</a>
+      <a href="../articles/predict_choices.html">Predicting Choices from Estimated Models</a>
     </li>
   </ul>
 </li>
@@ -157,7 +157,6 @@
 <div id="preference-space-models" class="section level2">
 <h2 class="hasAnchor">
 <a href="#preference-space-models" class="anchor"></a>Preference space models</h2>
-<p>Unlike similar packages like <a href="https://cran.r-project.org/package=mlogit"><strong>mlogit</strong></a>, <strong>logitr</strong> does not support the formula type input that uses a symbolic description of the model to be estimated. Parameters are simply described as a vector of the column names in the <code>data.frame</code> provided to the <code>data</code> argument.</p>
 <p>The <code><a href="../reference/logitr.html">logitr()</a></code> function assumes that the deterministic part of the utility function, <span class="math inline">\(v_{j}\)</span>, is linear in parameters, i.e.:</p>
 <p><span class="math display">\[\begin{equation}
     u_{j} = v_{j} + \varepsilon_{j}
@@ -173,46 +172,79 @@
 \label{eq:utilityPreferenceObserved}
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(\mathbf{β}\)</span> is the vector of coefficients for non-price attributes <span class="math inline">\(\mathrm{\mathbf{x}}_{j}\)</span>, <span class="math inline">\(\alpha\)</span> is the coefficient for price <span class="math inline">\(p_{j}\)</span>. Accordingly, each parameter in the <code>parNames</code> argument is an additive part of <span class="math inline">\(v_{j}\)</span>.</p>
-<p>For example, if the observed utility was <span class="math inline">\(v_{j} = \beta x_{j} + \alpha p_{j}\)</span>, where <span class="math inline">\(p_{j}\)</span> is “price” and <span class="math inline">\(x_{j}\)</span> is “size”, then the <code>parNames</code> argument should be <code><a href="https://rdrr.io/r/base/c.html">c("price", "size")</a></code>. Such an example could be estimated with the following code, where the <code>data</code> object is a <code>data.frame</code> with columns named <code>"choice"</code>, <code>"obsID"</code>, <code>"price"</code>, and <code>"size"</code>:</p>
+<p>For example, if the observed utility for yogurt purchases was <span class="math inline">\(v_{j} = \beta x_{j} + \alpha p_{j}\)</span>, where <span class="math inline">\(p_{j}\)</span> is “price” and <span class="math inline">\(x_{j}\)</span> is “brand”, then the <code>parNames</code> argument should be <code><a href="https://rdrr.io/r/base/c.html">c("price", "brand")</a></code>. This model can be estimated as follows using the <code>yogurt</code> data frame:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>mnl_pref &lt;-<span class="st"> </span><span class="kw">logitr</span>(</span>
-<span id="cb2-2"><a href="#cb2-2"></a>    <span class="dt">data       =</span> data,</span>
+<span id="cb2-2"><a href="#cb2-2"></a>    <span class="dt">data       =</span> yogurt,</span>
 <span id="cb2-3"><a href="#cb2-3"></a>    <span class="dt">choiceName =</span> <span class="st">"choice"</span>,</span>
 <span id="cb2-4"><a href="#cb2-4"></a>    <span class="dt">obsIDName  =</span> <span class="st">"obsID"</span>,</span>
-<span id="cb2-5"><a href="#cb2-5"></a>    <span class="dt">parNames   =</span> <span class="kw">c</span>(<span class="st">"price"</span>, <span class="st">"size"</span>))</span>
+<span id="cb2-5"><a href="#cb2-5"></a>    <span class="dt">parNames   =</span> <span class="kw">c</span>(<span class="st">"price"</span>, <span class="st">"brand"</span>))</span>
 <span id="cb2-6"><a href="#cb2-6"></a><span class="er">)</span></span></code></pre></div>
+<p>Use the <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> function to view a summary of the estimated model results. In the following summary, three coefficients are shown for the “brand” attribute, with <code>"dannon"</code> set as the reference level:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span>
+<span class="co">#&gt; =================================================</span>
+<span class="co">#&gt; MODEL SUMMARY: </span>
+<span class="co">#&gt;                           </span>
+<span class="co">#&gt; Model Space:    Preference</span>
+<span class="co">#&gt; Model Run:          1 of 1</span>
+<span class="co">#&gt; Iterations:             21</span>
+<span class="co">#&gt; Elapsed Time:  0h:0m:0.12s</span>
+<span class="co">#&gt; Exit Status:             3</span>
+<span class="co">#&gt; Weights Used?:       FALSE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Model Coefficients: </span>
+<span class="co">#&gt;               Estimate StdError    tStat pVal signif</span>
+<span class="co">#&gt; price        -0.366543 0.024365 -15.0439    0    ***</span>
+<span class="co">#&gt; feat          0.491433 0.120061   4.0932    0    ***</span>
+<span class="co">#&gt; brandhiland  -3.715428 0.145416 -25.5504    0    ***</span>
+<span class="co">#&gt; brandweight  -0.641128 0.054498 -11.7643    0    ***</span>
+<span class="co">#&gt; brandyoplait  0.734496 0.080642   9.1082    0    ***</span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Model Fit Values: </span>
+<span class="co">#&gt;                                      </span>
+<span class="co">#&gt; Log.Likelihood.         -2656.8878799</span>
+<span class="co">#&gt; Null.Log.Likelihood.    -3343.7419990</span>
+<span class="co">#&gt; AIC.                     5323.7758000</span>
+<span class="co">#&gt; BIC.                     5352.7168000</span>
+<span class="co">#&gt; McFadden.R2.                0.2054148</span>
+<span class="co">#&gt; Adj..McFadden.R2            0.2039195</span>
+<span class="co">#&gt; Number.of.Observations.  2412.0000000</span></code></pre></div>
 </div>
 <div id="wtp-space-models" class="section level2">
 <h2 class="hasAnchor">
 <a href="#wtp-space-models" class="anchor"></a>WTP space models</h2>
-<p>For models estimated in the WTP space, the <code>modelSpace</code> argument should be set to <code>modelSpace = "wtp"</code>. The <code>parNames</code> argument should <strong>not</strong> contain the name of the column for the price attribute as it should be provided separately with the <code>priceName</code> argument.</p>
-<p>For example, if the observed utility was <span class="math inline">\(v_{j} = \lambda \left(\omega x_{j} - p_{j}\right)\)</span>, where <span class="math inline">\(p_{j}\)</span> is “price” and <span class="math inline">\(x_{j}\)</span> is “size”, then the <code>parNames</code> argument should be <code>"size"</code> and the <code>priceName</code> argument should be <code>"price"</code>. Such an example could be estimated with the following code, where the <code>data</code> object is a <code>data.frame</code> with columns named <code>"choice"</code>, <code>"obsID"</code>, <code>"price"</code>, and <code>"size"</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p>For models estimated in the WTP space, the <code>modelSpace</code> argument should be set to <code>"wtp"</code>. In addition, the <code>parNames</code> argument should <em>not</em> contain the name of the column for the price attribute because there is no estimated “price” parameter in WTP space models. Instead, a “scale” parameter given by <span class="math inline">\(\lambda\)</span> will be estimated, and the column for “price” should be provided separately using the <code>priceName</code> argument.</p>
+<p>For example, if the observed utility was <span class="math inline">\(v_{j} = \lambda \left(\omega x_{j} - p_{j}\right)\)</span>, where <span class="math inline">\(p_{j}\)</span> is “price” and <span class="math inline">\(x_{j}\)</span> is “brand”, then the <code>parNames</code> argument should be <code>"brand"</code> and the <code>priceName</code> argument should be <code>"price"</code>. This model can be estimated as follows using the <code>yogurt</code> data frame:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-    data       <span class="op">=</span> <span class="va">data</span>,
+    data       <span class="op">=</span> <span class="va">yogurt</span>,
     choiceName <span class="op">=</span> <span class="st">"choice"</span>,
     obsIDName  <span class="op">=</span> <span class="st">"obsID"</span>,
-    parNames   <span class="op">=</span> <span class="st">"size"</span>,
+    parNames   <span class="op">=</span> <span class="st">"brand"</span>,
     priceName  <span class="op">=</span> <span class="st">"price"</span>,
     modelSpace <span class="op">=</span> <span class="st">"wtp"</span>,
-    options    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>numMultiStarts <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># Set numMultiStarts &gt; 1 to run a multistart</span>
+    options    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>numMultiStarts <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
-<p>Since WTP space models are non-convex, it is recommended that you use a multi-start search to run the optimization loop multiple times to search for different local minima:</p>
+<p>Since WTP space models are non-convex, it is recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima. This was implemented in the above example by passing a <code>numMultiStarts</code> argument inside a list to the <code>options</code> argument (other options can be passed in the same list).</p>
+<p>In the WTP space model, the estimated “brand” coefficients have units of dollars and can be interpreted as the average willingness to pay for each brand relative to the “Dannon” brand, all else being equal.</p>
 </div>
 <div id="mixed-logit-models" class="section level2">
 <h2 class="hasAnchor">
 <a href="#mixed-logit-models" class="anchor"></a>Mixed logit models</h2>
-<p>To estimate a mixed logit model, use the <code>randPars</code> argument to denote which parameters will be modeled with a distribution. The current package version supports normal and log-normal distributions.</p>
-<p>For example, if the observed utility was <span class="math inline">\(v_{j} = \beta x_{j} + \alpha p_{j}\)</span>, where <span class="math inline">\(p_{j}\)</span> is “price” and <span class="math inline">\(x_{j}\)</span> is “size” and you wanted to model the <code>"size"</code> parameter, <span class="math inline">\(\beta\)</span>, with a normal or log-normal distribution, set <code>randPars = c(size = "n")</code> or <code>randPars = c(size = "ln")</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p>To estimate a mixed logit model, use the <code>randPars</code> argument in the <code><a href="../reference/logitr.html">logitr()</a></code> function to denote which parameters will be modeled with a distribution. The current package version supports normal (<code>"n"</code>) and log-normal (<code>"ln"</code>) distributions.</p>
+<p>For example, assume the observed utility for yogurts was <span class="math inline">\(v_{j} = \beta x_{j} + \alpha p_{j}\)</span>, where <span class="math inline">\(p_{j}\)</span> is “price” and <span class="math inline">\(x_{j}\)</span> is “brand”. To model <code>"brand"</code> parameter, <span class="math inline">\(\beta\)</span>, with a normal or log-normal distribution, set <code>randPars = c(size = "n")</code> or <code>randPars = c(size = "ln")</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-    data       <span class="op">=</span> <span class="va">data</span>,
+    data       <span class="op">=</span> <span class="va">yogurt</span>,
     choiceName <span class="op">=</span> <span class="st">"choice"</span>,
     obsIDName  <span class="op">=</span> <span class="st">"obsID"</span>,
-    parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"size"</span><span class="op">)</span>,
-    randPars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>size <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span>, <span class="co"># Modeling size parameter as normally distributed</span>
-    options    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>numMultiStarts <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># Set numMultiStarts &gt; 1 to run a multistart</span>
+    parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"brand"</span><span class="op">)</span>,
+    randPars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>brand <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span>,
+    options    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>numMultiStarts <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
-<p>Since mixed logit models are non-convex, it is recommended that you use a multi-start search to run the optimization loop multiple times to search for different local minima. Note that mixed logit models can take a long time to estimate, so setting large number for <code>numMultiStarts</code> could take hours or longer to complete.</p>
+<p>Since mixed logit models are non-convex, it is again recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima. Note that mixed logit models can take a long time to estimate, so setting large number for <code>numMultiStarts</code> could take hours or longer to complete.</p>
 </div>
 <div id="view-results" class="section level2">
 <h2 class="hasAnchor">
@@ -228,19 +260,51 @@
 <div id="computing-and-comparing-wtp" class="section level2">
 <h2 class="hasAnchor">
 <a href="#computing-and-comparing-wtp" class="anchor"></a>Computing and comparing WTP</h2>
-<p>For models in the preference space, you can get a summary table of the implied WTP by using:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">priceName</span><span class="op">)</span></code></pre></div>
-<p>To compare the WTP between two equivalent models in the preference space and WTP spaces, use:</p>
+<p>For models in the preference space, a summary table of the computed WTP based on the estimated preference space parameters can be obtained with the <code><a href="../reference/wtp.html">wtp()</a></code> function. For example, the computed WTP from the previously estimated fixed parameter model can be obtained with the following command:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, <span class="va">priceName</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="simulate-shares" class="section level2">
-<h2 class="hasAnchor">
-<a href="#simulate-shares" class="anchor"></a>Simulate shares</h2>
-<p>Once you have estimated a model, you can use it to simulate the expected shares of a particular set of alternatives. This can be done using the function <code><a href="../reference/simulateShares.html">simulateShares()</a></code>. The simulation reports the expected share as well as a confidence interval for each alternative:</p>
+<code class="sourceCode R"><span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, priceName <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
+<span class="co">#&gt;                Estimate StdError    tStat  pVal signif</span>
+<span class="co">#&gt; lambda         0.366543 0.024467  14.9810 0e+00    ***</span>
+<span class="co">#&gt; feat           1.340724 0.360547   3.7186 2e-04    ***</span>
+<span class="co">#&gt; brandhiland  -10.136406 0.585340 -17.3171 0e+00    ***</span>
+<span class="co">#&gt; brandweight   -1.749121 0.182473  -9.5856 0e+00    ***</span>
+<span class="co">#&gt; brandyoplait   2.003848 0.341319   5.8709 0e+00    ***</span></code></pre></div>
+<p>The <code><a href="../reference/wtp.html">wtp()</a></code> function divides the non-price parameters by the negative of the price parameter. Standard errors are estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. Similarly, the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function can be used to compare the WTP from a WTP space model with that computed from an equivalent preference space model:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">shares</span> <span class="op">=</span> <span class="fu"><a href="../reference/simulateShares.html">simulateShares</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">alts</span>, priceName <span class="op">=</span> <span class="cn">NULL</span>, alpha <span class="op">=</span> <span class="fl">0.025</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, priceName <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
+<span class="co">#&gt;                      pref           wtp  difference</span>
+<span class="co">#&gt; lambda           0.366543     0.3665838  0.00004084</span>
+<span class="co">#&gt; feat             1.340724     1.3406124 -0.00011158</span>
+<span class="co">#&gt; brandhiland    -10.136406   -10.1357369  0.00066905</span>
+<span class="co">#&gt; brandweight     -1.749121    -1.7490856  0.00003538</span>
+<span class="co">#&gt; brandyoplait     2.003848     2.0038525  0.00000450</span>
+<span class="co">#&gt; logLik       -2656.887880 -2656.8878780  0.00000191</span></code></pre></div>
+</div>
+<div id="predict-shares-and-choices" class="section level2">
+<h2 class="hasAnchor">
+<a href="#predict-shares-and-choices" class="anchor"></a>Predict shares and choices</h2>
+<p>Once you have estimated a model, you can use it to predict the expected choices or shares of a particular set of alternatives (or multiple sets of alternatives). To predict shares, use the <code><a href="../reference/predictShares.html">predictShares()</a></code> function using an estimated model and a data frame of alternatives. As an example, I’ll use a couple of the choice observations from the <code>yogurt</code> dataset (note that if you include more than one set of alternatives you also have to specify an <code>obsID</code>):</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">alts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">yogurt</span>, <span class="va">obsID</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">13</span><span class="op">)</span>,
+               select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'obsID'</span>, <span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span><span class="op">)</span>
+<span class="va">alts</span>
+<span class="co">#&gt;     obsID price feat   brand</span>
+<span class="co">#&gt; 49     13   8.1    0  dannon</span>
+<span class="co">#&gt; 50     13   5.0    0  hiland</span>
+<span class="co">#&gt; 51     13   8.6    0  weight</span>
+<span class="co">#&gt; 52     13  10.8    0 yoplait</span>
+<span class="co">#&gt; 165    42   6.3    0  dannon</span>
+<span class="co">#&gt; 166    42   6.1    1  hiland</span>
+<span class="co">#&gt; 167    42   7.9    0  weight</span>
+<span class="co">#&gt; 168    42  11.5    0 yoplait</span></code></pre></div>
+<p>Now predict shares:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">shares</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predictShares.html">predictShares</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">alts</span><span class="op">)</span>
+<span class="va">shares</span></code></pre></div>
+<p>Likewise, you can use the <code><a href="../reference/predictChoices.html">predictChoices()</a></code> function to predict choices for a set of alternatives:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predictChoices.html">predictChoices</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">alts</span><span class="op">)</span>
+<span class="va">choices</span></code></pre></div>
 </div>
 </div>
   </div>

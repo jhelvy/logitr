@@ -8,8 +8,8 @@ articles:
   mnl_models: mnl_models.html
   mnl_models_weighted: mnl_models_weighted.html
   mxl_models: mxl_models.html
-  predictions: predictions.html
-  simulations: simulations.html
+  predict_choices: predict_choices.html
+  predict_shares: predict_shares.html
   utility_models: utility_models.html
-last_built: 2021-04-27T14:49Z
+last_built: 2021-05-10T21:15Z
 

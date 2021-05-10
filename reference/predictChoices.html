@@ -117,10 +117,10 @@ on the results from an estimated model." />
       <a href="../articles/weighted_models.html">Estimating Weighted Logit Models</a>
     </li>
     <li>
-      <a href="../articles/simulations.html">Simulating Shares from Estimated Models</a>
+      <a href="../articles/predict_shares.html">Predicting Shares from Estimated Models</a>
     </li>
     <li>
-      <a href="../articles/predictions.html">Predicting Choices from Estimated Models</a>
+      <a href="../articles/predict_choices.html">Predicting Choices from Estimated Models</a>
     </li>
   </ul>
 </li>
@@ -155,7 +155,7 @@ on the results from an estimated model." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Predict choices</h1>
-    <small class="dont-index">Source: <a href='https://github.com/jhelvy/logitr/blob/master/R/simulation.R'><code>R/simulation.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jhelvy/logitr/blob/master/R/predict.R'><code>R/predict.R</code></a></small>
     <div class="hidden name"><code>predictChoices.Rd</code></div>
     </div>
 
@@ -222,16 +222,27 @@ required for WTP space models. Defaults to <code>NULL</code>.</p></td>
   parNames <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
 <span class='op'>)</span>
 
-<span class='co'># Create a set of alternatives for which to simulate shares. Each row is an</span>
-<span class='co'># alternative and each column an attribute. In this example, I just use a</span>
-<span class='co'># couple of the choice observations from the yogurt dataset:</span>
-<span class='va'>alts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>yogurt</span>, <span class='va'>obsID</span> <span class='op'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>42</span>, <span class='fl'>13</span><span class='op'>)</span>,
-               select <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'price'</span>, <span class='st'>'feat'</span>, <span class='st'>'brand'</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>alts</span><span class='op'>$</span><span class='va'>obsID</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>4</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>alts</span>
+<span class='co'># You can predict choices for any set of alternative, such as hold out</span>
+<span class='co'># samples or within-sample. For this example I will predict choices on</span>
+<span class='co'># the full yogurt data set, which was used to estimate the model.</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>yogurt</span><span class='op'>)</span>
 
-<span class='co'># Predict choices using the estimated preference space MNL model:</span>
-<span class='fu'>predictChoices</span><span class='op'>(</span><span class='va'>mnl_pref</span>, <span class='va'>alts</span>, obsIDName <span class='op'>=</span> <span class='st'>"obsID"</span><span class='op'>)</span>
+<span class='co'># Run the simulation using the preference space MNL model:</span>
+<span class='va'>predict_mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'>predictChoices</span><span class='op'>(</span>
+  model      <span class='op'>=</span> <span class='va'>mnl_pref</span>,
+  alts       <span class='op'>=</span> <span class='va'>yogurt</span>,
+  choiceName <span class='op'>=</span> <span class='st'>"choice"</span>,
+  obsIDName  <span class='op'>=</span> <span class='st'>"obsID"</span>
+<span class='op'>)</span>
+
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>predict_mnl_pref</span><span class='op'>)</span>
+
+<span class='co'># Compute the accuracy</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+
+<span class='va'>predict_mnl_pref</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>choice</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>p_correct <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>choice_predict</span> <span class='op'>==</span> <span class='va'>choice</span><span class='op'>)</span> <span class='op'>/</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/context.html'>n</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 <span class='op'>}</span>
 </div></pre>
   </div>

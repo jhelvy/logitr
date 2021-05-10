@@ -75,10 +75,10 @@
       <a href="../articles/weighted_models.html">Estimating Weighted Logit Models</a>
     </li>
     <li>
-      <a href="../articles/simulations.html">Simulating Shares from Estimated Models</a>
+      <a href="../articles/predict_shares.html">Predicting Shares from Estimated Models</a>
     </li>
     <li>
-      <a href="../articles/predictions.html">Predicting Choices from Estimated Models</a>
+      <a href="../articles/predict_choices.html">Predicting Choices from Estimated Models</a>
     </li>
   </ul>
 </li>
@@ -135,7 +135,7 @@
 <li>
 <code>parNames</code>: The names of the variables that will be used as model covariates. For WTP space models, the price variable should <strong>not</strong> be included in <code>parNames</code> as it is provided separately with the <code>priceName</code> argument.</li>
 </ul>
-<p>The {logitr} package contains several example data sets that illustrate this data structure. For example, in the <code>yogurt</code> data set, each row is an alternative from a choice observation. Choice is identified by the <code>choice</code> column, the observation ID is identified by the <code>obsID</code> column, and the columns <code>price</code>, <code>feat</code>, and <code>brand</code> can be used as model covariates (brand is also broken out into additional dummy-coded columns):</p>
+<p>The {logitr} package contains several example data sets that illustrate this data structure. For example, in the <code>yogurt</code> data set, which contains observations of yogurt purchases by a panel of 100 households, each row is an alternative from a choice observation. Choice is identified by the <code>choice</code> column, the observation ID is identified by the <code>obsID</code> column, and the columns <code>price</code>, <code>feat</code>, and <code>brand</code> can be used as model covariates (brand is also broken out into additional dummy-coded columns):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">yogurt</span><span class="op">)</span>
 <span class="co">#&gt;   id obsID alt choice price feat   brand dannon hiland weight yoplait</span>
@@ -145,115 +145,25 @@
 <span class="co">#&gt; 4  1     1   4      0  10.8    0 yoplait      0      0      0       1</span>
 <span class="co">#&gt; 5  1     2   1      1   9.8    0  dannon      1      0      0       0</span>
 <span class="co">#&gt; 6  1     2   2      0   6.4    0  hiland      0      1      0       0</span></code></pre></div>
+<p>This data set also has an <code>alt</code> variable that determines the alternatives included in the choice set of each observation and an <code>id</code> variable that determines the individual (this data set contains repeated observations from each individual).</p>
 </div>
 <div id="continuous-versus-discrete-variables" class="section level1">
 <h1 class="hasAnchor">
 <a href="#continuous-versus-discrete-variables" class="anchor"></a>Continuous versus discrete variables</h1>
-<p>Variables will be modeled as either continuous or discrete based on their data <em>type</em>.</p>
-<p><strong>Numeric variables</strong> are by default estimated with a single “slope” coefficient.</p>
-<p><em>Example</em>: Consider a data frame that contains a <code>price</code> variable with the following three levels: <code><a href="https://rdrr.io/r/base/c.html">c(10, 15, 20)</a></code>. Adding <code>price</code> to the <code>parNames</code> argument in the main <code><a href="../reference/logitr.html">logitr()</a></code> function would result in a single <code>price</code> coefficient for the “slope” of the change in price.</p>
-<p><strong>Categorical variables</strong> (i.e. “character” or “factor” type variables) are by default estimated with a coefficient for all but the first “level”, which serves as the “baseline” or <code>"0"</code> level. Categorical variables are automatically “dummy” coded: <code>0</code> for <code>FALSE</code> and <code>1</code> for <code>TRUE</code>.</p>
-<p><em>Example</em>: Consider a data frame that contains a <code>brand</code> variable with the following four levels: <code><a href="https://rdrr.io/r/base/c.html">c("dannon", "hiland", "weight", "yoplait")</a></code>. Adding <code>brand</code> to the <code>parNames</code> argument in the main <code><a href="../reference/logitr.html">logitr()</a></code> function would result in three covariates: <code>brand_hiland</code>, <code>brand_weight</code>, and <code>brand_yoplait</code>, with <code>brand_dannon</code> serving as the reference level.</p>
-</div>
-<div id="changing-the-reference-level-for-categorical-variables" class="section level1">
-<h1 class="hasAnchor">
-<a href="#changing-the-reference-level-for-categorical-variables" class="anchor"></a>Changing the reference level for categorical variables</h1>
-<p>If you include a categorical (factor or character type) variable in a model, it will by default be modeled as a categorical / discrete variable, and the default reference level is usually the alphabetically first level. For example, in the <code>yogurt</code> data, the <code>brand</code> variable has four levels: <code>"dannon"</code>, <code>"weight"</code>, <code>"hiland"</code>, and <code>"yoplait"</code>. Since <code>"dannon"</code> is alphabetically first, it will be set as the reference level:</p>
+<p>Variables will be modeled as either continuous or discrete based on their data <em>type</em>. Numeric variables are by default estimated with a single “slope” coefficient. For example, consider a data frame that contains a <code>price</code> variable with the levels $10, $15, and $20. Adding <code>price</code> to the <code>parNames</code> argument in the main <code><a href="../reference/logitr.html">logitr()</a></code> function would result in a single <code>price</code> coefficient for the “slope” of the change in price.</p>
+<p>In contrast, categorical variables (i.e. <code>character</code> or <code>factor</code> type variables) are by default estimated with a coefficient for all but the first level, which serves as the reference level. The default reference level is determined alphabetically, but it can also be set by modifying the factor levels for that variable. For example, the default reference level for the <code>brand</code> variable is <code>"dannon"</code> as it is alphabetically first. To set <code>"weight"</code> as the reference level, the factor levels can be modified using the <code><a href="https://rdrr.io/r/base/factor.html">factor()</a></code> function:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mnl_pref_dannon</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data       <span class="op">=</span> <span class="va">yogurt</span>,
-  choiceName <span class="op">=</span> <span class="st">'choice'</span>,
-  obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
-  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
-<pre><code>Running Model...
-Done!</code></pre>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mnl_pref_dannon</span><span class="op">)</span>
-<span class="co">#&gt; =================================================</span>
-<span class="co">#&gt; MODEL SUMMARY: </span>
-<span class="co">#&gt;                           </span>
-<span class="co">#&gt; Model Space:    Preference</span>
-<span class="co">#&gt; Model Run:          1 of 1</span>
-<span class="co">#&gt; Iterations:             21</span>
-<span class="co">#&gt; Elapsed Time:  0h:0m:0.12s</span>
-<span class="co">#&gt; Exit Status:             3</span>
-<span class="co">#&gt; Weights Used?:       FALSE</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model Coefficients: </span>
-<span class="co">#&gt;               Estimate StdError    tStat pVal signif</span>
-<span class="co">#&gt; price        -0.366543 0.024365 -15.0439    0    ***</span>
-<span class="co">#&gt; feat          0.491433 0.120061   4.0932    0    ***</span>
-<span class="co">#&gt; brandhiland  -3.715428 0.145416 -25.5504    0    ***</span>
-<span class="co">#&gt; brandweight  -0.641128 0.054498 -11.7643    0    ***</span>
-<span class="co">#&gt; brandyoplait  0.734496 0.080642   9.1082    0    ***</span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model Fit Values: </span>
-<span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log.Likelihood.         -2656.8878799</span>
-<span class="co">#&gt; Null.Log.Likelihood.    -3343.7419990</span>
-<span class="co">#&gt; AIC.                     5323.7758000</span>
-<span class="co">#&gt; BIC.                     5352.7168000</span>
-<span class="co">#&gt; McFadden.R2.                0.2054148</span>
-<span class="co">#&gt; Adj..McFadden.R2            0.2039195</span>
-<span class="co">#&gt; Number.of.Observations.  2412.0000000</span></code></pre></div>
-<p>If you want to modify that so that a different level is set as the reference, you need to modify the factor levels for that variable. The first level will be set as the reference level. For example, in the code below I set <code>"weight"</code> as the reference level for <code>brand</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">yogurt</span><span class="op">$</span><span class="va">brand</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">yogurt</span><span class="op">$</span><span class="va">brand</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
   <span class="st">"weight"</span>, <span class="st">"hiland"</span>, <span class="st">"yoplait"</span>, <span class="st">"dannon"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>Now when the model is estimated, <code>"weight"</code> will be the reference level for <code>brand</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mnl_pref_weight</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data       <span class="op">=</span> <span class="va">yogurt</span>,
-  choiceName <span class="op">=</span> <span class="st">'choice'</span>,
-  obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
-  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
-<pre><code>Running Model...
-Done!</code></pre>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mnl_pref_weight</span><span class="op">)</span>
-<span class="co">#&gt; =================================================</span>
-<span class="co">#&gt; MODEL SUMMARY: </span>
-<span class="co">#&gt;                           </span>
-<span class="co">#&gt; Model Space:    Preference</span>
-<span class="co">#&gt; Model Run:          1 of 1</span>
-<span class="co">#&gt; Iterations:             21</span>
-<span class="co">#&gt; Elapsed Time:  0h:0m:0.12s</span>
-<span class="co">#&gt; Exit Status:             3</span>
-<span class="co">#&gt; Weights Used?:       FALSE</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model Coefficients: </span>
-<span class="co">#&gt;               Estimate StdError    tStat pVal signif</span>
-<span class="co">#&gt; price        -0.366581 0.024366 -15.0448    0    ***</span>
-<span class="co">#&gt; feat          0.491436 0.120063   4.0932    0    ***</span>
-<span class="co">#&gt; brandhiland  -3.074385 0.145383 -21.1468    0    ***</span>
-<span class="co">#&gt; brandyoplait  1.375768 0.088982  15.4613    0    ***</span>
-<span class="co">#&gt; branddannon   0.641174 0.054498  11.7650    0    ***</span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model Fit Values: </span>
-<span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log.Likelihood.         -2656.8878782</span>
-<span class="co">#&gt; Null.Log.Likelihood.    -3343.7419990</span>
-<span class="co">#&gt; AIC.                     5323.7758000</span>
-<span class="co">#&gt; BIC.                     5352.7168000</span>
-<span class="co">#&gt; McFadden.R2.                0.2054148</span>
-<span class="co">#&gt; Adj..McFadden.R2            0.2039195</span>
-<span class="co">#&gt; Number.of.Observations.  2412.0000000</span></code></pre></div>
-<p>Note how how the reference level is the <code>"weight"</code> brand whereas before it was the <code>"dannon"</code> brand.</p>
 </div>
 <div id="creating-dummy-coded-variables" class="section level1">
 <h1 class="hasAnchor">
 <a href="#creating-dummy-coded-variables" class="anchor"></a>Creating dummy coded variables</h1>
 <p>If you wish to make dummy-coded variables yourself to use them in a model, I recommend using the <code>dummy_cols()</code> function from the <a href="https://github.com/jacobkap/fastDummies">{fastDummies}</a> package. For example, in the code below, I create dummy-coded columns for the <code>brand</code> variable and then use those variables as covariates in a model:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">yogurt</span> <span class="op">&lt;-</span> <span class="fu">fastDummies</span><span class="fu">::</span><span class="fu"><a href="https://jacobkap.github.io/fastDummies/reference/dummy_cols.html">dummy_cols</a></span><span class="op">(</span><span class="va">yogurt</span>, <span class="st">"brand"</span><span class="op">)</span></code></pre></div>
 <p>The <code>yogurt</code> data frame now has new dummy-coded columns for brand (it actually already had these, but now there are additional ones):</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">yogurt</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 6 x 15</span>
 <span class="co">#&gt;      id obsID   alt choice price  feat brand   dannon hiland weight yoplait</span>
@@ -267,7 +177,7 @@ Done!</code></pre>
 <span class="co">#&gt; # … with 4 more variables: brand_dannon &lt;int&gt;, brand_hiland &lt;int&gt;,</span>
 <span class="co">#&gt; #   brand_weight &lt;int&gt;, brand_yoplait &lt;int&gt;</span></code></pre></div>
 <p>Now I can use those columns as covariates:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mnl_pref_dummies</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   data       <span class="op">=</span> <span class="va">yogurt</span>,
   choiceName <span class="op">=</span> <span class="st">'choice'</span>,
@@ -277,7 +187,7 @@ Done!</code></pre>
 <span class="op">)</span></code></pre></div>
 <pre><code>Running Model...
 Done!</code></pre>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mnl_pref_dummies</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; MODEL SUMMARY: </span>
