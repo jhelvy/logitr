@@ -102,7 +102,7 @@ mnl_wtp <- logitr(
 
 Since WTP space models are non-convex, it is recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima. This was implemented in the above example by passing a `numMultiStarts` argument inside a list to the `options` argument (other options can be passed in the same list).
 
-In the WTP space model, the estimated "brand" coefficients have units of dollars and can be interpreted as the average willingness to pay for each brand relative to the "Dannon" brand, all else being equal. 
+In the WTP space model, the estimated "brand" coefficients have units of dollars and can be interpreted as the average willingness to pay for each brand relative to the "Dannon" brand, all else being equal.
 
 ## Mixed logit models
 
@@ -153,20 +153,31 @@ Once you have estimated a model, you can use it to predict the expected choices 
 
 ```{r}
 alts <- subset(yogurt, obsID %in% c(42, 13),
-               select = c('obsID', 'price', 'feat', 'brand'))
+               select = c('obsID', 'choice', 'price', 'feat', 'brand'))
 alts
 ```
 
 Now predict shares:
 
-```{r, eval=FALSE}
-shares <- predictShares(mnl_pref, alts)
+```{r}
+shares <- predictShares(
+  model = mnl_pref, 
+  alts  = alts, 
+  obsID = "obsID"
+)
+
 shares
 ```
 
-Likewise, you can use the `predictChoices()` function to predict choices for a set of alternatives:
+Likewise, you can use the `predictChoices()` function to predict choices for a set of alternatives. The optional `choiceName` argument defines which column contains the actual choices made:
 
-```{r, eval=FALSE}
-choices <- predictChoices(mnl_pref, alts)
+```{r}
+choices <- predictChoices(
+  model = mnl_pref, 
+  alts  = alts, 
+  obsID = "obsID", 
+  choiceName = "choice"
+)
+
 choices
 ```
