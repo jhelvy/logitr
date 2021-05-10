@@ -35,70 +35,24 @@ mnl_pref_dummies <- readRDS(
 ```{r, child=here::here('man', 'rmdchunks', 'dataFormat.Rmd')}
 ```
 
-The {logitr} package contains several example data sets that illustrate this data structure. For example, in the `yogurt` data set, each row is an alternative from a choice observation. Choice is identified by the `choice` column, the observation ID is identified by the `obsID` column, and the columns `price`, `feat`, and `brand` can be used as model covariates (brand is also broken out into additional dummy-coded columns):
+The {logitr} package contains several example data sets that illustrate this data structure. For example, in the `yogurt` data set, which contains observations of yogurt purchases by a panel of 100 households, each row is an alternative from a choice observation. Choice is identified by the `choice` column, the observation ID is identified by the `obsID` column, and the columns `price`, `feat`, and `brand` can be used as model covariates (brand is also broken out into additional dummy-coded columns):
 
 ```{r}
 head(yogurt)
 ```
 
+This data set also has an `alt` variable that determines the alternatives included in the choice set of each observation and an `id` variable that determines the individual (this data set contains repeated observations from each individual).
+
 # Continuous versus discrete variables
 
-Variables will be modeled as either continuous or discrete based on their data _type_.
+Variables will be modeled as either continuous or discrete based on their data _type_. Numeric variables are by default estimated with a single "slope" coefficient. For example, consider a data frame that contains a `price` variable with the levels $10, $15, and $20. Adding `price` to the `parNames` argument in the main `logitr()` function would result in a single `price` coefficient for the "slope" of the change in price.
 
-**Numeric variables** are by default estimated with a single "slope" coefficient.
-
-_Example_: Consider a data frame that contains a `price` variable with the following three levels: `c(10, 15, 20)`. Adding `price` to the `parNames` argument in the main `logitr()` function would result in a single `price` coefficient for the "slope" of the change in price.
-
-**Categorical variables** (i.e. "character" or "factor" type variables) are by default estimated with a coefficient for all but the first "level", which serves as the "baseline" or `"0"` level. Categorical variables are automatically "dummy" coded: `0` for `FALSE` and `1` for `TRUE`.
-
-_Example_: Consider a data frame that contains a `brand` variable with the following four levels: `c("dannon", "hiland", "weight", "yoplait")`. Adding `brand` to the `parNames` argument in the main `logitr()` function would result in three covariates: `brand_hiland`, `brand_weight`, and `brand_yoplait`, with `brand_dannon` serving as the reference level.
-
-# Changing the reference level for categorical variables
-
-If you include a categorical (factor or character type) variable in a model, it will by default be modeled as a categorical / discrete variable, and the default reference level is usually the alphabetically first level. For example, in the `yogurt` data, the `brand` variable has four levels: `"dannon"`, `"weight"`, `"hiland"`, and `"yoplait"`. Since `"dannon"` is alphabetically first, it will be set as the reference level:
-
-```{r, eval=FALSE}
-mnl_pref_dannon <- logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'brand')
-)
-```
-```
-Running Model...
-Done!
-```
-```{r}
-summary(mnl_pref_dannon)
-```
-
-If you want to modify that so that a different level is set as the reference, you need to modify the factor levels for that variable. The first level will be set as the reference level. For example, in the code below I set `"weight"` as the reference level for `brand`:
+In contrast, categorical variables (i.e. `character` or `factor` type variables) are by default estimated with a coefficient for all but the first level, which serves as the reference level. The default reference level is determined alphabetically, but it can also be set by modifying the factor levels for that variable. For example, the default reference level for the `brand` variable is `"dannon"` as it is alphabetically first. To set `"weight"` as the reference level, the factor levels can be modified using the `factor()` function:
 
 ```{r, eval=FALSE}
 yogurt$brand <- factor(yogurt$brand, levels = c(
   "weight", "hiland", "yoplait", "dannon"))
 ```
-
-Now when the model is estimated, `"weight"` will be the reference level for `brand`:
-
-```{r, eval=FALSE}
-mnl_pref_weight <- logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'brand')
-)
-```
-```
-Running Model...
-Done!
-```
-```{r}
-summary(mnl_pref_weight)
-```
-
-Note how how the reference level is the `"weight"` brand whereas before it was the `"dannon"` brand.
 
 # Creating dummy coded variables
 

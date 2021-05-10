@@ -15,8 +15,8 @@ source(here::here("inst", "example", "mnl_models.R"))
 source(here::here("inst", "example", "mnl_models_weighted.R"))
 source(here::here("inst", "example", "interactions.R"))
 source(here::here("inst", "example", "mxl_models.R"))
-source(here::here("inst", "example", "simulations.R"))
-source(here::here("inst", "example", "predictions.R"))
+source(here::here("inst", "example", "predict_choices.R"))
+source(here::here("inst", "example", "predict_shares.R"))
 source(here::here("inst", "example", "data_formatting.R"))
 
 # Build the pkgdown site

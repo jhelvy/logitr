@@ -3,12 +3,7 @@
 ## Summary of larger updates:
 
 - Added `predictChoices()` function.
-
-## Summary of smaller updates:
-
-
-## Bugs
-
+- Added `predictShares()` function, depreciating `simulateShares()`.
 
 # logitr 0.1.3.9002
 

@@ -37,16 +37,27 @@
 #'   parNames = c("price", "feat", "brand")
 #' )
 #'
-#' # Create a set of alternatives for which to simulate shares. Each row is an
-#' # alternative and each column an attribute. In this example, I just use a
-#' # couple of the choice observations from the yogurt dataset:
-#' alts <- subset(yogurt, obsID %in% c(42, 13),
-#'                select = c('price', 'feat', 'brand'))
-#' alts$obsID <- c(rep(1, 4), rep(2, 4))
-#' alts
+#' # You can predict choices for any set of alternative, such as hold out
+#' # samples or within-sample. For this example I will predict choices on
+#' # the full yogurt data set, which was used to estimate the model.
+#' head(yogurt)
 #'
-#' # Predict choices using the estimated preference space MNL model:
-#' predictChoices(mnl_pref, alts, obsIDName = "obsID")
+#' # Run the simulation using the preference space MNL model:
+#' predict_mnl_pref <- predictChoices(
+#'   model      = mnl_pref,
+#'   alts       = yogurt,
+#'   choiceName = "choice",
+#'   obsIDName  = "obsID"
+#' )
+#'
+#' head(predict_mnl_pref)
+#'
+#' # Compute the accuracy
+#' library(dplyr)
+#'
+#' predict_mnl_pref %>%
+#'   filter(choice == 1) %>%
+#'   summarise(p_correct = sum(choice_predict == choice) / n())
 #' }
 predictChoices <- function(
   model,
@@ -55,7 +66,7 @@ predictChoices <- function(
   obsIDName = NULL,
   priceName = NULL
 ) {
-  shares <- simulateShares(
+  shares <- predictShares(
     model, alts, obsIDName = obsIDName, priceName = priceName,
     computeCI = FALSE)
   if (is.null(obsIDName)) {
@@ -79,15 +90,15 @@ simChoice <- function(df) {
   return(df)
 }
 
-#' Simulate expected shares
+#' Predict expected shares
 #'
-#' Returns the expected shares for a set of one or more alternatives based
-#' on the results from an estimated model.
+#' Returns the expected shares for a single set or multiple sets of
+#' alternatives based on the results from an estimated model.
 #' @keywords logitr simluation
 #'
 #' @param model The output of a model estimated model using the `logitr()`
 #' function.
-#' @param alts A data frame of a set of alternatives for which to simulate
+#' @param alts A data frame of a set of alternatives for which to predict
 #' shares. Each row is an alternative and each column an attribute
 #' corresponding to parameter names in the estimated model.
 #' @param obsIDName The name of the column that identifies each set of
@@ -117,18 +128,17 @@ simChoice <- function(df) {
 #'   parNames = c("price", "feat", "brand")
 #' )
 #'
-#' # Create a set of alternatives for which to simulate shares. Each row is an
+#' # Create a set of alternatives for which to predict shares. Each row is an
 #' # alternative and each column an attribute. In this example, I just use a
 #' # couple of the choice observations from the yogurt dataset:
 #' alts <- subset(yogurt, obsID %in% c(42, 13),
-#'                select = c('price', 'feat', 'brand'))
-#' alts$obsID <- c(rep(1, 4), rep(2, 4))
+#'                select = c('obsID', 'price', 'feat', 'brand'))
 #' alts
 #'
-#' # Run the simulation using the estimated preference space MNL model:
-#' simulateShares(mnl_pref, alts, obsIDName = "obsID")
+#' # Predict shares using the estimated preference space MNL model:
+#' predictShares(mnl_pref, alts, obsIDName = "obsID")
 #' }
-simulateShares <- function(
+predictShares <- function(
   model,
   alts,
   obsIDName = NULL,
@@ -264,4 +274,66 @@ summarizeUncShares <- function(meanShare, logitUncDraws, obsID,
   names <- c(obsIDName, colnames(shares))
   shares[obsIDName] <- obsID
   return(shares[names])
+}
+
+#' Simulate expected shares
+#'
+#' This function has been depreciated since logitr version 0.1.4. Use
+#' `predictShares()` instead.
+#' @keywords logitr simluation
+#'
+#' @param model The output of a model estimated model using the `logitr()`
+#' function.
+#' @param alts A data frame of a set of alternatives for which to simulate
+#' shares. Each row is an alternative and each column an attribute
+#' corresponding to parameter names in the estimated model.
+#' @param obsIDName The name of the column that identifies each set of
+#' alternatives. Required if simulating results for more than one set of
+#' alternatives. Defaults to `NULL` (for a single set of alternatives).
+#' @param priceName The name of the parameter that identifies price. Only
+#' required for WTP space models. Defaults to `NULL`.
+#' @param computeCI Should a confidence interval be computed?
+#' Defaults to `TRUE`.
+#' @param alpha The sensitivity of the computed confidence interval.
+#' Defaults to `alpha = 0.025`, reflecting a 95% CI.
+#' @param numDraws The number of draws to use in simulating uncertainty
+#' for the computed confidence interval.
+#'
+#' @return A data frame with the estimated shares for each alternative in
+#' `alts`.
+#' @export
+#' @examples
+#' \dontrun{
+#' # Run a MNL model in the Preference Space:
+#' library(logitr)
+#'
+#' mnl_pref <- logitr(
+#'   data = yogurt,
+#'   choiceName = "choice",
+#'   obsIDName = "obsID",
+#'   parNames = c("price", "feat", "brand")
+#' )
+#'
+#' # Create a set of alternatives for which to simulate shares. Each row is an
+#' # alternative and each column an attribute. In this example, I just use a
+#' # couple of the choice observations from the yogurt dataset:
+#' alts <- subset(yogurt, obsID %in% c(42, 13),
+#'                select = c('price', 'feat', 'brand'))
+#' alts$obsID <- c(rep(1, 4), rep(2, 4))
+#' alts
+#'
+#' # Run the simulation using the estimated preference space MNL model:
+#' simulateShares(mnl_pref, alts, obsIDName = "obsID")
+#' }
+simulateShares <- function(
+  model,
+  alts,
+  obsIDName = NULL,
+  priceName = NULL,
+  computeCI = TRUE,
+  alpha = 0.025,
+  numDraws = 10^4
+) {
+    # v0.1.4
+    .Deprecated("predictShares")
 }

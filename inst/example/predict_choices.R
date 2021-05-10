@@ -19,13 +19,14 @@ mxl_wtp  <- readRDS(here::here('inst', 'extdata', 'mxl_wtp.Rds'))
 head(yogurt)
 
 # Run the simulation using the preference space MNL model:
-predict_mnl_pref <- predictChoices(
+choices_mnl_pref <- predictChoices(
   model      = mnl_pref,
   alts       = yogurt,
   choiceName = "choice",
   obsIDName  = "obsID"
 )
-head(predict_mnl_pref)
+
+head(choices_mnl_pref)
 
 # The results show the expected shares for each alternative.
 # The low and high values show a 95% confidence interval, estimated using
@@ -33,14 +34,15 @@ head(predict_mnl_pref)
 # value (e.g. a 90% CI is obtained with alpha = 0.05).
 
 # Run the simulation using the WTP space MNL model:
-predict_mnl_wtp <- predictChoices(
+choices_mnl_wtp <- predictChoices(
   model      = mnl_wtp,
   alts       = yogurt,
   choiceName = "choice",
   obsIDName  = "obsID",
   priceName  = 'price'
 )
-head(predict_mnl_wtp)
+
+head(choices_mnl_wtp)
 
 # Since these two models are equivalent except in different spaces, the
 # simulation results should be the same. Note that 'priceName' is the name
@@ -48,47 +50,49 @@ head(predict_mnl_wtp)
 # WTP space models.
 
 # Simulations can also be run using MXL models in either space:
-predict_mxl_pref <- predictChoices(
+choices_mxl_pref <- predictChoices(
   model      = mxl_pref,
   alts       = yogurt,
   choiceName = "choice",
   obsIDName  = "obsID"
 )
-head(predict_mxl_pref)
 
-predict_mxl_wtp <- predictChoices(
+head(choices_mxl_pref)
+
+choices_mxl_wtp <- predictChoices(
   model      = mxl_wtp,
   alts       = yogurt,
   choiceName = "choice",
   obsIDName  = "obsID",
   priceName  = 'price'
 )
-head(predict_mxl_wtp)
+
+head(choices_mxl_wtp)
 
 # Save results
-saveRDS(predict_mnl_pref,
-        here::here('inst', 'extdata', 'predict_mnl_pref.Rds'))
-saveRDS(predict_mnl_wtp,
-        here::here('inst', 'extdata', 'predict_mnl_wtp.Rds'))
-saveRDS(predict_mxl_pref,
-        here::here('inst', 'extdata', 'predict_mxl_pref.Rds'))
-saveRDS(predict_mxl_wtp,
-        here::here('inst', 'extdata', 'predict_mxl_wtp.Rds'))
+saveRDS(choices_mnl_pref,
+        here::here('inst', 'extdata', 'choices_mnl_pref.Rds'))
+saveRDS(choices_mnl_wtp,
+        here::here('inst', 'extdata', 'choices_mnl_wtp.Rds'))
+saveRDS(choices_mxl_pref,
+        here::here('inst', 'extdata', 'choices_mxl_pref.Rds'))
+saveRDS(choices_mxl_wtp,
+        here::here('inst', 'extdata', 'choices_mxl_wtp.Rds'))
 
 # Compare prediction accuracy across models
 library(dplyr)
 
 # Combine models into one data frame
-predictions <- rbind(
-  predict_mnl_pref, predict_mnl_wtp, predict_mxl_pref, predict_mxl_wtp)
-predictions$model <- c(
-  rep("mnl_pref", nrow(predict_mnl_pref)),
-  rep("mnl_wtp",  nrow(predict_mnl_wtp)),
-  rep("mxl_pref", nrow(predict_mxl_pref)),
-  rep("mxl_wtp",  nrow(predict_mxl_wtp)))
+choices <- rbind(
+  choices_mnl_pref, choices_mnl_wtp, choices_mxl_pref, choices_mxl_wtp)
+choices$model <- c(
+  rep("mnl_pref", nrow(choices_mnl_pref)),
+  rep("mnl_wtp",  nrow(choices_mnl_wtp)),
+  rep("mxl_pref", nrow(choices_mxl_pref)),
+  rep("mxl_wtp",  nrow(choices_mxl_wtp)))
 
 # Compute prediction accuracy by model
-predictions %>%
+choices %>%
   filter(choice == 1) %>%
   mutate(predict_correct = (choice_predict == choice)) %>%
   group_by(model) %>%

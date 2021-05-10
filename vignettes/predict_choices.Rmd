@@ -21,14 +21,14 @@ library(logitr)
 # Read in results from already estimated models  so that the
 # examples aren't actually run when building this page, otherwise it'll
 # take much longer to build
-predict_mnl_pref <- readRDS(
-  here::here('inst', 'extdata', 'predict_mnl_pref.Rds'))
-predict_mnl_wtp <- readRDS(
-  here::here('inst', 'extdata', 'predict_mnl_wtp.Rds'))
-predict_mxl_pref <- readRDS(
-  here::here('inst', 'extdata', 'predict_mxl_pref.Rds'))
-predict_mxl_wtp <- readRDS(
-  here::here('inst', 'extdata', 'predict_mxl_wtp.Rds'))
+choices_mnl_pref <- readRDS(
+  here::here('inst', 'extdata', 'choices_mnl_pref.Rds'))
+choices_mnl_wtp <- readRDS(
+  here::here('inst', 'extdata', 'choices_mnl_wtp.Rds'))
+choices_mxl_pref <- readRDS(
+  here::here('inst', 'extdata', 'choices_mxl_pref.Rds'))
+choices_mxl_wtp <- readRDS(
+  here::here('inst', 'extdata', 'choices_mxl_wtp.Rds'))
 ```
 
 Once a model has been estimated, it can be used to predict choices for a set of alternatives. This vignette demonstrates examples of how to so using the `predictChoices()` function along with the results of an estimated model.
@@ -60,7 +60,7 @@ mnl_pref <- logitr(
 )
 
 # Make predictions
-predict_mnl_pref <- predictChoices(
+choices_mnl_pref <- predictChoices(
   model      = mnl_pref,
   alts       = yogurt,
   choiceName = "choice",
@@ -68,7 +68,7 @@ predict_mnl_pref <- predictChoices(
 )
 ```
 ```{r}
-head(predict_mnl_pref)
+head(choices_mnl_pref)
 ```
 
 The results are a data frame showing the actual choices, `choice`, and the predicted choices, `choice_predict`. You can quickly compute the accuracy by dividing the number of correctly predicted choices by the total number of choices:
@@ -76,14 +76,14 @@ The results are a data frame showing the actual choices, `choice`, and the predi
 ```{r}
 library(dplyr)
 
-predict_mnl_pref %>%
+choices_mnl_pref %>%
   filter(choice == 1) %>%
   summarise(p_correct = sum(choice_predict == choice) / n())
 ```
 
 ## WTP space parameterization
 
-You can also use WTP space models to predict choice, but you must provide the additional `priceName` argument to the `predictChoice()` function. For example, here are the results from an equivalent model but in the WTP space:
+You can also use WTP space models to predict choice, but you must provide the additional `priceName` argument to the `predictChoices()` function. For example, here are the results from an equivalent model but in the WTP space:
 
 ```{r, eval=FALSE}
 # Estimate the model
@@ -98,7 +98,7 @@ mnl_wtp <- logitr(
 )
 
 # Make predictions
-predict_mnl_wtp <- predictChoices(
+choices_mnl_wtp <- predictChoices(
   model      = mnl_wtp,
   alts       = yogurt,
   choiceName = "choice",
@@ -111,7 +111,7 @@ predict_mnl_wtp <- predictChoices(
 #> (the run with the largest log-likelihood value)
 ```
 ```{r}
-head(predict_mnl_wtp)
+head(choices_mnl_wtp)
 ```
 
 # Predicting with mixed logit models
@@ -132,7 +132,7 @@ mxl_pref <- logitr(
 )
 
 # Make predictions
-predict_mxl_pref <- predictChoices(
+choices_mxl_pref <- predictChoices(
   model      = mxl_pref,
   alts       = yogurt,
   choiceName = "choice",
@@ -140,7 +140,7 @@ predict_mxl_pref <- predictChoices(
 )
 ```
 ```{r}
-head(predict_mxl_pref)
+head(choices_mxl_pref)
 ```
 
 ## WTP space parameterization
@@ -161,7 +161,7 @@ mxl_wtp <- logitr(
 )
 
 # Make predictions
-predict_mxl_wtp <- predictChoices(
+choices_mxl_wtp <- predictChoices(
   model      = mxl_wtp,
   alts       = yogurt,
   choiceName = "choice",
@@ -170,23 +170,23 @@ predict_mxl_wtp <- predictChoices(
 )
 ```
 ```{r}
-head(predict_mxl_wtp)
+head(choices_mxl_wtp)
 ```
 
 # Compare prediction results
 
 ```{r}
 # Combine models into one data frame
-predictions <- rbind(
-  predict_mnl_pref, predict_mnl_wtp, predict_mxl_pref, predict_mxl_wtp)
-predictions$model <- c(
-  rep("mnl_pref", nrow(predict_mnl_pref)),
-  rep("mnl_wtp",  nrow(predict_mnl_wtp)),
-  rep("mxl_pref", nrow(predict_mxl_pref)),
-  rep("mxl_wtp",  nrow(predict_mxl_wtp)))
+choices <- rbind(
+  choices_mnl_pref, choices_mnl_wtp, choices_mxl_pref, choices_mxl_wtp)
+choices$model <- c(
+  rep("mnl_pref", nrow(choices_mnl_pref)),
+  rep("mnl_wtp",  nrow(choices_mnl_wtp)),
+  rep("mxl_pref", nrow(choices_mxl_pref)),
+  rep("mxl_wtp",  nrow(choices_mxl_wtp)))
 
 # Compute prediction accuracy by model
-predictions %>%
+choices %>%
   filter(choice == 1) %>%
   mutate(predict_correct = (choice_predict == choice)) %>%
   group_by(model) %>%

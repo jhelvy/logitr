@@ -5,7 +5,7 @@
 library('logitr')
 
 # ============================================================================
-# Run Market Simulation Using Estimated Models
+# Predict Market Shares Using Estimated Models
 
 # Read in saved estimated models
 mnl_pref <- readRDS(here::here('inst', 'extdata', 'mnl_pref.Rds'))
@@ -13,7 +13,7 @@ mnl_wtp  <- readRDS(here::here('inst', 'extdata', 'mnl_wtp.Rds'))
 mxl_pref <- readRDS(here::here('inst', 'extdata', 'mxl_pref.Rds'))
 mxl_wtp  <- readRDS(here::here('inst', 'extdata', 'mxl_wtp.Rds'))
 
-# Create a set of alternatives for which to simulate shares. Each row is an
+# Create a set of alternatives for which to predict shares. Each row is an
 # alternative and each column an attribute. In this example, I just use a
 # couple of the choice observations from the yogurt dataset:
 alts <- subset(yogurt, obsID %in% c(42, 13),
@@ -21,12 +21,13 @@ alts <- subset(yogurt, obsID %in% c(42, 13),
 alts
 
 # Run the simulation using the preference space MNL model:
-sim_mnl_pref <- simulateShares(
+shares_mnl_pref <- predictShares(
   model     = mnl_pref,
   alts      = alts,
   obsIDName = "obsID"
 )
-sim_mnl_pref
+
+shares_mnl_pref
 
 # The results show the expected shares for each alternative.
 # The low and high values show a 95% confidence interval, estimated using
@@ -34,13 +35,14 @@ sim_mnl_pref
 # value (e.g. a 90% CI is obtained with alpha = 0.05).
 
 # Run the simulation using the WTP space MNL model:
-sim_mnl_wtp <- simulateShares(
+shares_mnl_wtp <- predictShares(
   model     = mnl_wtp,
   alts      = alts,
   obsIDName = "obsID",
   priceName = 'price'
 )
-sim_mnl_wtp
+
+shares_mnl_wtp
 
 # Since these two models are equivalent except in different spaces, the
 # simulation results should be the same. Note that 'priceName' is the name
@@ -48,44 +50,51 @@ sim_mnl_wtp
 # WTP space models.
 
 # Simulations can also be run using MXL models in either space:
-sim_mxl_pref <- simulateShares(
+shares_mxl_pref <- predictShares(
   model     = mxl_pref,
   alts      = alts,
   obsIDName = "obsID"
 )
-sim_mxl_pref
 
-sim_mxl_wtp <- simulateShares(
+shares_mxl_pref
+
+shares_mxl_wtp <- predictShares(
   model     = mxl_wtp,
   alts      = alts,
   obsIDName = "obsID",
   priceName = 'price'
 )
-sim_mxl_wtp
+
+shares_mxl_wtp
 
 # Save results
-saveRDS(sim_mnl_pref,
-        here::here('inst', 'extdata', 'sim_mnl_pref.Rds'))
-saveRDS(sim_mnl_wtp,
-        here::here('inst', 'extdata', 'sim_mnl_wtp.Rds'))
-saveRDS(sim_mxl_pref,
-        here::here('inst', 'extdata', 'sim_mxl_pref.Rds'))
-saveRDS(sim_mxl_wtp,
-        here::here('inst', 'extdata', 'sim_mxl_wtp.Rds'))
+saveRDS(shares_mnl_pref,
+        here::here('inst', 'extdata', 'shares_mnl_pref.Rds'))
+saveRDS(shares_mnl_wtp,
+        here::here('inst', 'extdata', 'shares_mnl_wtp.Rds'))
+saveRDS(shares_mxl_pref,
+        here::here('inst', 'extdata', 'shares_mxl_pref.Rds'))
+saveRDS(shares_mxl_wtp,
+        here::here('inst', 'extdata', 'shares_mxl_wtp.Rds'))
 
 # Plot simulation results from each model:
 library(ggplot2)
+library(dplyr)
 
-sims <- rbind(sim_mnl_pref, sim_mnl_wtp, sim_mxl_pref, sim_mxl_wtp)
-sims <- sims[sims$obsID == 1,]
-sims$model <- c(rep("mnl_pref", 4), rep("mnl_wtp", 4),
-                rep("mxl_pref", 4), rep("mxl_wtp", 4))
-sims$alt <- rep(c("dannon", "hiland", "weight", "yoplait"), 4)
+shares <- rbind(
+  shares_mnl_pref, shares_mnl_wtp, shares_mxl_pref, shares_mxl_wtp) %>%
+  mutate(
+    model = c(rep("mnl_pref", 8), rep("mnl_wtp", 8),
+              rep("mxl_pref", 8), rep("mxl_wtp", 8)),
+    alt = rep(c("dannon", "hiland", "weight", "yoplait"), 8),
+    obs = paste0("Observation ID: ", obsID)
+  )
 
-ggplot(sims, aes(x = alt, y = share_mean, fill = model)) +
+ggplot(shares, aes(x = alt, y = share_mean, fill = model)) +
     geom_bar(stat = 'identity', width = 0.7, position = "dodge") +
     geom_errorbar(aes(ymin = share_low, ymax = share_high),
                   width = 0.2, position = position_dodge(width = 0.7)) +
+    facet_wrap(vars(obs)) +
     scale_y_continuous(limits = c(0, 1)) +
     labs(x = 'Alternative', y = 'Expected Share') +
     theme_bw()

@@ -7,6 +7,23 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.retina = 3,
+  comment = "#>"
+)
+library(logitr)
+# Read in results from already estimated models  so that the
+# examples aren't actually run when building this page, otherwise it'll
+# take much longer to build
+mnl_pref <- readRDS(here::here('inst', 'extdata', 'mnl_pref.Rds'))
+mnl_wtp  <- readRDS(here::here('inst', 'extdata', 'mnl_wtp.Rds'))
+```
+
 ```{r, child=here::here('man', 'rmdchunks', 'header.Rmd')}
 ```
 
@@ -38,8 +55,6 @@ The ["Data Formatting and Encoding"](data_formatting.html) vignette has more det
 
 ## Preference space models
 
-Unlike similar packages like [**mlogit**](https://cran.r-project.org/package=mlogit), **logitr** does not support the formula type input that uses a symbolic description of the model to be estimated. Parameters are simply described as a vector of the column names in the `data.frame` provided to the `data` argument.
-
 The `logitr()` function assumes that the deterministic part of the utility function, $v_{j}$, is linear in parameters, i.e.:
 
 ```{r, child=here::here('man', 'rmdchunks', 'utilityComponents.Rmd')}
@@ -50,55 +65,63 @@ The `logitr()` function assumes that the deterministic part of the utility funct
 
 where $\betaVec$ is the vector of coefficients for non-price attributes $\xVec_{j}$, $\alpha$ is the coefficient for price $p_{j}$. Accordingly, each parameter in the `parNames` argument is an additive part of $v_{j}$.
 
-For example, if the observed utility was $v_{j} = \beta x_{j} + \alpha p_{j}$, where $p_{j}$ is "price" and $x_{j}$ is "size", then the `parNames` argument should be `c("price", "size")`. Such an example could be estimated with the following code, where the `data` object is a `data.frame` with columns named `"choice"`, `"obsID"`, `"price"`, and `"size"`:
+For example, if the observed utility for yogurt purchases was $v_{j} = \beta x_{j} + \alpha p_{j}$, where $p_{j}$ is "price" and $x_{j}$ is "brand", then the `parNames` argument should be `c("price", "brand")`. This model can be estimated as follows using the `yogurt` data frame:
 
 ```{r, eval=FALSE}
 mnl_pref <- logitr(
-    data       = data,
+    data       = yogurt,
     choiceName = "choice",
     obsIDName  = "obsID",
-    parNames   = c("price", "size"))
+    parNames   = c("price", "brand"))
 )
+```
+
+Use the `summary()` function to view a summary of the estimated model results. In the following summary, three coefficients are shown for the "brand" attribute, with `"dannon"` set as the reference level:
+
+```{r}
+summary(mnl_pref)
 ```
 
 ## WTP space models
 
-For models estimated in the WTP space, the `modelSpace` argument should be set to `modelSpace = "wtp"`. The `parNames` argument should **not** contain the name of the column for the price attribute as it should be provided separately with the `priceName` argument.
+For models estimated in the WTP space, the `modelSpace` argument should be set to `"wtp"`. In addition, the `parNames` argument should _not_ contain the name of the column for the price attribute because there is no estimated "price" parameter in WTP space models. Instead, a "scale" parameter given by $\lambda$ will be estimated, and the column for "price" should be provided separately using the `priceName` argument.
 
-For example, if the observed utility was $v_{j} = \lambda \left(\omega x_{j} - p_{j}\right)$, where $p_{j}$ is "price" and $x_{j}$ is "size", then the `parNames` argument should be `"size"` and the `priceName` argument should be `"price"`. Such an example could be estimated with the following code, where the `data` object is a `data.frame` with columns named `"choice"`, `"obsID"`, `"price"`, and `"size"`:
+For example, if the observed utility was $v_{j} = \lambda \left(\omega x_{j} - p_{j}\right)$, where $p_{j}$ is "price" and $x_{j}$ is "brand", then the `parNames` argument should be `"brand"` and the `priceName` argument should be `"price"`. This model can be estimated as follows using the `yogurt` data frame:
 
 ```{r, eval=FALSE}
 mnl_wtp <- logitr(
-    data       = data,
+    data       = yogurt,
     choiceName = "choice",
     obsIDName  = "obsID",
-    parNames   = "size",
+    parNames   = "brand",
     priceName  = "price",
     modelSpace = "wtp",
-    options    = list(numMultiStarts = 10) # Set numMultiStarts > 1 to run a multistart
+    options    = list(numMultiStarts = 10)
 )
 ```
 
-Since WTP space models are non-convex, it is recommended that you use a multi-start search to run the optimization loop multiple times to search for different local minima:
+Since WTP space models are non-convex, it is recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima. This was implemented in the above example by passing a `numMultiStarts` argument inside a list to the `options` argument (other options can be passed in the same list).
+
+In the WTP space model, the estimated "brand" coefficients have units of dollars and can be interpreted as the average willingness to pay for each brand relative to the "Dannon" brand, all else being equal. 
 
 ## Mixed logit models
 
-To estimate a mixed logit model, use the `randPars` argument to denote which parameters will be modeled with a distribution. The current package version supports normal and log-normal distributions.
+To estimate a mixed logit model, use the `randPars` argument in the `logitr()` function to denote which parameters will be modeled with a distribution. The current package version supports normal (`"n"`) and log-normal (`"ln"`) distributions.
 
-For example, if the observed utility was $v_{j} = \beta x_{j} + \alpha p_{j}$, where $p_{j}$ is "price" and $x_{j}$ is "size" and you wanted to model the `"size"` parameter, $\beta$, with a normal or log-normal distribution, set `randPars = c(size = "n")` or `randPars = c(size = "ln")`:
+For example, assume the observed utility for yogurts was $v_{j} = \beta x_{j} + \alpha p_{j}$, where $p_{j}$ is "price" and $x_{j}$ is "brand". To model `"brand"` parameter, $\beta$, with a normal or log-normal distribution, set `randPars = c(size = "n")` or `randPars = c(size = "ln")`:
 
 ```{r, eval=FALSE}
 mxl_pref <- logitr(
-    data       = data,
+    data       = yogurt,
     choiceName = "choice",
     obsIDName  = "obsID",
-    parNames   = c("price", "size"),
-    randPars   = c(size = "n"), # Modeling size parameter as normally distributed
-    options    = list(numMultiStarts = 10) # Set numMultiStarts > 1 to run a multistart
+    parNames   = c("price", "brand"),
+    randPars   = c(brand = "n"),
+    options    = list(numMultiStarts = 10)
 )
 ```
 
-Since mixed logit models are non-convex, it is recommended that you use a multi-start search to run the optimization loop multiple times to search for different local minima. Note that mixed logit models can take a long time to estimate, so setting large number for `numMultiStarts` could take hours or longer to complete.
+Since mixed logit models are non-convex, it is again recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima. Note that mixed logit models can take a long time to estimate, so setting large number for `numMultiStarts` could take hours or longer to complete.
 
 ## View results
 
@@ -112,22 +135,38 @@ Use `statusCodes()` to print a description of each status code from the `nloptr`
 
 ## Computing and comparing WTP
 
-For models in the preference space, you can get a summary table of the implied WTP by using:
+For models in the preference space, a summary table of the computed WTP based on the estimated preference space parameters can be obtained with the `wtp()` function. For example, the computed WTP from the previously estimated fixed parameter model can be obtained with the following command:
 
-```{r, eval=FALSE}
-wtp(mnl_pref, priceName)
+```{r}
+wtp(mnl_pref, priceName = "price")
 ```
 
-To compare the WTP between two equivalent models in the preference space and WTP spaces, use:
+The `wtp()` function divides the non-price parameters by the negative of the price parameter. Standard errors are estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. Similarly, the `wtpCompare()` function can be used to compare the WTP from a WTP space model with that computed from an equivalent preference space model:
 
-```{r, eval=FALSE}
-wtpCompare(mnl_pref, mnl_wtp, priceName)
+```{r}
+wtpCompare(mnl_pref, mnl_wtp, priceName = "price")
 ```
 
-## Simulate shares
+## Predict shares and choices
 
-Once you have estimated a model, you can use it to simulate the expected shares of a particular set of alternatives. This can be done using the function `simulateShares()`. The simulation reports the expected share as well as a confidence interval for each alternative:
+Once you have estimated a model, you can use it to predict the expected choices or shares of a particular set of alternatives (or multiple sets of alternatives). To predict shares, use the `predictShares()` function using an estimated model and a data frame of alternatives. As an example, I'll use a couple of the choice observations from the `yogurt` dataset (note that if you include more than one set of alternatives you also have to specify an `obsID`):
+
+```{r}
+alts <- subset(yogurt, obsID %in% c(42, 13),
+               select = c('obsID', 'price', 'feat', 'brand'))
+alts
+```
+
+Now predict shares:
 
 ```{r, eval=FALSE}
-shares = simulateShares(model, alts, priceName = NULL, alpha = 0.025)
+shares <- predictShares(mnl_pref, alts)
+shares
+```
+
+Likewise, you can use the `predictChoices()` function to predict choices for a set of alternatives:
+
+```{r, eval=FALSE}
+choices <- predictChoices(mnl_pref, alts)
+choices
 ```
