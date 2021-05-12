@@ -44,7 +44,7 @@ A data frame with the estimated shares for each alternative in
 }
 \description{
 This function has been depreciated since logitr version 0.1.4. Use
-\code{predictShares()} instead.
+\code{predictProbs()} instead.
 }
 \examples{
 \dontrun{
@@ -71,4 +71,4 @@ simulateShares(mnl_pref, alts, obsIDName = "obsID")
 }
 }
 \keyword{logitr}
-\keyword{simluation}
+\keyword{simulation}

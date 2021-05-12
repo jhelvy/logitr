@@ -38,16 +38,13 @@ choices_mnl_wtp <- predictChoices(
   model      = mnl_wtp,
   alts       = yogurt,
   choiceName = "choice",
-  obsIDName  = "obsID",
-  priceName  = 'price'
+  obsIDName  = "obsID"
 )
 
 head(choices_mnl_wtp)
 
 # Since these two models are equivalent except in different spaces, the
-# simulation results should be the same. Note that 'priceName' is the name
-# of the price attribute in the alts argument and must be included for
-# WTP space models.
+# simulation results should be the same.
 
 # Simulations can also be run using MXL models in either space:
 choices_mxl_pref <- predictChoices(
@@ -63,8 +60,7 @@ choices_mxl_wtp <- predictChoices(
   model      = mxl_wtp,
   alts       = yogurt,
   choiceName = "choice",
-  obsIDName  = "obsID",
-  priceName  = 'price'
+  obsIDName  = "obsID"
 )
 
 head(choices_mxl_wtp)

@@ -45,13 +45,13 @@ This data set also has an `alt` variable that determines the alternatives includ
 
 # Continuous versus discrete variables
 
-Variables will be modeled as either continuous or discrete based on their data _type_. Numeric variables are by default estimated with a single "slope" coefficient. For example, consider a data frame that contains a `price` variable with the levels $10, $15, and $20. Adding `price` to the `parNames` argument in the main `logitr()` function would result in a single `price` coefficient for the "slope" of the change in price.
+Variables are modeled as either continuous or discrete based on their data _type_. Numeric variables are by default estimated with a single "slope" coefficient. For example, consider a data frame that contains a `price` variable with the levels $10, $15, and $20. Adding `price` to the `parNames` argument in the main `logitr()` function would result in a single `price` coefficient for the "slope" of the change in price.
 
 In contrast, categorical variables (i.e. `character` or `factor` type variables) are by default estimated with a coefficient for all but the first level, which serves as the reference level. The default reference level is determined alphabetically, but it can also be set by modifying the factor levels for that variable. For example, the default reference level for the `brand` variable is `"dannon"` as it is alphabetically first. To set `"weight"` as the reference level, the factor levels can be modified using the `factor()` function:
 
 ```{r, eval=FALSE}
-yogurt$brand <- factor(yogurt$brand, levels = c(
-  "weight", "hiland", "yoplait", "dannon"))
+brands <- c("weight", "hiland", "yoplait", "dannon")
+yogurt$brand <- factor(yogurt$brand, levels = brands)
 ```
 
 # Creating dummy coded variables

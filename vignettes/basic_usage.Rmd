@@ -7,7 +7,6 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -147,37 +146,44 @@ The `wtp()` function divides the non-price parameters by the negative of the pri
 wtpCompare(mnl_pref, mnl_wtp, priceName = "price")
 ```
 
-## Predict shares and choices
+## Making predictions
 
-Once you have estimated a model, you can use it to predict the expected choices or shares of a particular set of alternatives (or multiple sets of alternatives). To predict shares, use the `predictShares()` function using an estimated model and a data frame of alternatives. As an example, I'll use a couple of the choice observations from the `yogurt` dataset (note that if you include more than one set of alternatives you also have to specify an `obsID`):
+Estimated models can be used to predict expected choices and choice probabilities for a set (or multiple sets) of alternatives based on an estimated model. As an example, consider predicting choices and probabilities for two of the choice observations from the `yogurt` dataset:
 
 ```{r}
-alts <- subset(yogurt, obsID %in% c(42, 13),
-               select = c('obsID', 'choice', 'price', 'feat', 'brand'))
+alts <- subset(
+  yogurt, obsID %in% c(42, 13),
+  select = c('obsID', 'choice', 'price', 'feat', 'brand')
+)
+
 alts
 ```
 
-Now predict shares:
+In the example below, the expected choice probabilities for these sets of alternatives are computed using the fixed parameter `mnl_pref` model:
 
 ```{r}
-shares <- predictShares(
-  model = mnl_pref, 
-  alts  = alts, 
+probs <- predictProbs(
+  model = mnl_pref,
+  alts  = alts,
   obsID = "obsID"
 )
 
-shares
+probs
 ```
 
-Likewise, you can use the `predictChoices()` function to predict choices for a set of alternatives. The optional `choiceName` argument defines which column contains the actual choices made:
+The `probs` data frame contains the expected choice probabilities for each alternative. The low and high values show a 95% confidence interval, estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. You can change the CI level by setting alpha to a different value (e.g. a 90% CI is obtained with alpha = 0.05).
+
+Likewise, expected choices can also be predicted for these alternatives using the same `mnl_pref` model. The optional `choiceName` argument defines which column contains the actual choices made (for example, if predicting choices on a hold out sample):
 
 ```{r}
 choices <- predictChoices(
-  model = mnl_pref, 
-  alts  = alts, 
-  obsID = "obsID", 
+  model = mnl_pref,
+  alts  = alts,
+  obsID = "obsID",
   choiceName = "choice"
 )
 
 choices
 ```
+
+Both `predictProbs()` and `predictChoices()` work with models estimated in either preference or WTP space utility models.

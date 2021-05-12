@@ -4,13 +4,7 @@
 \alias{predictChoices}
 \title{Predict choices}
 \usage{
-predictChoices(
-  model,
-  alts,
-  choiceName = NULL,
-  obsIDName = NULL,
-  priceName = NULL
-)
+predictChoices(model, alts, choiceName = NULL, obsIDName = NULL)
 }
 \arguments{
 \item{model}{The output of a model estimated model using the \code{logitr()}
@@ -27,9 +21,6 @@ hold outs) to the predicted choices.}
 \item{obsIDName}{The name of the column that identifies each set of
 alternatives. Required if simulating results for more than one set of
 alternatives. Defaults to \code{NULL} (for a single set of alternatives).}
-
-\item{priceName}{The name of the parameter that identifies price. Only
-required for WTP space models. Defaults to \code{NULL}.}
 }
 \value{
 A data frame with the predicted choices for each alternative in
@@ -74,5 +65,7 @@ predict_mnl_pref \%>\%
   summarise(p_correct = sum(choice_predict == choice) / n())
 }
 }
+\keyword{choice}
 \keyword{logitr}
-\keyword{simluation}
+\keyword{predict}
+\keyword{simulation}

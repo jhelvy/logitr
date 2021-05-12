@@ -32,8 +32,8 @@ navbar:
           href: articles/interactions.html
         - text: "Estimating Weighted Logit Models"
           href: articles/weighted_models.html
-        - text: "Predicting Shares from Estimated Models"
-          href: articles/predict_shares.html
+        - text: "Predicting Choice Probabilities from Estimated Models"
+          href: articles/predict_probs.html
         - text: "Predicting Choices from Estimated Models"
           href: articles/predict_choices.html
     - text: "Changelog"
@@ -62,11 +62,11 @@ reference:
   contents:
   - wtp
   - wtpCompare
-- title: "Predicting Choices & Market Shares"
-  desc: "Functions for predicting choices and expected shares from a set of alternatives."
+- title: "Predicting Choices & Probabilities"
+  desc: "Functions for predicting choices and choice probabilities for a set of alternatives."
   contents:
   - predictChoices
-  - predictShares
+  - predictProbs
 - title: "Example Data Sets"
   desc: "Descriptions of data included with this package"
   contents:
