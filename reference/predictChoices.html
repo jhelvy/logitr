@@ -117,7 +117,7 @@ on the results from an estimated model." />
       <a href="../articles/weighted_models.html">Estimating Weighted Logit Models</a>
     </li>
     <li>
-      <a href="../articles/predict_shares.html">Predicting Shares from Estimated Models</a>
+      <a href="../articles/predict_probs.html">Predicting Choice Probabilities from Estimated Models</a>
     </li>
     <li>
       <a href="../articles/predict_choices.html">Predicting Choices from Estimated Models</a>
@@ -164,13 +164,7 @@ on the results from an estimated model." />
 on the results from an estimated model.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>predictChoices</span><span class='op'>(</span>
-  <span class='va'>model</span>,
-  <span class='va'>alts</span>,
-  choiceName <span class='op'>=</span> <span class='cn'>NULL</span>,
-  obsIDName <span class='op'>=</span> <span class='cn'>NULL</span>,
-  priceName <span class='op'>=</span> <span class='cn'>NULL</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>predictChoices</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>alts</span>, choiceName <span class='op'>=</span> <span class='cn'>NULL</span>, obsIDName <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -197,11 +191,6 @@ hold outs) to the predicted choices.</p></td>
       <td><p>The name of the column that identifies each set of
 alternatives. Required if simulating results for more than one set of
 alternatives. Defaults to <code>NULL</code> (for a single set of alternatives).</p></td>
-    </tr>
-    <tr>
-      <th>priceName</th>
-      <td><p>The name of the parameter that identifies price. Only
-required for WTP space models. Defaults to <code>NULL</code>.</p></td>
     </tr>
     </table>
 

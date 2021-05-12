@@ -75,7 +75,7 @@
       <a href="../articles/weighted_models.html">Estimating Weighted Logit Models</a>
     </li>
     <li>
-      <a href="../articles/predict_shares.html">Predicting Shares from Estimated Models</a>
+      <a href="../articles/predict_probs.html">Predicting Choice Probabilities from Estimated Models</a>
     </li>
     <li>
       <a href="../articles/predict_choices.html">Predicting Choices from Estimated Models</a>
@@ -150,11 +150,11 @@
 <div id="continuous-versus-discrete-variables" class="section level1">
 <h1 class="hasAnchor">
 <a href="#continuous-versus-discrete-variables" class="anchor"></a>Continuous versus discrete variables</h1>
-<p>Variables will be modeled as either continuous or discrete based on their data <em>type</em>. Numeric variables are by default estimated with a single “slope” coefficient. For example, consider a data frame that contains a <code>price</code> variable with the levels $10, $15, and $20. Adding <code>price</code> to the <code>parNames</code> argument in the main <code><a href="../reference/logitr.html">logitr()</a></code> function would result in a single <code>price</code> coefficient for the “slope” of the change in price.</p>
+<p>Variables are modeled as either continuous or discrete based on their data <em>type</em>. Numeric variables are by default estimated with a single “slope” coefficient. For example, consider a data frame that contains a <code>price</code> variable with the levels $10, $15, and $20. Adding <code>price</code> to the <code>parNames</code> argument in the main <code><a href="../reference/logitr.html">logitr()</a></code> function would result in a single <code>price</code> coefficient for the “slope” of the change in price.</p>
 <p>In contrast, categorical variables (i.e. <code>character</code> or <code>factor</code> type variables) are by default estimated with a coefficient for all but the first level, which serves as the reference level. The default reference level is determined alphabetically, but it can also be set by modifying the factor levels for that variable. For example, the default reference level for the <code>brand</code> variable is <code>"dannon"</code> as it is alphabetically first. To set <code>"weight"</code> as the reference level, the factor levels can be modified using the <code><a href="https://rdrr.io/r/base/factor.html">factor()</a></code> function:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">yogurt</span><span class="op">$</span><span class="va">brand</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">yogurt</span><span class="op">$</span><span class="va">brand</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
-  <span class="st">"weight"</span>, <span class="st">"hiland"</span>, <span class="st">"yoplait"</span>, <span class="st">"dannon"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">brands</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"weight"</span>, <span class="st">"hiland"</span>, <span class="st">"yoplait"</span>, <span class="st">"dannon"</span><span class="op">)</span>
+<span class="va">yogurt</span><span class="op">$</span><span class="va">brand</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">yogurt</span><span class="op">$</span><span class="va">brand</span>, levels <span class="op">=</span> <span class="va">brands</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="creating-dummy-coded-variables" class="section level1">
 <h1 class="hasAnchor">

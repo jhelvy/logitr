@@ -75,7 +75,7 @@
       <a href="../articles/weighted_models.html">Estimating Weighted Logit Models</a>
     </li>
     <li>
-      <a href="../articles/predict_shares.html">Predicting Shares from Estimated Models</a>
+      <a href="../articles/predict_probs.html">Predicting Choice Probabilities from Estimated Models</a>
     </li>
     <li>
       <a href="../articles/predict_choices.html">Predicting Choices from Estimated Models</a>
@@ -264,11 +264,11 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, priceName <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
 <span class="co">#&gt;                Estimate StdError    tStat  pVal signif</span>
-<span class="co">#&gt; lambda         0.366543 0.024329  15.0663 0e+00    ***</span>
-<span class="co">#&gt; feat           1.340724 0.359766   3.7267 2e-04    ***</span>
-<span class="co">#&gt; brandhiland  -10.136406 0.584748 -17.3347 0e+00    ***</span>
-<span class="co">#&gt; brandweight   -1.749121 0.181864  -9.6178 0e+00    ***</span>
-<span class="co">#&gt; brandyoplait   2.003848 0.339788   5.8973 0e+00    ***</span></code></pre></div>
+<span class="co">#&gt; lambda         0.366543 0.024332  15.0645 0e+00    ***</span>
+<span class="co">#&gt; feat           1.340724 0.358028   3.7448 2e-04    ***</span>
+<span class="co">#&gt; brandhiland  -10.136406 0.584398 -17.3450 0e+00    ***</span>
+<span class="co">#&gt; brandweight   -1.749121 0.181386  -9.6431 0e+00    ***</span>
+<span class="co">#&gt; brandyoplait   2.003848 0.339874   5.8959 0e+00    ***</span></code></pre></div>
 <p>The <code><a href="../reference/wtp.html">wtp()</a></code> function divides the non-price parameters by the negative of the price parameter. Standard errors are estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. Similarly, the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function can be used to compare the WTP from a WTP space model with that computed from an equivalent preference space model:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, priceName <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
@@ -280,13 +280,16 @@
 <span class="co">#&gt; brandyoplait     2.003848     2.0038525  0.00000450</span>
 <span class="co">#&gt; logLik       -2656.887880 -2656.8878780  0.00000191</span></code></pre></div>
 </div>
-<div id="predict-shares-and-choices" class="section level2">
+<div id="making-predictions" class="section level2">
 <h2 class="hasAnchor">
-<a href="#predict-shares-and-choices" class="anchor"></a>Predict shares and choices</h2>
-<p>Once you have estimated a model, you can use it to predict the expected choices or shares of a particular set of alternatives (or multiple sets of alternatives). To predict shares, use the <code><a href="../reference/predictShares.html">predictShares()</a></code> function using an estimated model and a data frame of alternatives. As an example, I’ll use a couple of the choice observations from the <code>yogurt</code> dataset (note that if you include more than one set of alternatives you also have to specify an <code>obsID</code>):</p>
+<a href="#making-predictions" class="anchor"></a>Making predictions</h2>
+<p>Estimated models can be used to predict expected choices and choice probabilities for a set (or multiple sets) of alternatives based on an estimated model. As an example, consider predicting choices and probabilities for two of the choice observations from the <code>yogurt</code> dataset:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">alts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">yogurt</span>, <span class="va">obsID</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">13</span><span class="op">)</span>,
-               select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'obsID'</span>, <span class="st">'choice'</span>, <span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">alts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span>
+  <span class="va">yogurt</span>, <span class="va">obsID</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">13</span><span class="op">)</span>,
+  select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'obsID'</span>, <span class="st">'choice'</span>, <span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>
+<span class="op">)</span>
+
 <span class="va">alts</span>
 <span class="co">#&gt;     obsID choice price feat   brand</span>
 <span class="co">#&gt; 49     13      0   8.1    0  dannon</span>
@@ -297,30 +300,31 @@
 <span class="co">#&gt; 166    42      0   6.1    1  hiland</span>
 <span class="co">#&gt; 167    42      0   7.9    0  weight</span>
 <span class="co">#&gt; 168    42      0  11.5    0 yoplait</span></code></pre></div>
-<p>Now predict shares:</p>
+<p>In the example below, the expected choice probabilities for these sets of alternatives are computed using the fixed parameter <code>mnl_pref</code> model:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">shares</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predictShares.html">predictShares</a></span><span class="op">(</span>
-  model <span class="op">=</span> <span class="va">mnl_pref</span>, 
-  alts  <span class="op">=</span> <span class="va">alts</span>, 
+<code class="sourceCode R"><span class="va">probs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predictProbs.html">predictProbs</a></span><span class="op">(</span>
+  model <span class="op">=</span> <span class="va">mnl_pref</span>,
+  alts  <span class="op">=</span> <span class="va">alts</span>,
   obsID <span class="op">=</span> <span class="st">"obsID"</span>
 <span class="op">)</span>
 
-<span class="va">shares</span>
-<span class="co">#&gt;     obsID share_mean  share_low share_high</span>
-<span class="co">#&gt; 49     13 0.43684871 0.39153951 0.47948700</span>
-<span class="co">#&gt; 50     13 0.03313009 0.02545814 0.04250109</span>
-<span class="co">#&gt; 51     13 0.19155738 0.17200893 0.21088141</span>
-<span class="co">#&gt; 52     13 0.33846382 0.28350003 0.39960198</span>
-<span class="co">#&gt; 165    42 0.60763975 0.54615196 0.66090590</span>
-<span class="co">#&gt; 166    42 0.02602079 0.01852714 0.03603432</span>
-<span class="co">#&gt; 167    42 0.17803594 0.16296017 0.19295047</span>
-<span class="co">#&gt; 168    42 0.18830353 0.14024164 0.24942670</span></code></pre></div>
-<p>Likewise, you can use the <code><a href="../reference/predictChoices.html">predictChoices()</a></code> function to predict choices for a set of alternatives. The optional <code>choiceName</code> argument defines which column contains the actual choices made:</p>
+<span class="va">probs</span>
+<span class="co">#&gt;     obsID  prob_mean   prob_low  prob_high</span>
+<span class="co">#&gt; 49     13 0.43684871 0.39233249 0.48051583</span>
+<span class="co">#&gt; 50     13 0.03313009 0.02544690 0.04251083</span>
+<span class="co">#&gt; 51     13 0.19155738 0.17176112 0.21115446</span>
+<span class="co">#&gt; 52     13 0.33846382 0.28220270 0.39853177</span>
+<span class="co">#&gt; 165    42 0.60763975 0.54628601 0.66188833</span>
+<span class="co">#&gt; 166    42 0.02602079 0.01840538 0.03598947</span>
+<span class="co">#&gt; 167    42 0.17803594 0.16253480 0.19325948</span>
+<span class="co">#&gt; 168    42 0.18830353 0.13886696 0.24901203</span></code></pre></div>
+<p>The <code>probs</code> data frame contains the expected choice probabilities for each alternative. The low and high values show a 95% confidence interval, estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. You can change the CI level by setting alpha to a different value (e.g. a 90% CI is obtained with alpha = 0.05).</p>
+<p>Likewise, expected choices can also be predicted for these alternatives using the same <code>mnl_pref</code> model. The optional <code>choiceName</code> argument defines which column contains the actual choices made (for example, if predicting choices on a hold out sample):</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predictChoices.html">predictChoices</a></span><span class="op">(</span>
-  model <span class="op">=</span> <span class="va">mnl_pref</span>, 
-  alts  <span class="op">=</span> <span class="va">alts</span>, 
-  obsID <span class="op">=</span> <span class="st">"obsID"</span>, 
+  model <span class="op">=</span> <span class="va">mnl_pref</span>,
+  alts  <span class="op">=</span> <span class="va">alts</span>,
+  obsID <span class="op">=</span> <span class="st">"obsID"</span>,
   choiceName <span class="op">=</span> <span class="st">"choice"</span>
 <span class="op">)</span>
 
@@ -328,12 +332,13 @@
 <span class="co">#&gt;        obsID choice choice_predict</span>
 <span class="co">#&gt; 13.49     13      0              0</span>
 <span class="co">#&gt; 13.50     13      0              0</span>
-<span class="co">#&gt; 13.51     13      1              1</span>
-<span class="co">#&gt; 13.52     13      0              0</span>
-<span class="co">#&gt; 42.165    42      1              0</span>
+<span class="co">#&gt; 13.51     13      1              0</span>
+<span class="co">#&gt; 13.52     13      0              1</span>
+<span class="co">#&gt; 42.165    42      1              1</span>
 <span class="co">#&gt; 42.166    42      0              0</span>
-<span class="co">#&gt; 42.167    42      0              1</span>
+<span class="co">#&gt; 42.167    42      0              0</span>
 <span class="co">#&gt; 42.168    42      0              0</span></code></pre></div>
+<p>Both <code><a href="../reference/predictProbs.html">predictProbs()</a></code> and <code><a href="../reference/predictChoices.html">predictChoices()</a></code> work with models estimated in either preference or WTP space utility models.</p>
 </div>
 </div>
   </div>
