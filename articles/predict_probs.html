@@ -128,8 +128,10 @@
 <a href="#the-data" class="anchor"></a>The data</h1>
 <p>To predict choice probabilities, you first need to create a set of alternatives where each row is an alternative and each column an attribute. In this example, I use two of the choice observations from the <code>yogurt</code> dataset (note that if you include more than one set of alternatives you also have to specify an <code>obsID</code>):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">alts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">yogurt</span>, <span class="va">obsID</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">13</span><span class="op">)</span>,
-               select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'obsID'</span>, <span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">alts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span>
+  <span class="va">yogurt</span>, <span class="va">obsID</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">13</span><span class="op">)</span>,
+  select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'obsID'</span>, <span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span><span class="op">)</span>
+
 <span class="va">alts</span>
 <span class="co">#&gt;     obsID price feat   brand</span>
 <span class="co">#&gt; 49     13   8.1    0  dannon</span>
