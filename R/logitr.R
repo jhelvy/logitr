@@ -15,7 +15,8 @@
 #'
 #' @param data The choice data, formatted as a `data.frame` object.
 #' @param choiceName The name of the column that identifies the choice variable.
-#' @param obsIDName The name of the column that identifies the `obsID` variable.
+#' @param obsIDName The name of the column that identifies each choice
+#' observation.
 #' @param parNames The names of the parameters to be estimated in the model.
 #' Must be the same as the column names in the `data` argument. For WTP space
 #' models, do not include price in `parNames`.
