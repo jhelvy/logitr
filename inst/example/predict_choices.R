@@ -27,11 +27,6 @@ choices_mnl_pref <- predictChoices(
 
 head(choices_mnl_pref)
 
-# The results show the expected shares for each alternative.
-# The low and high values show a 95% confidence interval, estimated using
-# simulation. You can change the CI level by setting alpha to a different
-# value (e.g. a 90% CI is obtained with alpha = 0.05).
-
 # Run the simulation using the WTP space MNL model:
 choices_mnl_wtp <- predictChoices(
   model      = mnl_wtp,
