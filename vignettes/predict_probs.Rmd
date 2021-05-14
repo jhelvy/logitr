@@ -34,8 +34,10 @@ Once a model has been estimated, it can be used to predict the expected choice p
 To predict choice probabilities, you first need to create a set of alternatives where each row is an alternative and each column an attribute. In this example, I use two of the choice observations from the `yogurt` dataset (note that if you include more than one set of alternatives you also have to specify an `obsID`):
 
 ```{r}
-alts <- subset(yogurt, obsID %in% c(42, 13),
-               select = c('obsID', 'price', 'feat', 'brand'))
+alts <- subset(
+  yogurt, obsID %in% c(42, 13),
+  select = c('obsID', 'price', 'feat', 'brand'))
+
 alts
 ```
 

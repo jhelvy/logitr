@@ -59,26 +59,24 @@ mnl_pref <- logitr(
   parNames   = c('price', 'feat', 'brand')
 )
 
-# Make predictions
+# Predict choices
 choices_mnl_pref <- predictChoices(
   model      = mnl_pref,
   alts       = yogurt,
-  choiceName = "choice",
   obsIDName  = "obsID"
 )
 ```
 ```{r}
-head(choices_mnl_pref)
+# Preview actual and predicted choices
+head(choices_mnl_pref[c('obsID', 'choice', 'choice_predict')])
 ```
 
-The results are a data frame showing the actual choices, `choice`, and the predicted choices, `choice_predict`. You can quickly compute the accuracy by dividing the number of correctly predicted choices by the total number of choices:
+The resulting `choices_mnl_pref` data frame contains the same `alts` data frame with an additional column, `choice_predict`, which contains the predicted choices. You can quickly compute the accuracy by dividing the number of correctly predicted choices by the total number of choices:
 
 ```{r}
-library(dplyr)
-
-choices_mnl_pref %>%
-  filter(choice == 1) %>%
-  summarise(p_correct = sum(choice_predict == choice) / n())
+chosen <- subset(choices_mnl_pref, choice == 1)
+chosen$correct <- chosen$choice == chosen$choice_predict
+sum(chosen$correct) / nrow(chosen)
 ```
 
 ## WTP space parameterization
@@ -101,7 +99,6 @@ mnl_wtp <- logitr(
 choices_mnl_wtp <- predictChoices(
   model      = mnl_wtp,
   alts       = yogurt,
-  choiceName = "choice",
   obsIDName  = "obsID"
 )
 ```
@@ -110,7 +107,8 @@ choices_mnl_wtp <- predictChoices(
 #> (the run with the largest log-likelihood value)
 ```
 ```{r}
-head(choices_mnl_wtp)
+# Preview actual and predicted choices
+head(choices_mnl_wtp[c('obsID', 'choice', 'choice_predict')])
 ```
 
 # Predicting with mixed logit models
@@ -134,12 +132,12 @@ mxl_pref <- logitr(
 choices_mxl_pref <- predictChoices(
   model      = mxl_pref,
   alts       = yogurt,
-  choiceName = "choice",
   obsIDName  = "obsID"
 )
 ```
 ```{r}
-head(choices_mxl_pref)
+# Preview actual and predicted choices
+head(choices_mxl_pref[c('obsID', 'choice', 'choice_predict')])
 ```
 
 ## WTP space parameterization
@@ -163,17 +161,19 @@ mxl_wtp <- logitr(
 choices_mxl_wtp <- predictChoices(
   model      = mxl_wtp,
   alts       = yogurt,
-  choiceName = "choice",
   obsIDName  = "obsID"
 )
 ```
 ```{r}
-head(choices_mxl_wtp)
+# Preview actual and predicted choices
+head(choices_mxl_wtp[c('obsID', 'choice', 'choice_predict')])
 ```
 
 # Compare prediction results
 
 ```{r}
+library(dplyr)
+
 # Combine models into one data frame
 choices <- rbind(
   choices_mnl_pref, choices_mnl_wtp, choices_mxl_pref, choices_mxl_wtp)

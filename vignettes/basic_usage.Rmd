@@ -148,7 +148,7 @@ wtpCompare(mnl_pref, mnl_wtp, priceName = "price")
 
 ## Making predictions
 
-Estimated models can be used to predict expected choices and choice probabilities for a set (or multiple sets) of alternatives based on an estimated model. As an example, consider predicting choices and probabilities for two of the choice observations from the `yogurt` dataset:
+Estimated models can be used to predict expected choices and choice probabilities for a set (or multiple sets) of alternatives based on an estimated model. As an example, consider predicting choice probabilities for two of the choice observations from the `yogurt` dataset:
 
 ```{r}
 alts <- subset(
@@ -159,31 +159,56 @@ alts <- subset(
 alts
 ```
 
-In the example below, the expected choice probabilities for these sets of alternatives are computed using the fixed parameter `mnl_pref` model:
+In the example below, the expected choice probabilities for these two sets of alternatives are computed using the fixed parameter `mnl_pref` model:
 
 ```{r}
 probs <- predictProbs(
-  model = mnl_pref,
-  alts  = alts,
-  obsID = "obsID"
+  model     = mnl_pref,
+  alts      = alts,
+  obsIDName = "obsID"
 )
 
 probs
 ```
 
-The `probs` data frame contains the expected choice probabilities for each alternative. The low and high values show a 95% confidence interval, estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. You can change the CI level by setting alpha to a different value (e.g. a 90% CI is obtained with alpha = 0.05).
+The resulting `probs` data frame contains the expected choice probabilities for each alternative. The low and high values show a 95% confidence interval, estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. You can change the CI level by setting alpha to a different value (e.g. a 90% CI is obtained with alpha = 0.05).
 
-Likewise, expected choices can also be predicted for these alternatives using the same `mnl_pref` model. The optional `choiceName` argument defines which column contains the actual choices made (for example, if predicting choices on a hold out sample):
+Choice probabilities can also be predicted used WTP space models. For example, the predicted choice probabilities using the `mnl_wtp` model are nearly identical with those from the `mnl_pref` model:
+
+```{r}
+probs <- predictProbs(
+  model     = mnl_wtp,
+  alts      = alts,
+  obsIDName = "obsID"
+)
+
+probs
+```
+
+Similar to the `predictProbs()` function, the `predictChoices()` function can be used to predict choices using the results of an estimated model. In the example below, choices are predicted for the entire `yogurt` dataset, which was used to the estimate the `mnl_pref` model:
 
 ```{r}
 choices <- predictChoices(
-  model = mnl_pref,
-  alts  = alts,
-  obsID = "obsID",
-  choiceName = "choice"
+  model     = mnl_pref,
+  alts      = yogurt,
+  obsIDName = "obsID"
 )
 
-choices
+# Preview actual and predicted choices
+head(choices[c('obsID', 'choice', 'choice_predict')])
 ```
 
-Both `predictProbs()` and `predictChoices()` work with models estimated in either preference or WTP space utility models.
+```{r, echo=FALSE}
+# Compute accuracy
+chosen <-  subset(choices, choice == 1)
+chosen$correct <- chosen$choice == chosen$choice_predict
+accuracy <- round(100*sum(chosen$correct) / nrow(chosen), 1)
+```
+
+The `choices` data frame contains the actual choices, `choice`, and the predicted choices, `choice_predict`. In this case, the model accurately predicted the actual choice in `r accuracy`% of the choice observations:
+
+```{r}
+chosen <- subset(choices, choice == 1)
+chosen$correct <- chosen$choice == chosen$choice_predict
+sum(chosen$correct) / nrow(chosen)
+```

@@ -4,19 +4,17 @@
 \alias{predictChoices}
 \title{Predict choices}
 \usage{
-predictChoices(model, alts, choiceName = NULL, obsIDName = NULL)
+predictChoices(model, alts, obsIDName = NULL)
 }
 \arguments{
 \item{model}{The output of a model estimated model using the \code{logitr()}
-function.}
+function.
+Include if you want to compare true choices from actual observations (e.g.
+hold outs) to the predicted choices.}
 
 \item{alts}{A data frame of a set of alternatives for which to predict
 choices. Each row is an alternative and each column an attribute
 corresponding to parameter names in the estimated model.}
-
-\item{choiceName}{The name of the column that identifies the choice variable.
-Include if you want to compare true choices from actual observations (e.g.
-hold outs) to the predicted choices.}
 
 \item{obsIDName}{The name of the column that identifies each set of
 alternatives. Required if simulating results for more than one set of
@@ -45,24 +43,20 @@ mnl_pref <- logitr(
 # You can predict choices for any set of alternative, such as hold out
 # samples or within-sample. For this example I will predict choices on
 # the full yogurt data set, which was used to estimate the model.
-head(yogurt)
 
 # Run the simulation using the preference space MNL model:
-predict_mnl_pref <- predictChoices(
+choices_mnl_pref <- predictChoices(
   model      = mnl_pref,
   alts       = yogurt,
-  choiceName = "choice",
   obsIDName  = "obsID"
 )
 
-head(predict_mnl_pref)
+head(choices_mnl_pref)
 
 # Compute the accuracy
-library(dplyr)
-
-predict_mnl_pref \%>\%
-  filter(choice == 1) \%>\%
-  summarise(p_correct = sum(choice_predict == choice) / n())
+chosen <-  subset(choices, choice == 1)
+chosen$correct <- chosen$choice == chosen$choice_predict
+sum(chosen$correct) / nrow(chosen)
 }
 }
 \keyword{choice}

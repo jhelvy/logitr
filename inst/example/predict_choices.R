@@ -22,7 +22,6 @@ head(yogurt)
 choices_mnl_pref <- predictChoices(
   model      = mnl_pref,
   alts       = yogurt,
-  choiceName = "choice",
   obsIDName  = "obsID"
 )
 
@@ -37,7 +36,6 @@ head(choices_mnl_pref)
 choices_mnl_wtp <- predictChoices(
   model      = mnl_wtp,
   alts       = yogurt,
-  choiceName = "choice",
   obsIDName  = "obsID"
 )
 
@@ -50,7 +48,6 @@ head(choices_mnl_wtp)
 choices_mxl_pref <- predictChoices(
   model      = mxl_pref,
   alts       = yogurt,
-  choiceName = "choice",
   obsIDName  = "obsID"
 )
 
@@ -59,7 +56,6 @@ head(choices_mxl_pref)
 choices_mxl_wtp <- predictChoices(
   model      = mxl_wtp,
   alts       = yogurt,
-  choiceName = "choice",
   obsIDName  = "obsID"
 )
 

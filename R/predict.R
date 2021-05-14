@@ -10,7 +10,6 @@
 #'
 #' @param model The output of a model estimated model using the `logitr()`
 #' function.
-#' @param choiceName The name of the column that identifies the choice variable.
 #' Include if you want to compare true choices from actual observations (e.g.
 #' hold outs) to the predicted choices.
 #' @param alts A data frame of a set of alternatives for which to predict
@@ -38,29 +37,24 @@
 #' # You can predict choices for any set of alternative, such as hold out
 #' # samples or within-sample. For this example I will predict choices on
 #' # the full yogurt data set, which was used to estimate the model.
-#' head(yogurt)
 #'
 #' # Run the simulation using the preference space MNL model:
-#' predict_mnl_pref <- predictChoices(
+#' choices_mnl_pref <- predictChoices(
 #'   model      = mnl_pref,
 #'   alts       = yogurt,
-#'   choiceName = "choice",
 #'   obsIDName  = "obsID"
 #' )
 #'
-#' head(predict_mnl_pref)
+#' head(choices_mnl_pref)
 #'
 #' # Compute the accuracy
-#' library(dplyr)
-#'
-#' predict_mnl_pref %>%
-#'   filter(choice == 1) %>%
-#'   summarise(p_correct = sum(choice_predict == choice) / n())
+#' chosen <-  subset(choices, choice == 1)
+#' chosen$correct <- chosen$choice == chosen$choice_predict
+#' sum(chosen$correct) / nrow(chosen)
 #' }
 predictChoices <- function(
   model,
   alts,
-  choiceName = NULL,
   obsIDName = NULL
 ) {
   probs <- predictProbs(
@@ -68,14 +62,11 @@ predictChoices <- function(
   if (is.null(obsIDName)) {
     obsIDName <- "obsID"
   }
-  if (!is.null(choiceName)) {
-    probs[choiceName] <- alts[choiceName]
-  }
   choices <- split(probs, probs[obsIDName])
   choices <- lapply(choices, simChoice)
   result <- do.call(rbind, choices)
-  result$prob_mean <- NULL
-  return(result)
+  result <- result['choice_predict']
+  return(cbind(alts, result))
 }
 
 simChoice <- function(df) {
