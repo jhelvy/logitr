@@ -22,7 +22,8 @@ logitr(
 
 \item{choiceName}{The name of the column that identifies the choice variable.}
 
-\item{obsIDName}{The name of the column that identifies the \code{obsID} variable.}
+\item{obsIDName}{The name of the column that identifies each choice
+observation.}
 
 \item{parNames}{The names of the parameters to be estimated in the model.
 Must be the same as the column names in the \code{data} argument. For WTP space
