@@ -94,7 +94,7 @@ printModelSummary <- function(model) {
   coefTable <- getCoefTable(model)
   statTable <- getStatTable(
     model$logLik, model$nullLogLik, model$numObs,
-    model$numParams
+    model$numParams, model$numClusters, model$clusterName
   )
   printLine()
   cat("MODEL SUMMARY:", "\n")
@@ -201,18 +201,35 @@ getSignifCodes <- function(pVal) {
   return(signif)
 }
 
-getStatTable <- function(logLik, nullLogLik, numObs, numParams) {
+getStatTable <- function(logLik, nullLogLik, numObs, numParams, numClusters, clusterName) {
   aic <- round(2 * numParams - 2 * logLik, 4)
   bic <- round(log(numObs) * numParams - 2 * logLik, 4)
-  result <- t(data.frame(
-    "Log-Likelihood:"         = logLik,
-    "Null Log-Likelihood:"    = nullLogLik,
-    "AIC:"                    = aic,
-    "BIC:"                    = bic,
-    "McFadden R2:"            = 1 - (logLik / nullLogLik),
-    "Adj. McFadden R2"        = 1 - ((logLik - numParams) / nullLogLik),
-    "Number of Observations:" = numObs
-  ))
+
+  if(clusterName>0){
+    result <- t(data.frame(
+      "Log-Likelihood:"         = logLik,
+      "Null Log-Likelihood:"    = nullLogLik,
+      "AIC:"                    = aic,
+      "BIC:"                    = bic,
+      "McFadden R2:"            = 1 - (logLik / nullLogLik),
+      "Adj. McFadden R2"        = 1 - ((logLik - numParams) / nullLogLik),
+      "Number of Observations:" = numObs,
+      "Cluster Name:"           = clusterName,
+      "Number of Clusters:"     = numClusters
+    ))
+  } else{
+    result <- t(data.frame(
+      "Log-Likelihood:"         = logLik,
+      "Null Log-Likelihood:"    = nullLogLik,
+      "AIC:"                    = aic,
+      "BIC:"                    = bic,
+      "McFadden R2:"            = 1 - (logLik / nullLogLik),
+      "Adj. McFadden R2"        = 1 - ((logLik - numParams) / nullLogLik),
+      "Number of Observations:" = numObs
+    ))
+  }
+
+
   colnames(result) <- ""
   return(result)
 }
