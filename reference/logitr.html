@@ -238,6 +238,18 @@ Defaults to <code>NULL</code>.</p></td>
 used in model estimation. Optional. Defaults to <code>NULL</code>.</p></td>
     </tr>
     <tr>
+      <th>clusterName</th>
+      <td><p>The name of the column that identifies the cluster
+groups to be used in model estimation. Optional. Defaults to <code>NULL</code>.</p></td>
+    </tr>
+    <tr>
+      <th>robust</th>
+      <td><p>Determines whether or not a robust covariance matrix is
+estimated. Defaults to <code>FALSE</code>. Specification of a clusterName or
+weightsName will override the user setting and set this to `TRUE' (a
+warning will be displayed in this case).</p></td>
+    </tr>
+    <tr>
       <th>options</th>
       <td><p>A list of options.</p></td>
     </tr>
