@@ -31,6 +31,13 @@
 #' @param modelSpace Set to `'wtp'` for WTP space models. Defaults to `"pref"`.
 #' @param weightsName The name of the column that identifies the weights to be
 #' used in model estimation. Optional. Defaults to `NULL`.
+#' @param clusterName The name of the column that identifies the cluster
+#' groups to be used in model estimation. Optional. Defaults to `NULL`.
+#' @param robust Determines whether or not a robust covariance matrix is
+#' estimated. Defaults to `FALSE`. Specification of a clusterName or
+#' weightsName will override the user setting and set this to `TRUE' (a
+#' warning will be displayed in this case).
+#'
 #' @param options A list of options.
 #'
 #' @details

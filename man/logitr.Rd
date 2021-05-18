@@ -47,6 +47,14 @@ Defaults to \code{NULL}.}
 \item{weightsName}{The name of the column that identifies the weights to be
 used in model estimation. Optional. Defaults to \code{NULL}.}
 
+\item{clusterName}{The name of the column that identifies the cluster
+groups to be used in model estimation. Optional. Defaults to \code{NULL}.}
+
+\item{robust}{Determines whether or not a robust covariance matrix is
+estimated. Defaults to \code{FALSE}. Specification of a clusterName or
+weightsName will override the user setting and set this to `TRUE' (a
+warning will be displayed in this case).}
+
 \item{options}{A list of options.}
 }
 \value{

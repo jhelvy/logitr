@@ -4,9 +4,9 @@
 # ============================================================================
 
 # Creates a list of the data and other information needed for running the model
-getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
-                           priceName, randPrice, modelSpace, weightsName, clusterName, robust,
-                           options) {
+getModelInputs <- function(
+  data, choiceName, obsIDName, parNames, randPars, priceName, randPrice,
+  modelSpace, weightsName, clusterName, robust, options) {
   data <- as.data.frame(data) # tibbles break things
   # Setup pars
   runInputChecks(
@@ -37,19 +37,27 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
   }
 
   # Setup Clusters
-  clusterIDs<-NULL
+  clusterIDs <- NULL
   numClusters <- 0
-  if(weightsUsed & is.null(clusterName)){
+  if (weightsUsed & is.null(clusterName)) {
+    message(
+      "Since weights are being used, the obsIDName argument will be used ",
+      "for clustering")
     clusterName <- obsIDName
-    robust<-TRUE
+    if (robust == FALSE) {
+      warning("Setting robust to TRUE since weights are being used")
+      robust <- TRUE
+    }
   }
-  if(!is.null(clusterName)){
+  if (!is.null(clusterName)) {
     clusterName <- clusterName
-    robust<-TRUE
+    if (robust == FALSE) {
+      warning("Setting robust to TRUE since clusters are being used")
+      robust <- TRUE
+    }
     clusterIDs <- as.matrix(data[clusterName])
     numClusters <- getNumClusters(clusterIDs)
   }
-
 
   # Create the modelInputs list
   modelInputs <- list(

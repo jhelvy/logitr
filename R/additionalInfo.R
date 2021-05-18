@@ -142,53 +142,51 @@ getModelCovarianceNonRobust <- function(hessian) {
 getModelCovarianceRobust <- function(model, modelInputs, hessian) {
 
   clusterID <- modelInputs$clusterIDs
-  if(is.null(clusterID) | modelInputs$robust==FALSE){
+  if (is.null(clusterID) | modelInputs$robust == FALSE) {
     return(getModelCovarianceNonRobust(hessian))
-  }
-  else{
+  } else {
     i <- 0
     gradientList <- c()
-    for (tempID in sort(unique(clusterID))){
+    for (tempID in sort(unique(clusterID))) {
       indices <- which(clusterID == tempID)
       tempModelInputs <- getClusterModelInputs(modelInputs, indices)
       tempGradient <- getModelGradient(model, tempModelInputs)
       gradientList <- c(gradientList, tempGradient)
-
-      i <- i+1
+      i <- i + 1
     }
-    gradMat <- matrix(gradientList, nrow = i, length(tempGradient), byrow = TRUE)
+    gradMat <- matrix(
+      gradientList, nrow = i, length(tempGradient), byrow = TRUE)
 
     gradMean <- colMeans(gradMat)
     gradMeans <- c()
-    for (tempID in sort(unique(clusterID))){
-
+    for (tempID in sort(unique(clusterID))) {
       gradMeans <- c(gradMeans, gradMean)
-
     }
 
-    gradMeanMat <- matrix(gradMeans, nrow = i, length(tempGradient), byrow = TRUE)
-
-
+    gradMeanMat <- matrix(
+      gradMeans, nrow = i, length(tempGradient), byrow = TRUE)
 
     diffMat <- gradMat - gradMeanMat
 
-    M <- t(diffMat)%*%diffMat
-    smallSampleCorrection <- (i/(i-1))
+    M <- t(diffMat) %*% diffMat
+    smallSampleCorrection <- (i / (i - 1))
     M <- smallSampleCorrection * M
     D <- getModelCovarianceNonRobust(hessian)
-    covar <- D%*%M%*%D
+    if (any(is.na(D))) {
+      return(D) # If there are NAs the next line will error
+    }
+    covar <- D %*% M %*% D
     return(covar)
   }
 }
 
-getClusterModelInputs <- function (modelInputs, indices){
+getClusterModelInputs <- function (modelInputs, indices) {
   modelInputs$X <- modelInputs$X[indices, ]
   modelInputs$choice <- modelInputs$choice[indices]
   modelInputs$price <- modelInputs$price[indices]
   modelInputs$weights <- modelInputs$weights[indices]
   modelInputs$obsID <- modelInputs$obsID[indices]
   modelInputs$clusterIDs <- modelInputs$clusterIDs[indices]
-
   return(modelInputs)
 }
 
