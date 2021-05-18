@@ -11,8 +11,10 @@ appendModelInfo <- function(model, modelInputs) {
   coef <- getModelCoefs(model, modelInputs)
   gradient <- getModelGradient(model, modelInputs)
   hessian <- getModelHessian(model, modelInputs)
-  covariance <- getModelCovariance(hessian)
-  se <- getModelStandErrs(covariance)
+  covariance <- getModelCovarianceNonRobust(hessian)
+  covarianceRobust <- getModelCovarianceRobust(model, modelInputs, hessian)
+  numClusters <- getNumClusters(modelInputs)
+  se <- getModelStandErrs(covarianceRobust)
   logLik <- as.numeric(model$logLik)
   nullLogLik <- -1 * modelInputs$evalFuncs$negLL(coef * 0, modelInputs)
   numObs <- sum(modelInputs$choice)
@@ -24,7 +26,7 @@ appendModelInfo <- function(model, modelInputs) {
     nullLogLik       = nullLogLik,
     gradient         = gradient,
     hessian          = hessian,
-    covariance       = covariance,
+    covariance       = covarianceRobust,
     numObs           = numObs,
     numParams        = length(coef),
     startPars        = model$startPars,
@@ -40,6 +42,9 @@ appendModelInfo <- function(model, modelInputs) {
     randPars         = modelInputs$randPars,
     parSetup         = modelInputs$parSetup,
     weightsUsed      = modelInputs$weightsUsed,
+    clusterName      = modelInputs$clusterName,
+    numClusters      = modelInputs$numClusters,
+    robust           = modelInputs$robust,
     standardDraws    = NA,
     randParSummary   = NA,
     options          = options
@@ -79,7 +84,7 @@ getModelGradient <- function(model, modelInputs) {
   gradient <- -1 * modelInputs$evalFuncs$negGradLL(pars, modelInputs)
   if (modelInputs$options$scaleInputs) {
     scaleFactors <- getModelScaleFactors(model, modelInputs)
-    gradient <- gradient / scaleFactors
+    gradient <- gradient * scaleFactors
   }
   names(gradient) <- names(pars)
   return(gradient)
@@ -123,15 +128,68 @@ getModelScaleFactors <- function(model, modelInputs) {
   }
 }
 
-getModelCovariance <- function(hessian) {
+getModelCovarianceNonRobust <- function(hessian) {
   covariance <- hessian*NA
   tryCatch(
     {
-      covariance <- abs(solve(hessian))
+      covariance <- solve(-1*hessian)
     },
     error = function(e) {}
   )
   return(covariance)
+}
+
+getModelCovarianceRobust <- function(model, modelInputs, hessian) {
+
+  clusterID <- modelInputs$clusterIDs
+  if(is.null(clusterID) | modelInputs$robust==FALSE){
+    return(getModelCovarianceNonRobust(hessian))
+  }
+  else{
+    i <- 0
+    gradientList <- c()
+    for (tempID in sort(unique(clusterID))){
+      indices <- which(clusterID == tempID)
+      tempModelInputs <- getClusterModelInputs(modelInputs, indices)
+      tempGradient <- getModelGradient(model, tempModelInputs)
+      gradientList <- c(gradientList, tempGradient)
+
+      i <- i+1
+    }
+    gradMat <- matrix(gradientList, nrow = i, length(tempGradient), byrow = TRUE)
+
+    gradMean <- colMeans(gradMat)
+    gradMeans <- c()
+    for (tempID in sort(unique(clusterID))){
+
+      gradMeans <- c(gradMeans, gradMean)
+
+    }
+
+    gradMeanMat <- matrix(gradMeans, nrow = i, length(tempGradient), byrow = TRUE)
+
+
+
+    diffMat <- gradMat - gradMeanMat
+
+    M <- t(diffMat)%*%diffMat
+    smallSampleCorrection <- (i/(i-1))
+    M <- smallSampleCorrection * M
+    D <- getModelCovarianceNonRobust(hessian)
+    covar <- D%*%M%*%D
+    return(covar)
+  }
+}
+
+getClusterModelInputs <- function (modelInputs, indices){
+  modelInputs$X <- modelInputs$X[indices, ]
+  modelInputs$choice <- modelInputs$choice[indices]
+  modelInputs$price <- modelInputs$price[indices]
+  modelInputs$weights <- modelInputs$weights[indices]
+  modelInputs$obsID <- modelInputs$obsID[indices]
+  modelInputs$clusterIDs <- modelInputs$clusterIDs[indices]
+
+  return(modelInputs)
 }
 
 getModelStandErrs <- function(covariance) {

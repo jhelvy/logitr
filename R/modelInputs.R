@@ -5,13 +5,13 @@
 
 # Creates a list of the data and other information needed for running the model
 getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
-                           priceName, randPrice, modelSpace, weightsName,
+                           priceName, randPrice, modelSpace, weightsName, clusterName, robust,
                            options) {
   data <- as.data.frame(data) # tibbles break things
   # Setup pars
   runInputChecks(
     data, choiceName, obsIDName, parNames, randPars, priceName,
-    randPrice, modelSpace, weightsName)
+    randPrice, modelSpace, weightsName, clusterName)
   # Get the design matrix, recoding parameters that are categorical
   # or have interactions
   parNames_orig <- parNames
@@ -35,13 +35,29 @@ getModelInputs <- function(data, choiceName, obsIDName, parNames, randPars,
     weights <- as.matrix(data[weightsName])
     weightsUsed <- TRUE
   }
+
+  # Setup Clusters
+  clusterIDs<-NULL
+  numClusters <- 0
+  if(weightsUsed & is.null(clusterName)){
+    clusterName <- obsIDName
+    robust<-TRUE
+  }
+  if(!is.null(clusterName)){
+    clusterName <- clusterName
+    robust<-TRUE
+    clusterIDs <- as.matrix(data[clusterName])
+    numClusters <- getNumClusters(clusterIDs)
+  }
+
+
   # Create the modelInputs list
   modelInputs <- list(
     price = price, X = X, choice = choice, obsID = obsID,
     weights = weights, priceName = priceName, parNames = parNames_orig,
     randPars = randPars_orig, parNameList = parNameList, parSetup = parSetup,
     scaleFactors = NA, modelSpace = modelSpace, modelType = "mnl",
-    weightsUsed = weightsUsed, options = options
+    weightsUsed = weightsUsed, clusterName = clusterName, clusterIDs = clusterIDs, numClusters = numClusters, robust = robust, options = options
   )
   if (options$scaleInputs) {
     modelInputs <- scaleInputs(modelInputs)
@@ -71,6 +87,13 @@ getParSetup <- function(parNames, priceName, randPars, randPrice) {
     names(parSetup)[1] <- "lambda"
   }
   return(parSetup)
+}
+
+getNumClusters <- function(clusterID){
+  if(is.null(clusterID)){
+    return(0)
+  }
+  return(length(unique(clusterID)))
 }
 
 getParNameList <- function(parSetup) {

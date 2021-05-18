@@ -120,11 +120,13 @@ logitr <- function(
   randPrice = NULL,
   modelSpace = "pref",
   weightsName = NULL,
+  clusterName = NULL,
+  robust = FALSE,
   options = list()
 ) {
   modelInputs <- getModelInputs(
     data, choiceName, obsIDName, parNames, randPars, priceName, randPrice,
-    modelSpace, weightsName, options
+    modelSpace, weightsName, clusterName, robust, options
   )
   allModels <- runMultistart(modelInputs)
   if (modelInputs$options$keepAllRuns) {
