@@ -43,7 +43,7 @@ appendModelInfo <- function(model, modelInputs) {
     parSetup         = modelInputs$parSetup,
     weightsUsed      = modelInputs$weightsUsed,
     clusterName      = modelInputs$clusterName,
-    numClusters      = numClusters,
+    numClusters      = modelInputs$numClusters,
     robust           = modelInputs$robust,
     standardDraws    = NA,
     randParSummary   = NA,
@@ -137,14 +137,6 @@ getModelCovarianceNonRobust <- function(hessian) {
     error = function(e) {}
   )
   return(covariance)
-}
-
-getNumClusters <- function(modelInputs){
-  clusterID <- modelInputs$clusterID
-  if(is.null(clusterID)){
-    return(0)
-  }
-  return(length(unique(clusterID)))
 }
 
 getModelCovarianceRobust <- function(model, modelInputs, hessian) {

@@ -204,31 +204,26 @@ getSignifCodes <- function(pVal) {
 getStatTable <- function(logLik, nullLogLik, numObs, numParams, numClusters, clusterName) {
   aic <- round(2 * numParams - 2 * logLik, 4)
   bic <- round(log(numObs) * numParams - 2 * logLik, 4)
+  mcR2 <- 1 - (logLik / nullLogLik)
+  adjMcR2 <- 1 - ((logLik - numParams) / nullLogLik)
+
+  result <- data.frame(
+      "Log-Likelihood:"         = logLik,
+      "Null Log-Likelihood:"    = nullLogLik,
+      "AIC:"                    = aic,
+      "BIC:"                    = bic,
+      "McFadden R2:"            = mcR2,
+      "Adj McFadden R2"        = adjMcR2,
+      "Number of Observations:" = numObs
+    )
+
 
   if(clusterName>0){
-    result <- t(data.frame(
-      "Log-Likelihood:"         = logLik,
-      "Null Log-Likelihood:"    = nullLogLik,
-      "AIC:"                    = aic,
-      "BIC:"                    = bic,
-      "McFadden R2:"            = 1 - (logLik / nullLogLik),
-      "Adj. McFadden R2"        = 1 - ((logLik - numParams) / nullLogLik),
-      "Number of Observations:" = numObs,
-      "Cluster Name:"           = clusterName,
-      "Number of Clusters:"     = numClusters
-    ))
-  } else{
-    result <- t(data.frame(
-      "Log-Likelihood:"         = logLik,
-      "Null Log-Likelihood:"    = nullLogLik,
-      "AIC:"                    = aic,
-      "BIC:"                    = bic,
-      "McFadden R2:"            = 1 - (logLik / nullLogLik),
-      "Adj. McFadden R2"        = 1 - ((logLik - numParams) / nullLogLik),
-      "Number of Observations:" = numObs
-    ))
+    result$Cluster.Name <- clusterName
+    result$Number.of.Clusters <- numClusters
   }
 
+  result <- t(result)
 
   colnames(result) <- ""
   return(result)
