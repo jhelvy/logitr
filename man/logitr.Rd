@@ -14,6 +14,8 @@ logitr(
   randPrice = NULL,
   modelSpace = "pref",
   weightsName = NULL,
+  clusterName = NULL,
+  robust = FALSE,
   options = list()
 )
 }

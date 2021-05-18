@@ -217,10 +217,12 @@ getStatTable <- function(logLik, nullLogLik, numObs, numParams, numClusters, clu
       "Number of Observations:" = numObs
     )
 
-
-  if(clusterName>0){
-    result$Cluster.Name <- clusterName
-    result$Number.of.Clusters <- numClusters
+  # Add cluster information, for v0.1.5 or higher
+  if (!is.null(numClusters)) { # Added for backwards compatibility
+    if (numClusters > 0) {
+      result$Cluster.Name <- clusterName
+      result$Number.of.Clusters <- numClusters
+    }
   }
 
   result <- t(result)

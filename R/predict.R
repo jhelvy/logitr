@@ -295,26 +295,6 @@ summarizeUncProbs <- function(
 #' @export
 #' @examples
 #' \dontrun{
-#' # Run a MNL model in the Preference Space:
-#' library(logitr)
-#'
-#' mnl_pref <- logitr(
-#'   data = yogurt,
-#'   choiceName = "choice",
-#'   obsIDName = "obsID",
-#'   parNames = c("price", "feat", "brand")
-#' )
-#'
-#' # Create a set of alternatives for which to simulate shares. Each row is an
-#' # alternative and each column an attribute. In this example, I just use a
-#' # couple of the choice observations from the yogurt dataset:
-#' alts <- subset(yogurt, obsID %in% c(42, 13),
-#'                select = c('price', 'feat', 'brand'))
-#' alts$obsID <- c(rep(1, 4), rep(2, 4))
-#' alts
-#'
-#' # Run the simulation using the estimated preference space MNL model:
-#' simulateShares(mnl_pref, alts, obsIDName = "obsID")
 #' }
 simulateShares <- function(
   model,

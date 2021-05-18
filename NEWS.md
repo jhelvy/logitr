@@ -1,20 +1,18 @@
-# logitr 0.1.4.9000
+# logitr 0.1.5.9000
 
-## Summary of larger updates:
+- Added robust covariance matrix calculations.
+- Added support for clustering errors.
+
+# logitr 0.1.4.9000
 
 - Added `predictChoices()` function.
 - Added `predictShares()` function, depreciating `simulateShares()`.
 
 # logitr 0.1.3.9002
 
-## Summary of larger updates:
-
 - Modified the `recodeData()` and `dummyCode()` functions for improved speed.
 - Updated `simulateShares()` to work with the automatic dummy coding from the revised `recodeData()` and `dummyCode()` functions.
 - Added support for `simulateShares()` to compute shares for multiple sets of alternatives.
-
-## Summary of smaller updates:
-
 - Added tests for encoding functions
 - Added covariance matrix to model export
 
@@ -26,24 +24,14 @@
 
 # logitr 0.1.2.9000
 
-## Bugs
-
 - Fixed bug where model with single variable would error due to a matrix being converted to a vector in the `standardDraws()` function
 - Fixed bug in `getCatVarDummyNames()` - previously used string matching, which can accidentally match with other similarly-named variables.
 - Fixed bug in `rowsum()` where the `reorder` argument was set to `TRUE`, which resulted in wrong logit calculations unless the `obsID` happened to be already sorted.
 
 # logitr 0.1.1
 
-## Summary of larger updates:
-
 - Changed how failures to converge are handled. Previously would continue to run a while loop. Now it fails and records the failure, along with appropriate changes in summary() and coef().
-
-## Summary of smaller updates:
-
 - Re-defined the wtp space utility models as B*X - p. Before it was p + B*X and p was re-defined as -1*p.
-
-## Bugs
-
 - If tidyverse library is loaded, data frames were getting converted to tibbles, which broke some things. Fixed this by forcing the input data to be a data.frame()
 
 # logitr 0.1.0
