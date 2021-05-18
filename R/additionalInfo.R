@@ -13,7 +13,6 @@ appendModelInfo <- function(model, modelInputs) {
   hessian <- getModelHessian(model, modelInputs)
   covariance <- getModelCovarianceNonRobust(hessian)
   covarianceRobust <- getModelCovarianceRobust(model, modelInputs, hessian)
-  numClusters <- getNumClusters(modelInputs)
   se <- getModelStandErrs(covarianceRobust)
   logLik <- as.numeric(model$logLik)
   nullLogLik <- -1 * modelInputs$evalFuncs$negLL(coef * 0, modelInputs)

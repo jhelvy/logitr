@@ -293,9 +293,6 @@ summarizeUncProbs <- function(
 #' @return A data frame with the estimated shares for each alternative in
 #' `alts`.
 #' @export
-#' @examples
-#' \dontrun{
-#' }
 simulateShares <- function(
   model,
   alts,
