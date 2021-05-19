@@ -138,6 +138,7 @@ getModelCovariance <- function(model, modelInputs, hessian) {
 getModelCovarianceRobust <- function(model, modelInputs, hessian) {
   i <- 0
   gradientList <- c()
+  clusterID <- modelInputs$clusterIDs
   for (tempID in sort(unique(clusterID))) {
     indices <- which(clusterID == tempID)
     tempModelInputs <- getClusterModelInputs(modelInputs, indices)

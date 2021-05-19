@@ -39,20 +39,19 @@ getModelInputs <- function(
   # Setup Clusters
   clusterIDs <- NULL
   numClusters <- 0
+  if (robust & is.null(clusterName)) {
+    clusterName <- obsIDName
+  }
   if (weightsUsed & is.null(clusterName)) {
     message(
-      "Since weights are being used, the obsIDName argument will be used ",
-      "for clustering")
+      "Since weights are being used and no clusterName was provided, ",
+      "the obsIDName argument will be used for clustering")
     clusterName <- obsIDName
-    if (robust == FALSE) {
-      warning("Setting robust to TRUE since weights are being used")
-      robust <- TRUE
-    }
   }
   if (!is.null(clusterName)) {
     clusterName <- clusterName
     if (robust == FALSE) {
-      warning("Setting robust to TRUE since clusters are being used")
+      message("Setting robust to TRUE since clusters are being used")
       robust <- TRUE
     }
     clusterIDs <- as.matrix(data[clusterName])
