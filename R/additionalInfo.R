@@ -11,9 +11,8 @@ appendModelInfo <- function(model, modelInputs) {
   coef <- getModelCoefs(model, modelInputs)
   gradient <- getModelGradient(model, modelInputs)
   hessian <- getModelHessian(model, modelInputs)
-  covariance <- getModelCovarianceNonRobust(hessian)
-  covarianceRobust <- getModelCovarianceRobust(model, modelInputs, hessian)
-  se <- getModelStandErrs(covarianceRobust)
+  covariance <- getModelCovariance(model, modelInputs, hessian)
+  se <- getModelStandErrs(covariance)
   logLik <- as.numeric(model$logLik)
   nullLogLik <- -1 * modelInputs$evalFuncs$negLL(coef * 0, modelInputs)
   numObs <- sum(modelInputs$choice)
@@ -25,7 +24,7 @@ appendModelInfo <- function(model, modelInputs) {
     nullLogLik       = nullLogLik,
     gradient         = gradient,
     hessian          = hessian,
-    covariance       = covarianceRobust,
+    covariance       = covariance,
     numObs           = numObs,
     numParams        = length(coef),
     startPars        = model$startPars,
@@ -127,6 +126,47 @@ getModelScaleFactors <- function(model, modelInputs) {
   }
 }
 
+getModelCovariance <- function(model, modelInputs, hessian) {
+  clusterID <- modelInputs$clusterIDs
+  if (is.null(clusterID) | modelInputs$robust == FALSE) {
+    return(getModelCovarianceNonRobust(hessian))
+  }
+  return(getModelCovarianceRobust(model, modelInputs, hessian))
+
+}
+
+getModelCovarianceRobust <- function(model, modelInputs, hessian) {
+  i <- 0
+  gradientList <- c()
+  for (tempID in sort(unique(clusterID))) {
+    indices <- which(clusterID == tempID)
+    tempModelInputs <- getClusterModelInputs(modelInputs, indices)
+    tempGradient <- getModelGradient(model, tempModelInputs)
+    gradientList <- c(gradientList, tempGradient)
+    i <- i + 1
+  }
+  gradMat <- matrix(gradientList, nrow = i, length(tempGradient), byrow = TRUE)
+  gradMean <- colMeans(gradMat)
+  gradMeans <- c()
+  for (tempID in sort(unique(clusterID))) {
+    gradMeans <- c(gradMeans, gradMean)
+  }
+  gradMeanMat <- matrix(
+    gradMeans, nrow = i, length(tempGradient), byrow = TRUE)
+
+  diffMat <- gradMat - gradMeanMat
+
+  M <- t(diffMat) %*% diffMat
+  smallSampleCorrection <- (i / (i - 1))
+  M <- smallSampleCorrection * M
+  D <- getModelCovarianceNonRobust(hessian)
+  if (any(is.na(D))) {
+    return(D) # If there are NAs the next line will error
+  }
+  covar <- D %*% M %*% D
+  return(covar)
+}
+
 getModelCovarianceNonRobust <- function(hessian) {
   covariance <- hessian*NA
   tryCatch(
@@ -136,47 +176,6 @@ getModelCovarianceNonRobust <- function(hessian) {
     error = function(e) {}
   )
   return(covariance)
-}
-
-getModelCovarianceRobust <- function(model, modelInputs, hessian) {
-
-  clusterID <- modelInputs$clusterIDs
-  if (is.null(clusterID) | modelInputs$robust == FALSE) {
-    return(getModelCovarianceNonRobust(hessian))
-  } else {
-    i <- 0
-    gradientList <- c()
-    for (tempID in sort(unique(clusterID))) {
-      indices <- which(clusterID == tempID)
-      tempModelInputs <- getClusterModelInputs(modelInputs, indices)
-      tempGradient <- getModelGradient(model, tempModelInputs)
-      gradientList <- c(gradientList, tempGradient)
-      i <- i + 1
-    }
-    gradMat <- matrix(
-      gradientList, nrow = i, length(tempGradient), byrow = TRUE)
-
-    gradMean <- colMeans(gradMat)
-    gradMeans <- c()
-    for (tempID in sort(unique(clusterID))) {
-      gradMeans <- c(gradMeans, gradMean)
-    }
-
-    gradMeanMat <- matrix(
-      gradMeans, nrow = i, length(tempGradient), byrow = TRUE)
-
-    diffMat <- gradMat - gradMeanMat
-
-    M <- t(diffMat) %*% diffMat
-    smallSampleCorrection <- (i / (i - 1))
-    M <- smallSampleCorrection * M
-    D <- getModelCovarianceNonRobust(hessian)
-    if (any(is.na(D))) {
-      return(D) # If there are NAs the next line will error
-    }
-    covar <- D %*% M %*% D
-    return(covar)
-  }
 }
 
 getClusterModelInputs <- function (modelInputs, indices) {
@@ -193,7 +192,7 @@ getModelStandErrs <- function(covariance) {
   se <- covariance[1,]*NA
   tryCatch(
     {
-      se <- diag(sqrt(covariance))
+      se <- diag(sqrt(abs(covariance)))
     },
     error = function(e) {}
   )
