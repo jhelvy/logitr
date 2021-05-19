@@ -181,6 +181,10 @@ getModelCovarianceNonRobust <- function(hessian) {
 
 getClusterModelInputs <- function (modelInputs, indices) {
   modelInputs$X <- modelInputs$X[indices, ]
+  #Cast to matrix in cases where there is 1 independent variable
+  if(!is.matrix(modelInputs$X)){
+    modelInputs$X <- as.matrix(modelInputs$X)
+  }
   modelInputs$choice <- modelInputs$choice[indices]
   modelInputs$price <- modelInputs$price[indices]
   modelInputs$weights <- modelInputs$weights[indices]
