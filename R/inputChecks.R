@@ -60,7 +60,7 @@ runInputChecks <- function(
     }
   }
 
-  # Check all parameter names - fixed
+  # Check all parameter names - fixed, no interactions
   parNamesNoInt <- parNames[grepl("\\*", parNames) == FALSE]
 
   if (length(parNamesNoInt) > 0) {
@@ -76,6 +76,27 @@ runInputChecks <- function(
         'You have specified a fixed parameter name(s) that is/are not present in the data provided:\n',
         as.list(missingFixedPars),
         '\nPlease double-check the provided data/fixed parameter name(s).'
+      )
+    }
+  }
+
+  # Check all parameter names - fixed, with interactions
+  intNames <- parNames[grepl("\\*", parNames) == TRUE]
+
+  if (length(intNames) > 0) {
+    intNames <- unique(unlist(strsplit(intNames, "\\*")))
+    missingIntPars <- c()
+    for (parName in intNames) {
+      if (! parName %in% dataColumnNames) {
+        missingIntPars <- c(missingIntPars, parName)
+      }
+    }
+
+    if (length(missingIntPars) > 0) {
+      stop(
+        'You have specified an interaction parameter name(s) that is/are not present in the data provided:\n',
+        as.list(missingIntPars),
+        '\nPlease double-check the provided data / parameter name(s).'
       )
     }
   }
