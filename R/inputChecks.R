@@ -2,8 +2,10 @@
 # Functions for checking inputs and setting up default options
 # ============================================================================
 
-runInputChecks <- function(data, choiceName, obsIDName, parNames, randPars,
-  priceName, randPrice, modelSpace, weightsName, clusterName) {
+runInputChecks <- function(
+  data, choiceName, obsIDName, parNames, randPars, priceName, randPrice,
+  modelSpace, weightsName, clusterName
+) {
   if (! is.null(priceName)) {
     if (priceName %in% parNames) {
       stop(
@@ -34,10 +36,11 @@ runInputChecks <- function(data, choiceName, obsIDName, parNames, randPars,
       'column in your data frame that represents "price".'
     )
   }
+
   dataColumnNames <- colnames(data)
-  #Check cluster name
-  if(!is.null(clusterName)){
-    if(! clusterName %in% dataColumnNames){
+  # Check cluster name
+  if (! is.null(clusterName)) {
+    if (! clusterName %in% dataColumnNames) {
       stop(
         'You have specified a cluster name that is not present in the data provided:\n',
         as.character(clusterName),
@@ -45,9 +48,10 @@ runInputChecks <- function(data, choiceName, obsIDName, parNames, randPars,
       )
     }
   }
-  #Check weights name
-  if(!is.null(weightsName)){
-    if(! weightsName %in% dataColumnNames){
+
+  # Check weights name
+  if (! is.null(weightsName)) {
+    if (! weightsName %in% dataColumnNames) {
       stop(
         'You have specified a weights name that is not present in the data provided:\n',
         as.character(weightsName),
@@ -55,16 +59,19 @@ runInputChecks <- function(data, choiceName, obsIDName, parNames, randPars,
       )
     }
   }
-  #Check all parameter names - fixed
-  if(length(parNames)>0){
+
+  # Check all parameter names - fixed
+  parNamesNoInt <- parNames[grepl("\\*", parNames) == FALSE]
+
+  if (length(parNamesNoInt) > 0) {
     missingFixedPars <- c()
-    for(parName in parNames){
-      if(! parName %in% dataColumnNames){
+    for (parName in parNamesNoInt) {
+      if (! parName %in% dataColumnNames) {
         missingFixedPars <- c(missingFixedPars, parName)
       }
     }
 
-    if(length(missingFixedPars)>0){
+    if (length(missingFixedPars) > 0) {
       stop(
         'You have specified a fixed parameter name(s) that is/are not present in the data provided:\n',
         as.list(missingFixedPars),
@@ -72,21 +79,22 @@ runInputChecks <- function(data, choiceName, obsIDName, parNames, randPars,
       )
     }
   }
-  #Check all parameter names - fixed
-  if(!is.null(randPars)){
+
+  # Check all parameter names - random
+  if (! is.null(randPars)) {
     missingRandPars <- c()
-    for(parName in names(randPars)){
-      if(! parName %in% dataColumnNames){
+    for (parName in names(randPars)) {
+      if (! parName %in% dataColumnNames) {
         missingRandPars <- c(missingFixedPars, parName)
       }
 
-      if(length(missingRandPars)>0){
+      if (length(missingRandPars) > 0) {
       stop(
         'You have specified a random parameter name(s) that is/are not present in the data provided:\n',
         as.list(missingRandPars),
         '\nPlease double-check the provided data/random parameter name(s).'
       )
-    }
+      }
     }
   }
 

@@ -73,7 +73,7 @@ To estimate the model, first load the **logitr** package:
 library(logitr)
 ```
 
-Estimate the unweighted model using the `logitr()` function:
+Estimate the unweighted model using the `logitr()` function. In this example, I have set `robust = TRUE` since it will also be `TRUE` in the weighted model:
 
 ```{r eval=FALSE}
 mnl_wtp_unweighted <- logitr(
@@ -86,6 +86,7 @@ mnl_wtp_unweighted <- logitr(
     'bevFastcharge','opCost', 'accelTime'),
   priceName = 'price',
   modelSpace = 'wtp',
+  robust = TRUE,
   options = list(
     # Since WTP space models are non-convex, run a multistart:
     numMultiStarts = 10)
@@ -128,6 +129,7 @@ mnl_wtp_weighted <- logitr(
   priceName = 'price',
   modelSpace = 'wtp',
   weightsName = 'weights', # This is the key argument for enabling weights
+  robust = TRUE,
   options = list(numMultiStarts = 10)
 )
 ```
