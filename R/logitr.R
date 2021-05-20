@@ -84,11 +84,18 @@
 #' |`message`|A more informative message with the status of the optimization result.|
 #' |`status`|An integer value with the status of the optimization (positive values are successes). Use [statusCodes()] for a detailed description.|
 #' |`modelSpace`|The model space (`'pref'` or `'wtp'`).|
+#' |`priceName`|The name of the column that identifies the price variable.|
+#' |`parNames`|The names of the parameters to be estimated in the model.|
+#' |`randPars`|A named vector whose names are the random parameters and values the distribution: `'n'` for normal or `'ln'` for log-normal.|
+#' |`parSetup`|A summary of the distributional assumptions on each model parameter (`"f"`="fixed", `"n"`="normal distribution", `"ln"`="log-normal distribution").|
+#' |`weightsUsed`|`TRUE` or `FALSE` for whether weights were used in the model.|
+#' |`clusterName`|The name of the column used to identify the cluster groups used in model estimation.|
+#' |`numClusters`|The number of clusters.|
+#' |`robust`|`TRUE` or `FALSE` for whether or not a robust covariance matrix was estimated.|
 #' |`standardDraws`|The draws used during maximum simulated likelihood (for MXL models).|
 #' |`randParSummary`|A summary of any random parameters (for MXL models).|
-#' |`parSetup`|A summary of the distributional assumptions on each model parameter (`"f"`="fixed", `"n"`="normal distribution", `"ln"`="log-normal distribution").|
+#' |`multistartSummary`|A summary of the log-likelihood values for each multistart run (if more than one multistart was used).|
 #' |`options`|A list of all the model options.|
-#' |`multistartSummary`|A summary of the log-likelihood values for each multistart run.|
 #'
 #' @export
 #' @examples
