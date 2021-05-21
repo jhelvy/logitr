@@ -1,14 +1,14 @@
-# logitr 0.1.5.9000
+# logitr 0.1.5
 
 - Added robust covariance matrix calculations.
 - Added support for clustering errors.
 
-# logitr 0.1.4.9000
+# logitr 0.1.4
 
 - Added `predictChoices()` function.
 - Added `predictShares()` function, depreciating `simulateShares()`.
 
-# logitr 0.1.3.9002
+# logitr 0.1.3
 
 - Modified the `recodeData()` and `dummyCode()` functions for improved speed.
 - Updated `simulateShares()` to work with the automatic dummy coding from the revised `recodeData()` and `dummyCode()` functions.
@@ -22,7 +22,7 @@
 - In `simulateShares()`, the shares were not correctly computed with a WTP space model because price was still being multiplied by -1. This has been corrected.
 - Changes to automatic dummy coding were accidentally ignoring factor levels - that's been fixed.
 
-# logitr 0.1.2.9000
+# logitr 0.1.2
 
 - Fixed bug where model with single variable would error due to a matrix being converted to a vector in the `standardDraws()` function
 - Fixed bug in `getCatVarDummyNames()` - previously used string matching, which can accidentally match with other similarly-named variables.

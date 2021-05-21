@@ -53,7 +53,8 @@ groups to be used in model estimation. Optional. Defaults to \code{NULL}.}
 \item{robust}{Determines whether or not a robust covariance matrix is
 estimated. Defaults to \code{FALSE}. Specification of a clusterName or
 weightsName will override the user setting and set this to `TRUE' (a
-warning will be displayed in this case).}
+warning will be displayed in this case). Replicates the functionality of
+Stata's cmcmmixlogit.}
 
 \item{options}{A list of options.}
 }
@@ -76,11 +77,18 @@ The function returns a list object containing the following objects.\tabular{ll}
    \code{message} \tab A more informative message with the status of the optimization result. \cr
    \code{status} \tab An integer value with the status of the optimization (positive values are successes). Use \code{\link[=statusCodes]{statusCodes()}} for a detailed description. \cr
    \code{modelSpace} \tab The model space (\code{'pref'} or \code{'wtp'}). \cr
+   \code{priceName} \tab The name of the column that identifies the price variable. \cr
+   \code{parNames} \tab The names of the parameters to be estimated in the model. \cr
+   \code{randPars} \tab A named vector whose names are the random parameters and values the distribution: \code{'n'} for normal or \code{'ln'} for log-normal. \cr
+   \code{parSetup} \tab A summary of the distributional assumptions on each model parameter (\code{"f"}="fixed", \code{"n"}="normal distribution", \code{"ln"}="log-normal distribution"). \cr
+   \code{weightsUsed} \tab \code{TRUE} or \code{FALSE} for whether weights were used in the model. \cr
+   \code{clusterName} \tab The name of the column used to identify the cluster groups used in model estimation. \cr
+   \code{numClusters} \tab The number of clusters. \cr
+   \code{robust} \tab \code{TRUE} or \code{FALSE} for whether or not a robust covariance matrix was estimated. \cr
    \code{standardDraws} \tab The draws used during maximum simulated likelihood (for MXL models). \cr
    \code{randParSummary} \tab A summary of any random parameters (for MXL models). \cr
-   \code{parSetup} \tab A summary of the distributional assumptions on each model parameter (\code{"f"}="fixed", \code{"n"}="normal distribution", \code{"ln"}="log-normal distribution"). \cr
+   \code{multistartSummary} \tab A summary of the log-likelihood values for each multistart run (if more than one multistart was used). \cr
    \code{options} \tab A list of all the model options. \cr
-   \code{multistartSummary} \tab A summary of the log-likelihood values for each multistart run. \cr
 }
 }
 \description{
@@ -104,7 +112,7 @@ e.g. \code{options = list(...)}.\tabular{lll}{
    \code{useAnalyticGrad} \tab Set to \code{FALSE} to use numerically approximated gradients instead of analytic gradients during estimation (which is slower). \tab \code{TRUE} \cr
    \code{scaleInputs} \tab By default each variable in \code{data} is scaled to be between 0 and 1 before running the optimization routine because it usually helps with stability, especially if some of the variables have very large or very small values (e.g. \verb{> 10^3} or \verb{< 10^-3}). Set to \code{FALSE} to turn this feature off. \tab \code{TRUE} \cr
    \code{standardDraws} \tab By default, a new set of standard normal draws are generated during each call to \code{logitr} (the same draws are used during each multistart iteration). The user can override those draws by providing a matrix of standard normal draws if desired. \tab \code{NULL} \cr
-   \code{numDraws} \tab The number of draws to use for MXL models for the maximum simulated likelihood. \tab \code{50} \cr
+   \code{numDraws} \tab The number of Halton draws to use for MXL models for the maximum simulated likelihood. \tab \code{50} \cr
    \code{printLevel} \tab The print level of the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{0} \cr
    \code{xtol_rel} \tab The relative \code{x} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-6} \cr
    \code{xtol_abs} \tab The absolute \code{x} tolerance for the \code{nloptr} optimization loop. Use \code{nloptr::nloptr.print.options()} for more details. \tab \code{1.0e-6} \cr

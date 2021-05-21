@@ -128,5 +128,6 @@ wtpCompare <- function(model_pref, model_wtp, priceName) {
   names(wtp)[length(wtp)] <- "logLik"
   compare <- data.frame(pref = pref, wtp = wtp)
   compare$difference <- round(compare$wtp - compare$pref, 8)
+  compare <- format(compare, scientific = FALSE)
   return(compare)
 }

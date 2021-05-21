@@ -36,7 +36,8 @@
 #' @param robust Determines whether or not a robust covariance matrix is
 #' estimated. Defaults to `FALSE`. Specification of a clusterName or
 #' weightsName will override the user setting and set this to `TRUE' (a
-#' warning will be displayed in this case).
+#' warning will be displayed in this case). Replicates the functionality of
+#' Stata's cmcmmixlogit.
 #'
 #' @param options A list of options.
 #'
@@ -54,7 +55,7 @@
 #' |`useAnalyticGrad`|Set to `FALSE` to use numerically approximated gradients instead of analytic gradients during estimation (which is slower).|`TRUE`|
 #' |`scaleInputs`|By default each variable in `data` is scaled to be between 0 and 1 before running the optimization routine because it usually helps with stability, especially if some of the variables have very large or very small values (e.g. `> 10^3` or `< 10^-3`). Set to `FALSE` to turn this feature off.|`TRUE`|
 #' |`standardDraws`|By default, a new set of standard normal draws are generated during each call to `logitr` (the same draws are used during each multistart iteration). The user can override those draws by providing a matrix of standard normal draws if desired.|`NULL`|
-#' |`numDraws`|The number of draws to use for MXL models for the maximum simulated likelihood.|`50`|
+#' |`numDraws`|The number of Halton draws to use for MXL models for the maximum simulated likelihood.|`50`|
 #' |`printLevel`|The print level of the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`0`|
 #' |`xtol_rel`|The relative `x` tolerance for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1.0e-6`|
 #' |`xtol_abs`|The absolute `x` tolerance for the `nloptr` optimization loop. Use `nloptr::nloptr.print.options()` for more details.|`1.0e-6`|
