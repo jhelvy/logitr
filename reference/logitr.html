@@ -247,7 +247,8 @@ groups to be used in model estimation. Optional. Defaults to <code>NULL</code>.<
       <td><p>Determines whether or not a robust covariance matrix is
 estimated. Defaults to <code>FALSE</code>. Specification of a clusterName or
 weightsName will override the user setting and set this to `TRUE' (a
-warning will be displayed in this case).</p></td>
+warning will be displayed in this case). Replicates the functionality of
+Stata's cmcmmixlogit.</p></td>
     </tr>
     <tr>
       <th>options</th>
@@ -275,11 +276,18 @@ warning will be displayed in this case).</p></td>
 <tr><td><code>message</code></td><td>A more informative message with the status of the optimization result.</td></tr>
 <tr><td><code>status</code></td><td>An integer value with the status of the optimization (positive values are successes). Use <code><a href='statusCodes.html'>statusCodes()</a></code> for a detailed description.</td></tr>
 <tr><td><code>modelSpace</code></td><td>The model space (<code>'pref'</code> or <code>'wtp'</code>).</td></tr>
+<tr><td><code>priceName</code></td><td>The name of the column that identifies the price variable.</td></tr>
+<tr><td><code>parNames</code></td><td>The names of the parameters to be estimated in the model.</td></tr>
+<tr><td><code>randPars</code></td><td>A named vector whose names are the random parameters and values the distribution: <code>'n'</code> for normal or <code>'ln'</code> for log-normal.</td></tr>
+<tr><td><code>parSetup</code></td><td>A summary of the distributional assumptions on each model parameter (<code>"f"</code>="fixed", <code>"n"</code>="normal distribution", <code>"ln"</code>="log-normal distribution").</td></tr>
+<tr><td><code>weightsUsed</code></td><td><code>TRUE</code> or <code>FALSE</code> for whether weights were used in the model.</td></tr>
+<tr><td><code>clusterName</code></td><td>The name of the column used to identify the cluster groups used in model estimation.</td></tr>
+<tr><td><code>numClusters</code></td><td>The number of clusters.</td></tr>
+<tr><td><code>robust</code></td><td><code>TRUE</code> or <code>FALSE</code> for whether or not a robust covariance matrix was estimated.</td></tr>
 <tr><td><code>standardDraws</code></td><td>The draws used during maximum simulated likelihood (for MXL models).</td></tr>
 <tr><td><code>randParSummary</code></td><td>A summary of any random parameters (for MXL models).</td></tr>
-<tr><td><code>parSetup</code></td><td>A summary of the distributional assumptions on each model parameter (<code>"f"</code>="fixed", <code>"n"</code>="normal distribution", <code>"ln"</code>="log-normal distribution").</td></tr>
+<tr><td><code>multistartSummary</code></td><td>A summary of the log-likelihood values for each multistart run (if more than one multistart was used).</td></tr>
 <tr><td><code>options</code></td><td>A list of all the model options.</td></tr>
-<tr><td><code>multistartSummary</code></td><td>A summary of the log-likelihood values for each multistart run.</td></tr>
 </table>
 
 
@@ -296,7 +304,7 @@ e.g. <code>options = list(...)</code>.</p><table class='table'>
 <tr><td><code>useAnalyticGrad</code></td><td>Set to <code>FALSE</code> to use numerically approximated gradients instead of analytic gradients during estimation (which is slower).</td><td><code>TRUE</code></td></tr>
 <tr><td><code>scaleInputs</code></td><td>By default each variable in <code>data</code> is scaled to be between 0 and 1 before running the optimization routine because it usually helps with stability, especially if some of the variables have very large or very small values (e.g. <code>&gt; 10^3</code> or <code>&lt; 10^-3</code>). Set to <code>FALSE</code> to turn this feature off.</td><td><code>TRUE</code></td></tr>
 <tr><td><code>standardDraws</code></td><td>By default, a new set of standard normal draws are generated during each call to <code>logitr</code> (the same draws are used during each multistart iteration). The user can override those draws by providing a matrix of standard normal draws if desired.</td><td><code>NULL</code></td></tr>
-<tr><td><code>numDraws</code></td><td>The number of draws to use for MXL models for the maximum simulated likelihood.</td><td><code>50</code></td></tr>
+<tr><td><code>numDraws</code></td><td>The number of Halton draws to use for MXL models for the maximum simulated likelihood.</td><td><code>50</code></td></tr>
 <tr><td><code>printLevel</code></td><td>The print level of the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>0</code></td></tr>
 <tr><td><code>xtol_rel</code></td><td>The relative <code>x</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-6</code></td></tr>
 <tr><td><code>xtol_abs</code></td><td>The absolute <code>x</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-6</code></td></tr>
