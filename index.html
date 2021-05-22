@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -124,9 +124,10 @@
 <li>Heterogeneous mixed logit (MXL) models (with normal and log-normal parameter distributions).</li>
 <li>Preference space utility parameterization.</li>
 <li>WTP space utility parameterization.</li>
-<li>An option to run a multistart optimization loop that uses different random starting points in each iteration (useful for non-convex problems like MXL models or models with WTP space parameterizations).</li>
+<li>An option to run a multistart optimization loop that uses different random starting points in each iteration to search for different local minima (useful for non-convex problems like MXL models or models with WTP space parameterizations).</li>
 <li>Computing and comparing WTP from both preference space and WTP space models.</li>
-<li>Simulating the expected shares of a set of alternatives using an estimated model.</li>
+<li>Support for weighted models to differentially weight individual choice observations.</li>
+<li>Functions for predicting expected choices and choice probabilities for a set (or multiple sets) of alternatives based on an estimated model.</li>
 </ul>
 <p>Note: MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in Kenneth Train’s book <a href="https://eml.berkeley.edu/books/choice2.html"><em>Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)</em></a>.</p>
 <div id="installation" class="section level2">
@@ -156,7 +157,7 @@
 </li>
 <li>Date First Written: <em>Sunday, September 28, 2014</em>
 </li>
-<li>Most Recent Update: March 23, 2021</li>
+<li>Most Recent Update: May 21, 2021</li>
 <li>License: <a href="https://github.com/jhelvy/logitr/blob/master/LICENSE.md">MIT</a>
 </li>
 </ul>
@@ -170,17 +171,17 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; To cite logitr in publications use:</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;   John Paul Helveston (2021). logitr: Random utility logit models with</span>
-<span class="co">#&gt;   preference and willingness to pay space parameterizations. R package</span>
-<span class="co">#&gt;   version 0.1.2.</span>
+<span class="co">#&gt;   John Paul Helveston and Connor Forsythe (2021). logitr: Random</span>
+<span class="co">#&gt;   utility logit models with preference and willingness to pay space</span>
+<span class="co">#&gt;   parameterizations. R package version 0.2.0.</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; A BibTeX entry for LaTeX users is</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;   @Manual{,</span>
 <span class="co">#&gt;     title = {logitr: Random Utility Logit Models with Preference and Willingness to Pay Space Parameterizations},</span>
 <span class="co">#&gt;     author = {John Paul Helveston},</span>
-<span class="co">#&gt;     year = {2020},</span>
-<span class="co">#&gt;     note = {R package version 0.1.2},</span>
+<span class="co">#&gt;     year = {2021},</span>
+<span class="co">#&gt;     note = {R package version 0.2.0},</span>
 <span class="co">#&gt;     url = {https://jhelvy.github.io/logitr/},</span>
 <span class="co">#&gt;   }</span></code></pre></div>
 </div>
