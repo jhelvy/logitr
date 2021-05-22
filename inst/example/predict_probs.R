@@ -98,5 +98,5 @@ probs <- ggplot(probs, aes(x = alt, y = prob_mean, fill = model)) +
     labs(x = 'Alternative', y = 'Expected Choice Probabilities') +
     theme_bw()
 
-ggsave(here::here('man', 'figures', 'probs.png'),
+ggsave(here::here('vignettes', 'probs.png'),
        probs, width = 7, height = 4, dpi = 300)

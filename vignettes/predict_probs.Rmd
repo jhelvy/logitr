@@ -184,11 +184,10 @@ ggplot(probs, aes(x = alt, y = prob_mean, fill = model)) +
     scale_y_continuous(limits = c(0, 1)) +
     labs(x = 'Alternative', y = 'Expected Choice Probabilities') +
     theme_bw()
-
 ```
 
-```{r, echo=FALSE}
-knitr::include_graphics(here::here('man', 'figures', 'probs.png'))
+```{r probabilities, echo=FALSE}
+knitr::include_graphics('probs.png')
 ```
 
 # References
