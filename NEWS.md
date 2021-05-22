@@ -1,3 +1,18 @@
+# logitr 0.2.0
+
+## Summary of larger updates:
+
+- New prediction functions: `predictChoices()` and `predictProbs()`, and , depreciated `simulateShares()`.
+- Added robust covariance matrix calculations.
+- Added support for clustering errors.
+- Major modifications to the `recodeData()` function to improve encoding efficiency.
+- Depreciated `dummyCode()`
+
+## Summary of smaller updates:
+
+- Improved documentation across all vignettes for new features.
+- Improved explanation of preference space and WTP space utility models in vignettes.
+
 # logitr 0.1.5
 
 - Added robust covariance matrix calculations.
