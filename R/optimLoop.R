@@ -55,12 +55,12 @@ getStartPars <- function(modelInputs, i) {
       message("NOTE: Using user-provided starting values for this run")
       userStartPars <- modelInputs$options$startVals
       if (length(userStartPars) != length(startPars)) {
-        stop(paste0(
+        stop(
           "Number of user-provided starting values do not match number ",
           "of model parameters."
-        ))
+        )
       }
-      return(startPars)
+      return(userStartPars)
     } else {
       # For first run only, use all 0s as the starting parameters
       startPars <- 0 * startPars

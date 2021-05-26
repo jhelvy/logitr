@@ -20,7 +20,6 @@ source(here::here("inst", "example", "predict_shares.R"))
 source(here::here("inst", "example", "data_formatting.R"))
 
 # Build the pkgdown site
-pkgdown::build_reference()
 pkgdown::build_site()
 
 # Check package
