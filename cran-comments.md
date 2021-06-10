@@ -6,4 +6,6 @@
 ## R CMD check results
 0 errors | 0 warnings | 0 notes
 
-* This is a new release, and the first submission.
+## Notes
+* This is a new release, and the second submission.
+* I fixed a url redirect error in the README.md of the initial submission.
