@@ -265,11 +265,11 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, priceName <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
 <span class="co">#&gt;                Estimate StdError    tStat  pVal signif</span>
-<span class="co">#&gt; lambda         0.366543 0.024358  15.0478 0e+00    ***</span>
-<span class="co">#&gt; feat           1.340724 0.359051   3.7341 2e-04    ***</span>
-<span class="co">#&gt; brandhiland  -10.136406 0.584972 -17.3280 0e+00    ***</span>
-<span class="co">#&gt; brandweight   -1.749121 0.181942  -9.6136 0e+00    ***</span>
-<span class="co">#&gt; brandyoplait   2.003848 0.143684  13.9462 0e+00    ***</span></code></pre></div>
+<span class="co">#&gt; lambda         0.366543 0.024449  14.9923 0e+00    ***</span>
+<span class="co">#&gt; feat           1.340724 0.358907   3.7356 2e-04    ***</span>
+<span class="co">#&gt; brandhiland  -10.136406 0.587419 -17.2558 0e+00    ***</span>
+<span class="co">#&gt; brandweight   -1.749121 0.181654  -9.6289 0e+00    ***</span>
+<span class="co">#&gt; brandyoplait   2.003848 0.142984  14.0145 0e+00    ***</span></code></pre></div>
 <p>The <code><a href="../reference/wtp.html">wtp()</a></code> function divides the non-price parameters by the negative of the price parameter. Standard errors are estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. Similarly, the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function can be used to compare the WTP from a WTP space model with that computed from an equivalent preference space model:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, priceName <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
@@ -311,14 +311,14 @@
 
 <span class="va">probs</span>
 <span class="co">#&gt;     obsID  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 49     13 0.43684871 0.41510971 0.45789401</span>
-<span class="co">#&gt; 50     13 0.03313009 0.02640902 0.04169282</span>
-<span class="co">#&gt; 51     13 0.19155738 0.17643919 0.20763001</span>
-<span class="co">#&gt; 52     13 0.33846382 0.31848996 0.35878941</span>
-<span class="co">#&gt; 165    42 0.60763975 0.57330947 0.64010258</span>
-<span class="co">#&gt; 166    42 0.02602079 0.01850352 0.03659345</span>
-<span class="co">#&gt; 167    42 0.17803594 0.16221233 0.19487844</span>
-<span class="co">#&gt; 168    42 0.18830353 0.16792768 0.20969574</span></code></pre></div>
+<span class="co">#&gt; 49     13 0.43684871 0.41543717 0.45805044</span>
+<span class="co">#&gt; 50     13 0.03313009 0.02641368 0.04159385</span>
+<span class="co">#&gt; 51     13 0.19155738 0.17638550 0.20791329</span>
+<span class="co">#&gt; 52     13 0.33846382 0.31890647 0.35823911</span>
+<span class="co">#&gt; 165    42 0.60763975 0.57326188 0.63964108</span>
+<span class="co">#&gt; 166    42 0.02602079 0.01839801 0.03661208</span>
+<span class="co">#&gt; 167    42 0.17803594 0.16216405 0.19495221</span>
+<span class="co">#&gt; 168    42 0.18830353 0.16866570 0.20912706</span></code></pre></div>
 <p>The resulting <code>probs</code> data frame contains the expected choice probabilities for each alternative. The low and high values show a 95% confidence interval, estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. You can change the CI level by setting alpha to a different value (e.g. a 90% CI is obtained with alpha = 0.05).</p>
 <p>Choice probabilities can also be predicted used WTP space models. For example, the predicted choice probabilities using the <code>mnl_wtp</code> model are nearly identical with those from the <code>mnl_pref</code> model:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -330,14 +330,14 @@
 
 <span class="va">probs</span>
 <span class="co">#&gt;     obsID  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 49     13 0.43686166 0.41545202 0.45766699</span>
-<span class="co">#&gt; 50     13 0.03312933 0.02652888 0.04211560</span>
-<span class="co">#&gt; 51     13 0.19154885 0.17590543 0.20734345</span>
-<span class="co">#&gt; 52     13 0.33846015 0.31852657 0.35850235</span>
-<span class="co">#&gt; 165    42 0.60767236 0.57271084 0.64041206</span>
-<span class="co">#&gt; 166    42 0.02601763 0.01832084 0.03644273</span>
-<span class="co">#&gt; 167    42 0.17802398 0.16192310 0.19448196</span>
-<span class="co">#&gt; 168    42 0.18828603 0.16787254 0.20921603</span></code></pre></div>
+<span class="co">#&gt; 49     13 0.43686166 0.41527970 0.45825385</span>
+<span class="co">#&gt; 50     13 0.03312933 0.02652637 0.04213978</span>
+<span class="co">#&gt; 51     13 0.19154885 0.17607464 0.20717510</span>
+<span class="co">#&gt; 52     13 0.33846015 0.31886429 0.35904258</span>
+<span class="co">#&gt; 165    42 0.60767236 0.57281011 0.63987169</span>
+<span class="co">#&gt; 166    42 0.02601763 0.01826228 0.03645568</span>
+<span class="co">#&gt; 167    42 0.17802398 0.16212262 0.19416088</span>
+<span class="co">#&gt; 168    42 0.18828603 0.16776218 0.20886061</span></code></pre></div>
 <p>Similar to the <code><a href="../reference/predictProbs.html">predictProbs()</a></code> function, the <code><a href="../reference/predictChoices.html">predictChoices()</a></code> function can be used to predict choices using the results of an estimated model. In the example below, choices are predicted for the entire <code>yogurt</code> dataset, which was used to the estimate the <code>mnl_pref</code> model:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predictChoices.html">predictChoices</a></span><span class="op">(</span>
@@ -353,14 +353,14 @@
 <span class="co">#&gt; 1.2     1      0              0</span>
 <span class="co">#&gt; 1.3     1      1              0</span>
 <span class="co">#&gt; 1.4     1      0              0</span>
-<span class="co">#&gt; 2.5     2      1              0</span>
+<span class="co">#&gt; 2.5     2      1              1</span>
 <span class="co">#&gt; 2.6     2      0              0</span></code></pre></div>
 <p>The resulting <code>choices</code> data frame contains the same <code>alts</code> data frame with an additional column, <code>choice_predict</code>, which contains the predicted choices. You can quickly compute the accuracy by dividing the number of correctly predicted choices by the total number of choices:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">chosen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">choices</span>, <span class="va">choice</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>
 <span class="va">chosen</span><span class="op">$</span><span class="va">correct</span> <span class="op">&lt;-</span> <span class="va">chosen</span><span class="op">$</span><span class="va">choice</span> <span class="op">==</span> <span class="va">chosen</span><span class="op">$</span><span class="va">choice_predict</span>
 <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">chosen</span><span class="op">$</span><span class="va">correct</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">chosen</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.3905473</span></code></pre></div>
+<span class="co">#&gt; [1] 0.3656716</span></code></pre></div>
 </div>
 </div>
   </div>
