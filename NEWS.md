@@ -1,3 +1,7 @@
+# logitr 0.2.1
+
+- Added `altIDName` argument to `predictChoices()` and `predictProbs()` to preserve the row order of predictions for each alternative in each set of alternatives. Closes issue #13.
+
 # logitr 0.2.0
 
 ## Summary of larger updates:

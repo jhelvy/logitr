@@ -17,14 +17,17 @@ mxl_wtp  <- readRDS(here::here('inst', 'extdata', 'mxl_wtp.Rds'))
 # Each row is an alternative and each column an attribute.
 # In this example, I just use two of the choice observations from the
 # yogurt dataset:
-alts <- subset(yogurt, obsID %in% c(42, 13),
-               select = c('obsID', 'price', 'feat', 'brand'))
+alts <- subset(
+  yogurt, obsID %in% c(42, 13),
+  select = c('obsID', 'alt', 'price', 'feat', 'brand'))
+
 alts
 
 # Compute choice probabilities using the preference space MNL model:
 probs_mnl_pref <- predictProbs(
   model     = mnl_pref,
   alts      = alts,
+  altIDName = "alt",
   obsIDName = "obsID"
 )
 
@@ -39,6 +42,7 @@ probs_mnl_pref
 probs_mnl_wtp <- predictProbs(
   model     = mnl_wtp,
   alts      = alts,
+  altIDName = "alt",
   obsIDName = "obsID"
 )
 
@@ -53,6 +57,7 @@ probs_mnl_wtp
 probs_mxl_pref <- predictProbs(
   model     = mxl_pref,
   alts      = alts,
+  altIDName = "alt",
   obsIDName = "obsID"
 )
 
@@ -61,6 +66,7 @@ probs_mxl_pref
 probs_mxl_wtp <- predictProbs(
   model     = mxl_wtp,
   alts      = alts,
+  altIDName = "alt",
   obsIDName = "obsID"
 )
 

@@ -153,7 +153,7 @@ Estimated models can be used to predict expected choices and choice probabilitie
 ```{r}
 alts <- subset(
   yogurt, obsID %in% c(42, 13),
-  select = c('obsID', 'choice', 'price', 'feat', 'brand')
+  select = c('obsID', 'alt', 'choice', 'price', 'feat', 'brand')
 )
 
 alts
@@ -165,6 +165,7 @@ In the example below, the expected choice probabilities for these two sets of al
 probs <- predictProbs(
   model     = mnl_pref,
   alts      = alts,
+  altIDName = "alt",
   obsIDName = "obsID"
 )
 
@@ -179,6 +180,7 @@ Choice probabilities can also be predicted used WTP space models. For example, t
 probs <- predictProbs(
   model     = mnl_wtp,
   alts      = alts,
+  altIDName = "alt",
   obsIDName = "obsID"
 )
 
@@ -191,6 +193,7 @@ Similar to the `predictProbs()` function, the `predictChoices()` function can be
 choices <- predictChoices(
   model     = mnl_pref,
   alts      = yogurt,
+  altIDName = "alt",
   obsIDName = "obsID"
 )
 

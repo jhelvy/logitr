@@ -63,6 +63,7 @@ mnl_pref <- logitr(
 choices_mnl_pref <- predictChoices(
   model      = mnl_pref,
   alts       = yogurt,
+  altIDName = "alt",
   obsIDName  = "obsID"
 )
 ```
@@ -99,6 +100,7 @@ mnl_wtp <- logitr(
 choices_mnl_wtp <- predictChoices(
   model      = mnl_wtp,
   alts       = yogurt,
+  altIDName = "alt",
   obsIDName  = "obsID"
 )
 ```
@@ -132,6 +134,7 @@ mxl_pref <- logitr(
 choices_mxl_pref <- predictChoices(
   model      = mxl_pref,
   alts       = yogurt,
+  altIDName = "alt",
   obsIDName  = "obsID"
 )
 ```
@@ -161,6 +164,7 @@ mxl_wtp <- logitr(
 choices_mxl_wtp <- predictChoices(
   model      = mxl_wtp,
   alts       = yogurt,
+  altIDName = "alt",
   obsIDName  = "obsID"
 )
 ```

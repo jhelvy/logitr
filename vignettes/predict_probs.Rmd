@@ -36,7 +36,7 @@ To predict choice probabilities, you first need to create a set of alternatives 
 ```{r}
 alts <- subset(
   yogurt, obsID %in% c(42, 13),
-  select = c('obsID', 'price', 'feat', 'brand'))
+  select = c('obsID', 'alt', 'price', 'feat', 'brand'))
 
 alts
 ```
@@ -60,6 +60,7 @@ mnl_pref <- logitr(
 probs_mnl_pref <- predictProbs(
   model     = mnl_pref,
   alts      = alts,
+  altIDName = "alt",
   obsIDName = "obsID",
   alpha     = 0.025
 )
@@ -90,6 +91,7 @@ mnl_wtp <- logitr(
 probs_mnl_wtp <- predictProbs(
   model     = mnl_wtp,
   alts      = alts,
+  altIDName = "alt",
   obsIDName = "obsID"
 )
 ```
@@ -124,6 +126,7 @@ mxl_pref <- logitr(
 probs_mxl_pref <- predictProbs(
   model     = mxl_pref,
   alts      = alts,
+  altIDName = "alt",
   obsIDName = "obsID"
 )
 ```
@@ -152,6 +155,7 @@ mxl_wtp <- logitr(
 probs_mxl_wtp <- predictProbs(
   model     = mxl_wtp,
   alts      = alts,
+  altIDName = "alt",
   obsIDName = "obsID"
 )
 ```

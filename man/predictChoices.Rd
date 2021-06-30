@@ -4,7 +4,7 @@
 \alias{predictChoices}
 \title{Predict choices}
 \usage{
-predictChoices(model, alts, obsIDName = NULL)
+predictChoices(model, alts, altIDName, obsIDName = NULL)
 }
 \arguments{
 \item{model}{The output of a model estimated model using the \code{logitr()}
@@ -16,8 +16,11 @@ hold outs) to the predicted choices.}
 choices. Each row is an alternative and each column an attribute
 corresponding to parameter names in the estimated model.}
 
+\item{altIDName}{The name of the column that identifies each alternative
+in each set of alternatives.}
+
 \item{obsIDName}{The name of the column that identifies each set of
-alternatives. Required if simulating results for more than one set of
+alternatives. Required if predicting results for more than one set of
 alternatives. Defaults to \code{NULL} (for a single set of alternatives).}
 }
 \value{
@@ -34,10 +37,10 @@ on the results from an estimated model.
 library(logitr)
 
 mnl_pref <- logitr(
-  data = yogurt,
+  data       = yogurt,
   choiceName = "choice",
-  obsIDName = "obsID",
-  parNames = c("price", "feat", "brand")
+  obsIDName  = "obsID",
+  parNames   = c("price", "feat", "brand")
 )
 
 # You can predict choices for any set of alternative, such as hold out
@@ -46,9 +49,10 @@ mnl_pref <- logitr(
 
 # Run the simulation using the preference space MNL model:
 choices_mnl_pref <- predictChoices(
-  model      = mnl_pref,
-  alts       = yogurt,
-  obsIDName  = "obsID"
+  model     = mnl_pref,
+  alts      = yogurt,
+  altIDName = "alt",
+  obsIDName = "obsID"
 )
 
 head(choices_mnl_pref)
