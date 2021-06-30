@@ -73,7 +73,7 @@ on the results from an estimated model." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9000</span>
       </span>
     </div>
 
@@ -164,7 +164,7 @@ on the results from an estimated model." />
 on the results from an estimated model.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>predictChoices</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>alts</span>, obsIDName <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>predictChoices</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>alts</span>, <span class='va'>altIDName</span>, obsIDName <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -183,9 +183,14 @@ choices. Each row is an alternative and each column an attribute
 corresponding to parameter names in the estimated model.</p></td>
     </tr>
     <tr>
+      <th>altIDName</th>
+      <td><p>The name of the column that identifies each alternative
+in each set of alternatives.</p></td>
+    </tr>
+    <tr>
       <th>obsIDName</th>
       <td><p>The name of the column that identifies each set of
-alternatives. Required if simulating results for more than one set of
+alternatives. Required if predicting results for more than one set of
 alternatives. Defaults to <code>NULL</code> (for a single set of alternatives).</p></td>
     </tr>
     </table>
@@ -201,10 +206,10 @@ alternatives. Defaults to <code>NULL</code> (for a single set of alternatives).<
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/jhelvy/logitr'>logitr</a></span><span class='op'>)</span>
 
 <span class='va'>mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
-  data <span class='op'>=</span> <span class='va'>yogurt</span>,
+  data       <span class='op'>=</span> <span class='va'>yogurt</span>,
   choiceName <span class='op'>=</span> <span class='st'>"choice"</span>,
-  obsIDName <span class='op'>=</span> <span class='st'>"obsID"</span>,
-  parNames <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
+  obsIDName  <span class='op'>=</span> <span class='st'>"obsID"</span>,
+  parNames   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
 <span class='op'>)</span>
 
 <span class='co'># You can predict choices for any set of alternative, such as hold out</span>
@@ -213,9 +218,10 @@ alternatives. Defaults to <code>NULL</code> (for a single set of alternatives).<
 
 <span class='co'># Run the simulation using the preference space MNL model:</span>
 <span class='va'>choices_mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'>predictChoices</span><span class='op'>(</span>
-  model      <span class='op'>=</span> <span class='va'>mnl_pref</span>,
-  alts       <span class='op'>=</span> <span class='va'>yogurt</span>,
-  obsIDName  <span class='op'>=</span> <span class='st'>"obsID"</span>
+  model     <span class='op'>=</span> <span class='va'>mnl_pref</span>,
+  alts      <span class='op'>=</span> <span class='va'>yogurt</span>,
+  altIDName <span class='op'>=</span> <span class='st'>"alt"</span>,
+  obsIDName <span class='op'>=</span> <span class='st'>"obsID"</span>
 <span class='op'>)</span>
 
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>choices_mnl_pref</span><span class='op'>)</span>
