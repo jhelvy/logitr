@@ -129,11 +129,7 @@ getDummyLevels <- function(data, parTypes) {
   for (i in seq_len(length(discreteNames))) {
     name <- discreteNames[i]
     var <- data[,name]
-    if (is.factor(var)) {
-      parLevels <- levels(var)
-    } else {
-      parLevels <- unique(var)
-    }
+    parLevels <- levels(as.factor(var))
     dummyNames <- paste0(name, parLevels)[-1]
     parNames[[i]] <- dummyNames
   }

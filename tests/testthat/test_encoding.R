@@ -188,8 +188,8 @@ test_that("recodeData correctly encodes interactions between two categorical var
   names_cut_first <- c(
     "cutGood", "cutIdeal", "colorE", "colorF", "cutGood:colorE",
     "cutIdeal:colorE", "cutGood:colorF", "cutIdeal:colorF")
-  cut_color <- c(cutGood = "n", cutFair = "n", colorF = "n", colorD = "n")
-  color_cut <- c(colorF = "n", colorD = "n", cutGood = "n", cutFair = "n")
+  cut_color <- c(cutGood = "n", cutIdeal = "n", colorE = "n", colorF = "n")
+  color_cut <- c(colorE = "n", colorF = "n", cutGood = "n", cutIdeal = "n")
 
   x <- recodeData(diamonds_test, c("cut", "color", "cut*color"), NULL)
   expect_equal(colnames(x$X), names_cut_first)
