@@ -175,3 +175,30 @@ runOptionsChecks <- function(options, parNameList) {
   }
   return(options)
 }
+
+predictInputsCheck <- function(model, alts, altIDName, obsIDName) {
+  if (!is_logitr(model)) {
+    stop(
+      'The "model" argument must be a model estimated using the logitr() ',
+      'function.'
+    )
+  }
+  if (is.null(alts)) {
+    stop('The "alts" argument is missing.')
+  }
+  if (is.null(altIDName)) {
+    stop('The "altIDName" argument is missing.')
+  }
+  if (! altIDName %in% names(alts)) {
+    stop(
+      'The "altIDName" argument refers to a column that does not exist in ',
+      'the "alts" data frame')
+  }
+  if (!is.null(obsIDName)) {
+    if (! obsIDName %in% names(alts)) {
+      stop(
+        'The "obsIDName" argument refers to a column that does not exist in ',
+        'the "alts" data frame')
+    }
+  }
+}

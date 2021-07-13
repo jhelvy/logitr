@@ -141,6 +141,7 @@ predictProbs <- function(
   alpha = 0.025,
   numDraws = 10^4
 ) {
+  predictInputsCheck(model, alts, altIDName, obsIDName)
   alts <- as.data.frame(alts)
   model <- allRunsCheck(model)
   recoded <- recodeData(alts, model$parNames, model$randPars)
