@@ -81,7 +81,7 @@ getDesignMatrix <- function(data, parNames) {
 }
 
 parsToFormula <- function(vars) {
-  return(stats::as.formula(paste0("~ ", paste(vars, collapse = " + "), "|0")))
+  return(stats::as.formula(paste0("~ ", paste(vars, collapse = " + "))))
 }
 
 recodeRandPars <- function(data, parNames, randPars) {
