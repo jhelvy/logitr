@@ -98,7 +98,7 @@ wtp <- function(model, priceName) {
 #' wtpCompare(mnl_pref, mnl_wtp, priceName = "price")
 wtpCompare <- function(model_pref, model_wtp, priceName) {
   wtpCompareInputsCheck(model_pref, model_wtp, priceName)
-  pref <- as.data.frame(wtp(model_pref, priceName))$Estimate
+  pref <- wtp(model_pref, priceName)$Estimate
   pref <- c(pref, model_pref$logLik)
   wtp <- model_wtp$coef
   wtp <- c(wtp, model_wtp$logLik)

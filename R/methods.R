@@ -145,7 +145,7 @@ getCoefTable <- function(coef, standErrs) {
     p <- 2 * (1 - pnorm(abs(z)))
     coefTable <- cbind(coef, standErrs, z, p)
     colnames(coefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
-    return(coefTable)
+    return(as.data.frame(coefTable))
 }
 
 getStatTable <- function(model) {
