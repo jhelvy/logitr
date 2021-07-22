@@ -1,3 +1,11 @@
+# logitr 0.2.2
+
+- Improved `summary.logitr()` and `coef.logitr()` methods for better printing, using `printCoefmat()`
+- Added new methods: `print.logitr()`, `logLik.logitr()`, `coef.summary.logitr()`, `vcov.logitr()`
+- Removed option for keeping all model outputs.
+- Added input checks for `wtp()` and `wtpCompare()` functions
+- Fixed some errors in some of the examples and made them all run (removed dontrun commands).
+
 # logitr 0.2.1
 
 - Added `altIDName` argument to `predictChoices()` and `predictProbs()` to preserve the row order of predictions for each alternative in each set of alternatives. Closes issue #13.

@@ -24,17 +24,17 @@ utility model in the "preference" space by the price parameter.
 Uncertainty is handled via simulation.
 }
 \examples{
-# Run a MNL model in the Preference Space:
 library(logitr)
 
+# Estimate a preference space model
 mnl_pref <- logitr(
-  data = yogurt,
+  data       = yogurt,
   choiceName = "choice",
-  obsIDName = "obsID",
-  parNames = c("price", "feat", "dannon", "hiland", "yoplait")
+  obsIDName  = "obsID",
+  parNames   = c("price", "feat", "brand")
 )
 
-# Get the WTP implied from the preference space model
+# Compute the WTP implied from the preference space model
 wtp(mnl_pref, priceName = "price")
 }
 \keyword{logitr}

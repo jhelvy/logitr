@@ -1,6 +1,6 @@
 Package: logitr
 Title: Logit Models w/Preference & WTP Space Utility Parameterizations
-Version: 0.2.1.9000
+Version: 0.2.2.9000
 Authors@R: c(
     person(given   = "John",
            family  = "Helveston",
@@ -9,7 +9,7 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-2657-9191")),
     person(given   = "Connor",
            family  = "Forsythe",
-           role    = "aut",
+           role    = "ctb",
            email   = "cforsyth@andrew.cmu.edu"))
 Description: Estimation of multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using "Preference" space or "Willingness-to-pay" (WTP) space utility parameterizations. Weighted models can also be estimated. An option is available to run a multistart optimization loop with random starting points in each iteration, which is useful for non-convex problems like MXL models or models with WTP space utility parameterizations. The main optimization loop uses the 'nloptr' package to minimize the negative log-likelihood function. Additional functions are available for computing and comparing WTP from both preference space and WTP space models and for predicting expected choices and choice probabilities for a set (or multiple sets) of alternatives based on an estimated model. MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in Train (2009) "Discrete Choice Methods with Simulation, 2nd Edition" <doi:10.1017/CBO9780511805271>.
 License: MIT + file LICENSE

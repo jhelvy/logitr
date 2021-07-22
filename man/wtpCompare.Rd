@@ -30,31 +30,32 @@ estimates are compared against the WTP values directly estimated from the
 "WTP" space model. Uncertainty is handled via simulation.
 }
 \examples{
-# Run a MNL model in the Preference Space:
 library(logitr)
 
+# Estimate a MNL model in the Preference space
 mnl_pref <- logitr(
-  data = yogurt,
+  data       = yogurt,
   choiceName = "choice",
-  obsIDName = "obsID",
-  parNames = c("price", "feat", "dannon", "hiland", "yoplait")
+  obsIDName  = "obsID",
+  parNames   = c("price", "feat", "brand")
 )
 
-# Get the WTP implied from the preference space model
+# Compute the WTP implied from the preference space model
 wtp_mnl_pref <- wtp(mnl_pref, priceName = "price")
 
-# Run a MNL model in the WTP Space:
+# Estimate a MNL model in the WTP Space, using the computed WTP values
+# from the preference space model as starting points
 mnl_wtp <- logitr(
-  data = yogurt,
+  data       = yogurt,
   choiceName = "choice",
-  obsIDName = "obsID",
-  parNames = c("feat", "dannon", "hiland", "yoplait"),
+  obsIDName  = "obsID",
+  parNames   = c("feat", "brand"),
   priceName = "price",
   modelSpace = "wtp",
   options = list(startVals = wtp_mnl_pref$Estimate)
 )
 
-# Compare the WTP between the two spaces:
+# Compare the WTP between the two spaces
 wtpCompare(mnl_pref, mnl_wtp, priceName = "price")
 }
 \keyword{logitr}

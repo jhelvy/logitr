@@ -7,5 +7,5 @@ citEntry(
   year     = "2021",
   note     = "R package version 0.2.0",
   url      = "https://jhelvy.github.io/logitr/",
-  textVersion = "John Paul Helveston and Connor Forsythe (2021). logitr: Random utility logit models with preference and willingness to pay space parameterizations. R package version 0.2.0."
+  textVersion = "John Paul Helveston (2021). logitr: Random utility logit models with preference and willingness to pay space parameterizations. R package version 0.2.0."
 )

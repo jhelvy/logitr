@@ -6,7 +6,7 @@
 # Creates a list of the data and other information needed for running the model
 getModelInputs <- function(
   data, choiceName, obsIDName, parNames, randPars, priceName, randPrice,
-  modelSpace, weightsName, clusterName, robust, options) {
+  modelSpace, weightsName, clusterName, robust, call, options) {
   data <- as.data.frame(data) # tibbles break things
   # Setup pars
   runInputChecks(
@@ -60,11 +60,27 @@ getModelInputs <- function(
 
   # Create the modelInputs list
   modelInputs <- list(
-    price = price, X = X, choice = choice, obsID = obsID,
-    weights = weights, priceName = priceName, parNames = parNames_orig,
-    randPars = randPars_orig, parNameList = parNameList, parSetup = parSetup,
-    scaleFactors = NA, modelSpace = modelSpace, modelType = "mnl",
-    weightsUsed = weightsUsed, clusterName = clusterName, clusterIDs = clusterIDs, numClusters = numClusters, robust = robust, options = options
+    call = call,
+    freq = getFrequencyCounts(data, choiceName, obsIDName),
+    price = price,
+    X = X,
+    choice = choice,
+    obsID = obsID,
+    weights = weights,
+    priceName = priceName,
+    parNames = parNames_orig,
+    randPars = randPars_orig,
+    parNameList = parNameList,
+    parSetup = parSetup,
+    scaleFactors = NA,
+    modelSpace = modelSpace,
+    modelType = "mnl",
+    weightsUsed = weightsUsed,
+    clusterName = clusterName,
+    clusterIDs = clusterIDs,
+    numClusters = numClusters,
+    robust = robust,
+    options = options
   )
   if (options$scaleInputs) {
     modelInputs <- scaleInputs(modelInputs)
@@ -230,4 +246,12 @@ setEvalFunctions <- function(modelType, useAnalyticGrad) {
     }
   }
   return(evalFuncs)
+}
+
+getFrequencyCounts <- function(data, choiceName, obsIDName) {
+  obsCounts <- table(data[obsIDName])
+  data$alt <- unlist(lapply(obsCounts, function(x) seq(x)))
+  freq <- table(data[c("alt", choiceName)])
+  freq <- freq[,which(colnames(freq) == "1")]
+  return(freq)
 }
