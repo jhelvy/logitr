@@ -68,10 +68,11 @@ makeBlankModel <- function(modelInputs) {
     covariance       = NA,
     numObs           = NA,
     numParams        = NA,
+    call             = NA,
+    freq             = NA,
     iterations       = NA,
     message          = NA,
     standardDraws    = NA,
-    randParSummary   = NA,
     status           = -99,
     modelType        = modelInputs$modelType,
     modelSpace       = modelInputs$modelSpace,
@@ -80,7 +81,11 @@ makeBlankModel <- function(modelInputs) {
     randPars         = modelInputs$randPars,
     parSetup         = modelInputs$parSetup,
     weightsUsed      = modelInputs$weightsUsed,
-    options          = modelInputs$options
+    clusterName      = modelInputs$clusterName,
+    numClusters      = modelInputs$numClusters,
+    robust           = modelInputs$robust,
+    standardDraws    = NA,
+    options          = options
   ),
   class = "logitr"
   )

@@ -1,3 +1,9 @@
+# logitr 0.2.2
+
+- Improved summary and coef methods for better printing, using printCoefmat()
+- Added new methods: print.logitr logLik.logitr coef.summary.logitr vcov.logitr
+- Removed
+
 # logitr 0.2.1
 
 - Added `altIDName` argument to `predictChoices()` and `predictProbs()` to preserve the row order of predictions for each alternative in each set of alternatives. Closes issue #13.

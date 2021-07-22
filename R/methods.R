@@ -72,7 +72,7 @@ summary.logitr <- function (object) {
     object$modelInfoTable <- getModelInfoTable(object)
     object$coefTable <- getCoefTable(object$coef, object$standErrs)
     object$statTable <- getStatTable(object)
-    if (! is.null(object$randPars)){
+    if (object$modelType == "mxl") {
         object$randParSummary <- getRandParSummary(object)
     }
     class(object) <- c("summary.logitr", "logitr")
@@ -101,7 +101,7 @@ print.summary.logitr <- function(x, digits = max(3, getOption("digits") - 2)) {
   cat("\n")
   cat("Model Fit:", "\n")
   print(x$statTable)
-  if (!is.na(x$randParSummary)) {
+  if (x$modelType == "mxl") {
       cat("\n")
       cat("Summary of 10k Draws for Random Coefficients:", "\n")
       print(x$randParSummary)

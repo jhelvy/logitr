@@ -48,7 +48,6 @@ appendModelInfo <- function(model, modelInputs, multistartSummary) {
     numClusters      = modelInputs$numClusters,
     robust           = modelInputs$robust,
     standardDraws    = NA,
-    randParSummary   = NA,
     options          = options
   ),
   class = "logitr"
