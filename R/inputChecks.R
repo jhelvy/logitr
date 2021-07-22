@@ -42,8 +42,8 @@ runInputChecks <- function(
   if (! is.null(clusterName)) {
     if (! clusterName %in% dataColumnNames) {
       stop(
-        'You have specified a cluster name that is not present in the data provided:\n',
-        as.character(clusterName),
+        'You have specified a cluster name that is not present in the data ',
+        'provided:\n', as.character(clusterName),
         '\nPlease double-check the provided data/cluster name.'
       )
     }
@@ -73,8 +73,8 @@ runInputChecks <- function(
 
     if (length(missingFixedPars) > 0) {
       stop(
-        'You have specified a fixed parameter name(s) that is/are not present in the data provided:\n',
-        as.list(missingFixedPars),
+        'You have specified a fixed parameter name(s) that is/are not present ',
+        'in the data provided:\n', as.list(missingFixedPars),
         '\nPlease double-check the provided data/fixed parameter name(s).'
       )
     }
@@ -94,8 +94,8 @@ runInputChecks <- function(
 
     if (length(missingIntPars) > 0) {
       stop(
-        'You have specified an interaction parameter name(s) that is/are not present in the data provided:\n',
-        as.list(missingIntPars),
+        'You have specified an interaction parameter name(s) that is/are ',
+        'not present in the data provided:\n', as.list(missingIntPars),
         '\nPlease double-check the provided data / parameter name(s).'
       )
     }
@@ -111,8 +111,8 @@ runInputChecks <- function(
 
       if (length(missingRandPars) > 0) {
       stop(
-        'You have specified a random parameter name(s) that is/are not present in the data provided:\n',
-        as.list(missingRandPars),
+        'You have specified a random parameter name(s) that is/are not ',
+        'present in the data provided:\n', as.list(missingRandPars),
         '\nPlease double-check the provided data/random parameter name(s).'
       )
       }
@@ -122,7 +122,7 @@ runInputChecks <- function(
 }
 
 runOptionsChecks <- function(options, parNameList) {
-  # Run checks for all options
+  # Set default option values
   if (is.null(options$numMultiStarts)) {
     options$numMultiStarts <- 1
   }
@@ -183,12 +183,8 @@ predictInputsCheck <- function(model, alts, altIDName, obsIDName) {
       'function.'
     )
   }
-  if (is.null(alts)) {
-    stop('The "alts" argument is missing.')
-  }
-  if (is.null(altIDName)) {
-    stop('The "altIDName" argument is missing.')
-  }
+  if (missing(alts)) stop("alts needs to be specified")
+  if (missing(altIDName)) stop("altIDName needs to be specified")
   if (! altIDName %in% names(alts)) {
     stop(
       'The "altIDName" argument refers to a column that does not exist in ',

@@ -72,7 +72,7 @@ makeBlankModel <- function(modelInputs) {
     message          = NA,
     standardDraws    = NA,
     randParSummary   = NA,
-    status           = -1,
+    status           = -99,
     modelType        = modelInputs$modelType,
     modelSpace       = modelInputs$modelSpace,
     priceName        = modelInputs$priceName,
@@ -82,7 +82,7 @@ makeBlankModel <- function(modelInputs) {
     weightsUsed      = modelInputs$weightsUsed,
     options          = modelInputs$options
   ),
-  class = c("logitr", "logitr.fail")
+  class = "logitr"
   )
   return(result)
 }
@@ -145,30 +145,24 @@ is_logitr <- function(x) {
   inherits(x, "logitr")
 }
 is_logitr_multistart <- function(x) {
-  inherits(x, "logitr.multistart")
+  inherits(x, "multistart")
 }
 is_logitr_allRuns <- function(x) {
-  inherits(x, "logitr.allRuns")
+  inherits(x, "allRuns")
 }
-is_logitr_fail <- function(x) {
-  inherits(x, "logitr.fail")
-}
-
-allRunsCheck <- function(model) {
-  if (is_logitr_allRuns(model)) {
-    model <- useBestModel(model)
-  }
-  return(model)
+isMxlModel <- function(parSetup) {
+  return(("n" %in% parSetup) | ("ln" %in% parSetup))
 }
 
-# Return the best model, and print a warning statement
 useBestModel <- function(model) {
-  model <- model$bestModel
-  message(
-    "NOTE: Using results from run ", model$multistartNumber, " of ",
-    model$options$numMultiStarts,
-    " multistart runs\n(the run with the largest log-likelihood value)"
-  )
+  if (is_logitr_allRuns(model)) {
+    model <- model$bestModel
+    message(
+      "Using results from run ", model$multistartNumber, " of ",
+      model$options$numMultiStarts,
+      " multistart runs\n(the run with the largest log-likelihood value)"
+    )
+  }
   return(model)
 }
 
@@ -187,8 +181,4 @@ getNormParIDs <- function(parSetup) {
 
 getLogNormParIDs <- function(parSetup) {
   return(which(parSetup == "ln"))
-}
-
-isMxlModel <- function(parSetup) {
-  return(("n" %in% parSetup) | ("ln" %in% parSetup))
 }

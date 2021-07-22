@@ -3,11 +3,12 @@
 # ============================================================================
 
 appendModelInfo <- function(model, modelInputs) {
-  if (is_logitr_fail(model)) {
+  if (model$status == -99) {
     # This run failed to converge - return the "blank" model summary
+    model$fail <- NULL
     return(model)
   }
-  # Compute variables
+  # Compute outputs
   coef <- getModelCoefs(model, modelInputs)
   gradient <- getModelGradient(model, modelInputs)
   hessian <- getModelHessian(model, modelInputs)
@@ -27,6 +28,8 @@ appendModelInfo <- function(model, modelInputs) {
     covariance       = covariance,
     numObs           = numObs,
     numParams        = length(coef),
+    call             = modelInputs$call,
+    freq             = modelInputs$freq,
     startPars        = model$startPars,
     multistartNumber = model$multistartNumber,
     time             = model$time,
@@ -49,10 +52,9 @@ appendModelInfo <- function(model, modelInputs) {
   ),
   class = "logitr"
   )
-  # If MXL model, attached draws and summary of parameter distributions
+  # If MXL model, attached draws
   if (modelInputs$modelType == "mxl") {
     result$standardDraws <- modelInputs$standardDraws
-    result$randParSummary <- getRandParSummary(coef, modelInputs)
   }
   return(result)
 }
@@ -197,26 +199,9 @@ getModelStandErrs <- function(covariance) {
   se <- covariance[1,]*NA
   tryCatch(
     {
-      se <- diag(sqrt(abs(covariance)))
+      se <- sqrt(diag(covariance))
     },
     error = function(e) {}
   )
   return(se)
-}
-
-getRandParSummary <- function(coef, modelInputs) {
-  parSetup <- modelInputs$parSetup
-  numDraws <- 10^4
-  randParIDs <- getRandParIDs(parSetup)
-  standardDraws <- getStandardDraws(parSetup, numDraws)
-  betaDraws <- makeBetaDraws(coef, parSetup, 10^4, standardDraws)
-  randParSummary <- apply(betaDraws, 2, summary)
-  # Add names to summary
-  distName <- rep("", length(parSetup))
-  distName[getNormParIDs(parSetup)] <- "normal"
-  distName[getLogNormParIDs(parSetup)] <- "log-normal"
-  summaryNames <- paste(names(parSetup), " (", distName, ")", sep = "")
-  colnames(randParSummary) <- summaryNames
-  randParSummary <- t(randParSummary[, randParIDs])
-  return(as.data.frame(randParSummary))
 }

@@ -38,7 +38,7 @@ wtp <- function(model, priceName) {
   if (is.null(priceName)) {
     stop("Must provide priceName to compute WTP")
   }
-  model <- allRunsCheck(model)
+  model <- useBestModel(model)
   if (model$modelSpace == "pref") {
     return(getPrefSpaceWtp(model, priceName))
   } else if (model$modelSpace == "wtp") {
@@ -118,8 +118,8 @@ wtpCompare <- function(model_pref, model_wtp, priceName) {
   if (is_logitr(model_pref) == FALSE | is_logitr(model_wtp) == FALSE) {
     stop('Models must be estimated using the "logitr" package')
   }
-  model_pref <- allRunsCheck(model_pref)
-  model_wtp <- allRunsCheck(model_wtp)
+  model_pref <- useBestModel(model_pref)
+  model_wtp <- useBestModel(model_wtp)
   pref <- wtp(model_pref, priceName)$Estimate
   pref <- c(pref, model_pref$logLik)
   wtp <- stats::coef(model_wtp)

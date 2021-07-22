@@ -14,6 +14,7 @@ test_that("getStartPars returns all 0s for first iteration in a multistart loop 
     weightsName = NULL,
     clusterName = NULL,
     robust = FALSE,
+    call = NULL,
     options = list()
   )
   startPars1 <- getStartPars(modelInputs, i = 1)
@@ -37,6 +38,7 @@ test_that("getStartPars returns user-provided starting parameters for first iter
     weightsName = NULL,
     clusterName = NULL,
     robust = FALSE,
+    call = NULL,
     options = list(startVals = c(1, 1))
   )
   startPars1 <- getStartPars(modelInputs, i = 1)

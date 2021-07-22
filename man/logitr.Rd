@@ -123,8 +123,6 @@ e.g. \code{options = list(...)}.\tabular{lll}{
 }
 }
 \examples{
-\dontrun{
-
 # For more detailed examples, visit
 # https://jhelvy.github.io/logitr/articles/
 
@@ -147,7 +145,6 @@ mnl_wtp <- logitr(
   priceName = "price",
   modelSpace = "wtp"
 )
-}
 }
 \keyword{logit}
 \keyword{logitr}

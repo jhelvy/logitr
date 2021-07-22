@@ -100,8 +100,6 @@
 #'
 #' @export
 #' @examples
-#' \dontrun{
-#'
 #' # For more detailed examples, visit
 #' # https://jhelvy.github.io/logitr/articles/
 #'
@@ -124,7 +122,6 @@
 #'   priceName = "price",
 #'   modelSpace = "wtp"
 #' )
-#' }
 logitr <- function(
   data,
   choiceName,
@@ -139,9 +136,10 @@ logitr <- function(
   robust = FALSE,
   options = list()
 ) {
+  call <- match.call()
   modelInputs <- getModelInputs(
     data, choiceName, obsIDName, parNames, randPars, priceName, randPrice,
-    modelSpace, weightsName, clusterName, robust, options
+    modelSpace, weightsName, clusterName, robust, call, options
   )
   allModels <- runMultistart(modelInputs)
   if (modelInputs$options$keepAllRuns) {
@@ -152,7 +150,7 @@ logitr <- function(
     bestModel <- getBestModel(allModels, modelInputs)
     if (modelInputs$options$numMultiStarts > 1) {
       bestModel$multistartSummary <- getMultistartSummary(allModels)
-      class(bestModel) <- c("logitr", "logitr.multistart")
+      class(bestModel) <- c("multistart", "logitr")
     }
     message("Done!")
     return(bestModel)
@@ -170,7 +168,7 @@ appendAllModelsInfo <- function(allModels, modelInputs) {
     models = models, bestModel = bestModel,
     multistartSummary = multistartSummary
   ),
-  class = c("logitr", "logitr.multistart", "logitr.allRuns")
+  class = c("allRuns", "logitr")
   )
   return(result)
 }
