@@ -2,8 +2,8 @@
 % Please edit documentation in R/methods.R
 \name{miscmethods.logitr}
 \alias{miscmethods.logitr}
-\alias{print.logitr}
 \alias{logLik.logitr}
+\alias{print.logitr}
 \alias{coef.logitr}
 \alias{coef.summary.logitr}
 \alias{vcov.logitr}
@@ -11,24 +11,33 @@
 \alias{print.summary.logitr}
 \title{Methods for logitr objects}
 \usage{
-\method{print}{logitr}(x, digits = max(3, getOption("digits") - 2))
+\method{logLik}{logitr}(object, ...)
 
-\method{logLik}{logitr}(x)
+\method{coef}{logitr}(object, ...)
 
-\method{coef}{logitr}(object)
+\method{coef}{summary.logitr}(object, ...)
 
-\method{coef}{summary.logitr}(object)
+\method{vcov}{logitr}(object, ...)
 
-\method{vcov}{logitr}(object)
+\method{summary}{logitr}(object, ...)
 
-\method{summary}{logitr}(object)
-
-\method{print}{summary.logitr}(x, digits = max(3, getOption("digits") - 2))
+\method{print}{summary.logitr}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+)
 }
 \arguments{
+\item{object}{is an object of class \code{logitr}.}
+
+\item{...}{further arguments.}
+
 \item{x}{is an object of class \code{logitr}.}
 
 \item{digits}{the number of digits for printing, defaults to \code{3}.}
+
+\item{width}{the width of the printing,}
 }
 \description{
 Miscellaneous methods for \code{logitr} class objects.
