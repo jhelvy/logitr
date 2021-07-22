@@ -1,9 +1,10 @@
 # logitr 0.2.2
 
-- Improved summary and coef methods for better printing, using printCoefmat()
-- Added new methods: print.logitr logLik.logitr coef.summary.logitr vcov.logitr
+- Improved `summary.logitr()` and `coef.logitr()` methods for better printing, using `printCoefmat()`
+- Added new methods: `print.logitr()`, `logLik.logitr()`, `coef.summary.logitr()`, `vcov.logitr()`
 - Removed option for keeping all model outputs.
-- Added input checks for wtp() and wtpCompare() functions
+- Added input checks for `wtp()` and `wtpCompare()` functions
+- Fixed some errors in some of the examples and made them all run (removed dontrun commands).
 
 # logitr 0.2.1
 
