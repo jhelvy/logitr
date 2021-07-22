@@ -32,10 +32,9 @@ Returns the expected choices for a set of one or more alternatives based
 on the results from an estimated model.
 }
 \examples{
-\dontrun{
-# Run a MNL model in the Preference Space:
 library(logitr)
 
+# Estimate a preference space model
 mnl_pref <- logitr(
   data       = yogurt,
   choiceName = "choice",
@@ -44,24 +43,23 @@ mnl_pref <- logitr(
 )
 
 # You can predict choices for any set of alternative, such as hold out
-# samples or within-sample. For this example I will predict choices on
+# samples or within-sample. For this example, choices will be predicted for
 # the full yogurt data set, which was used to estimate the model.
 
-# Run the simulation using the preference space MNL model:
-choices_mnl_pref <- predictChoices(
+# Predict choices using the estimated preference space MNL model
+choices <- predictChoices(
   model     = mnl_pref,
   alts      = yogurt,
   altIDName = "alt",
   obsIDName = "obsID"
 )
 
-head(choices_mnl_pref)
+head(choices)
 
 # Compute the accuracy
 chosen <-  subset(choices, choice == 1)
 chosen$correct <- chosen$choice == chosen$choice_predict
-sum(chosen$correct) / nrow(chosen)
-}
+sum(chosen$correct) / nrow(chosen) # \% correctly predicted
 }
 \keyword{choice}
 \keyword{logitr}

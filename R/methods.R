@@ -1,8 +1,3 @@
-# ============================================================================
-# Methods for printing, summarizing, and doing other computations with
-# logitr class objects
-# ============================================================================
-
 #' Methods for logitr objects
 #'
 #' Miscellaneous methods for `logitr` class objects.
@@ -10,7 +5,6 @@
 #' @name miscmethods.logitr
 #' @aliases print.logitr logLik.logitr coef.logitr coef.summary.logitr
 #' vcov.logitr summary.logitr print.summary.logitr
-#'
 #' @param x is an object of class `logitr`.
 #' @param object is an object of class `logitr`.
 #' @param digits the number of digits for printing, defaults to `3`.

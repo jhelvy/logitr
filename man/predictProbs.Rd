@@ -47,21 +47,19 @@ Returns the expected choice probabilities for a single set or multiple sets
 of alternatives based on the results from an estimated model.
 }
 \examples{
-\dontrun{
-# Run a MNL model in the Preference Space:
 library(logitr)
 
+# Estimate a preference space model
 mnl_pref <- logitr(
-  data = yogurt,
+  data       = yogurt,
   choiceName = "choice",
-  obsIDName = "obsID",
-  parNames = c("price", "feat", "brand")
+  obsIDName  = "obsID",
+  parNames   = c("price", "feat", "brand")
 )
 
 # Create a set of alternatives for which to predict choice probabilities.
-# Each row is an alternative and each column an attribute.
-# In this example, I just use two of the choice observations from the
-# yogurt dataset:
+# Each row is an alternative and each column an attribute. In this example,
+# two of the choice observations from the yogurt dataset are used
 alts <- subset(
     yogurt, obsID \%in\% c(42, 13),
     select = c('obsID', 'alt', 'price', 'feat', 'brand'))
@@ -69,9 +67,8 @@ alts <- subset(
 alts
 
 # Predict choice probabilities using the estimated preference space MNL
-# model:
+# model
 predictProbs(mnl_pref, alts, altIDName = "alt", obsIDName = "obsID")
-}
 }
 \keyword{logitr}
 \keyword{predict}

@@ -77,12 +77,16 @@
 #' |`covariance`|The covariance matrix at convergence.|
 #' |`numObs`|The number of observations.|
 #' |`numParams`|The number of model parameters.|
+#' |`call`|The matched call to `logitr()`.|
+#' |`freq`|The frequency counts of each choice alternative.|
 #' |`startPars`|The starting values used.|
 #' |`multistartNumber`|The multistart run number for this model.|
+#' |`multistartSummary`|A summary of the log-likelihood values for each multistart run (if more than one multistart was used).|
 #' |`time`|The user, system, and elapsed time to run the optimization.|
 #' |`iterations`|The number of iterations until convergence.|
 #' |`message`|A more informative message with the status of the optimization result.|
 #' |`status`|An integer value with the status of the optimization (positive values are successes). Use [statusCodes()] for a detailed description.|
+#' |`modelType`|The model type, `'mnl'` for multinomial logit or `'mxl'` for mixed logit.|
 #' |`modelSpace`|The model space (`'pref'` or `'wtp'`).|
 #' |`priceName`|The name of the column that identifies the price variable.|
 #' |`parNames`|The names of the parameters to be estimated in the model.|
@@ -93,8 +97,6 @@
 #' |`numClusters`|The number of clusters.|
 #' |`robust`|`TRUE` or `FALSE` for whether or not a robust covariance matrix was estimated.|
 #' |`standardDraws`|The draws used during maximum simulated likelihood (for MXL models).|
-#' |`randParSummary`|A summary of any random parameters (for MXL models).|
-#' |`multistartSummary`|A summary of the log-likelihood values for each multistart run (if more than one multistart was used).|
 #' |`options`|A list of all the model options.|
 #'
 #' @export
@@ -104,22 +106,23 @@
 #'
 #' library(logitr)
 #'
-#' # Run a MNL model in the Preference Space:
+#' # Estimate a MNL model in the Preference space
 #' mnl_pref <- logitr(
-#'   data = yogurt,
+#'   data       = yogurt,
 #'   choiceName = "choice",
-#'   obsIDName = "obsID",
-#'   parNames = c("price", "feat", "dannon", "hiland", "yoplait")
+#'   obsIDName  = "obsID",
+#'   parNames   = c("price", "feat", "brand")
 #' )
 #'
-#' # Run a MNL model in the WTP Space:
+#' # Estimate a MNL model in the WTP space, using a 10-run multistart
 #' mnl_wtp <- logitr(
-#'   data = yogurt,
+#'   data       = yogurt,
 #'   choiceName = "choice",
-#'   obsIDName = "obsID",
-#'   parNames = c("feat", "dannon", "hiland", "yoplait"),
+#'   obsIDName  = "obsID",
+#'   parNames   = c("feat", "brand"),
 #'   priceName = "price",
-#'   modelSpace = "wtp"
+#'   modelSpace = "wtp",
+#'   options = list(numMultiStarts = 3)
 #' )
 logitr <- function(
   data,

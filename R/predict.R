@@ -25,10 +25,9 @@
 #' `alts`.
 #' @export
 #' @examples
-#' \dontrun{
-#' # Run a MNL model in the Preference Space:
 #' library(logitr)
 #'
+#' # Estimate a preference space model
 #' mnl_pref <- logitr(
 #'   data       = yogurt,
 #'   choiceName = "choice",
@@ -37,24 +36,23 @@
 #' )
 #'
 #' # You can predict choices for any set of alternative, such as hold out
-#' # samples or within-sample. For this example I will predict choices on
+#' # samples or within-sample. For this example, choices will be predicted for
 #' # the full yogurt data set, which was used to estimate the model.
 #'
-#' # Run the simulation using the preference space MNL model:
-#' choices_mnl_pref <- predictChoices(
+#' # Predict choices using the estimated preference space MNL model
+#' choices <- predictChoices(
 #'   model     = mnl_pref,
 #'   alts      = yogurt,
 #'   altIDName = "alt",
 #'   obsIDName = "obsID"
 #' )
 #'
-#' head(choices_mnl_pref)
+#' head(choices)
 #'
 #' # Compute the accuracy
 #' chosen <-  subset(choices, choice == 1)
 #' chosen$correct <- chosen$choice == chosen$choice_predict
-#' sum(chosen$correct) / nrow(chosen)
-#' }
+#' sum(chosen$correct) / nrow(chosen) # % correctly predicted
 predictChoices <- function(
   model,
   alts,
@@ -107,21 +105,19 @@ simChoice <- function(df) {
 #' alternative in `alts`.
 #' @export
 #' @examples
-#' \dontrun{
-#' # Run a MNL model in the Preference Space:
 #' library(logitr)
 #'
+#' # Estimate a preference space model
 #' mnl_pref <- logitr(
-#'   data = yogurt,
+#'   data       = yogurt,
 #'   choiceName = "choice",
-#'   obsIDName = "obsID",
-#'   parNames = c("price", "feat", "brand")
+#'   obsIDName  = "obsID",
+#'   parNames   = c("price", "feat", "brand")
 #' )
 #'
 #' # Create a set of alternatives for which to predict choice probabilities.
-#' # Each row is an alternative and each column an attribute.
-#' # In this example, I just use two of the choice observations from the
-#' # yogurt dataset:
+#' # Each row is an alternative and each column an attribute. In this example,
+#' # two of the choice observations from the yogurt dataset are used
 #' alts <- subset(
 #'     yogurt, obsID %in% c(42, 13),
 #'     select = c('obsID', 'alt', 'price', 'feat', 'brand'))
@@ -129,9 +125,8 @@ simChoice <- function(df) {
 #' alts
 #'
 #' # Predict choice probabilities using the estimated preference space MNL
-#' # model:
+#' # model
 #' predictProbs(mnl_pref, alts, altIDName = "alt", obsIDName = "obsID")
-#' }
 predictProbs <- function(
   model,
   alts,

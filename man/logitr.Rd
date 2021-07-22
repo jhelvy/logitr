@@ -70,12 +70,16 @@ The function returns a list object containing the following objects.\tabular{ll}
    \code{covariance} \tab The covariance matrix at convergence. \cr
    \code{numObs} \tab The number of observations. \cr
    \code{numParams} \tab The number of model parameters. \cr
+   \code{call} \tab The matched call to \code{logitr()}. \cr
+   \code{freq} \tab The frequency counts of each choice alternative. \cr
    \code{startPars} \tab The starting values used. \cr
    \code{multistartNumber} \tab The multistart run number for this model. \cr
+   \code{multistartSummary} \tab A summary of the log-likelihood values for each multistart run (if more than one multistart was used). \cr
    \code{time} \tab The user, system, and elapsed time to run the optimization. \cr
    \code{iterations} \tab The number of iterations until convergence. \cr
    \code{message} \tab A more informative message with the status of the optimization result. \cr
    \code{status} \tab An integer value with the status of the optimization (positive values are successes). Use \code{\link[=statusCodes]{statusCodes()}} for a detailed description. \cr
+   \code{modelType} \tab The model type, \code{'mnl'} for multinomial logit or \code{'mxl'} for mixed logit. \cr
    \code{modelSpace} \tab The model space (\code{'pref'} or \code{'wtp'}). \cr
    \code{priceName} \tab The name of the column that identifies the price variable. \cr
    \code{parNames} \tab The names of the parameters to be estimated in the model. \cr
@@ -86,8 +90,6 @@ The function returns a list object containing the following objects.\tabular{ll}
    \code{numClusters} \tab The number of clusters. \cr
    \code{robust} \tab \code{TRUE} or \code{FALSE} for whether or not a robust covariance matrix was estimated. \cr
    \code{standardDraws} \tab The draws used during maximum simulated likelihood (for MXL models). \cr
-   \code{randParSummary} \tab A summary of any random parameters (for MXL models). \cr
-   \code{multistartSummary} \tab A summary of the log-likelihood values for each multistart run (if more than one multistart was used). \cr
    \code{options} \tab A list of all the model options. \cr
 }
 }
@@ -127,22 +129,23 @@ e.g. \code{options = list(...)}.\tabular{lll}{
 
 library(logitr)
 
-# Run a MNL model in the Preference Space:
+# Estimate a MNL model in the Preference space
 mnl_pref <- logitr(
-  data = yogurt,
+  data       = yogurt,
   choiceName = "choice",
-  obsIDName = "obsID",
-  parNames = c("price", "feat", "dannon", "hiland", "yoplait")
+  obsIDName  = "obsID",
+  parNames   = c("price", "feat", "brand")
 )
 
-# Run a MNL model in the WTP Space:
+# Estimate a MNL model in the WTP space, using a 10-run multistart
 mnl_wtp <- logitr(
-  data = yogurt,
+  data       = yogurt,
   choiceName = "choice",
-  obsIDName = "obsID",
-  parNames = c("feat", "dannon", "hiland", "yoplait"),
+  obsIDName  = "obsID",
+  parNames   = c("feat", "brand"),
   priceName = "price",
-  modelSpace = "wtp"
+  modelSpace = "wtp",
+  options = list(numMultiStarts = 3)
 )
 }
 \keyword{logit}

@@ -31,8 +31,11 @@ variables and interaction variables added to \code{X}, \code{parNames}, and
 \code{randPars}.
 }
 \examples{
+library(logitr)
+
 data(yogurt)
 
+# Recode the yogurt data
 result <- recodeData(
     data = yogurt,
     parNames = c("price", "feat", "brand", "price*brand"),

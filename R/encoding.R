@@ -35,8 +35,11 @@ dummyCode <- function(df, vars) {
 #' added.
 #' @export
 #' @examples
+#' library(logitr)
+#'
 #' data(yogurt)
 #'
+#' # Recode the yogurt data
 #' result <- recodeData(
 #'     data = yogurt,
 #'     parNames = c("price", "feat", "brand", "price*brand"),
