@@ -4,26 +4,14 @@
 \alias{miscmethods.logitr}
 \alias{print.logitr}
 \alias{logLik.logitr}
-\alias{summary.logitr}
-\alias{print.summary.logitr}
 \alias{coef.logitr}
 \alias{coef.summary.logitr}
-\alias{print.multistart}
-\alias{print.allRuns}
-\alias{coef.summary.multistart}
-\alias{coef.summary.allRuns}
 \alias{vcov.logitr}
-\alias{summary.multistart}
-\alias{summary.allRuns}
-\alias{print.summary.multistart}
-\alias{print.summary.allRuns}
+\alias{summary.logitr}
+\alias{print.summary.logitr}
 \title{Methods for logitr objects}
 \usage{
 \method{print}{logitr}(x, digits = max(3, getOption("digits") - 2))
-
-\method{print}{multistart}(x, digits = max(3, getOption("digits") - 2))
-
-\method{print}{allRuns}(x, digits = max(3, getOption("digits") - 2))
 
 \method{logLik}{logitr}(x)
 
@@ -31,30 +19,16 @@
 
 \method{coef}{summary.logitr}(object)
 
-\method{coef}{summary.multistart}(object)
-
-\method{coef}{summary.allRuns}(object)
-
 \method{vcov}{logitr}(object)
 
 \method{summary}{logitr}(object)
 
-\method{summary}{multistart}(object)
-
-\method{summary}{allRuns}(object)
-
 \method{print}{summary.logitr}(x, digits = max(3, getOption("digits") - 2))
-
-\method{print}{summary.multistart}(x, digits = max(3, getOption("digits") - 2))
-
-\method{print}{summary.allRuns}(x, digits = max(3, getOption("digits") - 2))
 }
 \arguments{
 \item{x}{is an object of class \code{logitr}.}
 
 \item{digits}{the number of digits for printing, defaults to \code{3}.}
-
-\item{...}{further arguments.}
 }
 \description{
 Miscellaneous methods for \code{logitr} class objects.

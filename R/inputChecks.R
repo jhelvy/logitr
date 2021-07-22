@@ -129,9 +129,6 @@ runOptionsChecks <- function(options, parNameList) {
   if (options$numMultiStarts < 1) {
     options$numMultiStarts <- 1
   }
-  if (is.null(options$keepAllRuns)) {
-    options$keepAllRuns <- FALSE
-  }
   if (is.null(options$useAnalyticGrad)) {
     options$useAnalyticGrad <- TRUE
   }
@@ -196,5 +193,34 @@ predictInputsCheck <- function(model, alts, altIDName, obsIDName) {
         'The "obsIDName" argument refers to a column that does not exist in ',
         'the "alts" data frame')
     }
+  }
+}
+
+wtpInputsCheck <- function(model, priceName) {
+  if (missing(model)) stop("model needs to be specified")
+  if (missing(priceName)) stop("priceName needs to be specified")
+  if (!is_logitr(model)) {
+    stop('model must be a model estimated using the logitr() function.')
+  }
+  if (! priceName %in% names(model$coef)) {
+    stop('priceName must be the name of a coefficient in model.')
+  }
+  if (model$modelSpace != "pref") {
+    stop('model must be a preference space model.')
+  }
+}
+
+wtpCompareInputsCheck <- function(model_pref, model_wtp, priceName) {
+  if (missing(model_pref)) stop("model_pref needs to be specified")
+  if (missing(model_wtp)) stop("model_wtp needs to be specified")
+  if (missing(priceName)) stop("priceName needs to be specified")
+  if (!is_logitr(model_pref)) {
+    stop('model_pref must be a model estimated using the logitr() function.')
+  }
+  if (!is_logitr(model_wtp)) {
+    stop('model_wtp must be a model estimated using the logitr() function.')
+  }
+  if (! priceName %in% names(model_pref$coef)) {
+    stop('priceName must be the name of a coefficient in model_pref')
   }
 }

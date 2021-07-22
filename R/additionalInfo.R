@@ -2,7 +2,7 @@
 # Functions for computing other information about model after estimation
 # ============================================================================
 
-appendModelInfo <- function(model, modelInputs) {
+appendModelInfo <- function(model, modelInputs, multistartSummary) {
   if (model$status == -99) {
     # This run failed to converge - return the "blank" model summary
     model$fail <- NULL
@@ -32,6 +32,7 @@ appendModelInfo <- function(model, modelInputs) {
     freq             = modelInputs$freq,
     startPars        = model$startPars,
     multistartNumber = model$multistartNumber,
+    multistartSummary = multistartSummary,
     time             = model$time,
     iterations       = model$iterations,
     message          = model$message,

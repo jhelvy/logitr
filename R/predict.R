@@ -143,7 +143,6 @@ predictProbs <- function(
 ) {
   predictInputsCheck(model, alts, altIDName, obsIDName)
   alts <- as.data.frame(alts)
-  model <- useBestModel(model)
   recoded <- recodeData(alts, model$parNames, model$randPars)
   X <- recoded$X
   # Check if model parNames match those from alts

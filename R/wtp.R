@@ -32,26 +32,8 @@
 #' # Get the WTP implied from the preference space model
 #' wtp(mnl_pref, priceName = "price")
 wtp <- function(model, priceName) {
-  if (is_logitr(model) == FALSE) {
-    stop('Model must be estimated using the"logitr" package')
-  }
-  if (is.null(priceName)) {
-    stop("Must provide priceName to compute WTP")
-  }
-  model <- useBestModel(model)
-  if (model$modelSpace == "pref") {
-    return(getPrefSpaceWtp(model, priceName))
-  } else if (model$modelSpace == "wtp") {
-    wtp_mean <- stats::coef(model)
-    wtp_se <- model$standErrs
-    return(getCoefSummaryTable(
-      wtp_mean, wtp_se, model$numObs, model$numParams))
-  }
-}
-
-getPrefSpaceWtp <- function(model, priceName) {
-  # Compute mean WTP
-  coefs <- stats::coef(model)
+  wtpInputsCheck(model, priceName)
+  coefs <- model$coef
   priceID <- which(names(coefs) == priceName)
   pricePar <- -1 * coefs[priceID]
   wtp_mean <- coefs / pricePar
@@ -63,7 +45,7 @@ getPrefSpaceWtp <- function(model, priceName) {
   wtpDraws <- draws / priceDraws
   wtpDraws[, priceID] <- draws[, priceID]
   wtp_se <- apply(wtpDraws, 2, stats::sd)
-  return(getCoefSummaryTable(wtp_mean, wtp_se, model$numObs, model$numParams))
+  return(getCoefTable(wtp_mean, wtp_se))
 }
 
 #' Compare WTP from preference and WTP space models
@@ -115,14 +97,10 @@ getPrefSpaceWtp <- function(model, priceName) {
 #' # Compare the WTP between the two spaces:
 #' wtpCompare(mnl_pref, mnl_wtp, priceName = "price")
 wtpCompare <- function(model_pref, model_wtp, priceName) {
-  if (is_logitr(model_pref) == FALSE | is_logitr(model_wtp) == FALSE) {
-    stop('Models must be estimated using the "logitr" package')
-  }
-  model_pref <- useBestModel(model_pref)
-  model_wtp <- useBestModel(model_wtp)
+  wtpCompareInputsCheck(model_pref, model_wtp, priceName)
   pref <- wtp(model_pref, priceName)$Estimate
   pref <- c(pref, model_pref$logLik)
-  wtp <- stats::coef(model_wtp)
+  wtp <- model_wtp$coef
   wtp <- c(wtp, model_wtp$logLik)
   names(pref)[length(pref)] <- "logLik"
   names(wtp)[length(wtp)] <- "logLik"

@@ -8,52 +8,34 @@
 #' Miscellaneous methods for `logitr` class objects.
 #'
 #' @name miscmethods.logitr
-#' @aliases print.logitr logLik.logitr summary.logitr print.summary.logitr
-#' coef.logitr coef.summary.logitr
+#' @aliases print.logitr logLik.logitr coef.logitr coef.summary.logitr
+#' vcov.logitr summary.logitr print.summary.logitr
+#'
 #' @param x is an object of class `logitr`.
 #' @param digits the number of digits for printing, defaults to `3`.
-#' @param ... further arguments.
 #'
 #' @rdname miscmethods.logitr
 #' @export
 print.logitr <- function(x, digits = max(3, getOption("digits") - 2)) {
-  printCall(x)
-  printCoefs(x, digits)
+  cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
+  # Print multistart summary
+  if (nrow(x$multistartSummary) > 1) {
+    printMutlistartSummary(x)
+    printMutlistartMessage(x)
+    cat("\n")
+  }
+  # Print coefficients
+  if (length(coef(x))) {
+      cat("Coefficients:\n")
+      print.default(
+        format(coef(x), digits = digits), print.gap = 2, quote = FALSE)
+  } else {
+    cat("No coefficients\n")
+  }
+  # Print log-likelihood
   print(logLik(x))
   cat("\n")
   invisible(x)
-}
-
-#' @rdname miscmethods.logitr
-#' @export
-print.multistart <- function(x, digits = max(3, getOption("digits") - 2)) {
-  printCall(x)
-  printMutlistartMessage(x)
-  printCoefs(x, digits)
-  print(logLik(x))
-  cat("\n")
-  invisible(x)
-}
-
-printCall <- function(x) {
-    cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
-}
-
-printMutlistartMessage <- function(x) {
-  cat(
-    "Results below are from run", x$multistartNumber, "of",
-    model$options$numMultiStarts, "multistart runs as it has the ",
-    "largest log-likelihood value\n\n"
-  )
-}
-
-printCoefs <- function(x, digits) {
-    if (length(coef(x))) {
-        cat("Coefficients:\n")
-        print.default(
-          format(coef(x), digits = digits), print.gap = 2, quote = FALSE)
-    }
-    else cat("No coefficients\n")
 }
 
 #' @rdname miscmethods.logitr
@@ -65,7 +47,6 @@ logLik.logitr <- function(x) {
 #' @rdname miscmethods.logitr
 #' @export
 coef.logitr <- function(object) {
-    object <- useBestModel(object)
     return(object$coef)
 }
 
@@ -73,13 +54,6 @@ coef.logitr <- function(object) {
 #' @method coef summary.logitr
 #' @export
 coef.summary.logitr <- function(object) {
-    return(object$coefTable)
-}
-
-#' @rdname miscmethods.logitr
-#' @method coef summary.multistart
-#' @export
-coef.summary.multistart <- function(object) {
     return(object$coefTable)
 }
 
@@ -92,27 +66,45 @@ vcov.logitr <- function(object) {
 #' @rdname miscmethods.logitr
 #' @export
 summary.logitr <- function (object) {
-    object <- makeSummaryObject(object)
+    object$modelInfoTable <- getModelInfoTable(object)
+    object$coefTable <- getCoefTable(object$coef, object$standErrs)
+    object$statTable <- getStatTable(object)
+    if (! is.null(object$randPars)){
+        object$randParSummary <- getRandParSummary(object)
+    }
     class(object) <- c("summary.logitr", "logitr")
     return(object)
 }
 
 #' @rdname miscmethods.logitr
+#' @method print summary.logitr
 #' @export
-summary.multistart <- function (object) {
-    object <- makeSummaryObject(object)
-    class(object) <- c("summary.multistart", "multistart")
-    return(object)
-}
-
-makeSummaryObject <- function (object) {
-    object$modelInfoTable <- getModelInfoTable(object)
-    object$coefTable <- getCoefTable(object)
-    object$statTable <- getStatTable(object)
-    if (! is.null(object$randPars)){
-        object$randParSummary <- getRandParSummary(object)
-    }
-    return(object)
+print.summary.logitr <- function(x, digits = max(3, getOption("digits") - 2)) {
+  cat("=================================================", "\n", sep = "")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat("Frequencies of alternatives:\n")
+  print(prop.table(x$freq), digits = digits)
+  # Print multistart summary
+  if (nrow(x$multistartSummary) > 1) {
+    cat("\n")
+    printMutlistartSummary(x)
+    printMutlistartMessage(x)
+  }
+  print(x$modelInfoTable)
+  cat("\n")
+  cat("Model Coefficients:", "\n")
+  printCoefmat(x$coefTable, digits = digits)
+  cat("\n")
+  cat("Model Fit:", "\n")
+  print(x$statTable)
+  if (!is.na(x$randParSummary)) {
+      cat("\n")
+      cat("Summary of 10k Draws for Random Coefficients:", "\n")
+      print(x$randParSummary)
+  }
+  invisible(x)
 }
 
 getModelInfoTable <- function(model) {
@@ -146,31 +138,8 @@ getModelInfoTable <- function(model) {
   return(modelInfoTable)
 }
 
-#' Get the coefficient summary table as a data frame
-#'
-#' Returns a data frame of the coefficient summary table for a `logitr` class
-#' object.
-#' @param x is an object of class `logitr`.
-#' @return Returns a data frame of the coefficient summary table of a model
-#' estimated using the `logitr()` function.
-#' @export
-#' @examples
-#' library(logitr)
-#'
-#' # Run a MNL model in the preference space
-#' mnl_pref <- logitr(
-#'   data = yogurt,
-#'   choiceName = "choice",
-#'   obsIDName = "obsID",
-#'   parNames = c("price", "feat", "dannon", "hiland", "yoplait")
-#' )
-#'
-#' # Get the coefficient summary table as a data frame
-#' getCoefTable(mnl_pref)
-getCoefTable <- function(object) {
-    b <- coef(object)
-    std.err <- sqrt(diag(vcov(object)))
-    z <- b / std.err
+getCoefTable <- function(coef, standErrs) {
+    z <- coef / standErrs
     p <- 2 * (1 - pnorm(abs(z)))
     coefTable <- cbind(b, std.err, z, p)
     colnames(coefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
@@ -215,54 +184,17 @@ getRandParSummary <- function(object) {
   return(as.data.frame(randParSummary))
 }
 
-#' @rdname miscmethods.logitr
-#' @method print summary.logitr
-#' @export
-print.summary.logitr <- function(x, digits = max(3, getOption("digits") - 2)) {
-    printLine()
-    printSummary(x, digits)
+printMutlistartMessage <- function(x) {
+  cat(
+    "Results below are from run", x$multistartNumber, "of",
+    model$options$numMultiStarts, "multistart runs\n",
+    "as it had the largest log-likelihood value\n"
+  )
 }
 
-#' @rdname miscmethods.logitr
-#' @method print summary.multistart
-#' @export
-print.summary.multistart <- function(
-  x, digits = max(3, getOption("digits") - 2)) {
-  printLine()
-  printMultistartSummary(x)
-  printSummary(x, digits)
-}
-
-printSummary <- function(x, digits = max(3, getOption("digits") - 2)) {
-    cat("\nCall:\n")
-    print(x$call)
+printMutlistartSummary <- function(x) {
+    cat("Summary Of Multistart Runs:\n")
+    print(x$multistartSummary)
     cat("\n")
-    cat("Frequencies of alternatives:\n")
-    print(prop.table(x$freq), digits = digits)
-    print(x$modelInfoTable)
-    cat("\n")
-    cat("Model Coefficients:", "\n")
-    printCoefmat(x$coefTable, digits = digits)
-    cat("\n")
-    cat("Model Fit:", "\n")
-    print(x$statTable)
-    if (!is.na(x$randParSummary)) {
-        cat("\n")
-        cat("Summary of 10k Draws for Random Coefficients:", "\n")
-        print(x$randParSummary)
-    }
-    invisible(x)
-}
-
-printMultistartSummary <- function(x) {
-  printLine()
-  cat("SUMMARY OF ALL MULTISTART RUNS:\n\n")
-  print(x$multistartSummary)
-  cat("\n")
-  cat("Use statusCodes() to view the meaning of each status code\n\n")
-  printMutlistartMessage(x)
-}
-
-printLine <- function() {
-  cat("=================================================", "\n", sep = "")
+    cat("Use statusCodes() to view the meaning of each status code\n\n")
 }

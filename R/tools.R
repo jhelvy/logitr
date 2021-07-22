@@ -144,26 +144,9 @@ ci <- function(data, alpha = 0.025) {
 is_logitr <- function(x) {
   inherits(x, "logitr")
 }
-is_logitr_multistart <- function(x) {
-  inherits(x, "multistart")
-}
-is_logitr_allRuns <- function(x) {
-  inherits(x, "allRuns")
-}
+
 isMxlModel <- function(parSetup) {
   return(("n" %in% parSetup) | ("ln" %in% parSetup))
-}
-
-useBestModel <- function(model) {
-  if (is_logitr_allRuns(model)) {
-    model <- model$bestModel
-    message(
-      "Using results from run ", model$multistartNumber, " of ",
-      model$options$numMultiStarts,
-      " multistart runs\n(the run with the largest log-likelihood value)"
-    )
-  }
-  return(model)
 }
 
 # Functions for getting specific parameter indexes
