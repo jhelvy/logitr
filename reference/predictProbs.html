@@ -73,7 +73,7 @@ of alternatives based on the results from an estimated model." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2.9000</span>
       </span>
     </div>
 
@@ -126,12 +126,6 @@ of alternatives based on the results from an estimated model." />
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
-</li>
-<li>
-  <a href="https://github.com/jhelvy/logitr">
-    <span class="fa fa-github"></span>
-     
-  </a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -222,32 +216,47 @@ for the computed confidence interval.</p></td>
 alternative in <code>alts</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'># Run a MNL model in the Preference Space:</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/jhelvy/logitr'>logitr</a></span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/jhelvy/logitr'>logitr</a></span><span class='op'>)</span>
 
+<span class='co'># Estimate a preference space model</span>
 <span class='va'>mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
-  data <span class='op'>=</span> <span class='va'>yogurt</span>,
+  data       <span class='op'>=</span> <span class='va'>yogurt</span>,
   choiceName <span class='op'>=</span> <span class='st'>"choice"</span>,
-  obsIDName <span class='op'>=</span> <span class='st'>"obsID"</span>,
-  parNames <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
+  obsIDName  <span class='op'>=</span> <span class='st'>"obsID"</span>,
+  parNames   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
 <span class='op'>)</span>
-
+</div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
 <span class='co'># Create a set of alternatives for which to predict choice probabilities.</span>
-<span class='co'># Each row is an alternative and each column an attribute.</span>
-<span class='co'># In this example, I just use two of the choice observations from the</span>
-<span class='co'># yogurt dataset:</span>
+<span class='co'># Each row is an alternative and each column an attribute. In this example,</span>
+<span class='co'># two of the choice observations from the yogurt dataset are used</span>
 <span class='va'>alts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span>
     <span class='va'>yogurt</span>, <span class='va'>obsID</span> <span class='op'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>42</span>, <span class='fl'>13</span><span class='op'>)</span>,
     select <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'obsID'</span>, <span class='st'>'alt'</span>, <span class='st'>'price'</span>, <span class='st'>'feat'</span>, <span class='st'>'brand'</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='va'>alts</span>
-
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 8 x 5</span>
+#&gt;   obsID   alt price  feat brand  
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  
+#&gt; <span style='color: #BCBCBC;'>1</span>    13     1  8.1      0 dannon 
+#&gt; <span style='color: #BCBCBC;'>2</span>    13     2  5.00     0 hiland 
+#&gt; <span style='color: #BCBCBC;'>3</span>    13     3  8.60     0 weight 
+#&gt; <span style='color: #BCBCBC;'>4</span>    13     4 10.8      0 yoplait
+#&gt; <span style='color: #BCBCBC;'>5</span>    42     1  6.30     0 dannon 
+#&gt; <span style='color: #BCBCBC;'>6</span>    42     2  6.10     1 hiland 
+#&gt; <span style='color: #BCBCBC;'>7</span>    42     3  7.90     0 weight 
+#&gt; <span style='color: #BCBCBC;'>8</span>    42     4 11.5      0 yoplait</div><div class='input'>
 <span class='co'># Predict choice probabilities using the estimated preference space MNL</span>
-<span class='co'># model:</span>
+<span class='co'># model</span>
 <span class='fu'>predictProbs</span><span class='op'>(</span><span class='va'>mnl_pref</span>, <span class='va'>alts</span>, altIDName <span class='op'>=</span> <span class='st'>"alt"</span>, obsIDName <span class='op'>=</span> <span class='st'>"obsID"</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+</div><div class='output co'>#&gt;   obsID alt  prob_mean   prob_low  prob_high
+#&gt; 1    13   1 0.43684871 0.41554434 0.45773098
+#&gt; 2    13   2 0.03313009 0.02607930 0.04146538
+#&gt; 3    13   3 0.19155738 0.17624700 0.20744225
+#&gt; 4    13   4 0.33846382 0.31844560 0.35841870
+#&gt; 5    42   1 0.60763975 0.57364017 0.63987415
+#&gt; 6    42   2 0.02602079 0.01839437 0.03652981
+#&gt; 7    42   3 0.17803594 0.16216319 0.19441976
+#&gt; 8    42   4 0.18830353 0.16820535 0.20927403</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -259,7 +268,7 @@ alternative in <code>alts</code>.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by John Helveston, Connor Forsythe.</p>
+  <p>Developed by John Helveston.</p>
 </div>
 
 <div class="pkgdown">

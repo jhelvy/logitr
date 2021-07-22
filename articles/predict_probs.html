@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2.9000</span>
       </span>
     </div>
 
@@ -84,12 +84,6 @@
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
-</li>
-<li>
-  <a href="https://github.com/jhelvy/logitr">
-    <span class="fa fa-github"></span>
-     
-  </a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -170,14 +164,14 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">probs_mnl_pref</span>
 <span class="co">#&gt;   obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 1    13   1 0.43684871 0.41553593 0.45812277</span>
-<span class="co">#&gt; 2    13   2 0.03313009 0.02626999 0.04172797</span>
-<span class="co">#&gt; 3    13   3 0.19155738 0.17625083 0.20789529</span>
-<span class="co">#&gt; 4    13   4 0.33846382 0.31855973 0.35835285</span>
-<span class="co">#&gt; 5    42   1 0.60763975 0.57247703 0.64055067</span>
-<span class="co">#&gt; 6    42   2 0.02602079 0.01846827 0.03656814</span>
-<span class="co">#&gt; 7    42   3 0.17803594 0.16191581 0.19491824</span>
-<span class="co">#&gt; 8    42   4 0.18830353 0.16878855 0.20997065</span></code></pre></div>
+<span class="co">#&gt; 1    13   1 0.43684871 0.41564756 0.45810985</span>
+<span class="co">#&gt; 2    13   2 0.03313009 0.02627045 0.04175975</span>
+<span class="co">#&gt; 3    13   3 0.19155738 0.17603526 0.20801585</span>
+<span class="co">#&gt; 4    13   4 0.33846382 0.31842474 0.35885537</span>
+<span class="co">#&gt; 5    42   1 0.60763975 0.57353631 0.64083208</span>
+<span class="co">#&gt; 6    42   2 0.02602079 0.01838582 0.03657106</span>
+<span class="co">#&gt; 7    42   3 0.17803594 0.16192615 0.19528216</span>
+<span class="co">#&gt; 8    42   4 0.18830353 0.16789822 0.20958650</span></code></pre></div>
 <p>The results show the expected choice probabilities for each alternative. The low and high values show a 95% confidence interval estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">(Krinsky and Robb 1986)</span>. You can change the CI level by setting <code>alpha</code> to a different value (e.g. a 90% CI is obtained with <code>alpha = 0.05</code>).</p>
 </div>
 <div id="wtp-space-parameterization" class="section level2">
@@ -208,14 +202,14 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">probs_mnl_wtp</span>
 <span class="co">#&gt;   obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 1    13   1 0.43686166 0.41591963 0.45799011</span>
-<span class="co">#&gt; 2    13   2 0.03312933 0.02652011 0.04230503</span>
-<span class="co">#&gt; 3    13   3 0.19154885 0.17626521 0.20778376</span>
-<span class="co">#&gt; 4    13   4 0.33846015 0.31869620 0.35837257</span>
-<span class="co">#&gt; 5    42   1 0.60767236 0.57350944 0.63976025</span>
-<span class="co">#&gt; 6    42   2 0.02601763 0.01833303 0.03643959</span>
-<span class="co">#&gt; 7    42   3 0.17802398 0.16208359 0.19463329</span>
-<span class="co">#&gt; 8    42   4 0.18828603 0.16758104 0.20833810</span></code></pre></div>
+<span class="co">#&gt; 1    13   1 0.43686015 0.41509805 0.45790052</span>
+<span class="co">#&gt; 2    13   2 0.03313003 0.02649214 0.04197840</span>
+<span class="co">#&gt; 3    13   3 0.19154919 0.17552467 0.20785048</span>
+<span class="co">#&gt; 4    13   4 0.33846063 0.31941685 0.35873429</span>
+<span class="co">#&gt; 5    42   1 0.60766707 0.57346481 0.63966819</span>
+<span class="co">#&gt; 6    42   2 0.02601904 0.01845153 0.03645185</span>
+<span class="co">#&gt; 7    42   3 0.17802489 0.16123921 0.19480783</span>
+<span class="co">#&gt; 8    42   4 0.18828900 0.16789522 0.20881636</span></code></pre></div>
 <p>Since these two models are equivalent except in different spaces, the predicted choice probabilities should be the same.</p>
 </div>
 </div>
@@ -247,14 +241,14 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">probs_mxl_pref</span>
 <span class="co">#&gt;   obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 1    13   1 0.45230084 0.39665572 0.47173650</span>
-<span class="co">#&gt; 2    13   2 0.02782708 0.02278237 0.09004505</span>
-<span class="co">#&gt; 3    13   3 0.21027296 0.18424112 0.22954050</span>
-<span class="co">#&gt; 4    13   4 0.30959912 0.27822157 0.36513130</span>
-<span class="co">#&gt; 5    42   1 0.60391759 0.50340031 0.64933008</span>
-<span class="co">#&gt; 6    42   2 0.06797893 0.02664426 0.14622165</span>
-<span class="co">#&gt; 7    42   3 0.18726035 0.16115551 0.20784324</span>
-<span class="co">#&gt; 8    42   4 0.14084313 0.11352484 0.22378693</span></code></pre></div>
+<span class="co">#&gt; 1    13   1 0.45230084 0.39636857 0.47101393</span>
+<span class="co">#&gt; 2    13   2 0.02782708 0.02262329 0.09150196</span>
+<span class="co">#&gt; 3    13   3 0.21027296 0.18328983 0.22924657</span>
+<span class="co">#&gt; 4    13   4 0.30959912 0.27825338 0.36585796</span>
+<span class="co">#&gt; 5    42   1 0.60391759 0.50165121 0.64863504</span>
+<span class="co">#&gt; 6    42   2 0.06797893 0.02677078 0.14886683</span>
+<span class="co">#&gt; 7    42   3 0.18726035 0.16080094 0.20766001</span>
+<span class="co">#&gt; 8    42   4 0.14084313 0.11303757 0.22733982</span></code></pre></div>
 </div>
 <div id="wtp-space-parameterization-1" class="section level2">
 <h2 class="hasAnchor">
@@ -283,14 +277,14 @@
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">probs_mxl_wtp</span>
 <span class="co">#&gt;   obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 1    13   1 0.44040652 0.40415857 0.45630824</span>
-<span class="co">#&gt; 2    13   2 0.02685423 0.02179069 0.06919888</span>
-<span class="co">#&gt; 3    13   3 0.20364898 0.18311314 0.22195785</span>
-<span class="co">#&gt; 4    13   4 0.32909026 0.30597232 0.35875894</span>
-<span class="co">#&gt; 5    42   1 0.58682140 0.52417604 0.62270734</span>
-<span class="co">#&gt; 6    42   2 0.08194992 0.04207058 0.14582510</span>
-<span class="co">#&gt; 7    42   3 0.18187533 0.15916422 0.20192783</span>
-<span class="co">#&gt; 8    42   4 0.14935336 0.12776595 0.19212315</span></code></pre></div>
+<span class="co">#&gt; 1    13   1 0.44040652 0.40410525 0.45646792</span>
+<span class="co">#&gt; 2    13   2 0.02685423 0.02184646 0.07049929</span>
+<span class="co">#&gt; 3    13   3 0.20364898 0.18296289 0.22172671</span>
+<span class="co">#&gt; 4    13   4 0.32909026 0.30562129 0.35800158</span>
+<span class="co">#&gt; 5    42   1 0.58682140 0.52456319 0.62150874</span>
+<span class="co">#&gt; 6    42   2 0.08194992 0.04192418 0.14438658</span>
+<span class="co">#&gt; 7    42   3 0.18187533 0.15882405 0.20179151</span>
+<span class="co">#&gt; 8    42   4 0.14935336 0.12769258 0.19217847</span></code></pre></div>
 </div>
 </div>
 <div id="compare-results" class="section level1">
@@ -342,7 +336,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by John Helveston, Connor Forsythe.</p>
+  <p>Developed by John Helveston.</p>
 </div>
 
 <div class="pkgdown">

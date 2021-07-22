@@ -73,7 +73,7 @@ on the results from an estimated model." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2.9000</span>
       </span>
     </div>
 
@@ -126,12 +126,6 @@ on the results from an estimated model." />
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
-</li>
-<li>
-  <a href="https://github.com/jhelvy/logitr">
-    <span class="fa fa-github"></span>
-     
-  </a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -201,37 +195,48 @@ alternatives. Defaults to <code>NULL</code> (for a single set of alternatives).<
 <code>alts</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'># Run a MNL model in the Preference Space:</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/jhelvy/logitr'>logitr</a></span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/jhelvy/logitr'>logitr</a></span><span class='op'>)</span>
 
+<span class='co'># Estimate a preference space model</span>
 <span class='va'>mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
   data       <span class='op'>=</span> <span class='va'>yogurt</span>,
   choiceName <span class='op'>=</span> <span class='st'>"choice"</span>,
   obsIDName  <span class='op'>=</span> <span class='st'>"obsID"</span>,
   parNames   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
 <span class='op'>)</span>
-
+</div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
 <span class='co'># You can predict choices for any set of alternative, such as hold out</span>
-<span class='co'># samples or within-sample. For this example I will predict choices on</span>
+<span class='co'># samples or within-sample. For this example, choices will be predicted for</span>
 <span class='co'># the full yogurt data set, which was used to estimate the model.</span>
 
-<span class='co'># Run the simulation using the preference space MNL model:</span>
-<span class='va'>choices_mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'>predictChoices</span><span class='op'>(</span>
+<span class='co'># Predict choices using the estimated preference space MNL model</span>
+<span class='va'>choices</span> <span class='op'>&lt;-</span> <span class='fu'>predictChoices</span><span class='op'>(</span>
   model     <span class='op'>=</span> <span class='va'>mnl_pref</span>,
   alts      <span class='op'>=</span> <span class='va'>yogurt</span>,
   altIDName <span class='op'>=</span> <span class='st'>"alt"</span>,
   obsIDName <span class='op'>=</span> <span class='st'>"obsID"</span>
 <span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>choices_mnl_pref</span><span class='op'>)</span>
-
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>choices</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;     id obsID alt choice price feat   brand dannon hiland weight yoplait
+#&gt; 1.1  1     1   1      0   8.1    0  dannon      1      0      0       0
+#&gt; 1.2  1     1   2      0   6.1    0  hiland      0      1      0       0
+#&gt; 1.3  1     1   3      1   7.9    0  weight      0      0      1       0
+#&gt; 1.4  1     1   4      0  10.8    0 yoplait      0      0      0       1
+#&gt; 2.5  1     2   1      1   9.8    0  dannon      1      0      0       0
+#&gt; 2.6  1     2   2      0   6.4    0  hiland      0      1      0       0
+#&gt;     choice_predict
+#&gt; 1.1              0
+#&gt; 1.2              0
+#&gt; 1.3              0
+#&gt; 1.4              1
+#&gt; 2.5              0
+#&gt; 2.6              0</div><div class='input'>
 <span class='co'># Compute the accuracy</span>
 <span class='va'>chosen</span> <span class='op'>&lt;-</span>  <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>choices</span>, <span class='va'>choice</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>chosen</span><span class='op'>$</span><span class='va'>correct</span> <span class='op'>&lt;-</span> <span class='va'>chosen</span><span class='op'>$</span><span class='va'>choice</span> <span class='op'>==</span> <span class='va'>chosen</span><span class='op'>$</span><span class='va'>choice_predict</span>
-<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>chosen</span><span class='op'>$</span><span class='va'>correct</span><span class='op'>)</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>chosen</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>chosen</span><span class='op'>$</span><span class='va'>correct</span><span class='op'>)</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>chosen</span><span class='op'>)</span> <span class='co'># % correctly predicted</span>
+</div><div class='output co'>#&gt; [1] 0.378524</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -243,7 +248,7 @@ alternatives. Defaults to <code>NULL</code> (for a single set of alternatives).<
 
       <footer>
       <div class="copyright">
-  <p>Developed by John Helveston, Connor Forsythe.</p>
+  <p>Developed by John Helveston.</p>
 </div>
 
 <div class="pkgdown">

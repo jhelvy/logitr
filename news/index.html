@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2.9000</span>
       </span>
     </div>
 
@@ -125,12 +125,6 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-<li>
-  <a href="https://github.com/jhelvy/logitr">
-    <span class="fa fa-github"></span>
-     
-  </a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -156,6 +150,20 @@
       <small>Source: <a href='https://github.com/jhelvy/logitr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="logitr-022" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.2">
+<a href="#logitr-022" class="anchor"></a>logitr 0.2.2<small> Unreleased </small>
+</h1>
+<ul>
+<li>Improved <code><a href="../reference/miscmethods.logitr.html">summary.logitr()</a></code> and <code><a href="../reference/miscmethods.logitr.html">coef.logitr()</a></code> methods for better printing, using <code><a href="https://rdrr.io/r/stats/printCoefmat.html">printCoefmat()</a></code>
+</li>
+<li>Added new methods: <code><a href="../reference/miscmethods.logitr.html">print.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">logLik.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">coef.summary.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">vcov.logitr()</a></code>
+</li>
+<li>Removed option for keeping all model outputs.</li>
+<li>Added input checks for <code><a href="../reference/wtp.html">wtp()</a></code> and <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> functions</li>
+<li>Fixed some errors in some of the examples and made them all run (removed dontrun commands).</li>
+</ul>
+</div>
     <div id="logitr-021" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.1">
 <a href="#logitr-021" class="anchor"></a>logitr 0.2.1<small> Unreleased </small>
@@ -294,7 +302,7 @@
 <a href="#summary-of-larger-updates-2" class="anchor"></a>Summary of larger updates:</h2>
 <ul>
 <li>Added support for auto creating interactions among variables</li>
-<li>exported <code><a href="../reference/getCoefTable.html">getCoefTable()</a></code> function</li>
+<li>exported <code>getCoefTable()</code> function</li>
 </ul>
 </div>
 <div id="summary-of-smaller-updates-2" class="section level2">
@@ -371,7 +379,7 @@
 <h2 class="hasAnchor">
 <a href="#summary-of-larger-updates-5" class="anchor"></a>Summary of larger updates:</h2>
 <ul>
-<li>I got rid of the <code>logitr.summary()</code> function and instead added the <code>logitr</code> class to all the models and renamed the summary function to <code><a href="../reference/summary.logitr.html">summary.logitr()</a></code>. Now you can just use the standard <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> function to summarize model results.</li>
+<li>I got rid of the <code>logitr.summary()</code> function and instead added the <code>logitr</code> class to all the models and renamed the summary function to <code><a href="../reference/miscmethods.logitr.html">summary.logitr()</a></code>. Now you can just use the standard <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> function to summarize model results.</li>
 <li>I finally fixed the analytic gradient for WTP space MXL models. I tested analytic versus numeric for WTP space and Preference Space MXL models and they are all identical, including variations of using normally and log-normally distributed parameters.</li>
 <li>Added startParBounds as an argument in options.</li>
 </ul>
@@ -417,7 +425,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by John Helveston, Connor Forsythe.</p>
+  <p>Developed by John Helveston.</p>
 </div>
 
 <div class="pkgdown">

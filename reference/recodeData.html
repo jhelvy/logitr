@@ -79,7 +79,7 @@ randPars." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2.9000</span>
       </span>
     </div>
 
@@ -132,12 +132,6 @@ randPars." />
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
-</li>
-<li>
-  <a href="https://github.com/jhelvy/logitr">
-    <span class="fa fa-github"></span>
-     
-  </a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -204,8 +198,11 @@ Defaults to <code>NULL</code>.</p></td>
 added.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>yogurt</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/jhelvy/logitr'>logitr</a></span><span class='op'>)</span>
 
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>yogurt</span><span class='op'>)</span>
+
+<span class='co'># Recode the yogurt data</span>
 <span class='va'>result</span> <span class='op'>&lt;-</span> <span class='fu'>recodeData</span><span class='op'>(</span>
     data <span class='op'>=</span> <span class='va'>yogurt</span>,
     parNames <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span>, <span class='st'>"price*brand"</span><span class='op'>)</span>,
@@ -243,7 +240,7 @@ added.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by John Helveston, Connor Forsythe.</p>
+  <p>Developed by John Helveston.</p>
 </div>
 
 <div class="pkgdown">

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2.9000</span>
       </span>
     </div>
 
@@ -125,12 +125,6 @@
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
-</li>
-<li>
-  <a href="https://github.com/jhelvy/logitr">
-    <span class="fa fa-github"></span>
-     
-  </a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -188,24 +182,24 @@ utility model in the "preference" space by the price parameter.
 Uncertainty is handled via simulation.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Run a MNL model in the Preference Space:</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/jhelvy/logitr'>logitr</a></span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/jhelvy/logitr'>logitr</a></span><span class='op'>)</span>
 
+<span class='co'># Estimate a preference space model</span>
 <span class='va'>mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
-  data <span class='op'>=</span> <span class='va'>yogurt</span>,
+  data       <span class='op'>=</span> <span class='va'>yogurt</span>,
   choiceName <span class='op'>=</span> <span class='st'>"choice"</span>,
-  obsIDName <span class='op'>=</span> <span class='st'>"obsID"</span>,
-  parNames <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"dannon"</span>, <span class='st'>"hiland"</span>, <span class='st'>"yoplait"</span><span class='op'>)</span>
+  obsIDName  <span class='op'>=</span> <span class='st'>"obsID"</span>,
+  parNames   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
 <span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
-<span class='co'># Get the WTP implied from the preference space model</span>
+<span class='co'># Compute the WTP implied from the preference space model</span>
 <span class='fu'>wtp</span><span class='op'>(</span><span class='va'>mnl_pref</span>, priceName <span class='op'>=</span> <span class='st'>"price"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;          Estimate StdError    tStat  pVal signif
-#&gt; lambda   0.366581 0.024393  15.0282 0e+00    ***
-#&gt; feat     1.340593 0.360434   3.7194 2e-04    ***
-#&gt; dannon   1.749066 0.181729   9.6246 0e+00    ***
-#&gt; hiland  -8.386654 0.509782 -16.4514 0e+00    ***
-#&gt; yoplait  3.752975 0.169524  22.1383 0e+00    ***</div></pre>
+</div><div class='output co'>#&gt;                 Estimate Std. Error    z-value     Pr(&gt;|z|)
+#&gt; lambda         0.3665429 0.02443361  15.001587 0.0000000000
+#&gt; feat           1.3407239 0.36050220   3.719045 0.0001999773
+#&gt; brandhiland  -10.1364057 0.58519624 -17.321379 0.0000000000
+#&gt; brandweight   -1.7491210 0.18209418  -9.605584 0.0000000000
+#&gt; brandyoplait   2.0038477 0.14369019  13.945612 0.0000000000</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -217,7 +211,7 @@ Uncertainty is handled via simulation.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by John Helveston, Connor Forsythe.</p>
+  <p>Developed by John Helveston.</p>
 </div>
 
 <div class="pkgdown">
