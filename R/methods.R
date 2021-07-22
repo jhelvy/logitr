@@ -18,9 +18,12 @@
 #' @export
 print.logitr <- function(x, digits = max(3, getOption("digits") - 2)) {
   cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
-  # Print multistart summary
+  modelType <- ifelse(x$modelType == "mnl", "Multinomial Logit", "Mixed Logit")
+  modelSpace <- ifelse(
+    x$modelSpace == "pref",
+    "Preference", "Willingness-to-Pay")
+  cat("A", modelType, "model estimated in the", modelSpace, "space\n\n")
   if (nrow(x$multistartSummary) > 1) {
-    printMutlistartSummary(x)
     printMutlistartMessage(x)
     cat("\n")
   }
@@ -90,7 +93,6 @@ print.summary.logitr <- function(x, digits = max(3, getOption("digits") - 2)) {
   if (nrow(x$multistartSummary) > 1) {
     cat("\n")
     printMutlistartSummary(x)
-    printMutlistartMessage(x)
   }
   print(x$modelInfoTable)
   cat("\n")
@@ -187,7 +189,7 @@ getRandParSummary <- function(object) {
 printMutlistartMessage <- function(x) {
   cat(
     "Results below are from run", x$multistartNumber, "of",
-    model$options$numMultiStarts, "multistart runs\n",
+    x$options$numMultiStarts, "multistart runs\n",
     "as it had the largest log-likelihood value\n"
   )
 }
@@ -196,5 +198,5 @@ printMutlistartSummary <- function(x) {
     cat("Summary Of Multistart Runs:\n")
     print(x$multistartSummary)
     cat("\n")
-    cat("Use statusCodes() to view the meaning of each status code\n\n")
+    cat("Use statusCodes() to view the meaning of each status code\n")
 }
