@@ -159,7 +159,7 @@
 <p>The <code>yogurt</code> data frame now has new dummy-coded columns for brand (it actually already had these, but now there are additional ones):</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">yogurt</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 6 x 15</span>
+<span class="co">#&gt; # A tibble: 6 × 15</span>
 <span class="co">#&gt;      id obsID   alt choice price  feat brand   dannon hiland weight yoplait</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;</span>
 <span class="co">#&gt; 1     1     1     1      0  8.1      0 dannon       1      0      0       0</span>
@@ -192,14 +192,17 @@ Done!</code></pre>
 <span class="co">#&gt; Frequencies of alternatives:</span>
 <span class="co">#&gt;        1        2        3        4 </span>
 <span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span>
-<span class="co">#&gt;                           </span>
-<span class="co">#&gt; Model Space:    Preference</span>
-<span class="co">#&gt; Model Run:          1 of 1</span>
-<span class="co">#&gt; Iterations:             18</span>
-<span class="co">#&gt; Elapsed Time:  0h:0m:0.13s</span>
-<span class="co">#&gt; Exit Status:             3</span>
-<span class="co">#&gt; Weights Used?:       FALSE</span>
-<span class="co">#&gt; robust?              FALSE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Exit Status: 3 </span>
+<span class="co">#&gt; Optimization stopped because ftol_rel or ftol_abs was reached.                                </span>
+<span class="co">#&gt; Model Type:    Multinomial Logit</span>
+<span class="co">#&gt; Model Space:          Preference</span>
+<span class="co">#&gt; Model Run:                1 of 1</span>
+<span class="co">#&gt; Iterations:                   18</span>
+<span class="co">#&gt; Elapsed Time:        0h:0m:0.13s</span>
+<span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span>
+<span class="co">#&gt; Weights Used?:             FALSE</span>
+<span class="co">#&gt; Robust?                    FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
 <span class="co">#&gt;                Estimate Std. Error z-value  Pr(&gt;|z|)    </span>
@@ -210,8 +213,6 @@ Done!</code></pre>
 <span class="co">#&gt; brand_weight   3.074399   0.145384  21.147 &lt; 2.2e-16 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model Fit: </span>
 <span class="co">#&gt;                                      </span>
 <span class="co">#&gt; Log-Likelihood:         -2656.8878788</span>
 <span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span>

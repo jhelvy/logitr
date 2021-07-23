@@ -163,36 +163,16 @@
 
     <p>No return value; prints a summary of the <code>nloptr</code> status codes to
 the console.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    
-<table class='table'>
-<tr><td>Code</td><td>Description</td></tr>
-<tr><td>1</td><td>Generic success return value.</td></tr>
-<tr><td>2</td><td>Optimization stopped because stopval was reached.</td></tr>
-<tr><td>3</td><td>Optimization stopped because ftol_rel or ftol_abs was reached.</td></tr>
-<tr><td>4</td><td>Optimization stopped because xtol_rel or xtol_abs was reached.</td></tr>
-<tr><td>5</td><td>Optimization stopped because maxeval was reached.</td></tr>
-<tr><td>6</td><td>Optimization stopped because maxtime was reached.</td></tr>
-<tr><td>-1</td><td>Generic failure code.</td></tr>
-<tr><td>-2</td><td>Invalid arguments (e.g. lower bounds are bigger than upper bounds,</td></tr>
-<tr><td>an unknown algorithm was specified, etc.).</td><td></td></tr>
-<tr><td>-3</td><td>Ran out of memory.</td></tr>
-<tr><td>-4</td><td>Halted because roundoff errors limited progress (in this case, the optimization still typically returns a useful result.).</td></tr>
-<tr><td>-5</td><td>Halted because of a forced termination: the user called <code>nlopt_force_stop(opt)</code> on the optimization's nlopt_opt object opt the user's objective function or constraints.</td></tr>
-</table>
-
-
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>statusCodes</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Status codes:
-#&gt; 1:  Generic success return value.
-#&gt; 2:  Optimization stopped because stopval was reached.
-#&gt; 3:  Optimization stopped because ftol_rel or ftol_abs was reached.
-#&gt; 4:  Optimization stopped because xtol_rel or xtol_abs was reached.
-#&gt; 5:  Optimization stopped because maxeval was reached.
-#&gt; 6:  Optimization stopped because maxtime was reached.
+#&gt; 1: Generic success return value.
+#&gt; 2: Optimization stopped because stopval was reached.
+#&gt; 3: Optimization stopped because ftol_rel or ftol_abs was reached.
+#&gt; 4: Optimization stopped because xtol_rel or xtol_abs was reached.
+#&gt; 5: Optimization stopped because maxeval was reached.
+#&gt; 6: Optimization stopped because maxtime was reached.
 #&gt; -1: Generic failure code.
 #&gt; -2: Invalid arguments (e.g. lower bounds are bigger than upper bounds, an unknown algorithm was specified, etc.).
 #&gt; -3: Ran out of memory.

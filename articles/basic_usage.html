@@ -184,14 +184,17 @@
 <span class="co">#&gt; Frequencies of alternatives:</span>
 <span class="co">#&gt;        1        2        3        4 </span>
 <span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span>
-<span class="co">#&gt;                           </span>
-<span class="co">#&gt; Model Space:    Preference</span>
-<span class="co">#&gt; Model Run:          1 of 1</span>
-<span class="co">#&gt; Iterations:             21</span>
-<span class="co">#&gt; Elapsed Time:  0h:0m:0.13s</span>
-<span class="co">#&gt; Exit Status:             3</span>
-<span class="co">#&gt; Weights Used?:       FALSE</span>
-<span class="co">#&gt; robust?              FALSE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Exit Status: 3 </span>
+<span class="co">#&gt; Optimization stopped because ftol_rel or ftol_abs was reached.                                </span>
+<span class="co">#&gt; Model Type:    Multinomial Logit</span>
+<span class="co">#&gt; Model Space:          Preference</span>
+<span class="co">#&gt; Model Run:                1 of 1</span>
+<span class="co">#&gt; Iterations:                   21</span>
+<span class="co">#&gt; Elapsed Time:        0h:0m:0.13s</span>
+<span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span>
+<span class="co">#&gt; Weights Used?:             FALSE</span>
+<span class="co">#&gt; Robust?                    FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
 <span class="co">#&gt;               Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
@@ -202,8 +205,6 @@
 <span class="co">#&gt; brandyoplait  0.734496   0.080642   9.1082 &lt; 2.2e-16 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model Fit: </span>
 <span class="co">#&gt;                                      </span>
 <span class="co">#&gt; Log-Likelihood:         -2656.8878799</span>
 <span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span>
@@ -265,11 +266,11 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, priceName <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
 <span class="co">#&gt;                 Estimate Std. Error    z-value     Pr(&gt;|z|)</span>
-<span class="co">#&gt; lambda         0.3665429 0.02434209  15.057991 0.0000000000</span>
-<span class="co">#&gt; feat           1.3407239 0.35964484   3.727911 0.0001930736</span>
-<span class="co">#&gt; brandhiland  -10.1364057 0.58504434 -17.325876 0.0000000000</span>
-<span class="co">#&gt; brandweight   -1.7491210 0.18176855  -9.622792 0.0000000000</span>
-<span class="co">#&gt; brandyoplait   2.0038477 0.14348317  13.965734 0.0000000000</span></code></pre></div>
+<span class="co">#&gt; lambda         0.3665429 0.02440056  15.021905 0.0000000000</span>
+<span class="co">#&gt; feat           1.3407239 0.35858105   3.738970 0.0001847754</span>
+<span class="co">#&gt; brandhiland  -10.1364057 0.58416785 -17.351872 0.0000000000</span>
+<span class="co">#&gt; brandweight   -1.7491210 0.18216833  -9.601674 0.0000000000</span>
+<span class="co">#&gt; brandyoplait   2.0038477 0.14331379  13.982239 0.0000000000</span></code></pre></div>
 <p>The <code><a href="../reference/wtp.html">wtp()</a></code> function divides the non-price parameters by the negative of the price parameter. Standard errors are estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. Similarly, the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function can be used to compare the WTP from a WTP space model with that computed from an equivalent preference space model:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, priceName <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
@@ -312,14 +313,14 @@
 
 <span class="va">probs</span>
 <span class="co">#&gt;     obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 49     13   1 0.43684871 0.41539769 0.45772552</span>
-<span class="co">#&gt; 50     13   2 0.03313009 0.02623710 0.04157791</span>
-<span class="co">#&gt; 51     13   3 0.19155738 0.17614866 0.20818023</span>
-<span class="co">#&gt; 52     13   4 0.33846382 0.31866549 0.35891007</span>
-<span class="co">#&gt; 165    42   1 0.60763975 0.57302914 0.64018085</span>
-<span class="co">#&gt; 166    42   2 0.02602079 0.01833143 0.03667387</span>
-<span class="co">#&gt; 167    42   3 0.17803594 0.16212749 0.19493860</span>
-<span class="co">#&gt; 168    42   4 0.18830353 0.16865261 0.20967734</span></code></pre></div>
+<span class="co">#&gt; 49     13   1 0.43684871 0.41530265 0.45799548</span>
+<span class="co">#&gt; 50     13   2 0.03313009 0.02636557 0.04173862</span>
+<span class="co">#&gt; 51     13   3 0.19155738 0.17599804 0.20805133</span>
+<span class="co">#&gt; 52     13   4 0.33846382 0.31819733 0.35876943</span>
+<span class="co">#&gt; 165    42   1 0.60763975 0.57346077 0.64070043</span>
+<span class="co">#&gt; 166    42   2 0.02602079 0.01852554 0.03659993</span>
+<span class="co">#&gt; 167    42   3 0.17803594 0.16173462 0.19498031</span>
+<span class="co">#&gt; 168    42   4 0.18830353 0.16826029 0.20964552</span></code></pre></div>
 <p>The resulting <code>probs</code> data frame contains the expected choice probabilities for each alternative. The low and high values show a 95% confidence interval, estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. You can change the CI level by setting alpha to a different value (e.g. a 90% CI is obtained with alpha = 0.05).</p>
 <p>Choice probabilities can also be predicted used WTP space models. For example, the predicted choice probabilities using the <code>mnl_wtp</code> model are nearly identical with those from the <code>mnl_pref</code> model:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -332,14 +333,14 @@
 
 <span class="va">probs</span>
 <span class="co">#&gt;     obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 49     13   1 0.43686015 0.41520716 0.45777671</span>
-<span class="co">#&gt; 50     13   2 0.03313003 0.02644835 0.04243332</span>
-<span class="co">#&gt; 51     13   3 0.19154919 0.17606540 0.20767674</span>
-<span class="co">#&gt; 52     13   4 0.33846063 0.31880744 0.35876744</span>
-<span class="co">#&gt; 165    42   1 0.60766707 0.57254725 0.63977322</span>
-<span class="co">#&gt; 166    42   2 0.02601904 0.01821700 0.03705731</span>
-<span class="co">#&gt; 167    42   3 0.17802489 0.16172967 0.19467530</span>
-<span class="co">#&gt; 168    42   4 0.18828900 0.16800652 0.20908681</span></code></pre></div>
+<span class="co">#&gt; 49     13   1 0.43686015 0.41494529 0.45819911</span>
+<span class="co">#&gt; 50     13   2 0.03313003 0.02655404 0.04233255</span>
+<span class="co">#&gt; 51     13   3 0.19154919 0.17577440 0.20803325</span>
+<span class="co">#&gt; 52     13   4 0.33846063 0.31822266 0.35888470</span>
+<span class="co">#&gt; 165    42   1 0.60766707 0.57265119 0.64024218</span>
+<span class="co">#&gt; 166    42   2 0.02601904 0.01846165 0.03659262</span>
+<span class="co">#&gt; 167    42   3 0.17802489 0.16165756 0.19506288</span>
+<span class="co">#&gt; 168    42   4 0.18828900 0.16767743 0.20885856</span></code></pre></div>
 <p>Similar to the <code><a href="../reference/predictProbs.html">predictProbs()</a></code> function, the <code><a href="../reference/predictChoices.html">predictChoices()</a></code> function can be used to predict choices using the results of an estimated model. In the example below, choices are predicted for the entire <code>yogurt</code> dataset, which was used to the estimate the <code>mnl_pref</code> model:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predictChoices.html">predictChoices</a></span><span class="op">(</span>
@@ -363,7 +364,7 @@
 <code class="sourceCode R"><span class="va">chosen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">choices</span>, <span class="va">choice</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>
 <span class="va">chosen</span><span class="op">$</span><span class="va">correct</span> <span class="op">&lt;-</span> <span class="va">chosen</span><span class="op">$</span><span class="va">choice</span> <span class="op">==</span> <span class="va">chosen</span><span class="op">$</span><span class="va">choice_predict</span>
 <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">chosen</span><span class="op">$</span><span class="va">correct</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">chosen</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.3656716</span></code></pre></div>
+<span class="co">#&gt; [1] 0.3839138</span></code></pre></div>
 </div>
 </div>
   </div>
