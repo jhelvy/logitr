@@ -8,24 +8,14 @@
 # MNL logit and log-likelihood functions for both Preference and WTP Spaces
 # ============================================================================
 
-# # Logit fraction using data.table package (faster, but requires data.table)
-# # Returns the logit fraction for mnl (homogeneous) models
-# getMnlLogit = function(V, obsID) {
-#     data = data.table::data.table(V=V, obsID=obsID)
-#     data[, expV:=exp(V.V1)]
-#     data[, sumExpV:=sum(expV), by=obsID]
-#     data[, logit:=expV/sumExpV]
-#     return(data$logit)
-# }
-
+# Logit fraction using data.table package (faster, but requires data.table)
 # Returns the logit fraction for mnl (homogeneous) models
 getMnlLogit <- function(V, obsID) {
-  expV <- exp(V)
-  sumExpV <- rowsum(expV, group = obsID, reorder = FALSE)
-  repTimes <- as.numeric(table(obsID))
-  sumExpVMat <- matrix(rep(sumExpV, times = repTimes), ncol = 1)
-  logit <- expV / sumExpVMat
-  return(logit)
+    data = data.table::data.table(V = V, obsID = obsID)
+    data[, expV:=exp(V.V1)]
+    data[, sumExpV:=sum(expV), by=obsID]
+    data[, logit:=expV/sumExpV]
+    return(data$logit)
 }
 
 mnlNegLL <- function(choice, logit, weights) {
