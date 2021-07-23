@@ -145,7 +145,7 @@ logitr <- function(
   )
   allModels <- runMultistart(modelInputs)
   summary <- getMultistartSummary(allModels)
-  model <- allModels[[which(summary$logLik == max(summary$logLik))]]
+  model <- allModels[[which.max(summary$`Log Likelihood`)]]
   model <- appendModelInfo(model, modelInputs, summary)
   message("Done!")
   return(model)
@@ -153,11 +153,11 @@ logitr <- function(
 
 getMultistartSummary <- function(allModels) {
   summary <- data.frame(
-    run        = seq_len(length(allModels)),
-    logLik     = getListVal(allModels, "logLik"),
-    iterations = getListVal(allModels, "iterations"),
-    status     = getListVal(allModels, "status")
+    getListVal(allModels, "logLik"),
+    getListVal(allModels, "iterations"),
+    getListVal(allModels, "status")
   )
+  colnames(summary) <- c("Log Likelihood", "Iterations", "Exit Status")
   return(summary)
 }
 

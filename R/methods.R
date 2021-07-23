@@ -105,12 +105,12 @@ print.summary.logitr <- function(
     cat("\n")
     cat("Use statusCodes() to view the meaning of each status code\n")
   }
+  cat("\nExit Status:", x$status, "\n")
+  cat(getExitMessage(x))
   print(x$modelInfoTable)
   cat("\n")
   cat("Model Coefficients:", "\n")
   stats::printCoefmat(x$coefTable, digits = digits)
-  cat("\n")
-  cat("Model Fit:", "\n")
   print(x$statTable)
   if (x$modelType == "mxl") {
       cat("\n")
@@ -128,16 +128,16 @@ getModelInfoTable <- function(model) {
   algorithm <- model$options$algorithm
   modelInfoTable <- data.frame(c(
     modelType, modelSpace, modelRun, model$iterations,
-    modelTime, algorithm, model$status, model$weightsUsed
+    modelTime, algorithm, model$weightsUsed
   ))
   colnames(modelInfoTable) <- ""
   row.names(modelInfoTable) <- c(
     "Model Type:", "Model Space:", "Model Run:", "Iterations:",
-    "Elapsed Time:", "Algorithm:", "Exit Status:", "Weights Used?:"
+    "Elapsed Time:", "Algorithm:", "Weights Used?:"
   )
   if (!is.null(model$robust)) { # Added for backwards compatibility
     modelInfoTable <- rbind(modelInfoTable, model$robust)
-    row.names(modelInfoTable)[nrow(modelInfoTable)] <- "robust?"
+    row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Robust?"
   }
   if (!is.null(model$numClusters)) { # Added for backwards compatibility
     if (model$numClusters > 0) {
@@ -204,4 +204,9 @@ getModelSpace <- function(x) {
 
 getModelRun <- function(x) {
   return(paste(x$multistartNumber, "of", x$options$numMultiStarts))
+}
+
+getExitMessage <- function(x) {
+  codes <- getStatusCodes()
+  return(codes$message[which(codes$code == x$status)])
 }
