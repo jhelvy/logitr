@@ -221,24 +221,24 @@ setLogitFunctions <- function(modelSpace) {
 
 setEvalFunctions <- function(modelType, useAnalyticGrad) {
   evalFuncs <- list(
-    objective = mnlNegLLAndNumericGradLL,
+    objective = mnlNegLLAndGradLL,
     negLL     = getMnlNegLL,
-    negGradLL = getNumericNegGradLL,
+    negGradLL = getMnlNegGradLL,
+    # hessLL    = getMnlHessLL # Numeric approx is faster
     hessLL    = getNumericHessLL
   )
-  if (useAnalyticGrad) {
-    evalFuncs$objective <- mnlNegLLAndGradLL
-    evalFuncs$negGradLL <- getMnlNegGradLL
-    # evalFuncs$hessLL    = getMnlHessLL # Numeric approx is faster
+  if (!useAnalyticGrad) {
+    evalFuncs$objective <- mnlNegLLAndNumericGradLL
+    evalFuncs$negGradLL <- getNumericNegGradLL
   }
   if (modelType == "mxl") {
-    evalFuncs$objective <- mxlNegLLAndNumericGradLL
+    evalFuncs$objective <- mxlNegLLAndGradLL
     evalFuncs$negLL <- getMxlNegLL
-    evalFuncs$negGradLL <- getNumericNegGradLL
+    evalFuncs$negGradLL <- getMxlNegGradLL
     evalFuncs$hessLL <- getNumericHessLL
-    if (useAnalyticGrad) {
-      evalFuncs$objective <- mxlNegLLAndGradLL
-      evalFuncs$negGradLL <- getMxlNegGradLL
+    if (!useAnalyticGrad) {
+      evalFuncs$objective <- mxlNegLLAndNumericGradLL
+      evalFuncs$negGradLL <- getNumericNegGradLL
     }
   }
   return(evalFuncs)
