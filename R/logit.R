@@ -35,9 +35,9 @@ mnlNegLLAndGradLL <- function(pars, modelInputs) {
   weights <- modelInputs$weights
   V <- logitFuncs$getMnlV(pars, X, p)
   logit <- getMnlLogit(V, obsID)
-  negLL <- negLL(choice, logit, weights)
+  negLogLik <- negLL(choice, logit, weights)
   negGradLL <- logitFuncs$mnlNegGradLL(p, X, pars, choice, logit, weights)
-  return(list("objective" = negLL, "gradient" = negGradLL))
+  return(list("objective" = negLogLik, "gradient" = negGradLL))
 }
 
 getMnlNegLL <- function(pars, modelInputs) {
@@ -49,8 +49,8 @@ getMnlNegLL <- function(pars, modelInputs) {
   weights <- modelInputs$weights
   V <- logitFuncs$getMnlV(pars, X, p)
   logit <- getMnlLogit(V, obsID)
-  negLL <- negLL(choice, logit, weights)
-  return(negLL)
+  negLogLik <- negLL(choice, logit, weights)
+  return(negLogLik)
 }
 
 getMnlNegGradLL <- function(pars, modelInputs) {
@@ -105,13 +105,13 @@ mxlNegLLAndGradLL <- function(pars, modelInputs) {
   VDraws <- logitFuncs$getMxlV(betaDraws, X, p)
   logitDraws <- getMxlLogit(VDraws, obsID)
   pHat <- rowMeans(logitDraws, na.rm = T)
-  negLL <- negLL(choice, pHat, weights)
+  negLogLik <- negLL(choice, pHat, weights)
   negGradLL <- logitFuncs$mxlNegGradLL(
     X, parSetup, obsID, choice,
     standardDraws, betaDraws, VDraws, logitDraws, pHat,
     weights
   )
-  return(list("objective" = negLL, "gradient" = negGradLL))
+  return(list("objective" = negLogLik, "gradient" = negGradLL))
 }
 
 # Returns the negative log-likelihood of an mxl (heterogeneous) model
@@ -129,8 +129,8 @@ getMxlNegLL <- function(pars, modelInputs) {
   VDraws <- logitFuncs$getMxlV(betaDraws, X, p)
   logitDraws <- getMxlLogit(VDraws, obsID)
   pHat <- rowMeans(logitDraws, na.rm = T)
-  negLL <- negLL(choice, pHat, weights)
-  return(negLL)
+  negLogLik <- negLL(choice, pHat, weights)
+  return(negLogLik)
 }
 
 getMxlNegGradLL <- function(pars, modelInputs) {
@@ -160,15 +160,15 @@ getMxlNegGradLL <- function(pars, modelInputs) {
 # ============================================================================
 
 mnlNegLLAndNumericGradLL <- function(pars, modelInputs) {
-  negLL <- getMnlNegLL(pars, modelInputs)
+  negLogLik <- getMnlNegLL(pars, modelInputs)
   negGradLL <- getNumericNegGradLL(pars, modelInputs)
-  return(list("objective" = negLL, "gradient" = negGradLL))
+  return(list("objective" = negLogLik, "gradient" = negGradLL))
 }
 
 mxlNegLLAndNumericGradLL <- function(pars, modelInputs) {
-  negLL <- getMxlNegLL(pars, modelInputs)
+  negLogLik <- getMxlNegLL(pars, modelInputs)
   negGradLL <- getNumericNegGradLL(pars, modelInputs)
-  return(list("objective" = negLL, "gradient" = negGradLL))
+  return(list("objective" = negLogLik, "gradient" = negGradLL))
 }
 
 getNumericNegGradLL <- function(pars, modelInputs) {
@@ -244,8 +244,10 @@ getMxlV_pref <- function(betaDraws, X, p) {
 }
 
 # Computes the gradient of the negative likelihood for a mixed logit model
-mxlNegGradLL_pref <- function(X, parSetup, obsID, choice, standardDraws,
-                              betaDraws, VDraws, logitDraws, pHat, weights) {
+mxlNegGradLL_pref <- function(
+  X, parSetup, obsID, choice, standardDraws, betaDraws, VDraws, logitDraws,
+  pHat, weights
+) {
   randParIDs <- getRandParIDs(parSetup)
   numDraws <- nrow(standardDraws)
   numBetas <- length(parSetup)
