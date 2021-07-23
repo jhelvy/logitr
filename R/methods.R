@@ -125,14 +125,15 @@ getModelInfoTable <- function(model) {
   modelSpace <- getModelSpace(model)
   modelRun <- getModelRun(model)
   modelTime <- convertTime(model$time)
+  algorithm <- model$options$algorithm
   modelInfoTable <- data.frame(c(
     modelType, modelSpace, modelRun, model$iterations,
-    modelTime, model$status, model$weightsUsed
+    modelTime, algorithm, model$status, model$weightsUsed
   ))
   colnames(modelInfoTable) <- ""
   row.names(modelInfoTable) <- c(
     "Model Type:", "Model Space:", "Model Run:", "Iterations:",
-    "Elapsed Time:", "Exit Status:", "Weights Used?:"
+    "Elapsed Time:", "Algorithm:", "Exit Status:", "Weights Used?:"
   )
   if (!is.null(model$robust)) { # Added for backwards compatibility
     modelInfoTable <- rbind(modelInfoTable, model$robust)
