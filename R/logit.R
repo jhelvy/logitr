@@ -12,7 +12,7 @@
 #' @importFrom data.table "data.table" ":="
 getMnlLogit <- function(V, obsID) {
     # Initiate objects created in data.table so R CMD check won't complain
-    expV <- sumExpV <- logit <- NULL
+    expV <- sumExpV <- logit <- V.V1 <- NULL
     DT <- data.table::data.table(V = V, obsID = obsID)
     DT[, expV := exp(V.V1)]
     DT[, sumExpV := sum(expV), by = obsID]
