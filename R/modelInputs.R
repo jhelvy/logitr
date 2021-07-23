@@ -203,13 +203,9 @@ addDraws <- function(modelInputs) {
 
 setLogitFunctions <- function(modelSpace) {
   logitFuncs <- list(
-    getMnlLogit  = getMnlLogit,
-    mnlNegLL     = mnlNegLL,
     getMnlV      = getMnlV_pref,
     mnlNegGradLL = mnlNegGradLL_pref,
     mnlHessLL    = mnlHessLL_pref,
-    getMxlLogit  = getMxlLogit,
-    mxlNegLL     = mxlNegLL,
     getMxlV      = getMxlV_pref,
     mxlNegGradLL = mxlNegGradLL_pref
   )

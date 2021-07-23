@@ -47,12 +47,6 @@ mnl_wtp <- logitr(
 # Print a summary of all multistart runs and a summary of the best model:
 summary(mnl_wtp)
 
-# Print a summary of only the second model run (not the optimal solution):
-summary(mnl_wtp$models[[2]])
-
-# Print a summary of the best model:
-summary(mnl_wtp$bestModel)
-
 # Get the coefficients from the model:
 coef(mnl_wtp)
 
