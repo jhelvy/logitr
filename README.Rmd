@@ -53,7 +53,6 @@ View the [basic usage](https://jhelvy.github.io/logitr/articles/basic_usage.html
 
 - Author: *John Paul Helveston* https://www.jhelvy.com/
 - Date First Written: *Sunday, September 28, 2014*
-- Most Recent Update: `r format(Sys.Date(), format="%B %d, %Y")`
 - License: [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
 
 ## Citation Information
