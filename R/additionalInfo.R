@@ -17,7 +17,6 @@ appendModelInfo <- function(model, modelInputs, multistartSummary) {
   logLik <- as.numeric(model$logLik)
   nullLogLik <- -1 * modelInputs$evalFuncs$negLL(coef * 0, modelInputs)
   numObs <- sum(modelInputs$choice)
-  options <- append(modelInputs$options, model$options)
   result <- structure(list(
     coef             = coef,
     standErrs        = se,
@@ -48,7 +47,7 @@ appendModelInfo <- function(model, modelInputs, multistartSummary) {
     numClusters      = modelInputs$numClusters,
     robust           = modelInputs$robust,
     standardDraws    = NA,
-    options          = options
+    options          = modelInputs$options
   ),
   class = "logitr"
   )

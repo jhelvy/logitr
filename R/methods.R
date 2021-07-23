@@ -58,15 +58,13 @@ print.logitr <- function (
   ...
 ) {
   cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
-  modelType <- ifelse(x$modelType == "mnl", "Multinomial Logit", "Mixed Logit")
-  modelSpace <- ifelse(
-    x$modelSpace == "pref",
-    "Preference", "Willingness-to-Pay")
+  modelType <- getModelType(x)
+  modelSpace <- getModelSpace(x)
   cat("A", modelType, "model estimated in the", modelSpace, "space\n\n")
   if (nrow(x$multistartSummary) > 1) {
+    modelRun <- getModelRun(x)
     cat(
-      "Results below are from run", x$multistartNumber, "of",
-      x$options$numMultiStarts, "multistart runs\n",
+      "Results below are from run", modelRun, "multistart runs\n",
       "as it had the largest log-likelihood value\n")
     cat("\n")
   }
@@ -123,13 +121,9 @@ print.summary.logitr <- function(
 }
 
 getModelInfoTable <- function(model) {
-  modelSpace <- "Preference"
-  if (model$modelSpace == "wtp") {
-    modelSpace <- "Willingness-to-Pay"
-  }
-  modelRun <- paste(model$multistartNumber, "of",
-    model$options$numMultiStarts, sep = " "
-  )
+  modelType <- getModelType(model)
+  modelSpace <- getModelSpace(model)
+  modelRun <- getModelRun(model)
   modelTime <- convertTime(model$time)
   modelInfoTable <- data.frame(c(
     modelSpace, modelRun, model$iterations,
@@ -197,4 +191,16 @@ getRandParSummary <- function(object) {
   colnames(randParSummary) <- summaryNames
   randParSummary <- t(randParSummary[, randParIDs])
   return(as.data.frame(randParSummary))
+}
+
+getModelType <- function(x) {
+  return(ifelse(x$modelType == "mnl", "Multinomial Logit", "Mixed Logit"))
+}
+
+getModelSpace <- function(x) {
+  return(ifelse(x$modelSpace == "pref", "Preference", "Willingness-to-Pay"))
+}
+
+getModelRun <- function(x) {
+  return(paste(x$multistartNumber, "of", x$options$numMultiStarts))
 }
