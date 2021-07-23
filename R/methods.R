@@ -126,12 +126,12 @@ getModelInfoTable <- function(model) {
   modelRun <- getModelRun(model)
   modelTime <- convertTime(model$time)
   modelInfoTable <- data.frame(c(
-    modelSpace, modelRun, model$iterations,
+    modelType, modelSpace, modelRun, model$iterations,
     modelTime, model$status, model$weightsUsed
   ))
   colnames(modelInfoTable) <- ""
   row.names(modelInfoTable) <- c(
-    "Model Space:", "Model Run:", "Iterations:",
+    "Model Type:", "Model Space:", "Model Run:", "Iterations:",
     "Elapsed Time:", "Exit Status:", "Weights Used?:"
   )
   if (!is.null(model$robust)) { # Added for backwards compatibility
