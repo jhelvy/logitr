@@ -1,4 +1,4 @@
-# ============================================================================
+# # ============================================================================
 # Logit and log-likelihood functions
 # The log-likelihood function is given as the negative log-likelihood
 # because the optimization performs a minimization
@@ -82,10 +82,9 @@ getMxlLogit <- function(VDraws, obsID) {
   numDraws <- ncol(VDraws)
   expVDraws <- exp(VDraws)
   sumExpVDraws <- rowsum(expVDraws, group = obsID, reorder = FALSE)
-  repTimes <- rep(as.numeric(table(obsID)), each = numDraws)
-  sumExpVDrawsMat <- matrix(rep(sumExpVDraws, times = repTimes),
-    ncol = numDraws, byrow = FALSE
-  )
+  repTimes <- rep(as.numeric(table(obsID)), times = numDraws)
+  sumExpVDrawsMat <- matrix(
+    rep(sumExpVDraws, times = repTimes), ncol = numDraws, byrow = FALSE)
   logitDraws <- expVDraws / sumExpVDrawsMat
   return(logitDraws)
 }
@@ -149,7 +148,7 @@ getMxlNegGradLL <- function(pars, modelInputs) {
   pHat <- rowMeans(logitDraws, na.rm = T)
   negGradLL <- logitFuncs$mxlNegGradLL(
     X, parSetup, obsID, choice, standardDraws, betaDraws, VDraws, logitDraws,
-    pHat, weights, numDraws
+    pHat, weights
   )
   return(negGradLL)
 }
@@ -245,9 +244,10 @@ getMxlV_pref <- function(betaDraws, X, p) {
 # Computes the gradient of the negative likelihood for a mixed logit model
 mxlNegGradLL_pref <- function(
   X, parSetup, obsID, choice, standardDraws, betaDraws, VDraws, logitDraws,
-  pHat, weights, numDraws
+  pHat, weights
 ) {
   randParIDs <- getRandParIDs(parSetup)
+  numDraws <- nrow(standardDraws)
   numBetas <- length(parSetup)
   logNormParIDs <- getLogNormParIDs(parSetup)
   repTimes <- rep(as.numeric(table(obsID)), each = 2 * numBetas)

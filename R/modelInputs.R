@@ -224,21 +224,26 @@ setEvalFunctions <- function(modelType, useAnalyticGrad) {
     objective = mnlNegLLAndGradLL,
     negLL     = getMnlNegLL,
     negGradLL = getMnlNegGradLL,
-    # hessLL    = getMnlHessLL # Numeric approx is faster
+    # hessLL    = getMnlHessLL # For now, numeric is faster
     hessLL    = getNumericHessLL
   )
   if (!useAnalyticGrad) {
     evalFuncs$objective <- mnlNegLLAndNumericGradLL
     evalFuncs$negGradLL <- getNumericNegGradLL
+    evalFuncs$hessLL    <- getNumericHessLL
   }
   if (modelType == "mxl") {
-    evalFuncs$objective <- mxlNegLLAndGradLL
+    # evalFuncs$objective <- mxlNegLLAndGradLL # For now, numeric is faster
+    evalFuncs$objective <- mxlNegLLAndNumericGradLL
     evalFuncs$negLL <- getMxlNegLL
-    evalFuncs$negGradLL <- getMxlNegGradLL
+    # evalFuncs$negGradLL <- getMxlNegGradLL # For now, numeric is faster
+    # evalFuncs$hessLL <- getMxlHessLL
+    evalFuncs$negGradLL <- getNumericNegGradLL
     evalFuncs$hessLL <- getNumericHessLL
     if (!useAnalyticGrad) {
       evalFuncs$objective <- mxlNegLLAndNumericGradLL
       evalFuncs$negGradLL <- getNumericNegGradLL
+      evalFuncs$hessLL    <- getNumericHessLL
     }
   }
   return(evalFuncs)
