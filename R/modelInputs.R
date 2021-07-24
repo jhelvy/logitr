@@ -203,13 +203,9 @@ addDraws <- function(modelInputs) {
 
 setLogitFunctions <- function(modelSpace) {
   logitFuncs <- list(
-    getMnlLogit  = getMnlLogit,
-    mnlNegLL     = mnlNegLL,
     getMnlV      = getMnlV_pref,
     mnlNegGradLL = mnlNegGradLL_pref,
     mnlHessLL    = mnlHessLL_pref,
-    getMxlLogit  = getMxlLogit,
-    mxlNegLL     = mxlNegLL,
     getMxlV      = getMxlV_pref,
     mxlNegGradLL = mxlNegGradLL_pref
   )
@@ -225,24 +221,29 @@ setLogitFunctions <- function(modelSpace) {
 
 setEvalFunctions <- function(modelType, useAnalyticGrad) {
   evalFuncs <- list(
-    objective = mnlNegLLAndNumericGradLL,
+    objective = mnlNegLLAndGradLL,
     negLL     = getMnlNegLL,
-    negGradLL = getNumericNegGradLL,
+    negGradLL = getMnlNegGradLL,
+    # hessLL    = getMnlHessLL # For now, numeric is faster
     hessLL    = getNumericHessLL
   )
-  if (useAnalyticGrad) {
-    evalFuncs$objective <- mnlNegLLAndGradLL
-    evalFuncs$negGradLL <- getMnlNegGradLL
-    # evalFuncs$hessLL    = getMnlHessLL # Numeric approx is faster
+  if (!useAnalyticGrad) {
+    evalFuncs$objective <- mnlNegLLAndNumericGradLL
+    evalFuncs$negGradLL <- getNumericNegGradLL
+    evalFuncs$hessLL    <- getNumericHessLL
   }
   if (modelType == "mxl") {
+    # evalFuncs$objective <- mxlNegLLAndGradLL # For now, numeric is faster
     evalFuncs$objective <- mxlNegLLAndNumericGradLL
     evalFuncs$negLL <- getMxlNegLL
+    # evalFuncs$negGradLL <- getMxlNegGradLL # For now, numeric is faster
+    # evalFuncs$hessLL <- getMxlHessLL
     evalFuncs$negGradLL <- getNumericNegGradLL
     evalFuncs$hessLL <- getNumericHessLL
-    if (useAnalyticGrad) {
-      evalFuncs$objective <- mxlNegLLAndGradLL
-      evalFuncs$negGradLL <- getMxlNegGradLL
+    if (!useAnalyticGrad) {
+      evalFuncs$objective <- mxlNegLLAndNumericGradLL
+      evalFuncs$negGradLL <- getNumericNegGradLL
+      evalFuncs$hessLL    <- getNumericHessLL
     }
   }
   return(evalFuncs)

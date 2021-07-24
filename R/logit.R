@@ -1,36 +1,27 @@
-# ============================================================================
+# # ============================================================================
 # Logit and log-likelihood functions
 # The log-likelihood function is given as the negative log-likelihood
 # because the optimization performs a minimization
 # ============================================================================
 
+negLL <- function(choice, logit, weights) {
+  return(-1 * sum(weights * choice * log(logit)))
+}
+
 # ============================================================================
 # MNL logit and log-likelihood functions for both Preference and WTP Spaces
 # ============================================================================
 
-# # Logit fraction using data.table package (faster, but requires data.table)
-# # Returns the logit fraction for mnl (homogeneous) models
-# getMnlLogit = function(V, obsID) {
-#     data = data.table::data.table(V=V, obsID=obsID)
-#     data[, expV:=exp(V.V1)]
-#     data[, sumExpV:=sum(expV), by=obsID]
-#     data[, logit:=expV/sumExpV]
-#     return(data$logit)
-# }
-
 # Returns the logit fraction for mnl (homogeneous) models
+#' @importFrom data.table "data.table" ":="
 getMnlLogit <- function(V, obsID) {
-  expV <- exp(V)
-  sumExpV <- rowsum(expV, group = obsID, reorder = FALSE)
-  repTimes <- as.numeric(table(obsID))
-  sumExpVMat <- matrix(rep(sumExpV, times = repTimes), ncol = 1)
-  logit <- expV / sumExpVMat
-  return(logit)
-}
-
-mnlNegLL <- function(choice, logit, weights) {
-  negLL <- -1 * sum(weights * choice * log(logit))
-  return(negLL)
+    # Initiate objects created in data.table so R CMD check won't complain
+    expV <- sumExpV <- logit <- V.V1 <- NULL
+    DT <- data.table::data.table(V = V, obsID = obsID)
+    DT[, expV := exp(V.V1)]
+    DT[, sumExpV := sum(expV), by = obsID]
+    DT[, logit := expV/sumExpV]
+    return(DT$logit)
 }
 
 # Returns a list containing the negative log-likelihood and it's gradient
@@ -43,10 +34,10 @@ mnlNegLLAndGradLL <- function(pars, modelInputs) {
   choice <- modelInputs$choice
   weights <- modelInputs$weights
   V <- logitFuncs$getMnlV(pars, X, p)
-  logit <- logitFuncs$getMnlLogit(V, obsID)
-  negLL <- logitFuncs$mnlNegLL(choice, logit, weights)
+  logit <- getMnlLogit(V, obsID)
+  negLogLik <- negLL(choice, logit, weights)
   negGradLL <- logitFuncs$mnlNegGradLL(p, X, pars, choice, logit, weights)
-  return(list("objective" = negLL, "gradient" = negGradLL))
+  return(list("objective" = negLogLik, "gradient" = negGradLL))
 }
 
 getMnlNegLL <- function(pars, modelInputs) {
@@ -57,9 +48,9 @@ getMnlNegLL <- function(pars, modelInputs) {
   choice <- modelInputs$choice
   weights <- modelInputs$weights
   V <- logitFuncs$getMnlV(pars, X, p)
-  logit <- logitFuncs$getMnlLogit(V, obsID)
-  negLL <- logitFuncs$mnlNegLL(choice, logit, weights)
-  return(negLL)
+  logit <- getMnlLogit(V, obsID)
+  negLogLik <- negLL(choice, logit, weights)
+  return(negLogLik)
 }
 
 getMnlNegGradLL <- function(pars, modelInputs) {
@@ -70,7 +61,7 @@ getMnlNegGradLL <- function(pars, modelInputs) {
   choice <- modelInputs$choice
   weights <- modelInputs$weights
   V <- logitFuncs$getMnlV(pars, X, p)
-  logit <- logitFuncs$getMnlLogit(V, obsID)
+  logit <- getMnlLogit(V, obsID)
   negGradLL <- logitFuncs$mnlNegGradLL(p, X, pars, choice, logit, weights)
   return(negGradLL)
 }
@@ -91,17 +82,11 @@ getMxlLogit <- function(VDraws, obsID) {
   numDraws <- ncol(VDraws)
   expVDraws <- exp(VDraws)
   sumExpVDraws <- rowsum(expVDraws, group = obsID, reorder = FALSE)
-  repTimes <- rep(as.numeric(table(obsID)), each = numDraws)
-  sumExpVDrawsMat <- matrix(rep(sumExpVDraws, times = repTimes),
-    ncol = numDraws, byrow = FALSE
-  )
+  repTimes <- rep(as.numeric(table(obsID)), times = numDraws)
+  sumExpVDrawsMat <- matrix(
+    rep(sumExpVDraws, times = repTimes), ncol = numDraws, byrow = FALSE)
   logitDraws <- expVDraws / sumExpVDrawsMat
   return(logitDraws)
-}
-
-mxlNegLL <- function(choice, pHat, weights) {
-  negLL <- -1 * sum(weights * choice * log(pHat))
-  return(negLL)
 }
 
 # Returns the negative log-likelihood of an mxl (heterogeneous) model
@@ -117,15 +102,15 @@ mxlNegLLAndGradLL <- function(pars, modelInputs) {
   standardDraws <- modelInputs$standardDraws
   betaDraws <- makeBetaDraws(pars, parSetup, numDraws, standardDraws)
   VDraws <- logitFuncs$getMxlV(betaDraws, X, p)
-  logitDraws <- logitFuncs$getMxlLogit(VDraws, obsID)
+  logitDraws <- getMxlLogit(VDraws, obsID)
   pHat <- rowMeans(logitDraws, na.rm = T)
-  negLL <- logitFuncs$mxlNegLL(choice, pHat, weights)
+  negLogLik <- negLL(choice, pHat, weights)
   negGradLL <- logitFuncs$mxlNegGradLL(
     X, parSetup, obsID, choice,
     standardDraws, betaDraws, VDraws, logitDraws, pHat,
     weights
   )
-  return(list("objective" = negLL, "gradient" = negGradLL))
+  return(list("objective" = negLogLik, "gradient" = negGradLL))
 }
 
 # Returns the negative log-likelihood of an mxl (heterogeneous) model
@@ -141,10 +126,10 @@ getMxlNegLL <- function(pars, modelInputs) {
   standardDraws <- modelInputs$standardDraws
   betaDraws <- makeBetaDraws(pars, parSetup, numDraws, standardDraws)
   VDraws <- logitFuncs$getMxlV(betaDraws, X, p)
-  logitDraws <- logitFuncs$getMxlLogit(VDraws, obsID)
+  logitDraws <- getMxlLogit(VDraws, obsID)
   pHat <- rowMeans(logitDraws, na.rm = T)
-  negLL <- logitFuncs$mxlNegLL(choice, pHat, weights)
-  return(negLL)
+  negLogLik <- negLL(choice, pHat, weights)
+  return(negLogLik)
 }
 
 getMxlNegGradLL <- function(pars, modelInputs) {
@@ -159,12 +144,11 @@ getMxlNegGradLL <- function(pars, modelInputs) {
   standardDraws <- modelInputs$standardDraws
   betaDraws <- makeBetaDraws(pars, parSetup, numDraws, standardDraws)
   VDraws <- logitFuncs$getMxlV(betaDraws, X, p)
-  logitDraws <- logitFuncs$getMxlLogit(VDraws, obsID)
+  logitDraws <- getMxlLogit(VDraws, obsID)
   pHat <- rowMeans(logitDraws, na.rm = T)
   negGradLL <- logitFuncs$mxlNegGradLL(
-    X, parSetup, obsID, choice,
-    standardDraws, betaDraws, VDraws, logitDraws, pHat,
-    weights
+    X, parSetup, obsID, choice, standardDraws, betaDraws, VDraws, logitDraws,
+    pHat, weights
   )
   return(negGradLL)
 }
@@ -174,15 +158,15 @@ getMxlNegGradLL <- function(pars, modelInputs) {
 # ============================================================================
 
 mnlNegLLAndNumericGradLL <- function(pars, modelInputs) {
-  negLL <- getMnlNegLL(pars, modelInputs)
+  negLogLik <- getMnlNegLL(pars, modelInputs)
   negGradLL <- getNumericNegGradLL(pars, modelInputs)
-  return(list("objective" = negLL, "gradient" = negGradLL))
+  return(list("objective" = negLogLik, "gradient" = negGradLL))
 }
 
 mxlNegLLAndNumericGradLL <- function(pars, modelInputs) {
-  negLL <- getMxlNegLL(pars, modelInputs)
+  negLogLik <- getMxlNegLL(pars, modelInputs)
   negGradLL <- getNumericNegGradLL(pars, modelInputs)
-  return(list("objective" = negLL, "gradient" = negGradLL))
+  return(list("objective" = negLogLik, "gradient" = negGradLL))
 }
 
 getNumericNegGradLL <- function(pars, modelInputs) {
@@ -258,8 +242,10 @@ getMxlV_pref <- function(betaDraws, X, p) {
 }
 
 # Computes the gradient of the negative likelihood for a mixed logit model
-mxlNegGradLL_pref <- function(X, parSetup, obsID, choice, standardDraws,
-                              betaDraws, VDraws, logitDraws, pHat, weights) {
+mxlNegGradLL_pref <- function(
+  X, parSetup, obsID, choice, standardDraws, betaDraws, VDraws, logitDraws,
+  pHat, weights
+) {
   randParIDs <- getRandParIDs(parSetup)
   numDraws <- nrow(standardDraws)
   numBetas <- length(parSetup)
@@ -293,9 +279,9 @@ mxlNegGradLL_pref <- function(X, parSetup, obsID, choice, standardDraws,
   weightsMat <- matrix(rep(weights, numBetas), ncol = ncol(X), byrow = F)
   weightsMat <- cbind(weightsMat, weightsMat)
   grad <- weightsMat * (grad / numDraws)
-  pHatInvChosen <- matrix(rep(choice * (1 / pHat), 2 * numBetas),
-    ncol = 2 * numBetas,
-    byrow = F
+  pHatInvChosen <- matrix(
+    rep(choice * (1 / pHat), 2 * numBetas),
+    ncol = 2 * numBetas, byrow = F
   )
   grad <- colSums(pHatInvChosen * grad, na.rm = TRUE)
   negGradLL <- -1 * grad[c(1:numBetas, numBetas + randParIDs)]

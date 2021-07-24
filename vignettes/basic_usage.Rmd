@@ -16,11 +16,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 library(logitr)
-# Read in results from already estimated models  so that the
-# examples aren't actually run when building this page, otherwise it'll
-# take much longer to build
-mnl_pref <- readRDS(here::here('inst', 'extdata', 'mnl_pref.Rds'))
-mnl_wtp  <- readRDS(here::here('inst', 'extdata', 'mnl_wtp.Rds'))
 ```
 
 ```{r, child=here::here('man', 'rmdchunks', 'header.Rmd')}
@@ -66,12 +61,12 @@ where $\betaVec$ is the vector of coefficients for non-price attributes $\xVec_{
 
 For example, if the observed utility for yogurt purchases was $v_{j} = \beta x_{j} + \alpha p_{j}$, where $p_{j}$ is "price" and $x_{j}$ is "brand", then the `parNames` argument should be `c("price", "brand")`. This model can be estimated as follows using the `yogurt` data frame:
 
-```{r, eval=FALSE}
+```{r}
 mnl_pref <- logitr(
     data       = yogurt,
     choiceName = "choice",
     obsIDName  = "obsID",
-    parNames   = c("price", "brand"))
+    parNames   = c("price", "brand")
 )
 ```
 
@@ -87,7 +82,7 @@ For models estimated in the WTP space, the `modelSpace` argument should be set t
 
 For example, if the observed utility was $v_{j} = \lambda \left(\omega x_{j} - p_{j}\right)$, where $p_{j}$ is "price" and $x_{j}$ is "brand", then the `parNames` argument should be `"brand"` and the `priceName` argument should be `"price"`. This model can be estimated as follows using the `yogurt` data frame:
 
-```{r, eval=FALSE}
+```{r}
 mnl_wtp <- logitr(
     data       = yogurt,
     choiceName = "choice",
