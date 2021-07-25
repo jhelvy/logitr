@@ -4,7 +4,7 @@
 
 runMultistart <- function(modelInputs) {
   # Setup lists for storing results
-  numMultiStarts <- modelInputs$options$numMultiStarts
+  numMultiStarts <- modelInputs$inputs$numMultiStarts
   models <- list()
   for (i in 1:numMultiStarts) {
     if (numMultiStarts == 1) {
@@ -34,15 +34,7 @@ runModel <- function(modelInputs, startPars) {
     x0 = startPars,
     eval_f = modelInputs$evalFuncs$objective,
     modelInputs = modelInputs,
-    opts = list(
-      "algorithm" = modelInputs$options$algorithm,
-      "xtol_rel"  = modelInputs$options$xtol_rel,
-      "xtol_abs"  = modelInputs$options$xtol_abs,
-      "ftol_rel"  = modelInputs$options$ftol_rel,
-      "ftol_abs"  = modelInputs$options$ftol_abs,
-      print_level = modelInputs$options$printLevel,
-      maxeval     = modelInputs$options$maxeval
-    )
+    opts = list(modelInputs$options)
   )
   model$logLik <- -1*model$objective # -1 for (+) rather than (-) LL
   return(model)
@@ -51,9 +43,9 @@ runModel <- function(modelInputs, startPars) {
 getStartPars <- function(modelInputs, i) {
   startPars <- getRandomStartPars(modelInputs)
   if (i == 1) {
-    if (! (is.null(modelInputs$options$startVals))) {
+    if (! (is.null(modelInputs$inputs$startVals))) {
       message("NOTE: Using user-provided starting values for this run")
-      userStartPars <- modelInputs$options$startVals
+      userStartPars <- modelInputs$inputs$startVals
       if (length(userStartPars) != length(startPars)) {
         stop(
           "Number of user-provided starting values do not match number ",
@@ -71,10 +63,10 @@ getStartPars <- function(modelInputs, i) {
 }
 
 # Returns randomly drawn starting parameters from a uniform distribution
-# between modelInputs$options$startParBounds
+# between modelInputs$inputs$startParBounds
 getRandomStartPars <- function(modelInputs) {
   parList <- modelInputs$parList
-  bounds <- modelInputs$options$startParBounds
+  bounds <- modelInputs$inputs$startParBounds
   lower <- bounds[1]
   upper <- bounds[2]
   # For mxl models, need both '_mu' and '_sigma' parameters

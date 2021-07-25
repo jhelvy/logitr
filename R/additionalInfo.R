@@ -65,7 +65,7 @@ getUnscaledPars <- function(model, modelInputs) {
 
 getModelCoefs <- function(model, modelInputs) {
   pars <- getUnscaledPars(model, modelInputs)
-  if (modelInputs$options$scaleInputs) {
+  if (modelInputs$inputs$scaleInputs) {
     scaleFactors <- getModelScaleFactors(model, modelInputs)
     pars <- pars / scaleFactors
   }
@@ -78,7 +78,7 @@ getModelCoefs <- function(model, modelInputs) {
 getModelGradient <- function(model, modelInputs) {
   pars <- getUnscaledPars(model, modelInputs)
   gradient <- -1 * modelInputs$evalFuncs$negGradLL(pars, modelInputs)
-  if (modelInputs$options$scaleInputs) {
+  if (modelInputs$inputs$scaleInputs) {
     scaleFactors <- getModelScaleFactors(model, modelInputs)
     gradient <- gradient * scaleFactors
   }
@@ -89,7 +89,7 @@ getModelGradient <- function(model, modelInputs) {
 getModelHessian <- function(model, modelInputs) {
   pars <- getUnscaledPars(model, modelInputs)
   hessian <- modelInputs$evalFuncs$hessLL(pars, modelInputs)
-  if (modelInputs$options$scaleInputs) {
+  if (modelInputs$inputs$scaleInputs) {
     scaleFactors <- getModelScaleFactors(model, modelInputs)
     sf <- matrix(scaleFactors, ncol = 1)
     sfMat <- sf %*% t(sf)

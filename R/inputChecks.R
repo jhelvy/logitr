@@ -113,33 +113,21 @@ runInputChecks <- function(data, inputs) {
     }
   }
 
+  # Make sure the number of multistarts and numDraws are positive
+  if (inputs$numMultiStarts < 1) {
+    stop('"numMultiStarts" must be a positive integer')
+  }
+
+  if (inputs$numDraws < 1) {
+    stop('"numDraws" must be a positive integer')
+  }
+
 }
 
-runOptionsChecks <- function(options, parList) {
-  # Set default option values
-  if (is.null(options$numMultiStarts)) {
-    options$numMultiStarts <- 1
-  }
-  if (options$numMultiStarts < 1) {
-    options$numMultiStarts <- 1
-  }
-  if (is.null(options$useAnalyticGrad)) {
-    options$useAnalyticGrad <- TRUE
-  }
-  if (is.null(options$scaleInputs)) {
-    options$scaleInputs <- TRUE
-  }
-  if (is.null(options$startParBounds)) {
-    options$startParBounds <- c(-1, 1)
-  }
-  if (is.null(options$standardDraws)) {
-    options$standardDraws <- NULL
-  }
-  if (is.null(options$numDraws)) {
-    options$numDraws <- 50
-  }
-  if (is.null(options$printLevel)) {
-    options$printLevel <- 0
+runOptionsChecks <- function(options) {
+  # Set default option values to pass to nloptr()
+  if (is.null(options$print_level)) {
+    options$print_level <- 0
   }
   if (is.null(options$xtol_rel)) {
     options$xtol_rel <- 1.0e-6
@@ -158,11 +146,6 @@ runOptionsChecks <- function(options, parList) {
   }
   if (is.null(options$algorithm)) {
     options$algorithm <- "NLOPT_LD_LBFGS"
-  }
-  if (is.null(options$startVals)) {
-    options$startVals <- NULL
-  } else {
-    names(options$startVals) <- parList$all
   }
   return(options)
 }

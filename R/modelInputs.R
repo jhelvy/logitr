@@ -5,23 +5,30 @@
 
 # Creates a list of the data and other information needed for running the model
 getModelInputs <- function(
-  data, choice, obsID, pars, randPars, price, randPrice,
-  modelSpace, weights, cluster, robust, call, options
+    data, choice, obsID, pars, randPars, price, randPrice, modelSpace, weights,
+    cluster, robust, numMultiStarts, useAnalyticGrad, scaleInputs,
+    startParBounds, standardDraws, numDraws, startVals, call, options
 ) {
   data <- as.data.frame(data) # tibbles break things
 
   # Keep original input arguments
   inputs <- list(
-    choice     = choice,
-    obsID      = obsID,
-    pars       = pars,
-    randPars   = randPars,
-    price      = price,
-    randPrice  = randPrice,
-    modelSpace = modelSpace,
-    weights    = weights,
-    robust     = robust,
-    cluster    = cluster
+    choice          = choice,
+    obsID           = obsID,
+    pars            = pars,
+    randPars        = randPars,
+    price           = price,
+    randPrice       = randPrice,
+    modelSpace      = modelSpace,
+    weights         = weights,
+    cluster         = cluster,
+    robust          = robust,
+    numMultiStarts  = numMultiStarts,
+    useAnalyticGrad = useAnalyticGrad,
+    scaleInputs     = scaleInputs,
+    startParBounds  = startParBounds,
+    numDraws        = numDraws,
+    startVals       = startVals
   )
 
   # Check that input are all valid
@@ -37,9 +44,15 @@ getModelInputs <- function(
   # Set up the parameters
   parSetup <- getParSetup(pars, price, randPars, randPrice)
   parList <- getParList(parSetup)
-  options <- runOptionsChecks(options, parList)
+  options <- runOptionsChecks(options)
   obsID <- as.matrix(data[obsID])
   choice <- as.matrix(data[choice])
+
+  # Add names to startVals (if provided)
+  if (!is.null(startVals)) {
+    names(startVals) <- parList$all
+    inputs$startVals <- startVals
+  }
 
   # Define price for WTP space models (price must be numeric type)
   price <- definePrice(data, inputs)
@@ -74,33 +87,34 @@ getModelInputs <- function(
   }
 
   modelInputs <- list(
-    call         = call,
-    inputs       = inputs,
-    modelType    = "mnl",
-    freq         = getFrequencyCounts(obsID, choice),
-    price        = price,
-    X            = X,
-    choice       = choice,
-    obsID        = obsID,
-    weights      = weights,
-    weightsUsed  = weightsUsed,
-    cluster      = cluster,
-    clusterIDs   = clusterIDs,
-    numClusters  = numClusters,
-    robust       = robust,
-    parList      = parList,
-    parSetup     = parSetup,
-    scaleFactors = NA,
-    options      = options
+    call          = call,
+    inputs        = inputs,
+    modelType     = "mnl",
+    freq          = getFrequencyCounts(obsID, choice),
+    price         = price,
+    X             = X,
+    choice        = choice,
+    obsID         = obsID,
+    weights       = weights,
+    weightsUsed   = weightsUsed,
+    cluster       = cluster,
+    clusterIDs    = clusterIDs,
+    numClusters   = numClusters,
+    robust        = robust,
+    parList       = parList,
+    parSetup      = parSetup,
+    scaleFactors  = NA,
+    standardDraws = standardDraws,
+    options       = options
   )
 
-  if (options$scaleInputs) {
-    modelInputs <- scaleInputs(modelInputs)
+  if (scaleInputs) {
+    modelInputs <- scaleModelInputs(modelInputs)
   }
   modelInputs <- addDraws(modelInputs)
   modelInputs$logitFuncs <- setLogitFunctions(modelSpace)
   modelInputs$evalFuncs <- setEvalFunctions(
-    modelInputs$modelType, options$useAnalyticGrad
+    modelInputs$modelType, useAnalyticGrad
   )
   return(modelInputs)
 }
@@ -163,7 +177,7 @@ definePrice <- function(data, inputs) {
 }
 
 # Function that scales all the variables in X to be between 0 and 1:
-scaleInputs <- function(modelInputs) {
+scaleModelInputs <- function(modelInputs) {
   price <- modelInputs$price
   X <- modelInputs$X
   scaledX <- X
@@ -194,18 +208,17 @@ scaleInputs <- function(modelInputs) {
 }
 
 addDraws <- function(modelInputs) {
-  options <- modelInputs$options
   if (isMxlModel(modelInputs$parSetup)) {
     modelInputs$modelType <- "mxl"
   }
-  userDraws <- options$standardDraws
-  standardDraws <- getStandardDraws(modelInputs$parSetup, options$numDraws)
+  userDraws <- modelInputs$standardDraws
+  standardDraws <- getStandardDraws(
+    modelInputs$parSetup, modelInputs$inputs$numDraws)
   if (is.null(userDraws)) {
     modelInputs$standardDraws <- standardDraws
     return(modelInputs)
   }
-  # If the user provides their own draws, make sure there are enough
-  # columns
+  # If the user provides their own draws, make sure there are enough columns
   if (ncol(userDraws) != ncol(standardDraws)) {
     stop("The user-provided draws do not match the dimensions of the number of parameters")
   }

@@ -204,7 +204,7 @@ getModelSpace <- function(x) {
 }
 
 getModelRun <- function(x) {
-  return(paste(x$multistartNumber, "of", x$options$numMultiStarts))
+  return(paste(x$multistartNumber, "of", x$inputs$numMultiStarts))
 }
 
 getExitMessage <- function(x) {
