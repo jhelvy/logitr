@@ -44,7 +44,6 @@ getModelInputs <- function(
   # Set up the parameters
   parSetup <- getParSetup(pars, price, randPars, randPrice)
   parList <- getParList(parSetup)
-  options <- runOptionsChecks(options)
   obsID <- as.matrix(data[obsID])
   choice <- as.matrix(data[choice])
 

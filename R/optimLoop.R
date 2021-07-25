@@ -34,7 +34,7 @@ runModel <- function(modelInputs, startPars) {
     x0 = startPars,
     eval_f = modelInputs$evalFuncs$objective,
     modelInputs = modelInputs,
-    opts = list(modelInputs$options)
+    opts = modelInputs$options
   )
   model$logLik <- -1*model$objective # -1 for (+) rather than (-) LL
   return(model)

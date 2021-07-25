@@ -113,7 +113,7 @@
 #' |`robust`|`TRUE` or `FALSE` for whether or not a robust covariance matrix was estimated.|
 #' |`parSetup`|A summary of the distributional assumptions on each model parameter (`"f"`="fixed", `"n"`="normal distribution", `"ln"`="log-normal distribution").|
 #' |`standardDraws`|The draws used during maximum simulated likelihood (for MXL models).|
-#' |`options`|A list of all the optimization control options.|
+#' |`options`|A list of options for controlling the `nloptr()` optimization. Run `nloptr::nloptr.print.options()` for details.|
 #'
 #' @export
 #' @examples
@@ -159,7 +159,15 @@ logitr <- function(
   standardDraws   = NULL,
   numDraws        = 50,
   startVals       = NULL,
-  options         = list()
+  options         = list(
+    print_level = 0,
+    xtol_rel    = 1.0e-6,
+    xtol_abs    = 1.0e-6,
+    ftol_rel    = 1.0e-6,
+    ftol_abs    = 1.0e-6,
+    maxeval     = 2000,
+    algorithm   = "NLOPT_LD_LBFGS"
+  )
 ) {
   call <- match.call()
   modelInputs <- getModelInputs(
