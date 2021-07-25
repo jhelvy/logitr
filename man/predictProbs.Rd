@@ -7,8 +7,8 @@
 predictProbs(
   model,
   alts,
-  altIDName,
-  obsIDName = NULL,
+  altID,
+  obsID = NULL,
   computeCI = TRUE,
   alpha = 0.025,
   numDraws = 10^4
@@ -22,10 +22,10 @@ function.}
 choice probabilities. Each row is an alternative and each column an
 attribute corresponding to parameter names in the estimated model.}
 
-\item{altIDName}{The name of the column that identifies each alternative
+\item{altID}{The name of the column that identifies each alternative
 in each set of alternatives.}
 
-\item{obsIDName}{The name of the column that identifies each set of
+\item{obsID}{The name of the column that identifies each set of
 alternatives. Required if predicting results for more than one set of
 alternatives. Defaults to \code{NULL} (for a single set of alternatives).}
 
@@ -51,10 +51,10 @@ library(logitr)
 
 # Estimate a preference space model
 mnl_pref <- logitr(
-  data       = yogurt,
-  choiceName = "choice",
-  obsIDName  = "obsID",
-  parNames   = c("price", "feat", "brand")
+  data   = yogurt,
+  choice = "choice",
+  obsID  = "obsID",
+  pars   = c("price", "feat", "brand")
 )
 
 # Create a set of alternatives for which to predict choice probabilities.
@@ -68,7 +68,7 @@ alts
 
 # Predict choice probabilities using the estimated preference space MNL
 # model
-predictProbs(mnl_pref, alts, altIDName = "alt", obsIDName = "obsID")
+predictProbs(mnl_pref, alts, altID = "alt", obsID = "obsID")
 }
 \keyword{logitr}
 \keyword{predict}

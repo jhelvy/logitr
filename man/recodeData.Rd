@@ -2,32 +2,32 @@
 % Please edit documentation in R/encoding.R
 \name{recodeData}
 \alias{recodeData}
-\title{Returns a list of the design matrix \code{X} and updated \code{parNames} and
+\title{Returns a list of the design matrix \code{X} and updated \code{pars} and
 \code{randPars} to include any dummy-coded categorical or interaction
 variables.}
 \usage{
-recodeData(data, parNames, randPars)
+recodeData(data, pars, randPars)
 }
 \arguments{
 \item{data}{The choice data, formatted as a \code{data.frame} object.}
 
-\item{parNames}{The names of the parameters to be estimated in the model.
+\item{pars}{The names of the parameters to be estimated in the model.
 Must be the same as the column names in the \code{data} argument. For WTP space
-models, do not include price in \code{parNames}.}
+models, do not include price in \code{pars}.}
 
 \item{randPars}{A named vector whose names are the random parameters and
 values the distribution: \code{'n'} for normal or \code{'ln'} for log-normal.
 Defaults to \code{NULL}.}
 }
 \value{
-A list of the design matrix (\code{X}) and two vectors (\code{parNames} and
+A list of the design matrix (\code{X}) and two vectors (\code{pars} and
 \code{randPars}) with discrete (categorical) variables and interaction variables
 added.
 }
 \description{
 Recodes the data and returns a list of the encoded design matrix (\code{X}) as
-well as two vectors (\code{parNames} and \code{randPars}) with discrete (categorical)
-variables and interaction variables added to \code{X}, \code{parNames}, and
+well as two vectors (\code{pars} and \code{randPars}) with discrete (categorical)
+variables and interaction variables added to \code{X}, \code{pars}, and
 \code{randPars}.
 }
 \examples{
@@ -38,11 +38,11 @@ data(yogurt)
 # Recode the yogurt data
 result <- recodeData(
     data = yogurt,
-    parNames = c("price", "feat", "brand", "price*brand"),
+    pars = c("price", "feat", "brand", "price*brand"),
     randPars = c(feat = "n", brand = "n")
 )
 
-result$parNames
+result$pars
 result$randPars
 head(result$X)
 }

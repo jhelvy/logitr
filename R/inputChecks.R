@@ -12,7 +12,7 @@ runInputChecks <- function(data, inputs) {
         'provide it separately with the "price" argument.'
       )
     }
-    if (modelSpace != "wtp") {
+    if (inputs$modelSpace != "wtp") {
       stop(
         'The "price" argument should only be used for WTP space models. ',
         'Please either set the "modelSpace" argument to "wtp" or remove the ',
@@ -20,13 +20,13 @@ runInputChecks <- function(data, inputs) {
       )
     }
   }
-  if (! modelSpace %in% c('pref', 'wtp')) {
+  if (! inputs$modelSpace %in% c('pref', 'wtp')) {
     stop(
-      'The modelSpace argument must be set to either "pref" or "wtp", all ',
+      'The "modelSpace" argument must be set to either "pref" or "wtp", all ',
       'lower case (defaults to "pref").'
     )
   }
-  if ((modelSpace == 'wtp') & is.null(inputs$price)) {
+  if ((inputs$modelSpace == 'wtp') & is.null(inputs$price)) {
     stop(
       'You are estimating a WTP space model but have not provided a ',
       '"price" argument. Please set "price" equal to the name of the ',
@@ -97,9 +97,9 @@ runInputChecks <- function(data, inputs) {
   }
 
   # Check all random parameter names
-  if (! is.null(randPars)) {
+  if (! is.null(inputs$randPars)) {
     missingRandPars <- c()
-    for (par in names(randPars)) {
+    for (par in names(inputs$randPars)) {
       if (! par %in% dataColumnNames) {
         missingRandPars <- c(missingFixedPars, par)
       }
@@ -199,7 +199,7 @@ wtpInputsCheck <- function(model, price) {
   if (! price %in% names(model$coef)) {
     stop('"price" must be the name of a coefficient in "model".')
   }
-  if (model$modelSpace != "pref") {
+  if (model$inputs$modelSpace != "pref") {
     stop('model must be a preference space model.')
   }
 }

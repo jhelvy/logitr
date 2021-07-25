@@ -6,15 +6,15 @@
 \usage{
 logitr(
   data,
-  choiceName,
-  obsIDName,
-  parNames,
-  priceName = NULL,
+  choice,
+  obsID,
+  pars,
+  price = NULL,
   randPars = NULL,
   randPrice = NULL,
   modelSpace = "pref",
-  weightsName = NULL,
-  clusterName = NULL,
+  weights = NULL,
+  cluster = NULL,
   robust = FALSE,
   options = list()
 )
@@ -22,17 +22,17 @@ logitr(
 \arguments{
 \item{data}{The choice data, formatted as a \code{data.frame} object.}
 
-\item{choiceName}{The name of the column that identifies the choice variable.}
+\item{choice}{The name of the column that identifies the choice variable.}
 
-\item{obsIDName}{The name of the column that identifies each choice
+\item{obsID}{The name of the column that identifies each choice
 observation.}
 
-\item{parNames}{The names of the parameters to be estimated in the model.
+\item{pars}{The names of the parameters to be estimated in the model.
 Must be the same as the column names in the \code{data} argument. For WTP space
-models, do not include price in \code{parNames}.}
+models, do not include price in \code{pars}.}
 
-\item{priceName}{The name of the column that identifies the price variable.
-Only required for WTP space models. Defaults to \code{NULL}.}
+\item{price}{The name of the column that identifies the price variable.
+Required for WTP space models. Defaults to \code{NULL}.}
 
 \item{randPars}{A named vector whose names are the random parameters and
 values the distribution: \code{'n'} for normal or \code{'ln'} for log-normal.
@@ -44,15 +44,15 @@ Defaults to \code{NULL}.}
 
 \item{modelSpace}{Set to \code{'wtp'} for WTP space models. Defaults to \code{"pref"}.}
 
-\item{weightsName}{The name of the column that identifies the weights to be
-used in model estimation. Optional. Defaults to \code{NULL}.}
+\item{weights}{The name of the column that identifies the weights to be
+used in model estimation. Defaults to \code{NULL}.}
 
-\item{clusterName}{The name of the column that identifies the cluster
+\item{cluster}{The name of the column that identifies the cluster
 groups to be used in model estimation. Optional. Defaults to \code{NULL}.}
 
 \item{robust}{Determines whether or not a robust covariance matrix is
-estimated. Defaults to \code{FALSE}. Specification of a clusterName or
-weightsName will override the user setting and set this to `TRUE' (a
+estimated. Defaults to \code{FALSE}. Specification of a \code{cluster} or
+\code{weights} will override the user setting and set this to `TRUE' (a
 warning will be displayed in this case). Replicates the functionality of
 Stata's cmcmmixlogit.}
 
@@ -81,12 +81,12 @@ The function returns a list object containing the following objects.\tabular{ll}
    \code{status} \tab An integer value with the status of the optimization (positive values are successes). Use \code{\link[=statusCodes]{statusCodes()}} for a detailed description. \cr
    \code{modelType} \tab The model type, \code{'mnl'} for multinomial logit or \code{'mxl'} for mixed logit. \cr
    \code{modelSpace} \tab The model space (\code{'pref'} or \code{'wtp'}). \cr
-   \code{priceName} \tab The name of the column that identifies the price variable. \cr
-   \code{parNames} \tab The names of the parameters to be estimated in the model. \cr
+   \code{price} \tab The name of the column that identifies the price variable. \cr
+   \code{pars} \tab The names of the parameters to be estimated in the model. \cr
    \code{randPars} \tab A named vector whose names are the random parameters and values the distribution: \code{'n'} for normal or \code{'ln'} for log-normal. \cr
    \code{parSetup} \tab A summary of the distributional assumptions on each model parameter (\code{"f"}="fixed", \code{"n"}="normal distribution", \code{"ln"}="log-normal distribution"). \cr
    \code{weightsUsed} \tab \code{TRUE} or \code{FALSE} for whether weights were used in the model. \cr
-   \code{clusterName} \tab The name of the column used to identify the cluster groups used in model estimation. \cr
+   \code{cluster} \tab The name of the column used to identify the cluster groups used in model estimation. \cr
    \code{numClusters} \tab The number of clusters. \cr
    \code{robust} \tab \code{TRUE} or \code{FALSE} for whether or not a robust covariance matrix was estimated. \cr
    \code{standardDraws} \tab The draws used during maximum simulated likelihood (for MXL models). \cr
@@ -131,21 +131,21 @@ library(logitr)
 
 # Estimate a MNL model in the Preference space
 mnl_pref <- logitr(
-  data       = yogurt,
-  choiceName = "choice",
-  obsIDName  = "obsID",
-  parNames   = c("price", "feat", "brand")
+  data   = yogurt,
+  choice = "choice",
+  obsID  = "obsID",
+  pars   = c("price", "feat", "brand")
 )
 
 # Estimate a MNL model in the WTP space, using a 10-run multistart
 mnl_wtp <- logitr(
   data       = yogurt,
-  choiceName = "choice",
-  obsIDName  = "obsID",
-  parNames   = c("feat", "brand"),
-  priceName = "price",
+  choice     = "choice",
+  obsID      = "obsID",
+  pars       = c("feat", "brand"),
+  price      = "price",
   modelSpace = "wtp",
-  options = list(numMultiStarts = 3)
+  options    = list(numMultiStarts = 3)
 )
 }
 \keyword{logit}
