@@ -73,15 +73,15 @@ getStartPars <- function(modelInputs, i) {
 # Returns randomly drawn starting parameters from a uniform distribution
 # between modelInputs$options$startParBounds
 getRandomStartPars <- function(modelInputs) {
-  parNameList <- modelInputs$parNameList
+  parList <- modelInputs$parList
   bounds <- modelInputs$options$startParBounds
   lower <- bounds[1]
   upper <- bounds[2]
   # For mxl models, need both '_mu' and '_sigma' parameters
-  pars_mu <- stats::runif(length(parNameList$mu), lower, upper)
-  pars_sigma <- stats::runif(length(parNameList$sigma), lower, upper)
+  pars_mu <- stats::runif(length(parList$mu), lower, upper)
+  pars_sigma <- stats::runif(length(parList$sigma), lower, upper)
   startPars <- c(pars_mu, pars_sigma)
-  names(startPars) <- parNameList$all
+  names(startPars) <- parList$all
   return(startPars)
 }
 
@@ -89,14 +89,13 @@ getRandomStartPars <- function(modelInputs) {
 checkStartPars <- function(startPars, modelInputs) {
   lambdaParIDs <- NULL
   if (modelInputs$modelSpace == "wtp") {
-    lambdaParIDs <- which(grepl("lambda", modelInputs$parNameList$all))
+    lambdaParIDs <- which(grepl("lambda", modelInputs$parList$all))
   }
-  logNParNames <- names(getLogNormParIDs(modelInputs$parSetup))
+  logNPars <- names(getLogNormParIDs(modelInputs$parSetup))
   logNParIDs <- c()
-  if (length(logNParNames) > 0) {
-    for (parName in logNParNames) {
-      logNParIDs <- c(logNParIDs,
-                      which(grepl(parName, modelInputs$parNameList$all)))
+  if (length(logNPars) > 0) {
+    for (par in logNPars) {
+      logNParIDs <- c(logNParIDs, which(grepl(par, modelInputs$parList$all)))
     }
   }
   positiveParIDs <- unique(c(lambdaParIDs, logNParIDs))

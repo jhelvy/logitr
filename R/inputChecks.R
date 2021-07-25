@@ -2,24 +2,21 @@
 # Functions for checking inputs and setting up default options
 # ============================================================================
 
-runInputChecks <- function(
-  data, choiceName, obsIDName, parNames, randPars, priceName, randPrice,
-  modelSpace, weightsName, clusterName
-) {
-  if (! is.null(priceName)) {
-    if (priceName %in% parNames) {
+runInputChecks <- function(data, inputs) {
+  if (! is.null(inputs$price)) {
+    if (inputs$price %in% inputs$pars) {
       stop(
-        'The value you provided for the "priceName" argument is also included ',
-        'in your "parNames" argument. If you are estimating a WTP space model',
-        ', you should remove the price name from your "parNames" argument and ',
-        'provide it separately with the "priceName" argument.'
+        'The value you provided for the "price" argument is also included ',
+        'in your "pars" argument. If you are estimating a WTP space model',
+        ', you should remove the price name from your "pars" argument and ',
+        'provide it separately with the "price" argument.'
       )
     }
     if (modelSpace != "wtp") {
       stop(
-        'The "priceName" argument should only be used for WTP space models. ',
+        'The "price" argument should only be used for WTP space models. ',
         'Please either set the "modelSpace" argument to "wtp" or remove the ',
-        '"priceName" argument.'
+        '"price" argument.'
       )
     }
   }
@@ -29,91 +26,88 @@ runInputChecks <- function(
       'lower case (defaults to "pref").'
     )
   }
-  if ((modelSpace == 'wtp') & is.null(priceName)) {
+  if ((modelSpace == 'wtp') & is.null(inputs$price)) {
     stop(
       'You are estimating a WTP space model but have not provided a ',
-      '"priceName" argument. Please set "priceName" equal to the name of the ',
+      '"price" argument. Please set "price" equal to the name of the ',
       'column in your data frame that represents "price".'
     )
   }
 
   dataColumnNames <- colnames(data)
+
   # Check cluster name
-  if (! is.null(clusterName)) {
-    if (! clusterName %in% dataColumnNames) {
+  if (! is.null(inputs$cluster)) {
+    if (! inputs$cluster %in% dataColumnNames) {
       stop(
         'You have specified a cluster name that is not present in the data ',
-        'provided:\n', as.character(clusterName),
-        '\nPlease double-check the provided data/cluster name.'
+        'provided:\n', as.character(inputs$cluster),
+        '\nPlease double-check the provided argument for "cluster".'
       )
     }
   }
 
   # Check weights name
-  if (! is.null(weightsName)) {
-    if (! weightsName %in% dataColumnNames) {
+  if (! is.null(inputs$weights)) {
+    if (! inputs$weights %in% dataColumnNames) {
       stop(
-        'You have specified a weights name that is not present in the data provided:\n',
-        as.character(weightsName),
-        '\nPlease double-check the provided data/weights name.'
+        'You have specified a weights name that is not present in the data ',
+        'provided:\n', as.character(inputs$weights),
+        '\nPlease double-check the provided argument for "weights".'
       )
     }
   }
 
-  # Check all parameter names - fixed, no interactions
-  parNamesNoInt <- parNames[grepl("\\*", parNames) == FALSE]
+  # Separate out pars with and without interactions
+  ints <- grepl("\\*", inputs$pars)
+  parsInt <- inputs$pars[ints == TRUE]
+  parsNoInt <- inputs$pars[ints == FALSE]
 
-  if (length(parNamesNoInt) > 0) {
+  # Check if provided pars are in the data
+  if (length(parsNoInt) > 0) {
     missingFixedPars <- c()
-    for (parName in parNamesNoInt) {
-      if (! parName %in% dataColumnNames) {
-        missingFixedPars <- c(missingFixedPars, parName)
+    for (par in parsNoInt) {
+      if (! par %in% dataColumnNames) {
+        missingFixedPars <- c(missingFixedPars, par)
       }
     }
-
     if (length(missingFixedPars) > 0) {
       stop(
         'You have specified a fixed parameter name(s) that is/are not present ',
         'in the data provided:\n', as.list(missingFixedPars),
-        '\nPlease double-check the provided data/fixed parameter name(s).'
+        '\nPlease double-check the provided argument for "pars".'
       )
     }
   }
-
-  # Check all parameter names - fixed, with interactions
-  intNames <- parNames[grepl("\\*", parNames) == TRUE]
-
-  if (length(intNames) > 0) {
-    intNames <- unique(unlist(strsplit(intNames, "\\*")))
+  if (length(parsInt) > 0) {
+    parsInt <- unique(unlist(strsplit(parsInt, "\\*")))
     missingIntPars <- c()
-    for (parName in intNames) {
-      if (! parName %in% dataColumnNames) {
-        missingIntPars <- c(missingIntPars, parName)
+    for (par in parsInt) {
+      if (! par %in% dataColumnNames) {
+        missingIntPars <- c(missingIntPars, par)
       }
     }
-
     if (length(missingIntPars) > 0) {
       stop(
         'You have specified an interaction parameter name(s) that is/are ',
         'not present in the data provided:\n', as.list(missingIntPars),
-        '\nPlease double-check the provided data / parameter name(s).'
+        '\nPlease double-check the provided argument for "pars".'
       )
     }
   }
 
-  # Check all parameter names - random
+  # Check all random parameter names
   if (! is.null(randPars)) {
     missingRandPars <- c()
-    for (parName in names(randPars)) {
-      if (! parName %in% dataColumnNames) {
-        missingRandPars <- c(missingFixedPars, parName)
+    for (par in names(randPars)) {
+      if (! par %in% dataColumnNames) {
+        missingRandPars <- c(missingFixedPars, par)
       }
-
       if (length(missingRandPars) > 0) {
       stop(
         'You have specified a random parameter name(s) that is/are not ',
         'present in the data provided:\n', as.list(missingRandPars),
-        '\nPlease double-check the provided data/random parameter name(s).'
+        '\nPlease double-check the provided argument for "randPars".'
       )
       }
     }
@@ -121,7 +115,7 @@ runInputChecks <- function(
 
 }
 
-runOptionsChecks <- function(options, parNameList) {
+runOptionsChecks <- function(options, parList) {
   # Set default option values
   if (is.null(options$numMultiStarts)) {
     options$numMultiStarts <- 1
@@ -168,59 +162,59 @@ runOptionsChecks <- function(options, parNameList) {
   if (is.null(options$startVals)) {
     options$startVals <- NULL
   } else {
-    names(options$startVals) <- parNameList$all
+    names(options$startVals) <- parList$all
   }
   return(options)
 }
 
-predictInputsCheck <- function(model, alts, altIDName, obsIDName) {
+predictInputsCheck <- function(model, alts, altID, obsID) {
   if (!is_logitr(model)) {
     stop(
       'The "model" argument must be a model estimated using the logitr() ',
       'function.'
     )
   }
-  if (missing(alts)) stop("alts needs to be specified")
-  if (missing(altIDName)) stop("altIDName needs to be specified")
-  if (! altIDName %in% names(alts)) {
+  if (missing(alts)) stop('"alts" needs to be specified')
+  if (missing(altID)) stop('"altID" needs to be specified')
+  if (! altID %in% names(alts)) {
     stop(
-      'The "altIDName" argument refers to a column that does not exist in ',
+      'The "altID" argument refers to a column that does not exist in ',
       'the "alts" data frame')
   }
-  if (!is.null(obsIDName)) {
-    if (! obsIDName %in% names(alts)) {
+  if (!is.null(obsID)) {
+    if (! obsID %in% names(alts)) {
       stop(
-        'The "obsIDName" argument refers to a column that does not exist in ',
+        'The "obsID" argument refers to a column that does not exist in ',
         'the "alts" data frame')
     }
   }
 }
 
-wtpInputsCheck <- function(model, priceName) {
-  if (missing(model)) stop("model needs to be specified")
-  if (missing(priceName)) stop("priceName needs to be specified")
+wtpInputsCheck <- function(model, price) {
+  if (missing(model)) stop('"model" needs to be specified')
+  if (missing(price)) stop('"price" needs to be specified')
   if (!is_logitr(model)) {
     stop('model must be a model estimated using the logitr() function.')
   }
-  if (! priceName %in% names(model$coef)) {
-    stop('priceName must be the name of a coefficient in model.')
+  if (! price %in% names(model$coef)) {
+    stop('"price" must be the name of a coefficient in "model".')
   }
   if (model$modelSpace != "pref") {
     stop('model must be a preference space model.')
   }
 }
 
-wtpCompareInputsCheck <- function(model_pref, model_wtp, priceName) {
-  if (missing(model_pref)) stop("model_pref needs to be specified")
-  if (missing(model_wtp)) stop("model_wtp needs to be specified")
-  if (missing(priceName)) stop("priceName needs to be specified")
+wtpCompareInputsCheck <- function(model_pref, model_wtp, price) {
+  if (missing(model_pref)) stop('"model_pref" needs to be specified')
+  if (missing(model_wtp)) stop('"model_wtp" needs to be specified')
+  if (missing(price)) stop('"price" needs to be specified')
   if (!is_logitr(model_pref)) {
-    stop('model_pref must be a model estimated using the logitr() function.')
+    stop('"model_pref" must be a model estimated using the logitr() function.')
   }
   if (!is_logitr(model_wtp)) {
-    stop('model_wtp must be a model estimated using the logitr() function.')
+    stop('"model_wtp" must be a model estimated using the logitr() function.')
   }
-  if (! priceName %in% names(model_pref$coef)) {
-    stop('priceName must be the name of a coefficient in model_pref')
+  if (! price %in% names(model_pref$coef)) {
+    stop('"price" must be the name of a coefficient in "model_pref"')
   }
 }

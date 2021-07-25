@@ -5,83 +5,95 @@
 
 # Creates a list of the data and other information needed for running the model
 getModelInputs <- function(
-  data, choiceName, obsIDName, parNames, randPars, priceName, randPrice,
-  modelSpace, weightsName, clusterName, robust, call, options) {
+  data, choice, obsID, pars, randPars, price, randPrice,
+  modelSpace, weights, cluster, robust, call, options
+) {
   data <- as.data.frame(data) # tibbles break things
-  # Setup pars
-  runInputChecks(
-    data, choiceName, obsIDName, parNames, randPars, priceName,
-    randPrice, modelSpace, weightsName, clusterName)
+
+  # Keep original input arguments
+  inputs <- list(
+    choice     = choice,
+    obsID      = obsID,
+    pars       = pars,
+    randPars   = randPars,
+    price      = price,
+    randPrice  = randPrice,
+    modelSpace = modelSpace,
+    weights    = weights,
+    robust     = robust,
+    cluster    = cluster
+  )
+
+  # Check that input are all valid
+  runInputChecks(data, inputs)
+
   # Get the design matrix, recoding parameters that are categorical
   # or have interactions
-  parNames_orig <- parNames
-  randPars_orig <- randPars
-  recoded <- recodeData(data, parNames, randPars)
+  recoded <- recodeData(data, pars, randPars)
   X <- recoded$X
-  parNames <- recoded$parNames
+  pars <- recoded$pars
   randPars <- recoded$randPars
+
   # Set up the parameters
-  parSetup <- getParSetup(parNames, priceName, randPars, randPrice)
-  parNameList <- getParNameList(parSetup)
-  options <- runOptionsChecks(options, parNameList)
-  obsID <- as.matrix(data[obsIDName])
-  choice <- as.matrix(data[choiceName])
+  parSetup <- getParSetup(pars, price, randPars, randPrice)
+  parList <- getParList(parSetup)
+  options <- runOptionsChecks(options, parList)
+  obsID <- as.matrix(data[obsID])
+  choice <- as.matrix(data[choice])
+
   # Define price for WTP space models (price must be numeric type)
-  price <- definePrice(data, priceName, modelSpace)
+  price <- definePrice(data, inputs)
+
   # Setup weights
   weights <- matrix(1, nrow(data))
   weightsUsed <- FALSE
-  if (!is.null(weightsName)) {
-    weights <- as.matrix(data[weightsName])
+  if (!is.null(inputs$weights)) {
+    weights <- as.matrix(data[inputs$weights])
     weightsUsed <- TRUE
   }
 
   # Setup Clusters
   clusterIDs <- NULL
   numClusters <- 0
-  if (robust & is.null(clusterName)) {
-    clusterName <- obsIDName
+  if (robust & is.null(cluster)) {
+    cluster <- inputs$obsID
   }
-  if (weightsUsed & is.null(clusterName)) {
+  if (weightsUsed & is.null(cluster)) {
     message(
-      "Since weights are being used and no clusterName was provided, ",
-      "the obsIDName argument will be used for clustering")
-    clusterName <- obsIDName
+      "Since weights are being used and no cluster was provided, ",
+      "the obsID argument will be used for clustering")
+    cluster <- inputs$obsID
   }
-  if (!is.null(clusterName)) {
-    clusterName <- clusterName
+  if (!is.null(cluster)) {
     if (robust == FALSE) {
       message("Setting robust to TRUE since clusters are being used")
       robust <- TRUE
     }
-    clusterIDs <- as.matrix(data[clusterName])
+    clusterIDs <- as.matrix(data[cluster])
     numClusters <- getNumClusters(clusterIDs)
   }
 
-  # Create the modelInputs list
   modelInputs <- list(
-    call = call,
-    freq = getFrequencyCounts(data, choiceName, obsIDName),
-    price = price,
-    X = X,
-    choice = choice,
-    obsID = obsID,
-    weights = weights,
-    priceName = priceName,
-    parNames = parNames_orig,
-    randPars = randPars_orig,
-    parNameList = parNameList,
-    parSetup = parSetup,
+    call         = call,
+    inputs       = inputs,
+    modelType    = "mnl",
+    freq         = getFrequencyCounts(obsID, choice),
+    price        = price,
+    X            = X,
+    choice       = choice,
+    obsID        = obsID,
+    weights      = weights,
+    weightsUsed  = weightsUsed,
+    cluster      = cluster,
+    clusterIDs   = clusterIDs,
+    numClusters  = numClusters,
+    robust       = robust,
+    parList      = parList,
+    parSetup     = parSetup,
     scaleFactors = NA,
-    modelSpace = modelSpace,
-    modelType = "mnl",
-    weightsUsed = weightsUsed,
-    clusterName = clusterName,
-    clusterIDs = clusterIDs,
-    numClusters = numClusters,
-    robust = robust,
-    options = options
+    options      = options
   )
+
   if (options$scaleInputs) {
     modelInputs <- scaleInputs(modelInputs)
   }
@@ -93,16 +105,16 @@ getModelInputs <- function(
   return(modelInputs)
 }
 
-getParSetup <- function(parNames, priceName, randPars, randPrice) {
-  parSetup <- rep("f", length(parNames))
-  for (i in seq_len(length(parNames))) {
-    name <- parNames[i]
+getParSetup <- function(pars, price, randPars, randPrice) {
+  parSetup <- rep("f", length(pars))
+  for (i in seq_len(length(pars))) {
+    name <- pars[i]
     if (name %in% names(randPars)) {
       parSetup[i] <- randPars[name]
     }
   }
-  names(parSetup) <- parNames
-  if (is.null(priceName) == F) {
+  names(parSetup) <- pars
+  if (is.null(price) == F) {
     if (is.null(randPrice)) {
       randPrice <- "f"
     }
@@ -119,7 +131,7 @@ getNumClusters <- function(clusterID){
   return(length(unique(clusterID)))
 }
 
-getParNameList <- function(parSetup) {
+getParList <- function(parSetup) {
   # For mxl models, need both '_mu' and '_sigma' parameters
   randParIDs <- getRandParIDs(parSetup)
   names <- names(parSetup)
@@ -133,13 +145,13 @@ getParNameList <- function(parSetup) {
   return(list(mu = names_mu, sigma = names_sigma, all = names_all))
 }
 
-definePrice <- function(data, priceName, modelSpace) {
-  if (modelSpace == "pref") {
+definePrice <- function(data, inputs) {
+  if (inputs$modelSpace == "pref") {
     return(NA)
   }
-  if (modelSpace == "wtp") {
-    price <- data[, which(names(data) == priceName)]
-    if (! typeof(price) %in% c("integer", "double")) {
+  if (inputs$modelSpace == "wtp") {
+    price <- data[, which(names(data) == inputs$price)]
+    if (! typeof(inputs$price) %in% c("integer", "double")) {
       stop(
         'Please make sure the price column in your data defined by the ',
         '"priceName" argument is encoded as a numeric data type. Price must ',
@@ -168,7 +180,7 @@ scaleInputs <- function(modelInputs) {
   scaleFactors <- scaleFactorsX
   names(scaleFactors) <- colnames(scaledX)
   # Scale price if WTP space model
-  if (modelInputs$modelSpace == "wtp") {
+  if (modelInputs$inputs$modelSpace == "wtp") {
     vals <- unique(price)
     scaleFactorPrice <- abs(max(vals) - min(vals))
     scaledPrice <- price / scaleFactorPrice
@@ -249,10 +261,10 @@ setEvalFunctions <- function(modelType, useAnalyticGrad) {
   return(evalFuncs)
 }
 
-getFrequencyCounts <- function(data, choiceName, obsIDName) {
-  obsCounts <- table(data[obsIDName])
-  data$alt <- unlist(lapply(obsCounts, function(x) seq(x)))
-  freq <- table(data[c("alt", choiceName)])
-  freq <- freq[,which(colnames(freq) == "1")]
+getFrequencyCounts <- function(obsID, choice) {
+  obsIDCounts <- table(obsID)
+  alt <- sequence(obsIDCounts)
+  freq <- table(alt, choice)
+  freq <- freq[, which(colnames(freq) == "1")]
   return(freq)
 }

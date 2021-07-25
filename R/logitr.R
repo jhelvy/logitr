@@ -14,14 +14,14 @@
 #' @keywords logitr mnl mxl wtp willingness-to-pay mixed logit
 #'
 #' @param data The choice data, formatted as a `data.frame` object.
-#' @param choiceName The name of the column that identifies the choice variable.
-#' @param obsIDName The name of the column that identifies each choice
+#' @param choice The name of the column that identifies the choice variable.
+#' @param obsID The name of the column that identifies each choice
 #' observation.
-#' @param parNames The names of the parameters to be estimated in the model.
+#' @param pars The names of the parameters to be estimated in the model.
 #' Must be the same as the column names in the `data` argument. For WTP space
-#' models, do not include price in `parNames`.
-#' @param priceName The name of the column that identifies the price variable.
-#' Only required for WTP space models. Defaults to `NULL`.
+#' models, do not include price in `pars`.
+#' @param price The name of the column that identifies the price variable.
+#' Required for WTP space models. Defaults to `NULL`.
 #' @param randPars A named vector whose names are the random parameters and
 #' values the distribution: `'n'` for normal or `'ln'` for log-normal.
 #' Defaults to `NULL`.
@@ -29,16 +29,15 @@
 #' normal or `'ln'` for log-normal. Only used for WTP space MXL models.
 #' Defaults to `NULL`.
 #' @param modelSpace Set to `'wtp'` for WTP space models. Defaults to `"pref"`.
-#' @param weightsName The name of the column that identifies the weights to be
-#' used in model estimation. Optional. Defaults to `NULL`.
-#' @param clusterName The name of the column that identifies the cluster
+#' @param weights The name of the column that identifies the weights to be
+#' used in model estimation. Defaults to `NULL`.
+#' @param cluster The name of the column that identifies the cluster
 #' groups to be used in model estimation. Optional. Defaults to `NULL`.
 #' @param robust Determines whether or not a robust covariance matrix is
-#' estimated. Defaults to `FALSE`. Specification of a clusterName or
-#' weightsName will override the user setting and set this to `TRUE' (a
+#' estimated. Defaults to `FALSE`. Specification of a `cluster` or
+#' `weights` will override the user setting and set this to `TRUE' (a
 #' warning will be displayed in this case). Replicates the functionality of
 #' Stata's cmcmmixlogit.
-#'
 #' @param options A list of options.
 #'
 #' @details
@@ -88,12 +87,12 @@
 #' |`status`|An integer value with the status of the optimization (positive values are successes). Use [statusCodes()] for a detailed description.|
 #' |`modelType`|The model type, `'mnl'` for multinomial logit or `'mxl'` for mixed logit.|
 #' |`modelSpace`|The model space (`'pref'` or `'wtp'`).|
-#' |`priceName`|The name of the column that identifies the price variable.|
-#' |`parNames`|The names of the parameters to be estimated in the model.|
+#' |`price`|The name of the column that identifies the price variable.|
+#' |`pars`|The names of the parameters to be estimated in the model.|
 #' |`randPars`|A named vector whose names are the random parameters and values the distribution: `'n'` for normal or `'ln'` for log-normal.|
 #' |`parSetup`|A summary of the distributional assumptions on each model parameter (`"f"`="fixed", `"n"`="normal distribution", `"ln"`="log-normal distribution").|
 #' |`weightsUsed`|`TRUE` or `FALSE` for whether weights were used in the model.|
-#' |`clusterName`|The name of the column used to identify the cluster groups used in model estimation.|
+#' |`cluster`|The name of the column used to identify the cluster groups used in model estimation.|
 #' |`numClusters`|The number of clusters.|
 #' |`robust`|`TRUE` or `FALSE` for whether or not a robust covariance matrix was estimated.|
 #' |`standardDraws`|The draws used during maximum simulated likelihood (for MXL models).|
@@ -108,40 +107,40 @@
 #'
 #' # Estimate a MNL model in the Preference space
 #' mnl_pref <- logitr(
-#'   data       = yogurt,
-#'   choiceName = "choice",
-#'   obsIDName  = "obsID",
-#'   parNames   = c("price", "feat", "brand")
+#'   data   = yogurt,
+#'   choice = "choice",
+#'   obsID  = "obsID",
+#'   pars   = c("price", "feat", "brand")
 #' )
 #'
 #' # Estimate a MNL model in the WTP space, using a 10-run multistart
 #' mnl_wtp <- logitr(
 #'   data       = yogurt,
-#'   choiceName = "choice",
-#'   obsIDName  = "obsID",
-#'   parNames   = c("feat", "brand"),
-#'   priceName = "price",
+#'   choice     = "choice",
+#'   obsID      = "obsID",
+#'   pars       = c("feat", "brand"),
+#'   price      = "price",
 #'   modelSpace = "wtp",
-#'   options = list(numMultiStarts = 3)
+#'   options    = list(numMultiStarts = 3)
 #' )
 logitr <- function(
   data,
-  choiceName,
-  obsIDName,
-  parNames,
-  priceName = NULL,
-  randPars = NULL,
-  randPrice = NULL,
+  choice,
+  obsID,
+  pars,
+  price      = NULL,
+  randPars   = NULL,
+  randPrice  = NULL,
   modelSpace = "pref",
-  weightsName = NULL,
-  clusterName = NULL,
-  robust = FALSE,
-  options = list()
+  weights    = NULL,
+  cluster    = NULL,
+  robust     = FALSE,
+  options    = list()
 ) {
   call <- match.call()
   modelInputs <- getModelInputs(
-    data, choiceName, obsIDName, parNames, randPars, priceName, randPrice,
-    modelSpace, weightsName, clusterName, robust, call, options
+    data, choice, obsID, pars, randPars, price, randPrice,
+    modelSpace, weights, cluster, robust, call, options
   )
   allModels <- runMultistart(modelInputs)
   summary <- getMultistartSummary(allModels)

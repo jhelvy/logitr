@@ -15,22 +15,22 @@ dummyCode <- function(df, vars) {
   .Deprecated("fastDummies::dummy_cols")
 }
 
-#' Returns a list of the design matrix `X` and updated `parNames` and
+#' Returns a list of the design matrix `X` and updated `pars` and
 #' `randPars` to include any dummy-coded categorical or interaction
 #' variables.
 #'
 #' Recodes the data and returns a list of the encoded design matrix (`X`) as
-#' well as two vectors (`parNames` and `randPars`) with discrete (categorical)
-#' variables and interaction variables added to `X`, `parNames`, and
+#' well as two vectors (`pars` and `randPars`) with discrete (categorical)
+#' variables and interaction variables added to `X`, `pars`, and
 #' `randPars`.
 #' @param data The choice data, formatted as a `data.frame` object.
-#' @param parNames The names of the parameters to be estimated in the model.
+#' @param pars The names of the parameters to be estimated in the model.
 #' Must be the same as the column names in the `data` argument. For WTP space
-#' models, do not include price in `parNames`.
+#' models, do not include price in `pars`.
 #' @param randPars A named vector whose names are the random parameters and
 #' values the distribution: `'n'` for normal or `'ln'` for log-normal.
 #' Defaults to `NULL`.
-#' @return A list of the design matrix (`X`) and two vectors (`parNames` and
+#' @return A list of the design matrix (`X`) and two vectors (`pars` and
 #' `randPars`) with discrete (categorical) variables and interaction variables
 #' added.
 #' @export
@@ -42,21 +42,21 @@ dummyCode <- function(df, vars) {
 #' # Recode the yogurt data
 #' result <- recodeData(
 #'     data = yogurt,
-#'     parNames = c("price", "feat", "brand", "price*brand"),
+#'     pars = c("price", "feat", "brand", "price*brand"),
 #'     randPars = c(feat = "n", brand = "n")
 #' )
 #'
-#' result$parNames
+#' result$pars
 #' result$randPars
 #' head(result$X)
-recodeData <- function(data, parNames, randPars) {
+recodeData <- function(data, pars, randPars) {
   data <- as.data.frame(data) # tibbles break things
   data <- orderedFactorsToChars(data) # ordered factors cause weird names
-  X <- getDesignMatrix(data, parNames)
+  X <- getDesignMatrix(data, pars)
   return(list(
     X = X,
-    parNames = colnames(X),
-    randPars = recodeRandPars(data, parNames, randPars)))
+    pars = colnames(X),
+    randPars = recodeRandPars(data, pars, randPars)))
 }
 
 # Ordered factors have strange returned column names when encoding with
@@ -76,8 +76,8 @@ getColumnTypes <- function(data) {
   return(unlist(lapply(types, test)))
 }
 
-getDesignMatrix <- function(data, parNames) {
-  formula <- parsToFormula(parNames)
+getDesignMatrix <- function(data, pars) {
+  formula <- parsToFormula(pars)
   X <- stats::model.matrix(formula, data)
   X <- X[,-1,drop=FALSE] # Drop intercept
   return(X)
@@ -87,14 +87,14 @@ parsToFormula <- function(vars) {
   return(stats::as.formula(paste0("~ ", paste(vars, collapse = " + "))))
 }
 
-recodeRandPars <- function(data, parNames, randPars) {
+recodeRandPars <- function(data, pars, randPars) {
   # Separate out interactions
-  ints <- grepl("\\*", parNames)
+  ints <- grepl("\\*", pars)
   if (any(ints)) {
-    parNames <- parNames[ints == FALSE]
+    pars <- pars[ints == FALSE]
   }
   # Dummy code categorical variables (if any exist)
-  parTypes <- getParTypes(data, parNames)
+  parTypes <- getParTypes(data, pars)
   if (!is.null(parTypes$discrete)) {
     dummyLevels <- getDummyLevels(data, parTypes)
     for (i in seq_len(length(dummyLevels))) {
@@ -112,30 +112,30 @@ recodeRandPars <- function(data, parNames, randPars) {
   return(randPars)
 }
 
-getParTypes <- function(df, parNames) {
-  types <- getColumnTypes(df[parNames])
+getParTypes <- function(df, pars) {
+  types <- getColumnTypes(df[pars])
   discIDs <- which(types %in% c("character", "factor"))
-  continuousNames <- parNames[setdiff(seq_len(length(parNames)), discIDs)]
-  if (length(continuousNames) == 0) {
-    continuousNames <- NULL
+  continuous <- pars[setdiff(seq_len(length(pars)), discIDs)]
+  if (length(continuous) == 0) {
+    continuous <- NULL
   }
-  discreteNames <- parNames[discIDs]
-  if (length(discreteNames) == 0) {
-    discreteNames <- NULL
+  discrete <- pars[discIDs]
+  if (length(discrete) == 0) {
+    discrete <- NULL
   }
-  return(list(continuous = continuousNames, discrete = discreteNames))
+  return(list(continuous = continuous, discrete = discrete))
 }
 
 getDummyLevels <- function(data, parTypes) {
-  discreteNames <- parTypes$discrete
-  parNames <- list()
-  for (i in seq_len(length(discreteNames))) {
-    name <- discreteNames[i]
+  discrete <- parTypes$discrete
+  pars <- list()
+  for (i in seq_len(length(discrete))) {
+    name <- discrete[i]
     var <- data[,name]
     parLevels <- levels(as.factor(var))
     dummyNames <- paste0(name, parLevels)[-1]
-    parNames[[i]] <- dummyNames
+    pars[[i]] <- dummyNames
   }
-  names(parNames) <- discreteNames
-  return(parNames)
+  names(pars) <- discrete
+  return(pars)
 }

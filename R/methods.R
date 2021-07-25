@@ -141,7 +141,7 @@ getModelInfoTable <- function(model) {
   }
   if (!is.null(model$numClusters)) { # Added for backwards compatibility
     if (model$numClusters > 0) {
-      modelInfoTable <- rbind(modelInfoTable, model$clusterName)
+      modelInfoTable <- rbind(modelInfoTable, model$inputs$cluster)
       row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Cluster Name:"
     }
   }

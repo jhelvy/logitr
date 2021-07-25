@@ -18,36 +18,33 @@ appendModelInfo <- function(model, modelInputs, multistartSummary) {
   nullLogLik <- -1 * modelInputs$evalFuncs$negLL(coef * 0, modelInputs)
   numObs <- sum(modelInputs$choice)
   result <- structure(list(
-    coef             = coef,
-    standErrs        = se,
-    logLik           = logLik,
-    nullLogLik       = nullLogLik,
-    gradient         = gradient,
-    hessian          = hessian,
-    covariance       = covariance,
-    numObs           = numObs,
-    numParams        = length(coef),
-    call             = modelInputs$call,
-    freq             = modelInputs$freq,
-    startPars        = model$startPars,
-    multistartNumber = model$multistartNumber,
+    coef              = coef,
+    standErrs         = se,
+    logLik            = logLik,
+    nullLogLik        = nullLogLik,
+    gradient          = gradient,
+    hessian           = hessian,
+    covariance        = covariance,
+    numObs            = numObs,
+    numParams         = length(coef),
+    call              = modelInputs$call,
+    inputs            = modelInputs$inputs,
+    freq              = modelInputs$freq,
+    startPars         = model$startPars,
+    multistartNumber  = model$multistartNumber,
     multistartSummary = multistartSummary,
-    time             = model$time,
-    iterations       = model$iterations,
-    message          = model$message,
-    status           = model$status,
-    modelType        = modelInputs$modelType,
-    modelSpace       = modelInputs$modelSpace,
-    priceName        = modelInputs$priceName,
-    parNames         = modelInputs$parNames,
-    randPars         = modelInputs$randPars,
-    parSetup         = modelInputs$parSetup,
-    weightsUsed      = modelInputs$weightsUsed,
-    clusterName      = modelInputs$clusterName,
-    numClusters      = modelInputs$numClusters,
-    robust           = modelInputs$robust,
-    standardDraws    = NA,
-    options          = modelInputs$options
+    time              = model$time,
+    iterations        = model$iterations,
+    message           = model$message,
+    status            = model$status,
+    modelType         = modelInputs$modelType,
+    weightsUsed       = modelInputs$weightsUsed,
+    cluster           = modelInputs$cluster,
+    numClusters       = modelInputs$numClusters,
+    robust            = modelInputs$robust,
+    parSetup          = modelInputs$parSetup,
+    standardDraws     = NA,
+    options           = modelInputs$options
   ),
   class = "logitr"
   )
@@ -60,8 +57,8 @@ appendModelInfo <- function(model, modelInputs, multistartSummary) {
 
 getUnscaledPars <- function(model, modelInputs) {
   pars <- model$solution
-  muNames <- modelInputs$parNameList$mu
-  sigmaNames <- modelInputs$parNameList$sigma
+  muNames <- modelInputs$parList$mu
+  sigmaNames <- modelInputs$parList$sigma
   names(pars) <- c(muNames, sigmaNames)
   return(pars)
 }
@@ -73,7 +70,7 @@ getModelCoefs <- function(model, modelInputs) {
     pars <- pars / scaleFactors
   }
   # Make sigmas positive
-  sigmaNames <- modelInputs$parNameList$sigma
+  sigmaNames <- modelInputs$parList$sigma
   pars[sigmaNames] <- abs(pars[sigmaNames])
   return(pars)
 }
@@ -98,7 +95,7 @@ getModelHessian <- function(model, modelInputs) {
     sfMat <- sf %*% t(sf)
     hessian <- hessian * sfMat
   }
-  parNames <- c(modelInputs$parNameList$mu, modelInputs$parNameList$sigma)
+  parNames <- c(modelInputs$parList$mu, modelInputs$parList$sigma)
   colnames(hessian) <- parNames
   row.names(hessian) <- parNames
   return(hessian)
@@ -106,7 +103,7 @@ getModelHessian <- function(model, modelInputs) {
 
 getModelScaleFactors <- function(model, modelInputs) {
   scaleFactors <- modelInputs$scaleFactors
-  if (modelInputs$modelSpace == "wtp") {
+  if (modelInputs$inputs$modelSpace == "wtp") {
     lambdaID <- which(grepl("lambda", names(scaleFactors)) == T)
     nonLambdaID <- which(grepl("lambda", names(scaleFactors)) == F)
     lambdaSF <- scaleFactors[lambdaID]
@@ -115,7 +112,7 @@ getModelScaleFactors <- function(model, modelInputs) {
   if (modelInputs$modelType == "mnl") {
     return(scaleFactors)
   } else {
-    parNames <- c(modelInputs$parNameList$mu, modelInputs$parNameList$sigma)
+    parNames <- c(modelInputs$parList$mu, modelInputs$parList$sigma)
     mxlScaleFactors <- rep(0, length(parNames))
     for (i in seq_len(length(scaleFactors))) {
       scaleFactor <- scaleFactors[i]
