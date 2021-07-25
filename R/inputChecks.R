@@ -154,7 +154,7 @@ runOptionsChecks <- function(options, parList) {
     options$ftol_abs <- 1.0e-6
   }
   if (is.null(options$maxeval)) {
-    options$maxeval <- 1000
+    options$maxeval <- 2000
   }
   if (is.null(options$algorithm)) {
     options$algorithm <- "NLOPT_LD_LBFGS"
