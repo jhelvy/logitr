@@ -88,7 +88,7 @@ getRandomStartPars <- function(modelInputs) {
 # For lambda and logN parameters must start with positive numbers
 checkStartPars <- function(startPars, modelInputs) {
   lambdaParIDs <- NULL
-  if (modelInputs$modelSpace == "wtp") {
+  if (modelInputs$inputs$modelSpace == "wtp") {
     lambdaParIDs <- which(grepl("lambda", modelInputs$parList$all))
   }
   logNPars <- names(getLogNormParIDs(modelInputs$parSetup))

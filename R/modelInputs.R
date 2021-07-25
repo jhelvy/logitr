@@ -151,10 +151,10 @@ definePrice <- function(data, inputs) {
   }
   if (inputs$modelSpace == "wtp") {
     price <- data[, which(names(data) == inputs$price)]
-    if (! typeof(inputs$price) %in% c("integer", "double")) {
+    if (! typeof(price) %in% c("integer", "double")) {
       stop(
         'Please make sure the price column in your data defined by the ',
-        '"priceName" argument is encoded as a numeric data type. Price must ',
+        '"price" argument is encoded as a numeric data type. Price must ',
         'be numeric for WTP space models.'
       )
     }

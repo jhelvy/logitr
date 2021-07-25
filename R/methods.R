@@ -199,7 +199,8 @@ getModelType <- function(x) {
 }
 
 getModelSpace <- function(x) {
-  return(ifelse(x$modelSpace == "pref", "Preference", "Willingness-to-Pay"))
+  return(ifelse(
+    x$inputs$modelSpace == "pref", "Preference", "Willingness-to-Pay"))
 }
 
 getModelRun <- function(x) {
