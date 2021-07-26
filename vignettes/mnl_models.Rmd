@@ -36,15 +36,8 @@ This vignette demonstrates an example of how to use the `logitr()` function to e
 
 In the utility models described below, the data variables are represented as follows:
 
-<div style="width:550px">
-| Symbol | Variable                             |
-|--------|--------------------------------------|
-| $p$                        | The price in US dollars.       |
-| $x_{j}^{\mathrm{Feat}}$     | Dummy variable for whether the newspaper advertisement was shown to the customer.    |
-| $x_{j}^{\mathrm{Hiland}}$ | Dummy variable for the "Highland" brand. |
-| $x_{j}^{\mathrm{Yoplait}}$  | Dummy variable for the "Yoplait" brand.  |
-| $x_{j}^{\mathrm{Dannon}}$   | Dummy variable for the "Dannon" brand.   |
-</div>
+```{r, child=here::here('man', 'rmdchunks', 'mnlPrefExampleTable.Rmd')}
+```
 
 # Preference space model
 
@@ -65,10 +58,10 @@ Estimate the model using the `logitr()` function:
 
 ```{r, eval=FALSE}
 mnl_pref <- logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'brand')
+  data   = yogurt,
+  choice = 'choice',
+  obsID  = 'obsID',
+  pars   = c('price', 'feat', 'brand')
 )
 ```
 ```
@@ -91,7 +84,7 @@ coef(mnl_pref)
 Compute the WTP implied from the preference space model:
 
 ```{r, eval=FALSE}
-wtp_mnl_pref <- wtp(mnl_pref, priceName =  "price")
+wtp_mnl_pref <- wtp(mnl_pref, price =  "price")
 ```
 ```{r}
 wtp_mnl_pref
@@ -111,20 +104,16 @@ Estimate the model using the `logitr()` function:
 ```{r eval=FALSE}
 mnl_wtp <- logitr(
   data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('feat', 'brand'),
-  priceName  = 'price',
+  choice     = 'choice',
+  obsID      = 'obsID',
+  pars       = c('feat', 'brand'),
+  price      = 'price',
   modelSpace = 'wtp',
-  options = list(
-    # Since WTP space models are non-convex, run a multistart:
-    numMultiStarts = 10,
-    # If you want to view the results from each multistart run,
-    # set keepAllRuns=TRUE:
-    keepAllRuns = TRUE,
-    # Use the computed WTP from the preference space model as the starting
-    # values for the first run:
-    startVals = wtp_mnl_pref$Estimate)
+  # Since WTP space models are non-convex, run a multistart:
+  numMultiStarts = 10,
+  # Use the computed WTP from the preference space model as the starting
+  # values for the first run:
+  startVals = wtp_mnl_pref$Estimate)
 )
 ```
 ```
@@ -161,7 +150,7 @@ Since WTP space models are non-convex, you cannot be certain that the model reac
 To compare the WTP and log-likelihood values between the preference space and WTP space models, use the `wtpCompare()` function:
 
 ```{r, eval=FALSE}
-wtp_mnl_comparison <- wtpCompare(mnl_pref, mnl_wtp, priceName = 'price')
+wtp_mnl_comparison <- wtpCompare(mnl_pref, mnl_wtp, price = 'price')
 ```
 ```{r}
 wtp_mnl_comparison

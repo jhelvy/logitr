@@ -3,8 +3,8 @@
         \alpha p_{j} +
         \beta_1 x_{j}^{\mathrm{Feat}} +
         \beta_2 x_{j}^{\mathrm{Hiland}} +
-        \beta_3 x_{j}^{\mathrm{Yoplait}} +
-        \beta_4 x_{j}^{\mathrm{Dannon}}  +
+        \beta_3 x_{j}^{\mathrm{Weight}} +
+        \beta_4 x_{j}^{\mathrm{Yoplait}}  +
         \varepsilon_{j}
 \label{eq:mnlPrefExample}
 \end{equation}

@@ -25,10 +25,10 @@ alts
 
 # Compute choice probabilities using the preference space MNL model:
 probs_mnl_pref <- predictProbs(
-  model     = mnl_pref,
-  alts      = alts,
-  altIDName = "alt",
-  obsIDName = "obsID"
+  model = mnl_pref,
+  alts  = alts,
+  altID = "alt",
+  obsID = "obsID"
 )
 
 probs_mnl_pref
@@ -40,34 +40,34 @@ probs_mnl_pref
 
 # Compute choice probabilities using the WTP space MNL model:
 probs_mnl_wtp <- predictProbs(
-  model     = mnl_wtp,
-  alts      = alts,
-  altIDName = "alt",
-  obsIDName = "obsID"
+  model = mnl_wtp,
+  alts  = alts,
+  altID = "alt",
+  obsID = "obsID"
 )
 
 probs_mnl_wtp
 
 # Since these two models are equivalent except in different spaces, the
-# simulation results should be the same. Note that 'priceName' is the name
+# simulation results should be the same. Note that 'price' is the name
 # of the price attribute in the alts argument and must be included for
 # WTP space models.
 
 # Simulations can also be run using MXL models in either space:
 probs_mxl_pref <- predictProbs(
-  model     = mxl_pref,
-  alts      = alts,
-  altIDName = "alt",
-  obsIDName = "obsID"
+  model = mxl_pref,
+  alts  = alts,
+  altID = "alt",
+  obsID = "obsID"
 )
 
 probs_mxl_pref
 
 probs_mxl_wtp <- predictProbs(
-  model     = mxl_wtp,
-  alts      = alts,
-  altIDName = "alt",
-  obsIDName = "obsID"
+  model = mxl_wtp,
+  alts  = alts,
+  altID = "alt",
+  obsID = "obsID"
 )
 
 probs_mxl_wtp

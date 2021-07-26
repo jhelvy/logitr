@@ -9,10 +9,10 @@ library('logitr')
 
 # Continuous variable interactions
 model_price_feat <- logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'brand', 'price*feat')
+  data   = yogurt,
+  choice = 'choice',
+  obsID  = 'obsID',
+  pars   = c('price', 'feat', 'brand', 'price*feat')
 )
 
 # The model now has an estimated coefficient for the `price*feat` effect:
@@ -20,10 +20,10 @@ summary(model_price_feat)
 
 # Discrete variable interactions
 model_price_brand <- logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'brand', 'price*brand')
+  data   = yogurt,
+  choice = 'choice',
+  obsID  = 'obsID',
+  pars   = c('price', 'feat', 'brand', 'price*brand')
 )
 
 # The model now has three estimated coefficients for the `price*brand` effect:
@@ -33,11 +33,11 @@ summary(model_price_brand)
 # Estimate heterogeneous MXL models with interactions
 
 model_price_feat_mxl <- logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'brand', 'price*feat'),
-  randPars   = c(feat = "n")
+  data     = yogurt,
+  choice   = 'choice',
+  obsID    = 'obsID',
+  pars     = c('price', 'feat', 'brand', 'price*feat'),
+  randPars = c(feat = "n")
 )
 
 # The interaction term of price*feat is interpreted as a difference in the

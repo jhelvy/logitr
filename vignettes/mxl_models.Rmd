@@ -36,24 +36,17 @@ This vignette demonstrates an example of how to use the `logitr()` function to e
 
 In the utility models described below, the data variables are represented as follows:
 
-<div style="width:550px">
-| Symbol | Variable                             |
-|--------|--------------------------------------|
-| $p$                        | The price in US dollars.       |
-| $x_{j}^{\mathrm{Feat}}$     | Dummy variable for whether the newspaper advertisement was shown to the customer.    |
-| $x_{j}^{\mathrm{Hiland}}$ | Dummy variable for the "Highland" brand. |
-| $x_{j}^{\mathrm{Yoplait}}$  | Dummy variable for the "Yoplait" brand.  |
-| $x_{j}^{\mathrm{Dannon}}$   | Dummy variable for the "Dannon" brand.   |
-</div>
+```{r, child=here::here('man', 'rmdchunks', 'mnlPrefExampleTable.Rmd')}
+```
 
 # Preference space model
 
 This example will estimate the following mixed logit model in the preference space:
 
-```{r, child=here::here('man', 'rmdchunks', 'mxlPrefExample.Rmd')}
+```{r, child=here::here('man', 'rmdchunks', 'mnlPrefExample.Rmd')}
 ```
 
-where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ have units of utility. In the example below, we will model $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ as normally distributed across the population. As a result, the model will estimate two parameters for each of these coefficients: a mean (`parname_mu`) and a standard deviation (`parname_sigma`).
+where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ have units of utility. In the example below, we will model $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ as normally distributed across the population. As a result, the model will estimate two parameters for each of these coefficients: a mean (`par_mu`) and a standard deviation (`par_sigma`).
 
 To estimate the model, first load the **logitr** package:
 
@@ -65,14 +58,14 @@ Estimate the model using the `logitr()` function:
 
 ```{r eval=FALSE}
 mxl_pref <- logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'brand'),
-  randPars   = c(feat = 'n', brand = 'n'),
+  data     = yogurt,
+  choice   = 'choice',
+  obsID    = 'obsID',
+  pars     = c('price', 'feat', 'brand'),
+  randPars = c(feat = 'n', brand = 'n'),
   # You should run a multistart for MXL models since they are non-convex,
   # but it can take a long time. Here I just use 5 starts for brevity:
-  options    = list(numMultiStarts = 5)
+  numMultiStarts = 5
 )
 ```
 ```
@@ -95,7 +88,7 @@ The above summary table prints summaries of the estimated coefficients as well a
 Compute the WTP implied from the preference space model:
 
 ```{r, eval=FALSE}
-wtp_mxl_pref <- wtp(mxl_pref, priceName = "price")
+wtp_mxl_pref <- wtp(mxl_pref, price = "price")
 ```
 ```{r}
 wtp_mxl_pref
@@ -105,10 +98,10 @@ wtp_mxl_pref
 
 This example will estimate the following mixed logit model in the WTP space:
 
-```{r, child=here::here('man', 'rmdchunks', 'mxlWtpExample.Rmd')}
+```{r, child=here::here('man', 'rmdchunks', 'mnlWtpExample.Rmd')}
 ```
 
-where the parameters $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ have units of dollars and $\lambda$ is the scale parameter. In the example below, we will model $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ as normally distributed across the population. As a result, the model will estimate two parameters for each of these coefficients: a mean (`parname_mu`) and a standard deviation (`parname_sigma`).
+where the parameters $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ have units of dollars and $\lambda$ is the scale parameter. In the example below, we will model $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ as normally distributed across the population. As a result, the model will estimate two parameters for each of these coefficients: a mean (`par_mu`) and a standard deviation (`par_sigma`).
 
 To estimate the model, first load the **logitr** package:
 
@@ -121,19 +114,18 @@ Estimate the model using the `logitr()` function:
 ```{r eval=FALSE}
 mxl_wtp <- logitr(
   data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('feat', 'brand'),
-  priceName  = 'price',
+  choice     = 'choice',
+  obsID      = 'obsID',
+  pars       = c('feat', 'brand'),
+  price      = 'price',
   randPars   = c(feat = 'n', brand = 'n'),
   modelSpace = 'wtp',
-  options    = list(
-    # You should run a multistart for MXL models since they are non-convex,
-    # but it can take a long time. Here I just use 5 starts for brevity:
-    numMultiStarts = 5,
-    # Use the computed WTP from the preference space model as the starting
-    # values for the first run:
-    startVals = wtp_mxl_pref$Estimate)
+  # You should run a multistart for MXL models since they are non-convex,
+  # but it can take a long time. Here I just use 5 starts for brevity:
+  numMultiStarts = 5,
+  # Use the computed WTP from the preference space model as the starting
+  # values for the first run:
+  startVals = wtp_mxl_pref$Estimate
 )
 ```
 ```
@@ -155,7 +147,7 @@ summary(mxl_wtp)
 If you want to compare the WTP from the two different model spaces, use the `wtpCompare()` function:
 
 ```{r, eval=FALSE}
-wtp_mxl_comparison <- wtpCompare(mxl_pref, mxl_wtp, priceName = 'price')
+wtp_mxl_comparison <- wtpCompare(mxl_pref, mxl_wtp, price = 'price')
 ```
 ```{r}
 wtp_mxl_comparison
