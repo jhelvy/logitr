@@ -144,7 +144,7 @@
 <div id="continuous-versus-discrete-variables" class="section level1">
 <h1 class="hasAnchor">
 <a href="#continuous-versus-discrete-variables" class="anchor"></a>Continuous versus discrete variables</h1>
-<p>Variables are modeled as either continuous or discrete based on their data <em>type</em>. Numeric variables are by default estimated with a single “slope” coefficient. For example, consider a data frame that contains a <code>price</code> variable with the levels $10, $15, and $20. Adding <code>price</code> to the <code>parNames</code> argument in the main <code><a href="../reference/logitr.html">logitr()</a></code> function would result in a single <code>price</code> coefficient for the “slope” of the change in price.</p>
+<p>Variables are modeled as either continuous or discrete based on their data <em>type</em>. Numeric variables are by default estimated with a single “slope” coefficient. For example, consider a data frame that contains a <code>price</code> variable with the levels $10, $15, and $20. Adding <code>price</code> to the <code>pars</code> argument in the main <code><a href="../reference/logitr.html">logitr()</a></code> function would result in a single <code>price</code> coefficient for the “slope” of the change in price.</p>
 <p>In contrast, categorical variables (i.e. <code>character</code> or <code>factor</code> type variables) are by default estimated with a coefficient for all but the first level, which serves as the reference level. The default reference level is determined alphabetically, but it can also be set by modifying the factor levels for that variable. For example, the default reference level for the <code>brand</code> variable is <code>"dannon"</code> as it is alphabetically first. To set <code>"weight"</code> as the reference level, the factor levels can be modified using the <code><a href="https://rdrr.io/r/base/factor.html">factor()</a></code> function:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">brands</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"weight"</span>, <span class="st">"hiland"</span>, <span class="st">"yoplait"</span>, <span class="st">"dannon"</span><span class="op">)</span>
@@ -173,10 +173,10 @@
 <p>Now I can use those columns as covariates:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mnl_pref_dummies</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data       <span class="op">=</span> <span class="va">yogurt</span>,
-  choiceName <span class="op">=</span> <span class="st">'choice'</span>,
-  obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
-  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+  data   <span class="op">=</span> <span class="va">yogurt</span>,
+  choice <span class="op">=</span> <span class="st">'choice'</span>,
+  obsID  <span class="op">=</span> <span class="st">'obsID'</span>,
+  pars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
     <span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand_yoplait'</span>, <span class="st">'brand_dannon'</span>, <span class="st">'brand_weight'</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 <pre><code>Running Model...
@@ -185,21 +185,21 @@ Done!</code></pre>
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mnl_pref_dummies</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; Call:</span>
-<span class="co">#&gt; logitr(data = yogurt, choiceName = "choice", obsIDName = "obsID", </span>
-<span class="co">#&gt;     parNames = c("price", "feat", "brand_yoplait", "brand_dannon", </span>
-<span class="co">#&gt;         "brand_weight"))</span>
+<span class="co">#&gt; logitr(data = yogurt, choice = "choice", obsID = "obsID", pars = c("price", </span>
+<span class="co">#&gt;     "feat", "brand_yoplait", "brand_dannon", "brand_weight"))</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Frequencies of alternatives:</span>
 <span class="co">#&gt;        1        2        3        4 </span>
 <span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Exit Status: 3 </span>
-<span class="co">#&gt; Optimization stopped because ftol_rel or ftol_abs was reached.                                </span>
+<span class="co">#&gt; Optimization stopped because ftol_rel or ftol_abs was reached. </span>
+<span class="co">#&gt;                                 </span>
 <span class="co">#&gt; Model Type:    Multinomial Logit</span>
 <span class="co">#&gt; Model Space:          Preference</span>
 <span class="co">#&gt; Model Run:                1 of 1</span>
 <span class="co">#&gt; Iterations:                   18</span>
-<span class="co">#&gt; Elapsed Time:        0h:0m:0.13s</span>
+<span class="co">#&gt; Elapsed Time:        0h:0m:0.16s</span>
 <span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span>
 <span class="co">#&gt; Weights Used?:             FALSE</span>
 <span class="co">#&gt; Robust?                    FALSE</span>

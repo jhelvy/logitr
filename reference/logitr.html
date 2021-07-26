@@ -170,17 +170,25 @@ function to minimize the negative log-likelihood function.</p>
 
     <pre class="usage"><span class='fu'>logitr</span><span class='op'>(</span>
   <span class='va'>data</span>,
-  <span class='va'>choiceName</span>,
-  <span class='va'>obsIDName</span>,
-  <span class='va'>parNames</span>,
-  priceName <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>choice</span>,
+  <span class='va'>obsID</span>,
+  <span class='va'>pars</span>,
+  price <span class='op'>=</span> <span class='cn'>NULL</span>,
   randPars <span class='op'>=</span> <span class='cn'>NULL</span>,
   randPrice <span class='op'>=</span> <span class='cn'>NULL</span>,
   modelSpace <span class='op'>=</span> <span class='st'>"pref"</span>,
-  weightsName <span class='op'>=</span> <span class='cn'>NULL</span>,
-  clusterName <span class='op'>=</span> <span class='cn'>NULL</span>,
+  weights <span class='op'>=</span> <span class='cn'>NULL</span>,
+  cluster <span class='op'>=</span> <span class='cn'>NULL</span>,
   robust <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>
+  numMultiStarts <span class='op'>=</span> <span class='fl'>1</span>,
+  useAnalyticGrad <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  scaleInputs <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  startParBounds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>,
+  standardDraws <span class='op'>=</span> <span class='cn'>NULL</span>,
+  numDraws <span class='op'>=</span> <span class='fl'>50</span>,
+  startVals <span class='op'>=</span> <span class='cn'>NULL</span>,
+  options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>print_level <span class='op'>=</span> <span class='fl'>0</span>, xtol_rel <span class='op'>=</span> <span class='fl'>1e-06</span>, xtol_abs <span class='op'>=</span> <span class='fl'>1e-06</span>, ftol_rel <span class='op'>=</span> <span class='fl'>1e-06</span>,
+    ftol_abs <span class='op'>=</span> <span class='fl'>1e-06</span>, maxeval <span class='op'>=</span> <span class='fl'>2000</span>, algorithm <span class='op'>=</span> <span class='st'>"NLOPT_LD_LBFGS"</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -191,24 +199,24 @@ function to minimize the negative log-likelihood function.</p>
       <td><p>The choice data, formatted as a <code>data.frame</code> object.</p></td>
     </tr>
     <tr>
-      <th>choiceName</th>
+      <th>choice</th>
       <td><p>The name of the column that identifies the choice variable.</p></td>
     </tr>
     <tr>
-      <th>obsIDName</th>
+      <th>obsID</th>
       <td><p>The name of the column that identifies each choice
 observation.</p></td>
     </tr>
     <tr>
-      <th>parNames</th>
+      <th>pars</th>
       <td><p>The names of the parameters to be estimated in the model.
 Must be the same as the column names in the <code>data</code> argument. For WTP space
-models, do not include price in <code>parNames</code>.</p></td>
+models, do not include price in <code>pars</code>.</p></td>
     </tr>
     <tr>
-      <th>priceName</th>
+      <th>price</th>
       <td><p>The name of the column that identifies the price variable.
-Only required for WTP space models. Defaults to <code>NULL</code>.</p></td>
+Required for WTP space models. Defaults to <code>NULL</code>.</p></td>
     </tr>
     <tr>
       <th>randPars</th>
@@ -227,26 +235,73 @@ Defaults to <code>NULL</code>.</p></td>
       <td><p>Set to <code>'wtp'</code> for WTP space models. Defaults to <code>"pref"</code>.</p></td>
     </tr>
     <tr>
-      <th>weightsName</th>
+      <th>weights</th>
       <td><p>The name of the column that identifies the weights to be
-used in model estimation. Optional. Defaults to <code>NULL</code>.</p></td>
+used in model estimation. Defaults to <code>NULL</code>.</p></td>
     </tr>
     <tr>
-      <th>clusterName</th>
+      <th>cluster</th>
       <td><p>The name of the column that identifies the cluster
 groups to be used in model estimation. Optional. Defaults to <code>NULL</code>.</p></td>
     </tr>
     <tr>
       <th>robust</th>
       <td><p>Determines whether or not a robust covariance matrix is
-estimated. Defaults to <code>FALSE</code>. Specification of a clusterName or
-weightsName will override the user setting and set this to `TRUE' (a
+estimated. Defaults to <code>FALSE</code>. Specification of a <code>cluster</code> or
+<code>weights</code> will override the user setting and set this to `TRUE' (a
 warning will be displayed in this case). Replicates the functionality of
 Stata's cmcmmixlogit.</p></td>
     </tr>
     <tr>
+      <th>numMultiStarts</th>
+      <td><p>is the number of times to run the optimization loop,
+each time starting from a different random starting point for each parameter
+between <code>startParBounds</code>. Recommended for non-convex models, such as WTP
+space models and mixed logit models. Defaults to <code>1</code>.</p></td>
+    </tr>
+    <tr>
+      <th>useAnalyticGrad</th>
+      <td><p>Set to <code>FALSE</code> to use numerically approximated
+gradients instead of analytic gradients during estimation. For now, using
+the analytic gradient is faster for MNL models but slower for MXL models.
+Defaults to <code>TRUE</code>.</p></td>
+    </tr>
+    <tr>
+      <th>scaleInputs</th>
+      <td><p>By default each variable in <code>data</code> is scaled to be
+between 0 and 1 before running the optimization routine because it usually
+helps with stability, especially if some of the variables have very large or
+very small values (e.g. <code>&gt; 10^3</code> or <code>&lt; 10^-3</code>). Set to <code>FALSE</code> to turn this
+feature off. Defaults to <code>TRUE</code>.</p></td>
+    </tr>
+    <tr>
+      <th>startParBounds</th>
+      <td><p>sets the <code>lower</code> and <code>upper</code> bounds for the starting
+parameters for each optimization run, which are generated by
+<code><a href='https://rdrr.io/r/stats/Uniform.html'>runif(n, lower, upper)</a></code>. Defaults to <code><a href='https://rdrr.io/r/base/c.html'>c(-1, 1)</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>standardDraws</th>
+      <td><p>By default, a new set of standard normal draws are
+generated during each call to <code>logitr</code> (the same draws are used during each
+multistart iteration). The user can override those draws by providing a
+matrix of standard normal draws if desired. Defaults to <code>NULL</code>.</p></td>
+    </tr>
+    <tr>
+      <th>numDraws</th>
+      <td><p>The number of Halton draws to use for MXL models for the
+maximum simulated likelihood. Defaults to <code>50</code>.</p></td>
+    </tr>
+    <tr>
+      <th>startVals</th>
+      <td><p>is vector of values to be used as starting values for the
+optimization. Only used for the first run if <code>numMultiStarts &gt; 1</code>. Defaults
+to <code>NULL</code>.</p></td>
+    </tr>
+    <tr>
       <th>options</th>
-      <td><p>A list of options.</p></td>
+      <td><p>A list of options for controlling the <code>nloptr()</code> optimization.
+Run <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for details.</p></td>
     </tr>
     </table>
 
@@ -264,6 +319,7 @@ Stata's cmcmmixlogit.</p></td>
 <tr><td><code>numObs</code></td><td>The number of observations.</td></tr>
 <tr><td><code>numParams</code></td><td>The number of model parameters.</td></tr>
 <tr><td><code>call</code></td><td>The matched call to <code>logitr()</code>.</td></tr>
+<tr><td><code>inputs</code></td><td>A list of the original inputs to <code>logitr()</code>.</td></tr>
 <tr><td><code>freq</code></td><td>The frequency counts of each choice alternative.</td></tr>
 <tr><td><code>startPars</code></td><td>The starting values used.</td></tr>
 <tr><td><code>multistartNumber</code></td><td>The multistart run number for this model.</td></tr>
@@ -273,17 +329,13 @@ Stata's cmcmmixlogit.</p></td>
 <tr><td><code>message</code></td><td>A more informative message with the status of the optimization result.</td></tr>
 <tr><td><code>status</code></td><td>An integer value with the status of the optimization (positive values are successes). Use <code><a href='statusCodes.html'>statusCodes()</a></code> for a detailed description.</td></tr>
 <tr><td><code>modelType</code></td><td>The model type, <code>'mnl'</code> for multinomial logit or <code>'mxl'</code> for mixed logit.</td></tr>
-<tr><td><code>modelSpace</code></td><td>The model space (<code>'pref'</code> or <code>'wtp'</code>).</td></tr>
-<tr><td><code>priceName</code></td><td>The name of the column that identifies the price variable.</td></tr>
-<tr><td><code>parNames</code></td><td>The names of the parameters to be estimated in the model.</td></tr>
-<tr><td><code>randPars</code></td><td>A named vector whose names are the random parameters and values the distribution: <code>'n'</code> for normal or <code>'ln'</code> for log-normal.</td></tr>
-<tr><td><code>parSetup</code></td><td>A summary of the distributional assumptions on each model parameter (<code>"f"</code>="fixed", <code>"n"</code>="normal distribution", <code>"ln"</code>="log-normal distribution").</td></tr>
 <tr><td><code>weightsUsed</code></td><td><code>TRUE</code> or <code>FALSE</code> for whether weights were used in the model.</td></tr>
-<tr><td><code>clusterName</code></td><td>The name of the column used to identify the cluster groups used in model estimation.</td></tr>
+<tr><td><code>cluster</code></td><td>The name of the column used to identify the cluster groups used in model estimation.</td></tr>
 <tr><td><code>numClusters</code></td><td>The number of clusters.</td></tr>
 <tr><td><code>robust</code></td><td><code>TRUE</code> or <code>FALSE</code> for whether or not a robust covariance matrix was estimated.</td></tr>
+<tr><td><code>parSetup</code></td><td>A summary of the distributional assumptions on each model parameter (<code>"f"</code>="fixed", <code>"n"</code>="normal distribution", <code>"ln"</code>="log-normal distribution").</td></tr>
 <tr><td><code>standardDraws</code></td><td>The draws used during maximum simulated likelihood (for MXL models).</td></tr>
-<tr><td><code>options</code></td><td>A list of all the model options.</td></tr>
+<tr><td><code>options</code></td><td>A list of options for controlling the <code>nloptr()</code> optimization. Run <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for details.</td></tr>
 </table>
 
 
@@ -291,22 +343,16 @@ Stata's cmcmmixlogit.</p></td>
 
     <p>The following options control the detailed behavior of the optimization
 algorithm. They must be provided as a named list to the <code>options</code> argument,
-e.g. <code>options = list(...)</code>.</p><table class='table'>
+e.g. <code>options = list(...)</code>. Below are a list of the default options.
+Run <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more options</p><table class='table'>
 <tr><td>Argument</td><td>Description</td><td>Default</td></tr>
-<tr><td><code>numMultiStarts</code></td><td>Number of times to run the optimization loop, each time starting from a different random starting point for each parameter between <code>startParBounds</code>. Recommended for non-convex models, such as WTP space models and MXL models.</td><td><code>1</code></td></tr>
-<tr><td><code>startParBounds</code></td><td>Set the <code>lower</code> and <code>upper</code> bounds for the starting parameters for each optimization run, which are generated by <code><a href='https://rdrr.io/r/stats/Uniform.html'>runif(n, lower, upper)</a></code>.</td><td><code><a href='https://rdrr.io/r/base/c.html'>c(-1, 1)</a></code></td></tr>
-<tr><td><code>startVals</code></td><td>A vector of values to be used as starting values for the optimization. Only used for the first run if <code>numMultiStarts &gt; 1</code>.</td><td><code>NULL</code></td></tr>
-<tr><td><code>useAnalyticGrad</code></td><td>Set to <code>FALSE</code> to use numerically approximated gradients instead of analytic gradients during estimation (which is slower). For now, this only applied to MNL models and is ignored for mixed logit models as the numerical approximation is currently faster.</td><td><code>TRUE</code></td></tr>
-<tr><td><code>scaleInputs</code></td><td>By default each variable in <code>data</code> is scaled to be between 0 and 1 before running the optimization routine because it usually helps with stability, especially if some of the variables have very large or very small values (e.g. <code>&gt; 10^3</code> or <code>&lt; 10^-3</code>). Set to <code>FALSE</code> to turn this feature off.</td><td><code>TRUE</code></td></tr>
-<tr><td><code>standardDraws</code></td><td>By default, a new set of standard normal draws are generated during each call to <code>logitr</code> (the same draws are used during each multistart iteration). The user can override those draws by providing a matrix of standard normal draws if desired.</td><td><code>NULL</code></td></tr>
-<tr><td><code>numDraws</code></td><td>The number of Halton draws to use for MXL models for the maximum simulated likelihood.</td><td><code>50</code></td></tr>
-<tr><td><code>printLevel</code></td><td>The print level of the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>0</code></td></tr>
-<tr><td><code>xtol_rel</code></td><td>The relative <code>x</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-6</code></td></tr>
-<tr><td><code>xtol_abs</code></td><td>The absolute <code>x</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-6</code></td></tr>
-<tr><td><code>ftol_rel</code></td><td>The relative <code>f</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-6</code></td></tr>
-<tr><td><code>ftol_abs</code></td><td>The absolute <code>f</code> tolerance for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1.0e-6</code></td></tr>
-<tr><td><code>maxeval</code></td><td>The maximum number of function evaluations for the <code>nloptr</code> optimization loop. Use <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</td><td><code>1000</code></td></tr>
+<tr><td><code>xtol_rel</code></td><td>The relative <code>x</code> tolerance for the <code>nloptr</code> optimization loop.</td><td><code>1.0e-6</code></td></tr>
+<tr><td><code>xtol_abs</code></td><td>The absolute <code>x</code> tolerance for the <code>nloptr</code> optimization loop.</td><td><code>1.0e-6</code></td></tr>
+<tr><td><code>ftol_rel</code></td><td>The relative <code>f</code> tolerance for the <code>nloptr</code> optimization loop.</td><td><code>1.0e-6</code></td></tr>
+<tr><td><code>ftol_abs</code></td><td>The absolute <code>f</code> tolerance for the <code>nloptr</code> optimization loop.</td><td><code>1.0e-6</code></td></tr>
+<tr><td><code>maxeval</code></td><td>The maximum number of function evaluations for the <code>nloptr</code> optimization loop.</td><td><code>1000</code></td></tr>
 <tr><td><code>algorithm</code></td><td>The optimization algorithm that <code>nloptr</code> uses.</td><td><code>"NLOPT_LD_LBFGS"</code></td></tr>
+<tr><td><code>print_level</code></td><td>The print level of the <code>nloptr</code> optimization loop.</td><td><code>0</code></td></tr>
 </table>
 
 
@@ -319,23 +365,23 @@ e.g. <code>options = list(...)</code>.</p><table class='table'>
 
 <span class='co'># Estimate a MNL model in the Preference space</span>
 <span class='va'>mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'>logitr</span><span class='op'>(</span>
-  data       <span class='op'>=</span> <span class='va'>yogurt</span>,
-  choiceName <span class='op'>=</span> <span class='st'>"choice"</span>,
-  obsIDName  <span class='op'>=</span> <span class='st'>"obsID"</span>,
-  parNames   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
+  data   <span class='op'>=</span> <span class='va'>yogurt</span>,
+  choice <span class='op'>=</span> <span class='st'>"choice"</span>,
+  obsID  <span class='op'>=</span> <span class='st'>"obsID"</span>,
+  pars   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
 <span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
 <span class='co'># Estimate a MNL model in the WTP space, using a 10-run multistart</span>
 <span class='va'>mnl_wtp</span> <span class='op'>&lt;-</span> <span class='fu'>logitr</span><span class='op'>(</span>
-  data       <span class='op'>=</span> <span class='va'>yogurt</span>,
-  choiceName <span class='op'>=</span> <span class='st'>"choice"</span>,
-  obsIDName  <span class='op'>=</span> <span class='st'>"obsID"</span>,
-  parNames   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>,
-  priceName <span class='op'>=</span> <span class='st'>"price"</span>,
-  modelSpace <span class='op'>=</span> <span class='st'>"wtp"</span>,
-  options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>numMultiStarts <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
+  data           <span class='op'>=</span> <span class='va'>yogurt</span>,
+  choice         <span class='op'>=</span> <span class='st'>"choice"</span>,
+  obsID          <span class='op'>=</span> <span class='st'>"obsID"</span>,
+  pars           <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>,
+  price          <span class='op'>=</span> <span class='st'>"price"</span>,
+  modelSpace     <span class='op'>=</span> <span class='st'>"wtp"</span>,
+  numMultiStarts <span class='op'>=</span> <span class='fl'>10</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Running Multistart 1 of 3...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 2 of 3...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 3 of 3...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div></pre>
+</div><div class='output co'>#&gt; <span class='message'>Running Multistart 1 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 2 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 3 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 4 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 5 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 6 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 7 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 8 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 9 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 10 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

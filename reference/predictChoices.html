@@ -158,7 +158,7 @@ on the results from an estimated model." />
 on the results from an estimated model.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>predictChoices</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>alts</span>, <span class='va'>altIDName</span>, obsIDName <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>predictChoices</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>alts</span>, <span class='va'>altID</span>, obsID <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -177,12 +177,12 @@ choices. Each row is an alternative and each column an attribute
 corresponding to parameter names in the estimated model.</p></td>
     </tr>
     <tr>
-      <th>altIDName</th>
+      <th>altID</th>
       <td><p>The name of the column that identifies each alternative
 in each set of alternatives.</p></td>
     </tr>
     <tr>
-      <th>obsIDName</th>
+      <th>obsID</th>
       <td><p>The name of the column that identifies each set of
 alternatives. Required if predicting results for more than one set of
 alternatives. Defaults to <code>NULL</code> (for a single set of alternatives).</p></td>
@@ -199,10 +199,10 @@ alternatives. Defaults to <code>NULL</code> (for a single set of alternatives).<
 
 <span class='co'># Estimate a preference space model</span>
 <span class='va'>mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
-  data       <span class='op'>=</span> <span class='va'>yogurt</span>,
-  choiceName <span class='op'>=</span> <span class='st'>"choice"</span>,
-  obsIDName  <span class='op'>=</span> <span class='st'>"obsID"</span>,
-  parNames   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
+  data   <span class='op'>=</span> <span class='va'>yogurt</span>,
+  choice <span class='op'>=</span> <span class='st'>"choice"</span>,
+  obsID  <span class='op'>=</span> <span class='st'>"obsID"</span>,
+  pars   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
 <span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
 <span class='co'># You can predict choices for any set of alternative, such as hold out</span>
@@ -211,10 +211,10 @@ alternatives. Defaults to <code>NULL</code> (for a single set of alternatives).<
 
 <span class='co'># Predict choices using the estimated preference space MNL model</span>
 <span class='va'>choices</span> <span class='op'>&lt;-</span> <span class='fu'>predictChoices</span><span class='op'>(</span>
-  model     <span class='op'>=</span> <span class='va'>mnl_pref</span>,
-  alts      <span class='op'>=</span> <span class='va'>yogurt</span>,
-  altIDName <span class='op'>=</span> <span class='st'>"alt"</span>,
-  obsIDName <span class='op'>=</span> <span class='st'>"obsID"</span>
+  model <span class='op'>=</span> <span class='va'>mnl_pref</span>,
+  alts  <span class='op'>=</span> <span class='va'>yogurt</span>,
+  altID <span class='op'>=</span> <span class='st'>"alt"</span>,
+  obsID <span class='op'>=</span> <span class='st'>"obsID"</span>
 <span class='op'>)</span>
 
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>choices</span><span class='op'>)</span>
@@ -236,7 +236,7 @@ alternatives. Defaults to <code>NULL</code> (for a single set of alternatives).<
 <span class='va'>chosen</span> <span class='op'>&lt;-</span>  <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>choices</span>, <span class='va'>choice</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>chosen</span><span class='op'>$</span><span class='va'>correct</span> <span class='op'>&lt;-</span> <span class='va'>chosen</span><span class='op'>$</span><span class='va'>choice</span> <span class='op'>==</span> <span class='va'>chosen</span><span class='op'>$</span><span class='va'>choice_predict</span>
 <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>chosen</span><span class='op'>$</span><span class='va'>correct</span><span class='op'>)</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>chosen</span><span class='op'>)</span> <span class='co'># % correctly predicted</span>
-</div><div class='output co'>#&gt; [1] 0.378524</div></pre>
+</div><div class='output co'>#&gt; [1] 0.3884743</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -119,21 +119,21 @@
 <div id="interactions-with-continuous-variables" class="section level1">
 <h1 class="hasAnchor">
 <a href="#interactions-with-continuous-variables" class="anchor"></a>Interactions with continuous variables</h1>
-<p>To add interactions between coefficients in your model, you can add additional arguments in the <code>parNames</code> vector in the <code><a href="../reference/logitr.html">logitr()</a></code> function separated by the <code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code> symbol. For example, let’s say we want to interact <code>price</code> with <code>feat</code> in the following model:</p>
+<p>To add interactions between coefficients in your model, you can add additional arguments in the <code>pars</code> vector in the <code><a href="../reference/logitr.html">logitr()</a></code> function separated by the <code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code> symbol. For example, let’s say we want to interact <code>price</code> with <code>feat</code> in the following model:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data       <span class="op">=</span> <span class="va">yogurt</span>,
-  choiceName <span class="op">=</span> <span class="st">'choice'</span>,
-  obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
-  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>
+  data   <span class="op">=</span> <span class="va">yogurt</span>,
+  choice <span class="op">=</span> <span class="st">'choice'</span>,
+  obsID  <span class="op">=</span> <span class="st">'obsID'</span>,
+  pars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
-<p>To do so, I could add <code>"price*feat"</code> to the <code>parNames</code> vector:</p>
+<p>To do so, I could add <code>"price*feat"</code> to the <code>pars</code> vector:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_price_feat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data       <span class="op">=</span> <span class="va">yogurt</span>,
-  choiceName <span class="op">=</span> <span class="st">'choice'</span>,
-  obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
-  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price*feat'</span><span class="op">)</span>
+  data   <span class="op">=</span> <span class="va">yogurt</span>,
+  choice <span class="op">=</span> <span class="st">'choice'</span>,
+  obsID  <span class="op">=</span> <span class="st">'obsID'</span>,
+  pars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price*feat'</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 <pre><code>#&gt; Running Model...
 #&gt; Done!</code></pre>
@@ -142,20 +142,21 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_price_feat</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; Call:</span>
-<span class="co">#&gt; logitr(data = yogurt, choiceName = "choice", obsIDName = "obsID", </span>
-<span class="co">#&gt;     parNames = c("price", "feat", "brand", "price*feat"))</span>
+<span class="co">#&gt; logitr(data = yogurt, choice = "choice", obsID = "obsID", pars = c("price", </span>
+<span class="co">#&gt;     "feat", "brand", "price*feat"))</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Frequencies of alternatives:</span>
 <span class="co">#&gt;        1        2        3        4 </span>
 <span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Exit Status: 3 </span>
-<span class="co">#&gt; Optimization stopped because ftol_rel or ftol_abs was reached.                                </span>
+<span class="co">#&gt; Optimization stopped because ftol_rel or ftol_abs was reached. </span>
+<span class="co">#&gt;                                 </span>
 <span class="co">#&gt; Model Type:    Multinomial Logit</span>
 <span class="co">#&gt; Model Space:          Preference</span>
 <span class="co">#&gt; Model Run:                1 of 1</span>
 <span class="co">#&gt; Iterations:                   19</span>
-<span class="co">#&gt; Elapsed Time:        0h:0m:0.14s</span>
+<span class="co">#&gt; Elapsed Time:        0h:0m:0.18s</span>
 <span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span>
 <span class="co">#&gt; Weights Used?:             FALSE</span>
 <span class="co">#&gt; Robust?                    FALSE</span>
@@ -186,10 +187,10 @@
 <p>In the case of interacting <em>discrete</em> variables, multiple interactions coefficients will be estimated according to the number of levels in the discrete attribute. For example, the interaction of <code>price</code> with <code>brand</code> will require three new interactions - one for each level of the <code>brand</code> variable except the first “baseline” level:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_price_brand</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data       <span class="op">=</span> <span class="va">yogurt</span>,
-  choiceName <span class="op">=</span> <span class="st">'choice'</span>,
-  obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
-  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price*brand'</span><span class="op">)</span>
+  data   <span class="op">=</span> <span class="va">yogurt</span>,
+  choice <span class="op">=</span> <span class="st">'choice'</span>,
+  obsID  <span class="op">=</span> <span class="st">'obsID'</span>,
+  pars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price*brand'</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 <pre><code>#&gt; Running Model...
 #&gt; Done!</code></pre>
@@ -198,20 +199,21 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_price_brand</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; Call:</span>
-<span class="co">#&gt; logitr(data = yogurt, choiceName = "choice", obsIDName = "obsID", </span>
-<span class="co">#&gt;     parNames = c("price", "feat", "brand", "price*brand"))</span>
+<span class="co">#&gt; logitr(data = yogurt, choice = "choice", obsID = "obsID", pars = c("price", </span>
+<span class="co">#&gt;     "feat", "brand", "price*brand"))</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Frequencies of alternatives:</span>
 <span class="co">#&gt;        1        2        3        4 </span>
 <span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Exit Status: 3 </span>
-<span class="co">#&gt; Optimization stopped because ftol_rel or ftol_abs was reached.                                </span>
+<span class="co">#&gt; Optimization stopped because ftol_rel or ftol_abs was reached. </span>
+<span class="co">#&gt;                                 </span>
 <span class="co">#&gt; Model Type:    Multinomial Logit</span>
 <span class="co">#&gt; Model Space:          Preference</span>
 <span class="co">#&gt; Model Run:                1 of 1</span>
 <span class="co">#&gt; Iterations:                   39</span>
-<span class="co">#&gt; Elapsed Time:        0h:0m:0.23s</span>
+<span class="co">#&gt; Elapsed Time:         0h:0m:0.3s</span>
 <span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span>
 <span class="co">#&gt; Weights Used?:             FALSE</span>
 <span class="co">#&gt; Robust?                    FALSE</span>
@@ -243,11 +245,11 @@
 <p>Suppose I want to include an interaction between two variables and I also want one of those variables to be modeled as normally distributed across the population. The example below illustrates this cases, where a <code>price*feat</code> interaction is specified and the <code>feat</code> parameter is modeled as normally distributed by setting <code>randPars = c(feat = "n")</code>:randPars = c(feat = “n”)</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_price_feat_mxl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data       <span class="op">=</span> <span class="va">yogurt</span>,
-  choiceName <span class="op">=</span> <span class="st">'choice'</span>,
-  obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
-  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price*feat'</span><span class="op">)</span>,
-  randPars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span>
+  data     <span class="op">=</span> <span class="va">yogurt</span>,
+  choice   <span class="op">=</span> <span class="st">'choice'</span>,
+  obsID    <span class="op">=</span> <span class="st">'obsID'</span>,
+  pars     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price*feat'</span><span class="op">)</span>,
+  randPars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 <pre><code>#&gt; Running Model...
 #&gt; Done!</code></pre>
@@ -256,37 +258,38 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_price_feat_mxl</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; Call:</span>
-<span class="co">#&gt; logitr(data = yogurt, choiceName = "choice", obsIDName = "obsID", </span>
-<span class="co">#&gt;     parNames = c("price", "feat", "brand", "price*feat"), randPars = c(feat = "n"))</span>
+<span class="co">#&gt; logitr(data = yogurt, choice = "choice", obsID = "obsID", pars = c("price", </span>
+<span class="co">#&gt;     "feat", "brand", "price*feat"), randPars = c(feat = "n"))</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Frequencies of alternatives:</span>
 <span class="co">#&gt;        1        2        3        4 </span>
 <span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Exit Status: 3 </span>
-<span class="co">#&gt; Optimization stopped because ftol_rel or ftol_abs was reached.                             </span>
+<span class="co">#&gt; Optimization stopped because ftol_rel or ftol_abs was reached. </span>
+<span class="co">#&gt;                              </span>
 <span class="co">#&gt; Model Type:       Mixed Logit</span>
 <span class="co">#&gt; Model Space:       Preference</span>
 <span class="co">#&gt; Model Run:             1 of 1</span>
-<span class="co">#&gt; Iterations:                33</span>
-<span class="co">#&gt; Elapsed Time:       0h:0m:20s</span>
+<span class="co">#&gt; Iterations:                32</span>
+<span class="co">#&gt; Elapsed Time:       0h:0m:14s</span>
 <span class="co">#&gt; Algorithm:     NLOPT_LD_LBFGS</span>
 <span class="co">#&gt; Weights Used?:          FALSE</span>
 <span class="co">#&gt; Robust?                 FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
 <span class="co">#&gt;               Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
-<span class="co">#&gt; price        -0.388106   0.027025 -14.3609 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; feat_mu       0.829946   0.552190   1.5030    0.1328    </span>
-<span class="co">#&gt; brandhiland  -3.991534   0.165896 -24.0605 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandweight  -0.662058   0.055779 -11.8693 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandyoplait  0.787710   0.086231   9.1349 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; price:feat   -0.076849   0.071061  -1.0815    0.2795    </span>
-<span class="co">#&gt; feat_sigma    2.341117   0.493312   4.7457 2.078e-06 ***</span>
+<span class="co">#&gt; price        -0.388120   0.027027 -14.3606 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; feat_mu       0.829684   0.551652   1.5040    0.1326    </span>
+<span class="co">#&gt; brandhiland  -3.991527   0.165926 -24.0560 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandweight  -0.662144   0.055780 -11.8706 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandyoplait  0.787745   0.086236   9.1347 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; price:feat   -0.076833   0.070990  -1.0823    0.2791    </span>
+<span class="co">#&gt; feat_sigma    2.341035   0.493465   4.7441 2.095e-06 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log-Likelihood:         -2645.2196914</span>
+<span class="co">#&gt; Log-Likelihood:         -2645.2196909</span>
 <span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span>
 <span class="co">#&gt; AIC:                     5304.4394000</span>
 <span class="co">#&gt; BIC:                     5344.9569000</span>
@@ -295,8 +298,8 @@
 <span class="co">#&gt; Number of Observations:  2412.0000000</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Summary of 10k Draws for Random Coefficients: </span>
-<span class="co">#&gt;        Min.    1st Qu.    Median      Mean 3rd Qu.     Max.</span>
-<span class="co">#&gt; 1 -8.269304 -0.7507041 0.8281574 0.8266687 2.40648 9.284091</span></code></pre></div>
+<span class="co">#&gt;        Min.   1st Qu.    Median      Mean  3rd Qu.     Max.</span>
+<span class="co">#&gt; 1 -8.269247 -0.750911 0.8278951 0.8264064 2.406162 9.283532</span></code></pre></div>
 </div>
   </div>
 

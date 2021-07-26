@@ -147,31 +147,31 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Estimate the model</span>
 <span class="va">mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data       <span class="op">=</span> <span class="va">yogurt</span>,
-  choiceName <span class="op">=</span> <span class="st">'choice'</span>,
-  obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
-  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>
+  data   <span class="op">=</span> <span class="va">yogurt</span>,
+  choice <span class="op">=</span> <span class="st">'choice'</span>,
+  obsID  <span class="op">=</span> <span class="st">'obsID'</span>,
+  pars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>
 <span class="op">)</span>
 
 <span class="co"># Predict choice probabilities</span>
 <span class="va">probs_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predictProbs.html">predictProbs</a></span><span class="op">(</span>
-  model     <span class="op">=</span> <span class="va">mnl_pref</span>,
-  alts      <span class="op">=</span> <span class="va">alts</span>,
-  altIDName <span class="op">=</span> <span class="st">"alt"</span>,
-  obsIDName <span class="op">=</span> <span class="st">"obsID"</span>,
-  alpha     <span class="op">=</span> <span class="fl">0.025</span>
+  model <span class="op">=</span> <span class="va">mnl_pref</span>,
+  alts  <span class="op">=</span> <span class="va">alts</span>,
+  altID <span class="op">=</span> <span class="st">"alt"</span>,
+  obsID <span class="op">=</span> <span class="st">"obsID"</span>,
+  alpha <span class="op">=</span> <span class="fl">0.025</span>
 <span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">probs_mnl_pref</span>
 <span class="co">#&gt;   obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 1    13   1 0.43684871 0.41564756 0.45810985</span>
-<span class="co">#&gt; 2    13   2 0.03313009 0.02627045 0.04175975</span>
-<span class="co">#&gt; 3    13   3 0.19155738 0.17603526 0.20801585</span>
-<span class="co">#&gt; 4    13   4 0.33846382 0.31842474 0.35885537</span>
-<span class="co">#&gt; 5    42   1 0.60763975 0.57353631 0.64083208</span>
-<span class="co">#&gt; 6    42   2 0.02602079 0.01838582 0.03657106</span>
-<span class="co">#&gt; 7    42   3 0.17803594 0.16192615 0.19528216</span>
-<span class="co">#&gt; 8    42   4 0.18830353 0.16789822 0.20958650</span></code></pre></div>
+<span class="co">#&gt; 1    13   1 0.43684871 0.41538731 0.45785917</span>
+<span class="co">#&gt; 2    13   2 0.03313009 0.02625502 0.04171638</span>
+<span class="co">#&gt; 3    13   3 0.19155738 0.17609550 0.20771830</span>
+<span class="co">#&gt; 4    13   4 0.33846382 0.31873970 0.35847648</span>
+<span class="co">#&gt; 5    42   1 0.60763975 0.57326868 0.64034634</span>
+<span class="co">#&gt; 6    42   2 0.02602079 0.01829755 0.03692547</span>
+<span class="co">#&gt; 7    42   3 0.17803594 0.16175025 0.19468887</span>
+<span class="co">#&gt; 8    42   4 0.18830353 0.16845545 0.20945726</span></code></pre></div>
 <p>The results show the expected choice probabilities for each alternative. The low and high values show a 95% confidence interval estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">(Krinsky and Robb 1986)</span>. You can change the CI level by setting <code>alpha</code> to a different value (e.g. a 90% CI is obtained with <code>alpha = 0.05</code>).</p>
 </div>
 <div id="wtp-space-parameterization" class="section level2">
@@ -182,34 +182,34 @@
 <code class="sourceCode R"><span class="co"># Estimate the model</span>
 <span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   data       <span class="op">=</span> <span class="va">yogurt</span>,
-  choiceName <span class="op">=</span> <span class="st">'choice'</span>,
-  obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
-  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>,
-  priceName  <span class="op">=</span> <span class="st">'price'</span>,
+  choice     <span class="op">=</span> <span class="st">'choice'</span>,
+  obsID      <span class="op">=</span> <span class="st">'obsID'</span>,
+  pars       <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>,
+  price      <span class="op">=</span> <span class="st">'price'</span>,
   modelSpace <span class="op">=</span> <span class="st">'wtp'</span>,
-  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>numMultiStarts <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+  numMultiStarts <span class="op">=</span> <span class="fl">10</span>
 <span class="op">)</span>
 
 <span class="co"># Predict choice probabilities</span>
 <span class="va">probs_mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predictProbs.html">predictProbs</a></span><span class="op">(</span>
-  model     <span class="op">=</span> <span class="va">mnl_wtp</span>,
-  alts      <span class="op">=</span> <span class="va">alts</span>,
-  altIDName <span class="op">=</span> <span class="st">"alt"</span>,
-  obsIDName <span class="op">=</span> <span class="st">"obsID"</span>
+  model <span class="op">=</span> <span class="va">mnl_wtp</span>,
+  alts  <span class="op">=</span> <span class="va">alts</span>,
+  altID <span class="op">=</span> <span class="st">"alt"</span>,
+  obsID <span class="op">=</span> <span class="st">"obsID"</span>
 <span class="op">)</span></code></pre></div>
 <pre><code>#&gt; NOTE: Using results from run 8 of 10 multistart runs
 #&gt; (the run with the largest log-likelihood value)</code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">probs_mnl_wtp</span>
 <span class="co">#&gt;   obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 1    13   1 0.43686015 0.41509805 0.45790052</span>
-<span class="co">#&gt; 2    13   2 0.03313003 0.02649214 0.04197840</span>
-<span class="co">#&gt; 3    13   3 0.19154919 0.17552467 0.20785048</span>
-<span class="co">#&gt; 4    13   4 0.33846063 0.31941685 0.35873429</span>
-<span class="co">#&gt; 5    42   1 0.60766707 0.57346481 0.63966819</span>
-<span class="co">#&gt; 6    42   2 0.02601904 0.01845153 0.03645185</span>
-<span class="co">#&gt; 7    42   3 0.17802489 0.16123921 0.19480783</span>
-<span class="co">#&gt; 8    42   4 0.18828900 0.16789522 0.20881636</span></code></pre></div>
+<span class="co">#&gt; 1    13   1 0.43686655 0.41505105 0.45838097</span>
+<span class="co">#&gt; 2    13   2 0.03312687 0.02644804 0.04196952</span>
+<span class="co">#&gt; 3    13   3 0.19154668 0.17596820 0.20823727</span>
+<span class="co">#&gt; 4    13   4 0.33845991 0.31890315 0.35850564</span>
+<span class="co">#&gt; 5    42   1 0.60767875 0.57195033 0.64035062</span>
+<span class="co">#&gt; 6    42   2 0.02601582 0.01815489 0.03646483</span>
+<span class="co">#&gt; 7    42   3 0.17802120 0.16176526 0.19533787</span>
+<span class="co">#&gt; 8    42   4 0.18828424 0.16762019 0.20891532</span></code></pre></div>
 <p>Since these two models are equivalent except in different spaces, the predicted choice probabilities should be the same.</p>
 </div>
 </div>
@@ -223,32 +223,32 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Estimate the model</span>
 <span class="va">mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data       <span class="op">=</span> <span class="va">yogurt</span>,
-  choiceName <span class="op">=</span> <span class="st">'choice'</span>,
-  obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
-  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>,
-  randPars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">'n'</span>, brand <span class="op">=</span> <span class="st">'n'</span><span class="op">)</span>,
-  options    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>numMultiStarts <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
+  data     <span class="op">=</span> <span class="va">yogurt</span>,
+  choice   <span class="op">=</span> <span class="st">'choice'</span>,
+  obsID    <span class="op">=</span> <span class="st">'obsID'</span>,
+  pars     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>,
+  randPars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">'n'</span>, brand <span class="op">=</span> <span class="st">'n'</span><span class="op">)</span>,
+  numMultiStarts <span class="op">=</span> <span class="fl">5</span>
 <span class="op">)</span>
 
 <span class="co"># Predict choice probabilities</span>
 <span class="va">probs_mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predictProbs.html">predictProbs</a></span><span class="op">(</span>
-  model     <span class="op">=</span> <span class="va">mxl_pref</span>,
-  alts      <span class="op">=</span> <span class="va">alts</span>,
-  altIDName <span class="op">=</span> <span class="st">"alt"</span>,
-  obsIDName <span class="op">=</span> <span class="st">"obsID"</span>
+  model <span class="op">=</span> <span class="va">mxl_pref</span>,
+  alts  <span class="op">=</span> <span class="va">alts</span>,
+  altID <span class="op">=</span> <span class="st">"alt"</span>,
+  obsID <span class="op">=</span> <span class="st">"obsID"</span>
 <span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">probs_mxl_pref</span>
 <span class="co">#&gt;   obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 1    13   1 0.45230084 0.39636857 0.47101393</span>
-<span class="co">#&gt; 2    13   2 0.02782708 0.02262329 0.09150196</span>
-<span class="co">#&gt; 3    13   3 0.21027296 0.18328983 0.22924657</span>
-<span class="co">#&gt; 4    13   4 0.30959912 0.27825338 0.36585796</span>
-<span class="co">#&gt; 5    42   1 0.60391759 0.50165121 0.64863504</span>
-<span class="co">#&gt; 6    42   2 0.06797893 0.02677078 0.14886683</span>
-<span class="co">#&gt; 7    42   3 0.18726035 0.16080094 0.20766001</span>
-<span class="co">#&gt; 8    42   4 0.14084313 0.11303757 0.22733982</span></code></pre></div>
+<span class="co">#&gt; 1    13   1 0.45143418 0.39764351 0.47031838</span>
+<span class="co">#&gt; 2    13   2 0.02774058 0.02268605 0.08707157</span>
+<span class="co">#&gt; 3    13   3 0.20988843 0.18475772 0.22897565</span>
+<span class="co">#&gt; 4    13   4 0.31093681 0.28148435 0.36280698</span>
+<span class="co">#&gt; 5    42   1 0.60338322 0.50537458 0.64725590</span>
+<span class="co">#&gt; 6    42   2 0.06793719 0.02675796 0.14668728</span>
+<span class="co">#&gt; 7    42   3 0.18713576 0.16151710 0.20775316</span>
+<span class="co">#&gt; 8    42   4 0.14154383 0.11496858 0.21938361</span></code></pre></div>
 </div>
 <div id="wtp-space-parameterization-1" class="section level2">
 <h2 class="hasAnchor">
@@ -258,33 +258,33 @@
 <code class="sourceCode R"><span class="co"># Estimate the model</span>
 <span class="va">mxl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   data       <span class="op">=</span> <span class="va">yogurt</span>,
-  choiceName <span class="op">=</span> <span class="st">'choice'</span>,
-  obsIDName  <span class="op">=</span> <span class="st">'obsID'</span>,
-  parNames   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>,
-  priceName  <span class="op">=</span> <span class="st">'price'</span>,
+  choice     <span class="op">=</span> <span class="st">'choice'</span>,
+  obsID      <span class="op">=</span> <span class="st">'obsID'</span>,
+  pars       <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>,
+  price      <span class="op">=</span> <span class="st">'price'</span>,
   randPars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">'n'</span>, brand <span class="op">=</span> <span class="st">'n'</span><span class="op">)</span>,
   modelSpace <span class="op">=</span> <span class="st">'wtp'</span>,
-  options    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>numMultiStarts <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
+  numMultiStarts <span class="op">=</span> <span class="fl">5</span>
 <span class="op">)</span>
 
 <span class="co"># Predict choice probabilities</span>
 <span class="va">probs_mxl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predictProbs.html">predictProbs</a></span><span class="op">(</span>
-  model     <span class="op">=</span> <span class="va">mxl_wtp</span>,
-  alts      <span class="op">=</span> <span class="va">alts</span>,
-  altIDName <span class="op">=</span> <span class="st">"alt"</span>,
-  obsIDName <span class="op">=</span> <span class="st">"obsID"</span>
+  model <span class="op">=</span> <span class="va">mxl_wtp</span>,
+  alts  <span class="op">=</span> <span class="va">alts</span>,
+  altID <span class="op">=</span> <span class="st">"alt"</span>,
+  obsID <span class="op">=</span> <span class="st">"obsID"</span>
 <span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">probs_mxl_wtp</span>
 <span class="co">#&gt;   obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 1    13   1 0.44040652 0.40410525 0.45646792</span>
-<span class="co">#&gt; 2    13   2 0.02685423 0.02184646 0.07049929</span>
-<span class="co">#&gt; 3    13   3 0.20364898 0.18296289 0.22172671</span>
-<span class="co">#&gt; 4    13   4 0.32909026 0.30562129 0.35800158</span>
-<span class="co">#&gt; 5    42   1 0.58682140 0.52456319 0.62150874</span>
-<span class="co">#&gt; 6    42   2 0.08194992 0.04192418 0.14438658</span>
-<span class="co">#&gt; 7    42   3 0.18187533 0.15882405 0.20179151</span>
-<span class="co">#&gt; 8    42   4 0.14935336 0.12769258 0.19217847</span></code></pre></div>
+<span class="co">#&gt; 1    13   1 0.45327962 0.36871088 0.51741556</span>
+<span class="co">#&gt; 2    13   2 0.02740641 0.02107745 0.07234855</span>
+<span class="co">#&gt; 3    13   3 0.17587408 0.05740128 0.30350383</span>
+<span class="co">#&gt; 4    13   4 0.34343988 0.28729688 0.40077402</span>
+<span class="co">#&gt; 5    42   1 0.60623731 0.48990952 0.69214439</span>
+<span class="co">#&gt; 6    42   2 0.08248721 0.04027755 0.15152836</span>
+<span class="co">#&gt; 7    42   3 0.15610950 0.04709230 0.28212714</span>
+<span class="co">#&gt; 8    42   4 0.15516598 0.12625929 0.20266728</span></code></pre></div>
 </div>
 </div>
 <div id="compare-results" class="section level1">

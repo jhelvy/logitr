@@ -161,8 +161,8 @@ of alternatives based on the results from an estimated model.</p>
     <pre class="usage"><span class='fu'>predictProbs</span><span class='op'>(</span>
   <span class='va'>model</span>,
   <span class='va'>alts</span>,
-  <span class='va'>altIDName</span>,
-  obsIDName <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>altID</span>,
+  obsID <span class='op'>=</span> <span class='cn'>NULL</span>,
   computeCI <span class='op'>=</span> <span class='cn'>TRUE</span>,
   alpha <span class='op'>=</span> <span class='fl'>0.025</span>,
   numDraws <span class='op'>=</span> <span class='fl'>10</span><span class='op'>^</span><span class='fl'>4</span>
@@ -183,12 +183,12 @@ choice probabilities. Each row is an alternative and each column an
 attribute corresponding to parameter names in the estimated model.</p></td>
     </tr>
     <tr>
-      <th>altIDName</th>
+      <th>altID</th>
       <td><p>The name of the column that identifies each alternative
 in each set of alternatives.</p></td>
     </tr>
     <tr>
-      <th>obsIDName</th>
+      <th>obsID</th>
       <td><p>The name of the column that identifies each set of
 alternatives. Required if predicting results for more than one set of
 alternatives. Defaults to <code>NULL</code> (for a single set of alternatives).</p></td>
@@ -220,10 +220,10 @@ alternative in <code>alts</code>.</p>
 
 <span class='co'># Estimate a preference space model</span>
 <span class='va'>mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
-  data       <span class='op'>=</span> <span class='va'>yogurt</span>,
-  choiceName <span class='op'>=</span> <span class='st'>"choice"</span>,
-  obsIDName  <span class='op'>=</span> <span class='st'>"obsID"</span>,
-  parNames   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
+  data   <span class='op'>=</span> <span class='va'>yogurt</span>,
+  choice <span class='op'>=</span> <span class='st'>"choice"</span>,
+  obsID  <span class='op'>=</span> <span class='st'>"obsID"</span>,
+  pars   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
 <span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
 <span class='co'># Create a set of alternatives for which to predict choice probabilities.</span>
@@ -247,16 +247,16 @@ alternative in <code>alts</code>.</p>
 #&gt; <span style='color: #BCBCBC;'>8</span>    42     4 11.5      0 yoplait</div><div class='input'>
 <span class='co'># Predict choice probabilities using the estimated preference space MNL</span>
 <span class='co'># model</span>
-<span class='fu'>predictProbs</span><span class='op'>(</span><span class='va'>mnl_pref</span>, <span class='va'>alts</span>, altIDName <span class='op'>=</span> <span class='st'>"alt"</span>, obsIDName <span class='op'>=</span> <span class='st'>"obsID"</span><span class='op'>)</span>
+<span class='fu'>predictProbs</span><span class='op'>(</span><span class='va'>mnl_pref</span>, <span class='va'>alts</span>, altID <span class='op'>=</span> <span class='st'>"alt"</span>, obsID <span class='op'>=</span> <span class='st'>"obsID"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   obsID alt  prob_mean   prob_low  prob_high
-#&gt; 1    13   1 0.43684871 0.41554434 0.45773098
+#&gt; 1    13   1 0.43684871 0.41555223 0.45773098
 #&gt; 2    13   2 0.03313009 0.02607930 0.04146538
-#&gt; 3    13   3 0.19155738 0.17624700 0.20744225
-#&gt; 4    13   4 0.33846382 0.31844560 0.35841870
-#&gt; 5    42   1 0.60763975 0.57364017 0.63987415
-#&gt; 6    42   2 0.02602079 0.01839437 0.03652981
-#&gt; 7    42   3 0.17803594 0.16216319 0.19441976
-#&gt; 8    42   4 0.18830353 0.16820535 0.20927403</div></pre>
+#&gt; 3    13   3 0.19155738 0.17624700 0.20748898
+#&gt; 4    13   4 0.33846382 0.31844109 0.35841870
+#&gt; 5    42   1 0.60763975 0.57366488 0.63988060
+#&gt; 6    42   2 0.02602079 0.01839306 0.03652981
+#&gt; 7    42   3 0.17803594 0.16216706 0.19444635
+#&gt; 8    42   4 0.18830353 0.16820356 0.20924858</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

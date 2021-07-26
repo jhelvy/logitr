@@ -156,7 +156,7 @@
     <p>Returns the computed WTP from a preference space model.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>wtp</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>priceName</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>wtp</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>price</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -167,7 +167,7 @@
 using the <code><a href='logitr.html'>logitr()</a></code> function.</p></td>
     </tr>
     <tr>
-      <th>priceName</th>
+      <th>price</th>
       <td><p>The name of the parameter that identifies price.</p></td>
     </tr>
     </table>
@@ -186,20 +186,20 @@ Uncertainty is handled via simulation.</p>
 
 <span class='co'># Estimate a preference space model</span>
 <span class='va'>mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
-  data       <span class='op'>=</span> <span class='va'>yogurt</span>,
-  choiceName <span class='op'>=</span> <span class='st'>"choice"</span>,
-  obsIDName  <span class='op'>=</span> <span class='st'>"obsID"</span>,
-  parNames   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
+  data   <span class='op'>=</span> <span class='va'>yogurt</span>,
+  choice <span class='op'>=</span> <span class='st'>"choice"</span>,
+  obsID  <span class='op'>=</span> <span class='st'>"obsID"</span>,
+  pars   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
 <span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
 <span class='co'># Compute the WTP implied from the preference space model</span>
-<span class='fu'>wtp</span><span class='op'>(</span><span class='va'>mnl_pref</span>, priceName <span class='op'>=</span> <span class='st'>"price"</span><span class='op'>)</span>
+<span class='fu'>wtp</span><span class='op'>(</span><span class='va'>mnl_pref</span>, price <span class='op'>=</span> <span class='st'>"price"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                 Estimate Std. Error    z-value     Pr(&gt;|z|)
-#&gt; lambda         0.3665429 0.02443361  15.001587 0.0000000000
-#&gt; feat           1.3407239 0.36050220   3.719045 0.0001999773
-#&gt; brandhiland  -10.1364057 0.58519624 -17.321379 0.0000000000
-#&gt; brandweight   -1.7491210 0.18209418  -9.605584 0.0000000000
-#&gt; brandyoplait   2.0038477 0.14369019  13.945612 0.0000000000</div></pre>
+#&gt; lambda         0.3665429 0.02443456  15.001007 0.0000000000
+#&gt; feat           1.3407239 0.36048938   3.719177 0.0001998727
+#&gt; brandhiland  -10.1364057 0.58519356 -17.321458 0.0000000000
+#&gt; brandweight   -1.7491210 0.18208707  -9.605960 0.0000000000
+#&gt; brandyoplait   2.0038477 0.14369616  13.945033 0.0000000000</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

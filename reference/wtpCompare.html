@@ -158,7 +158,7 @@ model." />
 model.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>wtpCompare</span><span class='op'>(</span><span class='va'>model_pref</span>, <span class='va'>model_wtp</span>, <span class='va'>priceName</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>wtpCompare</span><span class='op'>(</span><span class='va'>model_pref</span>, <span class='va'>model_wtp</span>, <span class='va'>price</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,7 +174,7 @@ the <code><a href='logitr.html'>logitr()</a></code> function.</p></td>
 using the <code><a href='logitr.html'>logitr()</a></code> function.</p></td>
     </tr>
     <tr>
-      <th>priceName</th>
+      <th>price</th>
       <td><p>The name of the parameter that identifies price.</p></td>
     </tr>
     </table>
@@ -195,29 +195,29 @@ estimates are compared against the WTP values directly estimated from the
 
 <span class='co'># Estimate a MNL model in the Preference space</span>
 <span class='va'>mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
-  data       <span class='op'>=</span> <span class='va'>yogurt</span>,
-  choiceName <span class='op'>=</span> <span class='st'>"choice"</span>,
-  obsIDName  <span class='op'>=</span> <span class='st'>"obsID"</span>,
-  parNames   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
+  data   <span class='op'>=</span> <span class='va'>yogurt</span>,
+  choice <span class='op'>=</span> <span class='st'>"choice"</span>,
+  obsID  <span class='op'>=</span> <span class='st'>"obsID"</span>,
+  pars   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
 <span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
 <span class='co'># Compute the WTP implied from the preference space model</span>
-<span class='va'>wtp_mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'><a href='wtp.html'>wtp</a></span><span class='op'>(</span><span class='va'>mnl_pref</span>, priceName <span class='op'>=</span> <span class='st'>"price"</span><span class='op'>)</span>
+<span class='va'>wtp_mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'><a href='wtp.html'>wtp</a></span><span class='op'>(</span><span class='va'>mnl_pref</span>, price <span class='op'>=</span> <span class='st'>"price"</span><span class='op'>)</span>
 
 <span class='co'># Estimate a MNL model in the WTP Space, using the computed WTP values</span>
 <span class='co'># from the preference space model as starting points</span>
 <span class='va'>mnl_wtp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
   data       <span class='op'>=</span> <span class='va'>yogurt</span>,
-  choiceName <span class='op'>=</span> <span class='st'>"choice"</span>,
-  obsIDName  <span class='op'>=</span> <span class='st'>"obsID"</span>,
-  parNames   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>,
-  priceName <span class='op'>=</span> <span class='st'>"price"</span>,
+  choice     <span class='op'>=</span> <span class='st'>"choice"</span>,
+  obsID      <span class='op'>=</span> <span class='st'>"obsID"</span>,
+  pars       <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>,
+  price      <span class='op'>=</span> <span class='st'>"price"</span>,
   modelSpace <span class='op'>=</span> <span class='st'>"wtp"</span>,
-  options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>startVals <span class='op'>=</span> <span class='va'>wtp_mnl_pref</span><span class='op'>$</span><span class='va'>Estimate</span><span class='op'>)</span>
+  startVals  <span class='op'>=</span> <span class='va'>wtp_mnl_pref</span><span class='op'>$</span><span class='va'>Estimate</span>
 <span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>NOTE: Using user-provided starting values for this run</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
 <span class='co'># Compare the WTP between the two spaces</span>
-<span class='fu'>wtpCompare</span><span class='op'>(</span><span class='va'>mnl_pref</span>, <span class='va'>mnl_wtp</span>, priceName <span class='op'>=</span> <span class='st'>"price"</span><span class='op'>)</span>
+<span class='fu'>wtpCompare</span><span class='op'>(</span><span class='va'>mnl_pref</span>, <span class='va'>mnl_wtp</span>, price <span class='op'>=</span> <span class='st'>"price"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                       pref           wtp  difference
 #&gt; lambda           0.3665429     0.3666017  0.00005872
 #&gt; feat             1.3407239     1.3405810 -0.00014291
