@@ -123,11 +123,11 @@
 <p>The <code>data</code> argument must be provided a <code>data.frame</code> arranged in “long” or “tidy” format <span class="citation">[@Wickham2014]</span>. Each row should be an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. each choice observation could have a different number of alternatives). The data must also include variables for each of the following arguments in the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
 <ul>
 <li>
-<code>choiceName</code>: A dummy variable that identifies which alternative was chosen (<code>1</code> is chosen, <code>0</code> is not chosen). Only one alternative should be chosen per choice observation.</li>
+<code>choice</code>: A dummy variable that identifies which alternative was chosen (<code>1</code> is chosen, <code>0</code> is not chosen). Only one alternative should be chosen per choice observation.</li>
 <li>
-<code>obsIDName</code>: A sequence of repeated numbers that identifies each unique choice observation For example, if the first three choice observations had 2 alternatives each, then the first 6 rows of the <code>obsID</code> variable would be <code>1, 1, 2, 2, 3, 3</code>.</li>
+<code>obsID</code>: A sequence of repeated numbers that identifies each unique choice observation For example, if the first three choice observations had 2 alternatives each, then the first 6 rows of the <code>obsID</code> variable would be <code>1, 1, 2, 2, 3, 3</code>.</li>
 <li>
-<code>parNames</code>: The names of the variables that will be used as model covariates. For WTP space models, the price variable should <strong>not</strong> be included in <code>parNames</code> as it is provided separately with the <code>priceName</code> argument.</li>
+<code>pars</code>: The names of the variables that will be used as model covariates. For WTP space models, the price variable should <strong>not</strong> be included in <code>pars</code> as it is provided separately with the <code>price</code> argument.</li>
 </ul>
 <p>The {logitr} package contains several example data sets that illustrate this data structure. For example, in the <code>yogurt</code> data set, which contains observations of yogurt purchases by a panel of 100 households, each row is an alternative from a choice observation. Choice is identified by the <code>choice</code> column, the observation ID is identified by the <code>obsID</code> column, and the columns <code>price</code>, <code>feat</code>, and <code>brand</code> can be used as model covariates (brand is also broken out into additional dummy-coded columns):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
