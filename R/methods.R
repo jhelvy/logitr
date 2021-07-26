@@ -61,6 +61,7 @@ print.logitr <- function (
   modelType <- getModelType(x)
   modelSpace <- getModelSpace(x)
   cat("A", modelType, "model estimated in the", modelSpace, "space\n\n")
+  cat(getExitMessage(x), "\n\n")
   if (nrow(x$multistartSummary) > 1) {
     modelRun <- getModelRun(x)
     cat(
@@ -106,7 +107,7 @@ print.summary.logitr <- function(
     cat("Use statusCodes() to view the meaning of each status code\n")
   }
   cat("\nExit Status:", x$status, "\n")
-  cat(getExitMessage(x))
+  cat(getExitMessage(x), "\n")
   print(x$modelInfoTable)
   cat("\n")
   cat("Model Coefficients:", "\n")
