@@ -4,18 +4,33 @@ library(logitr)
 test_that("getStartPars returns all 0s for first iteration in a multistart loop (and not other iterations)", {
   modelInputs <- getModelInputs(
     data = yogurt,
-    choiceName = "choice",
-    obsIDName = "obsID",
-    parNames = c("price", "feat"),
-    priceName = NULL,
+    choice = "choice",
+    obsID = "obsID",
+    pars = c("price", "feat"),
+    price = NULL,
     randPars = NULL,
     randPrice = NULL,
     modelSpace = "pref",
-    weightsName = NULL,
-    clusterName = NULL,
+    weights = NULL,
+    cluster = NULL,
     robust = FALSE,
+    numMultiStarts  = 1,
+    useAnalyticGrad = TRUE,
+    scaleInputs     = TRUE,
+    startParBounds  = c(-1, 1),
+    standardDraws   = NULL,
+    numDraws        = 50,
+    startVals       = NULL,
     call = NULL,
-    options = list()
+    options         = list(
+      print_level = 0,
+      xtol_rel    = 1.0e-6,
+      xtol_abs    = 1.0e-6,
+      ftol_rel    = 1.0e-6,
+      ftol_abs    = 1.0e-6,
+      maxeval     = 2000,
+      algorithm   = "NLOPT_LD_LBFGS"
+    )
   )
   startPars1 <- getStartPars(modelInputs, i = 1)
   startPars2 <- getStartPars(modelInputs, i = 2)
@@ -28,18 +43,33 @@ test_that("getStartPars returns all 0s for first iteration in a multistart loop 
 test_that("getStartPars returns user-provided starting parameters for first iteration in a multistart loop (and not other iterations)", {
   modelInputs <- getModelInputs(
     data = yogurt,
-    choiceName = "choice",
-    obsIDName = "obsID",
-    parNames = c("price", "feat"),
-    priceName = NULL,
+    choice = "choice",
+    obsID = "obsID",
+    pars = c("price", "feat"),
+    price = NULL,
     randPars = NULL,
     randPrice = NULL,
     modelSpace = "pref",
-    weightsName = NULL,
-    clusterName = NULL,
+    weights = NULL,
+    cluster = NULL,
     robust = FALSE,
+    numMultiStarts  = 1,
+    useAnalyticGrad = TRUE,
+    scaleInputs     = TRUE,
+    startParBounds  = c(-1, 1),
+    standardDraws   = NULL,
+    numDraws        = 50,
+    startVals       = c(1, 1),
     call = NULL,
-    options = list(startVals = c(1, 1))
+    options         = list(
+      print_level = 0,
+      xtol_rel    = 1.0e-6,
+      xtol_abs    = 1.0e-6,
+      ftol_rel    = 1.0e-6,
+      ftol_abs    = 1.0e-6,
+      maxeval     = 2000,
+      algorithm   = "NLOPT_LD_LBFGS"
+    )
   )
   startPars1 <- getStartPars(modelInputs, i = 1)
   startPars2 <- getStartPars(modelInputs, i = 2)

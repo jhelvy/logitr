@@ -4,7 +4,7 @@
 
 runMultistart <- function(modelInputs) {
   # Setup lists for storing results
-  numMultiStarts <- modelInputs$options$numMultiStarts
+  numMultiStarts <- modelInputs$inputs$numMultiStarts
   models <- list()
   for (i in 1:numMultiStarts) {
     if (numMultiStarts == 1) {
@@ -34,15 +34,7 @@ runModel <- function(modelInputs, startPars) {
     x0 = startPars,
     eval_f = modelInputs$evalFuncs$objective,
     modelInputs = modelInputs,
-    opts = list(
-      "algorithm" = modelInputs$options$algorithm,
-      "xtol_rel"  = modelInputs$options$xtol_rel,
-      "xtol_abs"  = modelInputs$options$xtol_abs,
-      "ftol_rel"  = modelInputs$options$ftol_rel,
-      "ftol_abs"  = modelInputs$options$ftol_abs,
-      print_level = modelInputs$options$printLevel,
-      maxeval     = modelInputs$options$maxeval
-    )
+    opts = modelInputs$options
   )
   model$logLik <- -1*model$objective # -1 for (+) rather than (-) LL
   return(model)
@@ -51,9 +43,9 @@ runModel <- function(modelInputs, startPars) {
 getStartPars <- function(modelInputs, i) {
   startPars <- getRandomStartPars(modelInputs)
   if (i == 1) {
-    if (! (is.null(modelInputs$options$startVals))) {
+    if (! (is.null(modelInputs$inputs$startVals))) {
       message("NOTE: Using user-provided starting values for this run")
-      userStartPars <- modelInputs$options$startVals
+      userStartPars <- modelInputs$inputs$startVals
       if (length(userStartPars) != length(startPars)) {
         stop(
           "Number of user-provided starting values do not match number ",
@@ -71,32 +63,31 @@ getStartPars <- function(modelInputs, i) {
 }
 
 # Returns randomly drawn starting parameters from a uniform distribution
-# between modelInputs$options$startParBounds
+# between modelInputs$inputs$startParBounds
 getRandomStartPars <- function(modelInputs) {
-  parNameList <- modelInputs$parNameList
-  bounds <- modelInputs$options$startParBounds
+  parList <- modelInputs$parList
+  bounds <- modelInputs$inputs$startParBounds
   lower <- bounds[1]
   upper <- bounds[2]
   # For mxl models, need both '_mu' and '_sigma' parameters
-  pars_mu <- stats::runif(length(parNameList$mu), lower, upper)
-  pars_sigma <- stats::runif(length(parNameList$sigma), lower, upper)
+  pars_mu <- stats::runif(length(parList$mu), lower, upper)
+  pars_sigma <- stats::runif(length(parList$sigma), lower, upper)
   startPars <- c(pars_mu, pars_sigma)
-  names(startPars) <- parNameList$all
+  names(startPars) <- parList$all
   return(startPars)
 }
 
 # For lambda and logN parameters must start with positive numbers
 checkStartPars <- function(startPars, modelInputs) {
   lambdaParIDs <- NULL
-  if (modelInputs$modelSpace == "wtp") {
-    lambdaParIDs <- which(grepl("lambda", modelInputs$parNameList$all))
+  if (modelInputs$inputs$modelSpace == "wtp") {
+    lambdaParIDs <- which(grepl("lambda", modelInputs$parList$all))
   }
-  logNParNames <- names(getLogNormParIDs(modelInputs$parSetup))
+  logNPars <- names(getLogNormParIDs(modelInputs$parSetup))
   logNParIDs <- c()
-  if (length(logNParNames) > 0) {
-    for (parName in logNParNames) {
-      logNParIDs <- c(logNParIDs,
-                      which(grepl(parName, modelInputs$parNameList$all)))
+  if (length(logNPars) > 0) {
+    for (par in logNPars) {
+      logNParIDs <- c(logNParIDs, which(grepl(par, modelInputs$parList$all)))
     }
   }
   positiveParIDs <- unique(c(lambdaParIDs, logNParIDs))

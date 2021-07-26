@@ -61,6 +61,7 @@ print.logitr <- function (
   modelType <- getModelType(x)
   modelSpace <- getModelSpace(x)
   cat("A", modelType, "model estimated in the", modelSpace, "space\n\n")
+  cat(getExitMessage(x), "\n\n")
   if (nrow(x$multistartSummary) > 1) {
     modelRun <- getModelRun(x)
     cat(
@@ -106,7 +107,7 @@ print.summary.logitr <- function(
     cat("Use statusCodes() to view the meaning of each status code\n")
   }
   cat("\nExit Status:", x$status, "\n")
-  cat(getExitMessage(x))
+  cat(getExitMessage(x), "\n")
   print(x$modelInfoTable)
   cat("\n")
   cat("Model Coefficients:", "\n")
@@ -141,7 +142,7 @@ getModelInfoTable <- function(model) {
   }
   if (!is.null(model$numClusters)) { # Added for backwards compatibility
     if (model$numClusters > 0) {
-      modelInfoTable <- rbind(modelInfoTable, model$clusterName)
+      modelInfoTable <- rbind(modelInfoTable, model$inputs$cluster)
       row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Cluster Name:"
     }
   }
@@ -199,11 +200,12 @@ getModelType <- function(x) {
 }
 
 getModelSpace <- function(x) {
-  return(ifelse(x$modelSpace == "pref", "Preference", "Willingness-to-Pay"))
+  return(ifelse(
+    x$inputs$modelSpace == "pref", "Preference", "Willingness-to-Pay"))
 }
 
 getModelRun <- function(x) {
-  return(paste(x$multistartNumber, "of", x$options$numMultiStarts))
+  return(paste(x$multistartNumber, "of", x$inputs$numMultiStarts))
 }
 
 getExitMessage <- function(x) {

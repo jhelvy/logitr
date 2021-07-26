@@ -4,13 +4,13 @@
 \alias{wtp}
 \title{Get WTP from a preference space model}
 \usage{
-wtp(model, priceName)
+wtp(model, price)
 }
 \arguments{
 \item{model}{The output of a "preference space" model estimated
 using the \code{logitr()} function.}
 
-\item{priceName}{The name of the parameter that identifies price.}
+\item{price}{The name of the parameter that identifies price.}
 }
 \value{
 A data frame of the WTP estimates.
@@ -28,14 +28,14 @@ library(logitr)
 
 # Estimate a preference space model
 mnl_pref <- logitr(
-  data       = yogurt,
-  choiceName = "choice",
-  obsIDName  = "obsID",
-  parNames   = c("price", "feat", "brand")
+  data   = yogurt,
+  choice = "choice",
+  obsID  = "obsID",
+  pars   = c("price", "feat", "brand")
 )
 
 # Compute the WTP implied from the preference space model
-wtp(mnl_pref, priceName = "price")
+wtp(mnl_pref, price = "price")
 }
 \keyword{logitr}
 \keyword{wtp}

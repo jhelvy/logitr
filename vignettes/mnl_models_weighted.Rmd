@@ -26,7 +26,7 @@ mnl_wtp_weighted <- readRDS(
   here::here('inst', 'extdata', 'mnl_wtp_weighted.Rds'))
 ```
 
-This vignette demonstrates an example of how to use the `logitr()` function with the `weightsName` argument to estimate weighted logit models.
+This vignette demonstrates an example of how to use the `logitr()` function with the `weights` argument to estimate weighted logit models.
 
 # The data
 
@@ -77,19 +77,18 @@ Estimate the unweighted model using the `logitr()` function. In this example, I 
 
 ```{r eval=FALSE}
 mnl_wtp_unweighted <- logitr(
-  data       = cars_us,
-  choiceName = 'choice',
-  obsIDName  = 'obsnum',
-  parNames   = c(
+  data   = cars_us,
+  choice = 'choice',
+  obsID  = 'obsnum',
+  pars   = c(
     'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100', 'bev150',
     'american', 'japanese', 'chinese', 'skorean', 'phevFastcharge',
     'bevFastcharge','opCost', 'accelTime'),
-  priceName = 'price',
+  price = 'price',
   modelSpace = 'wtp',
   robust = TRUE,
-  options = list(
-    # Since WTP space models are non-convex, run a multistart:
-    numMultiStarts = 10)
+  # Since WTP space models are non-convex, run a multistart:
+  numMultiStarts = 10
 )
 ```
 ```
@@ -112,25 +111,25 @@ summary(mnl_wtp_unweighted)
 
 # Weighted model
 
-To estimate the weighted model, simply add the `weightsName` argument to the call to  `logitr()`, referring to the column of weights that will be used to weight each choice observation. In this example, the weights used in the `weights` column range from 0.2 to 5:
+To estimate the weighted model, simply add the `weights` argument to the call to  `logitr()`, referring to the column of weights that will be used to weight each choice observation. In this example, the weights used in the `weights` column range from 0.2 to 5:
 
 ```{r}
 summary(cars_us$weights)
 ```
 ```{r eval=FALSE}
 mnl_wtp_weighted <- logitr(
-  data       = cars_us,
-  choiceName = 'choice',
-  obsIDName  = 'obsnum',
-  parNames   = c(
+  data   = cars_us,
+  choice = 'choice',
+  obsID  = 'obsnum',
+  pars   = c(
     'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100', 'bev150',
     'american', 'japanese', 'chinese', 'skorean', 'phevFastcharge',
     'bevFastcharge','opCost', 'accelTime'),
-  priceName = 'price',
+  price = 'price',
   modelSpace = 'wtp',
-  weightsName = 'weights', # This is the key argument for enabling weights
+  weights = 'weights', # This is the key argument for enabling weights
   robust = TRUE,
-  options = list(numMultiStarts = 10)
+  numMultiStarts = 10
 )
 ```
 ```

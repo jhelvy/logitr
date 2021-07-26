@@ -29,25 +29,25 @@ model_price_feat_mxl <- readRDS(
 
 # Interactions with continuous variables
 
-To add interactions between coefficients in your model, you can add additional arguments in the `parNames` vector in the `logitr()` function separated by the `*` symbol. For example, let's say we want to interact `price` with `feat` in the following model:
+To add interactions between coefficients in your model, you can add additional arguments in the `pars` vector in the `logitr()` function separated by the `*` symbol. For example, let's say we want to interact `price` with `feat` in the following model:
 
 ```{r, eval=FALSE}
 model <- logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'brand')
+  data   = yogurt,
+  choice = 'choice',
+  obsID  = 'obsID',
+  pars   = c('price', 'feat', 'brand')
 )
 ```
 
-To do so, I could add `"price*feat"` to the `parNames` vector:
+To do so, I could add `"price*feat"` to the `pars` vector:
 
 ```{r, eval=FALSE}
 model_price_feat <- logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'brand', 'price*feat')
+  data   = yogurt,
+  choice = 'choice',
+  obsID  = 'obsID',
+  pars   = c('price', 'feat', 'brand', 'price*feat')
 )
 ```
 ```
@@ -69,10 +69,10 @@ In the case of interacting _discrete_ variables, multiple interactions coefficie
 
 ```{r, eval=FALSE}
 model_price_brand <- logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'brand', 'price*brand')
+  data   = yogurt,
+  choice = 'choice',
+  obsID  = 'obsID',
+  pars   = c('price', 'feat', 'brand', 'price*brand')
 )
 ```
 ```
@@ -92,11 +92,11 @@ Suppose I want to include an interaction between two variables and I also want o
 
 ```{r, eval=FALSE}
 model_price_feat_mxl <- logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'brand', 'price*feat'),
-  randPars   = c(feat = "n")
+  data     = yogurt,
+  choice   = 'choice',
+  obsID    = 'obsID',
+  pars     = c('price', 'feat', 'brand', 'price*feat'),
+  randPars = c(feat = "n")
 )
 ```
 ```

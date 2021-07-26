@@ -98,7 +98,7 @@ mxlNegLLAndGradLL <- function(pars, modelInputs) {
   choice <- modelInputs$choice
   weights <- modelInputs$weights
   parSetup <- modelInputs$parSetup
-  numDraws <- modelInputs$options$numDraws
+  numDraws <- modelInputs$inputs$numDraws
   standardDraws <- modelInputs$standardDraws
   betaDraws <- makeBetaDraws(pars, parSetup, numDraws, standardDraws)
   VDraws <- logitFuncs$getMxlV(betaDraws, X, p)
@@ -122,7 +122,7 @@ getMxlNegLL <- function(pars, modelInputs) {
   choice <- modelInputs$choice
   weights <- modelInputs$weights
   parSetup <- modelInputs$parSetup
-  numDraws <- modelInputs$options$numDraws
+  numDraws <- modelInputs$inputs$numDraws
   standardDraws <- modelInputs$standardDraws
   betaDraws <- makeBetaDraws(pars, parSetup, numDraws, standardDraws)
   VDraws <- logitFuncs$getMxlV(betaDraws, X, p)
@@ -140,7 +140,7 @@ getMxlNegGradLL <- function(pars, modelInputs) {
   choice <- modelInputs$choice
   weights <- modelInputs$weights
   parSetup <- modelInputs$parSetup
-  numDraws <- modelInputs$options$numDraws
+  numDraws <- modelInputs$inputs$numDraws
   standardDraws <- modelInputs$standardDraws
   betaDraws <- makeBetaDraws(pars, parSetup, numDraws, standardDraws)
   VDraws <- logitFuncs$getMxlV(betaDraws, X, p)

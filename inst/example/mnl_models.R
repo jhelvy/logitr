@@ -9,10 +9,10 @@ library('logitr')
 
 # Run a MNL model in the Preference Space:
 mnl_pref <- logitr(
-  data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('price', 'feat', 'brand')
+  data   = yogurt,
+  choice = 'choice',
+  obsID  = 'obsID',
+  pars   = c('price', 'feat', 'brand')
 )
 
 # Print a summary of the results:
@@ -22,26 +22,22 @@ summary(mnl_pref)
 coef(mnl_pref)
 
 # Get the WTP implied from the preference space model
-wtp_mnl_pref <- wtp(mnl_pref, priceName = 'price')
+wtp_mnl_pref <- wtp(mnl_pref, price = 'price')
 wtp_mnl_pref
 
 # Run a MNL model in the WTP Space using a multistart:
 mnl_wtp <- logitr(
   data       = yogurt,
-  choiceName = 'choice',
-  obsIDName  = 'obsID',
-  parNames   = c('feat', 'brand'),
-  priceName  = 'price',
+  choice     = 'choice',
+  obsID      = 'obsID',
+  pars       = c('feat', 'brand'),
+  price      = 'price',
   modelSpace = 'wtp',
-  options = list(
-    # Since WTP space models are non-convex, run a multistart:
-    numMultiStarts = 10,
-    # If you want to view the results from each multistart run,
-    # set keepAllRuns=TRUE:
-    keepAllRuns = TRUE,
-    # Use the computed WTP from the preference space model as the starting
-    # values for the first run:
-    startVals = wtp_mnl_pref$Estimate)
+  # Since WTP space models are non-convex, run a multistart:
+  numMultiStarts = 10,
+  # Use the computed WTP from the preference space model as the starting
+  # values for the first run:
+  startVals = wtp_mnl_pref$Estimate
 )
 
 # Print a summary of all multistart runs and a summary of the best model:
@@ -55,15 +51,14 @@ coef(mnl_wtp)
 # the preference space and WTP space is a helpful check for whether you have
 # reached a global solution in WTP space models, which have non-convex
 # log-likelihoods functions. This can be done using the wtpCompare function:
-wtp_mnl_comparison <- wtpCompare(mnl_pref, mnl_wtp, priceName = 'price')
+wtp_mnl_comparison <- wtpCompare(mnl_pref, mnl_wtp, price = 'price')
 wtp_mnl_comparison
 
 # Save results
-saveRDS(mnl_pref,
-        here::here('inst', 'extdata', 'mnl_pref.Rds'))
-saveRDS(mnl_wtp,
-        here::here('inst', 'extdata', 'mnl_wtp.Rds'))
-saveRDS(wtp_mnl_pref,
-        here::here('inst', 'extdata', 'wtp_mnl_pref.Rds'))
-saveRDS(wtp_mnl_comparison,
-        here::here('inst', 'extdata', 'wtp_mnl_comparison.Rds'))
+saveRDS(mnl_pref, here::here('inst', 'extdata', 'mnl_pref.Rds'))
+saveRDS(mnl_wtp, here::here('inst', 'extdata', 'mnl_wtp.Rds'))
+saveRDS(wtp_mnl_pref, here::here('inst', 'extdata', 'wtp_mnl_pref.Rds'))
+saveRDS(
+  wtp_mnl_comparison,
+  here::here('inst', 'extdata', 'wtp_mnl_comparison.Rds')
+)

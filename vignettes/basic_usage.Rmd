@@ -28,15 +28,18 @@ The `logitr()` function estimates multinomial logit (MNL) and mixed logit (MXL) 
 ```{r, eval=FALSE}
 model <- logitr(
   data,
-  choiceName,
-  obsIDName,
-  parNames,
-  priceName = NULL,
+  choice,
+  obsID,
+  pars,
+  price = NULL,
   randPars = NULL,
   randPrice = NULL,
   modelSpace = "pref",
-  weightsName = NULL,
-  options = list()
+  weights = NULL,
+  cluster         = NULL,
+  robust          = FALSE,
+  numMultiStarts  = 1,
+  ...
 )
 ```
 
@@ -57,16 +60,16 @@ The `logitr()` function assumes that the deterministic part of the utility funct
 ```{r, child=here::here('man', 'rmdchunks', 'utilityPreferenceObserved.Rmd')}
 ```
 
-where $\betaVec$ is the vector of coefficients for non-price attributes $\xVec_{j}$, $\alpha$ is the coefficient for price $p_{j}$. Accordingly, each parameter in the `parNames` argument is an additive part of $v_{j}$.
+where $\betaVec$ is the vector of coefficients for non-price attributes $\xVec_{j}$, $\alpha$ is the coefficient for price $p_{j}$. Accordingly, each parameter in the `pars` argument is an additive part of $v_{j}$.
 
-For example, if the observed utility for yogurt purchases was $v_{j} = \beta x_{j} + \alpha p_{j}$, where $p_{j}$ is "price" and $x_{j}$ is "brand", then the `parNames` argument should be `c("price", "brand")`. This model can be estimated as follows using the `yogurt` data frame:
+For example, if the observed utility for yogurt purchases was $v_{j} = \beta x_{j} + \alpha p_{j}$, where $p_{j}$ is "price" and $x_{j}$ is "brand", then the `pars` argument should be `c("price", "brand")`. This model can be estimated as follows using the `yogurt` data frame:
 
 ```{r}
 mnl_pref <- logitr(
-    data       = yogurt,
-    choiceName = "choice",
-    obsIDName  = "obsID",
-    parNames   = c("price", "brand")
+    data   = yogurt,
+    choice = "choice",
+    obsID  = "obsID",
+    pars   = c("price", "brand")
 )
 ```
 
@@ -78,19 +81,19 @@ summary(mnl_pref)
 
 ## WTP space models
 
-For models estimated in the WTP space, the `modelSpace` argument should be set to `"wtp"`. In addition, the `parNames` argument should _not_ contain the name of the column for the price attribute because there is no estimated "price" parameter in WTP space models. Instead, a "scale" parameter given by $\lambda$ will be estimated, and the column for "price" should be provided separately using the `priceName` argument.
+For models estimated in the WTP space, the `modelSpace` argument should be set to `"wtp"`. In addition, the `pars` argument should _not_ contain the name of the column for the price attribute because there is no estimated "price" parameter in WTP space models. Instead, a "scale" parameter given by $\lambda$ will be estimated, and the column for "price" should be provided separately using the `price` argument.
 
-For example, if the observed utility was $v_{j} = \lambda \left(\omega x_{j} - p_{j}\right)$, where $p_{j}$ is "price" and $x_{j}$ is "brand", then the `parNames` argument should be `"brand"` and the `priceName` argument should be `"price"`. This model can be estimated as follows using the `yogurt` data frame:
+For example, if the observed utility was $v_{j} = \lambda \left(\omega x_{j} - p_{j}\right)$, where $p_{j}$ is "price" and $x_{j}$ is "brand", then the `pars` argument should be `"brand"` and the `price` argument should be `"price"`. This model can be estimated as follows using the `yogurt` data frame:
 
 ```{r}
 mnl_wtp <- logitr(
     data       = yogurt,
-    choiceName = "choice",
-    obsIDName  = "obsID",
-    parNames   = "brand",
-    priceName  = "price",
+    choice     = "choice",
+    obsID      = "obsID",
+    pars       = "brand",
+    price      = "price",
     modelSpace = "wtp",
-    options    = list(numMultiStarts = 10)
+    numMultiStarts = 10
 )
 ```
 
@@ -106,12 +109,12 @@ For example, assume the observed utility for yogurts was $v_{j} = \beta x_{j} + 
 
 ```{r, eval=FALSE}
 mxl_pref <- logitr(
-    data       = yogurt,
-    choiceName = "choice",
-    obsIDName  = "obsID",
-    parNames   = c("price", "brand"),
-    randPars   = c(brand = "n"),
-    options    = list(numMultiStarts = 10)
+    data     = yogurt,
+    choice   = "choice",
+    obsID    = "obsID",
+    pars     = c("price", "brand"),
+    randPars = c(brand = "n"),
+    numMultiStarts = 10
 )
 ```
 
@@ -132,13 +135,13 @@ Use `statusCodes()` to print a description of each status code from the `nloptr`
 For models in the preference space, a summary table of the computed WTP based on the estimated preference space parameters can be obtained with the `wtp()` function. For example, the computed WTP from the previously estimated fixed parameter model can be obtained with the following command:
 
 ```{r}
-wtp(mnl_pref, priceName = "price")
+wtp(mnl_pref, price = "price")
 ```
 
 The `wtp()` function divides the non-price parameters by the negative of the price parameter. Standard errors are estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. Similarly, the `wtpCompare()` function can be used to compare the WTP from a WTP space model with that computed from an equivalent preference space model:
 
 ```{r}
-wtpCompare(mnl_pref, mnl_wtp, priceName = "price")
+wtpCompare(mnl_pref, mnl_wtp, price = "price")
 ```
 
 ## Making predictions
@@ -158,10 +161,10 @@ In the example below, the expected choice probabilities for these two sets of al
 
 ```{r}
 probs <- predictProbs(
-  model     = mnl_pref,
-  alts      = alts,
-  altIDName = "alt",
-  obsIDName = "obsID"
+  model = mnl_pref,
+  alts  = alts,
+  altID = "alt",
+  obsID = "obsID"
 )
 
 probs
@@ -173,10 +176,10 @@ Choice probabilities can also be predicted used WTP space models. For example, t
 
 ```{r}
 probs <- predictProbs(
-  model     = mnl_wtp,
-  alts      = alts,
-  altIDName = "alt",
-  obsIDName = "obsID"
+  model = mnl_wtp,
+  alts  = alts,
+  altID = "alt",
+  obsID = "obsID"
 )
 
 probs
@@ -186,10 +189,10 @@ Similar to the `predictProbs()` function, the `predictChoices()` function can be
 
 ```{r}
 choices <- predictChoices(
-  model     = mnl_pref,
-  alts      = yogurt,
-  altIDName = "alt",
-  obsIDName = "obsID"
+  model = mnl_pref,
+  alts  = yogurt,
+  altID = "alt",
+  obsID = "obsID"
 )
 
 # Preview actual and predicted choices
