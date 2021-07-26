@@ -1,3 +1,11 @@
+# logitr 0.2.3
+
+**Several breaking changes in this version**. 
+
+- Several argument names were changed to make them easier to understand. These include: `choiceName` --> `choice`, `obsIDName` --> `obsID`, `parNames` --> `pars`, `priceName` --> `price`, `weightsName` --> `weights`, `clusterName` --> `cluster`.
+- Several arguments were moved out of the previous `options` argument and are now passed directly as arguments to `logitr()`. These include: `numMultiStarts`, `useAnalyticGrad`, `scaleInputs`, `startParBounds`, `standardDraws`, `numDraws`, `startVals`.
+- Some minor tweaks to printing methods.
+
 # logitr 0.2.2
 
 - Improved `summary.logitr()` and `coef.logitr()` methods for better printing, using `printCoefmat()`
