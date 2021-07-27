@@ -180,6 +180,8 @@ logitr <- function(
     summary <- getMultistartSummary(allModels)
     model <- getBestModel(allModels, summary)
     model$multistartSummary <- summary
+  } else {
+    model <- allModels[[1]]
   }
   model <- appendModelInfo(model, modelInputs)
   message("Done!")
