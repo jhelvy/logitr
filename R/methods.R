@@ -60,7 +60,7 @@ getCovarianceRobust <- function(object) {
   modelInputs$evalFuncs <- setEvalFunctions(
     object$modelType, object$inputs$useAnalyticGrad)
   modelInputs$inputs <- object$inputs
-  parsUnscaled <- coef(model)
+  parsUnscaled <- stats::coef(object)
   scaleFactors <- object$scaleFactors
   if (object$inputs$scaleInputs) {
     parsUnscaled <- parsUnscaled * scaleFactors
@@ -112,8 +112,8 @@ getClusterModelInputs <- function (object, indices, modelInputs) {
 #' @export
 summary.logitr <- function (object, ...) {
     object$modelInfoTable <- getModelInfoTable(object)
-    coefs <- coef(object)
-    standErr <- sqrt(diag(vcov(object)))
+    coefs <- stats::coef(object)
+    standErr <- sqrt(diag(stats::vcov(object)))
     object$coefTable <- getCoefTable(coefs, standErr)
     object$statTable <- getStatTable(object)
     if (object$modelType == "mxl") {
@@ -230,7 +230,7 @@ getModelInfoTable <- function(model) {
 
 getCoefTable <- function(coefs, standErr) {
     z <- coefs / standErr
-    p <- 2 * (1 - pnorm(abs(z)))
+    p <- 2 * (1 - stats::pnorm(abs(z)))
     coefTable <- cbind(coefs, standErr, z, p)
     colnames(coefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
     return(as.data.frame(coefTable))
