@@ -212,8 +212,9 @@ getModelInfoTable <- function(model) {
     "Model Type:", "Model Space:", "Model Run:", "Iterations:",
     "Elapsed Time:", "Algorithm:", "Weights Used?:"
   )
-  if (!is.null(model$robust)) { # Added for backwards compatibility
-    modelInfoTable <- rbind(modelInfoTable, model$robust)
+  robust <- model$inputs$robust
+  if (!is.null(robust)) { # Added for backwards compatibility
+    modelInfoTable <- rbind(modelInfoTable, robust)
     row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Robust?"
   }
   if (!is.null(model$numClusters)) { # Added for backwards compatibility
