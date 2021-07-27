@@ -112,7 +112,9 @@ getClusterModelInputs <- function (object, indices, modelInputs) {
 #' @export
 summary.logitr <- function (object, ...) {
     object$modelInfoTable <- getModelInfoTable(object)
-    object$coefTable <- getCoefTable(object)
+    coefs <- coef(object)
+    standErr <- sqrt(diag(vcov(object)))
+    object$coefTable <- getCoefTable(coefs, standErr)
     object$statTable <- getStatTable(object)
     if (object$modelType == "mxl") {
         object$randParSummary <- getRandParSummary(object)
@@ -226,12 +228,10 @@ getModelInfoTable <- function(model) {
   return(modelInfoTable)
 }
 
-getCoefTable <- function(object) {
-    b <- coef(object)
-    std.err <- sqrt(diag(vcov(object)))
-    z <- b / std.err
+getCoefTable <- function(coefs, standErr) {
+    z <- coefs / standErr
     p <- 2 * (1 - pnorm(abs(z)))
-    coefTable <- cbind(b, std.err, z, p)
+    coefTable <- cbind(coefs, standErr, z, p)
     colnames(coefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
     return(as.data.frame(coefTable))
 }

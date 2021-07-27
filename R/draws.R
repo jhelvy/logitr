@@ -43,7 +43,9 @@ getStandardDraws <- function(parSetup, numDraws) {
 }
 
 getUncertaintyDraws <- function(model, numDraws) {
-  draws <- data.frame(MASS::mvrnorm(numDraws, model$coef, model$covariance))
-  colnames(draws) <- names(model$coef)
+  coefs <- coef(model)
+  covariance <- vcov(model)
+  draws <- data.frame(MASS::mvrnorm(numDraws, coefs, covariance))
+  colnames(draws) <- names(coefs)
   return(draws)
 }
