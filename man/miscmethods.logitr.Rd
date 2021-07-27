@@ -17,8 +17,6 @@
 
 \method{coef}{summary.logitr}(object, ...)
 
-\method{vcov}{logitr}(object, ...)
-
 \method{summary}{logitr}(object, ...)
 
 \method{print}{summary.logitr}(
@@ -27,6 +25,8 @@
   width = getOption("width"),
   ...
 )
+
+\method{vcov}{logitr}(object, ...)
 }
 \arguments{
 \item{object}{is an object of class \code{logitr}.}

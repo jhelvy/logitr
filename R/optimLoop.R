@@ -39,6 +39,7 @@ runMultistart <- function(modelInputs) {
       model$status     <- result$status
       model$message    <- result$message
     }
+
     model$startPars <- startPars
     model$multistartNumber <- i
     model$time <- proc.time() - startTime
@@ -48,15 +49,18 @@ runMultistart <- function(modelInputs) {
 }
 
 makeModelTemplate <- function(modelInputs) {
+  # Make default values to return if the model fails
+  pars <- modelInputs$parList$all
+  coefNA <- rep(NA, length(pars))
   result <- structure(list(
-    coef              = NA,
+    coef              = coefNA,
     logLik            = NA,
     nullLogLik        = NA,
     gradient          = NA,
     hessian           = NA,
     startPars         = NA,
     multistartNumber  = NA,
-    multistartSummary = NA,
+    multistartSummary = NULL,
     time              = NA,
     iterations        = NA,
     message           = "Generic failure code.",
@@ -70,7 +74,7 @@ makeModelTemplate <- function(modelInputs) {
     weights           = modelInputs$weights,
     clusterIDs        = modelInputs$clusterIDs,
     numObs            = sum(modelInputs$choice),
-    numParams         = length(modelInputs$parList$all),
+    numParams         = length(pars),
     freq              = modelInputs$freq,
     modelType         = modelInputs$modelType,
     weightsUsed       = modelInputs$weightsUsed,

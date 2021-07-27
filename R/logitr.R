@@ -176,9 +176,12 @@ logitr <- function(
     startParBounds, standardDraws, numDraws, startVals, call, options
   )
   allModels <- runMultistart(modelInputs)
-  summary <- getMultistartSummary(allModels)
-  model <- getBestModel(allModels, summary)
-  model <- appendModelInfo(model, modelInputs, summary)
+  if (modelInputs$inputs$numMultiStarts > 1) {
+    summary <- getMultistartSummary(allModels)
+    model <- getBestModel(allModels, summary)
+    model$multistartSummary <- summary
+  }
+  model <- appendModelInfo(model, modelInputs)
   message("Done!")
   return(model)
 }

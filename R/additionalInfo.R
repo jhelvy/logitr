@@ -2,7 +2,7 @@
 # Functions for computing other information about model after estimation
 # ============================================================================
 
-appendModelInfo <- function(model, modelInputs, multistartSummary) {
+appendModelInfo <- function(model, modelInputs) {
   parsUnscaled <- model$coef
   names(parsUnscaled) <- c(modelInputs$parList$mu, modelInputs$parList$sigma)
   scaleFactors <- NA
@@ -64,13 +64,18 @@ getGradient <- function(parsUnscaled, scaleFactors, modelInputs) {
 }
 
 getHessian <- function(parsUnscaled, scaleFactors, modelInputs) {
-  hessian <- modelInputs$evalFuncs$hessLL(parsUnscaled, modelInputs)
-  if (modelInputs$inputs$scaleInputs) {
-    sf <- matrix(scaleFactors, ncol = 1)
-    sfMat <- sf %*% t(sf)
-    hessian <- hessian * sfMat
-  }
   parNames <- c(modelInputs$parList$mu, modelInputs$parList$sigma)
+  if (any(is.na(parsUnscaled))) {
+    # Model failed - return a matrix of NA values
+    hessian <- matrix(NA, nrow = length(parNames), ncol = length(parNames))
+  } else {
+    hessian <- modelInputs$evalFuncs$hessLL(parsUnscaled, modelInputs)
+    if (modelInputs$inputs$scaleInputs) {
+      sf <- matrix(scaleFactors, ncol = 1)
+      sfMat <- sf %*% t(sf)
+      hessian <- hessian * sfMat
+    }
+  }
   colnames(hessian) <- parNames
   row.names(hessian) <- parNames
   return(hessian)

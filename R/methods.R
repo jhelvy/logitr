@@ -32,6 +32,185 @@ coef.summary.logitr <- function(object, ...) {
 
 #' @rdname miscmethods.logitr
 #' @export
+summary.logitr <- function (object, ...) {
+    object$modelInfoTable <- getModelInfoTable(object)
+    coefs <- stats::coef(object)
+    standErr <- sqrt(diag(stats::vcov(object)))
+    object$coefTable <- getCoefTable(coefs, standErr)
+    object$statTable <- getStatTable(object)
+    if (object$modelType == "mxl") {
+        object$randParSummary <- getRandParSummary(object)
+    }
+    class(object) <- c("summary.logitr", "logitr")
+    return(object)
+}
+
+#' @rdname miscmethods.mlogit
+#' @export
+print.logitr <- function (
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+) {
+  cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
+  modelType <- getModelType(x)
+  modelSpace <- getModelSpace(x)
+  cat("A", modelType, "model estimated in the", modelSpace, "space\n\n")
+  cat("Exit Status: ", x$status, ", ", getExitMessage(x), "\n\n", sep = "")
+  # Print which run was "best" if a multistart was used
+  if (x$inputs$numMultiStarts > 1) {
+    modelRun <- getModelRun(x)
+    cat(
+      "Results below are from run", modelRun, "multistart runs\n",
+      "as it had the largest log-likelihood value\n")
+    cat("\n")
+  }
+  # Print coefficients & log-likelihood
+  if (!any(is.na(coef(x)))) {
+      cat("Coefficients:\n")
+      print.default(
+        format(x$coef, digits = digits), print.gap = 2, quote = FALSE)
+      print(x$logLik)
+  } else {
+    cat("No coefficients\n")
+  }
+  cat("\n")
+  invisible(x)
+}
+
+#' @rdname miscmethods.logitr
+#' @method print summary.logitr
+#' @export
+print.summary.logitr <- function(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+) {
+  cat("=================================================", "\n", sep = "")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat("Frequencies of alternatives:\n")
+  print(prop.table(x$freq), digits = digits)
+  # Print multistart summary
+  if (!is.null(x$multistartSummary)) {
+    cat("\n")
+    cat("Summary Of Multistart Runs:\n")
+    print(x$multistartSummary)
+    cat("\n")
+    cat("Use statusCodes() to view the meaning of each status code\n")
+  }
+  cat("\nExit Status: ", x$status, ", ", getExitMessage(x), "\n", sep = "")
+  print(x$modelInfoTable)
+  cat("\n")
+  cat("Model Coefficients:", "\n")
+  stats::printCoefmat(x$coefTable, digits = digits)
+  print(x$statTable)
+  if (x$modelType == "mxl") {
+      cat("\n")
+      cat("Summary of 10k Draws for Random Coefficients:", "\n")
+      print(x$randParSummary)
+  }
+  invisible(x)
+}
+
+getModelInfoTable <- function(object) {
+  modelType <- getModelType(object)
+  modelSpace <- getModelSpace(object)
+  modelRun <- getModelRun(object)
+  modelTime <- convertTime(object$time)
+  algorithm <- object$options$algorithm
+  modelInfoTable <- data.frame(c(
+    modelType, modelSpace, modelRun, object$iterations,
+    modelTime, algorithm, object$weightsUsed
+  ))
+  colnames(modelInfoTable) <- ""
+  row.names(modelInfoTable) <- c(
+    "Model Type:", "Model Space:", "Model Run:", "Iterations:",
+    "Elapsed Time:", "Algorithm:", "Weights Used?:"
+  )
+  robust <- object$inputs$robust
+  if (!is.null(robust)) { # Added for backwards compatibility
+    modelInfoTable <- rbind(modelInfoTable, robust)
+    row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Robust?"
+  }
+  if (!is.null(object$numClusters)) { # Added for backwards compatibility
+    if (object$numClusters > 0) {
+      modelInfoTable <- rbind(modelInfoTable, object$inputs$cluster)
+      row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Cluster Name:"
+    }
+  }
+  return(modelInfoTable)
+}
+
+getCoefTable <- function(coefs, standErr) {
+    z <- coefs / standErr
+    p <- 2 * (1 - stats::pnorm(abs(z)))
+    coefTable <- cbind(coefs, standErr, z, p)
+    colnames(coefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
+    return(as.data.frame(coefTable))
+}
+
+getStatTable <- function(model) {
+  aic <- round(2 * model$numParams - 2 * model$logLik, 4)
+  bic <- round(log(model$numObs) * model$numParams - 2 * model$logLik, 4)
+  mcR2 <- 1 - (model$logLik / model$nullLogLik)
+  adjMcR2 <- 1 - ((model$logLik - model$numParams) / model$nullLogLik)
+  statTable <- data.frame(c(
+    model$logLik, model$nullLogLik, aic, bic, mcR2, adjMcR2, model$numObs
+  ))
+  colnames(statTable) <- ""
+  row.names(statTable) <- c(
+    "Log-Likelihood:", "Null Log-Likelihood:", "AIC:", "BIC:", "McFadden R2:",
+    "Adj McFadden R2:" , "Number of Observations:")
+  if (!is.null(model$numClusters)) { # Added for backwards compatibility
+    if (model$numClusters > 0) {
+      statTable <- rbind(statTable, model$numClusters)
+      row.names(statTable)[nrow(statTable)] <- "Number of Clusters"
+    }
+  }
+  return(statTable)
+}
+
+getRandParSummary <- function(object) {
+  parSetup <- object$parSetup
+  numDraws <- 10^4
+  randParIDs <- getRandParIDs(parSetup)
+  standardDraws <- getStandardDraws(parSetup, numDraws)
+  betaDraws <- makeBetaDraws(object$coef, parSetup, 10^4, standardDraws)
+  randParSummary <- apply(betaDraws, 2, summary)
+  # Add names to summary
+  distName <- rep("", length(parSetup))
+  distName[getNormParIDs(parSetup)] <- "normal"
+  distName[getLogNormParIDs(parSetup)] <- "log-normal"
+  summaryNames <- paste(names(parSetup), " (", distName, ")", sep = "")
+  colnames(randParSummary) <- summaryNames
+  randParSummary <- t(randParSummary[, randParIDs])
+  return(as.data.frame(randParSummary))
+}
+
+getModelType <- function(x) {
+  return(ifelse(x$modelType == "mnl", "Multinomial Logit", "Mixed Logit"))
+}
+
+getModelSpace <- function(x) {
+  return(ifelse(
+    x$inputs$modelSpace == "pref", "Preference", "Willingness-to-Pay"))
+}
+
+getModelRun <- function(x) {
+  return(paste(x$multistartNumber, "of", x$inputs$numMultiStarts))
+}
+
+getExitMessage <- function(x) {
+  codes <- getStatusCodes()
+  return(codes$message[which(codes$code == x$status)])
+}
+
+#' @rdname miscmethods.logitr
+#' @export
 vcov.logitr <- function(object, ...) {
   clusterID <- object$clusterIDs
   if (is.null(clusterID) | object$inputs$robust == FALSE) {
@@ -106,188 +285,4 @@ getClusterModelInputs <- function (object, indices, modelInputs) {
   modelInputs$obsID      <- object$obsID[indices]
   modelInputs$clusterIDs <- object$clusterIDs[indices]
   return(modelInputs)
-}
-
-#' @rdname miscmethods.logitr
-#' @export
-summary.logitr <- function (object, ...) {
-    object$modelInfoTable <- getModelInfoTable(object)
-    coefs <- stats::coef(object)
-    standErr <- sqrt(diag(stats::vcov(object)))
-    object$coefTable <- getCoefTable(coefs, standErr)
-    object$statTable <- getStatTable(object)
-    if (object$modelType == "mxl") {
-        object$randParSummary <- getRandParSummary(object)
-    }
-    class(object) <- c("summary.logitr", "logitr")
-    return(object)
-}
-
-#' @rdname miscmethods.mlogit
-#' @export
-print.logitr <- function (
-  x,
-  digits = max(3, getOption("digits") - 2),
-  width = getOption("width"),
-  ...
-) {
-  cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
-  modelType <- getModelType(x)
-  modelSpace <- getModelSpace(x)
-  cat("A", modelType, "model estimated in the", modelSpace, "space\n\n")
-  cat("Exit Status: ", x$status, ", ", getExitMessage(x), "\n\n", sep = "")
-  # Print multistart summary
-  if (!is.na(x$multistartSummary)) {
-    if (nrow(x$multistartSummary) > 1) {
-      modelRun <- getModelRun(x)
-      cat(
-        "Results below are from run", modelRun, "multistart runs\n",
-        "as it had the largest log-likelihood value\n")
-      cat("\n")
-    }
-  }
-  # Print coefficients
-  if (length(x$coef)) {
-      cat("Coefficients:\n")
-      print.default(
-        format(x$coef, digits = digits), print.gap = 2, quote = FALSE)
-  } else {
-    cat("No coefficients\n")
-  }
-  # Print log-likelihood
-  print(x$logLik)
-  cat("\n")
-  invisible(x)
-}
-
-#' @rdname miscmethods.logitr
-#' @method print summary.logitr
-#' @export
-print.summary.logitr <- function(
-  x,
-  digits = max(3, getOption("digits") - 2),
-  width = getOption("width"),
-  ...
-) {
-  cat("=================================================", "\n", sep = "")
-  cat("Call:\n")
-  print(x$call)
-  cat("\n")
-  cat("Frequencies of alternatives:\n")
-  print(prop.table(x$freq), digits = digits)
-  # Print multistart summary
-  if (!is.na(x$multistartSummary)) {
-    if (nrow(x$multistartSummary) > 1) {
-      cat("\n")
-      cat("Summary Of Multistart Runs:\n")
-      print(x$multistartSummary)
-      cat("\n")
-      cat("Use statusCodes() to view the meaning of each status code\n")
-    }
-  }
-  cat("\nExit Status: ", x$status, ", ", getExitMessage(x), "\n", sep = "")
-  print(x$modelInfoTable)
-  cat("\n")
-  cat("Model Coefficients:", "\n")
-  stats::printCoefmat(x$coefTable, digits = digits)
-  print(x$statTable)
-  if (x$modelType == "mxl") {
-      cat("\n")
-      cat("Summary of 10k Draws for Random Coefficients:", "\n")
-      print(x$randParSummary)
-  }
-  invisible(x)
-}
-
-getModelInfoTable <- function(model) {
-  modelType <- getModelType(model)
-  modelSpace <- getModelSpace(model)
-  modelRun <- getModelRun(model)
-  modelTime <- convertTime(model$time)
-  algorithm <- model$options$algorithm
-  modelInfoTable <- data.frame(c(
-    modelType, modelSpace, modelRun, model$iterations,
-    modelTime, algorithm, model$weightsUsed
-  ))
-  colnames(modelInfoTable) <- ""
-  row.names(modelInfoTable) <- c(
-    "Model Type:", "Model Space:", "Model Run:", "Iterations:",
-    "Elapsed Time:", "Algorithm:", "Weights Used?:"
-  )
-  robust <- model$inputs$robust
-  if (!is.null(robust)) { # Added for backwards compatibility
-    modelInfoTable <- rbind(modelInfoTable, robust)
-    row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Robust?"
-  }
-  if (!is.null(model$numClusters)) { # Added for backwards compatibility
-    if (model$numClusters > 0) {
-      modelInfoTable <- rbind(modelInfoTable, model$inputs$cluster)
-      row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Cluster Name:"
-    }
-  }
-  return(modelInfoTable)
-}
-
-getCoefTable <- function(coefs, standErr) {
-    z <- coefs / standErr
-    p <- 2 * (1 - stats::pnorm(abs(z)))
-    coefTable <- cbind(coefs, standErr, z, p)
-    colnames(coefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
-    return(as.data.frame(coefTable))
-}
-
-getStatTable <- function(model) {
-  aic <- round(2 * model$numParams - 2 * model$logLik, 4)
-  bic <- round(log(model$numObs) * model$numParams - 2 * model$logLik, 4)
-  mcR2 <- 1 - (model$logLik / model$nullLogLik)
-  adjMcR2 <- 1 - ((model$logLik - model$numParams) / model$nullLogLik)
-  statTable <- data.frame(c(
-    model$logLik, model$nullLogLik, aic, bic, mcR2, adjMcR2, model$numObs
-  ))
-  colnames(statTable) <- ""
-  row.names(statTable) <- c(
-    "Log-Likelihood:", "Null Log-Likelihood:", "AIC:", "BIC:", "McFadden R2:",
-    "Adj McFadden R2:" , "Number of Observations:")
-  if (!is.null(model$numClusters)) { # Added for backwards compatibility
-    if (model$numClusters > 0) {
-      statTable <- rbind(statTable, model$numClusters)
-      row.names(statTable)[nrow(statTable)] <- "Number of Clusters"
-    }
-  }
-  return(statTable)
-}
-
-getRandParSummary <- function(object) {
-  parSetup <- object$parSetup
-  numDraws <- 10^4
-  randParIDs <- getRandParIDs(parSetup)
-  standardDraws <- getStandardDraws(parSetup, numDraws)
-  betaDraws <- makeBetaDraws(object$coef, parSetup, 10^4, standardDraws)
-  randParSummary <- apply(betaDraws, 2, summary)
-  # Add names to summary
-  distName <- rep("", length(parSetup))
-  distName[getNormParIDs(parSetup)] <- "normal"
-  distName[getLogNormParIDs(parSetup)] <- "log-normal"
-  summaryNames <- paste(names(parSetup), " (", distName, ")", sep = "")
-  colnames(randParSummary) <- summaryNames
-  randParSummary <- t(randParSummary[, randParIDs])
-  return(as.data.frame(randParSummary))
-}
-
-getModelType <- function(x) {
-  return(ifelse(x$modelType == "mnl", "Multinomial Logit", "Mixed Logit"))
-}
-
-getModelSpace <- function(x) {
-  return(ifelse(
-    x$inputs$modelSpace == "pref", "Preference", "Willingness-to-Pay"))
-}
-
-getModelRun <- function(x) {
-  return(paste(x$multistartNumber, "of", x$inputs$numMultiStarts))
-}
-
-getExitMessage <- function(x) {
-  codes <- getStatusCodes()
-  return(codes$message[which(codes$code == x$status)])
 }
