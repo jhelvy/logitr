@@ -4,10 +4,6 @@
 # Load logitr package
 library('logitr')
 
-# Set factors for "brand" to the default levels
-brands <- c("dannon", "hiland", "weight", "yoplait")
-yogurt$brand <- factor(yogurt$brand, levels = brands)
-
 mnl_pref_dannon <- logitr(
   data   = yogurt,
   choice = 'choice',
