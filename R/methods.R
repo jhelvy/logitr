@@ -67,7 +67,7 @@ print.logitr <- function (
     cat("\n")
   }
   # Print coefficients & log-likelihood
-  if (!any(is.na(coef(x)))) {
+  if (!any(is.na(stats::coef(x)))) {
       cat("Coefficients:\n")
       print.default(
         format(x$coef, digits = digits), print.gap = 2, quote = FALSE)
