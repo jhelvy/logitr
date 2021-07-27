@@ -33,14 +33,86 @@ coef.summary.logitr <- function(object, ...) {
 #' @rdname miscmethods.logitr
 #' @export
 vcov.logitr <- function(object, ...) {
-    return(object$covariance)
+  clusterID <- object$clusterIDs
+  if (is.null(clusterID) | object$inputs$robust == FALSE) {
+    return(getCovarianceNonRobust(object$hessian))
+  }
+  return(getCovarianceRobust(object))
+}
+
+getCovarianceNonRobust <- function(hessian) {
+  covariance <- hessian*NA
+  tryCatch(
+    {
+      covariance <- solve(-1*hessian)
+    },
+    error = function(e) {}
+  )
+  return(covariance)
+}
+
+getCovarianceRobust <- function(object) {
+  i <- 0
+  gradientList <- c()
+  clusterID <- object$clusterIDs
+  modelInputs <- list()
+  modelInputs$logitFuncs <- setLogitFunctions(object$inputs$modelSpace)
+  modelInputs$evalFuncs <- setEvalFunctions(
+    object$modelType, object$inputs$useAnalyticGrad)
+  modelInputs$inputs <- object$inputs
+  parsUnscaled <- coef(model)
+  scaleFactors <- object$scaleFactors
+  if (object$inputs$scaleInputs) {
+    parsUnscaled <- parsUnscaled * scaleFactors
+  }
+  for (tempID in sort(unique(clusterID))) {
+    indices <- which(clusterID == tempID)
+    tempModelInputs <- getClusterModelInputs(object, indices, modelInputs)
+    tempGradient <- getGradient(parsUnscaled, scaleFactors, tempModelInputs)
+    gradientList <- c(gradientList, tempGradient)
+    i <- i + 1
+  }
+  gradMat <- matrix(gradientList, nrow = i, length(tempGradient), byrow = TRUE)
+  gradMean <- colMeans(gradMat)
+  gradMeans <- c()
+  for (tempID in sort(unique(clusterID))) {
+    gradMeans <- c(gradMeans, gradMean)
+  }
+  gradMeanMat <- matrix(
+    gradMeans, nrow = i, length(tempGradient), byrow = TRUE)
+
+  diffMat <- gradMat - gradMeanMat
+
+  M <- t(diffMat) %*% diffMat
+  smallSampleCorrection <- (i / (i - 1))
+  M <- smallSampleCorrection * M
+  D <- getCovarianceNonRobust(object$hessian)
+  if (any(is.na(D))) {
+    return(D) # If there are NAs the next line will error
+  }
+  return(D %*% M %*% D)
+}
+
+getClusterModelInputs <- function (object, indices, modelInputs) {
+  X <- object$X[indices, ]
+  # Cast to matrix in cases where there is 1 independent variable
+  if (!is.matrix(X)) {
+    X <- as.matrix(X)
+  }
+  modelInputs$X          <- X
+  modelInputs$choice     <- object$choice[indices]
+  modelInputs$price      <- object$price[indices]
+  modelInputs$weights    <- object$weights[indices]
+  modelInputs$obsID      <- object$obsID[indices]
+  modelInputs$clusterIDs <- object$clusterIDs[indices]
+  return(modelInputs)
 }
 
 #' @rdname miscmethods.logitr
 #' @export
 summary.logitr <- function (object, ...) {
     object$modelInfoTable <- getModelInfoTable(object)
-    object$coefTable <- getCoefTable(object$coef, object$standErrs)
+    object$coefTable <- getCoefTable(object)
     object$statTable <- getStatTable(object)
     if (object$modelType == "mxl") {
         object$randParSummary <- getRandParSummary(object)
@@ -61,13 +133,16 @@ print.logitr <- function (
   modelType <- getModelType(x)
   modelSpace <- getModelSpace(x)
   cat("A", modelType, "model estimated in the", modelSpace, "space\n\n")
-  cat(getExitMessage(x), "\n\n")
-  if (nrow(x$multistartSummary) > 1) {
-    modelRun <- getModelRun(x)
-    cat(
-      "Results below are from run", modelRun, "multistart runs\n",
-      "as it had the largest log-likelihood value\n")
-    cat("\n")
+  cat("Exit Status: ", x$status, ", ", getExitMessage(x), "\n\n", sep = "")
+  # Print multistart summary
+  if (!is.na(x$multistartSummary)) {
+    if (nrow(x$multistartSummary) > 1) {
+      modelRun <- getModelRun(x)
+      cat(
+        "Results below are from run", modelRun, "multistart runs\n",
+        "as it had the largest log-likelihood value\n")
+      cat("\n")
+    }
   }
   # Print coefficients
   if (length(x$coef)) {
@@ -99,15 +174,16 @@ print.summary.logitr <- function(
   cat("Frequencies of alternatives:\n")
   print(prop.table(x$freq), digits = digits)
   # Print multistart summary
-  if (nrow(x$multistartSummary) > 1) {
-    cat("\n")
-    cat("Summary Of Multistart Runs:\n")
-    print(x$multistartSummary)
-    cat("\n")
-    cat("Use statusCodes() to view the meaning of each status code\n")
+  if (!is.na(x$multistartSummary)) {
+    if (nrow(x$multistartSummary) > 1) {
+      cat("\n")
+      cat("Summary Of Multistart Runs:\n")
+      print(x$multistartSummary)
+      cat("\n")
+      cat("Use statusCodes() to view the meaning of each status code\n")
+    }
   }
-  cat("\nExit Status:", x$status, "\n")
-  cat(getExitMessage(x), "\n")
+  cat("\nExit Status: ", x$status, ", ", getExitMessage(x), "\n", sep = "")
   print(x$modelInfoTable)
   cat("\n")
   cat("Model Coefficients:", "\n")
@@ -149,10 +225,12 @@ getModelInfoTable <- function(model) {
   return(modelInfoTable)
 }
 
-getCoefTable <- function(coef, standErrs) {
-    z <- coef / standErrs
-    p <- 2 * (1 - stats::pnorm(abs(z)))
-    coefTable <- cbind(coef, standErrs, z, p)
+getCoefTable <- function(object) {
+    b <- coef(object)
+    std.err <- sqrt(diag(vcov(object)))
+    z <- b / std.err
+    p <- 2 * (1 - pnorm(abs(z)))
+    coefTable <- cbind(b, std.err, z, p)
     colnames(coefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
     return(as.data.frame(coefTable))
 }

@@ -50,40 +50,6 @@ getStatusCodes <- function() {
   return(result)
 }
 
-makeBlankModel <- function(modelInputs) {
-  result <- structure(list(
-    coef          = NA,
-    standErrs     = NA,
-    logLik        = NA,
-    nullLogLik    = NA,
-    gradient      = NA,
-    hessian       = NA,
-    covariance    = NA,
-    numObs        = NA,
-    numParams     = NA,
-    call          = NA,
-    inputs        = modelInputs$inputs,
-    freq          = modelInputs$freq,
-    time          = NA,
-    iterations    = NA,
-    message       = NA,
-    standardDraws = NA,
-    status        = -99,
-    modelType     = modelInputs$modelType,
-    weightsUsed   = modelInputs$weightsUsed,
-    parSetup      = modelInputs$parSetup,
-    cluster       = modelInputs$cluster,
-    numClusters   = modelInputs$numClusters,
-    robust        = modelInputs$robust,
-    parSetup      = modelInputs$parSetup,
-    standardDraws = NA,
-    options       = modelInputs$options
-  ),
-  class = "logitr"
-  )
-  return(result)
-}
-
 # R equivalent of matlab's repmat function
 repmat <- function(X, m, n) {
   mx <- dim(X)[1]

@@ -177,7 +177,7 @@ logitr <- function(
   )
   allModels <- runMultistart(modelInputs)
   summary <- getMultistartSummary(allModels)
-  model <- allModels[[which.max(summary$`Log Likelihood`)]]
+  model <- getBestModel(allModels, summary)
   model <- appendModelInfo(model, modelInputs, summary)
   message("Done!")
   return(model)
@@ -195,4 +195,13 @@ getMultistartSummary <- function(allModels) {
 
 getListVal <- function(object, val) {
   return(unlist(lapply(object, function(x) x[[val]])))
+}
+
+getBestModel <- function(allModels, summary) {
+  index <- which.max(summary$`Log Likelihood`)
+  if (length(index) == 0) {
+    # All NA values...none of the models converged, so just return the first
+    index <- 1
+  }
+  return(allModels[[index]])
 }
