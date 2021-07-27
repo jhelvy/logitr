@@ -89,7 +89,7 @@ citation("logitr")
 #> 
 #>   John Paul Helveston (2021). logitr: Random utility logit models with
 #>   preference and willingness to pay space parameterizations. R package
-#>   version 0.2.2.
+#>   version 0.2.4
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -97,7 +97,7 @@ citation("logitr")
 #>     title = {logitr: Random Utility Logit Models with Preference and Willingness to Pay Space Parameterizations},
 #>     author = {John Paul Helveston},
 #>     year = {2021},
-#>     note = {R package version 0.2.2},
+#>     note = {R package version 0.2.4},
 #>     url = {https://jhelvy.github.io/logitr/},
 #>   }
 ```
