@@ -63,6 +63,8 @@ getModelInputs <- function(
     weights <- as.matrix(data[inputs$weights])
     weightsUsed <- TRUE
   }
+  # Weights will be multiplied by only the chosen alternative
+  weights <- weights[choice == 1]
 
   # Setup Clusters
   clusterIDs <- NULL
@@ -89,6 +91,8 @@ getModelInputs <- function(
   inputs$cluster <- cluster
   inputs$robust <- robust
 
+
+
   # Make modelInputs list
   modelInputs <- list(
     call          = call,
@@ -99,6 +103,7 @@ getModelInputs <- function(
     X             = X,
     choice        = choice,
     obsID         = obsID,
+    repTimes      = rep(table(obsID)),
     weights       = weights,
     weightsUsed   = weightsUsed,
     clusterIDs    = clusterIDs,
@@ -163,7 +168,7 @@ getParList <- function(parSetup) {
 
 definePrice <- function(data, inputs) {
   if (inputs$modelSpace == "pref") {
-    return(NA)
+    return(NULL)
   }
   if (inputs$modelSpace == "wtp") {
     price <- data[, which(names(data) == inputs$price)]

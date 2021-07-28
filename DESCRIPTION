@@ -29,7 +29,6 @@ Suggests:
     ggplot2,
     testthat
 Imports:
-    data.table,
     nloptr,
     stats,
     randtoolbox,
