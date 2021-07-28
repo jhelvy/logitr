@@ -85,6 +85,11 @@ getModelInputs <- function(
     numClusters <- getNumClusters(clusterIDs)
   }
 
+  # Update inputs
+  inputs$cluster <- cluster
+  inputs$robust <- robust
+
+  # Make modelInputs list
   modelInputs <- list(
     call          = call,
     inputs        = inputs,
@@ -96,10 +101,8 @@ getModelInputs <- function(
     obsID         = obsID,
     weights       = weights,
     weightsUsed   = weightsUsed,
-    cluster       = cluster,
     clusterIDs    = clusterIDs,
     numClusters   = numClusters,
-    robust        = robust,
     parList       = parList,
     parSetup      = parSetup,
     scaleFactors  = NA,
@@ -207,9 +210,10 @@ scaleModelInputs <- function(modelInputs) {
 }
 
 addDraws <- function(modelInputs) {
-  if (isMxlModel(modelInputs$parSetup)) {
-    modelInputs$modelType <- "mxl"
+  if (!isMxlModel(modelInputs$parSetup)) {
+    return(modelInputs)
   }
+  modelInputs$modelType <- "mxl"
   userDraws <- modelInputs$standardDraws
   standardDraws <- getStandardDraws(
     modelInputs$parSetup, modelInputs$inputs$numDraws)
@@ -258,11 +262,9 @@ setEvalFunctions <- function(modelType, useAnalyticGrad) {
   }
   if (modelType == "mxl") {
     evalFuncs$objective <- mxlNegLLAndGradLL
-    evalFuncs$objective <- mxlNegLLAndNumericGradLL
-    evalFuncs$negLL <- getMxlNegLL
+    evalFuncs$negLL     <- getMxlNegLL
     evalFuncs$negGradLL <- getMxlNegGradLL
     # evalFuncs$hessLL <- getMxlHessLL # Haven't defined yet
-    evalFuncs$negGradLL <- getNumericNegGradLL
     evalFuncs$hessLL <- getNumericHessLL
     if (!useAnalyticGrad) {
       evalFuncs$objective <- mxlNegLLAndNumericGradLL

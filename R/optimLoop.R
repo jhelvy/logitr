@@ -3,23 +3,43 @@
 # ============================================================================
 
 runMultistart <- function(modelInputs) {
-  # Setup lists for storing results
+
   numMultiStarts <- modelInputs$inputs$numMultiStarts
+  modelTemplate <- makeModelTemplate(modelInputs)
   models <- list()
+
+  # Run multistart loop
   for (i in 1:numMultiStarts) {
+
+    # Print run number
     if (numMultiStarts == 1) {
       message("Running Model...")
     } else {
       message("Running Multistart ", i, " of ", numMultiStarts, "...")
     }
+
+    # Attempt to estimate model
     startTime <- proc.time()
-    model <- makeBlankModel(modelInputs)
     startPars <- getStartPars(modelInputs, i)
-    tryCatch({
-      model <- runModel(modelInputs, startPars)
+    model <- modelTemplate
+    result <- NULL
+    tryCatch(
+      {
+        result <- runModel(modelInputs, startPars)
       },
-      error = function(e) { message("ERROR: failed to converge") }
+      error = function(e) {}
     )
+
+    # Add result values to model
+    if (!is.null(result)) {
+      model$coef <- result$solution
+      # -1 for (+) rather than (-) LL
+      model$logLik     <- as.numeric(-1*result$objective)
+      model$iterations <- result$iterations
+      model$status     <- result$status
+      model$message    <- result$message
+    }
+
     model$startPars <- startPars
     model$multistartNumber <- i
     model$time <- proc.time() - startTime
@@ -28,16 +48,45 @@ runMultistart <- function(modelInputs) {
   return(models)
 }
 
-# Runs the MNL model
-runModel <- function(modelInputs, startPars) {
-  model <- nloptr::nloptr(
-    x0 = startPars,
-    eval_f = modelInputs$evalFuncs$objective,
-    modelInputs = modelInputs,
-    opts = modelInputs$options
+makeModelTemplate <- function(modelInputs) {
+  # Make default values to return if the model fails
+  pars <- modelInputs$parList$all
+  coefNA <- rep(NA, length(pars))
+  result <- structure(list(
+    coef              = coefNA,
+    logLik            = NA,
+    nullLogLik        = NA,
+    gradient          = NA,
+    hessian           = NA,
+    startPars         = NA,
+    multistartNumber  = NA,
+    multistartSummary = NULL,
+    time              = NA,
+    iterations        = NA,
+    message           = "Generic failure code.",
+    status            = -1,
+    call              = modelInputs$call,
+    inputs            = modelInputs$inputs,
+    X                 = modelInputs$X,
+    price             = modelInputs$price,
+    choice            = modelInputs$choice,
+    obsID             = modelInputs$obsID,
+    weights           = modelInputs$weights,
+    clusterIDs        = modelInputs$clusterIDs,
+    numObs            = sum(modelInputs$choice),
+    numParams         = length(pars),
+    freq              = modelInputs$freq,
+    modelType         = modelInputs$modelType,
+    weightsUsed       = modelInputs$weightsUsed,
+    numClusters       = modelInputs$numClusters,
+    parSetup          = modelInputs$parSetup,
+    scaleFactors      = NA,
+    standardDraws     = modelInputs$standardDraws,
+    options           = modelInputs$options
+  ),
+  class = "logitr"
   )
-  model$logLik <- -1*model$objective # -1 for (+) rather than (-) LL
-  return(model)
+  return(result)
 }
 
 getStartPars <- function(modelInputs, i) {
@@ -96,4 +145,14 @@ checkStartPars <- function(startPars, modelInputs) {
       length(positiveParIDs), 0.01, 0.1)
   }
   return(startPars)
+}
+
+runModel <- function(modelInputs, startPars) {
+  model <- nloptr::nloptr(
+    x0 = startPars,
+    eval_f = modelInputs$evalFuncs$objective,
+    modelInputs = modelInputs,
+    opts = modelInputs$options
+  )
+  return(model)
 }

@@ -176,9 +176,14 @@ logitr <- function(
     startParBounds, standardDraws, numDraws, startVals, call, options
   )
   allModels <- runMultistart(modelInputs)
-  summary <- getMultistartSummary(allModels)
-  model <- allModels[[which.max(summary$`Log Likelihood`)]]
-  model <- appendModelInfo(model, modelInputs, summary)
+  if (modelInputs$inputs$numMultiStarts > 1) {
+    summary <- getMultistartSummary(allModels)
+    model <- getBestModel(allModels, summary)
+    model$multistartSummary <- summary
+  } else {
+    model <- allModels[[1]]
+  }
+  model <- appendModelInfo(model, modelInputs)
   message("Done!")
   return(model)
 }
@@ -195,4 +200,13 @@ getMultistartSummary <- function(allModels) {
 
 getListVal <- function(object, val) {
   return(unlist(lapply(object, function(x) x[[val]])))
+}
+
+getBestModel <- function(allModels, summary) {
+  index <- which.max(summary$`Log Likelihood`)
+  if (length(index) == 0) {
+    # All NA values...none of the models converged, so just return the first
+    index <- 1
+  }
+  return(allModels[[index]])
 }

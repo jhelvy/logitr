@@ -53,8 +53,8 @@ coef_compare
 
 # Compare the log-likelihood between the weighted and unweighted models:
 logLik_compare <- c(
-  "Unweighted" = mnl_wtp_unweighted$logLik,
-  "Weighted" = mnl_wtp_weighted$logLik)
+  "Unweighted" = logLik(mnl_wtp_unweighted),
+  "Weighted" = logLik(mnl_wtp_weighted))
 logLik_compare
 
 # Save results

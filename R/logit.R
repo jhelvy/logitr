@@ -15,12 +15,11 @@ negLL <- function(choice, logit, weights) {
 # Returns the logit fraction for mnl (homogeneous) models
 #' @importFrom data.table "data.table" ":="
 getMnlLogit <- function(V, obsID) {
-    # Initiate objects created in data.table so R CMD check won't complain
-    expV <- sumExpV <- logit <- V.V1 <- NULL
-    DT <- data.table::data.table(V = V, obsID = obsID)
-    DT[, expV := exp(V.V1)]
-    DT[, sumExpV := sum(expV), by = obsID]
-    DT[, logit := expV/sumExpV]
+    DT <- data.table::data.table(
+      expV  = as.vector(exp(V)),
+      obsID = as.vector(obsID)
+    )
+    DT[, logit := expV/sum(expV), by = obsID]
     return(DT$logit)
 }
 

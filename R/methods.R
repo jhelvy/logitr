@@ -32,15 +32,11 @@ coef.summary.logitr <- function(object, ...) {
 
 #' @rdname miscmethods.logitr
 #' @export
-vcov.logitr <- function(object, ...) {
-    return(object$covariance)
-}
-
-#' @rdname miscmethods.logitr
-#' @export
 summary.logitr <- function (object, ...) {
     object$modelInfoTable <- getModelInfoTable(object)
-    object$coefTable <- getCoefTable(object$coef, object$standErrs)
+    coefs <- stats::coef(object)
+    standErr <- sqrt(diag(stats::vcov(object)))
+    object$coefTable <- getCoefTable(coefs, standErr)
     object$statTable <- getStatTable(object)
     if (object$modelType == "mxl") {
         object$randParSummary <- getRandParSummary(object)
@@ -61,24 +57,24 @@ print.logitr <- function (
   modelType <- getModelType(x)
   modelSpace <- getModelSpace(x)
   cat("A", modelType, "model estimated in the", modelSpace, "space\n\n")
-  cat(getExitMessage(x), "\n\n")
-  if (nrow(x$multistartSummary) > 1) {
+  cat("Exit Status: ", x$status, ", ", getExitMessage(x), "\n\n", sep = "")
+  # Print which run was "best" if a multistart was used
+  if (x$inputs$numMultiStarts > 1) {
     modelRun <- getModelRun(x)
     cat(
       "Results below are from run", modelRun, "multistart runs\n",
       "as it had the largest log-likelihood value\n")
     cat("\n")
   }
-  # Print coefficients
-  if (length(x$coef)) {
+  # Print coefficients & log-likelihood
+  if (!any(is.na(stats::coef(x)))) {
       cat("Coefficients:\n")
       print.default(
         format(x$coef, digits = digits), print.gap = 2, quote = FALSE)
+      print(x$logLik)
   } else {
     cat("No coefficients\n")
   }
-  # Print log-likelihood
-  print(x$logLik)
   cat("\n")
   invisible(x)
 }
@@ -99,15 +95,14 @@ print.summary.logitr <- function(
   cat("Frequencies of alternatives:\n")
   print(prop.table(x$freq), digits = digits)
   # Print multistart summary
-  if (nrow(x$multistartSummary) > 1) {
+  if (!is.null(x$multistartSummary)) {
     cat("\n")
     cat("Summary Of Multistart Runs:\n")
     print(x$multistartSummary)
     cat("\n")
     cat("Use statusCodes() to view the meaning of each status code\n")
   }
-  cat("\nExit Status:", x$status, "\n")
-  cat(getExitMessage(x), "\n")
+  cat("\nExit Status: ", x$status, ", ", getExitMessage(x), "\n", sep = "")
   print(x$modelInfoTable)
   cat("\n")
   cat("Model Coefficients:", "\n")
@@ -121,38 +116,39 @@ print.summary.logitr <- function(
   invisible(x)
 }
 
-getModelInfoTable <- function(model) {
-  modelType <- getModelType(model)
-  modelSpace <- getModelSpace(model)
-  modelRun <- getModelRun(model)
-  modelTime <- convertTime(model$time)
-  algorithm <- model$options$algorithm
+getModelInfoTable <- function(object) {
+  modelType <- getModelType(object)
+  modelSpace <- getModelSpace(object)
+  modelRun <- getModelRun(object)
+  modelTime <- convertTime(object$time)
+  algorithm <- object$options$algorithm
   modelInfoTable <- data.frame(c(
-    modelType, modelSpace, modelRun, model$iterations,
-    modelTime, algorithm, model$weightsUsed
+    modelType, modelSpace, modelRun, object$iterations,
+    modelTime, algorithm, object$weightsUsed
   ))
   colnames(modelInfoTable) <- ""
   row.names(modelInfoTable) <- c(
     "Model Type:", "Model Space:", "Model Run:", "Iterations:",
     "Elapsed Time:", "Algorithm:", "Weights Used?:"
   )
-  if (!is.null(model$robust)) { # Added for backwards compatibility
-    modelInfoTable <- rbind(modelInfoTable, model$robust)
+  robust <- object$inputs$robust
+  if (!is.null(robust)) { # Added for backwards compatibility
+    modelInfoTable <- rbind(modelInfoTable, robust)
     row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Robust?"
   }
-  if (!is.null(model$numClusters)) { # Added for backwards compatibility
-    if (model$numClusters > 0) {
-      modelInfoTable <- rbind(modelInfoTable, model$inputs$cluster)
+  if (!is.null(object$numClusters)) { # Added for backwards compatibility
+    if (object$numClusters > 0) {
+      modelInfoTable <- rbind(modelInfoTable, object$inputs$cluster)
       row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Cluster Name:"
     }
   }
   return(modelInfoTable)
 }
 
-getCoefTable <- function(coef, standErrs) {
-    z <- coef / standErrs
+getCoefTable <- function(coefs, standErr) {
+    z <- coefs / standErr
     p <- 2 * (1 - stats::pnorm(abs(z)))
-    coefTable <- cbind(coef, standErrs, z, p)
+    coefTable <- cbind(coefs, standErr, z, p)
     colnames(coefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
     return(as.data.frame(coefTable))
 }
@@ -181,9 +177,10 @@ getStatTable <- function(model) {
 getRandParSummary <- function(object) {
   parSetup <- object$parSetup
   numDraws <- 10^4
+  pars <- object$coef
   randParIDs <- getRandParIDs(parSetup)
   standardDraws <- getStandardDraws(parSetup, numDraws)
-  betaDraws <- makeBetaDraws(object$coef, parSetup, 10^4, standardDraws)
+  betaDraws <- makeBetaDraws(pars, parSetup, numDraws, standardDraws)
   randParSummary <- apply(betaDraws, 2, summary)
   # Add names to summary
   distName <- rep("", length(parSetup))
@@ -211,4 +208,82 @@ getModelRun <- function(x) {
 getExitMessage <- function(x) {
   codes <- getStatusCodes()
   return(codes$message[which(codes$code == x$status)])
+}
+
+#' @rdname miscmethods.logitr
+#' @export
+vcov.logitr <- function(object, ...) {
+  clusterID <- object$clusterIDs
+  if (is.null(clusterID) | object$inputs$robust == FALSE) {
+    return(getCovarianceNonRobust(object$hessian))
+  }
+  return(getCovarianceRobust(object))
+}
+
+getCovarianceNonRobust <- function(hessian) {
+  covariance <- hessian*NA
+  tryCatch(
+    {
+      covariance <- solve(-1*hessian)
+    },
+    error = function(e) {}
+  )
+  return(covariance)
+}
+
+getCovarianceRobust <- function(object) {
+  i <- 0
+  gradientList <- c()
+  clusterID <- object$clusterIDs
+  modelInputs <- list()
+  modelInputs$logitFuncs <- setLogitFunctions(object$inputs$modelSpace)
+  modelInputs$evalFuncs <- setEvalFunctions(
+    object$modelType, object$inputs$useAnalyticGrad)
+  modelInputs$inputs <- object$inputs
+  parsUnscaled <- stats::coef(object)
+  scaleFactors <- object$scaleFactors
+  if (object$inputs$scaleInputs) {
+    parsUnscaled <- parsUnscaled * scaleFactors
+  }
+  for (tempID in sort(unique(clusterID))) {
+    indices <- which(clusterID == tempID)
+    tempModelInputs <- getClusterModelInputs(object, indices, modelInputs)
+    tempGradient <- getGradient(parsUnscaled, scaleFactors, tempModelInputs)
+    gradientList <- c(gradientList, tempGradient)
+    i <- i + 1
+  }
+  gradMat <- matrix(gradientList, nrow = i, length(tempGradient), byrow = TRUE)
+  gradMean <- colMeans(gradMat)
+  gradMeans <- c()
+  for (tempID in sort(unique(clusterID))) {
+    gradMeans <- c(gradMeans, gradMean)
+  }
+  gradMeanMat <- matrix(
+    gradMeans, nrow = i, length(tempGradient), byrow = TRUE)
+
+  diffMat <- gradMat - gradMeanMat
+
+  M <- t(diffMat) %*% diffMat
+  smallSampleCorrection <- (i / (i - 1))
+  M <- smallSampleCorrection * M
+  D <- getCovarianceNonRobust(object$hessian)
+  if (any(is.na(D))) {
+    return(D) # If there are NAs the next line will error
+  }
+  return(D %*% M %*% D)
+}
+
+getClusterModelInputs <- function (object, indices, modelInputs) {
+  X <- object$X[indices, ]
+  # Cast to matrix in cases where there is 1 independent variable
+  if (!is.matrix(X)) {
+    X <- as.matrix(X)
+  }
+  modelInputs$X          <- X
+  modelInputs$choice     <- object$choice[indices]
+  modelInputs$price      <- object$price[indices]
+  modelInputs$weights    <- object$weights[indices]
+  modelInputs$obsID      <- object$obsID[indices]
+  modelInputs$clusterIDs <- object$clusterIDs[indices]
+  return(modelInputs)
 }
