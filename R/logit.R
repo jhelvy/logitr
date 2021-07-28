@@ -123,7 +123,7 @@ mxlNegLLAndGradLL <- function(pars, mi) {
     gradient = mi$logitFuncs$mxlNegGradLL(
       mi$X, mi$parSetup, mi$obsID, mi$choice, mi$standardDraws, mi$betaDraws,
       VDraws, logitDraws, pHat, mi$weights, mi$inputs$numDraws, mi$numBetas,
-      mi$repTimesMxlGrad, mi$parIDs
+      mi$repTimesMxlGrad, mi$parIDs)
   ))
 }
 
@@ -148,8 +148,8 @@ getMxlNegGradLL <- function(pars, mi) {
   return(mi$logitFuncs$mxlNegGradLL(
     mi$X, mi$parSetup, mi$obsID, mi$choice, mi$standardDraws, mi$betaDraws,
     VDraws, logitDraws, pHat, mi$weights, mi$inputs$numDraws, mi$numBetas,
-    mi$repTimesMxlGrad, mi$parIDs
-  ))
+    mi$repTimesMxlGrad, mi$parIDs)
+  )
 }
 
 getMxlHessLL <- function(pars, mi) {
@@ -220,66 +220,54 @@ getMxlV_wtp <- function(betaDraws, X, p) {
   return(lambdaDraws * (X %*% t(gammaDraws) - pMat))
 }
 
-mxlNegGradLL_wtp <- function(X, parSetup, obsID, choice, standardDraws,
-                             betaDraws, VDraws, logitDraws, pHat, weights) {
-  stdDraws_lambda <- standardDraws[, 1]
-  stdDraws_gamma <- standardDraws[, 2:ncol(standardDraws)]
-  randParIDs <- getRandParIDs(parSetup)
-  numDraws <- nrow(standardDraws)
-  numBetas <- ncol(X)
+mxlNegGradLL_wtp <- function(
+  X, parSetup, obsID, choice, standardDraws, betaDraws, VDraws, logitDraws,
+  pHat, weights, numDraws, numBetas, repTimes, parIDs
+) {
+  numPars <- numBetas
+  numBetas <- numBetas - 1 # subtract lambda par
+  draws_lambda <- standardDraws[, 1]
+  draws_gamma <- standardDraws[, 2:ncol(standardDraws)]
   numPars <- numBetas + 1 # +1 for lambda par
-  xParSetup <- parSetup[which(names(parSetup) != "lambda")]
-  xLogNormIDs <- which(xParSetup == "ln")
-  repTimes <- rep(as.numeric(table(obsID)), each = 2 * numPars)
-  lambdaDraws <- matrix(
-    rep(betaDraws[, 1], nrow(X)), ncol = numDraws, byrow = T)
-  gammaDraws <- matrix(betaDraws[, 2:ncol(betaDraws)], nrow = numDraws)
-  # Compute the gradient of V for all parameters
+  xlnID <- parIDs$logNormal - 1
+  hasLnIDs <- length(xlnID) > 0
+  lambdaDraws <- repmat(matrix(betaDraws[, 1], nrow = 1), nrow(X), 1)
+  gammaDraws <- betaDraws[, 2:ncol(betaDraws)]
+  lambda_partial_mu_draws <- VDraws / lambdaDraws
+  if (parSetup["lambda"] == "ln") {
+    lambda_partial_mu_draws <- VDraws
+  }
   grad <- matrix(0, nrow = nrow(X), ncol = 2 * numPars)
   for (i in 1:numDraws) {
     Xtemp <- X
-    lambda <- lambdaDraws[, i]
-    v <- VDraws[, i]
-    draws_lambda <- stdDraws_lambda[i]
-    draws_gamma <- stdDraws_gamma[i, ]
-    logit <- logitDraws[, i]
-    lambdaMat <- matrix(rep(lambda, numBetas), ncol = numBetas, byrow = T)
-    drawsMat_lambda <- matrix(rep(draws_lambda, nrow(X)), ncol = 1, byrow = T)
-    drawsMat_gamma <- matrix(
-      rep(draws_gamma, nrow(X)), ncol = numBetas, byrow = T)
-    logitMat <- matrix(rep(logit, numPars), ncol = numPars, byrow = F)
-    logitMat <- cbind(logitMat, logitMat)
-    if (length(xLogNormIDs) > 0) {
-      gamma <- gammaDraws[i, ]
-      gammaMat <- matrix(rep(gamma, nrow(X)), ncol = numBetas, byrow = T)
-      Xtemp[, xLogNormIDs] <- Xtemp[, xLogNormIDs] * gammaMat[, xLogNormIDs]
+    if (hasLnIDs) {
+      gammaMat <- repmat(matrix(gammaDraws[i, xlnID], nrow = 1), nrow(X), 1)
+      Xtemp[, xlnID] <- Xtemp[, xlnID] * gammaMat
     }
+    drawsMat_lambda <- repmat(matrix(draws_lambda[i]), nrow(X), 1)
+    drawsMat_gamma <- repmat(matrix(draws_gamma[i, ], nrow = 1), nrow(X), 1)
+    lambdaMat <- repmat(matrix(lambdaDraws[, i]), 1, numBetas)
     gamma_partial_mu <- lambdaMat * Xtemp
     gamma_partial_sigma <- gamma_partial_mu * drawsMat_gamma
-    lambda_partial_mu <- v / lambda
-    if (parSetup["lambda"] == "ln") {
-      lambda_partial_mu <- v
-    }
+    lambda_partial_mu <- lambda_partial_mu_draws[,i]
     lambda_partial_sigma <- lambda_partial_mu * drawsMat_lambda
-    partial_mu <- cbind(lambda_partial_mu, gamma_partial_mu)
-    partial_sigma <- cbind(lambda_partial_sigma, gamma_partial_sigma)
-    partial <- cbind(partial_mu, partial_sigma)
-    temp <- rowsum(logitMat * partial, group = obsID, reorder = FALSE)
-    tempMat <- matrix(rep(temp, times = repTimes),
+    partial <- cbind(
+      lambda_partial_mu, gamma_partial_mu,
+      lambda_partial_sigma,  gamma_partial_sigma
+    )
+    logitMat <- repmat(matrix(logitDraws[, i]), 1, 2*numPars)
+    sumsMat <- rowsum(logitMat * partial, group = obsID, reorder = FALSE)
+    sumsMat <- matrix(
+      rep(sumsMat, times = repTimes),
       ncol = ncol(partial),
       byrow = F
     )
-    grad <- grad + logitMat * (partial - tempMat)
+    grad <- grad + logitMat * (partial - sumsMat)
   }
-  weightsMat <- matrix(rep(weights, numPars), ncol = numPars, byrow = F)
-  weightsMat <- cbind(weightsMat, weightsMat)
-  grad <- weightsMat * (grad / numDraws)
-  pHatInvChosen <- matrix(rep(choice * (1 / pHat), 2 * numPars),
-    ncol = 2 * numPars,
-    byrow = F
-  )
-  grad <- colSums(pHatInvChosen * grad, na.rm = TRUE)
-  negGradLL <- -1 * grad[c(1:numPars, numPars + randParIDs)]
+  weightsMat <- repmat(matrix(weights), 1, 2*numPars)
+  pHatInvChosen <- repmat(matrix(choice / pHat), 1, 2*numPars)
+  grad <- colSums(pHatInvChosen * weightsMat * (grad / numDraws), na.rm = TRUE)
+  negGradLL <- -1 * grad[c(1:numPars, numPars + parIDs$random)]
   return(negGradLL)
 }
 
