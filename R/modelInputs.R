@@ -262,11 +262,9 @@ setEvalFunctions <- function(modelType, useAnalyticGrad) {
   }
   if (modelType == "mxl") {
     evalFuncs$objective <- mxlNegLLAndGradLL
-    evalFuncs$objective <- mxlNegLLAndNumericGradLL
-    evalFuncs$negLL <- getMxlNegLL
+    evalFuncs$negLL     <- getMxlNegLL
     evalFuncs$negGradLL <- getMxlNegGradLL
     # evalFuncs$hessLL <- getMxlHessLL # Haven't defined yet
-    evalFuncs$negGradLL <- getNumericNegGradLL
     evalFuncs$hessLL <- getNumericHessLL
     if (!useAnalyticGrad) {
       evalFuncs$objective <- mxlNegLLAndNumericGradLL
