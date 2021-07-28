@@ -103,12 +103,10 @@ mnlHessLL_wtp <- function(pars, mi) {
 
 # Returns the logit fraction for all the draws in a mxl (heterogeneous) models
 getMxlLogit <- function(VDraws, obsID, repTimes) {
-  numDraws <- ncol(VDraws)
   expVDraws <- exp(VDraws)
   sumExpVDraws <- rowsum(expVDraws, group = obsID, reorder = FALSE)
-  repTimes <- rep(as.numeric(table(obsID)), times = numDraws)
   sumExpVDrawsMat <- matrix(
-    rep(sumExpVDraws, times = repTimes), ncol = numDraws, byrow = FALSE)
+    rep(sumExpVDraws, times = repTimes), ncol = ncol(VDraws), byrow = FALSE)
   return(expVDraws / sumExpVDrawsMat)
 }
 
@@ -117,7 +115,7 @@ mxlNegLLAndGradLL <- function(pars, mi) {
   betaDraws <- makeBetaDraws(
     pars, mi$parSetup, mi$inputs$numDraws, mi$standardDraws)
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$price)
-  logitDraws <- getMxlLogit(VDraws, mi$obsID)
+  logitDraws <- getMxlLogit(VDraws, mi$obsID, mi$repTimesMxl)
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(list(
     objective = negLL(mi$choice, pHat, mi$weights),
@@ -132,7 +130,7 @@ getMxlNegLL <- function(pars, mi) {
   betaDraws <- makeBetaDraws(
     pars, mi$parSetup, mi$inputs$numDraws, mi$standardDraws)
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$price)
-  logitDraws <- getMxlLogit(VDraws, mi$obsID)
+  logitDraws <- getMxlLogit(VDraws, mi$obsID, mi$repTimesMxl)
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(negLL(mi$choice, pHat, mi$weights))
 }
@@ -141,7 +139,7 @@ getMxlNegGradLL <- function(pars, mi) {
   betaDraws <- makeBetaDraws(
     pars, mi$parSetup, mi$inputs$numDraws, mi$standardDraws)
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$price)
-  logitDraws <- getMxlLogit(VDraws, mi$obsID)
+  logitDraws <- getMxlLogit(VDraws, mi$obsID, mi$repTimesMxl)
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(mi$logitFuncs$mxlNegGradLL(
     mi$X, mi$parSetup, mi$obsID, mi$choice, mi$standardDraws, betaDraws,

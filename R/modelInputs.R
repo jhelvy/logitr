@@ -215,6 +215,8 @@ addDraws <- function(modelInputs) {
     return(modelInputs)
   }
   modelInputs$modelType <- "mxl"
+  modelInputs$repTimesMxl <- rep(
+    modelInputs$repTimes, times = modelInputs$inputs$numDraws)
   userDraws <- modelInputs$standardDraws
   standardDraws <- getStandardDraws(
     modelInputs$parSetup, modelInputs$inputs$numDraws)
