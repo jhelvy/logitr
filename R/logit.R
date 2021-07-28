@@ -1,5 +1,6 @@
 # # ============================================================================
 # Logit and log-likelihood functions
+#
 # The log-likelihood function is given as the negative log-likelihood
 # because the optimization performs a minimization
 #
@@ -7,8 +8,7 @@
 # ============================================================================
 
 negLL <- function(choice, logit, weights) {
-  negLL <- -1 * sum(weights * choice * log(logit))
-  return(negLL)
+  return(-1 * sum(weights * choice * log(logit)))
 }
 
 # ============================================================================
@@ -28,29 +28,29 @@ getMnlLogit <- function(V, obsID, repTimes) {
 mnlNegLLAndGradLL <- function(pars, mi) {
   V <- mi$logitFuncs$getMnlV(pars, mi$X, mi$p)
   logit <- getMnlLogit(V, mi$obsID, mi$repTimes)
-  negLogLik <- negLL(mi$choice, logit, mi$weights)
-  negGradLL <- logitFuncs$mnlNegGradLL(
-    pars, mi$X, mi$p, mi$choice, logit, mi$weights)
-  return(list("objective" = negLogLik, "gradient" = negGradLL))
+  return(list(
+    objective = negLL(mi$choice, logit, mi$weights),
+    gradient = mi$logitFuncs$mnlNegGradLL(
+      pars, mi$X, mi$p, mi$choice, logit, mi$weights)
+  ))
 }
 
 getMnlNegLL <- function(pars, mi) {
   V <- mi$logitFuncs$getMnlV(pars, mi$X, mi$p)
   logit <- getMnlLogit(V, mi$obsID, mi$repTimes)
-  negLogLik <- negLL(mi$choice, logit, mi$weights)
-  return(negLogLik)
+  return(negLL(mi$choice, logit, mi$weights))
 }
 
 getMnlNegGradLL <- function(pars, mi) {
   V <- mi$logitFuncs$getMnlV(pars, mi$X, mi$p)
   logit <- getMnlLogit(V, mi$obsID, mi$repTimes)
-  negGradLL <- logitFuncs$mnlNegGradLL(
-    pars, mi$X, mi$p, mi$choice, logit, mi$weights)
-  return(negGradLL)
+  return(mi$logitFuncs$mnlNegGradLL(
+    pars, mi$X, mi$p, mi$choice, logit, mi$weights))
 }
 
 getMnlHessLL <- function(pars, mi) {
-  return(mi$logitFuncs$mnlHessLL(pars, mi))
+  # Need to define analytic hessian - use numeric approximation for now
+  return(getNumericHessLL(pars, mi))
 }
 
 # ============================================================================
@@ -58,48 +58,48 @@ getMnlHessLL <- function(pars, mi) {
 # ============================================================================
 
 getMnlV_pref <- function(pars, X, p) {
-  V <- X %*% as.numeric(pars)
-  return(V)
+  return(X %*% pars)
 }
 
 mnlNegGradLL_pref <- function(pars, X, p, choice, logit, weights) {
   weightedDiff <- weights * (choice - logit)
-  negGradLL <- -1 * (t(X) %*% weightedDiff)
-  return(negGradLL)
+  return(-1 * (t(X) %*% weightedDiff))
 }
 
-# Returns the hessian of the log-likelihood at the given pars
 mnlHessLL_pref <- function(pars, mi) {
-  V <- mi$logitFuncs$getMnlV(pars, mi$X, mi$p)
-  logit <- getMnlLogit(V, mi$obsID, mi$repTimes)
-  diffMat <- getDiffMatByObsID_pref(logit, mi$X, mi$obsID)
-  logitMat <- repmat(matrix(logit), 1, ncol(mi$X))
-  weightsMat <- matrix(
-    rep(mi$weights, length(mi$parSetup)),
-    ncol = ncol(mi$X), byrow = F
-  )
-  hessLL <- -1 * (t(diffMat) %*% (weightsMat * logitMat * diffMat))
-  return(hessLL)
+  # Need to define analytic hessian - use numeric approximation for now
+  return(getNumericHessLL(pars, mi))
 }
 
-# Used in computing the hessian
-getDiffMatByObsID_pref <- function(logit, X, obsID) {
-  diffMat <- matrix(0, nrow = length(obsID), ncol = ncol(X))
-  for (id in sort(unique(obsID))) {
-    indices <- which(obsID == id)
-    tempX <- X[indices, ]
-    tempLogit <- logit[indices]
-    diffMat[indices, ] <- tempX - repmat(t(tempLogit) %*% tempX, nrow(tempX), 1)
-  }
-  return(diffMat)
+# ============================================================================
+# WTP Space Logit Functions - MNL models
+# ============================================================================
+
+# Returns the observed utility
+getMnlV_wtp <- function(pars, X, p) {
+  lambda <- pars[1]
+  beta <- pars[2:length(pars)]
+  return(lambda * ((X %*% beta) - p))
 }
 
+# Returns the negative gradient of the log-likelihood
+mnlNegGradLL_wtp <- function(pars, X, p, choice, logit, weights) {
+  lambda <- pars[1]
+  beta <- pars[2:length(pars)]
+  weightedDiff <- weights * (choice - logit)
+  gradLLLambda <- t((X %*% beta) - p) %*% weightedDiff
+  gradLLBeta <- lambda * (t(X) %*% weightedDiff)
+  return(-1 * c(gradLLLambda, gradLLBeta))
+}
+
+mnlHessLL_wtp <- function(pars, mi) {
+  # Need to define analytic hessian - use numeric approximation for now
+  return(getNumericHessLL(pars, mi))
+}
 
 # ============================================================================
 # MXL logit and log-likelihood functions for both Preference and WTP Spaces
 # ============================================================================
-# The log-likelihood function is given here as the negative log-likelihood
-# because the optim function performs a minimization
 
 # Returns the logit fraction for all the draws in a mxl (heterogeneous) models
 getMxlLogit <- function(VDraws, obsID) {
@@ -109,8 +109,7 @@ getMxlLogit <- function(VDraws, obsID) {
   repTimes <- rep(as.numeric(table(obsID)), times = numDraws)
   sumExpVDrawsMat <- matrix(
     rep(sumExpVDraws, times = repTimes), ncol = numDraws, byrow = FALSE)
-  logitDraws <- expVDraws / sumExpVDrawsMat
-  return(logitDraws)
+  return(expVDraws / sumExpVDrawsMat)
 }
 
 # Returns the negative log-likelihood of an mxl (heterogeneous) model
@@ -120,13 +119,12 @@ mxlNegLLAndGradLL <- function(pars, mi) {
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$p)
   logitDraws <- getMxlLogit(VDraws, mi$obsID)
   pHat <- rowMeans(logitDraws, na.rm = T)
-  negLogLik <- negLL(pHat, mi$weights)
-  negGradLL <- logitFuncs$mxlNegGradLL(
-    mi$X, mi$parSetup, mi$obsID, mi$choice,
-    mi$standardDraws, betaDraws, VDraws, logitDraws, pHat,
-    mi$weights
-  )
-  return(list("objective" = negLogLik, "gradient" = negGradLL))
+  return(list(
+    objective = negLL(mi$choice, pHat, mi$weights),
+    gradient = mi$logitFuncs$mxlNegGradLL(
+      mi$X, mi$parSetup, mi$obsID, mi$choice, mi$standardDraws, betaDraws,
+      VDraws, logitDraws, pHat, mi$weights)
+  ))
 }
 
 # Returns the negative log-likelihood of an mxl (heterogeneous) model
@@ -136,8 +134,7 @@ getMxlNegLL <- function(pars, mi) {
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$p)
   logitDraws <- getMxlLogit(VDraws, mi$obsID)
   pHat <- rowMeans(logitDraws, na.rm = T)
-  negLogLik <- negLL(pHat, mi$weights)
-  return(negLogLik)
+  return(negLL(mi$choice, pHat, mi$weights))
 }
 
 getMxlNegGradLL <- function(pars, mi) {
@@ -146,12 +143,15 @@ getMxlNegGradLL <- function(pars, mi) {
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$p)
   logitDraws <- getMxlLogit(VDraws, mi$obsID)
   pHat <- rowMeans(logitDraws, na.rm = T)
-  negGradLL <- logitFuncs$mxlNegGradLL(
-    mi$X, mi$parSetup, mi$obsID, mi$choice,
-    mi$standardDraws, betaDraws, VDraws, logitDraws, pHat,
-    mi$weights
-  )
-  return(negGradLL)
+  return(logitFuncs$mxlNegGradLL(
+    mi$X, mi$parSetup, mi$obsID, mi$choice, mi$standardDraws, betaDraws,
+    VDraws, logitDraws, pHat, mi$weights
+  ))
+}
+
+getMxlHessLL <- function(pars, mi) {
+  # Need to define analytic hessian - use numeric approximation for now
+  return(getNumericHessLL(pars, mi))
 }
 
 # ============================================================================
@@ -160,8 +160,7 @@ getMxlNegGradLL <- function(pars, mi) {
 
 # Returns the observed utility
 getMxlV_pref <- function(betaDraws, X, p) {
-  VDraws <- X %*% t(betaDraws)
-  return(VDraws)
+  return(X %*% t(betaDraws))
 }
 
 # Computes the gradient of the negative likelihood for a mixed logit model
@@ -211,70 +210,9 @@ mxlNegGradLL_pref <- function(
   return(negGradLL)
 }
 
-# ============================================================================
-# WTP Space Logit Functions - MNL models
-# ============================================================================
-
-# Returns the observed utility
-getMnlV_wtp <- function(pars, X, p) {
-  lambda <- as.numeric(pars[1])
-  beta <- as.numeric(pars[2:length(pars)])
-  V <- lambda * ((X %*% beta) - p)
-  return(V)
-}
-
-# Returns the negative gradient of the log-likelihood
-mnlNegGradLL_wtp <- function(p, X, pars, choice, logit, weights) {
-  lambda <- as.numeric(pars[1])
-  beta <- as.numeric(pars[2:length(pars)])
-  weightedLogit <- weights * (choice - logit)
-  gradLLLambda <- t((X %*% beta) - p) %*% weightedLogit
-  gradLLBeta <- lambda * (t(X) %*% weightedLogit)
-  negGradLL <- -1 * c(gradLLLambda, gradLLBeta)
-  return(negGradLL)
-}
-
-# Returns the negative hessian of the log-likelihood
-mnlHessLL_wtp <- function(pars, mi) {
-  lambda <- as.numeric(pars[1])
-  beta <- as.numeric(pars[2:length(pars)])
-  X <- mi$X
-  p <- mi$price
-  choice <- mi$choice
-  obsID <- mi$obsID
-  weights <- mi$weights
-  parSetup <- mi$parSetup
-  V <- getMnlV_wtp(pars, X, p)
-  logit <- getMnlLogit(V, obsID)
-  diffMat <- getDiffMatByObsID_wtp(lambda, beta, p, X, logit, obsID)
-  logitMat <- repmat(matrix(logit), 1, ncol(diffMat))
-  weightsMat <- matrix(rep(weights, length(parSetup)),
-    ncol = ncol(X), byrow = F
-  )
-  hessLL <- -1 * (t(diffMat) %*% (weightsMat * logitMat * diffMat))
-  return(hessLL)
-}
-
-# Used in computing the hessian
-getDiffMatByObsID_wtp <- function(lambda, beta, p, X, logit, obsID) {
-  diffMatLambda <- matrix(0, nrow = length(obsID), ncol = 1)
-  diffMatBeta <- matrix(0, nrow = length(obsID), ncol = ncol(X))
-  for (id in sort(unique(obsID))) {
-    indices <- which(obsID == id)
-    tempP <- as.matrix(p[indices])
-    tempX <- as.matrix(X[indices, ])
-    tempLogit <- logit[indices]
-    tempMat <- (tempX %*% beta) - tempP
-    diffMatLambda[indices, ] <- tempMat - repmat(
-      t(tempLogit) %*% tempMat,
-      nrow(tempP), 1
-    )
-    diffMatBeta[indices, ] <- lambda * tempX - repmat(
-      t(tempLogit) %*% (lambda * tempX),
-      nrow(tempX), 1
-    )
-  }
-  return(cbind(diffMatLambda, diffMatBeta))
+mxlHessLL_pref <- function(pars, mi) {
+  # Need to define analytic hessian - use numeric approximation for now
+  return(getNumericHessLL(pars, mi))
 }
 
 # ============================================================================
@@ -354,20 +292,20 @@ mxlNegGradLL_wtp <- function(X, parSetup, obsID, choice, standardDraws,
   return(negGradLL)
 }
 
+mxlHessLL_wtp <- function(pars, mi) {
+  # Need to define analytic hessian - use numeric approximation for now
+  return(getNumericHessLL(pars, mi))
+}
+
 # ============================================================================
 # Numerical log-likelihood functions for both Preference and WTP Spaces
 # ============================================================================
 
-mnlNegLLAndNumericGradLL <- function(pars, mi) {
-  negLogLik <- getMnlNegLL(pars, mi)
-  negGradLL <- getNumericNegGradLL(pars, mi)
-  return(list("objective" = negLogLik, "gradient" = negGradLL))
-}
-
-mxlNegLLAndNumericGradLL <- function(pars, mi) {
-  negLogLik <- getMxlNegLL(pars, mi)
-  negGradLL <- getNumericNegGradLL(pars, mi)
-  return(list("objective" = negLogLik, "gradient" = negGradLL))
+negLLAndNumericGradLL <- function(pars, mi) {
+  return(list(
+    objective = mi$evalFuncs$negLL(pars, mi),
+    gradient = getNumericNegGradLL(pars, mi)
+  ))
 }
 
 getNumericNegGradLL <- function(pars, mi) {

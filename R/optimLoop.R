@@ -149,10 +149,10 @@ checkStartPars <- function(startPars, modelInputs) {
 
 runModel <- function(modelInputs, startPars) {
   model <- nloptr::nloptr(
-    x0 = startPars,
+    x0     = startPars,
     eval_f = modelInputs$evalFuncs$objective,
-    modelInputs = modelInputs,
-    opts = modelInputs$options
+    mi     = modelInputs,
+    opts   = modelInputs$options
   )
   return(model)
 }

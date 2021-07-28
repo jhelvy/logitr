@@ -89,8 +89,6 @@ getModelInputs <- function(
   inputs$cluster <- cluster
   inputs$robust <- robust
 
-
-
   # Make modelInputs list
   modelInputs <- list(
     call          = call,
@@ -235,17 +233,19 @@ addDraws <- function(modelInputs) {
 setLogitFunctions <- function(modelSpace) {
   logitFuncs <- list(
     getMnlV      = getMnlV_pref,
-    mnlNegGradLL = mnlNegGradLL_pref,
-    mnlHessLL    = mnlHessLL_pref,
     getMxlV      = getMxlV_pref,
-    mxlNegGradLL = mxlNegGradLL_pref
+    mnlNegGradLL = mnlNegGradLL_pref,
+    mxlNegGradLL = mxlNegGradLL_pref,
+    mnlHessLL    = mnlHessLL_pref,
+    mxlHessLL    = mxlHessLL_pref
   )
   if (modelSpace == "wtp") {
     logitFuncs$getMnlV <- getMnlV_wtp
-    logitFuncs$mnlNegGradLL <- mnlNegGradLL_wtp
-    logitFuncs$mnlHessLL <- mnlHessLL_wtp
     logitFuncs$getMxlV <- getMxlV_wtp
+    logitFuncs$mnlNegGradLL <- mnlNegGradLL_wtp
     logitFuncs$mxlNegGradLL <- mxlNegGradLL_wtp
+    logitFuncs$mnlHessLL <- mnlHessLL_wtp
+    logitFuncs$mxlHessLL <- mxlHessLL_wtp
   }
   return(logitFuncs)
 }
@@ -255,11 +255,10 @@ setEvalFunctions <- function(modelType, useAnalyticGrad) {
     objective = mnlNegLLAndGradLL,
     negLL     = getMnlNegLL,
     negGradLL = getMnlNegGradLL,
-    # hessLL    = getMnlHessLL # Haven't defined yet
-    hessLL    = getNumericHessLL
+    hessLL    = getMnlHessLL
   )
   if (!useAnalyticGrad) {
-    evalFuncs$objective <- mnlNegLLAndNumericGradLL
+    evalFuncs$objective <- negLLAndNumericGradLL
     evalFuncs$negGradLL <- getNumericNegGradLL
     evalFuncs$hessLL    <- getNumericHessLL
   }
@@ -267,10 +266,9 @@ setEvalFunctions <- function(modelType, useAnalyticGrad) {
     evalFuncs$objective <- mxlNegLLAndGradLL
     evalFuncs$negLL     <- getMxlNegLL
     evalFuncs$negGradLL <- getMxlNegGradLL
-    # evalFuncs$hessLL <- getMxlHessLL # Haven't defined yet
-    evalFuncs$hessLL <- getNumericHessLL
+    evalFuncs$hessLL    <- getMxlHessLL
     if (!useAnalyticGrad) {
-      evalFuncs$objective <- mxlNegLLAndNumericGradLL
+      evalFuncs$objective <- negLLAndNumericGradLL
       evalFuncs$negGradLL <- getNumericNegGradLL
       evalFuncs$hessLL    <- getNumericHessLL
     }
