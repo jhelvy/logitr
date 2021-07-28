@@ -244,9 +244,11 @@ getCovarianceRobust <- function(object) {
   if (object$inputs$scaleInputs) {
     parsUnscaled <- parsUnscaled * scaleFactors
   }
-  for (tempID in sort(unique(clusterID))) {
-    indices <- which(clusterID == tempID)
-    tempModelInputs <- getClusterModelInputs(object, indices, modelInputs)
+  object$repTimes <- as.numeric(table(object$obsID))
+  for (id in clusterID) {
+    indices <- which(clusterID == id)
+    tempModelInputs <- getClusterModelInputs(id, object, indices, modelInputs)
+    modelInputs$evalFuncs$negGradLL(parsUnscaled, tempModelInputs)
     tempGradient <- getGradient(parsUnscaled, scaleFactors, tempModelInputs)
     gradientList <- c(gradientList, tempGradient)
     i <- i + 1
@@ -254,7 +256,7 @@ getCovarianceRobust <- function(object) {
   gradMat <- matrix(gradientList, nrow = i, length(tempGradient), byrow = TRUE)
   gradMean <- colMeans(gradMat)
   gradMeans <- c()
-  for (tempID in sort(unique(clusterID))) {
+  for (id in clusterID) {
     gradMeans <- c(gradMeans, gradMean)
   }
   gradMeanMat <- matrix(
@@ -272,7 +274,7 @@ getCovarianceRobust <- function(object) {
   return(D %*% M %*% D)
 }
 
-getClusterModelInputs <- function (object, indices, modelInputs) {
+getClusterModelInputs <- function (id, object, indices, modelInputs) {
   X <- object$X[indices, ]
   # Cast to matrix in cases where there is 1 independent variable
   if (!is.matrix(X)) {
@@ -283,6 +285,7 @@ getClusterModelInputs <- function (object, indices, modelInputs) {
   modelInputs$price      <- object$price[indices]
   modelInputs$weights    <- object$weights[indices]
   modelInputs$obsID      <- object$obsID[indices]
+  modelInputs$repTimes   <- object$repTimes[id]
   modelInputs$clusterIDs <- object$clusterIDs[indices]
   return(modelInputs)
 }
