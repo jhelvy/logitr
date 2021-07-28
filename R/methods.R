@@ -231,36 +231,29 @@ getCovarianceNonRobust <- function(hessian) {
 }
 
 getCovarianceRobust <- function(object) {
-  i <- 0
   gradientList <- c()
-  clusterID <- object$clusterIDs
-  modelInputs <- list()
-  modelInputs$logitFuncs <- setLogitFunctions(object$inputs$modelSpace)
-  modelInputs$evalFuncs <- setEvalFunctions(
-    object$modelType, object$inputs$useAnalyticGrad)
-  modelInputs$inputs <- object$inputs
+  clusterIDs <- object$clusterIDs
+  clusters <- sort(unique(clusterIDs))
+  numClusters <- object$numClusters
+  modelInputs <- list(
+    logitFuncs = setLogitFunctions(object$inputs$modelSpace),
+    evalFuncs = setEvalFunctions(
+      object$modelType, object$inputs$useAnalyticGrad),
+    inputs = object$inputs,
+    repTimes = as.numeric(table(object$obsID))
+  )
   parsUnscaled <- stats::coef(object)
   scaleFactors <- object$scaleFactors
   if (object$inputs$scaleInputs) {
     parsUnscaled <- parsUnscaled * scaleFactors
   }
-  object$repTimes <- as.numeric(table(object$obsID))
-  for (id in clusterID) {
-    indices <- which(clusterID == id)
-    tempModelInputs <- getClusterModelInputs(id, object, indices, modelInputs)
-    modelInputs$evalFuncs$negGradLL(parsUnscaled, tempModelInputs)
-    tempGradient <- getGradient(parsUnscaled, scaleFactors, tempModelInputs)
-    gradientList <- c(gradientList, tempGradient)
-    i <- i + 1
+  gradMat <- matrix(NA, nrow = numClusters, ncol = length(coef(object)))
+  for (i in seq_len(length(clusters))) {
+    indices <- which(clusterIDs == i)
+    tempMI <- getClusterModelInputs(i, object, indices, modelInputs)
+    gradMat[i, ] <- getGradient(parsUnscaled, scaleFactors,tempMI)
   }
-  gradMat <- matrix(gradientList, nrow = i, length(tempGradient), byrow = TRUE)
-  gradMean <- colMeans(gradMat)
-  gradMeans <- c()
-  for (id in clusterID) {
-    gradMeans <- c(gradMeans, gradMean)
-  }
-  gradMeanMat <- matrix(
-    gradMeans, nrow = i, length(tempGradient), byrow = TRUE)
+  gradMeanMat <- repmat(matrix(colMeans(gradMat), nrow = 1), numClusters, 1)
 
   diffMat <- gradMat - gradMeanMat
 
@@ -277,15 +270,13 @@ getCovarianceRobust <- function(object) {
 getClusterModelInputs <- function (id, object, indices, modelInputs) {
   X <- object$X[indices, ]
   # Cast to matrix in cases where there is 1 independent variable
-  if (!is.matrix(X)) {
-    X <- as.matrix(X)
-  }
+  if (!is.matrix(X)) { X <- as.matrix(X) }
   modelInputs$X          <- X
   modelInputs$choice     <- object$choice[indices]
   modelInputs$price      <- object$price[indices]
   modelInputs$weights    <- object$weights[indices]
   modelInputs$obsID      <- object$obsID[indices]
-  modelInputs$repTimes   <- object$repTimes[id]
+  modelInputs$repTimes   <- modelInputs$repTimes[id]
   modelInputs$clusterIDs <- object$clusterIDs[indices]
   return(modelInputs)
 }
