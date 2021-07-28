@@ -26,26 +26,26 @@ getMnlLogit <- function(V, obsID, repTimes) {
 # Returns a list containing the negative log-likelihood and it's gradient
 # Primary objective function for the nloptr optimizer.
 mnlNegLLAndGradLL <- function(pars, mi) {
-  V <- mi$logitFuncs$getMnlV(pars, mi$X, mi$p)
+  V <- mi$logitFuncs$getMnlV(pars, mi$X, mi$price)
   logit <- getMnlLogit(V, mi$obsID, mi$repTimes)
   return(list(
     objective = negLL(mi$choice, logit, mi$weights),
     gradient = mi$logitFuncs$mnlNegGradLL(
-      pars, mi$X, mi$p, mi$choice, logit, mi$weights)
+      pars, mi$X, mi$price, mi$choice, logit, mi$weights)
   ))
 }
 
 getMnlNegLL <- function(pars, mi) {
-  V <- mi$logitFuncs$getMnlV(pars, mi$X, mi$p)
+  V <- mi$logitFuncs$getMnlV(pars, mi$X, mi$price)
   logit <- getMnlLogit(V, mi$obsID, mi$repTimes)
   return(negLL(mi$choice, logit, mi$weights))
 }
 
 getMnlNegGradLL <- function(pars, mi) {
-  V <- mi$logitFuncs$getMnlV(pars, mi$X, mi$p)
+  V <- mi$logitFuncs$getMnlV(pars, mi$X, mi$price)
   logit <- getMnlLogit(V, mi$obsID, mi$repTimes)
   return(mi$logitFuncs$mnlNegGradLL(
-    pars, mi$X, mi$p, mi$choice, logit, mi$weights))
+    pars, mi$X, mi$price, mi$choice, logit, mi$weights))
 }
 
 getMnlHessLL <- function(pars, mi) {
@@ -116,7 +116,7 @@ getMxlLogit <- function(VDraws, obsID) {
 mxlNegLLAndGradLL <- function(pars, mi) {
   betaDraws <- makeBetaDraws(
     pars, mi$parSetup, mi$inputs$numDraws, mi$standardDraws)
-  VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$p)
+  VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$price)
   logitDraws <- getMxlLogit(VDraws, mi$obsID)
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(list(
@@ -131,7 +131,7 @@ mxlNegLLAndGradLL <- function(pars, mi) {
 getMxlNegLL <- function(pars, mi) {
   betaDraws <- makeBetaDraws(
     pars, mi$parSetup, mi$inputs$numDraws, mi$standardDraws)
-  VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$p)
+  VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$price)
   logitDraws <- getMxlLogit(VDraws, mi$obsID)
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(negLL(mi$choice, pHat, mi$weights))
@@ -140,7 +140,7 @@ getMxlNegLL <- function(pars, mi) {
 getMxlNegGradLL <- function(pars, mi) {
   betaDraws <- makeBetaDraws(
     pars, mi$parSetup, mi$inputs$numDraws, mi$standardDraws)
-  VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$p)
+  VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$price)
   logitDraws <- getMxlLogit(VDraws, mi$obsID)
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(logitFuncs$mxlNegGradLL(
