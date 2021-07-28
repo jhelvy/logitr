@@ -176,19 +176,18 @@ getStatTable <- function(model) {
 
 getRandParSummary <- function(object) {
   parSetup <- object$parSetup
+  parIDs <- object$parIDs
   numDraws <- 10^4
-  pars <- object$coef
-  randParIDs <- getRandParIDs(parSetup)
-  standardDraws <- getStandardDraws(parSetup, numDraws)
-  betaDraws <- makeBetaDraws(pars, parSetup, numDraws, standardDraws)
+  standardDraws <- getStandardDraws(parIDs, numDraws)
+  betaDraws <- makeBetaDraws(object$coef, parIDs, numDraws, standardDraws)
   randParSummary <- apply(betaDraws, 2, summary)
   # Add names to summary
   distName <- rep("", length(parSetup))
-  distName[getNormParIDs(parSetup)] <- "normal"
-  distName[getLogNormParIDs(parSetup)] <- "log-normal"
+  distName[parIDs$normal] <- "normal"
+  distName[parIDs$logNormal] <- "log-normal"
   summaryNames <- paste(names(parSetup), " (", distName, ")", sep = "")
   colnames(randParSummary) <- summaryNames
-  randParSummary <- t(randParSummary[, randParIDs])
+  randParSummary <- t(randParSummary[, parIDs$random])
   return(as.data.frame(randParSummary))
 }
 

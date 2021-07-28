@@ -102,48 +102,53 @@ mnlHessLL_wtp <- function(pars, mi) {
 # ============================================================================
 
 # Returns the logit fraction for all the draws in a mxl (heterogeneous) models
-getMxlLogit <- function(VDraws, obsID, repTimes) {
+getMxlLogit <- function(VDraws, obsID, repTimes, numDraws) {
   expVDraws <- exp(VDraws)
   sumExpVDraws <- rowsum(expVDraws, group = obsID, reorder = FALSE)
   sumExpVDrawsMat <- matrix(
-    rep(sumExpVDraws, times = repTimes), ncol = ncol(VDraws), byrow = FALSE)
+    rep(sumExpVDraws, times = repTimes), ncol = numDraws, byrow = FALSE)
   return(expVDraws / sumExpVDrawsMat)
 }
 
 # Returns the negative log-likelihood of an mxl (heterogeneous) model
 mxlNegLLAndGradLL <- function(pars, mi) {
   betaDraws <- makeBetaDraws(
-    pars, mi$parSetup, mi$inputs$numDraws, mi$standardDraws)
+    pars, mi$parIDs, mi$inputs$numDraws, mi$standardDraws)
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$price)
-  logitDraws <- getMxlLogit(VDraws, mi$obsID, mi$repTimesMxl)
+  logitDraws <- getMxlLogit(
+    VDraws, mi$obsID, mi$repTimesMxl, mi$inputs$numDraws)
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(list(
     objective = negLL(mi$choice, pHat, mi$weights),
     gradient = mi$logitFuncs$mxlNegGradLL(
-      mi$X, mi$parSetup, mi$obsID, mi$choice, mi$standardDraws, betaDraws,
-      VDraws, logitDraws, pHat, mi$weights)
+      mi$X, mi$parSetup, mi$obsID, mi$choice, mi$standardDraws, mi$betaDraws,
+      VDraws, logitDraws, pHat, mi$weights, mi$inputs$numDraws, mi$numBetas,
+      mi$repTimesMxlGrad, mi$parIDs
   ))
 }
 
 # Returns the negative log-likelihood of an mxl (heterogeneous) model
 getMxlNegLL <- function(pars, mi) {
   betaDraws <- makeBetaDraws(
-    pars, mi$parSetup, mi$inputs$numDraws, mi$standardDraws)
+    pars, mi$parIDs, mi$inputs$numDraws, mi$standardDraws)
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$price)
-  logitDraws <- getMxlLogit(VDraws, mi$obsID, mi$repTimesMxl)
+  logitDraws <- getMxlLogit(
+    VDraws, mi$obsID, mi$repTimesMxl, mi$inputs$numDraws)
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(negLL(mi$choice, pHat, mi$weights))
 }
 
 getMxlNegGradLL <- function(pars, mi) {
   betaDraws <- makeBetaDraws(
-    pars, mi$parSetup, mi$inputs$numDraws, mi$standardDraws)
+    pars, mi$parIDs, mi$inputs$numDraws, mi$standardDraws)
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$price)
-  logitDraws <- getMxlLogit(VDraws, mi$obsID, mi$repTimesMxl)
+  logitDraws <- getMxlLogit(
+    VDraws, mi$obsID, mi$repTimesMxl, mi$inputs$numDraws)
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(mi$logitFuncs$mxlNegGradLL(
-    mi$X, mi$parSetup, mi$obsID, mi$choice, mi$standardDraws, betaDraws,
-    VDraws, logitDraws, pHat, mi$weights
+    mi$X, mi$parSetup, mi$obsID, mi$choice, mi$standardDraws, mi$betaDraws,
+    VDraws, logitDraws, pHat, mi$weights, mi$inputs$numDraws, mi$numBetas,
+    mi$repTimesMxlGrad, mi$parIDs
   ))
 }
 
@@ -164,47 +169,35 @@ getMxlV_pref <- function(betaDraws, X, p) {
 # Computes the gradient of the negative likelihood for a mixed logit model
 mxlNegGradLL_pref <- function(
   X, parSetup, obsID, choice, standardDraws, betaDraws, VDraws, logitDraws,
-  pHat, weights
+  pHat, weights, numDraws, numBetas, repTimes, parIDs
 ) {
-  randParIDs <- getRandParIDs(parSetup)
-  numDraws <- nrow(standardDraws)
-  numBetas <- length(parSetup)
-  logNormParIDs <- getLogNormParIDs(parSetup)
-  repTimes <- rep(as.numeric(table(obsID)), each = 2 * numBetas)
-  # Compute the gradient of V for all parameters
+  lnID <- parIDs$logNormal
+  hasLnIDs <- length(lnID) > 0
+  lnIDs <- c(lnID, lnID + numBetas)
+  X2 <- repmat(X, 1, 2)
   grad <- matrix(0, nrow = nrow(X), ncol = 2 * numBetas)
   for (i in 1:numDraws) {
-    Xtemp <- X
-    draws <- standardDraws[i, ]
-    logit <- logitDraws[, i]
-    drawsMat <- matrix(rep(draws, nrow(X)), ncol = numBetas, byrow = TRUE)
-    logitMat <- matrix(rep(logit, numBetas), ncol = numBetas, byrow = FALSE)
-    logitMat <- cbind(logitMat, logitMat)
-    if (length(logNormParIDs) > 0) {
-      beta <- betaDraws[i, ]
-      betaMat <- matrix(rep(beta, nrow(X)), ncol = numBetas, byrow = TRUE)
-      Xtemp[, logNormParIDs] <- Xtemp[, logNormParIDs] *
-        betaMat[, logNormParIDs]
+    Xtemp <- X2
+    if (hasLnIDs) {
+      betaMat <- repmat(matrix(betaDraws[i, lnID], nrow = 1), nrow(X), 2)
+      Xtemp[, lnIDs] <- Xtemp[, lnIDs] * betaMat
     }
-    partial_mu <- Xtemp
-    partial_sigma <- Xtemp * drawsMat
-    partial <- cbind(partial_mu, partial_sigma)
-    temp <- rowsum(logitMat * partial, group = obsID, reorder = FALSE)
-    tempMat <- matrix(rep(temp, times = repTimes),
+    drawsMat <- repmat(
+      matrix(c(rep(1, numBetas), standardDraws[i, ]), nrow = 1), nrow(X), 1)
+    partial <- Xtemp * drawsMat
+    logitMat <- repmat(matrix(logitDraws[, i]), 1, 2*numBetas)
+    sumsMat <- rowsum(logitMat * partial, group = obsID, reorder = FALSE)
+    sumsMat <- matrix(
+      rep(sumsMat, times = repTimes),
       ncol = ncol(partial),
       byrow = F
     )
-    grad <- grad + logitMat * (partial - tempMat)
+    grad <- grad + logitMat * (partial - sumsMat)
   }
-  weightsMat <- matrix(rep(weights, numBetas), ncol = ncol(X), byrow = F)
-  weightsMat <- cbind(weightsMat, weightsMat)
-  grad <- weightsMat * (grad / numDraws)
-  pHatInvChosen <- matrix(
-    rep(choice * (1 / pHat), 2 * numBetas),
-    ncol = 2 * numBetas, byrow = F
-  )
-  grad <- colSums(pHatInvChosen * grad, na.rm = TRUE)
-  negGradLL <- -1 * grad[c(1:numBetas, numBetas + randParIDs)]
+  weightsMat <- repmat(matrix(weights), 1, 2*numBetas)
+  pHatInvChosen <- repmat(matrix(choice / pHat), 1, 2*numBetas)
+  grad <- colSums(pHatInvChosen * weightsMat * (grad / numDraws), na.rm = TRUE)
+  negGradLL <- -1 * grad[c(1:numBetas, numBetas + parIDs$random)]
   return(negGradLL)
 }
 

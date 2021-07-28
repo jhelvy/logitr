@@ -3,42 +3,30 @@
 # ============================================================================
 
 # Returns shifted normal draws for each parameter
-makeBetaDraws <- function(pars, parSetup, numDraws, standardDraws) {
-  muMat <- getMuMat(pars, parSetup, numDraws)
-  sigmaMat <- getSigmaMat(pars, parSetup, numDraws)
+makeBetaDraws <- function(pars, parIDs, numDraws, standardDraws) {
+  numBetas <- length(parIDs$fixed) + length(parIDs$random)
+  pars_mu <- as.numeric(pars[seq_len(numBetas)])
+  muMat <- matrix(rep(pars_mu, numDraws), ncol = length(pars_mu), byrow = T)
+  pars_sigma <- rep(0, numBetas)
+  pars_sigma[parIDs$random] <- as.numeric(pars[(numBetas + 1):length(pars)])
+  sigmaMat <- matrix(
+    rep(pars_sigma, numDraws),
+    ncol = length(pars_sigma),
+    byrow = TRUE
+  )
   # Shift draws by mu and sigma
   betaDraws <- muMat + standardDraws * sigmaMat
   # Exponentiate draws for those with logN distribution
-  logNormParIDs <- getLogNormParIDs(parSetup)
-  if (length(logNormParIDs) > 0) {
-    betaDraws[, logNormParIDs] <- exp(betaDraws[, logNormParIDs])
+  if (length(parIDs$logNormal) > 0) {
+    betaDraws[, parIDs$logNormal] <- exp(betaDraws[, parIDs$logNormal])
   }
   return(betaDraws)
 }
 
-getMuMat <- function(pars, parSetup, numDraws) {
-  pars_mu <- as.numeric(pars[seq_len(length(parSetup))])
-  muMat <- matrix(rep(pars_mu, numDraws), ncol = length(pars_mu), byrow = T)
-  return(muMat)
-}
-
-getSigmaMat <- function(pars, parSetup, numDraws) {
-  numPars <- length(parSetup)
-  pars_sigma <- rep(0, length(parSetup))
-  randParIDs <- getRandParIDs(parSetup)
-  pars_sigma[randParIDs] <- as.numeric(pars[(numPars + 1):length(pars)])
-  sigmaMat <- matrix(rep(pars_sigma, numDraws),
-    ncol = length(pars_sigma),
-    byrow = T
-  )
-  return(sigmaMat)
-}
-
-getStandardDraws <- function(parSetup, numDraws) {
-  numBetas <- length(parSetup)
+getStandardDraws <- function(parIDs, numDraws) {
+  numBetas <- length(parIDs$fixed) + length(parIDs$random)
   draws <- as.matrix(randtoolbox::halton(numDraws, numBetas, normal = TRUE))
-  fixedParIDs <- getFixedParIDs(parSetup)
-  draws[, fixedParIDs] <- rep(0, numDraws)
+  draws[, parIDs$fixed] <- 0 * draws[, parIDs$fixed]
   return(draws)
 }
 

@@ -82,6 +82,7 @@ makeModelTemplate <- function(modelInputs) {
     weightsUsed       = modelInputs$weightsUsed,
     numClusters       = modelInputs$numClusters,
     parSetup          = modelInputs$parSetup,
+    parIDs            = modelInputs$parIDs,
     scaleFactors      = NA,
     standardDraws     = modelInputs$standardDraws,
     options           = modelInputs$options
@@ -134,7 +135,7 @@ checkStartPars <- function(startPars, modelInputs) {
   if (modelInputs$inputs$modelSpace == "wtp") {
     lambdaParIDs <- which(grepl("lambda", modelInputs$parList$all))
   }
-  logNPars <- names(getLogNormParIDs(modelInputs$parSetup))
+  logNPars <- names(modelInputs$parIDs$logNormal)
   logNParIDs <- c()
   if (length(logNPars) > 0) {
     for (par in logNPars) {

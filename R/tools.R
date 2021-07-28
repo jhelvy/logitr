@@ -111,20 +111,3 @@ is_logitr <- function(x) {
 isMxlModel <- function(parSetup) {
   return(("n" %in% parSetup) | ("ln" %in% parSetup))
 }
-
-# Functions for getting specific parameter indexes
-getFixedParIDs <- function(parSetup) {
-  return(which(parSetup == "f"))
-}
-
-getRandParIDs <- function(parSetup) {
-  return(which(parSetup != "f"))
-}
-
-getNormParIDs <- function(parSetup) {
-  return(which(parSetup == "n"))
-}
-
-getLogNormParIDs <- function(parSetup) {
-  return(which(parSetup == "ln"))
-}

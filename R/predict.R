@@ -239,9 +239,12 @@ mxlSimulation <- function(
 }
 
 getSimPHat <- function(pars, model, X, price, obsID, getVDraws) {
-  betaDraws <- makeBetaDraws(
-    pars, model$parSetup, model$inputs$numDraws, model$standardDraws)
-  colnames(betaDraws) <- names(model$parSetup)
+  numDraws <- model$inputs$numDraws
+  parSetup <- model$parSetup
+  parIDs <- model$parIDs
+  standardDraws <- getStandardDraws(parIDs, numDraws)
+  betaDraws <- makeBetaDraws(pars, parIDs, numDraws, standardDraws)
+  colnames(betaDraws) <- names(parSetup)
   betaDraws <- selectSimDraws(betaDraws, model$inputs$modelSpace, X)
   VDraws <- getVDraws(betaDraws, X, price)
   logitDraws <- getMxlLogit(VDraws, obsID)

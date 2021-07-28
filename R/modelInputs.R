@@ -43,7 +43,8 @@ getModelInputs <- function(
 
   # Set up the parameters
   parSetup <- getParSetup(pars, price, randPars, randPrice)
-  parList <- getParList(parSetup)
+  parIDs <- getParIDs(parSetup)
+  parList <- getParList(parSetup, parIDs$random)
   obsID <- as.matrix(data[obsID])
   choice <- as.matrix(data[choice])
 
@@ -104,8 +105,10 @@ getModelInputs <- function(
     weightsUsed   = weightsUsed,
     clusterIDs    = clusterIDs,
     numClusters   = numClusters,
-    parList       = parList,
     parSetup      = parSetup,
+    parIDs        = parIDs,
+    parList       = parList,
+    numBetas      = length(parSetup),
     scaleFactors  = NA,
     standardDraws = standardDraws,
     options       = options
@@ -141,16 +144,17 @@ getParSetup <- function(pars, price, randPars, randPrice) {
   return(parSetup)
 }
 
-getNumClusters <- function(clusterID){
-  if(is.null(clusterID)){
-    return(0)
-  }
-  return(length(unique(clusterID)))
+getParIDs <- function(parSetup) {
+  return(list(
+    fixed     = which(parSetup == "f"),
+    random    = which(parSetup != "f"),
+    normal    = which(parSetup == "n"),
+    logNormal = which(parSetup == "ln")
+  ))
 }
 
-getParList <- function(parSetup) {
+getParList <- function(parSetup, randParIDs) {
   # For mxl models, need both '_mu' and '_sigma' parameters
-  randParIDs <- getRandParIDs(parSetup)
   names <- names(parSetup)
   names_mu <- names
   names_sigma <- names[randParIDs]
@@ -177,6 +181,11 @@ definePrice <- function(data, inputs) {
     }
   }
   return(as.matrix(price))
+}
+
+getNumClusters <- function(clusterID) {
+  if (is.null(clusterID)) { return(0) }
+  return(length(unique(clusterID)))
 }
 
 # Function that scales all the variables in X to be between 0 and 1:
@@ -217,9 +226,11 @@ addDraws <- function(modelInputs) {
   modelInputs$modelType <- "mxl"
   modelInputs$repTimesMxl <- rep(
     modelInputs$repTimes, times = modelInputs$inputs$numDraws)
+  modelInputs$repTimesMxlGrad <- rep(
+    modelInputs$repTimes, each = 2 * length(modelInputs$parSetup))
   userDraws <- modelInputs$standardDraws
   standardDraws <- getStandardDraws(
-    modelInputs$parSetup, modelInputs$inputs$numDraws)
+    modelInputs$parIDs, modelInputs$inputs$numDraws)
   if (is.null(userDraws)) {
     modelInputs$standardDraws <- standardDraws
     return(modelInputs)
