@@ -63,8 +63,6 @@ getModelInputs <- function(
     weights <- as.matrix(data[inputs$weights])
     weightsUsed <- TRUE
   }
-  # Weights will be multiplied by only the chosen alternative
-  weights <- weights[choice == 1]
 
   # Setup Clusters
   clusterIDs <- NULL
