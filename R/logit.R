@@ -121,7 +121,7 @@ mxlNegLLAndGradLL <- function(pars, mi) {
   return(list(
     objective = negLL(mi$choice, pHat, mi$weights),
     gradient = mi$logitFuncs$mxlNegGradLL(
-      mi$X, mi$parSetup, mi$obsID, mi$choice, mi$standardDraws, mi$betaDraws,
+      mi$X, mi$parSetup, mi$obsID, mi$choice, mi$standardDraws, betaDraws,
       VDraws, logitDraws, pHat, mi$weights, mi$inputs$numDraws, mi$numBetas,
       mi$repTimesMxlGrad, mi$parIDs)
   ))
@@ -146,7 +146,7 @@ getMxlNegGradLL <- function(pars, mi) {
     VDraws, mi$obsID, mi$repTimesMxl, mi$inputs$numDraws)
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(mi$logitFuncs$mxlNegGradLL(
-    mi$X, mi$parSetup, mi$obsID, mi$choice, mi$standardDraws, mi$betaDraws,
+    mi$X, mi$parSetup, mi$obsID, mi$choice, mi$standardDraws, betaDraws,
     VDraws, logitDraws, pHat, mi$weights, mi$inputs$numDraws, mi$numBetas,
     mi$repTimesMxlGrad, mi$parIDs)
   )
