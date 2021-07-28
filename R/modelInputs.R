@@ -99,7 +99,7 @@ getModelInputs <- function(
     X             = X,
     choice        = choice,
     obsID         = obsID,
-    repTimes      = rep(table(obsID)),
+    repTimes      = as.numeric(table(obsID)),
     weights       = weights,
     weightsUsed   = weightsUsed,
     clusterIDs    = clusterIDs,

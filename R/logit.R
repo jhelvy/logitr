@@ -102,7 +102,7 @@ mnlHessLL_wtp <- function(pars, mi) {
 # ============================================================================
 
 # Returns the logit fraction for all the draws in a mxl (heterogeneous) models
-getMxlLogit <- function(VDraws, obsID) {
+getMxlLogit <- function(VDraws, obsID, repTimes) {
   numDraws <- ncol(VDraws)
   expVDraws <- exp(VDraws)
   sumExpVDraws <- rowsum(expVDraws, group = obsID, reorder = FALSE)
@@ -143,7 +143,7 @@ getMxlNegGradLL <- function(pars, mi) {
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, mi$X, mi$price)
   logitDraws <- getMxlLogit(VDraws, mi$obsID)
   pHat <- rowMeans(logitDraws, na.rm = T)
-  return(logitFuncs$mxlNegGradLL(
+  return(mi$logitFuncs$mxlNegGradLL(
     mi$X, mi$parSetup, mi$obsID, mi$choice, mi$standardDraws, betaDraws,
     VDraws, logitDraws, pHat, mi$weights
   ))
