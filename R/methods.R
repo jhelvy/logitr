@@ -177,9 +177,10 @@ getStatTable <- function(model) {
 getRandParSummary <- function(object) {
   parSetup <- object$parSetup
   numDraws <- 10^4
+  pars <- object$coef
   randParIDs <- getRandParIDs(parSetup)
   standardDraws <- getStandardDraws(parSetup, numDraws)
-  betaDraws <- makeBetaDraws(object$coef, parSetup, 10^4, standardDraws)
+  betaDraws <- makeBetaDraws(pars, parSetup, numDraws, standardDraws)
   randParSummary <- apply(betaDraws, 2, summary)
   # Add names to summary
   distName <- rep("", length(parSetup))
