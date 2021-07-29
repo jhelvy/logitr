@@ -108,23 +108,22 @@ is_logitr <- function(x) {
   inherits(x, "logitr")
 }
 
+isMnlModel <- function(parSetup) {
+  return(all(parSetup == "f"))
+}
+
 isMxlModel <- function(parSetup) {
-  return(("n" %in% parSetup) | ("ln" %in% parSetup))
+  return(!isMnlModel(parSetup))
 }
 
-# Functions for getting specific parameter indexes
-getFixedParIDs <- function(parSetup) {
-  return(which(parSetup == "f"))
+getRepTimes <- function(obsID) {
+  return(as.numeric(table(obsID)))
 }
 
-getRandParIDs <- function(parSetup) {
-  return(which(parSetup != "f"))
+getRepTimesMxl <- function(repTimes, numDraws) {
+  return(rep(repTimes, times = numDraws))
 }
 
-getNormParIDs <- function(parSetup) {
-  return(which(parSetup == "n"))
-}
-
-getLogNormParIDs <- function(parSetup) {
-  return(which(parSetup == "ln"))
+getRepTimesMxlGrad <- function(repTimes, parSetup) {
+  return(rep(repTimes, each = 2 * length(parSetup)))
 }

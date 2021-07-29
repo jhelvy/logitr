@@ -147,6 +147,27 @@ predictInputsCheck <- function(model, alts, altID, obsID) {
   }
 }
 
+predictParCheck <- function(model, X) {
+  modelPars <- names(model$parSetup)
+  if (model$inputs$modelSpace == "wtp") {
+    # Drop lambda parameter
+    modelPars <- modelPars[2:length(modelPars)]
+  }
+  dataNames <- colnames(X)
+  if (length(setdiff(modelPars, dataNames)) > 0) {
+    modelPars <- paste(modelPars, collapse = ", ")
+    dataPars <- paste(dataNames, collapse = ", ")
+    stop(paste0(
+      'The coefficient names for the provided model do not correspond to ',
+      'variables in "alts".\n\n',
+      'Expect columns:\n\t', modelPars, '\n\n',
+      'Encoded column names from provided `alts` object:\n\t', dataPars, '\n\n',
+      'If you have a factor variable in "alts", check that the factor ',
+      'levels match those of the data used to estimate the model.'
+    ))
+  }
+}
+
 wtpInputsCheck <- function(model, price) {
   if (missing(model)) stop('"model" needs to be specified')
   if (missing(price)) stop('"price" needs to be specified')

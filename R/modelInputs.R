@@ -43,7 +43,8 @@ getModelInputs <- function(
 
   # Set up the parameters
   parSetup <- getParSetup(pars, price, randPars, randPrice)
-  parList <- getParList(parSetup)
+  parIDs <- getParIDs(parSetup)
+  parList <- getParList(parSetup, parIDs$random)
   obsID <- as.matrix(data[obsID])
   choice <- as.matrix(data[choice])
 
@@ -99,12 +100,15 @@ getModelInputs <- function(
     X             = X,
     choice        = choice,
     obsID         = obsID,
+    repTimes      = getRepTimes(obsID),
     weights       = weights,
     weightsUsed   = weightsUsed,
     clusterIDs    = clusterIDs,
     numClusters   = numClusters,
-    parList       = parList,
     parSetup      = parSetup,
+    parIDs        = parIDs,
+    parList       = parList,
+    numBetas      = length(parSetup),
     scaleFactors  = NA,
     standardDraws = standardDraws,
     options       = options
@@ -140,16 +144,17 @@ getParSetup <- function(pars, price, randPars, randPrice) {
   return(parSetup)
 }
 
-getNumClusters <- function(clusterID){
-  if(is.null(clusterID)){
-    return(0)
-  }
-  return(length(unique(clusterID)))
+getParIDs <- function(parSetup) {
+  return(list(
+    fixed     = which(parSetup == "f"),
+    random    = which(parSetup != "f"),
+    normal    = which(parSetup == "n"),
+    logNormal = which(parSetup == "ln")
+  ))
 }
 
-getParList <- function(parSetup) {
+getParList <- function(parSetup, randParIDs) {
   # For mxl models, need both '_mu' and '_sigma' parameters
-  randParIDs <- getRandParIDs(parSetup)
   names <- names(parSetup)
   names_mu <- names
   names_sigma <- names[randParIDs]
@@ -163,7 +168,7 @@ getParList <- function(parSetup) {
 
 definePrice <- function(data, inputs) {
   if (inputs$modelSpace == "pref") {
-    return(NA)
+    return(NULL)
   }
   if (inputs$modelSpace == "wtp") {
     price <- data[, which(names(data) == inputs$price)]
@@ -176,6 +181,11 @@ definePrice <- function(data, inputs) {
     }
   }
   return(as.matrix(price))
+}
+
+getNumClusters <- function(clusterID) {
+  if (is.null(clusterID)) { return(0) }
+  return(length(unique(clusterID)))
 }
 
 # Function that scales all the variables in X to be between 0 and 1:
@@ -210,13 +220,16 @@ scaleModelInputs <- function(modelInputs) {
 }
 
 addDraws <- function(modelInputs) {
-  if (!isMxlModel(modelInputs$parSetup)) {
-    return(modelInputs)
-  }
+  parSetup <- modelInputs$parSetup
+  if (isMnlModel(parSetup)) { return(modelInputs) }
   modelInputs$modelType <- "mxl"
+  repTimes <- modelInputs$repTimes
+  numDraws <- modelInputs$inputs$numDraws
+  modelInputs$repTimesMxl <- getRepTimesMxl(repTimes, numDraws)
+  modelInputs$repTimesMxlGrad <- getRepTimesMxlGrad(repTimes, parSetup)
   userDraws <- modelInputs$standardDraws
   standardDraws <- getStandardDraws(
-    modelInputs$parSetup, modelInputs$inputs$numDraws)
+    modelInputs$parIDs, modelInputs$inputs$numDraws)
   if (is.null(userDraws)) {
     modelInputs$standardDraws <- standardDraws
     return(modelInputs)
@@ -232,17 +245,19 @@ addDraws <- function(modelInputs) {
 setLogitFunctions <- function(modelSpace) {
   logitFuncs <- list(
     getMnlV      = getMnlV_pref,
-    mnlNegGradLL = mnlNegGradLL_pref,
-    mnlHessLL    = mnlHessLL_pref,
     getMxlV      = getMxlV_pref,
-    mxlNegGradLL = mxlNegGradLL_pref
+    mnlNegGradLL = mnlNegGradLL_pref,
+    mxlNegGradLL = mxlNegGradLL_pref,
+    mnlHessLL    = mnlHessLL_pref,
+    mxlHessLL    = mxlHessLL_pref
   )
   if (modelSpace == "wtp") {
     logitFuncs$getMnlV <- getMnlV_wtp
-    logitFuncs$mnlNegGradLL <- mnlNegGradLL_wtp
-    logitFuncs$mnlHessLL <- mnlHessLL_wtp
     logitFuncs$getMxlV <- getMxlV_wtp
+    logitFuncs$mnlNegGradLL <- mnlNegGradLL_wtp
     logitFuncs$mxlNegGradLL <- mxlNegGradLL_wtp
+    logitFuncs$mnlHessLL <- mnlHessLL_wtp
+    logitFuncs$mxlHessLL <- mxlHessLL_wtp
   }
   return(logitFuncs)
 }
@@ -252,11 +267,10 @@ setEvalFunctions <- function(modelType, useAnalyticGrad) {
     objective = mnlNegLLAndGradLL,
     negLL     = getMnlNegLL,
     negGradLL = getMnlNegGradLL,
-    # hessLL    = getMnlHessLL # Haven't defined yet
-    hessLL    = getNumericHessLL
+    hessLL    = getMnlHessLL
   )
   if (!useAnalyticGrad) {
-    evalFuncs$objective <- mnlNegLLAndNumericGradLL
+    evalFuncs$objective <- negLLAndNumericGradLL
     evalFuncs$negGradLL <- getNumericNegGradLL
     evalFuncs$hessLL    <- getNumericHessLL
   }
@@ -264,10 +278,9 @@ setEvalFunctions <- function(modelType, useAnalyticGrad) {
     evalFuncs$objective <- mxlNegLLAndGradLL
     evalFuncs$negLL     <- getMxlNegLL
     evalFuncs$negGradLL <- getMxlNegGradLL
-    # evalFuncs$hessLL <- getMxlHessLL # Haven't defined yet
-    evalFuncs$hessLL <- getNumericHessLL
+    evalFuncs$hessLL    <- getMxlHessLL
     if (!useAnalyticGrad) {
-      evalFuncs$objective <- mxlNegLLAndNumericGradLL
+      evalFuncs$objective <- negLLAndNumericGradLL
       evalFuncs$negGradLL <- getNumericNegGradLL
       evalFuncs$hessLL    <- getNumericHessLL
     }

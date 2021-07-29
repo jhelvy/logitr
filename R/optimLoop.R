@@ -32,6 +32,7 @@ runMultistart <- function(modelInputs) {
 
     # Add result values to model
     if (!is.null(result)) {
+      model$fail <- FALSE
       model$coef <- result$solution
       # -1 for (+) rather than (-) LL
       model$logLik     <- as.numeric(-1*result$objective)
@@ -53,6 +54,7 @@ makeModelTemplate <- function(modelInputs) {
   pars <- modelInputs$parList$all
   coefNA <- rep(NA, length(pars))
   result <- structure(list(
+    fail              = TRUE,
     coef              = coefNA,
     logLik            = NA,
     nullLogLik        = NA,
@@ -80,6 +82,7 @@ makeModelTemplate <- function(modelInputs) {
     weightsUsed       = modelInputs$weightsUsed,
     numClusters       = modelInputs$numClusters,
     parSetup          = modelInputs$parSetup,
+    parIDs            = modelInputs$parIDs,
     scaleFactors      = NA,
     standardDraws     = modelInputs$standardDraws,
     options           = modelInputs$options
@@ -132,7 +135,7 @@ checkStartPars <- function(startPars, modelInputs) {
   if (modelInputs$inputs$modelSpace == "wtp") {
     lambdaParIDs <- which(grepl("lambda", modelInputs$parList$all))
   }
-  logNPars <- names(getLogNormParIDs(modelInputs$parSetup))
+  logNPars <- names(modelInputs$parIDs$logNormal)
   logNParIDs <- c()
   if (length(logNPars) > 0) {
     for (par in logNPars) {
@@ -149,10 +152,10 @@ checkStartPars <- function(startPars, modelInputs) {
 
 runModel <- function(modelInputs, startPars) {
   model <- nloptr::nloptr(
-    x0 = startPars,
+    x0     = startPars,
     eval_f = modelInputs$evalFuncs$objective,
-    modelInputs = modelInputs,
-    opts = modelInputs$options
+    mi     = modelInputs,
+    opts   = modelInputs$options
   )
   return(model)
 }

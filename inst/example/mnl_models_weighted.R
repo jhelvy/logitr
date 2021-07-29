@@ -18,6 +18,7 @@ mnl_wtp_unweighted <- logitr(
     'bevFastcharge','opCost', 'accelTime'),
   price = 'price',
   modelSpace = 'wtp',
+  robust = TRUE,
   # Since WTP space models are non-convex, run a multistart:
   numMultiStarts = 10
 )
