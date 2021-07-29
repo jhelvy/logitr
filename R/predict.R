@@ -135,8 +135,7 @@ predictProbs <- function(
   alts <- as.data.frame(alts)
   recoded <- recodeData(alts, model$inputs$pars, model$inputs$randPars)
   X <- recoded$X
-  # Check if model pars match those from alts
-  checkPars(model, X)
+  predictParCheck(model, X) # Check if model pars match those from alts
   price <- NA
   getV <- getMnlV_pref
   getVDraws <- getMxlV_pref
@@ -167,30 +166,16 @@ predictProbs <- function(
   }
 }
 
-checkPars <- function(model, X) {
-  modelPars <- names(model$parSetup)
-  if (model$inputs$modelSpace == "wtp") {
-    # Drop lambda parameter
-    modelPars <- modelPars[2:length(modelPars)]
-  }
-  dataNames <- colnames(X)
-  if (length(setdiff(modelPars, dataNames)) > 0) {
-    modelPars <- paste(modelPars, collapse = ", ")
-    dataPars <- paste(dataNames, collapse = ", ")
-    stop(paste0(
-      'The coefficient names for the provided model do not correspond to ',
-      'variables in "alts".\n\n',
-      'Expect columns:\n\t', modelPars, '\n\n',
-      'Encoded column names from provided `alts` object:\n\t', dataPars, '\n\n',
-      'If you have a factor variable in "alts", check that the factor ',
-      'levels match those of the data used to estimate the model.'
-    ))
-  }
-}
+V <- getV(stats::coef(model), X, price)
+ expV <- exp(V)
+  sumExpV <- rowsum(expV, group = obsID, reorder = FALSE)
+  sumExpVMat <- matrix(rep(sumExpV, times = repTimes), ncol = 1)
+  return(expV / sumExpVMat)
 
 mnlSimulation <- function(
   alts, model, X, price, altID, obsID, altIDName, obsIDName, numDraws, alpha,
-  getV, getVDraws, computeCI) {
+  getV, getVDraws, computeCI
+) {
   # Compute mean probs
   V <- getV(stats::coef(model), X, price)
   meanProb <- getMnlLogit(V, obsID)

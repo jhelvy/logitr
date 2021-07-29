@@ -100,7 +100,7 @@ getModelInputs <- function(
     X             = X,
     choice        = choice,
     obsID         = obsID,
-    repTimes      = as.numeric(table(obsID)),
+    repTimes      = getRepTimes(obsID),
     weights       = weights,
     weightsUsed   = weightsUsed,
     clusterIDs    = clusterIDs,
@@ -220,14 +220,10 @@ scaleModelInputs <- function(modelInputs) {
 }
 
 addDraws <- function(modelInputs) {
-  if (!isMxlModel(modelInputs$parSetup)) {
+  if (isMnlModel(modelInputs$parSetup)) {
     return(modelInputs)
   }
   modelInputs$modelType <- "mxl"
-  modelInputs$repTimesMxl <- rep(
-    modelInputs$repTimes, times = modelInputs$inputs$numDraws)
-  modelInputs$repTimesMxlGrad <- rep(
-    modelInputs$repTimes, each = 2 * length(modelInputs$parSetup))
   userDraws <- modelInputs$standardDraws
   standardDraws <- getStandardDraws(
     modelInputs$parIDs, modelInputs$inputs$numDraws)

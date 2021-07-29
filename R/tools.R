@@ -108,6 +108,22 @@ is_logitr <- function(x) {
   inherits(x, "logitr")
 }
 
-isMxlModel <- function(parSetup) {
-  return(("n" %in% parSetup) | ("ln" %in% parSetup))
+isMnlModel <- function(parSetup) {
+  return(all(parSetup == "f"))
+}
+
+getRepTimes <- function(obsID) {
+  return(as.numeric(table(obsID)))
+}
+
+getRepTimesMxl <- function(mi) {
+  return(rep(mi$repTimes, times = mi$inputs$numDraws))
+}
+
+getRepTimesMxl <- function(mi) {
+  return(rep(mi$repTimes, times = mi$inputs$numDraws))
+}
+
+getRepTimesMxlGrad <- function(mi) {
+  return(rep(mi$repTimes, each = 2 * length(mi$parSetup)))
 }

@@ -102,11 +102,11 @@ mnlHessLL_wtp <- function(pars, mi) {
 # ============================================================================
 
 # Returns the logit fraction for all the draws in a mxl (heterogeneous) models
-getMxlLogit <- function(VDraws, obsID, repTimes, numDraws) {
+getMxlLogit <- function(VDraws, obsID, repTimesMxl, numDraws) {
   expVDraws <- exp(VDraws)
   sumExpVDraws <- rowsum(expVDraws, group = obsID, reorder = FALSE)
   sumExpVDrawsMat <- matrix(
-    rep(sumExpVDraws, times = repTimes), ncol = numDraws, byrow = FALSE)
+    rep(sumExpVDraws, times = repTimesMxl), ncol = numDraws, byrow = FALSE)
   return(expVDraws / sumExpVDrawsMat)
 }
 
@@ -169,7 +169,7 @@ getMxlV_pref <- function(betaDraws, X, p) {
 # Computes the gradient of the negative likelihood for a mixed logit model
 mxlNegGradLL_pref <- function(
   X, parSetup, obsID, choice, standardDraws, betaDraws, VDraws, logitDraws,
-  pHat, weights, numDraws, numBetas, repTimes, parIDs
+  pHat, weights, numDraws, numBetas, repTimesMxlGrad, parIDs
 ) {
   lnID <- parIDs$logNormal
   hasLnIDs <- length(lnID) > 0
@@ -188,7 +188,7 @@ mxlNegGradLL_pref <- function(
     logitMat <- repmat(matrix(logitDraws[, i]), 1, 2*numBetas)
     sumsMat <- rowsum(logitMat * partial, group = obsID, reorder = FALSE)
     sumsMat <- matrix(
-      rep(sumsMat, times = repTimes),
+      rep(sumsMat, times = repTimesMxlGrad),
       ncol = ncol(partial),
       byrow = F
     )
@@ -222,7 +222,7 @@ getMxlV_wtp <- function(betaDraws, X, p) {
 
 mxlNegGradLL_wtp <- function(
   X, parSetup, obsID, choice, standardDraws, betaDraws, VDraws, logitDraws,
-  pHat, weights, numDraws, numBetas, repTimes, parIDs
+  pHat, weights, numDraws, numBetas, repTimesMxlGrad, parIDs
 ) {
   numPars <- numBetas
   numBetas <- numBetas - 1 # subtract lambda par
@@ -258,7 +258,7 @@ mxlNegGradLL_wtp <- function(
     logitMat <- repmat(matrix(logitDraws[, i]), 1, 2*numPars)
     sumsMat <- rowsum(logitMat * partial, group = obsID, reorder = FALSE)
     sumsMat <- matrix(
-      rep(sumsMat, times = repTimes),
+      rep(sumsMat, times = repTimesMxlGrad),
       ncol = ncol(partial),
       byrow = F
     )
