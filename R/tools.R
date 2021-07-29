@@ -116,14 +116,10 @@ getRepTimes <- function(obsID) {
   return(as.numeric(table(obsID)))
 }
 
-getRepTimesMxl <- function(mi) {
-  return(rep(mi$repTimes, times = mi$inputs$numDraws))
+getRepTimesMxl <- function(repTimes, numDraws) {
+  return(rep(repTimes, times = numDraws))
 }
 
-getRepTimesMxl <- function(mi) {
-  return(rep(mi$repTimes, times = mi$inputs$numDraws))
-}
-
-getRepTimesMxlGrad <- function(mi) {
-  return(rep(mi$repTimes, each = 2 * length(mi$parSetup)))
+getRepTimesMxlGrad <- function(repTimes, parSetup) {
+  return(rep(repTimes, each = 2 * length(parSetup)))
 }

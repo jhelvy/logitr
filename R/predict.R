@@ -151,34 +151,29 @@ predictProbs <- function(
     obsID <- rep(1, nrow(X))
     obsIDName <- "obsID"
   } else {
-    obsID <- alts[,obsIDName]
+    obsID <- alts[, obsIDName]
   }
+  repTimes <- getRepTimes(obsID)
   if (model$modelType == "mxl") {
     return(
       mxlSimulation(
         alts, model, X, price, altID, obsID, altIDName, obsIDName, numDraws,
-        alpha, getV, getVDraws, computeCI))
+        repTimes, alpha, getV, getVDraws, computeCI))
   } else {
     return(
       mnlSimulation(
         alts, model, X, price, altID, obsID, altIDName, obsIDName, numDraws,
-        alpha, getV, getVDraws, computeCI))
+        repTimes, alpha, getV, getVDraws, computeCI))
   }
 }
 
-V <- getV(stats::coef(model), X, price)
- expV <- exp(V)
-  sumExpV <- rowsum(expV, group = obsID, reorder = FALSE)
-  sumExpVMat <- matrix(rep(sumExpV, times = repTimes), ncol = 1)
-  return(expV / sumExpVMat)
-
 mnlSimulation <- function(
-  alts, model, X, price, altID, obsID, altIDName, obsIDName, numDraws, alpha,
-  getV, getVDraws, computeCI
+  alts, model, X, price, altID, obsID, altIDName, obsIDName, numDraws,
+  repTimes, alpha, getV, getVDraws, computeCI
 ) {
   # Compute mean probs
   V <- getV(stats::coef(model), X, price)
-  meanProb <- getMnlLogit(V, obsID)
+  meanProb <- getMnlLogit(V, obsID, repTimes)
   if (computeCI == FALSE) {
     return(summarizeMeanProbs(meanProb, altID, obsID, altIDName, obsIDName))
   }
@@ -186,7 +181,8 @@ mnlSimulation <- function(
   betaUncDraws <- getUncertaintyDraws(model, numDraws)
   betaUncDraws <- selectSimDraws(betaUncDraws, model$inputs$modelSpace, X)
   VUncDraws <- getVDraws(betaUncDraws, X, price)
-  logitUncDraws <- getMxlLogit(VUncDraws, obsID)
+  repTimesMxl <- getRepTimesMxl(repTimes, numDraws)
+  logitUncDraws <- getMxlLogit(VUncDraws, obsID, repTimesMxl, numDraws)
   return(summarizeUncProbs(
     meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, alpha))
 }
@@ -204,11 +200,12 @@ selectSimDraws <- function(betaDraws, modelSpace, X) {
 }
 
 mxlSimulation <- function(
-  alts, model, X, price, altID, obsID, altIDName, obsIDName, numDraws, alpha,
-  getV, getVDraws, computeCI) {
+  alts, model, X, price, altID, obsID, altIDName, obsIDName, numDraws,
+  repTimes, alpha, getV, getVDraws, computeCI
+) {
   # Compute mean probs
   meanProb <- getSimPHat(
-    stats::coef(model), model, X, price, obsID, getVDraws)
+    stats::coef(model), model, X, price, obsID, getVDraws, repTimes)
   if (computeCI == FALSE) {
     return(summarizeMeanProbs(meanProb, altID, obsID, altIDName, obsIDName))
   }
@@ -217,13 +214,14 @@ mxlSimulation <- function(
   logitUncDraws <- matrix(0, nrow = nrow(X), ncol = nrow(betaUncDraws))
   for (i in seq_len(nrow(betaUncDraws))) {
     pars <- betaUncDraws[i, ]
-    logitUncDraws[, i] <- getSimPHat(pars, model, X, price, obsID, getVDraws)
+    logitUncDraws[, i] <- getSimPHat(
+      pars, model, X, price, obsID, getVDraws, repTimes)
   }
   return(summarizeUncProbs(
     meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, alpha))
 }
 
-getSimPHat <- function(pars, model, X, price, obsID, getVDraws) {
+getSimPHat <- function(pars, model, X, price, obsID, getVDraws, repTimes) {
   numDraws <- model$inputs$numDraws
   parSetup <- model$parSetup
   parIDs <- model$parIDs
@@ -232,7 +230,8 @@ getSimPHat <- function(pars, model, X, price, obsID, getVDraws) {
   colnames(betaDraws) <- names(parSetup)
   betaDraws <- selectSimDraws(betaDraws, model$inputs$modelSpace, X)
   VDraws <- getVDraws(betaDraws, X, price)
-  logitDraws <- getMxlLogit(VDraws, obsID)
+  repTimesMxl <- getRepTimesMxl(repTimes, numDraws)
+  logitDraws <- getMxlLogit(VDraws, obsID, repTimesMxl, numDraws)
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(pHat)
 }

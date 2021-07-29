@@ -233,16 +233,18 @@ getCovarianceNonRobust <- function(hessian) {
 getCovarianceRobust <- function(object) {
   clusterIDs <- object$clusterIDs
   numClusters <- object$numClusters
+  parSetup <- object$parSetup
+  inputs <- object$inputs
+  repTimes <- getRepTimes(object$obsID)
   modelInputs <- list(
-    logitFuncs = setLogitFunctions(object$inputs$modelSpace),
-    evalFuncs = setEvalFunctions(
-      object$modelType, object$inputs$useAnalyticGrad),
-    inputs = object$inputs,
-    repTimes = getRepTimes(object$obsID)
+    logitFuncs = setLogitFunctions(inputs$modelSpace),
+    evalFuncs = setEvalFunctions(object$modelType, inputs$useAnalyticGrad),
+    inputs = inputs,
+    repTimes = repTimes
   )
-  if (isMxlModel(object$parSetup)) {
-    modelInputs$repTimesMxl <- getRepTimesMxl(modelInputs)
-    modelInputs$repTimesMxlGrad <- getRepTimesMxlGrad(modelInputs)
+  if (isMxlModel(parSetup)) {
+    modelInputs$repTimesMxl <- getRepTimesMxl(repTimes, inputs$numDraws)
+    modelInputs$repTimesMxlGrad <- getRepTimesMxlGrad(repTimes, parSetup)
   }
   parsUnscaled <- stats::coef(object)
   scaleFactors <- object$scaleFactors
