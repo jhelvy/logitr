@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.4.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.5.9000</span>
       </span>
     </div>
 
@@ -197,18 +197,13 @@
 <span class="co">#&gt;        1        2        3        4 </span>
 <span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Summary Of Multistart Runs:</span>
-<span class="co">#&gt; [1] NA</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Use statusCodes() to view the meaning of each status code</span>
-<span class="co">#&gt; </span>
 <span class="co">#&gt; Exit Status: 3, Optimization stopped because ftol_rel or ftol_abs was reached.</span>
 <span class="co">#&gt;                                 </span>
 <span class="co">#&gt; Model Type:    Multinomial Logit</span>
 <span class="co">#&gt; Model Space:          Preference</span>
 <span class="co">#&gt; Model Run:                1 of 1</span>
 <span class="co">#&gt; Iterations:                   21</span>
-<span class="co">#&gt; Elapsed Time:        0h:0m:0.19s</span>
+<span class="co">#&gt; Elapsed Time:        0h:0m:0.05s</span>
 <span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span>
 <span class="co">#&gt; Weights Used?:             FALSE</span>
 <span class="co">#&gt; Robust?                    FALSE</span>
@@ -241,11 +236,11 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wtp_mnl_pref</span>
 <span class="co">#&gt;                 Estimate Std. Error    z-value     Pr(&gt;|z|)</span>
-<span class="co">#&gt; lambda         0.3665429 0.02431891  15.072341 0.0000000000</span>
-<span class="co">#&gt; feat           1.3407239 0.36015335   3.722647 0.0001971447</span>
-<span class="co">#&gt; brandhiland  -10.1364057 0.58229703 -17.407620 0.0000000000</span>
-<span class="co">#&gt; brandweight   -1.7491210 0.18141428  -9.641584 0.0000000000</span>
-<span class="co">#&gt; brandyoplait   2.0038477 0.14337464  13.976305 0.0000000000</span></code></pre></div>
+<span class="co">#&gt; lambda         0.3665429 0.02436864  15.041586 0.0000000000</span>
+<span class="co">#&gt; feat           1.3407239 0.35931667   3.731316 0.0001904823</span>
+<span class="co">#&gt; brandhiland  -10.1364057 0.58322164 -17.380023 0.0000000000</span>
+<span class="co">#&gt; brandweight   -1.7491210 0.18082785  -9.672852 0.0000000000</span>
+<span class="co">#&gt; brandyoplait   2.0038477 0.14309895  14.003231 0.0000000000</span></code></pre></div>
 </div>
 <div id="wtp-space-model" class="section level1">
 <h1 class="hasAnchor">
@@ -303,7 +298,17 @@
 <span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Summary Of Multistart Runs:</span>
-<span class="co">#&gt; [1] NA</span>
+<span class="co">#&gt;    Log Likelihood Iterations Exit Status</span>
+<span class="co">#&gt; 1       -2656.888         85           3</span>
+<span class="co">#&gt; 2       -2656.888         46           3</span>
+<span class="co">#&gt; 3       -2805.227         76           3</span>
+<span class="co">#&gt; 4       -2804.193         71           4</span>
+<span class="co">#&gt; 5       -2804.283         88           3</span>
+<span class="co">#&gt; 6       -2804.834         79           3</span>
+<span class="co">#&gt; 7       -2656.888         28           3</span>
+<span class="co">#&gt; 8       -2656.888         49           3</span>
+<span class="co">#&gt; 9       -2803.602         95           3</span>
+<span class="co">#&gt; 10      -2656.888         37           3</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Use statusCodes() to view the meaning of each status code</span>
 <span class="co">#&gt; </span>
@@ -311,24 +316,24 @@
 <span class="co">#&gt;                                  </span>
 <span class="co">#&gt; Model Type:     Multinomial Logit</span>
 <span class="co">#&gt; Model Space:   Willingness-to-Pay</span>
-<span class="co">#&gt; Model Run:                6 of 10</span>
-<span class="co">#&gt; Iterations:                    33</span>
-<span class="co">#&gt; Elapsed Time:         0h:0m:0.29s</span>
+<span class="co">#&gt; Model Run:                8 of 10</span>
+<span class="co">#&gt; Iterations:                    49</span>
+<span class="co">#&gt; Elapsed Time:         0h:0m:0.15s</span>
 <span class="co">#&gt; Algorithm:         NLOPT_LD_LBFGS</span>
 <span class="co">#&gt; Weights Used?:              FALSE</span>
 <span class="co">#&gt; Robust?                     FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
 <span class="co">#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
-<span class="co">#&gt; lambda         0.366584   0.024366  15.0448 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; feat           1.340601   0.355867   3.7671 0.0001651 ***</span>
-<span class="co">#&gt; brandhiland  -10.135767   0.576090 -17.5941 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandweight   -1.749071   0.179897  -9.7226 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandyoplait   2.003825   0.142377  14.0741 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; lambda         0.366588   0.024365  15.0454 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; feat           1.340464   0.355855   3.7669 0.0001653 ***</span>
+<span class="co">#&gt; brandhiland  -10.135624   0.576059 -17.5948 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandweight   -1.749043   0.179891  -9.7228 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandyoplait   2.003782   0.142377  14.0738 &lt; 2.2e-16 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log-Likelihood:         -2656.8878779</span>
+<span class="co">#&gt; Log-Likelihood:         -2656.8878781</span>
 <span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span>
 <span class="co">#&gt; AIC:                     5323.7758000</span>
 <span class="co">#&gt; BIC:                     5352.7168000</span>
@@ -339,7 +344,7 @@
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mnl_wtp</span><span class="op">)</span>
 <span class="co">#&gt;       lambda         feat  brandhiland  brandweight brandyoplait </span>
-<span class="co">#&gt;    0.3665836    1.3406005  -10.1357670   -1.7490714    2.0038254</span></code></pre></div>
+<span class="co">#&gt;    0.3665879    1.3404637  -10.1356240   -1.7490430    2.0037821</span></code></pre></div>
 </div>
 <div id="compare-wtp-from-both-models" class="section level1">
 <h1 class="hasAnchor">
@@ -351,12 +356,12 @@
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wtp_mnl_comparison</span>
 <span class="co">#&gt;                       pref           wtp  difference</span>
-<span class="co">#&gt; lambda           0.3665429     0.3665836  0.00004066</span>
-<span class="co">#&gt; feat             1.3407239     1.3406005 -0.00012343</span>
-<span class="co">#&gt; brandhiland    -10.1364057   -10.1357670  0.00063866</span>
-<span class="co">#&gt; brandweight     -1.7491210    -1.7490714  0.00004963</span>
-<span class="co">#&gt; brandyoplait     2.0038477     2.0038254 -0.00002230</span>
-<span class="co">#&gt; logLik       -2656.8878799 -2656.8878779  0.00000194</span></code></pre></div>
+<span class="co">#&gt; lambda           0.3665429     0.3665879  0.00004492</span>
+<span class="co">#&gt; feat             1.3407239     1.3404637 -0.00026028</span>
+<span class="co">#&gt; brandhiland    -10.1364057   -10.1356240  0.00078173</span>
+<span class="co">#&gt; brandweight     -1.7491210    -1.7490430  0.00007804</span>
+<span class="co">#&gt; brandyoplait     2.0038477     2.0037821 -0.00006559</span>
+<span class="co">#&gt; logLik       -2656.8878799 -2656.8878781  0.00000178</span></code></pre></div>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">
