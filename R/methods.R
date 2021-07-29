@@ -249,7 +249,7 @@ getCovarianceRobust <- function(object) {
   parsUnscaled <- stats::coef(object)
   scaleFactors <- object$scaleFactors
   if (object$inputs$scaleInputs) { parsUnscaled <- parsUnscaled * scaleFactors }
-  gradMat <- matrix(NA, nrow = numClusters, ncol = length(coef(object)))
+  gradMat <- matrix(NA, nrow = numClusters, ncol = length(parsUnscaled))
   clusters <- sort(unique(clusterIDs))
   for (i in seq_len(length(clusters))) {
     indices <- which(clusterIDs == i)

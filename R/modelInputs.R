@@ -220,10 +220,13 @@ scaleModelInputs <- function(modelInputs) {
 }
 
 addDraws <- function(modelInputs) {
-  if (isMnlModel(modelInputs$parSetup)) {
-    return(modelInputs)
-  }
+  parSetup <- modelInputs$parSetup
+  if (isMnlModel(parSetup)) { return(modelInputs) }
   modelInputs$modelType <- "mxl"
+  repTimes <- modelInputs$repTimes
+  numDraws <- modelInputs$inputs$numDraws
+  modelInputs$repTimesMxl <- getRepTimesMxl(repTimes, numDraws)
+  modelInputs$repTimesMxlGrad <- getRepTimesMxlGrad(repTimes, parSetup)
   userDraws <- modelInputs$standardDraws
   standardDraws <- getStandardDraws(
     modelInputs$parIDs, modelInputs$inputs$numDraws)

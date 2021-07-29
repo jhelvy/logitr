@@ -112,6 +112,10 @@ isMnlModel <- function(parSetup) {
   return(all(parSetup == "f"))
 }
 
+isMxlModel <- function(parSetup) {
+  return(!isMnlModel(parSetup))
+}
+
 getRepTimes <- function(obsID) {
   return(as.numeric(table(obsID)))
 }
