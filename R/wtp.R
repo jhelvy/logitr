@@ -33,7 +33,7 @@
 #' wtp(mnl_pref, price = "price")
 wtp <- function(model, price) {
   wtpInputsCheck(model, price)
-  coefs <- model$coef
+  coefs <- stats::coef(model)
   priceID <- which(names(coefs) == price)
   pricePar <- -1 * coefs[priceID]
   wtp_mean <- coefs / pricePar
@@ -101,8 +101,8 @@ wtpCompare <- function(model_pref, model_wtp, price) {
   wtpCompareInputsCheck(model_pref, model_wtp, price)
   pref <- wtp(model_pref, price)$Estimate
   pref <- c(pref, model_pref$logLik)
-  wtp <- model_wtp$coef
-  wtp <- c(wtp, model_wtp$logLik)
+  wtp <- stats::coef(model_wtp)
+  wtp <- c(wtp, stats::logLik(model_wtp)
   names(pref)[length(pref)] <- "logLik"
   names(wtp)[length(wtp)] <- "logLik"
   compare <- data.frame(pref = pref, wtp = wtp)

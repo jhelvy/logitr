@@ -153,38 +153,47 @@ predictProbs <- function(
   } else {
     obsID <- alts[, obsIDName]
   }
-  repTimes <- getRepTimes(obsID)
+  altID <- matrix(altID, ncol = 1)
+  obsID <- matrix(obsID, ncol = 1)
+  colnames(altID) <- altIDName
+  colnames(obsID) <- obsIDName
   if (model$modelType == "mxl") {
     return(
       mxlSimulation(
-        alts, model, X, price, altID, obsID, altIDName, obsIDName, numDraws,
-        repTimes, alpha, getV, getVDraws, computeCI))
+        alts, model, price, X, altID, obsID, numDraws, alpha, getV, getVDraws,
+        computeCI))
   } else {
     return(
       mnlSimulation(
-        alts, model, X, price, altID, obsID, altIDName, obsIDName, numDraws,
-        repTimes, alpha, getV, getVDraws, computeCI))
+        alts, model, price, X, altID, obsID, numDraws, alpha, getV, getVDraws,
+        computeCI))
   }
 }
 
+predictLogit <- function(V, obsID) {
+  expV <- exp(V)
+  sumExpV <- rowsum(expV, group = obsID, reorder = FALSE)
+  reps <- table(obsID)
+  sumExpVMat <- sumExpV[rep(seq_along(reps), reps),]
+  return(expV / sumExpVMat)
+}
+
 mnlSimulation <- function(
-  alts, model, X, price, altID, obsID, altIDName, obsIDName, numDraws,
-  repTimes, alpha, getV, getVDraws, computeCI
+  alts, model, price, X, altID, obsID, numDraws, alpha, getV, getVDraws,
+  computeCI
 ) {
   # Compute mean probs
   V <- getV(stats::coef(model), X, price)
-  meanProb <- getMnlLogit(V, obsID, repTimes)
+  meanProb <- predictLogit(V, obsID)
   if (computeCI == FALSE) {
-    return(summarizeMeanProbs(meanProb, altID, obsID, altIDName, obsIDName))
+    return(summarizeMeanProbs(meanProb, altID, obsID))
   }
   # Compute uncertainty with simulation
   betaUncDraws <- getUncertaintyDraws(model, numDraws)
   betaUncDraws <- selectSimDraws(betaUncDraws, model$inputs$modelSpace, X)
   VUncDraws <- getVDraws(betaUncDraws, X, price)
-  repTimesMxl <- getRepTimesMxl(repTimes, numDraws)
-  logitUncDraws <- getMxlLogit(VUncDraws, obsID, repTimesMxl, numDraws)
-  return(summarizeUncProbs(
-    meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, alpha))
+  logitUncDraws <- predictLogit(VUncDraws, obsID)
+  return(summarizeUncProbs(meanProb, logitUncDraws, altID, obsID, alpha))
 }
 
 selectSimDraws <- function(betaDraws, modelSpace, X) {
@@ -200,14 +209,14 @@ selectSimDraws <- function(betaDraws, modelSpace, X) {
 }
 
 mxlSimulation <- function(
-  alts, model, X, price, altID, obsID, altIDName, obsIDName, numDraws,
-  repTimes, alpha, getV, getVDraws, computeCI
+  alts, model, price, X, altID, obsID, numDraws, alpha, getV, getVDraws,
+  computeCI
 ) {
   # Compute mean probs
   meanProb <- getSimPHat(
     stats::coef(model), model, X, price, obsID, getVDraws, repTimes)
   if (computeCI == FALSE) {
-    return(summarizeMeanProbs(meanProb, altID, obsID, altIDName, obsIDName))
+    return(summarizeMeanProbs(meanProb, altID, obsID))
   }
   # Compute uncertainty with simulation
   betaUncDraws <- getUncertaintyDraws(model, numDraws)
@@ -217,8 +226,7 @@ mxlSimulation <- function(
     logitUncDraws[, i] <- getSimPHat(
       pars, model, X, price, obsID, getVDraws, repTimes)
   }
-  return(summarizeUncProbs(
-    meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, alpha))
+  return(summarizeUncProbs(meanProb, logitUncDraws, altID, obsID, alpha))
 }
 
 getSimPHat <- function(pars, model, X, price, obsID, getVDraws, repTimes) {
@@ -236,19 +244,28 @@ getSimPHat <- function(pars, model, X, price, obsID, getVDraws, repTimes) {
   return(pHat)
 }
 
-summarizeMeanProbs <- function(meanProb, altID, obsID, altIDName, obsIDName) {
+
+
+
+
+
+
+summarizeMeanProbs <- function(meanProb, altID, obsID) {
   probs <- as.data.frame(meanProb)
   colnames(probs) <- "prob_mean"
+  altIDName <- names(altID)
+  obsIDName <- names(obsID)
   probs[altIDName] <- altID
   probs[obsIDName] <- obsID
   return(probs[c(obsIDName, altIDName, "prob_mean")])
 }
 
-summarizeUncProbs <- function(
-  meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, alpha) {
+summarizeUncProbs <- function(meanProb, logitUncDraws, altID, obsID, alpha) {
   probs <- as.data.frame(t(apply(logitUncDraws, 1, ci, alpha)))
   probs$mean <- as.numeric(meanProb)
   colnames(probs) <- paste0("prob_", colnames(probs))
+  altIDName <- names(altID)
+  obsIDName <- names(obsID)
   names <- c(obsIDName, altIDName, colnames(probs))
   probs[altIDName] <- altID
   probs[obsIDName] <- obsID

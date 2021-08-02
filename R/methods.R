@@ -153,21 +153,21 @@ getCoefTable <- function(coefs, standErr) {
     return(as.data.frame(coefTable))
 }
 
-getStatTable <- function(model) {
-  aic <- round(2 * model$numParams - 2 * model$logLik, 4)
-  bic <- round(log(model$numObs) * model$numParams - 2 * model$logLik, 4)
-  mcR2 <- 1 - (model$logLik / model$nullLogLik)
-  adjMcR2 <- 1 - ((model$logLik - model$numParams) / model$nullLogLik)
+getStatTable <- function(object) {
+  aic <- round(2 * object$numParams - 2 * object$logLik, 4)
+  bic <- round(log(object$numObs) * object$numParams - 2 * object$logLik, 4)
+  mcR2 <- 1 - (object$logLik / object$nullLogLik)
+  adjMcR2 <- 1 - ((object$logLik - object$numParams) / object$nullLogLik)
   statTable <- data.frame(c(
-    model$logLik, model$nullLogLik, aic, bic, mcR2, adjMcR2, model$numObs
+    object$logLik, object$nullLogLik, aic, bic, mcR2, adjMcR2, object$numObs
   ))
   colnames(statTable) <- ""
   row.names(statTable) <- c(
     "Log-Likelihood:", "Null Log-Likelihood:", "AIC:", "BIC:", "McFadden R2:",
     "Adj McFadden R2:" , "Number of Observations:")
-  if (!is.null(model$numClusters)) { # Added for backwards compatibility
-    if (model$numClusters > 0) {
-      statTable <- rbind(statTable, model$numClusters)
+  if (!is.null(object$numClusters)) { # Added for backwards compatibility
+    if (object$numClusters > 0) {
+      statTable <- rbind(statTable, object$numClusters)
       row.names(statTable)[nrow(statTable)] <- "Number of Clusters"
     }
   }

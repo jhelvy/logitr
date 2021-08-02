@@ -35,7 +35,7 @@ appendModelInfo <- function(model, modelInputs) {
 }
 
 updateScaleFactors <- function(modelInputs) {
-  scaleFactors <- modelInputs$scaleFactors
+  scaleFactors <- modelInputs$data$scaleFactors
   if (modelInputs$inputs$modelSpace == "wtp") {
     lambdaID <- which(grepl("lambda", names(scaleFactors)) == T)
     nonLambdaID <- which(grepl("lambda", names(scaleFactors)) == F)

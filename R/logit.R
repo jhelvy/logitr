@@ -7,45 +7,49 @@
 # object "mi" is the "modelInputs" object
 # ============================================================================
 
-negLL <- function(choice, logit, weights) {
-  return(-1 * sum(weights * choice * log(logit)))
-}
-
 # ============================================================================
 # MNL logit and log-likelihood functions for both Preference and WTP Spaces
 # ============================================================================
 
-# Returns the logit fraction for mnl (fixed parameter) models
-getMnlLogit <- function(V, obsID, repTimes) {
-  expV <- exp(V)
-  sumExpV <- rowsum(expV, group = obsID, reorder = FALSE)
-  sumExpVMat <- matrix(rep(sumExpV, times = repTimes), ncol = 1)
-  return(expV / sumExpVMat)
+negLL <- function(logit, weights) {
+  return(-1 * sum(weights * log(logit)))
 }
 
-# Returns a list containing the negative log-likelihood and it's gradient
-# Primary objective function for the nloptr optimizer.
+# The configuration here is P = 1 / (1 + sumExpV),
+# where sumExpV equals sum_j^(J != j*) exp(V - V*),
+# where * indicates the chosen alternative
+
+getMnlLogit <- function(expV, obsID) {
+  return(1 / (1 + rowsum(expV, group = obsID, reorder = FALSE)))
+}
+
 mnlNegLLAndGradLL <- function(pars, mi) {
-  V <- mi$logitFuncs$getMnlV(pars, mi$X, mi$price)
-  logit <- getMnlLogit(V, mi$obsID, mi$repTimes)
+  d <- mi$data_diff
+  V <- mi$logitFuncs$getMnlV(pars, d$X, d$price)
+  expV <- exp(V)
+  logit <- getMnlLogit(expV, d$obsID)
   return(list(
-    objective = negLL(mi$choice, logit, mi$weights),
+    objective = negLL(logit, d$weights),
     gradient = mi$logitFuncs$mnlNegGradLL(
-      pars, mi$X, mi$price, mi$choice, logit, mi$weights)
+      pars, V, expV, d$X, d$obsID, logit, d$weights)
   ))
 }
 
 getMnlNegLL <- function(pars, mi) {
-  V <- mi$logitFuncs$getMnlV(pars, mi$X, mi$price)
-  logit <- getMnlLogit(V, mi$obsID, mi$repTimes)
-  return(negLL(mi$choice, logit, mi$weights))
+  d <- mi$data_diff
+  V <- mi$logitFuncs$getMnlV(pars, d$X, d$price)
+  expV <- exp(V)
+  logit <- getMnlLogit(expV, d$obsID)
+  return(negLL(logit, d$weights))
 }
 
 getMnlNegGradLL <- function(pars, mi) {
-  V <- mi$logitFuncs$getMnlV(pars, mi$X, mi$price)
-  logit <- getMnlLogit(V, mi$obsID, mi$repTimes)
+  d <- mi$data_diff
+  V <- mi$logitFuncs$getMnlV(pars, d$X, d$price)
+  expV <- exp(V)
+  logit <- getMnlLogit(expV, d$obsID)
   return(mi$logitFuncs$mnlNegGradLL(
-    pars, mi$X, mi$price, mi$choice, logit, mi$weights))
+    pars, V, expV, d$X, d$obsID, logit, d$weights))
 }
 
 getMnlHessLL <- function(pars, mi) {
@@ -57,13 +61,13 @@ getMnlHessLL <- function(pars, mi) {
 # Preference Space Logit Functions - MNL models
 # ============================================================================
 
-getMnlV_pref <- function(pars, X, p) {
+getMnlV_pref <- function(pars, X, price) {
   return(X %*% pars)
 }
 
-mnlNegGradLL_pref <- function(pars, X, p, choice, logit, weights) {
-  weightedDiff <- weights * (choice - logit)
-  return(-1 * (t(X) %*% weightedDiff))
+mnlNegGradLL_pref <- function(pars, V, expV, X, obsID, logit, weights) {
+  X_temp <- rowsum(X*expV[,rep(1, ncol(X))], group = obsID, reorder = FALSE)
+  return(t(X_temp) %*% (weights * logit))
 }
 
 mnlHessLL_pref <- function(pars, mi) {
@@ -78,18 +82,16 @@ mnlHessLL_pref <- function(pars, mi) {
 # Returns the observed utility
 getMnlV_wtp <- function(pars, X, p) {
   lambda <- pars[1]
-  beta <- pars[2:length(pars)]
-  return(lambda * ((X %*% beta) - p))
+  omega <- pars[2:length(pars)]
+  return(lambda * ((X %*% omega) - p))
 }
 
-# Returns the negative gradient of the log-likelihood
-mnlNegGradLL_wtp <- function(pars, X, p, choice, logit, weights) {
+mnlNegGradLL_wtp <- function(pars, V, expV, X, obsID, logit, weights) {
   lambda <- pars[1]
-  beta <- pars[2:length(pars)]
-  weightedDiff <- weights * (choice - logit)
-  gradLLLambda <- t((X %*% beta) - p) %*% weightedDiff
-  gradLLBeta <- lambda * (t(X) %*% weightedDiff)
-  return(-1 * c(gradLLLambda, gradLLBeta))
+  X_temp <- rowsum(
+    cbind((V / lambda), lambda*X) * expV[,rep(1, (ncol(X) + 1))],
+    group = obsID, reorder = FALSE)
+  return(t(X_temp) %*% (weights * logit))
 }
 
 mnlHessLL_wtp <- function(pars, mi) {

@@ -40,12 +40,15 @@ getModelInputs <- function(
   X <- recoded$X
   pars <- recoded$pars
   randPars <- recoded$randPars
+  price <- definePrice(data, inputs)
 
-  # Set up the parameters
+  # Set up other data
   parSetup <- getParSetup(pars, price, randPars, randPrice)
   parIDs <- getParIDs(parSetup)
   parList <- getParList(parSetup, parIDs$random)
   obsID <- as.matrix(data[obsID])
+  reps <- as.numeric(table(obsID))
+  obsID <- rep(seq_along(reps), reps) # Make sure obsID is sequential number
   choice <- as.matrix(data[choice])
 
   # Add names to startVals (if provided)
@@ -53,9 +56,6 @@ getModelInputs <- function(
     names(startVals) <- parList$all
     inputs$startVals <- startVals
   }
-
-  # Define price for WTP space models (price must be numeric type)
-  price <- definePrice(data, inputs)
 
   # Setup weights
   weights <- matrix(1, nrow(data))
@@ -66,7 +66,7 @@ getModelInputs <- function(
   }
 
   # Setup Clusters
-  clusterIDs <- NULL
+  clusterID <- NULL
   numClusters <- 0
   if (robust & is.null(cluster)) {
     cluster <- inputs$obsID
@@ -82,13 +82,29 @@ getModelInputs <- function(
       message("Setting robust to TRUE since clusters are being used")
       robust <- TRUE
     }
-    clusterIDs <- as.matrix(data[cluster])
-    numClusters <- getNumClusters(clusterIDs)
+    clusterID <- as.matrix(data[cluster])
+    numClusters <- getNumClusters(clusterID)
   }
 
-  # Update inputs
+  # Update inputs for cluster and robust controls
   inputs$cluster <- cluster
   inputs$robust <- robust
+
+  # Make data object
+  data <- list(
+    price     = price,
+    X         = X,
+    choice    = choice,
+    obsID     = obsID,
+    clusterID = clusterID,
+    weights   = weights
+  )
+
+  # Scale data
+  if (scaleInputs) { data <- scaleData(data, inputs$modelSpace) }
+
+  # Make differenced data
+  data_diff <- makeDiffData(data)
 
   # Make modelInputs list
   modelInputs <- list(
@@ -97,13 +113,9 @@ getModelInputs <- function(
     modelType     = "mnl",
     freq          = getFrequencyCounts(obsID, choice),
     price         = price,
-    X             = X,
-    choice        = choice,
-    obsID         = obsID,
-    repTimes      = getRepTimes(obsID),
-    weights       = weights,
+    data          = data,
+    data_diff     = data_diff,
     weightsUsed   = weightsUsed,
-    clusterIDs    = clusterIDs,
     numClusters   = numClusters,
     parSetup      = parSetup,
     parIDs        = parIDs,
@@ -114,15 +126,29 @@ getModelInputs <- function(
     options       = options
   )
 
-  if (scaleInputs) {
-    modelInputs <- scaleModelInputs(modelInputs)
-  }
   modelInputs <- addDraws(modelInputs)
   modelInputs$logitFuncs <- setLogitFunctions(modelSpace)
   modelInputs$evalFuncs <- setEvalFunctions(
     modelInputs$modelType, useAnalyticGrad
   )
   return(modelInputs)
+}
+
+definePrice <- function(data, inputs) {
+  if (inputs$modelSpace == "pref") {
+    return(NULL)
+  }
+  if (inputs$modelSpace == "wtp") {
+    price <- data[, which(names(data) == inputs$price)]
+    if (! typeof(price) %in% c("integer", "double")) {
+      stop(
+        'Please make sure the price column in your data defined by the ',
+        '"price" argument is encoded as a numeric data type. Price must ',
+        'be numeric for WTP space models.'
+      )
+    }
+  }
+  return(as.matrix(price))
 }
 
 getParSetup <- function(pars, price, randPars, randPrice) {
@@ -166,32 +192,15 @@ getParList <- function(parSetup, randParIDs) {
   return(list(mu = names_mu, sigma = names_sigma, all = names_all))
 }
 
-definePrice <- function(data, inputs) {
-  if (inputs$modelSpace == "pref") {
-    return(NULL)
-  }
-  if (inputs$modelSpace == "wtp") {
-    price <- data[, which(names(data) == inputs$price)]
-    if (! typeof(price) %in% c("integer", "double")) {
-      stop(
-        'Please make sure the price column in your data defined by the ',
-        '"price" argument is encoded as a numeric data type. Price must ',
-        'be numeric for WTP space models.'
-      )
-    }
-  }
-  return(as.matrix(price))
-}
-
 getNumClusters <- function(clusterID) {
   if (is.null(clusterID)) { return(0) }
   return(length(unique(clusterID)))
 }
 
 # Function that scales all the variables in X to be between 0 and 1:
-scaleModelInputs <- function(modelInputs) {
-  price <- modelInputs$price
-  X <- modelInputs$X
+scaleData <- function(data, modelSpace) {
+  price <- data$price
+  X <- data$X
   scaledX <- X
   scaledPrice <- price
   # Scale X data
@@ -206,27 +215,42 @@ scaleModelInputs <- function(modelInputs) {
   scaleFactors <- scaleFactorsX
   names(scaleFactors) <- colnames(scaledX)
   # Scale price if WTP space model
-  if (modelInputs$inputs$modelSpace == "wtp") {
+  if (modelSpace == "wtp") {
     vals <- unique(price)
     scaleFactorPrice <- abs(max(vals) - min(vals))
     scaledPrice <- price / scaleFactorPrice
     scaleFactors <- c(scaleFactorPrice, scaleFactorsX)
     names(scaleFactors) <- c("lambda", colnames(scaledX))
   }
-  modelInputs$X <- scaledX
-  modelInputs$price <- scaledPrice
-  modelInputs$scaleFactors <- scaleFactors
-  return(modelInputs)
+  data$X <- scaledX
+  data$price <- scaledPrice
+  data$scaleFactors <- scaleFactors
+  return(data)
+}
+
+makeDiffData <- function(data) {
+  # Subtracting out the chosen alternative makes things faster
+  X_chosen <- data$X[data$choice == 1,]
+  X_diff <- (data$X - X_chosen[data$obsID,])[data$choice != 1,]
+  price_diff <- NULL
+  if (!is.null(data$price)) {
+    price_chosen <- data$price[data$choice == 1]
+    price_diff <- (data$price - price_chosen[data$obsID])[data$choice != 1]
+  }
+  return(list(
+    price     = price_diff,
+    X         = X_diff,
+    obsID     = data$obsID[data$choice != 1],
+    clusterID = data$clusterID[data$choice != 1],
+    weights   = data$weights[data$choice == 1]
+  ))
 }
 
 addDraws <- function(modelInputs) {
   parSetup <- modelInputs$parSetup
   if (isMnlModel(parSetup)) { return(modelInputs) }
   modelInputs$modelType <- "mxl"
-  repTimes <- modelInputs$repTimes
   numDraws <- modelInputs$inputs$numDraws
-  modelInputs$repTimesMxl <- getRepTimesMxl(repTimes, numDraws)
-  modelInputs$repTimesMxlGrad <- getRepTimesMxlGrad(repTimes, parSetup)
   userDraws <- modelInputs$standardDraws
   standardDraws <- getStandardDraws(
     modelInputs$parIDs, modelInputs$inputs$numDraws)
