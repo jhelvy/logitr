@@ -203,7 +203,9 @@ getListVal <- function(object, val) {
 }
 
 getBestModel <- function(allModels, summary) {
-  index <- which.max(summary$`Log Likelihood`)
+  summary$index <- seq(nrow(summary))
+  good <- summary[which(summary$`Exit Status` > 0),]
+  index <- good[which.max(good$`Log Likelihood`),]$index
   if (length(index) == 0) {
     # All NA values...none of the models converged, so just return the first
     index <- 1

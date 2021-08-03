@@ -6,7 +6,7 @@ appendModelInfo <- function(model, modelInputs) {
   parsUnscaled <- model$coef
   parNames <- c(modelInputs$parList$mu, modelInputs$parList$sigma)
   names(parsUnscaled) <- parNames
-  scaleFactors <- NA
+  scaleFactors <- 1
   if (modelInputs$inputs$scaleInputs) {
     scaleFactors <- updateScaleFactors(modelInputs)
   }

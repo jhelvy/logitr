@@ -102,7 +102,7 @@ wtpCompare <- function(model_pref, model_wtp, price) {
   pref <- wtp(model_pref, price)$Estimate
   pref <- c(pref, model_pref$logLik)
   wtp <- stats::coef(model_wtp)
-  wtp <- c(wtp, stats::logLik(model_wtp)
+  wtp <- c(wtp, stats::logLik(model_wtp))
   names(pref)[length(pref)] <- "logLik"
   names(wtp)[length(wtp)] <- "logLik"
   compare <- data.frame(pref = pref, wtp = wtp)

@@ -121,12 +121,15 @@ getModelInputs <- function(
     parIDs        = parIDs,
     parList       = parList,
     numBetas      = length(parSetup),
-    scaleFactors  = NA,
     standardDraws = standardDraws,
+    nrowX         = nrow(data_diff$X),
     options       = options
   )
 
-  modelInputs <- addDraws(modelInputs)
+  # Add mixed logit inputs
+  if (isMxlModel(parSetup)) { modelInputs <- addMxlInputs(modelInputs) }
+
+  # Set logit and eval functions
   modelInputs$logitFuncs <- setLogitFunctions(modelSpace)
   modelInputs$evalFuncs <- setEvalFunctions(
     modelInputs$modelType, useAnalyticGrad
@@ -246,24 +249,40 @@ makeDiffData <- function(data) {
   ))
 }
 
-addDraws <- function(modelInputs) {
-  parSetup <- modelInputs$parSetup
-  if (isMnlModel(parSetup)) { return(modelInputs) }
+addMxlInputs <- function(modelInputs) {
   modelInputs$modelType <- "mxl"
   numDraws <- modelInputs$inputs$numDraws
   userDraws <- modelInputs$standardDraws
-  standardDraws <- getStandardDraws(
-    modelInputs$parIDs, modelInputs$inputs$numDraws)
   if (is.null(userDraws)) {
-    modelInputs$standardDraws <- standardDraws
-    return(modelInputs)
+    modelInputs$standardDraws <- getStandardDraws(
+      modelInputs$parIDs, modelInputs$inputs$numDraws)
+  } else if (ncol(userDraws) != modelInputs$numBetas) {
+    # If user provides draws, make sure there are enough columns
+    stop(
+      "The number of columns in the user-provided draws do not match the ",
+      "specified number of parameters")
   }
-  # If the user provides their own draws, make sure there are enough columns
-  if (ncol(userDraws) != ncol(standardDraws)) {
-    stop("The user-provided draws do not match the dimensions of the number of parameters")
-  }
-  modelInputs$standardDraws <- userDraws
+  modelInputs$partials <- makePartials(modelInputs)
   return(modelInputs)
+}
+
+makePartials <- function(modelInputs) {
+  numBetas <- modelInputs$numBetas
+  numDraws <- modelInputs$inputs$numDraws
+  X <- modelInputs$data_diff$X
+  if (modelInputs$inputs$modelSpace == "wtp") {
+    X <- cbind(1, X)
+  }
+  X2 <- repmat(X, 1, 2)
+  partials <- list()
+  draws <- cbind(
+    matrix(1, ncol = numBetas, nrow = numDraws), modelInputs$standardDraws)
+  for (i in seq_len(2*numBetas)) {
+    X_temp <- X2[,rep(i, numDraws)]
+    draws_temp <- repmat(matrix(draws[, i], nrow = 1), nrow(X_temp), 1)
+    partials[[i]] <- X_temp*draws_temp
+  }
+  return(partials[c(1:numBetas, numBetas + modelInputs$parIDs$random)])
 }
 
 setLogitFunctions <- function(modelSpace) {
