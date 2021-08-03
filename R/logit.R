@@ -116,7 +116,7 @@ mxlNegLLAndGradLL <- function(pars, mi) {
     objective = negLL(pHat, d$weights),
     gradient = mi$logitFuncs$mxlNegGradLL(
       betaDraws, VDraws, expVDraws, logitDraws, pHat, mi$partials, d$obsID,
-      mi$parIDs, d$weights, mi$numBetas, mi$nrowX)
+      mi$parIDs, d$weights, mi$numBetas, mi$nrowX, mi$inputs$numDraws)
   ))
 }
 
@@ -142,7 +142,7 @@ getMxlNegGradLL <- function(pars, mi) {
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(mi$logitFuncs$mxlNegGradLL(
       betaDraws, VDraws, expVDraws, logitDraws, pHat, mi$partials, d$obsID,
-      mi$parIDs, d$weights, mi$numBetas, mi$nrowX)
+      mi$parIDs, d$weights, mi$numBetas, mi$nrowX, mi$inputs$numDraws)
   )
 }
 
@@ -162,7 +162,7 @@ getMxlV_pref <- function(betaDraws, X, p) {
 
 mxlNegGradLL_pref <- function(
   betaDraws, VDraws, expVDraws, logitDraws, pHat, partials, obsID, parIDs,
-  weights, numBetas, nrowX
+  weights, numBetas, nrowX, numDraws
 ) {
   # First, adjust partials for any log-normal parameters
   if (length(parIDs$logNormal) > 0) {
@@ -205,7 +205,7 @@ getMxlV_wtp <- function(betaDraws, X, p) {
 
 mxlNegGradLL_wtp <- function(
   betaDraws, VDraws, expVDraws, logitDraws, pHat, partials, obsID, parIDs,
-  weights, numBetas, nrowX
+  weights, numBetas, nrowX, numDraws
 ) {
   # First, adjust partials for any log-normal parameters
   if (length(parIDs$logNormal) > 0) {
