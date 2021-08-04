@@ -22,9 +22,9 @@ library(logitr)
 # examples aren't actually run when building this page, otherwise it'll
 # take much longer to build
 probs_mnl_pref <- readRDS(here::here('inst', 'extdata', 'probs_mnl_pref.Rds'))
-probs_mnl_wtp <- readRDS(here::here('inst', 'extdata', 'probs_mnl_wtp.Rds'))
+probs_mnl_wtp <-  readRDS(here::here('inst', 'extdata', 'probs_mnl_wtp.Rds'))
 probs_mxl_pref <- readRDS(here::here('inst', 'extdata', 'probs_mxl_pref.Rds'))
-probs_mxl_wtp <- readRDS(here::here('inst', 'extdata', 'probs_mxl_wtp.Rds'))
+probs_mxl_wtp <-  readRDS(here::here('inst', 'extdata', 'probs_mxl_wtp.Rds'))
 ```
 
 Once a model has been estimated, it can be used to predict the expected choice probabilities for a set of alternatives. This vignette demonstrates examples of how to so using the `predictProbs()` function along with the results of an estimated model.

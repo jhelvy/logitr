@@ -19,7 +19,7 @@ mxl_pref <- logitr(
   randPars = c(feat = 'n', brand = 'n'),
   # You should run a multistart for MXL models since they are non-convex,
   # but it can take a long time. Here I just use 5 starts for brevity:
-  numMultiStarts = 5
+  numMultiStarts = 10
 )
 
 # View summary of model
@@ -40,7 +40,7 @@ mxl_wtp <- logitr(
   modelSpace = 'wtp',
   # You should run a multistart for MXL models since they are non-convex,
   # but it can take a long time. Here I just use 5 starts for brevity:
-  numMultiStarts = 5,
+  numMultiStarts = 10,
   # Use the computed WTP from the preference space model as the starting
   # values for the first run:
   startVals = wtp_mxl_pref$Estimate
@@ -50,15 +50,8 @@ mxl_wtp <- logitr(
 summary(mxl_wtp)
 
 # Compare WTP from each space
-wtp_mxl_comparison <- wtpCompare(mxl_pref, mxl_wtp, price = 'price')
-wtp_mxl_comparison
+wtpCompare(mxl_pref, mxl_wtp, price = 'price')
 
 # Save results
-saveRDS(mxl_pref,
-        here::here('inst', 'extdata', 'mxl_pref.Rds'))
-saveRDS(mxl_wtp,
-        here::here('inst', 'extdata', 'mxl_wtp.Rds'))
-saveRDS(wtp_mxl_pref,
-        here::here('inst', 'extdata', 'wtp_mxl_pref.Rds'))
-saveRDS(wtp_mxl_comparison,
-        here::here('inst', 'extdata', 'wtp_mxl_comparison.Rds'))
+saveRDS(mxl_pref, here::here('inst', 'extdata', 'mxl_pref.Rds'))
+saveRDS(mxl_wtp,  here::here('inst', 'extdata', 'mxl_wtp.Rds'))

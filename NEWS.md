@@ -1,3 +1,15 @@
+# logitr 0.2.6
+
+Major changes were made to the gradient functions, which dramatically improved computational efficiency. MNL and MXL models in either preference or WTP spaces now use the faster implementation of the logit calculations.
+
+# logitr 0.2.5
+
+This version was the first implementation of an alternative approach for computing the logit probabilities, which increased computational speed. Specifically, the formulation was to compute P = 1 / (1 + sum(exp(V - V_chosen)))
+
+# logitr 0.2.4
+
+The `vcov()` method was modified such that it computes the covariance post model estimation. Previously, the covariance matrix was being computed internally in the `logitr()` function, and `vcov()` just returned this value, which was computationally much slower.
+
 # logitr 0.2.3
 
 **Several breaking changes in this version**. 

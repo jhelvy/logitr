@@ -51,14 +51,8 @@ coef(mnl_wtp)
 # the preference space and WTP space is a helpful check for whether you have
 # reached a global solution in WTP space models, which have non-convex
 # log-likelihoods functions. This can be done using the wtpCompare function:
-wtp_mnl_comparison <- wtpCompare(mnl_pref, mnl_wtp, price = 'price')
-wtp_mnl_comparison
+wtpCompare(mnl_pref, mnl_wtp, price = 'price')
 
 # Save results
 saveRDS(mnl_pref, here::here('inst', 'extdata', 'mnl_pref.Rds'))
-saveRDS(mnl_wtp, here::here('inst', 'extdata', 'mnl_wtp.Rds'))
-saveRDS(wtp_mnl_pref, here::here('inst', 'extdata', 'wtp_mnl_pref.Rds'))
-saveRDS(
-  wtp_mnl_comparison,
-  here::here('inst', 'extdata', 'wtp_mnl_comparison.Rds')
-)
+saveRDS(mnl_wtp,  here::here('inst', 'extdata', 'mnl_wtp.Rds'))

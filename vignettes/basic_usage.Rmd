@@ -16,31 +16,14 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 library(logitr)
+# Read in results from already estimated models  so that the
+# examples aren't actually run when building this page, otherwise it'll
+# take much longer to build
+mnl_pref <- readRDS(here::here('inst', 'extdata', 'mnl_pref.Rds'))
+mnl_wtp  <- readRDS(here::here('inst', 'extdata', 'mnl_wtp.Rds'))
 ```
 
 ```{r, child=here::here('man', 'rmdchunks', 'header.Rmd')}
-```
-
-# Estimating models
-
-The `logitr()` function estimates multinomial logit (MNL) and mixed logit (MXL) models using "Preference" space or "Willingness-to-pay (WTP)" space [utility parameterizations](utility_models.html). The basic usage for estimating models is as follows:
-
-```{r, eval=FALSE}
-model <- logitr(
-  data,
-  choice,
-  obsID,
-  pars,
-  price = NULL,
-  randPars = NULL,
-  randPrice = NULL,
-  modelSpace = "pref",
-  weights = NULL,
-  cluster         = NULL,
-  robust          = FALSE,
-  numMultiStarts  = 1,
-  ...
-)
 ```
 
 ## Data format
@@ -50,85 +33,125 @@ model <- logitr(
 
 The ["Data Formatting and Encoding"](data_formatting.html) vignette has more details about the required data format.
 
-## Preference space models
+## Model specification interface
 
-The `logitr()` function assumes that the deterministic part of the utility function, $v_{j}$, is linear in parameters, i.e.:
+Unlike most other similar packages, package {logitr} does not use the `formula` class to specify the model covariates and instead uses a vector of the covariates names. Each element in the vector is additively included as a covariate in the utility model, with the interpretation that they represent _utility_ parameters in preference space models and _WTP_ parameters in a WTP space model. While this design choice is a departure from the popular formula interface used in other similar packages such as {mlogit}, it was chosen to avoid confusion when switching between estimating preference space and WTP space models.
 
-```{r, child=here::here('man', 'rmdchunks', 'utilityComponents.Rmd')}
+
+The basic usage for estimating models is as follows:
+
+```{r, eval=FALSE}
+model <- logitr(
+  data,
+  choice,
+  obsID,
+  pars
+  ...
+)
 ```
 
-```{r, child=here::here('man', 'rmdchunks', 'utilityPreferenceObserved.Rmd')}
-```
+For example, consider a preference space model where the observed utility for yogurt purchases is given by $v_{j} = \alpha p_{j} + \beta_1 x_{j1} + \beta_2 x_{j2}$, where $p_{j}$ is `price`, $x_{j1}$ is `feat`, and $x_{j2}$ is `brand`. This model can be estimated using the `logitr()` function as follows:
 
-where $\betaVec$ is the vector of coefficients for non-price attributes $\xVec_{j}$, $\alpha$ is the coefficient for price $p_{j}$. Accordingly, each parameter in the `pars` argument is an additive part of $v_{j}$.
-
-For example, if the observed utility for yogurt purchases was $v_{j} = \beta x_{j} + \alpha p_{j}$, where $p_{j}$ is "price" and $x_{j}$ is "brand", then the `pars` argument should be `c("price", "brand")`. This model can be estimated as follows using the `yogurt` data frame:
-
-```{r}
+```{r, eval=FALSE}
 mnl_pref <- logitr(
     data   = yogurt,
     choice = "choice",
     obsID  = "obsID",
-    pars   = c("price", "brand")
+    pars   = c("price", "feat", "brand")
 )
 ```
 
-Use the `summary()` function to view a summary of the estimated model results. In the following summary, three coefficients are shown for the "brand" attribute, with `"dannon"` set as the reference level:
+To instead estimate a WTP space model, the user can simply move the `"price"` covariate from the `pars` argument to the `price` argument and change the `modelSpace` argument value from `"pref"` to `"wtp"` (`"pref"` is the default value):
 
-```{r}
-summary(mnl_pref)
+```{r, eval=FALSE}
+mnl_wtp <- logitr(
+    data   = yogurt,
+    choice = "choice",
+    obsID  = "obsID",
+    pars   = c("feat", "brand"),
+    price  = "price",
+    modelSpace = "wtp"
+)
 ```
 
-## WTP space models
+In this case, the observed utility is $v_{j} = \lambda \left(\omega_1 x_{j1} + \omega_2 x_{j2} - p_{j}\right)$, where $p_{j}$ is `price`, $x_{j1}$ is `feat`, and $x_{j2}$ is `brand`.
 
-For models estimated in the WTP space, the `modelSpace` argument should be set to `"wtp"`. In addition, the `pars` argument should _not_ contain the name of the column for the price attribute because there is no estimated "price" parameter in WTP space models. Instead, a "scale" parameter given by $\lambda$ will be estimated, and the column for "price" should be provided separately using the `price` argument.
+Note that for WTP space models the `pars` argument should _not_ contain the name of the column for the price attribute because there is no estimated "price" parameter in WTP space models. Instead, a "scale" parameter given by $\lambda$ will be estimated, and the column for "price" should be provided separately using the `price` argument.
 
-For example, if the observed utility was $v_{j} = \lambda \left(\omega x_{j} - p_{j}\right)$, where $p_{j}$ is "price" and $x_{j}$ is "brand", then the `pars` argument should be `"brand"` and the `price` argument should be `"price"`. This model can be estimated as follows using the `yogurt` data frame:
+Both of these examples are multinomial logit models with fixed parameters. See the ["Estimating Multinomial Logit Models"](mnl_models.html) vignette for more details.
+
+## Multi-start estimation
+
+Since WTP space models have non-convex log-likelihood functions, it is recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima. This is implemented using the `numMultiStarts` argument, e.g.:
 
 ```{r}
 mnl_wtp <- logitr(
-    data       = yogurt,
-    choice     = "choice",
-    obsID      = "obsID",
-    pars       = "brand",
-    price      = "price",
+    data   = yogurt,
+    choice = "choice",
+    obsID  = "obsID",
+    pars   = c("feat", "brand"),
+    price  = "price",
     modelSpace = "wtp",
     numMultiStarts = 10
 )
 ```
 
-Since WTP space models are non-convex, it is recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima. This was implemented in the above example by passing a `numMultiStarts` argument inside a list to the `options` argument (other options can be passed in the same list).
-
-In the WTP space model, the estimated "brand" coefficients have units of dollars and can be interpreted as the average willingness to pay for each brand relative to the "Dannon" brand, all else being equal.
-
 ## Mixed logit models
 
 To estimate a mixed logit model, use the `randPars` argument in the `logitr()` function to denote which parameters will be modeled with a distribution. The current package version supports normal (`"n"`) and log-normal (`"ln"`) distributions.
 
-For example, assume the observed utility for yogurts was $v_{j} = \beta x_{j} + \alpha p_{j}$, where $p_{j}$ is "price" and $x_{j}$ is "brand". To model `"brand"` parameter, $\beta$, with a normal or log-normal distribution, set `randPars = c(size = "n")` or `randPars = c(size = "ln")`:
+For example, assume the observed utility for yogurts is given by $v_{j} = \alpha p_{j} + \beta_1 x_{j1} + \beta_2 x_{j2}$, where $p_{j}$ is `price`, $x_{j1}$ is `feat`, and $x_{j2}$ is `brand`. To model the `"feat"` and `"brand"` parameters as normally distributed, set `randPars = c(feat = 'n', brand = 'n')`:
 
 ```{r, eval=FALSE}
 mxl_pref <- logitr(
     data     = yogurt,
-    choice   = "choice",
-    obsID    = "obsID",
-    pars     = c("price", "brand"),
-    randPars = c(brand = "n"),
+    choice   = 'choice',
+    obsID    = 'obsID',
+    pars     = c('price', 'feat', 'brand'),
+    randPars = c(feat = 'n', brand = 'n'),
     numMultiStarts = 10
 )
 ```
 
-Since mixed logit models are non-convex, it is again recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima. Note that mixed logit models can take a long time to estimate, so setting large number for `numMultiStarts` could take hours or longer to complete.
+Since mixed logit models also have non-convex log-likelihood functions, it is again recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima.
+
+See the ["Estimating Mixed Logit Models"](mxl_models.html) vignette for more details.
 
 ## View results
 
-Use the `summary()` function to print a summary of the results from an estimated model. The function will print the following based on the model settings:
+Use the `summary()` function to print a summary of the results from an estimated model, e.g.
 
-- For a single model run, it prints some summary information, including the model space (Preference or WTP), log-likelihood value at the solution, and a summary table of the model coefficients.
-- For MXL models, the function also prints a summary of the random parameters.
-- If you set `keepAllRuns = TRUE` in the `options` argument, `summary()` will print a summary of all the multistart runs followed by a summary of the best model (as determined by the largest log-likelihood value).
+```{r}
+summary(mnl_pref)
+```
 
 Use `statusCodes()` to print a description of each status code from the `nloptr` optimization routine.
+
+You can also extract other values of interest at the solution, such as:
+
+**The estimated coefficients**
+
+```{r}
+coef(mnl_pref)
+```
+
+**The log-likelihood**
+
+```{r}
+logLik(mnl_pref)
+```
+
+**The variance-covariance matrix**
+
+```{r}
+vcov(mnl_pref)
+```
+
+**The coefficient standard errors**
+
+```{r}
+sqrt(diag(vcov(mnl_pref)))
+```
 
 ## Computing and comparing WTP
 
@@ -144,7 +167,7 @@ The `wtp()` function divides the non-price parameters by the negative of the pri
 wtpCompare(mnl_pref, mnl_wtp, price = "price")
 ```
 
-## Making predictions
+## Predicting choice probabilities
 
 Estimated models can be used to predict expected choices and choice probabilities for a set (or multiple sets) of alternatives based on an estimated model. As an example, consider predicting choice probabilities for two of the choice observations from the `yogurt` dataset:
 
@@ -185,6 +208,10 @@ probs <- predictProbs(
 probs
 ```
 
+See the ["Predicting Choice Probabilities from Estimated Models"](predict_probs.html) vignette for more details.
+
+## Predicting choices
+
 Similar to the `predictProbs()` function, the `predictChoices()` function can be used to predict choices using the results of an estimated model. In the example below, choices are predicted for the entire `yogurt` dataset, which was used to the estimate the `mnl_pref` model:
 
 ```{r}
@@ -206,3 +233,5 @@ chosen <- subset(choices, choice == 1)
 chosen$correct <- chosen$choice == chosen$choice_predict
 sum(chosen$correct) / nrow(chosen)
 ```
+
+See the ["Predicting Choices from Estimated Models"](predict_choices.html) vignette for more details.

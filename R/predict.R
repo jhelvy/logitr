@@ -208,13 +208,13 @@ mxlSimulation <- function(
   for (i in seq_len(nrow(betaUncDraws))) {
     pars <- betaUncDraws[i, ]
     logitUncDraws[, i] <- getSimPHat(
-      pars, model, X, price, obsID, getVDraws, repTimes)
+      pars, model, X, price, obsID, getVDraws)
   }
   return(summarizeUncProbs(
     meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, alpha))
 }
 
-getSimPHat <- function(pars, model, X, price, obsID, getVDraws, repTimes) {
+getSimPHat <- function(pars, model, X, price, obsID, getVDraws) {
   numDraws <- model$inputs$numDraws
   parSetup <- model$parSetup
   parIDs <- model$parIDs

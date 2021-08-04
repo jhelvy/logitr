@@ -116,7 +116,8 @@ mxlNegLLAndGradLL <- function(pars, mi) {
     objective = negLL(pHat, d$weights),
     gradient = mi$logitFuncs$mxlNegGradLL(
       betaDraws, VDraws, expVDraws, logitDraws, pHat, mi$partials, d$obsID,
-      mi$parIDs, d$weights, mi$numBetas, mi$nrowX, mi$inputs$numDraws)
+      mi$parIDs, d$weights, mi$numBetas, mi$nrowX, mi$inputs$numDraws,
+      mi$inputs$randPrice)
   ))
 }
 
@@ -142,7 +143,8 @@ getMxlNegGradLL <- function(pars, mi) {
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(mi$logitFuncs$mxlNegGradLL(
       betaDraws, VDraws, expVDraws, logitDraws, pHat, mi$partials, d$obsID,
-      mi$parIDs, d$weights, mi$numBetas, mi$nrowX, mi$inputs$numDraws)
+      mi$parIDs, d$weights, mi$numBetas, mi$nrowX, mi$inputs$numDraws,
+      mi$inputs$randPrice)
   )
 }
 
@@ -162,7 +164,7 @@ getMxlV_pref <- function(betaDraws, X, p) {
 
 mxlNegGradLL_pref <- function(
   betaDraws, VDraws, expVDraws, logitDraws, pHat, partials, obsID, parIDs,
-  weights, numBetas, nrowX, numDraws
+  weights, numBetas, nrowX, numDraws, randPrice
 ) {
   # First, adjust partials for any log-normal parameters
   if (length(parIDs$logNormal) > 0) {
@@ -205,7 +207,7 @@ getMxlV_wtp <- function(betaDraws, X, p) {
 
 mxlNegGradLL_wtp <- function(
   betaDraws, VDraws, expVDraws, logitDraws, pHat, partials, obsID, parIDs,
-  weights, numBetas, nrowX, numDraws
+  weights, numBetas, nrowX, numDraws, randPrice
 ) {
   # First, adjust partials for any log-normal parameters
   if (length(parIDs$logNormal) > 0) {
@@ -222,7 +224,7 @@ mxlNegGradLL_wtp <- function(
   lambdaDraws <- repmat(matrix(betaDraws[,1], nrow = 1), nrowX, 1)
   partial_lambda_mu <- VDraws / lambdaDraws
   partials[[1]] <- partial_lambda_mu
-  if (parSetup["lambda"] != "f") {
+  if (!is.null(randPrice)) {
     lambda_sigmaID <- numBetas + 1
     partials[[lambda_sigmaID]] <- partials[[lambda_sigmaID]]*partial_lambda_mu
     lambdaIDs <- c(lambdaIDs, lambda_sigmaID)
