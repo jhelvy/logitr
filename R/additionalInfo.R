@@ -6,10 +6,7 @@ appendModelInfo <- function(model, modelInputs) {
   parsUnscaled <- model$coef
   parNames <- c(modelInputs$parList$mu, modelInputs$parList$sigma)
   names(parsUnscaled) <- parNames
-  scaleFactors <- 1
-  if (modelInputs$inputs$scaleInputs) {
-    scaleFactors <- updateScaleFactors(modelInputs)
-  }
+  scaleFactors <- model$data$scaleFactors
   if (model$fail) {
     coef <- parsUnscaled*NA
     gradient <- matrix(coef, ncol = 1)
@@ -34,45 +31,16 @@ appendModelInfo <- function(model, modelInputs) {
   return(model)
 }
 
-updateScaleFactors <- function(modelInputs) {
-  scaleFactors <- modelInputs$data$scaleFactors
-  if (modelInputs$inputs$modelSpace == "wtp") {
-    lambdaID <- which(grepl("lambda", names(scaleFactors)) == T)
-    nonLambdaID <- which(grepl("lambda", names(scaleFactors)) == F)
-    lambdaSF <- scaleFactors[lambdaID]
-    scaleFactors[nonLambdaID] <- scaleFactors[nonLambdaID] / lambdaSF
-  }
-  if (modelInputs$modelType == "mnl") {
-    return(scaleFactors)
-  } else {
-    parNames <- c(modelInputs$parList$mu, modelInputs$parList$sigma)
-    mxlScaleFactors <- rep(0, length(parNames))
-    for (i in seq_len(length(scaleFactors))) {
-      scaleFactor <- scaleFactors[i]
-      factorIDs <- which(grepl(names(scaleFactor), parNames))
-      mxlScaleFactors[factorIDs] <- scaleFactor
-      names(mxlScaleFactors)[factorIDs] <- parNames[factorIDs]
-    }
-    return(mxlScaleFactors)
-  }
-}
-
 getCoefs <- function(parsUnscaled, scaleFactors, modelInputs) {
-  if (modelInputs$inputs$scaleInputs) {
-    pars <- parsUnscaled / scaleFactors
-  }
-  # Make sigmas positive
+  pars <- parsUnscaled / scaleFactors
   sigmaNames <- modelInputs$parList$sigma
-  pars[sigmaNames] <- abs(pars[sigmaNames])
+  pars[sigmaNames] <- abs(pars[sigmaNames]) # Make sigmas positive
   return(pars)
 }
 
 getGradient <- function(parsUnscaled, scaleFactors, modelInputs) {
   gradient <- -1 * modelInputs$evalFuncs$negGradLL(parsUnscaled, modelInputs)
-  if (modelInputs$inputs$scaleInputs) {
-    gradient <- gradient * scaleFactors
-  }
-  return(gradient)
+  return(gradient * scaleFactors)
 }
 
 getHessian <- function(parsUnscaled, scaleFactors, modelInputs) {

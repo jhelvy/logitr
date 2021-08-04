@@ -212,7 +212,7 @@ getExitMessage <- function(x) {
 #' @rdname miscmethods.logitr
 #' @export
 vcov.logitr <- function(object, ...) {
-  clusterID <- object$clusterIDs
+  clusterID <- object$data$clusterID
   if (is.null(clusterID) | object$inputs$robust == FALSE) {
     return(getCovarianceNonRobust(object$hessian))
   }
@@ -231,29 +231,29 @@ getCovarianceNonRobust <- function(hessian) {
 }
 
 getCovarianceRobust <- function(object) {
-  clusterIDs <- object$clusterIDs
   numClusters <- object$numClusters
-  parSetup <- object$parSetup
   inputs <- object$inputs
-  repTimes <- getRepTimes(object$obsID)
+  parSetup <- object$parSetup
   modelInputs <- list(
     logitFuncs = setLogitFunctions(inputs$modelSpace),
     evalFuncs = setEvalFunctions(object$modelType, inputs$useAnalyticGrad),
     inputs = inputs,
-    repTimes = repTimes
+    modelType = object$modelType,
+    numBetas = length(parSetup),
+    numDraws = inputs$numDraws,
+    parSetup = parSetup,
+    parIDs = object$parIDs,
+    standardDraws = object$standardDraws,
+    data_diff = makeDiffData(object$data)
   )
-  if (isMxlModel(parSetup)) {
-    modelInputs$repTimesMxl <- getRepTimesMxl(repTimes, inputs$numDraws)
-    modelInputs$repTimesMxlGrad <- getRepTimesMxlGrad(repTimes, parSetup)
-  }
-  parsUnscaled <- stats::coef(object)
-  scaleFactors <- object$scaleFactors
-  if (object$inputs$scaleInputs) { parsUnscaled <- parsUnscaled * scaleFactors }
+  clusterID <- modelInputs$data_diff$clusterID
+  scaleFactors <- object$data$scaleFactors
+  parsUnscaled <- stats::coef(object)*scaleFactors
   gradMat <- matrix(NA, nrow = numClusters, ncol = length(parsUnscaled))
-  clusters <- sort(unique(clusterIDs))
+  clusters <- sort(unique(clusterID))
   for (i in seq_len(length(clusters))) {
-    indices <- which(clusterIDs == i)
-    tempMI <- getClusterModelInputs(object, i, indices, modelInputs)
+    indices <- which(clusterID == i)
+    tempMI <- getClusterModelInputs(indices, modelInputs)
     gradMat[i, ] <- getGradient(parsUnscaled, scaleFactors, tempMI)
   }
   gradMeanMat <- repmat(matrix(colMeans(gradMat), nrow = 1), numClusters, 1)
@@ -265,20 +265,20 @@ getCovarianceRobust <- function(object) {
   return(D %*% M %*% D)
 }
 
-getClusterModelInputs <- function (object, i, indices, modelInputs) {
-  X <- object$X[indices, ]
+getClusterModelInputs <- function (indices, modelInputs) {
+  mi <- modelInputs
+  X <- mi$data_diff$X[indices,]
   # Cast to matrix in cases where there is 1 independent variable
   if (!is.matrix(X)) { X <- as.matrix(X) }
-  modelInputs$X          <- X
-  modelInputs$choice     <- object$choice[indices]
-  modelInputs$price      <- object$price[indices]
-  modelInputs$weights    <- object$weights[indices]
-  modelInputs$obsID      <- object$obsID[indices]
-  modelInputs$repTimes   <- modelInputs$repTimes[i]
-  modelInputs$clusterIDs <- object$clusterIDs[indices]
-  if (isMxlModel(object$parSetup)) {
-    modelInputs$repTimesMxl <- modelInputs$repTimesMxl[i]
-    modelInputs$repTimesMxlGrad <- modelInputs$repTimesMxlGrad[i]
+  mi$data_diff$X <- X
+  mi$data_diff$price <- mi$data_diff$price[indices]
+  obsID <- mi$data_diff$obsID[indices]
+  mi$data_diff$obsID <- obsID
+  mi$data_diff$weights <- mi$data_diff$weights[unique(obsID)]
+  mi$data_diff$clusterID <- NULL
+  if (isMxlModel(mi$parSetup)) {
+    mi$partials <- makePartials(mi)
   }
-  return(modelInputs)
+  mi$nrowX <- nrow(X)
+  return(mi)
 }

@@ -97,11 +97,14 @@ getModelInputs <- function(
     choice    = choice,
     obsID     = obsID,
     clusterID = clusterID,
-    weights   = weights
+    weights   = weights,
+    scaleFactors = rep(1, length(parList$all))
   )
 
   # Scale data
-  if (scaleInputs) { data <- scaleData(data, inputs$modelSpace) }
+  if (scaleInputs) {
+    data <- scaleData(data, inputs$modelSpace, parSetup, parIDs)
+  }
 
   # Make differenced data
   data_diff <- makeDiffData(data)
@@ -127,7 +130,11 @@ getModelInputs <- function(
   )
 
   # Add mixed logit inputs
-  if (isMxlModel(parSetup)) { modelInputs <- addMxlInputs(modelInputs) }
+  if (isMxlModel(parSetup)) {
+    modelInputs$modelType <- "mxl"
+    modelInputs$standardDraws <- makeMxlDraws(modelInputs)
+    modelInputs$partials <- makePartials(modelInputs)
+  }
 
   # Set logit and eval functions
   modelInputs$logitFuncs <- setLogitFunctions(modelSpace)
@@ -201,7 +208,7 @@ getNumClusters <- function(clusterID) {
 }
 
 # Function that scales all the variables in X to be between 0 and 1:
-scaleData <- function(data, modelSpace) {
+scaleData <- function(data, modelSpace, parSetup, parIDs) {
   price <- data$price
   X <- data$X
   scaledX <- X
@@ -221,9 +228,14 @@ scaleData <- function(data, modelSpace) {
   if (modelSpace == "wtp") {
     vals <- unique(price)
     scaleFactorPrice <- abs(max(vals) - min(vals))
-    scaledPrice <- price / scaleFactorPrice
+    scaledPrice <- price / scaleFactorPrice # Scale price
+    scaleFactorsX <- scaleFactorsX / scaleFactorPrice # Update scaleFactorsX
     scaleFactors <- c(scaleFactorPrice, scaleFactorsX)
     names(scaleFactors) <- c("lambda", colnames(scaledX))
+  }
+  # If MXL model, need to replicate scale factors for sigma pars
+  if (isMxlModel(parSetup)) {
+    scaleFactors <- c(scaleFactors, scaleFactors[parIDs$random])
   }
   data$X <- scaledX
   data$price <- scaledPrice
@@ -249,21 +261,18 @@ makeDiffData <- function(data) {
   ))
 }
 
-addMxlInputs <- function(modelInputs) {
-  modelInputs$modelType <- "mxl"
-  numDraws <- modelInputs$inputs$numDraws
-  userDraws <- modelInputs$standardDraws
-  if (is.null(userDraws)) {
-    modelInputs$standardDraws <- getStandardDraws(
+makeMxlDraws <- function(modelInputs) {
+  draws <- modelInputs$standardDraws
+  if (is.null(draws)) {
+    draws <- getStandardDraws(
       modelInputs$parIDs, modelInputs$inputs$numDraws)
-  } else if (ncol(userDraws) != modelInputs$numBetas) {
+  } else if (ncol(draws) != modelInputs$numBetas) {
     # If user provides draws, make sure there are enough columns
     stop(
       "The number of columns in the user-provided draws do not match the ",
       "specified number of parameters")
   }
-  modelInputs$partials <- makePartials(modelInputs)
-  return(modelInputs)
+  return(draws)
 }
 
 makePartials <- function(modelInputs) {
