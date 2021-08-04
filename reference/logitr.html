@@ -381,7 +381,17 @@ Run <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nlo
   modelSpace     <span class='op'>=</span> <span class='st'>"wtp"</span>,
   numMultiStarts <span class='op'>=</span> <span class='fl'>10</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Running Multistart 1 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 2 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 3 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 4 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 5 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 6 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 7 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 8 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 9 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 10 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div></pre>
+</div><div class='output co'>#&gt; <span class='message'>Running Multistart 1 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 2 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 3 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 4 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 5 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 6 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 7 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 8 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 9 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 10 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
+<span class='co'># Estimate a MXL model in the Preference space with "feat" and "brand"</span>
+<span class='co'># following normal distributions</span>
+<span class='va'>mxl_pref</span> <span class='op'>&lt;-</span> <span class='fu'>logitr</span><span class='op'>(</span>
+  data   <span class='op'>=</span> <span class='va'>yogurt</span>,
+  choice <span class='op'>=</span> <span class='st'>"choice"</span>,
+  obsID  <span class='op'>=</span> <span class='st'>"obsID"</span>,
+  pars   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>,
+  randPars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>feat <span class='op'>=</span> <span class='st'>"n"</span>, brand <span class='op'>=</span> <span class='st'>"n"</span><span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
