@@ -103,17 +103,10 @@ Run \code{nloptr::nloptr.print.options()} for details.}
 The function returns a list object containing the following objects.\tabular{ll}{
    Value \tab Description \cr
    \code{coef} \tab The model coefficients at convergence. \cr
-   \code{standErrs} \tab The standard errors of the model coefficients at convergence. \cr
    \code{logLik} \tab The log-likelihood value at convergence. \cr
    \code{nullLogLik} \tab The null log-likelihood value (if all coefficients are 0). \cr
    \code{gradient} \tab The gradient of the log-likelihood at convergence. \cr
    \code{hessian} \tab The hessian of the log-likelihood at convergence. \cr
-   \code{covariance} \tab The covariance matrix at convergence. \cr
-   \code{numObs} \tab The number of observations. \cr
-   \code{numParams} \tab The number of model parameters. \cr
-   \code{call} \tab The matched call to \code{logitr()}. \cr
-   \code{inputs} \tab A list of the original inputs to \code{logitr()}. \cr
-   \code{freq} \tab The frequency counts of each choice alternative. \cr
    \code{startPars} \tab The starting values used. \cr
    \code{multistartNumber} \tab The multistart run number for this model. \cr
    \code{multistartSummary} \tab A summary of the log-likelihood values for each multistart run (if more than one multistart was used). \cr
@@ -121,12 +114,18 @@ The function returns a list object containing the following objects.\tabular{ll}
    \code{iterations} \tab The number of iterations until convergence. \cr
    \code{message} \tab A more informative message with the status of the optimization result. \cr
    \code{status} \tab An integer value with the status of the optimization (positive values are successes). Use \code{\link[=statusCodes]{statusCodes()}} for a detailed description. \cr
+   \code{call} \tab The matched call to \code{logitr()}. \cr
+   \code{inputs} \tab A list of the original inputs to \code{logitr()}. \cr
+   \code{data} \tab A list of the original data provided to \code{logitr()} broken up into components used during model estimation. \cr
+   \code{numObs} \tab The number of observations. \cr
+   \code{numParams} \tab The number of model parameters. \cr
+   \code{freq} \tab The frequency counts of each choice alternative. \cr
    \code{modelType} \tab The model type, \code{'mnl'} for multinomial logit or \code{'mxl'} for mixed logit. \cr
    \code{weightsUsed} \tab \code{TRUE} or \code{FALSE} for whether weights were used in the model. \cr
-   \code{cluster} \tab The name of the column used to identify the cluster groups used in model estimation. \cr
    \code{numClusters} \tab The number of clusters. \cr
-   \code{robust} \tab \code{TRUE} or \code{FALSE} for whether or not a robust covariance matrix was estimated. \cr
    \code{parSetup} \tab A summary of the distributional assumptions on each model parameter (\code{"f"}="fixed", \code{"n"}="normal distribution", \code{"ln"}="log-normal distribution"). \cr
+   \code{parIDs} \tab A list identifying the indices of each parameter in \code{coef} by a variety of types. \cr
+   \code{scaleFactors} \tab A vector of the scaling factors used to scale each coefficient during estimation. \cr
    \code{standardDraws} \tab The draws used during maximum simulated likelihood (for MXL models). \cr
    \code{options} \tab A list of options for controlling the \code{nloptr()} optimization. Run \code{nloptr::nloptr.print.options()} for details. \cr
 }
@@ -141,10 +140,10 @@ utility parameterizations. The main optimization loop uses the \code{nloptr()}
 function to minimize the negative log-likelihood function.
 }
 \details{
-The following options control the detailed behavior of the optimization
-algorithm. They must be provided as a named list to the \code{options} argument,
-e.g. \code{options = list(...)}. Below are a list of the default options.
-Run \code{nloptr::nloptr.print.options()} for more options\tabular{lll}{
+The the \code{options} argument is used to control the detailed behavior of the
+optimization and must be passed as a list, e.g. \code{options = list(...)}.
+Below are a list of the default options, but other options can be included.
+Run \code{nloptr::nloptr.print.options()} for more details.\tabular{lll}{
    Argument \tab Description \tab Default \cr
    \code{xtol_rel} \tab The relative \code{x} tolerance for the \code{nloptr} optimization loop. \tab \code{1.0e-6} \cr
    \code{xtol_abs} \tab The absolute \code{x} tolerance for the \code{nloptr} optimization loop. \tab \code{1.0e-6} \cr

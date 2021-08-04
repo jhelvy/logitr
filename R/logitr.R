@@ -67,10 +67,10 @@
 #' Run `nloptr::nloptr.print.options()` for details.
 #'
 #' @details
-#' The following options control the detailed behavior of the optimization
-#' algorithm. They must be provided as a named list to the `options` argument,
-#' e.g. `options = list(...)`. Below are a list of the default options.
-#' Run `nloptr::nloptr.print.options()` for more options
+#' The the `options` argument is used to control the detailed behavior of the
+#' optimization and must be passed as a list, e.g. `options = list(...)`.
+#' Below are a list of the default options, but other options can be included.
+#' Run `nloptr::nloptr.print.options()` for more details.
 #'
 #' |    Argument    |    Description    |    Default    |
 #' |:---------------|:------------------|:--------------|
@@ -88,17 +88,10 @@
 #' |    Value    |    Description    |
 #' |:------------|:------------------|
 #' |`coef`|The model coefficients at convergence.|
-#' |`standErrs`|The standard errors of the model coefficients at convergence.|
 #' |`logLik`|The log-likelihood value at convergence.|
 #' |`nullLogLik`|The null log-likelihood value (if all coefficients are 0).|
 #' |`gradient`|The gradient of the log-likelihood at convergence.|
 #' |`hessian`|The hessian of the log-likelihood at convergence.|
-#' |`covariance`|The covariance matrix at convergence.|
-#' |`numObs`|The number of observations.|
-#' |`numParams`|The number of model parameters.|
-#' |`call`|The matched call to `logitr()`.|
-#' |`inputs`|A list of the original inputs to `logitr()`.|
-#' |`freq`|The frequency counts of each choice alternative.|
 #' |`startPars`|The starting values used.|
 #' |`multistartNumber`|The multistart run number for this model.|
 #' |`multistartSummary`|A summary of the log-likelihood values for each multistart run (if more than one multistart was used).|
@@ -106,12 +99,18 @@
 #' |`iterations`|The number of iterations until convergence.|
 #' |`message`|A more informative message with the status of the optimization result.|
 #' |`status`|An integer value with the status of the optimization (positive values are successes). Use [statusCodes()] for a detailed description.|
+#' |`call`|The matched call to `logitr()`.|
+#' |`inputs`|A list of the original inputs to `logitr()`.|
+#' |`data`|A list of the original data provided to `logitr()` broken up into components used during model estimation.|
+#' |`numObs`|The number of observations.|
+#' |`numParams`|The number of model parameters.|
+#' |`freq`|The frequency counts of each choice alternative.|
 #' |`modelType`|The model type, `'mnl'` for multinomial logit or `'mxl'` for mixed logit.|
 #' |`weightsUsed`|`TRUE` or `FALSE` for whether weights were used in the model.|
-#' |`cluster`|The name of the column used to identify the cluster groups used in model estimation.|
 #' |`numClusters`|The number of clusters.|
-#' |`robust`|`TRUE` or `FALSE` for whether or not a robust covariance matrix was estimated.|
 #' |`parSetup`|A summary of the distributional assumptions on each model parameter (`"f"`="fixed", `"n"`="normal distribution", `"ln"`="log-normal distribution").|
+#' |`parIDs`|A list identifying the indices of each parameter in `coef` by a variety of types.|
+#' |`scaleFactors`|A vector of the scaling factors used to scale each coefficient during estimation.|
 #' |`standardDraws`|The draws used during maximum simulated likelihood (for MXL models).|
 #' |`options`|A list of options for controlling the `nloptr()` optimization. Run `nloptr::nloptr.print.options()` for details.|
 #'
