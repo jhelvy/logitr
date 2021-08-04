@@ -9,6 +9,7 @@
 \alias{vcov.logitr}
 \alias{summary.logitr}
 \alias{print.summary.logitr}
+\alias{print.logitr_wtp}
 \title{Methods for logitr objects}
 \usage{
 \method{logLik}{logitr}(object, ...)
@@ -19,6 +20,13 @@
 
 \method{summary}{logitr}(object, ...)
 
+\method{print}{logitr}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+)
+
 \method{print}{summary.logitr}(
   x,
   digits = max(3, getOption("digits") - 2),
@@ -27,6 +35,13 @@
 )
 
 \method{vcov}{logitr}(object, ...)
+
+\method{print}{logitr_wtp}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+)
 }
 \arguments{
 \item{object}{is an object of class \code{logitr}.}

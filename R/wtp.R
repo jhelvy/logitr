@@ -45,7 +45,9 @@ wtp <- function(model, price) {
   wtpDraws <- draws / priceDraws
   wtpDraws[, priceID] <- draws[, priceID]
   wtp_se <- apply(wtpDraws, 2, stats::sd)
-  return(getCoefTable(wtp_mean, wtp_se))
+  result <- getCoefTable(wtp_mean, wtp_se)
+  class(result) <- c("logitr_wtp", "data.frame")
+  return(result)
 }
 
 #' Compare WTP from preference and WTP space models

@@ -45,7 +45,7 @@ summary.logitr <- function (object, ...) {
     return(object)
 }
 
-#' @rdname miscmethods.mlogit
+#' @rdname miscmethods.logitr
 #' @export
 print.logitr <- function (
   x,
@@ -281,4 +281,15 @@ getClusterModelInputs <- function (indices, modelInputs) {
   }
   mi$nrowX <- nrow(X)
   return(mi)
+}
+
+#' @rdname miscmethods.logitr
+#' @export
+print.logitr_wtp <- function (
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+) {
+  stats::printCoefmat(x, digits = digits)
 }
