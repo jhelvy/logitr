@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.5.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.6.9000</span>
       </span>
     </div>
 
@@ -163,14 +163,14 @@
 <span class="co">#&gt; 1.2     1      0              0</span>
 <span class="co">#&gt; 1.3     1      1              0</span>
 <span class="co">#&gt; 1.4     1      0              0</span>
-<span class="co">#&gt; 2.5     2      1              0</span>
+<span class="co">#&gt; 2.5     2      1              1</span>
 <span class="co">#&gt; 2.6     2      0              0</span></code></pre></div>
 <p>The resulting <code>choices_mnl_pref</code> data frame contains the same <code>alts</code> data frame with an additional column, <code>choice_predict</code>, which contains the predicted choices. You can quickly compute the accuracy by dividing the number of correctly predicted choices by the total number of choices:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">chosen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">choices_mnl_pref</span>, <span class="va">choice</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>
 <span class="va">chosen</span><span class="op">$</span><span class="va">correct</span> <span class="op">&lt;-</span> <span class="va">chosen</span><span class="op">$</span><span class="va">choice</span> <span class="op">==</span> <span class="va">chosen</span><span class="op">$</span><span class="va">choice_predict</span>
 <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">chosen</span><span class="op">$</span><span class="va">correct</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">chosen</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.3731343</span></code></pre></div>
+<span class="co">#&gt; [1] 0.3818408</span></code></pre></div>
 </div>
 <div id="wtp-space-parameterization" class="section level2">
 <h2 class="hasAnchor">
@@ -238,9 +238,9 @@
 <code class="sourceCode R"><span class="co"># Preview actual and predicted choices</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">choices_mxl_pref</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'obsID'</span>, <span class="st">'choice'</span>, <span class="st">'choice_predict'</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
 <span class="co">#&gt;     obsID choice choice_predict</span>
-<span class="co">#&gt; 1.1     1      0              1</span>
+<span class="co">#&gt; 1.1     1      0              0</span>
 <span class="co">#&gt; 1.2     1      0              0</span>
-<span class="co">#&gt; 1.3     1      1              0</span>
+<span class="co">#&gt; 1.3     1      1              1</span>
 <span class="co">#&gt; 1.4     1      0              0</span>
 <span class="co">#&gt; 2.5     2      1              0</span>
 <span class="co">#&gt; 2.6     2      0              0</span></code></pre></div>
@@ -273,11 +273,11 @@
 <code class="sourceCode R"><span class="co"># Preview actual and predicted choices</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">choices_mxl_wtp</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'obsID'</span>, <span class="st">'choice'</span>, <span class="st">'choice_predict'</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
 <span class="co">#&gt;     obsID choice choice_predict</span>
-<span class="co">#&gt; 1.1     1      0              0</span>
+<span class="co">#&gt; 1.1     1      0              1</span>
 <span class="co">#&gt; 1.2     1      0              0</span>
-<span class="co">#&gt; 1.3     1      1              1</span>
+<span class="co">#&gt; 1.3     1      1              0</span>
 <span class="co">#&gt; 1.4     1      0              0</span>
-<span class="co">#&gt; 2.5     2      1              1</span>
+<span class="co">#&gt; 2.5     2      1              0</span>
 <span class="co">#&gt; 2.6     2      0              0</span></code></pre></div>
 </div>
 </div>
@@ -305,10 +305,10 @@
 <span class="co">#&gt; # A tibble: 4 × 2</span>
 <span class="co">#&gt;   model    p_correct</span>
 <span class="co">#&gt;   &lt;chr&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 mnl_pref     0.373</span>
-<span class="co">#&gt; 2 mnl_wtp      0.376</span>
-<span class="co">#&gt; 3 mxl_pref     0.375</span>
-<span class="co">#&gt; 4 mxl_wtp      0.382</span></code></pre></div>
+<span class="co">#&gt; 1 mnl_pref     0.382</span>
+<span class="co">#&gt; 2 mnl_wtp      0.367</span>
+<span class="co">#&gt; 3 mxl_pref     0.381</span>
+<span class="co">#&gt; 4 mxl_wtp      0.381</span></code></pre></div>
 <p>The models all perform about the same with ~38% correct predictions. This is significantly better than random predictions, which should be 25%.</p>
 </div>
 <div id="references" class="section level1 unnumbered">

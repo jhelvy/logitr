@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.5.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.6.9000</span>
       </span>
     </div>
 
@@ -111,17 +111,16 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>Estimation of multinomial (MNL) and mixed logit (MXL) models in R with “Preference” space or “Willingness-to-pay” (WTP) space <a href="https://jhelvy.github.io/logitr/articles/utility_models.html">utility parameterizations</a>.</p>
+<p>Fast estimation of multinomial (MNL) and mixed logit (MXL) models in R with “Preference” space or “Willingness-to-pay” (WTP) space <a href="https://jhelvy.github.io/logitr/articles/utility_models.html">utility parameterizations</a>.</p>
 <p>The latest version includes support for:</p>
 <ul>
 <li>Homogeneous multinomial logit (MNL) models</li>
-<li>Heterogeneous mixed logit (MXL) models (with normal and log-normal parameter distributions).</li>
-<li>Preference space utility parameterization.</li>
-<li>WTP space utility parameterization.</li>
-<li>An option to run a multistart optimization loop that uses different random starting points in each iteration to search for different local minima (useful for non-convex problems like MXL models or models with WTP space parameterizations).</li>
-<li>Computing and comparing WTP from both preference space and WTP space models.</li>
-<li>Support for weighted models to differentially weight individual choice observations.</li>
+<li>Heterogeneous mixed logit (MXL) models with normal and log-normal parameter distributions.</li>
+<li>Preference space and WTP space utility parameterizations.</li>
+<li>Weighted models to differentially weight individual choice observations.</li>
+<li>Functions for computing WTP from preference space models.</li>
 <li>Functions for predicting expected choices and choice probabilities for a set (or multiple sets) of alternatives based on an estimated model.</li>
+<li>An option to run a multistart optimization loop that uses different random starting points in each iteration to search for different local minima (useful for non-convex problems like MXL models or models with WTP space parameterizations).</li>
 </ul>
 <p>Note: MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in Kenneth Train’s book <a href="https://eml.berkeley.edu/books/choice2.html"><em>Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)</em></a>.</p>
 <div id="installation" class="section level2">

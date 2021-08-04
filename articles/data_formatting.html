@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.5.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.6.9000</span>
       </span>
     </div>
 
@@ -120,16 +120,16 @@
 <div id="basic-required-format" class="section level1">
 <h1 class="hasAnchor">
 <a href="#basic-required-format" class="anchor"></a>Basic required format</h1>
-<p>The <code>data</code> argument must be provided a <code>data.frame</code> arranged in “long” or “tidy” format <span class="citation">[@Wickham2014]</span>. Each row should be an alternative from a choice observation. The choice observations do not have to be symmetric (i.e. each choice observation could have a different number of alternatives). The data must also include variables for each of the following arguments in the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
+<p>The {logitr} package requires that data be structured in a <code>data.frame</code> and arranged in “long” or “tidy” format <span class="citation">[@Wickham2014]</span>. Each row should be an alternative from a choice observation. The choice observations do not have to be symmetric, meaning they can have a “ragged” structure where different choice observations have different numbers of alternatives. The data must also include variables for each of the following:</p>
 <ul>
 <li>
-<code>choice</code>: A dummy variable that identifies which alternative was chosen (<code>1</code> is chosen, <code>0</code> is not chosen). Only one alternative should be chosen per choice observation.</li>
+<strong>Choice</strong>: A dummy variable that identifies which alternative was chosen (<code>1</code> is chosen, <code>0</code> is not chosen). Only one alternative should be chosen per choice observation.</li>
 <li>
-<code>obsID</code>: A sequence of repeated numbers that identifies each unique choice observation For example, if the first three choice observations had 2 alternatives each, then the first 6 rows of the <code>obsID</code> variable would be <code>1, 1, 2, 2, 3, 3</code>.</li>
+<strong>Observation ID</strong>: A sequence of repeated numbers that identifies each unique choice observation. For example, if the first three choice observations had 2 alternatives each, then the first 6 rows of the <code>obsID</code> variable would be <code>1, 1, 2, 2, 3, 3</code>.</li>
 <li>
-<code>pars</code>: The names of the variables that will be used as model covariates. For WTP space models, the price variable should <strong>not</strong> be included in <code>pars</code> as it is provided separately with the <code>price</code> argument.</li>
+<strong>Covariates</strong>: Other variables that will be used as model covariates.</li>
 </ul>
-<p>The {logitr} package contains several example data sets that illustrate this data structure. For example, in the <code>yogurt</code> data set, which contains observations of yogurt purchases by a panel of 100 households, each row is an alternative from a choice observation. Choice is identified by the <code>choice</code> column, the observation ID is identified by the <code>obsID</code> column, and the columns <code>price</code>, <code>feat</code>, and <code>brand</code> can be used as model covariates (brand is also broken out into additional dummy-coded columns):</p>
+<p>The {logitr} package contains several example data sets that illustrate this data structure. For example, the <code>yogurt</code> contains observations of yogurt purchases by a panel of 100 households <span class="citation">[@Jain1994]</span>. Choice is identified by the <code>choice</code> column, the observation ID is identified by the <code>obsID</code> column, and the columns <code>price</code>, <code>feat</code>, and <code>brand</code> can be used as model covariates (brand is also broken out into additional dummy-coded columns):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">yogurt</span><span class="op">)</span>
 <span class="co">#&gt;   id obsID alt choice price feat   brand dannon hiland weight yoplait</span>
@@ -139,7 +139,7 @@
 <span class="co">#&gt; 4  1     1   4      0  10.8    0 yoplait      0      0      0       1</span>
 <span class="co">#&gt; 5  1     2   1      1   9.8    0  dannon      1      0      0       0</span>
 <span class="co">#&gt; 6  1     2   2      0   6.4    0  hiland      0      1      0       0</span></code></pre></div>
-<p>This data set also has an <code>alt</code> variable that determines the alternatives included in the choice set of each observation and an <code>id</code> variable that determines the individual (this data set contains repeated observations from each individual).</p>
+<p>This data set also includes an <code>alt</code> variable that determines the alternatives included in the choice set of each observation and an <code>id</code> variable that determines the individual as the data have a panel structure containing multiple choice observations from each individual.</p>
 </div>
 <div id="continuous-versus-discrete-variables" class="section level1">
 <h1 class="hasAnchor">
