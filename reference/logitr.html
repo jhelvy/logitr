@@ -310,17 +310,10 @@ Run <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nlo
     <p>The function returns a list object containing the following objects.</p><table class='table'>
 <tr><td>Value</td><td>Description</td></tr>
 <tr><td><code>coef</code></td><td>The model coefficients at convergence.</td></tr>
-<tr><td><code>standErrs</code></td><td>The standard errors of the model coefficients at convergence.</td></tr>
 <tr><td><code>logLik</code></td><td>The log-likelihood value at convergence.</td></tr>
 <tr><td><code>nullLogLik</code></td><td>The null log-likelihood value (if all coefficients are 0).</td></tr>
 <tr><td><code>gradient</code></td><td>The gradient of the log-likelihood at convergence.</td></tr>
 <tr><td><code>hessian</code></td><td>The hessian of the log-likelihood at convergence.</td></tr>
-<tr><td><code>covariance</code></td><td>The covariance matrix at convergence.</td></tr>
-<tr><td><code>numObs</code></td><td>The number of observations.</td></tr>
-<tr><td><code>numParams</code></td><td>The number of model parameters.</td></tr>
-<tr><td><code>call</code></td><td>The matched call to <code>logitr()</code>.</td></tr>
-<tr><td><code>inputs</code></td><td>A list of the original inputs to <code>logitr()</code>.</td></tr>
-<tr><td><code>freq</code></td><td>The frequency counts of each choice alternative.</td></tr>
 <tr><td><code>startPars</code></td><td>The starting values used.</td></tr>
 <tr><td><code>multistartNumber</code></td><td>The multistart run number for this model.</td></tr>
 <tr><td><code>multistartSummary</code></td><td>A summary of the log-likelihood values for each multistart run (if more than one multistart was used).</td></tr>
@@ -328,12 +321,18 @@ Run <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nlo
 <tr><td><code>iterations</code></td><td>The number of iterations until convergence.</td></tr>
 <tr><td><code>message</code></td><td>A more informative message with the status of the optimization result.</td></tr>
 <tr><td><code>status</code></td><td>An integer value with the status of the optimization (positive values are successes). Use <code><a href='statusCodes.html'>statusCodes()</a></code> for a detailed description.</td></tr>
+<tr><td><code>call</code></td><td>The matched call to <code>logitr()</code>.</td></tr>
+<tr><td><code>inputs</code></td><td>A list of the original inputs to <code>logitr()</code>.</td></tr>
+<tr><td><code>data</code></td><td>A list of the original data provided to <code>logitr()</code> broken up into components used during model estimation.</td></tr>
+<tr><td><code>numObs</code></td><td>The number of observations.</td></tr>
+<tr><td><code>numParams</code></td><td>The number of model parameters.</td></tr>
+<tr><td><code>freq</code></td><td>The frequency counts of each choice alternative.</td></tr>
 <tr><td><code>modelType</code></td><td>The model type, <code>'mnl'</code> for multinomial logit or <code>'mxl'</code> for mixed logit.</td></tr>
 <tr><td><code>weightsUsed</code></td><td><code>TRUE</code> or <code>FALSE</code> for whether weights were used in the model.</td></tr>
-<tr><td><code>cluster</code></td><td>The name of the column used to identify the cluster groups used in model estimation.</td></tr>
 <tr><td><code>numClusters</code></td><td>The number of clusters.</td></tr>
-<tr><td><code>robust</code></td><td><code>TRUE</code> or <code>FALSE</code> for whether or not a robust covariance matrix was estimated.</td></tr>
 <tr><td><code>parSetup</code></td><td>A summary of the distributional assumptions on each model parameter (<code>"f"</code>="fixed", <code>"n"</code>="normal distribution", <code>"ln"</code>="log-normal distribution").</td></tr>
+<tr><td><code>parIDs</code></td><td>A list identifying the indices of each parameter in <code>coef</code> by a variety of types.</td></tr>
+<tr><td><code>scaleFactors</code></td><td>A vector of the scaling factors used to scale each coefficient during estimation.</td></tr>
 <tr><td><code>standardDraws</code></td><td>The draws used during maximum simulated likelihood (for MXL models).</td></tr>
 <tr><td><code>options</code></td><td>A list of options for controlling the <code>nloptr()</code> optimization. Run <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for details.</td></tr>
 </table>
@@ -341,10 +340,10 @@ Run <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nlo
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The following options control the detailed behavior of the optimization
-algorithm. They must be provided as a named list to the <code>options</code> argument,
-e.g. <code>options = list(...)</code>. Below are a list of the default options.
-Run <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more options</p><table class='table'>
+    <p>The the <code>options</code> argument is used to control the detailed behavior of the
+optimization and must be passed as a list, e.g. <code>options = list(...)</code>.
+Below are a list of the default options, but other options can be included.
+Run <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for more details.</p><table class='table'>
 <tr><td>Argument</td><td>Description</td><td>Default</td></tr>
 <tr><td><code>xtol_rel</code></td><td>The relative <code>x</code> tolerance for the <code>nloptr</code> optimization loop.</td><td><code>1.0e-6</code></td></tr>
 <tr><td><code>xtol_abs</code></td><td>The absolute <code>x</code> tolerance for the <code>nloptr</code> optimization loop.</td><td><code>1.0e-6</code></td></tr>
