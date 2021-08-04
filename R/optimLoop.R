@@ -105,7 +105,7 @@ getStartPars <- function(modelInputs, i) {
       startPars <- 0 * startPars
     }
   }
-  startPars <- checkStartPars(startPars, modelInputs)
+  startPars <- checkStartPars(startPars, modelInputs, i)
   return(startPars)
 }
 
@@ -125,22 +125,18 @@ getRandomStartPars <- function(modelInputs) {
 }
 
 # For lambda and logN parameters must start with positive numbers
-checkStartPars <- function(startPars, modelInputs) {
-  lambdaParIDs <- NULL
+checkStartPars <- function(startPars, modelInputs, i) {
   if (modelInputs$inputs$modelSpace == "wtp") {
-    lambdaParIDs <- which(grepl("lambda", modelInputs$parList$all))
+    startPars[1] <- 1
   }
-  logNPars <- names(modelInputs$parIDs$logNormal)
-  logNParIDs <- c()
-  if (length(logNPars) > 0) {
-    for (par in logNPars) {
-      logNParIDs <- c(logNParIDs, which(grepl(par, modelInputs$parList$all)))
-    }
-  }
-  positiveParIDs <- unique(c(lambdaParIDs, logNParIDs))
+  if (i == 1) { return(startPars) }
+  parIDs <- modelInputs$parIDs
+  lnIDs <- parIDs$logNormal
+  randIDs <- parIDs$random
+  positiveParIDs <- c(lnIDs, randIDs + length(parIDs$random))
   if (length(positiveParIDs) > 0) {
     startPars[positiveParIDs] <- stats::runif(
-      length(positiveParIDs), 0.01, 0.1)
+      length(positiveParIDs), 0.1, 1)
   }
   return(startPars)
 }
