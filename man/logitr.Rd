@@ -179,6 +179,16 @@ mnl_wtp <- logitr(
   modelSpace     = "wtp",
   numMultiStarts = 10
 )
+
+# Estimate a MXL model in the Preference space with "feat" and "brand"
+# following normal distributions
+mxl_pref <- logitr(
+  data   = yogurt,
+  choice = "choice",
+  obsID  = "obsID",
+  pars   = c("price", "feat", "brand"),
+  randPars = c(feat = "n", brand = "n")
+)
 }
 \keyword{logit}
 \keyword{logitr}
