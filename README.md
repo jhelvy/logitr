@@ -12,28 +12,26 @@ status](https://travis-ci.com/jhelvy/logitr.svg?branch=master)](https://travis-c
 [![](http://cranlogs.r-pkg.org/badges/grand-total/logitr?color=blue)](https://cran.r-project.org/package=logitr)
 <!-- badges: end -->
 
-Estimation of multinomial (MNL) and mixed logit (MXL) models in R with
-“Preference” space or “Willingness-to-pay” (WTP) space [utility
+Fast estimation of multinomial (MNL) and mixed logit (MXL) models in R
+with “Preference” space or “Willingness-to-pay” (WTP) space [utility
 parameterizations](https://jhelvy.github.io/logitr/articles/utility_models.html).
 
 The latest version includes support for:
 
 -   Homogeneous multinomial logit (MNL) models
--   Heterogeneous mixed logit (MXL) models (with normal and log-normal
-    parameter distributions).
--   Preference space utility parameterization.
--   WTP space utility parameterization.
+-   Heterogeneous mixed logit (MXL) models with normal and log-normal
+    parameter distributions.
+-   Preference space and WTP space utility parameterizations.
+-   Weighted models to differentially weight individual choice
+    observations.
+-   Functions for computing WTP from preference space models.
+-   Functions for predicting expected choices and choice probabilities
+    for a set (or multiple sets) of alternatives based on an estimated
+    model.
 -   An option to run a multistart optimization loop that uses different
     random starting points in each iteration to search for different
     local minima (useful for non-convex problems like MXL models or
     models with WTP space parameterizations).
--   Computing and comparing WTP from both preference space and WTP space
-    models.
--   Support for weighted models to differentially weight individual
-    choice observations.
--   Functions for predicting expected choices and choice probabilities
-    for a set (or multiple sets) of alternatives based on an estimated
-    model.
 
 Note: MXL models assume uncorrelated heterogeneity covariances and are
 estimated using maximum simulated likelihood based on the algorithms in

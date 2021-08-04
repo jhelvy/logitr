@@ -40,12 +40,15 @@ getModelInputs <- function(
   X <- recoded$X
   pars <- recoded$pars
   randPars <- recoded$randPars
+  price <- definePrice(data, inputs)
 
-  # Set up the parameters
+  # Set up other data
   parSetup <- getParSetup(pars, price, randPars, randPrice)
   parIDs <- getParIDs(parSetup)
   parList <- getParList(parSetup, parIDs$random)
   obsID <- as.matrix(data[obsID])
+  reps <- as.numeric(table(obsID))
+  obsID <- rep(seq_along(reps), reps) # Make sure obsID is sequential number
   choice <- as.matrix(data[choice])
 
   # Add names to startVals (if provided)
@@ -53,9 +56,6 @@ getModelInputs <- function(
     names(startVals) <- parList$all
     inputs$startVals <- startVals
   }
-
-  # Define price for WTP space models (price must be numeric type)
-  price <- definePrice(data, inputs)
 
   # Setup weights
   weights <- matrix(1, nrow(data))
@@ -66,7 +66,7 @@ getModelInputs <- function(
   }
 
   # Setup Clusters
-  clusterIDs <- NULL
+  clusterID <- NULL
   numClusters <- 0
   if (robust & is.null(cluster)) {
     cluster <- inputs$obsID
@@ -82,13 +82,32 @@ getModelInputs <- function(
       message("Setting robust to TRUE since clusters are being used")
       robust <- TRUE
     }
-    clusterIDs <- as.matrix(data[cluster])
-    numClusters <- getNumClusters(clusterIDs)
+    clusterID <- as.matrix(data[cluster])
+    numClusters <- getNumClusters(clusterID)
   }
 
-  # Update inputs
+  # Update inputs for cluster and robust controls
   inputs$cluster <- cluster
   inputs$robust <- robust
+
+  # Make data object
+  data <- list(
+    price     = price,
+    X         = X,
+    choice    = choice,
+    obsID     = obsID,
+    clusterID = clusterID,
+    weights   = weights,
+    scaleFactors = rep(1, length(parList$all))
+  )
+
+  # Scale data
+  if (scaleInputs) {
+    data <- scaleData(data, inputs$modelSpace, parSetup, parIDs)
+  }
+
+  # Make differenced data
+  data_diff <- makeDiffData(data)
 
   # Make modelInputs list
   modelInputs <- list(
@@ -97,32 +116,49 @@ getModelInputs <- function(
     modelType     = "mnl",
     freq          = getFrequencyCounts(obsID, choice),
     price         = price,
-    X             = X,
-    choice        = choice,
-    obsID         = obsID,
-    repTimes      = getRepTimes(obsID),
-    weights       = weights,
+    data          = data,
+    data_diff     = data_diff,
     weightsUsed   = weightsUsed,
-    clusterIDs    = clusterIDs,
     numClusters   = numClusters,
     parSetup      = parSetup,
     parIDs        = parIDs,
     parList       = parList,
     numBetas      = length(parSetup),
-    scaleFactors  = NA,
     standardDraws = standardDraws,
+    nrowX         = nrow(data_diff$X),
     options       = options
   )
 
-  if (scaleInputs) {
-    modelInputs <- scaleModelInputs(modelInputs)
+  # Add mixed logit inputs
+  if (isMxlModel(parSetup)) {
+    modelInputs$modelType <- "mxl"
+    modelInputs$standardDraws <- makeMxlDraws(modelInputs)
+    modelInputs$partials <- makePartials(modelInputs)
   }
-  modelInputs <- addDraws(modelInputs)
+
+  # Set logit and eval functions
   modelInputs$logitFuncs <- setLogitFunctions(modelSpace)
   modelInputs$evalFuncs <- setEvalFunctions(
     modelInputs$modelType, useAnalyticGrad
   )
   return(modelInputs)
+}
+
+definePrice <- function(data, inputs) {
+  if (inputs$modelSpace == "pref") {
+    return(NULL)
+  }
+  if (inputs$modelSpace == "wtp") {
+    price <- data[, which(names(data) == inputs$price)]
+    if (! typeof(price) %in% c("integer", "double")) {
+      stop(
+        'Please make sure the price column in your data defined by the ',
+        '"price" argument is encoded as a numeric data type. Price must ',
+        'be numeric for WTP space models.'
+      )
+    }
+  }
+  return(as.matrix(price))
 }
 
 getParSetup <- function(pars, price, randPars, randPrice) {
@@ -166,32 +202,15 @@ getParList <- function(parSetup, randParIDs) {
   return(list(mu = names_mu, sigma = names_sigma, all = names_all))
 }
 
-definePrice <- function(data, inputs) {
-  if (inputs$modelSpace == "pref") {
-    return(NULL)
-  }
-  if (inputs$modelSpace == "wtp") {
-    price <- data[, which(names(data) == inputs$price)]
-    if (! typeof(price) %in% c("integer", "double")) {
-      stop(
-        'Please make sure the price column in your data defined by the ',
-        '"price" argument is encoded as a numeric data type. Price must ',
-        'be numeric for WTP space models.'
-      )
-    }
-  }
-  return(as.matrix(price))
-}
-
 getNumClusters <- function(clusterID) {
   if (is.null(clusterID)) { return(0) }
   return(length(unique(clusterID)))
 }
 
 # Function that scales all the variables in X to be between 0 and 1:
-scaleModelInputs <- function(modelInputs) {
-  price <- modelInputs$price
-  X <- modelInputs$X
+scaleData <- function(data, modelSpace, parSetup, parIDs) {
+  price <- data$price
+  X <- data$X
   scaledX <- X
   scaledPrice <- price
   # Scale X data
@@ -206,40 +225,73 @@ scaleModelInputs <- function(modelInputs) {
   scaleFactors <- scaleFactorsX
   names(scaleFactors) <- colnames(scaledX)
   # Scale price if WTP space model
-  if (modelInputs$inputs$modelSpace == "wtp") {
+  if (modelSpace == "wtp") {
     vals <- unique(price)
     scaleFactorPrice <- abs(max(vals) - min(vals))
-    scaledPrice <- price / scaleFactorPrice
+    scaledPrice <- price / scaleFactorPrice # Scale price
+    scaleFactorsX <- scaleFactorsX / scaleFactorPrice # Update scaleFactorsX
     scaleFactors <- c(scaleFactorPrice, scaleFactorsX)
     names(scaleFactors) <- c("lambda", colnames(scaledX))
   }
-  modelInputs$X <- scaledX
-  modelInputs$price <- scaledPrice
-  modelInputs$scaleFactors <- scaleFactors
-  return(modelInputs)
+  # If MXL model, need to replicate scale factors for sigma pars
+  if (isMxlModel(parSetup)) {
+    scaleFactors <- c(scaleFactors, scaleFactors[parIDs$random])
+  }
+  data$X <- scaledX
+  data$price <- scaledPrice
+  data$scaleFactors <- scaleFactors
+  return(data)
 }
 
-addDraws <- function(modelInputs) {
-  parSetup <- modelInputs$parSetup
-  if (isMnlModel(parSetup)) { return(modelInputs) }
-  modelInputs$modelType <- "mxl"
-  repTimes <- modelInputs$repTimes
+makeDiffData <- function(data) {
+  # Subtracting out the chosen alternative makes things faster
+  X_chosen <- data$X[data$choice == 1,]
+  X_diff <- (data$X - X_chosen[data$obsID,])[data$choice != 1,]
+  price_diff <- NULL
+  if (!is.null(data$price)) {
+    price_chosen <- data$price[data$choice == 1]
+    price_diff <- (data$price - price_chosen[data$obsID])[data$choice != 1]
+  }
+  return(list(
+    price     = price_diff,
+    X         = X_diff,
+    obsID     = data$obsID[data$choice != 1],
+    clusterID = data$clusterID[data$choice != 1],
+    weights   = data$weights[data$choice == 1]
+  ))
+}
+
+makeMxlDraws <- function(modelInputs) {
+  draws <- modelInputs$standardDraws
+  if (is.null(draws)) {
+    draws <- getStandardDraws(
+      modelInputs$parIDs, modelInputs$inputs$numDraws)
+  } else if (ncol(draws) != modelInputs$numBetas) {
+    # If user provides draws, make sure there are enough columns
+    stop(
+      "The number of columns in the user-provided draws do not match the ",
+      "specified number of parameters")
+  }
+  return(draws)
+}
+
+makePartials <- function(modelInputs) {
+  numBetas <- modelInputs$numBetas
   numDraws <- modelInputs$inputs$numDraws
-  modelInputs$repTimesMxl <- getRepTimesMxl(repTimes, numDraws)
-  modelInputs$repTimesMxlGrad <- getRepTimesMxlGrad(repTimes, parSetup)
-  userDraws <- modelInputs$standardDraws
-  standardDraws <- getStandardDraws(
-    modelInputs$parIDs, modelInputs$inputs$numDraws)
-  if (is.null(userDraws)) {
-    modelInputs$standardDraws <- standardDraws
-    return(modelInputs)
+  X <- modelInputs$data_diff$X
+  if (modelInputs$inputs$modelSpace == "wtp") {
+    X <- cbind(1, X)
   }
-  # If the user provides their own draws, make sure there are enough columns
-  if (ncol(userDraws) != ncol(standardDraws)) {
-    stop("The user-provided draws do not match the dimensions of the number of parameters")
+  X2 <- repmat(X, 1, 2)
+  partials <- list()
+  draws <- cbind(
+    matrix(1, ncol = numBetas, nrow = numDraws), modelInputs$standardDraws)
+  for (i in seq_len(2*numBetas)) {
+    X_temp <- X2[,rep(i, numDraws)]
+    draws_temp <- repmat(matrix(draws[, i], nrow = 1), nrow(X_temp), 1)
+    partials[[i]] <- X_temp*draws_temp
   }
-  modelInputs$standardDraws <- userDraws
-  return(modelInputs)
+  return(partials[c(1:numBetas, numBetas + modelInputs$parIDs$random)])
 }
 
 setLogitFunctions <- function(modelSpace) {

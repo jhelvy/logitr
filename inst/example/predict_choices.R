@@ -61,14 +61,10 @@ choices_mxl_wtp <- predictChoices(
 head(choices_mxl_wtp)
 
 # Save results
-saveRDS(choices_mnl_pref,
-        here::here('inst', 'extdata', 'choices_mnl_pref.Rds'))
-saveRDS(choices_mnl_wtp,
-        here::here('inst', 'extdata', 'choices_mnl_wtp.Rds'))
-saveRDS(choices_mxl_pref,
-        here::here('inst', 'extdata', 'choices_mxl_pref.Rds'))
-saveRDS(choices_mxl_wtp,
-        here::here('inst', 'extdata', 'choices_mxl_wtp.Rds'))
+saveRDS(choices_mnl_pref, here::here('inst', 'extdata', 'choices_mnl_pref.Rds'))
+saveRDS(choices_mnl_wtp,  here::here('inst', 'extdata', 'choices_mnl_wtp.Rds'))
+saveRDS(choices_mxl_pref, here::here('inst', 'extdata', 'choices_mxl_pref.Rds'))
+saveRDS(choices_mxl_wtp,  here::here('inst', 'extdata', 'choices_mxl_wtp.Rds'))
 
 # Compare prediction accuracy across models
 library(dplyr)

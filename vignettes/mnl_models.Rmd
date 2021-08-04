@@ -22,9 +22,6 @@ library(logitr)
 # take much longer to build
 mnl_pref <- readRDS(here::here('inst', 'extdata', 'mnl_pref.Rds'))
 mnl_wtp  <- readRDS(here::here('inst', 'extdata', 'mnl_wtp.Rds'))
-wtp_mnl_pref <- readRDS(here::here('inst', 'extdata', 'wtp_mnl_pref.Rds'))
-wtp_mnl_comparison <- readRDS(here::here('inst', 'extdata',
-    'wtp_mnl_comparison.Rds'))
 ```
 
 This vignette demonstrates an example of how to use the `logitr()` function to estimate multinomial logit (MNL) models with preference space and WTP space utility parameterizations.
@@ -83,10 +80,8 @@ coef(mnl_pref)
 
 Compute the WTP implied from the preference space model:
 
-```{r, eval=FALSE}
-wtp_mnl_pref <- wtp(mnl_pref, price =  "price")
-```
 ```{r}
+wtp_mnl_pref <- wtp(mnl_pref, price =  "price")
 wtp_mnl_pref
 ```
 
@@ -109,7 +104,7 @@ mnl_wtp <- logitr(
   pars       = c('feat', 'brand'),
   price      = 'price',
   modelSpace = 'wtp',
-  # Since WTP space models are non-convex, run a multistart:
+  # Since WTP space models are non-convex, run a multistart
   numMultiStarts = 10,
   # Use the computed WTP from the preference space model as the starting
   # values for the first run:
@@ -149,11 +144,8 @@ Since WTP space models are non-convex, you cannot be certain that the model reac
 
 To compare the WTP and log-likelihood values between the preference space and WTP space models, use the `wtpCompare()` function:
 
-```{r, eval=FALSE}
-wtp_mnl_comparison <- wtpCompare(mnl_pref, mnl_wtp, price = 'price')
-```
 ```{r}
-wtp_mnl_comparison
+wtpCompare(mnl_pref, mnl_wtp, price = 'price')
 ```
 
 # References

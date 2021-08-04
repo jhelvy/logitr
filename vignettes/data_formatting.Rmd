@@ -35,13 +35,13 @@ mnl_pref_dummies <- readRDS(
 ```{r, child=here::here('man', 'rmdchunks', 'dataFormat.Rmd')}
 ```
 
-The {logitr} package contains several example data sets that illustrate this data structure. For example, in the `yogurt` data set, which contains observations of yogurt purchases by a panel of 100 households, each row is an alternative from a choice observation. Choice is identified by the `choice` column, the observation ID is identified by the `obsID` column, and the columns `price`, `feat`, and `brand` can be used as model covariates (brand is also broken out into additional dummy-coded columns):
+The {logitr} package contains several example data sets that illustrate this data structure. For example, the `yogurt` contains observations of yogurt purchases by a panel of 100 households [@Jain1994]. Choice is identified by the `choice` column, the observation ID is identified by the `obsID` column, and the columns `price`, `feat`, and `brand` can be used as model covariates (brand is also broken out into additional dummy-coded columns):
 
 ```{r}
 head(yogurt)
 ```
 
-This data set also has an `alt` variable that determines the alternatives included in the choice set of each observation and an `id` variable that determines the individual (this data set contains repeated observations from each individual).
+This data set also includes an `alt` variable that determines the alternatives included in the choice set of each observation and an `id` variable that determines the individual as the data have a panel structure containing multiple choice observations from each individual.
 
 # Continuous versus discrete variables
 

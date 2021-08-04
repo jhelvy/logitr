@@ -87,7 +87,7 @@ mnl_wtp_unweighted <- logitr(
   price = 'price',
   modelSpace = 'wtp',
   robust = TRUE,
-  # Since WTP space models are non-convex, run a multistart:
+  # Since WTP space models are non-convex, run a multistart
   numMultiStarts = 10
 )
 ```
@@ -157,19 +157,19 @@ summary(mnl_wtp_weighted)
 Here is a comparison of the coefficients between the weighted and unweighted models. All of the significant coefficients have the same sign, but the magnitudes shift some based on the differential weighting of each individual choice in the weighted model:
 
 ```{r}
-coef_compare <- data.frame(
+data.frame(
   Unweighted = coef(mnl_wtp_unweighted),
-  Weighted   = coef(mnl_wtp_weighted))
-coef_compare
+  Weighted   = coef(mnl_wtp_weighted)
+)
 ```
 
 Here is a comparison of the log-likelihood for the weighted and unweighted models:
 
 ```{r}
-logLik_compare <- c(
+c(
   "Unweighted" = mnl_wtp_unweighted$logLik,
-  "Weighted" = mnl_wtp_weighted$logLik)
-logLik_compare
+  "Weighted" = mnl_wtp_weighted$logLik
+)
 ```
 
 # References

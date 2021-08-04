@@ -47,16 +47,16 @@ mnl_wtp_weighted <- logitr(
 summary(mnl_wtp_weighted)
 
 # Compare the coefficients between the weighted and unweighted models:
-coef_compare <- data.frame(
+data.frame(
   Unweighted = coef(mnl_wtp_unweighted),
-  Weighted   = coef(mnl_wtp_weighted))
-coef_compare
+  Weighted   = coef(mnl_wtp_weighted)
+)
 
 # Compare the log-likelihood between the weighted and unweighted models:
-logLik_compare <- c(
+c(
   "Unweighted" = logLik(mnl_wtp_unweighted),
-  "Weighted" = logLik(mnl_wtp_weighted))
-logLik_compare
+  "Weighted" = logLik(mnl_wtp_weighted)
+)
 
 # Save results
 saveRDS(mnl_wtp_unweighted,

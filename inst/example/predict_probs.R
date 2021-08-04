@@ -73,14 +73,10 @@ probs_mxl_wtp <- predictProbs(
 probs_mxl_wtp
 
 # Save results
-saveRDS(probs_mnl_pref,
-        here::here('inst', 'extdata', 'probs_mnl_pref.Rds'))
-saveRDS(probs_mnl_wtp,
-        here::here('inst', 'extdata', 'probs_mnl_wtp.Rds'))
-saveRDS(probs_mxl_pref,
-        here::here('inst', 'extdata', 'probs_mxl_pref.Rds'))
-saveRDS(probs_mxl_wtp,
-        here::here('inst', 'extdata', 'probs_mxl_wtp.Rds'))
+saveRDS(probs_mnl_pref, here::here('inst', 'extdata', 'probs_mnl_pref.Rds'))
+saveRDS(probs_mnl_wtp,  here::here('inst', 'extdata', 'probs_mnl_wtp.Rds'))
+saveRDS(probs_mxl_pref, here::here('inst', 'extdata', 'probs_mxl_pref.Rds'))
+saveRDS(probs_mxl_wtp,  here::here('inst', 'extdata', 'probs_mxl_wtp.Rds'))
 
 # Plot simulation results from each model:
 library(ggplot2)
