@@ -44,7 +44,7 @@ getModelInputs <- function(
 
   # Set up other data
   parSetup <- getParSetup(pars, price, randPars, randPrice)
-  parIDs <- getParIDs(parSetup)
+  parIDs <- getParIDs(parSetup, modelSpace, randPrice)
   parList <- getParList(parSetup, parIDs$random)
   obsID <- as.matrix(data[obsID])
   reps <- as.numeric(table(obsID))
@@ -103,7 +103,7 @@ getModelInputs <- function(
 
   # Scale data
   if (scaleInputs) {
-    data <- scaleData(data, inputs$modelSpace, parSetup, parIDs)
+    data <- scaleData(data, modelSpace, parSetup, parIDs)
   }
 
   # Make differenced data
@@ -180,13 +180,25 @@ getParSetup <- function(pars, price, randPars, randPrice) {
   return(parSetup)
 }
 
-getParIDs <- function(parSetup) {
-  return(list(
+getParIDs <- function(parSetup, modelSpace, randPrice) {
+  parIDs <- list(
     fixed     = which(parSetup == "f"),
     random    = which(parSetup != "f"),
     normal    = which(parSetup == "n"),
     logNormal = which(parSetup == "ln")
-  ))
+  )
+  if (modelSpace == "wtp") {
+    lambdaIDs <- 1
+    numPars <- length(parIDs$fixed) + 2*length(parIDs$random)
+    omegaIDs <- seq(numPars)
+    if (!is.null(randPrice)) {
+      lambdaIDs <- c(lambdaIDs, length(parSetup) + 1)
+    }
+    omegaIDs <- omegaIDs[-lambdaIDs]
+    parIDs$lambdaIDs <- lambdaIDs
+    parIDs$omegaIDs <- omegaIDs
+  }
+  return(parIDs)
 }
 
 getParList <- function(parSetup, randParIDs) {

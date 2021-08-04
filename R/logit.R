@@ -167,7 +167,7 @@ mxlNegGradLL_pref <- function(
   weights, numBetas, nrowX, numDraws, randPrice
 ) {
   # First, adjust partials for any log-normal parameters
-  partials <- updatePartials(partials, parIDs, betaDraws)
+  partials <- updatePartials(partials, parIDs, betaDraws, nrowX)
   # Now compute the gradient
   return(computeMxlNegGradLL(
     expVDraws, logitDraws, partials, obsID, weights, pHat, numDraws))
@@ -182,7 +182,7 @@ mxlHessLL_pref <- function(pars, mi) {
 
 # Updates each of the partials matrices based on if the parameter follows
 # a log-normal distribution
-updatePartials <- function(partials, parIDs, betaDraws) {
+updatePartials <- function(partials, parIDs, betaDraws, nrowX) {
   if (length(parIDs$logNormal) > 0) {
     for (id in parIDs$logNormal) {
       id_sigma <- id + length(parIDs$random)
@@ -226,20 +226,16 @@ mxlNegGradLL_wtp <- function(
   weights, numBetas, nrowX, numDraws, randPrice
 ) {
   # First, adjust partials for any log-normal parameters
-  partials <- updatePartials(partials, parIDs, betaDraws)
+  partials <- updatePartials(partials, parIDs, betaDraws, nrowX)
   # Now adjust the partials for the lambda and omega parameters
-  lambdaIDs <- 1
-  omegaIDs <- seq_len(length(partials))
   lambdaDraws <- repmat(matrix(betaDraws[,1], nrow = 1), nrowX, 1)
   partial_lambda_mu <- VDraws / lambdaDraws
   partials[[1]] <- partial_lambda_mu
   if (!is.null(randPrice)) {
-    lambda_sigmaID <- numBetas + 1
+    lambda_sigmaID <- parIDs$lambdaIDs[2]
     partials[[lambda_sigmaID]] <- partials[[lambda_sigmaID]]*partial_lambda_mu
-    lambdaIDs <- c(lambdaIDs, lambda_sigmaID)
   }
-  omegaIDs <- omegaIDs[-lambdaIDs]
-  for (id in omegaIDs) {
+  for (id in parIDs$omegaIDs) {
     partials[[id]] <- partials[[id]]*lambdaDraws
   }
   # Now compute the gradient

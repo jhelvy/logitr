@@ -165,7 +165,7 @@ logitr <- function(
     xtol_abs    = 1.0e-6,
     ftol_rel    = 1.0e-6,
     ftol_abs    = 1.0e-6,
-    maxeval     = 2000,
+    maxeval     = 500,
     algorithm   = "NLOPT_LD_LBFGS"
   )
 ) {
