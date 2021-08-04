@@ -167,6 +167,22 @@ mxlNegGradLL_pref <- function(
   weights, numBetas, nrowX, numDraws, randPrice
 ) {
   # First, adjust partials for any log-normal parameters
+  partials <- updatePartials(partials, parIDs, betaDraws)
+  # Now compute the gradient
+  return(computeMxlNegGradLL(
+    expVDraws, logitDraws, partials, obsID, weights, pHat, numDraws))
+}
+
+mxlHessLL_pref <- function(pars, mi) {
+  # Need to define analytic hessian - use numeric approximation for now
+  # Note that this is only used post-estimation, so there are only marginal
+  # benefits in terms of speed improvements from specifying an analytic hessian
+  return(getNumericHessLL(pars, mi))
+}
+
+# Updates each of the partials matrices based on if the parameter follows
+# a log-normal distribution
+updatePartials <- function(partials, parIDs, betaDraws) {
   if (length(parIDs$logNormal) > 0) {
     for (id in parIDs$logNormal) {
       id_sigma <- id + length(parIDs$random)
@@ -175,7 +191,12 @@ mxlNegGradLL_pref <- function(
       partials[[id_sigma]] <- partials[[id_sigma]]*betaMat
     }
   }
-  # Now compute the gradient
+  return(partials)
+}
+
+computeMxlNegGradLL <- function(
+  expVDraws, logitDraws, partials, obsID, weights, pHat, numDraws
+) {
   logitDrawsSq <- logitDraws^2
   grads <- lapply(partials, function(x) {
     rowSums(
@@ -184,11 +205,6 @@ mxlNegGradLL_pref <- function(
   })
   grad <- matrix(unlist(grads), ncol = length(partials), byrow = FALSE)
   return(t(grad) %*% (weights / (pHat * numDraws)))
-}
-
-mxlHessLL_pref <- function(pars, mi) {
-  # Need to define analytic hessian - use numeric approximation for now
-  return(getNumericHessLL(pars, mi))
 }
 
 # ============================================================================
@@ -210,15 +226,8 @@ mxlNegGradLL_wtp <- function(
   weights, numBetas, nrowX, numDraws, randPrice
 ) {
   # First, adjust partials for any log-normal parameters
-  if (length(parIDs$logNormal) > 0) {
-    for (id in parIDs$logNormal) {
-      id_sigma <- id + length(parIDs$random)
-      betaMat <- repmat(matrix(betaDraws[,id], nrow = 1), nrowX, 1)
-      partials[[id]] <- partials[[id]]*betaMat
-      partials[[id_sigma]] <- partials[[id_sigma]]*betaMat
-    }
-  }
-  # Now compute the gradient
+  partials <- updatePartials(partials, parIDs, betaDraws)
+  # Now adjust the partials for the lambda and omega parameters
   lambdaIDs <- 1
   omegaIDs <- seq_len(length(partials))
   lambdaDraws <- repmat(matrix(betaDraws[,1], nrow = 1), nrowX, 1)
@@ -233,18 +242,15 @@ mxlNegGradLL_wtp <- function(
   for (id in omegaIDs) {
     partials[[id]] <- partials[[id]]*lambdaDraws
   }
-  logitDrawsSq <- logitDraws^2
-  grads <- lapply(partials, function(x) {
-    rowSums(
-      logitDrawsSq * rowsum(x*expVDraws, group = obsID, reorder = FALSE)
-    )
-  })
-  grad <- matrix(unlist(grads), ncol = length(partials), byrow = FALSE)
-  return(t(grad) %*% (weights / (pHat * numDraws)))
+  # Now compute the gradient
+  return(computeMxlNegGradLL(
+    expVDraws, logitDraws, partials, obsID, weights, pHat, numDraws))
 }
 
 mxlHessLL_wtp <- function(pars, mi) {
   # Need to define analytic hessian - use numeric approximation for now
+  # Note that this is only used post-estimation, so there are only marginal
+  # benefits in terms of speed improvements from specifying an analytic hessian
   return(getNumericHessLL(pars, mi))
 }
 
