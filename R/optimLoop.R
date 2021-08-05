@@ -127,16 +127,18 @@ getRandomStartPars <- function(modelInputs) {
 # For lambda and logN parameters must start with positive numbers
 checkStartPars <- function(startPars, modelInputs, i) {
   if (modelInputs$inputs$modelSpace == "wtp") {
+    # Force starting with lambda = 1 for WTP space models for stability
     startPars[1] <- 1
   }
-  if (i == 1) { return(startPars) }
+  # For log-normal parameters, force positivity
   parIDs <- modelInputs$parIDs
   lnIDs <- parIDs$logNormal
-  randIDs <- parIDs$random
-  positiveParIDs <- c(lnIDs, randIDs + length(parIDs$random))
-  if (length(positiveParIDs) > 0) {
-    startPars[positiveParIDs] <- stats::runif(
-      length(positiveParIDs), 0.1, 1)
+  if (length(lnIDs) > 0) {
+    if (i == 1) {
+      startPars[lnIDs] <- 1
+    } else {
+      startPars[lnIDs] <- stats::runif(length(lnIDs), 0.1, 1)
+    }
   }
   return(startPars)
 }

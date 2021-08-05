@@ -187,6 +187,7 @@ getParIDs <- function(parSetup, modelSpace, randPrice) {
     normal    = which(parSetup == "n"),
     logNormal = which(parSetup == "ln")
   )
+  # Make lambda & omega IDs for WTP space models
   if (modelSpace == "wtp") {
     lambdaIDs <- 1
     numPars <- length(parIDs$fixed) + 2*length(parIDs$random)
