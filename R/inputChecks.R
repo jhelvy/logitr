@@ -124,6 +124,33 @@ runInputChecks <- function(data, inputs) {
 
 }
 
+# Need to check if the user-provided list of options omits any of these
+# options as they are required for the optimizer
+checkOptions <- function(options) {
+  if (is.null(options$print_level)) {
+    options$print_level <- 0
+  }
+  if (is.null(options$xtol_rel)) {
+    options$xtol_rel <- 1.0e-6
+  }
+  if (is.null(options$xtol_abs)) {
+    options$xtol_abs <- 1.0e-6
+  }
+  if (is.null(options$ftol_rel)) {
+    options$ftol_rel <- 1.0e-6
+  }
+  if (is.null(options$ftol_abs)) {
+    options$ftol_abs <- 1.0e-6
+  }
+  if (is.null(options$maxeval)) {
+    options$maxeval <- 1000
+  }
+  if (is.null(options$algorithm)) {
+    options$algorithm <- "NLOPT_LD_LBFGS"
+  }
+  return(options)
+}
+
 predictInputsCheck <- function(model, alts, altID, obsID) {
   if (!is_logitr(model)) {
     stop(

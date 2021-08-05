@@ -34,6 +34,9 @@ getModelInputs <- function(
   # Check that input are all valid
   runInputChecks(data, inputs)
 
+  # Check options
+  options <- checkOptions(options)
+
   # Get the design matrix, recoding parameters that are categorical
   # or have interactions
   recoded <- recodeData(data, pars, randPars)

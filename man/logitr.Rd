@@ -24,7 +24,7 @@ logitr(
   numDraws = 50,
   startVals = NULL,
   options = list(print_level = 0, xtol_rel = 1e-06, xtol_abs = 1e-06, ftol_rel = 1e-06,
-    ftol_abs = 1e-06, maxeval = 500, algorithm = "NLOPT_LD_LBFGS")
+    ftol_abs = 1e-06, maxeval = 1000, algorithm = "NLOPT_LD_LBFGS")
 )
 }
 \arguments{
