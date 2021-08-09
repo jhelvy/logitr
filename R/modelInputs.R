@@ -6,7 +6,7 @@
 # Creates a list of the data and other information needed for running the model
 getModelInputs <- function(
     data, choice, obsID, pars, randPars, price, randPrice, modelSpace, weights,
-    clusterID, robust, numMultiStarts, useAnalyticGrad, scaleInputs,
+    panelID, clusterID, robust, numMultiStarts, useAnalyticGrad, scaleInputs,
     startParBounds, standardDraws, numDraws, startVals, call, options
 ) {
 
@@ -23,6 +23,7 @@ getModelInputs <- function(
     randPrice       = randPrice,
     modelSpace      = modelSpace,
     weights         = weights,
+    panelID         = panelID,
     clusterID       = clusterID,
     robust          = robust,
     numMultiStarts  = numMultiStarts,
@@ -68,7 +69,14 @@ getModelInputs <- function(
     weightsUsed <- TRUE
   }
 
-  # Setup Clusters
+  # Setup panelID
+  if (!is.null(panelID)) {
+    obsID <- as.matrix(data[obsID])
+    reps <- as.numeric(table(obsID))
+    panelID <- rep(seq_along(reps), reps) # Make sure it's a sequential number
+  }
+
+  # Setup clusters
   numClusters <- 0
   if (robust & is.null(inputs$clusterID)) {
     inputs$clusterID <- inputs$obsID
@@ -95,6 +103,7 @@ getModelInputs <- function(
     X         = X,
     choice    = choice,
     obsID     = obsID,
+    panelID   = panelID,
     clusterID = clusterID,
     weights   = weights,
     scaleFactors = rep(1, length(parList$all))
@@ -268,6 +277,7 @@ makeDiffData <- function(data) {
     price     = price_diff,
     X         = X_diff,
     obsID     = data$obsID[data$choice != 1],
+    panelID   = data$panelID[data$choice != 1],
     clusterID = data$clusterID[data$choice != 1],
     weights   = data$weights[data$choice == 1]
   ))

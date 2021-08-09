@@ -31,6 +31,9 @@
 #' @param modelSpace Set to `'wtp'` for WTP space models. Defaults to `"pref"`.
 #' @param weights The name of the column that identifies the weights to be
 #' used in model estimation. Defaults to `NULL`.
+#' @param panelID The name of the column that identifies the individual (for
+#' panel data where multiple observations are recorded for each individual).
+#' Defaults to `NULL`.
 #' @param clusterID The name of the column that identifies the cluster
 #' groups to be used in model estimation. Defaults to `NULL`.
 #' @param robust Determines whether or not a robust covariance matrix is
@@ -159,6 +162,7 @@ logitr <- function(
   randPrice       = NULL,
   modelSpace      = "pref",
   weights         = NULL,
+  panelID         = NULL,
   clusterID       = NULL,
   robust          = FALSE,
   numMultiStarts  = 1,
@@ -181,7 +185,7 @@ logitr <- function(
   call <- match.call()
   modelInputs <- getModelInputs(
     data, choice, obsID, pars, randPars, price, randPrice, modelSpace, weights,
-    clusterID, robust, numMultiStarts, useAnalyticGrad, scaleInputs,
+    panelID, clusterID, robust, numMultiStarts, useAnalyticGrad, scaleInputs,
     startParBounds, standardDraws, numDraws, startVals, call, options
   )
   allModels <- runMultistart(modelInputs)
