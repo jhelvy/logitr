@@ -6,7 +6,7 @@
 # Creates a list of the data and other information needed for running the model
 getModelInputs <- function(
     data, choice, obsID, pars, randPars, price, randPrice, modelSpace, weights,
-    cluster, robust, numMultiStarts, useAnalyticGrad, scaleInputs,
+    clusterID, robust, numMultiStarts, useAnalyticGrad, scaleInputs,
     startParBounds, standardDraws, numDraws, startVals, call, options
 ) {
 
@@ -23,7 +23,7 @@ getModelInputs <- function(
     randPrice       = randPrice,
     modelSpace      = modelSpace,
     weights         = weights,
-    cluster         = cluster,
+    clusterID       = clusterID,
     robust          = robust,
     numMultiStarts  = numMultiStarts,
     useAnalyticGrad = useAnalyticGrad,
@@ -69,29 +69,25 @@ getModelInputs <- function(
   }
 
   # Setup Clusters
-  clusterID <- NULL
   numClusters <- 0
-  if (robust & is.null(cluster)) {
-    cluster <- inputs$obsID
+  if (robust & is.null(inputs$clusterID)) {
+    inputs$clusterID <- inputs$obsID
   }
-  if (weightsUsed & is.null(cluster)) {
+  if (weightsUsed & is.null(inputs$clusterID)) {
     message(
       "Since weights are being used and no cluster was provided, ",
       "the obsID argument will be used for clustering")
-    cluster <- inputs$obsID
+    inputs$clusterID <- inputs$obsID
   }
-  if (!is.null(cluster)) {
+  if (!is.null(inputs$clusterID)) {
     if (robust == FALSE) {
       message("Setting robust to TRUE since clusters are being used")
       robust <- TRUE
+      inputs$robust <- robust
     }
-    clusterID <- as.matrix(data[cluster])
+    clusterID <- as.matrix(data[inputs$clusterID])
     numClusters <- getNumClusters(clusterID)
   }
-
-  # Update inputs for cluster and robust controls
-  inputs$cluster <- cluster
-  inputs$robust <- robust
 
   # Make data object
   data <- list(

@@ -14,7 +14,7 @@ logitr(
   randPrice = NULL,
   modelSpace = "pref",
   weights = NULL,
-  cluster = NULL,
+  clusterID = NULL,
   robust = FALSE,
   numMultiStarts = 1,
   useAnalyticGrad = TRUE,
@@ -55,11 +55,11 @@ Defaults to \code{NULL}.}
 \item{weights}{The name of the column that identifies the weights to be
 used in model estimation. Defaults to \code{NULL}.}
 
-\item{cluster}{The name of the column that identifies the cluster
-groups to be used in model estimation. Optional. Defaults to \code{NULL}.}
+\item{clusterID}{The name of the column that identifies the cluster
+groups to be used in model estimation. Defaults to \code{NULL}.}
 
 \item{robust}{Determines whether or not a robust covariance matrix is
-estimated. Defaults to \code{FALSE}. Specification of a \code{cluster} or
+estimated. Defaults to \code{FALSE}. Specification of a \code{clusterID} or
 \code{weights} will override the user setting and set this to `TRUE' (a
 warning will be displayed in this case). Replicates the functionality of
 Stata's cmcmmixlogit.}
