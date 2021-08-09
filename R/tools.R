@@ -93,16 +93,6 @@ convertTime <- function(time) {
   return(paste(h, "h:", m, "m:", s, "s", sep = ""))
 }
 
-# Returns a confidence interval from a vector of data
-ci <- function(data, alpha = 0.025) {
-  B <- mean(data, na.rm = T)
-  L <- stats::quantile(data, alpha, na.rm = T)
-  U <- stats::quantile(data, 1 - alpha, na.rm = T)
-  ests <- c(B, L, U)
-  names(ests) <- c("mean", "low", "high")
-  return(ests)
-}
-
 # Class check functions
 is_logitr <- function(x) {
   inherits(x, "logitr")
@@ -114,16 +104,4 @@ isMnlModel <- function(parSetup) {
 
 isMxlModel <- function(parSetup) {
   return(!isMnlModel(parSetup))
-}
-
-getRepTimes <- function(obsID) {
-  return(as.numeric(table(obsID)))
-}
-
-getRepTimesMxl <- function(repTimes, numDraws) {
-  return(rep(repTimes, times = numDraws))
-}
-
-getRepTimesMxlGrad <- function(repTimes, parSetup) {
-  return(rep(repTimes, each = 2 * length(parSetup)))
 }
