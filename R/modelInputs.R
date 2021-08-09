@@ -70,9 +70,9 @@ getModelInputs <- function(
   }
 
   # Setup panelID
-  if (!is.null(panelID)) {
-    obsID <- as.matrix(data[obsID])
-    reps <- as.numeric(table(obsID))
+  if (!is.null(inputs$panelID)) {
+    panelID <- as.matrix(data[panelID])
+    reps <- as.numeric(table(panelID))
     panelID <- rep(seq_along(reps), reps) # Make sure it's a sequential number
   }
 
