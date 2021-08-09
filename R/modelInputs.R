@@ -9,7 +9,9 @@ getModelInputs <- function(
     cluster, robust, numMultiStarts, useAnalyticGrad, scaleInputs,
     startParBounds, standardDraws, numDraws, startVals, call, options
 ) {
+
   data <- as.data.frame(data) # tibbles break things
+  checkArguments(call) # Argument names were changed in v0.2.3
 
   # Keep original input arguments
   inputs <- list(
@@ -31,10 +33,8 @@ getModelInputs <- function(
     startVals       = startVals
   )
 
-  # Check that input are all valid
+  # Check for valid inputs and options
   runInputChecks(data, inputs)
-
-  # Check options
   options <- checkOptions(options)
 
   # Get the design matrix, recoding parameters that are categorical
