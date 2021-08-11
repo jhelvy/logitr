@@ -111,16 +111,19 @@ mxlNegLLAndGradLL <- function(pars, mi) {
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price)
   expVDraws <- exp(VDraws)
   logitDraws <- getLogit(expVDraws, d$obsID)
-  if (!is.null(d$panelID)) {
-    logitDraws <- exp(rowsum(log(logitDraws), d$panelID))
+  logitDrawsPanel <- logitDraws
+  if (mi$panel) {
+    logitDrawsPanel <- exp(rowsum(log(logitDraws), d$panelID))
+    pHat <- rowMeans(logitDrawsPanel, na.rm = T)
+  } else {
+    pHat <- rowMeans(logitDraws, na.rm = T)
   }
-  pHat <- rowMeans(logitDraws, na.rm = T)
   return(list(
     objective = negLL(pHat, d$weights),
     gradient = mi$logitFuncs$mxlNegGradLL(
-      betaDraws, VDraws, expVDraws, logitDraws, pHat, mi$partials, d$obsID,
-      mi$parIDs, d$weights, mi$numBetas, mi$nrowX, mi$inputs$numDraws,
-      mi$inputs$randPrice)
+      betaDraws, VDraws, expVDraws, logitDraws, logitDrawsPanel, pHat,
+      mi$partials, d$obsID, d$panelID, mi$parIDs, d$weights, mi$numBetas,
+      mi$nrowX, mi$inputs$numDraws, mi$inputs$randPrice, mi$panel)
   ))
 }
 
@@ -132,10 +135,13 @@ getMxlNegLL <- function(pars, mi) {
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price)
   expVDraws <- exp(VDraws)
   logitDraws <- getLogit(expVDraws, d$obsID)
-  if (!is.null(d$panelID)) {
-    logitDraws <- exp(rowsum(log(logitDraws), d$panelID))
+  logitDrawsPanel <- logitDraws
+  if (mi$panel) {
+    logitDrawsPanel <- exp(rowsum(log(logitDraws), d$panelID))
+    pHat <- rowMeans(logitDrawsPanel, na.rm = T)
+  } else {
+    pHat <- rowMeans(logitDraws, na.rm = T)
   }
-  pHat <- rowMeans(logitDraws, na.rm = T)
   return(negLL(pHat, d$weights))
 }
 
@@ -146,14 +152,17 @@ getMxlNegGradLL <- function(pars, mi) {
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price)
   expVDraws <- exp(VDraws)
   logitDraws <- getLogit(expVDraws, d$obsID)
-  if (!is.null(d$panelID)) {
-    logitDraws <- exp(rowsum(log(logitDraws), d$panelID))
+  logitDrawsPanel <- logitDraws
+  if (mi$panel) {
+    logitDrawsPanel <- exp(rowsum(log(logitDraws), d$panelID))
+    pHat <- rowMeans(logitDrawsPanel, na.rm = T)
+  } else {
+    pHat <- rowMeans(logitDraws, na.rm = T)
   }
-  pHat <- rowMeans(logitDraws, na.rm = T)
   return(mi$logitFuncs$mxlNegGradLL(
-      betaDraws, VDraws, expVDraws, logitDraws, pHat, mi$partials, d$obsID,
-      mi$parIDs, d$weights, mi$numBetas, mi$nrowX, mi$inputs$numDraws,
-      mi$inputs$randPrice)
+      betaDraws, VDraws, expVDraws, logitDraws, logitDrawsPanel, pHat,
+      mi$partials, d$obsID, d$panelID, mi$parIDs, d$weights, mi$numBetas,
+      mi$nrowX, mi$inputs$numDraws, mi$inputs$randPrice, mi$panel)
   )
 }
 
@@ -172,14 +181,16 @@ getMxlV_pref <- function(betaDraws, X, p) {
 }
 
 mxlNegGradLL_pref <- function(
-  betaDraws, VDraws, expVDraws, logitDraws, pHat, partials, obsID, parIDs,
-  weights, numBetas, nrowX, numDraws, randPrice
+  betaDraws, VDraws, expVDraws, logitDraws, logitDrawsPanel, pHat, partials,
+  obsID, panelID, parIDs, weights, numBetas, nrowX, numDraws, randPrice, panel
 ) {
   # First, adjust partials for any log-normal parameters
   partials <- updatePartials(partials, parIDs, betaDraws, nrowX, numBetas)
   # Now compute the gradient
   return(computeMxlNegGradLL(
-    expVDraws, logitDraws, partials, obsID, weights, pHat, numDraws))
+    expVDraws, logitDraws, logitDrawsPanel, partials, obsID, panelID, weights,
+    pHat, numDraws, panel)
+  )
 }
 
 mxlHessLL_pref <- function(pars, mi) {
@@ -205,14 +216,24 @@ updatePartials <- function(partials, parIDs, betaDraws, nrowX, numBetas) {
 }
 
 computeMxlNegGradLL <- function(
-  expVDraws, logitDraws, partials, obsID, weights, pHat, numDraws
+  expVDraws, logitDraws, logitDrawsPanel, partials, obsID, panelID, weights,
+  pHat, numDraws, panel
 ) {
-  logitDrawsSq <- logitDraws^2
-  grads <- lapply(partials, function(x) {
-    rowSums(
-      logitDrawsSq * rowsum(x*expVDraws, group = obsID, reorder = FALSE)
-    )
-  })
+  if (panel) {
+    grads <- lapply(partials, function(x) {
+      rowSums(logitDrawsPanel*rowsum(
+        logitDraws * rowsum(x*expVDraws, group = obsID, reorder = FALSE),
+        group = panelID)
+      )
+    })
+  } else {
+    logitDrawsSq <- logitDraws^2
+    grads <- lapply(partials, function(x) {
+      rowSums(
+        logitDrawsSq * rowsum(x*expVDraws, group = obsID, reorder = FALSE)
+      )
+    })
+  }
   grad <- matrix(unlist(grads), ncol = length(partials), byrow = FALSE)
   return(t(grad) %*% (weights / (pHat * numDraws)))
 }
@@ -232,8 +253,8 @@ getMxlV_wtp <- function(betaDraws, X, p) {
 }
 
 mxlNegGradLL_wtp <- function(
-  betaDraws, VDraws, expVDraws, logitDraws, pHat, partials, obsID, parIDs,
-  weights, numBetas, nrowX, numDraws, randPrice
+  betaDraws, VDraws, expVDraws, logitDraws, logitDrawsPanel, pHat, partials,
+  obsID, panelID, parIDs, weights, numBetas, nrowX, numDraws, randPrice, panel
 ) {
   # First, adjust partials for any log-normal parameters
   partials <- updatePartials(partials, parIDs, betaDraws, nrowX, numBetas)
@@ -250,7 +271,9 @@ mxlNegGradLL_wtp <- function(
   }
   # Now compute the gradient
   return(computeMxlNegGradLL(
-    expVDraws, logitDraws, partials, obsID, weights, pHat, numDraws))
+    expVDraws, logitDraws, logitDrawsPanel, partials, obsID, panelID, weights,
+    pHat, numDraws, panel)
+  )
 }
 
 mxlHessLL_wtp <- function(pars, mi) {

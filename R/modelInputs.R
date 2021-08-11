@@ -70,7 +70,8 @@ getModelInputs <- function(
   }
 
   # Setup panelID
-  if (!is.null(inputs$panelID)) {
+  panel <- !is.null(inputs$panelID)
+  if (panel) {
     panelID <- as.matrix(data[panelID])
     reps <- as.numeric(table(panelID))
     panelID <- rep(seq_along(reps), reps) # Make sure it's a sequential number
@@ -134,6 +135,7 @@ getModelInputs <- function(
     numBetas      = length(parSetup),
     standardDraws = standardDraws,
     nrowX         = nrow(data_diff$X),
+    panel         = panel,
     options       = options
   )
 
