@@ -273,13 +273,19 @@ makeDiffData <- function(data) {
     price_chosen <- data$price[data$choice == 1]
     price_diff <- (data$price - price_chosen[data$obsID])[data$choice != 1]
   }
+  panelID <- data$panelID
+  weights <- data$weights[data$choice == 1]
+  if (!is.null(panelID)) {
+    panelID <- data$panelID[data$choice == 1]
+    weights <- unique(data.frame(panelID = panelID, weights = weights))$weights
+  }
   return(list(
     price     = price_diff,
     X         = X_diff,
     obsID     = data$obsID[data$choice != 1],
-    panelID   = data$panelID[data$choice != 1],
+    panelID   = panelID,
     clusterID = data$clusterID[data$choice != 1],
-    weights   = data$weights[data$choice == 1]
+    weights   = weights
   ))
 }
 

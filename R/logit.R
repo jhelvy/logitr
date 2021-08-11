@@ -111,6 +111,9 @@ mxlNegLLAndGradLL <- function(pars, mi) {
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price)
   expVDraws <- exp(VDraws)
   logitDraws <- getLogit(expVDraws, d$obsID)
+  if (!is.null(d$panelID)) {
+    logitDraws <- exp(rowsum(log(logitDraws), d$panelID))
+  }
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(list(
     objective = negLL(pHat, d$weights),
@@ -129,6 +132,9 @@ getMxlNegLL <- function(pars, mi) {
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price)
   expVDraws <- exp(VDraws)
   logitDraws <- getLogit(expVDraws, d$obsID)
+  if (!is.null(d$panelID)) {
+    logitDraws <- exp(rowsum(log(logitDraws), d$panelID))
+  }
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(negLL(pHat, d$weights))
 }
@@ -140,6 +146,9 @@ getMxlNegGradLL <- function(pars, mi) {
   VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price)
   expVDraws <- exp(VDraws)
   logitDraws <- getLogit(expVDraws, d$obsID)
+  if (!is.null(d$panelID)) {
+    logitDraws <- exp(rowsum(log(logitDraws), d$panelID))
+  }
   pHat <- rowMeans(logitDraws, na.rm = T)
   return(mi$logitFuncs$mxlNegGradLL(
       betaDraws, VDraws, expVDraws, logitDraws, pHat, mi$partials, d$obsID,
