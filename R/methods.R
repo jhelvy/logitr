@@ -131,16 +131,21 @@ getModelInfoTable <- function(object) {
     "Model Type:", "Model Space:", "Model Run:", "Iterations:",
     "Elapsed Time:", "Algorithm:", "Weights Used?:"
   )
-  robust <- object$inputs$robust
-  if (!is.null(robust)) { # Added for backwards compatibility
-    modelInfoTable <- rbind(modelInfoTable, robust)
-    row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Robust?"
+  panelID <- object$inputs$panelID
+  if (!is.null(panelID)) {
+    modelInfoTable <- rbind(modelInfoTable, panelID)
+    row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Panel ID:"
   }
-  if (!is.null(object$numClusters)) { # Added for backwards compatibility
+  if (!is.null(object$numClusters)) {
     if (object$numClusters > 0) {
       modelInfoTable <- rbind(modelInfoTable, object$inputs$clusterID)
-      row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Cluster Name:"
+      row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Cluster ID:"
     }
+  }
+  robust <- object$inputs$robust
+  if (!is.null(robust)) {
+    modelInfoTable <- rbind(modelInfoTable, robust)
+    row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Robust?"
   }
   return(modelInfoTable)
 }
@@ -244,6 +249,7 @@ getCovarianceRobust <- function(object) {
     parSetup = parSetup,
     parIDs = object$parIDs,
     standardDraws = object$standardDraws,
+    panel = !is.null(inputs$panelID),
     data_diff = makeDiffData(object$data)
   )
   clusterID <- modelInputs$data_diff$clusterID
@@ -253,7 +259,7 @@ getCovarianceRobust <- function(object) {
   clusters <- sort(unique(clusterID))
   for (i in seq_len(length(clusters))) {
     indices <- which(clusterID == i)
-    tempMI <- getClusterModelInputs(indices, modelInputs)
+    tempMI <- getClusterModelInputs(indices, modelInputs, i)
     gradMat[i, ] <- getGradient(parsUnscaled, scaleFactors, tempMI)
   }
   gradMeanMat <- repmat(matrix(colMeans(gradMat), nrow = 1), numClusters, 1)
@@ -265,16 +271,22 @@ getCovarianceRobust <- function(object) {
   return(D %*% M %*% D)
 }
 
-getClusterModelInputs <- function (indices, modelInputs) {
-  mi <- modelInputs
+getClusterModelInputs <- function (indices, mi, i) {
   X <- mi$data_diff$X[indices,]
   # Cast to matrix in cases where there is 1 independent variable
   if (!is.matrix(X)) { X <- as.matrix(X) }
   mi$data_diff$X <- X
   mi$data_diff$price <- mi$data_diff$price[indices]
   obsID <- mi$data_diff$obsID[indices]
+  unique_obsID <- unique(obsID)
   mi$data_diff$obsID <- obsID
-  mi$data_diff$weights <- mi$data_diff$weights[unique(obsID)]
+  panelID <- mi$data_diff$panelID[unique_obsID]
+  weights <- mi$data_diff$weights[unique_obsID]
+  if (!is.null(panelID)) {
+    weights <- mi$data_diff$weights[i]
+  }
+  mi$data_diff$panelID <- panelID
+  mi$data_diff$weights <- weights
   mi$data_diff$clusterID <- NULL
   if (isMxlModel(mi$parSetup)) {
     mi$partials <- makePartials(mi)

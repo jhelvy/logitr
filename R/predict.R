@@ -170,8 +170,7 @@ predictLogit <- function(V, obsID) {
   expV <- exp(V)
   sumExpV <- rowsum(expV, group = obsID, reorder = FALSE)
   reps <- table(obsID)
-  sumExpVMat <- sumExpV[rep(seq_along(reps), reps),]
-  return(expV / sumExpVMat)
+  return(expV / sumExpV[rep(seq_along(reps), reps),])
 }
 
 mnlSimulation <- function(
