@@ -14,6 +14,7 @@ logitr(
   randPrice = NULL,
   modelSpace = "pref",
   weights = NULL,
+  panelID = NULL,
   clusterID = NULL,
   robust = FALSE,
   numMultiStarts = 1,
@@ -54,6 +55,10 @@ Defaults to \code{NULL}.}
 
 \item{weights}{The name of the column that identifies the weights to be
 used in model estimation. Defaults to \code{NULL}.}
+
+\item{panelID}{The name of the column that identifies the individual (for
+panel data where multiple observations are recorded for each individual).
+Defaults to \code{NULL}.}
 
 \item{clusterID}{The name of the column that identifies the cluster
 groups to be used in model estimation. Defaults to \code{NULL}.}
