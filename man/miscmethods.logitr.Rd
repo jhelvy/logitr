@@ -3,25 +3,19 @@
 \name{miscmethods.logitr}
 \alias{miscmethods.logitr}
 \alias{logLik.logitr}
-\alias{print.logitr}
-\alias{nobs.logitr}
 \alias{terms.logitr}
-\alias{model.response.logitr}
 \alias{coef.logitr}
 \alias{coef.summary.logitr}
-\alias{vcov.logitr}
 \alias{summary.logitr}
+\alias{print.logitr}
 \alias{print.summary.logitr}
+\alias{vcov.logitr}
 \alias{print.logitr_wtp}
 \title{Methods for logitr objects}
 \usage{
 \method{logLik}{logitr}(object, ...)
 
-\method{nobs}{logitr}(object, ...)
-
 \method{terms}{logitr}(x, ...)
-
-model.response.logitr(object, ...)
 
 \method{coef}{logitr}(object, ...)
 

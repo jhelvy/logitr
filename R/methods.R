@@ -3,9 +3,8 @@
 #' Miscellaneous methods for `logitr` class objects.
 #'
 #' @name miscmethods.logitr
-#' @aliases print.logitr logLik.logitr nobs.logitr terms.logitr
-#' model.response.logitr coef.logitr coef.summary.logitr vcov.logitr
-#' summary.logitr print.summary.logitr
+#' @aliases logLik.logitr terms.logitr coef.logitr coef.summary.logitr
+#' summary.logitr print.logitr print.summary.logitr vcov.logitr
 #' @param x is an object of class `logitr`.
 #' @param object is an object of class `logitr`.
 #' @param digits the number of digits for printing, defaults to `3`.
@@ -25,20 +24,8 @@ logLik.logitr <- function(object, ...) {
 
 #' @rdname miscmethods.logitr
 #' @export
-nobs.logitr <- function(object, ...) {
-  return(object$numObs)
-}
-
-#' @rdname miscmethods.logitr
-#' @export
 terms.logitr <- function(x, ...) {
   return(x$inputs$pars)
-}
-
-#' @rdname miscmethods.logitr
-#' @export
-model.response.logitr <- function(object, ...) {
-  return(object$data$choice)
 }
 
 #' @rdname miscmethods.logitr
@@ -184,7 +171,7 @@ getCoefTable <- function(coefs, standErr) {
 
 getStatTable <- function(object) {
   aic <- stats::AIC(object)
-  bic <- stats::BIC(object)
+  bic <- round(log(object$numObs) * object$numParams - 2 * object$logLik, 4)
   mcR2 <- 1 - (object$logLik / object$nullLogLik)
   adjMcR2 <- 1 - ((object$logLik - object$numParams) / object$nullLogLik)
   statTable <- data.frame(c(
