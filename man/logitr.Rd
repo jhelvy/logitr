@@ -25,7 +25,14 @@ logitr(
   numDraws = 50,
   startVals = NULL,
   options = list(print_level = 0, xtol_rel = 1e-06, xtol_abs = 1e-06, ftol_rel = 1e-06,
-    ftol_abs = 1e-06, maxeval = 1000, algorithm = "NLOPT_LD_LBFGS")
+    ftol_abs = 1e-06, maxeval = 1000, algorithm = "NLOPT_LD_LBFGS"),
+  parNames,
+  choiceName,
+  obsIDName,
+  priceName,
+  weightsName,
+  clusterName,
+  cluster
 )
 }
 \arguments{
@@ -103,6 +110,27 @@ to \code{NULL}.}
 
 \item{options}{A list of options for controlling the \code{nloptr()} optimization.
 Run \code{nloptr::nloptr.print.options()} for details.}
+
+\item{parNames}{No longer used as of v0.2.3 - if provided, this is passed
+to the \code{pars} argument and a warning is displayed.}
+
+\item{choiceName}{No longer used as of v0.2.3 - if provided, this is passed
+to the \code{choice} argument and a warning is displayed.}
+
+\item{obsIDName}{No longer used as of v0.2.3 - if provided, this is passed
+to the \code{obsID} argument and a warning is displayed.}
+
+\item{priceName}{No longer used as of v0.2.3 - if provided, this is passed
+to the \code{price} argument and a warning is displayed.}
+
+\item{weightsName}{No longer used as of v0.2.3 - if provided, this is passed
+to the \code{weights} argument and a warning is displayed.}
+
+\item{clusterName}{No longer used as of v0.2.3 - if provided, this is passed
+to the \code{clusterID} argument and a warning is displayed.}
+
+\item{cluster}{No longer used as of v0.2.3 - if provided, this is passed
+to the \code{clusterID} argument and a warning is displayed.}
 }
 \value{
 The function returns a list object containing the following objects.\tabular{ll}{
