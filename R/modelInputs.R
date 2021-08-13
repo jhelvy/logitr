@@ -10,9 +10,6 @@ getModelInputs <- function(
     startParBounds, standardDraws, numDraws, startVals, call, options
 ) {
 
-  data <- as.data.frame(data) # tibbles break things
-  checkArguments(call) # Argument names were changed in v0.2.3
-
   # Keep original input arguments
   inputs <- list(
     choice          = choice,

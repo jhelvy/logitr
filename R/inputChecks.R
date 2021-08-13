@@ -2,31 +2,6 @@
 # Functions for checking inputs and setting up default options
 # ============================================================================
 
-checkArguments <- function(call) {
-    calls <- names(sapply(call, deparse))[-1]
-    if (any("parNames" %in% calls)) {
-        stop("Use 'pars' instead of 'parNames'")
-    }
-    if (any("choiceName" %in% calls)) {
-        stop("Use 'choice' instead of 'choiceName'")
-    }
-    if (any("obsIDName" %in% calls)) {
-        stop("Use 'obsID' instead of 'obsIDName'")
-    }
-    if (any("priceName" %in% calls)) {
-        stop("Use 'price' instead of 'priceName'")
-    }
-    if (any("weightsName" %in% calls)) {
-        stop("Use 'weights' instead of 'weightsName'")
-    }
-    if (any("clusterName" %in% calls)) {
-        stop("Use 'clusterID' instead of 'clusterName'")
-    }
-    if (any("cluster" %in% calls)) {
-        stop("Use 'clusterID' instead of 'cluster'")
-    }
-}
-
 runInputChecks <- function(data, inputs) {
   if (! is.null(inputs$price)) {
     if (inputs$price %in% inputs$pars) {
