@@ -1,3 +1,26 @@
+# logitr 0.3.0
+
+## Breaking changes with v0.2.0:
+
+- Several arguments were moved out of the previous `options` argument and are now passed directly as arguments to `logitr()`. These include: `numMultiStarts`, `useAnalyticGrad`, `scaleInputs`, `startParBounds`, `standardDraws`, `numDraws`, `startVals`. The `options` argument is now only used for options to control the optimization handled by `nloptr()`.
+- Options for keeping all model outputs on a multistart were removed.
+
+## Summary of larger updates:
+
+- Added support for panel data in the log-likelihood function and gradients.
+- Several argument names in the `logitr()` function were changed to make them easier to understand: `choiceName` became `choice`, `obsIDName` became `obsID`, `parNames` became `pars`, `priceName` became `price`, `weightsName` became `weights`, `clusterName` became `cluster`. If used, old names will be passed to the new argument names and a warning will be displayed.
+- The log-likelihood and gradient functions were overhauled to improve computational efficiency, resulting in substantially faster estimation for all models.
+- The following new methods were introduced: `print.logitr()`, `logLik.logitr()`, `coef.summary.logitr()`, `vcov.logitr()`, `terms.logitr()`
+
+## Summary of smaller updates:
+
+- Improved `summary.logitr()` and `coef.logitr()` methods for better printing, now using `printCoefmat()`.
+- Added input checks for `wtp()` and `wtpCompare()` functions
+- Fixed some errors in some of the documentation examples and removed the dontrun commands on all of them.
+- Added the `altIDName` argument to `predictChoices()` and `predictProbs()` to preserve the row order of predictions for each alternative in each set of alternatives. Closes issue #13.
+- Fixed bug in data encoding where random parameter names were not aligned with encoded data.
+- Added input checks for all predict functions.
+
 # logitr 0.2.7
 
 Added support for panel data in the log-likelihood function and gradients

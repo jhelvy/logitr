@@ -1,5 +1,5 @@
 ## Test environments
-* local R installation, R 4.0.4
+* local R installation, R 4.1.0
 * ubuntu 16.04 (on travis-ci), R 4.0.2
 * win-builder (devel and release)
 
@@ -7,5 +7,4 @@
 0 errors | 0 warnings | 0 notes
 
 ## Notes
-* This is a new release, and the second submission.
-* I fixed a url redirect error in the README.md of the initial submission.
+* This is a new release.

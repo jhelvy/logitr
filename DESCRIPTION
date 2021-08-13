@@ -1,6 +1,6 @@
 Package: logitr
 Title: Logit Models w/Preference & WTP Space Utility Parameterizations
-Version: 0.2.7.9000
+Version: 0.3.0
 Authors@R: c(
     person(given   = "John",
            family  = "Helveston",
