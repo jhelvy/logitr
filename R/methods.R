@@ -3,8 +3,9 @@
 #' Miscellaneous methods for `logitr` class objects.
 #'
 #' @name miscmethods.logitr
-#' @aliases print.logitr logLik.logitr nobs.logitr, coef.logitr
-#' coef.summary.logitr vcov.logitr summary.logitr print.summary.logitr
+#' @aliases print.logitr logLik.logitr nobs.logitr terms.logitr
+#' model.response.logitr coef.logitr coef.summary.logitr vcov.logitr
+#' summary.logitr print.summary.logitr
 #' @param x is an object of class `logitr`.
 #' @param object is an object of class `logitr`.
 #' @param digits the number of digits for printing, defaults to `3`.
@@ -26,6 +27,18 @@ logLik.logitr <- function(object, ...) {
 #' @export
 nobs.logitr <- function(object, ...) {
   return(object$numObs)
+}
+
+#' @rdname miscmethods.logitr
+#' @export
+terms.logitr <- function(x, ...) {
+  return(x$inputs$pars)
+}
+
+#' @rdname miscmethods.logitr
+#' @export
+model.response.logitr <- function(object, ...) {
+  return(object$data$choice)
 }
 
 #' @rdname miscmethods.logitr
