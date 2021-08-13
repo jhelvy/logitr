@@ -28,15 +28,16 @@ probs_mnl_pref <- predictProbs(
   model = mnl_pref,
   alts  = alts,
   altID = "alt",
-  obsID = "obsID"
+  obsID = "obsID",
+  ci = 0.95
 )
 
 probs_mnl_pref
 
 # The results show the expected choice probabilities for each alternative.
 # The low and high values show a 95% confidence interval, estimated using
-# simulation. You can change the CI level by setting alpha to a different
-# value (e.g. a 90% CI is obtained with alpha = 0.05).
+# simulation. You can change the CI level by setting ci to a different
+# value (e.g. a 90% CI is obtained with ci = 0.90).
 
 # Compute choice probabilities using the WTP space MNL model:
 probs_mnl_wtp <- predictProbs(

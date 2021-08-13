@@ -31,10 +31,13 @@
 #' @param modelSpace Set to `'wtp'` for WTP space models. Defaults to `"pref"`.
 #' @param weights The name of the column that identifies the weights to be
 #' used in model estimation. Defaults to `NULL`.
-#' @param cluster The name of the column that identifies the cluster
-#' groups to be used in model estimation. Optional. Defaults to `NULL`.
+#' @param panelID The name of the column that identifies the individual (for
+#' panel data where multiple observations are recorded for each individual).
+#' Defaults to `NULL`.
+#' @param clusterID The name of the column that identifies the cluster
+#' groups to be used in model estimation. Defaults to `NULL`.
 #' @param robust Determines whether or not a robust covariance matrix is
-#' estimated. Defaults to `FALSE`. Specification of a `cluster` or
+#' estimated. Defaults to `FALSE`. Specification of a `clusterID` or
 #' `weights` will override the user setting and set this to `TRUE' (a
 #' warning will be displayed in this case). Replicates the functionality of
 #' Stata's cmcmmixlogit.
@@ -65,7 +68,20 @@
 #' maximum simulated likelihood. Defaults to `50`.
 #' @param options A list of options for controlling the `nloptr()` optimization.
 #' Run `nloptr::nloptr.print.options()` for details.
-#'
+#' @param choiceName No longer used as of v0.2.3 - if provided, this is passed
+#' to the `choice` argument and a warning is displayed.
+#' @param obsIDName No longer used as of v0.2.3 - if provided, this is passed
+#' to the `obsID` argument and a warning is displayed.
+#' @param parNames No longer used as of v0.2.3 - if provided, this is passed
+#' to the `pars` argument and a warning is displayed.
+#' @param priceName No longer used as of v0.2.3 - if provided, this is passed
+#' to the `price` argument and a warning is displayed.
+#' @param weightsName No longer used as of v0.2.3 - if provided, this is passed
+#' to the `weights` argument and a warning is displayed.
+#' @param clusterName No longer used as of v0.2.3 - if provided, this is passed
+#' to the `clusterID` argument and a warning is displayed.
+#' @param cluster No longer used as of v0.2.3 - if provided, this is passed
+#' to the `clusterID` argument and a warning is displayed.
 #' @details
 #' The the `options` argument is used to control the detailed behavior of the
 #' optimization and must be passed as a list, e.g. `options = list(...)`.
@@ -159,7 +175,8 @@ logitr <- function(
   randPrice       = NULL,
   modelSpace      = "pref",
   weights         = NULL,
-  cluster         = NULL,
+  panelID         = NULL,
+  clusterID       = NULL,
   robust          = FALSE,
   numMultiStarts  = 1,
   useAnalyticGrad = TRUE,
@@ -176,12 +193,54 @@ logitr <- function(
     ftol_abs    = 1.0e-6,
     maxeval     = 1000,
     algorithm   = "NLOPT_LD_LBFGS"
-  )
+  ),
+  parNames, # Outdated argument names as of v0.2.3
+  choiceName,
+  obsIDName,
+  priceName,
+  weightsName,
+  clusterName,
+  cluster
 ) {
+
   call <- match.call()
+
+  # Argument names were changed in v0.2.3
+  calls <- names(sapply(call, deparse))[-1]
+  if (any("parNames" %in% calls)) {
+    pars <- parNames
+    warning("Use 'pars' instead of 'parNames'")
+  }
+  if (any("choiceName" %in% calls)) {
+    choice <- choiceName
+    warning("Use 'choice' instead of 'choiceName'")
+  }
+  if (any("obsIDName" %in% calls)) {
+    obsID <- obsIDName
+    warning("Use 'obsID' instead of 'obsIDName'")
+  }
+  if (any("priceName" %in% calls)) {
+    price <- priceName
+    warning("Use 'price' instead of 'priceName'")
+  }
+  if (any("weightsName" %in% calls)) {
+    weights <- weightsName
+    warning("Use 'weights' instead of 'weightsName'")
+  }
+  if (any("clusterName" %in% calls)) {
+    clusterID <- clusterName
+    warning("Use 'clusterID' instead of 'clusterName'")
+  }
+  if (any("cluster" %in% calls)) {
+    clusterID <- cluster
+    warning("Use 'clusterID' instead of 'cluster'")
+  }
+
+  data <- as.data.frame(data) # tibbles break things
+
   modelInputs <- getModelInputs(
     data, choice, obsID, pars, randPars, price, randPrice, modelSpace, weights,
-    cluster, robust, numMultiStarts, useAnalyticGrad, scaleInputs,
+    panelID, clusterID, robust, numMultiStarts, useAnalyticGrad, scaleInputs,
     startParBounds, standardDraws, numDraws, startVals, call, options
   )
   allModels <- runMultistart(modelInputs)

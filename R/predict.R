@@ -91,10 +91,13 @@ simChoice <- function(df) {
 #' alternatives. Defaults to `NULL` (for a single set of alternatives).
 #' @param computeCI Should a confidence interval be computed?
 #' Defaults to `TRUE`.
-#' @param alpha The sensitivity of the computed confidence interval.
-#' Defaults to `alpha = 0.025`, reflecting a 95% CI.
+#' @param ci The sensitivity of the computed confidence interval (CI).
+#' Defaults to `ci = 0.95`, reflecting a 95% CI.
 #' @param numDraws The number of draws to use in simulating uncertainty
 #' for the computed confidence interval.
+#' @param alpha The sensitivity of the computed confidence interval.
+#' No longer used as of v0.2.7 - if provided, a warning is shown and `ci`
+#' is computed from `alpha`.
 #'
 #' @return A data frame with the estimated choice probabilities for each
 #' alternative in `alts`.
@@ -128,9 +131,19 @@ predictProbs <- function(
   altID,
   obsID     = NULL,
   computeCI = TRUE,
-  alpha     = 0.025,
-  numDraws  = 10^4
+  ci        = 0.95,
+  numDraws  = 10^4,
+  alpha
 ) {
+  # In v0.2.7, alpha was changed to ci
+  calls <- names(sapply(match.call(), deparse))[-1]
+  if (any("alpha" %in% calls)) {
+    ci <- 1 - 2*alpha
+    warning(
+      "Use 'ci' instead of 'alpha'...converting 'alpha = ", alpha,
+      "' to 'ci = ", ci, "'"
+    )
+  }
   predictInputsCheck(model, alts, altID, obsID)
   alts <- as.data.frame(alts)
   recoded <- recodeData(alts, model$inputs$pars, model$inputs$randPars)
@@ -157,12 +170,12 @@ predictProbs <- function(
     return(
       mxlSimulation(
         alts, model, price, X, altID, obsID, altIDName, obsIDName, numDraws,
-        alpha, getV, getVDraws, computeCI))
+        ci, getV, getVDraws, computeCI))
   } else {
     return(
       mnlSimulation(
         alts, model, price, X, altID, obsID, altIDName, obsIDName, numDraws,
-        alpha, getV, getVDraws, computeCI))
+        ci, getV, getVDraws, computeCI))
   }
 }
 
@@ -170,12 +183,11 @@ predictLogit <- function(V, obsID) {
   expV <- exp(V)
   sumExpV <- rowsum(expV, group = obsID, reorder = FALSE)
   reps <- table(obsID)
-  sumExpVMat <- sumExpV[rep(seq_along(reps), reps),]
-  return(expV / sumExpVMat)
+  return(expV / sumExpV[rep(seq_along(reps), reps),])
 }
 
 mnlSimulation <- function(
-  alts, model, price, X, altID, obsID, altIDName, obsIDName, numDraws, alpha,
+  alts, model, price, X, altID, obsID, altIDName, obsIDName, numDraws, ci,
   getV, getVDraws, computeCI
 ) {
   # Compute mean probs
@@ -190,11 +202,11 @@ mnlSimulation <- function(
   VUncDraws <- getVDraws(betaUncDraws, X, price)
   logitUncDraws <- predictLogit(VUncDraws, obsID)
   return(summarizeUncProbs(
-    meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, alpha))
+    meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, ci))
 }
 
 mxlSimulation <- function(
-  alts, model, price, X, altID, obsID, altIDName, obsIDName, numDraws, alpha,
+  alts, model, price, X, altID, obsID, altIDName, obsIDName, numDraws, ci,
   getV, getVDraws, computeCI
 ) {
   # Compute mean probs
@@ -211,7 +223,7 @@ mxlSimulation <- function(
       pars, model, X, price, obsID, getVDraws)
   }
   return(summarizeUncProbs(
-    meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, alpha))
+    meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, ci))
 }
 
 getSimPHat <- function(pars, model, X, price, obsID, getVDraws) {
@@ -248,15 +260,26 @@ summarizeMeanProbs <- function(meanProb, altID, obsID, altIDName, obsIDName) {
 }
 
 summarizeUncProbs <- function(
-  meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, alpha
+  meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, ci
 ) {
-  probs <- as.data.frame(t(apply(logitUncDraws, 1, ci, alpha)))
+  probs <- as.data.frame(t(apply(logitUncDraws, 1, getCI, ci)))
   probs$mean <- as.numeric(meanProb)
   colnames(probs) <- paste0("prob_", colnames(probs))
   names <- c(obsIDName, altIDName, colnames(probs))
   probs[altIDName] <- altID
   probs[obsIDName] <- obsID
   return(probs[names])
+}
+
+# Returns a confidence interval from a vector of data
+getCI <- function(data, ci = 0.95) {
+  alpha <- (1 - ci)/2
+  B <- mean(data, na.rm = T)
+  L <- stats::quantile(data, alpha, na.rm = T)
+  U <- stats::quantile(data, 1 - alpha, na.rm = T)
+  ests <- c(B, L, U)
+  names(ests) <- c("mean", "low", "high")
+  return(ests)
 }
 
 #' Simulate expected shares

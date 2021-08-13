@@ -36,13 +36,24 @@ runInputChecks <- function(data, inputs) {
 
   dataColumnNames <- colnames(data)
 
-  # Check cluster name
-  if (! is.null(inputs$cluster)) {
-    if (! inputs$cluster %in% dataColumnNames) {
+  # Check panel name
+  if (! is.null(inputs$panelID)) {
+    if (! inputs$panelID %in% dataColumnNames) {
       stop(
-        'You have specified a cluster name that is not present in the data ',
-        'provided:\n', as.character(inputs$cluster),
-        '\nPlease double-check the provided argument for "cluster".'
+        'You have specified a panelID name that is not present in the data ',
+        'provided:\n', as.character(inputs$panelID),
+        '\nPlease double-check the provided argument for "panelID".'
+      )
+    }
+  }
+
+  # Check cluster name
+  if (! is.null(inputs$clusterID)) {
+    if (! inputs$clusterID %in% dataColumnNames) {
+      stop(
+        'You have specified a clusterID name that is not present in the data ',
+        'provided:\n', as.character(inputs$clusterID),
+        '\nPlease double-check the provided argument for "clusterID".'
       )
     }
   }

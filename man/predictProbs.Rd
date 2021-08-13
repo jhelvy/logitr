@@ -10,8 +10,9 @@ predictProbs(
   altID,
   obsID = NULL,
   computeCI = TRUE,
-  alpha = 0.025,
-  numDraws = 10^4
+  ci = 0.95,
+  numDraws = 10^4,
+  alpha
 )
 }
 \arguments{
@@ -32,11 +33,15 @@ alternatives. Defaults to \code{NULL} (for a single set of alternatives).}
 \item{computeCI}{Should a confidence interval be computed?
 Defaults to \code{TRUE}.}
 
-\item{alpha}{The sensitivity of the computed confidence interval.
-Defaults to \code{alpha = 0.025}, reflecting a 95\% CI.}
+\item{ci}{The sensitivity of the computed confidence interval (CI).
+Defaults to \code{ci = 0.95}, reflecting a 95\% CI.}
 
 \item{numDraws}{The number of draws to use in simulating uncertainty
 for the computed confidence interval.}
+
+\item{alpha}{The sensitivity of the computed confidence interval.
+No longer used as of v0.2.7 - if provided, a warning is shown and \code{ci}
+is computed from \code{alpha}.}
 }
 \value{
 A data frame with the estimated choice probabilities for each

@@ -6,10 +6,9 @@
 # Creates a list of the data and other information needed for running the model
 getModelInputs <- function(
     data, choice, obsID, pars, randPars, price, randPrice, modelSpace, weights,
-    cluster, robust, numMultiStarts, useAnalyticGrad, scaleInputs,
+    panelID, clusterID, robust, numMultiStarts, useAnalyticGrad, scaleInputs,
     startParBounds, standardDraws, numDraws, startVals, call, options
 ) {
-  data <- as.data.frame(data) # tibbles break things
 
   # Keep original input arguments
   inputs <- list(
@@ -21,7 +20,8 @@ getModelInputs <- function(
     randPrice       = randPrice,
     modelSpace      = modelSpace,
     weights         = weights,
-    cluster         = cluster,
+    panelID         = panelID,
+    clusterID       = clusterID,
     robust          = robust,
     numMultiStarts  = numMultiStarts,
     useAnalyticGrad = useAnalyticGrad,
@@ -31,10 +31,8 @@ getModelInputs <- function(
     startVals       = startVals
   )
 
-  # Check that input are all valid
+  # Check for valid inputs and options
   runInputChecks(data, inputs)
-
-  # Check options
   options <- checkOptions(options)
 
   # Get the design matrix, recoding parameters that are categorical
@@ -68,30 +66,34 @@ getModelInputs <- function(
     weightsUsed <- TRUE
   }
 
-  # Setup Clusters
-  clusterID <- NULL
-  numClusters <- 0
-  if (robust & is.null(cluster)) {
-    cluster <- inputs$obsID
+  # Setup panelID
+  panel <- !is.null(inputs$panelID)
+  if (panel) {
+    panelID <- as.matrix(data[panelID])
+    reps <- as.numeric(table(panelID))
+    panelID <- rep(seq_along(reps), reps) # Make sure it's a sequential number
   }
-  if (weightsUsed & is.null(cluster)) {
+
+  # Setup clusters
+  numClusters <- 0
+  if (robust & is.null(inputs$clusterID)) {
+    inputs$clusterID <- inputs$obsID
+  }
+  if (weightsUsed & is.null(inputs$clusterID)) {
     message(
       "Since weights are being used and no cluster was provided, ",
       "the obsID argument will be used for clustering")
-    cluster <- inputs$obsID
+    inputs$clusterID <- inputs$obsID
   }
-  if (!is.null(cluster)) {
+  if (!is.null(inputs$clusterID)) {
     if (robust == FALSE) {
       message("Setting robust to TRUE since clusters are being used")
       robust <- TRUE
+      inputs$robust <- robust
     }
-    clusterID <- as.matrix(data[cluster])
+    clusterID <- as.matrix(data[inputs$clusterID])
     numClusters <- getNumClusters(clusterID)
   }
-
-  # Update inputs for cluster and robust controls
-  inputs$cluster <- cluster
-  inputs$robust <- robust
 
   # Make data object
   data <- list(
@@ -99,6 +101,7 @@ getModelInputs <- function(
     X         = X,
     choice    = choice,
     obsID     = obsID,
+    panelID   = panelID,
     clusterID = clusterID,
     weights   = weights,
     scaleFactors = rep(1, length(parList$all))
@@ -129,6 +132,7 @@ getModelInputs <- function(
     numBetas      = length(parSetup),
     standardDraws = standardDraws,
     nrowX         = nrow(data_diff$X),
+    panel         = panel,
     options       = options
   )
 
@@ -268,12 +272,19 @@ makeDiffData <- function(data) {
     price_chosen <- data$price[data$choice == 1]
     price_diff <- (data$price - price_chosen[data$obsID])[data$choice != 1]
   }
+  panelID <- data$panelID
+  weights <- data$weights[data$choice == 1]
+  if (!is.null(panelID)) {
+    panelID <- data$panelID[data$choice == 1]
+    weights <- unique(data.frame(panelID = panelID, weights = weights))$weights
+  }
   return(list(
     price     = price_diff,
     X         = X_diff,
     obsID     = data$obsID[data$choice != 1],
+    panelID   = panelID,
     clusterID = data$clusterID[data$choice != 1],
-    weights   = data$weights[data$choice == 1]
+    weights   = weights
   ))
 }
 

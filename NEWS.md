@@ -1,3 +1,7 @@
+# logitr 0.2.7
+
+Added support for panel data in the log-likelihood function and gradients
+
 # logitr 0.2.6
 
 Major changes were made to the gradient functions, which dramatically improved computational efficiency. MNL and MXL models in either preference or WTP spaces now use the faster implementation of the logit calculations.
