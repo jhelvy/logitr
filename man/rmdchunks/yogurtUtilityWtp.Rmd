@@ -1,0 +1,12 @@
+\begin{equation}
+    u_{j} =
+        \lambda \left(
+            \omega_1 x_{j1} +
+            \omega_1 x_{j2} +
+            \omega_1 x_{j3} +
+            \omega_2 x_{j4} -
+            p_{j}
+        \right) +
+        \varepsilon_{j},
+\label{eq:yogurtUtilityWtp}
+\end{equation}

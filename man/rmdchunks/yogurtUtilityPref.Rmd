@@ -1,0 +1,10 @@
+\begin{equation}
+    u_{j} =
+        \alpha p_{j} +
+        \beta_1 x_{j1} +
+        \beta_2 x_{j2} +
+        \beta_3 x_{j3} +
+        \beta_4 x_{j4} +
+        \varepsilon_{j},
+\label{eq:yogurtUtilityPref}
+\end{equation}

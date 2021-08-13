@@ -35,22 +35,15 @@ The ["Data Formatting and Encoding"](data_formatting.html) vignette has more det
 
 ## Model specification interface
 
-Unlike most other similar packages, package {logitr} does not use the `formula` class to specify the model covariates and instead uses a vector of the covariates names. Each element in the vector is additively included as a covariate in the utility model, with the interpretation that they represent _utility_ parameters in preference space models and _WTP_ parameters in a WTP space model. While this design choice is a departure from the popular formula interface used in other similar packages such as {mlogit}, it was chosen to avoid confusion when switching between estimating preference space and WTP space models.
+Models are specified and estimated using the `logitr()` function. The `data` argument should be set to the data frame containing the choice data, and the `choice` and `obsID` arguments should be set to the column names in the data frame that correspond to the choice dummy variable column and the observation ID column, respectively. All variables to be used as model covariates should be provided as a vector of column names to the `pars` argument. Each variable in the vector is additively included as a covariate in the utility model, with the interpretation that they represent utilities in preference space models and WTPs in a WTP space model.
 
+For example, consider a preference space model where the utility for yogurt is given by the following utility model:
 
-The basic usage for estimating models is as follows:
-
-```{r, eval=FALSE}
-model <- logitr(
-  data,
-  choice,
-  obsID,
-  pars
-  ...
-)
+```{r, child=here::here('man', 'rmdchunks', 'yogurtUtilityPref.Rmd')}
 ```
 
-For example, consider a preference space model where the observed utility for yogurt purchases is given by $v_{j} = \alpha p_{j} + \beta_1 x_{j1} + \beta_2 x_{j2}$, where $p_{j}$ is `price`, $x_{j1}$ is `feat`, and $x_{j2}$ is `brand`. This model can be estimated using the `logitr()` function as follows:
+\noindent
+where $p_{j}$ is `price`, $x_{j1}$ is `feat`, and $x_{j2-4}$ are dummy-coded variables for each `brand` (with the fourth brand representing the reference level). This model can be estimated using the `logitr()` function as follows:
 
 ```{r, eval=FALSE}
 mnl_pref <- logitr(
@@ -61,7 +54,13 @@ mnl_pref <- logitr(
 )
 ```
 
-To instead estimate a WTP space model, the user can simply move the `"price"` covariate from the `pars` argument to the `price` argument and change the `modelSpace` argument value from `"pref"` to `"wtp"` (`"pref"` is the default value):
+The equivalent model in the WTP space is given by the following utility model:
+
+```{r, child=here::here('man', 'rmdchunks', 'yogurtUtilityWtp.Rmd')}
+```
+
+\noindent
+To specify this model, the user should move `"price"` from the `pars` argument to the `price` argument and set the `modelSpace` argument to `"wtp"` (`"pref"` is the default value):
 
 ```{r, eval=FALSE}
 mnl_wtp <- logitr(
@@ -74,9 +73,10 @@ mnl_wtp <- logitr(
 )
 ```
 
-In this case, the observed utility is $v_{j} = \lambda \left(\omega_1 x_{j1} + \omega_2 x_{j2} - p_{j}\right)$, where $p_{j}$ is `price`, $x_{j1}$ is `feat`, and $x_{j2}$ is `brand`.
+\noindent
+In the above model, the variables in `pars` are marginal WTPs, whereas in the preference space model they are marginal utilities. Note that in the WTP space model price is separately specified with the `price` argument as it acts as a scaling term and does not reflect a marginal WTP.
 
-Note that for WTP space models the `pars` argument should _not_ contain the name of the column for the price attribute because there is no estimated "price" parameter in WTP space models. Instead, a "scale" parameter given by $\lambda$ will be estimated, and the column for "price" should be provided separately using the `price` argument.
+Interactions between covariates can be entered in the `pars` vector separated by the `*` symbol. For example, an interaction between `price` with `feat` in the above preference space model could be included by specifying `pars = c("price", "feat", "brand", "price*feat")`, or even more concisely just `pars = c("price*feat", "brand")` as the interaction between `price` and `feat` will produce individual parameters for `price` and `feat` in addition to the interaction parameter.
 
 Both of these examples are multinomial logit models with fixed parameters. See the ["Estimating Multinomial Logit Models"](mnl_models.html) vignette for more details.
 
@@ -96,28 +96,7 @@ mnl_wtp <- logitr(
 )
 ```
 
-## Mixed logit models
-
-To estimate a mixed logit model, use the `randPars` argument in the `logitr()` function to denote which parameters will be modeled with a distribution. The current package version supports normal (`"n"`) and log-normal (`"ln"`) distributions.
-
-For example, assume the observed utility for yogurts is given by $v_{j} = \alpha p_{j} + \beta_1 x_{j1} + \beta_2 x_{j2}$, where $p_{j}$ is `price`, $x_{j1}$ is `feat`, and $x_{j2}$ is `brand`. To model the `"feat"` and `"brand"` parameters as normally distributed, set `randPars = c(feat = 'n', brand = 'n')`:
-
-```{r, eval=FALSE}
-mxl_pref <- logitr(
-    data     = yogurt,
-    choice   = 'choice',
-    obsID    = 'obsID',
-    pars     = c('price', 'feat', 'brand'),
-    randPars = c(feat = 'n', brand = 'n'),
-    numMultiStarts = 10
-)
-```
-
-Since mixed logit models also have non-convex log-likelihood functions, it is again recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima.
-
-See the ["Estimating Mixed Logit Models"](mxl_models.html) vignette for more details.
-
-## View results
+## Viewing results
 
 Use the `summary()` function to print a summary of the results from an estimated model, e.g.
 
@@ -167,6 +146,27 @@ The `wtp()` function divides the non-price parameters by the negative of the pri
 wtpCompare(mnl_pref, mnl_wtp, price = "price")
 ```
 
+## Mixed logit models
+
+To estimate a mixed logit model, use the `randPars` argument in the `logitr()` function to denote which parameters will be modeled with a distribution. The current package version supports normal (`"n"`) and log-normal (`"ln"`) distributions.
+
+For example, assume the observed utility for yogurts was $v_{j} = \alpha p_{j} + \beta_1 x_{j1} + \beta_2 x_{j2} + \beta_3 x_{j3} + \beta_4 x_{j4}$, where $p_{j}$ is `price`, $x_{j1}$ is `feat`, and $x_{j2-4}$ are dummy-coded variables for `brand`. To model `feat` as well as each of the brands as normally-distributed, set `randPars = c(feat = "n", brand = "n")`:
+
+```{r, eval=FALSE}
+mxl_pref <- logitr(
+    data     = yogurt,
+    choice   = 'choice',
+    obsID    = 'obsID',
+    pars     = c('price', 'feat', 'brand'),
+    randPars = c(feat = 'n', brand = 'n'),
+    numMultiStarts = 10
+)
+```
+
+Since mixed logit models also have non-convex log-likelihood functions, it is again recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima.
+
+See the ["Estimating Mixed Logit Models"](mxl_models.html) vignette for more details.
+
 ## Predicting choice probabilities
 
 Estimated models can be used to predict expected choices and choice probabilities for a set (or multiple sets) of alternatives based on an estimated model. As an example, consider predicting choice probabilities for two of the choice observations from the `yogurt` dataset:
@@ -193,7 +193,7 @@ probs <- predictProbs(
 probs
 ```
 
-The resulting `probs` data frame contains the expected choice probabilities for each alternative. The low and high values show a 95% confidence interval, estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. You can change the CI level by setting alpha to a different value (e.g. a 90% CI is obtained with alpha = 0.05).
+The resulting `probs` data frame contains the expected choice probabilities for each alternative. The low and high values show a 95% confidence interval, estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. You can change the CI level with the optional `ci` argument (e.g. a 90% CI is obtained with `ci = 0.90`).
 
 Choice probabilities can also be predicted used WTP space models. For example, the predicted choice probabilities using the `mnl_wtp` model are nearly identical with those from the `mnl_pref` model:
 
