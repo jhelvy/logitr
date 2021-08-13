@@ -73,7 +73,7 @@ of alternatives based on the results from an estimated model." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.6.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.7.9000</span>
       </span>
     </div>
 
@@ -164,8 +164,9 @@ of alternatives based on the results from an estimated model.</p>
   <span class='va'>altID</span>,
   obsID <span class='op'>=</span> <span class='cn'>NULL</span>,
   computeCI <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  alpha <span class='op'>=</span> <span class='fl'>0.025</span>,
-  numDraws <span class='op'>=</span> <span class='fl'>10</span><span class='op'>^</span><span class='fl'>4</span>
+  ci <span class='op'>=</span> <span class='fl'>0.95</span>,
+  numDraws <span class='op'>=</span> <span class='fl'>10</span><span class='op'>^</span><span class='fl'>4</span>,
+  <span class='va'>alpha</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -199,14 +200,20 @@ alternatives. Defaults to <code>NULL</code> (for a single set of alternatives).<
 Defaults to <code>TRUE</code>.</p></td>
     </tr>
     <tr>
-      <th>alpha</th>
-      <td><p>The sensitivity of the computed confidence interval.
-Defaults to <code>alpha = 0.025</code>, reflecting a 95% CI.</p></td>
+      <th>ci</th>
+      <td><p>The sensitivity of the computed confidence interval (CI).
+Defaults to <code>ci = 0.95</code>, reflecting a 95% CI.</p></td>
     </tr>
     <tr>
       <th>numDraws</th>
       <td><p>The number of draws to use in simulating uncertainty
 for the computed confidence interval.</p></td>
+    </tr>
+    <tr>
+      <th>alpha</th>
+      <td><p>The sensitivity of the computed confidence interval.
+No longer used as of v0.2.7 - if provided, a warning is shown and <code>ci</code>
+is computed from <code>alpha</code>.</p></td>
     </tr>
     </table>
 
