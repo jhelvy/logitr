@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -158,21 +158,20 @@
   model <span class="op">=</span> <span class="va">mnl_pref</span>,
   alts  <span class="op">=</span> <span class="va">alts</span>,
   altID <span class="op">=</span> <span class="st">"alt"</span>,
-  obsID <span class="op">=</span> <span class="st">"obsID"</span>,
-  alpha <span class="op">=</span> <span class="fl">0.025</span>
+  obsID <span class="op">=</span> <span class="st">"obsID"</span>
 <span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">probs_mnl_pref</span>
 <span class="co">#&gt;   obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 1    13   1 0.43685145 0.41585734 0.45847848</span>
-<span class="co">#&gt; 2    13   2 0.03312986 0.02620776 0.04149993</span>
-<span class="co">#&gt; 3    13   3 0.19155548 0.17608606 0.20784518</span>
-<span class="co">#&gt; 4    13   4 0.33846321 0.31847321 0.35841983</span>
-<span class="co">#&gt; 5    42   1 0.60764778 0.57444386 0.64026763</span>
-<span class="co">#&gt; 6    42   2 0.02602007 0.01845737 0.03636455</span>
-<span class="co">#&gt; 7    42   3 0.17803313 0.16204721 0.19481176</span>
-<span class="co">#&gt; 8    42   4 0.18829902 0.16859482 0.20926093</span></code></pre></div>
-<p>The results show the expected choice probabilities for each alternative. The low and high values show a 95% confidence interval estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">(Krinsky and Robb 1986)</span>. You can change the CI level by setting <code>alpha</code> to a different value (e.g. a 90% CI is obtained with <code>alpha = 0.05</code>).</p>
+<span class="co">#&gt; 1    13   1 0.43685145 0.41551636 0.45767025</span>
+<span class="co">#&gt; 2    13   2 0.03312986 0.02634065 0.04197329</span>
+<span class="co">#&gt; 3    13   3 0.19155548 0.17638379 0.20740073</span>
+<span class="co">#&gt; 4    13   4 0.33846321 0.31883538 0.35819210</span>
+<span class="co">#&gt; 5    42   1 0.60764778 0.57298037 0.63952161</span>
+<span class="co">#&gt; 6    42   2 0.02602007 0.01844817 0.03666175</span>
+<span class="co">#&gt; 7    42   3 0.17803313 0.16254368 0.19433957</span>
+<span class="co">#&gt; 8    42   4 0.18829902 0.16820048 0.20962336</span></code></pre></div>
+<p>The results show the expected choice probabilities for each alternative. The low and high values show a 95% confidence interval estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">(Krinsky and Robb 1986)</span>. You can change the CI level with the optional <code>ci</code> argument (e.g. a 90% CI is obtained with <code>ci = 0.90</code>).</p>
 </div>
 <div id="wtp-space-parameterization" class="section level2">
 <h2 class="hasAnchor">
@@ -202,14 +201,14 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">probs_mnl_wtp</span>
 <span class="co">#&gt;   obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 1    13   1 0.43686184 0.41496771 0.45812923</span>
-<span class="co">#&gt; 2    13   2 0.03312997 0.02651075 0.04222236</span>
-<span class="co">#&gt; 3    13   3 0.19154827 0.17628386 0.20761276</span>
-<span class="co">#&gt; 4    13   4 0.33845992 0.31831229 0.35891832</span>
-<span class="co">#&gt; 5    42   1 0.60767177 0.57242689 0.64008780</span>
-<span class="co">#&gt; 6    42   2 0.02601813 0.01848768 0.03658464</span>
-<span class="co">#&gt; 7    42   3 0.17802356 0.16226777 0.19461673</span>
-<span class="co">#&gt; 8    42   4 0.18828654 0.16781147 0.20924935</span></code></pre></div>
+<span class="co">#&gt; 1    13   1 0.43686118 0.41520035 0.45757324</span>
+<span class="co">#&gt; 2    13   2 0.03312960 0.02645117 0.04218890</span>
+<span class="co">#&gt; 3    13   3 0.19154819 0.17624652 0.20798421</span>
+<span class="co">#&gt; 4    13   4 0.33846102 0.31879172 0.35891319</span>
+<span class="co">#&gt; 5    42   1 0.60767142 0.57242148 0.63901654</span>
+<span class="co">#&gt; 6    42   2 0.02601792 0.01836527 0.03669751</span>
+<span class="co">#&gt; 7    42   3 0.17802356 0.16234301 0.19508236</span>
+<span class="co">#&gt; 8    42   4 0.18828710 0.16823284 0.20918393</span></code></pre></div>
 <p>Since these two models are equivalent except in different spaces, the predicted choice probabilities should be the same.</p>
 </div>
 </div>
@@ -241,14 +240,14 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">probs_mxl_pref</span>
 <span class="co">#&gt;   obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 1    13   1 0.45219073 0.39717811 0.47054433</span>
-<span class="co">#&gt; 2    13   2 0.02780546 0.02257613 0.09058017</span>
-<span class="co">#&gt; 3    13   3 0.21019800 0.18470368 0.22916028</span>
-<span class="co">#&gt; 4    13   4 0.30980580 0.27869248 0.36420085</span>
-<span class="co">#&gt; 5    42   1 0.60383358 0.50510151 0.64982841</span>
-<span class="co">#&gt; 6    42   2 0.06797921 0.02649454 0.14815592</span>
-<span class="co">#&gt; 7    42   3 0.18721068 0.16172173 0.20753853</span>
-<span class="co">#&gt; 8    42   4 0.14097653 0.11341383 0.22145662</span></code></pre></div>
+<span class="co">#&gt; 1    13   1 0.45219073 0.39712730 0.47081159</span>
+<span class="co">#&gt; 2    13   2 0.02780546 0.02272863 0.08881051</span>
+<span class="co">#&gt; 3    13   3 0.21019800 0.18393940 0.22900610</span>
+<span class="co">#&gt; 4    13   4 0.30980580 0.27932247 0.36616376</span>
+<span class="co">#&gt; 5    42   1 0.60383358 0.50122199 0.64836191</span>
+<span class="co">#&gt; 6    42   2 0.06797921 0.02776386 0.14701828</span>
+<span class="co">#&gt; 7    42   3 0.18721068 0.16160022 0.20758873</span>
+<span class="co">#&gt; 8    42   4 0.14097653 0.11411015 0.22517057</span></code></pre></div>
 </div>
 <div id="wtp-space-parameterization-1" class="section level2">
 <h2 class="hasAnchor">
@@ -276,15 +275,15 @@
 <span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">probs_mxl_wtp</span>
-<span class="co">#&gt;   obsID alt  prob_mean   prob_low prob_high</span>
-<span class="co">#&gt; 1    13   1 0.45128980 0.40047460 0.4695457</span>
-<span class="co">#&gt; 2    13   2 0.02780809 0.02302259 0.0914304</span>
-<span class="co">#&gt; 3    13   3 0.20981129 0.18496661 0.2284837</span>
-<span class="co">#&gt; 4    13   4 0.31109082 0.27835806 0.3607233</span>
-<span class="co">#&gt; 5    42   1 0.60313058 0.52554881 0.6374786</span>
-<span class="co">#&gt; 6    42   2 0.06827443 0.02756029 0.1539602</span>
-<span class="co">#&gt; 7    42   3 0.18703583 0.16163180 0.2074360</span>
-<span class="co">#&gt; 8    42   4 0.14155916 0.10922549 0.2164167</span></code></pre></div>
+<span class="co">#&gt;   obsID alt  prob_mean   prob_low  prob_high</span>
+<span class="co">#&gt; 1    13   1 0.45134184 0.40081021 0.46968446</span>
+<span class="co">#&gt; 2    13   2 0.02782395 0.02301138 0.09224299</span>
+<span class="co">#&gt; 3    13   3 0.20985172 0.18556229 0.22940154</span>
+<span class="co">#&gt; 4    13   4 0.31098250 0.27875473 0.35998801</span>
+<span class="co">#&gt; 5    42   1 0.60310825 0.52405495 0.63738901</span>
+<span class="co">#&gt; 6    42   2 0.06830282 0.02751463 0.15554164</span>
+<span class="co">#&gt; 7    42   3 0.18706005 0.16145448 0.20805114</span>
+<span class="co">#&gt; 8    42   4 0.14152888 0.10857708 0.21589030</span></code></pre></div>
 </div>
 </div>
 <div id="compare-results" class="section level1">

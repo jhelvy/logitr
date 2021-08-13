@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -150,6 +150,42 @@
       <small>Source: <a href='https://github.com/jhelvy/logitr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="logitr-030" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.0">
+<a href="#logitr-030" class="anchor"></a>logitr 0.3.0<small> Unreleased </small>
+</h1>
+<div id="breaking-changes-with-v020" class="section level2">
+<h2 class="hasAnchor">
+<a href="#breaking-changes-with-v020" class="anchor"></a>Breaking changes with v0.2.0:</h2>
+<ul>
+<li>Several arguments were moved out of the previous <code>options</code> argument and are now passed directly as arguments to <code><a href="../reference/logitr.html">logitr()</a></code>. These include: <code>numMultiStarts</code>, <code>useAnalyticGrad</code>, <code>scaleInputs</code>, <code>startParBounds</code>, <code>standardDraws</code>, <code>numDraws</code>, <code>startVals</code>. The <code>options</code> argument is now only used for options to control the optimization handled by <code>nloptr()</code>.</li>
+<li>Options for keeping all model outputs on a multistart were removed.</li>
+</ul>
+</div>
+<div id="summary-of-larger-updates" class="section level2">
+<h2 class="hasAnchor">
+<a href="#summary-of-larger-updates" class="anchor"></a>Summary of larger updates:</h2>
+<ul>
+<li>Added support for panel data in the log-likelihood function and gradients.</li>
+<li>Several argument names in the <code><a href="../reference/logitr.html">logitr()</a></code> function were changed to make them easier to understand: <code>choiceName</code> became <code>choice</code>, <code>obsIDName</code> became <code>obsID</code>, <code>parNames</code> became <code>pars</code>, <code>priceName</code> became <code>price</code>, <code>weightsName</code> became <code>weights</code>, <code>clusterName</code> became <code>cluster</code>. If used, old names will be passed to the new argument names and a warning will be displayed.</li>
+<li>The log-likelihood and gradient functions were overhauled to improve computational efficiency, resulting in substantially faster estimation for all models.</li>
+<li>The following new methods were introduced: <code><a href="../reference/miscmethods.logitr.html">print.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">logLik.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">coef.summary.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">vcov.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">terms.logitr()</a></code>
+</li>
+</ul>
+</div>
+<div id="summary-of-smaller-updates" class="section level2">
+<h2 class="hasAnchor">
+<a href="#summary-of-smaller-updates" class="anchor"></a>Summary of smaller updates:</h2>
+<ul>
+<li>Improved <code><a href="../reference/miscmethods.logitr.html">summary.logitr()</a></code> and <code><a href="../reference/miscmethods.logitr.html">coef.logitr()</a></code> methods for better printing, now using <code><a href="https://rdrr.io/r/stats/printCoefmat.html">printCoefmat()</a></code>.</li>
+<li>Added input checks for <code><a href="../reference/wtp.html">wtp()</a></code> and <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> functions</li>
+<li>Fixed some errors in some of the documentation examples and removed the dontrun commands on all of them.</li>
+<li>Added the <code>altIDName</code> argument to <code><a href="../reference/predictChoices.html">predictChoices()</a></code> and <code><a href="../reference/predictProbs.html">predictProbs()</a></code> to preserve the row order of predictions for each alternative in each set of alternatives. Closes issue <a href='https://github.com/jhelvy/logitr/issues/13'>#13</a>.</li>
+<li>Fixed bug in data encoding where random parameter names were not aligned with encoded data.</li>
+<li>Added input checks for all predict functions.</li>
+</ul>
+</div>
+</div>
     <div id="logitr-027" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.7">
 <a href="#logitr-027" class="anchor"></a>logitr 0.2.7<small> Unreleased </small>
@@ -213,9 +249,9 @@
 <h1 class="page-header" data-toc-text="0.2.0">
 <a href="#logitr-020" class="anchor"></a>logitr 0.2.0<small> 2021-06-14 </small>
 </h1>
-<div id="summary-of-larger-updates" class="section level2">
+<div id="summary-of-larger-updates-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-larger-updates" class="anchor"></a>Summary of larger updates:</h2>
+<a href="#summary-of-larger-updates-1" class="anchor"></a>Summary of larger updates:</h2>
 <ul>
 <li>New prediction functions: <code><a href="../reference/predictChoices.html">predictChoices()</a></code> and <code><a href="../reference/predictProbs.html">predictProbs()</a></code>, and , depreciated <code><a href="../reference/simulateShares.html">simulateShares()</a></code>.</li>
 <li>Added robust covariance matrix calculations.</li>
@@ -225,9 +261,9 @@
 </li>
 </ul>
 </div>
-<div id="summary-of-smaller-updates" class="section level2">
+<div id="summary-of-smaller-updates-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-smaller-updates" class="anchor"></a>Summary of smaller updates:</h2>
+<a href="#summary-of-smaller-updates-1" class="anchor"></a>Summary of smaller updates:</h2>
 <ul>
 <li>Improved documentation across all vignettes for new features.</li>
 <li>Improved explanation of preference space and WTP space utility models in vignettes.</li>
@@ -297,16 +333,16 @@
 <h1 class="page-header" data-toc-text="0.1.0">
 <a href="#logitr-010" class="anchor"></a>logitr 0.1.0<small> 2021-01-19 </small>
 </h1>
-<div id="summary-of-larger-updates-1" class="section level2">
+<div id="summary-of-larger-updates-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-larger-updates-1" class="anchor"></a>Summary of larger updates:</h2>
+<a href="#summary-of-larger-updates-2" class="anchor"></a>Summary of larger updates:</h2>
 <ul>
 <li>v0.1.0 Submitted to CRAN!</li>
 </ul>
 </div>
-<div id="summary-of-smaller-updates-1" class="section level2">
+<div id="summary-of-smaller-updates-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-smaller-updates-1" class="anchor"></a>Summary of smaller updates:</h2>
+<a href="#summary-of-smaller-updates-2" class="anchor"></a>Summary of smaller updates:</h2>
 <ul>
 <li>Reduced the length of the title in DESCRIPTION to less than 65 characters.</li>
 <li>Changed package names in title and description to single quotes, e.g: {nloptr} -&gt; ‘nloptr’</li>
@@ -332,17 +368,17 @@
 <h1 class="page-header" data-toc-text="0.0.5">
 <a href="#logitr-005" class="anchor"></a>logitr 0.0.5<small> Unreleased </small>
 </h1>
-<div id="summary-of-larger-updates-2" class="section level2">
+<div id="summary-of-larger-updates-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-larger-updates-2" class="anchor"></a>Summary of larger updates:</h2>
+<a href="#summary-of-larger-updates-3" class="anchor"></a>Summary of larger updates:</h2>
 <ul>
 <li>Added support for auto creating interactions among variables</li>
 <li>exported <code>getCoefTable()</code> function</li>
 </ul>
 </div>
-<div id="summary-of-smaller-updates-2" class="section level2">
+<div id="summary-of-smaller-updates-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-smaller-updates-2" class="anchor"></a>Summary of smaller updates:</h2>
+<a href="#summary-of-smaller-updates-3" class="anchor"></a>Summary of smaller updates:</h2>
 <ul>
 <li>Added new documentation for prepping data:
 <ul>
@@ -361,9 +397,9 @@
 <a href="#logitr-004" class="anchor"></a>logitr 0.0.4<small> Unreleased </small>
 </h1>
 <p>Weighted models, new dataset, new encoding features</p>
-<div id="summary-of-larger-updates-3" class="section level2">
+<div id="summary-of-larger-updates-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-larger-updates-3" class="anchor"></a>Summary of larger updates:</h2>
+<a href="#summary-of-larger-updates-4" class="anchor"></a>Summary of larger updates:</h2>
 <ul>
 <li>Added support for estimating weighted regressions</li>
 <li>Added and improved documentation for new datasets: <code>yogurt</code>, <code>cars_china</code>, <code>cars_us</code>
@@ -373,9 +409,9 @@
 <li>Major overhaul of documentation using {pkgdown}</li>
 </ul>
 </div>
-<div id="summary-of-smaller-updates-3" class="section level2">
+<div id="summary-of-smaller-updates-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-smaller-updates-3" class="anchor"></a>Summary of smaller updates:</h2>
+<a href="#summary-of-smaller-updates-4" class="anchor"></a>Summary of smaller updates:</h2>
 <ul>
 <li>Changed license to MIT (after doing a bit of reading up on this)</li>
 <li>Fixed dimension-matching issue with user-provided draws for mixed logit models</li>
@@ -389,17 +425,17 @@
 <a href="#logitr-003" class="anchor"></a>logitr 0.0.3<small> Unreleased </small>
 </h1>
 <p>New simulation functionality</p>
-<div id="summary-of-larger-updates-4" class="section level2">
+<div id="summary-of-larger-updates-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-larger-updates-4" class="anchor"></a>Summary of larger updates:</h2>
+<a href="#summary-of-larger-updates-5" class="anchor"></a>Summary of larger updates:</h2>
 <ul>
 <li>Added support for simulating shares for a set of alternatives given an estimated model: <code><a href="../reference/simulateShares.html">simulateShares()</a></code>. This is similar to the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> function in mlogit.</li>
 <li>Removed support for using an estimated preference space model as an input in the <code><a href="https://rdrr.io/r/base/options.html">options()</a></code> function. I found this just far too confusing, and instead encourage users to supply a WTP space model with the computed WTP from a preference space model as starting parameters.</li>
 </ul>
 </div>
-<div id="summary-of-smaller-updates-4" class="section level2">
+<div id="summary-of-smaller-updates-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-smaller-updates-4" class="anchor"></a>Summary of smaller updates:</h2>
+<a href="#summary-of-smaller-updates-5" class="anchor"></a>Summary of smaller updates:</h2>
 <ul>
 <li>Updated the <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> and main <code><a href="../reference/logitr.html">logitr()</a></code> functions to keep the basic information (run #, log-likelihood value, number of iterations, and output status) whenever <code>numMultistarts</code> &gt; 1. Previously this information was only kept if <code>keepAllRuns</code> was set to <code>TRUE</code>.</li>
 </ul>
@@ -410,9 +446,9 @@
 <a href="#logitr-002" class="anchor"></a>logitr 0.0.2<small> Unreleased </small>
 </h1>
 <p>Updates to options and a few small bug fixes</p>
-<div id="summary-of-larger-updates-5" class="section level2">
+<div id="summary-of-larger-updates-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#summary-of-larger-updates-5" class="anchor"></a>Summary of larger updates:</h2>
+<a href="#summary-of-larger-updates-6" class="anchor"></a>Summary of larger updates:</h2>
 <ul>
 <li>I got rid of the <code>logitr.summary()</code> function and instead added the <code>logitr</code> class to all the models and renamed the summary function to <code><a href="../reference/miscmethods.logitr.html">summary.logitr()</a></code>. Now you can just use the standard <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> function to summarize model results.</li>
 <li>I finally fixed the analytic gradient for WTP space MXL models. I tested analytic versus numeric for WTP space and Preference Space MXL models and they are all identical, including variations of using normally and log-normally distributed parameters.</li>
