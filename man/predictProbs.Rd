@@ -11,7 +11,8 @@ predictProbs(
   obsID = NULL,
   computeCI = TRUE,
   ci = 0.95,
-  numDraws = 10^4
+  numDraws = 10^4,
+  alpha
 )
 }
 \arguments{
@@ -37,6 +38,10 @@ Defaults to \code{ci = 0.95}, reflecting a 95\% CI.}
 
 \item{numDraws}{The number of draws to use in simulating uncertainty
 for the computed confidence interval.}
+
+\item{alpha}{The sensitivity of the computed confidence interval.
+No longer used as of v0.2.7 - if provided, a warning is shown and \code{ci}
+is computed from \code{alpha}.}
 }
 \value{
 A data frame with the estimated choice probabilities for each

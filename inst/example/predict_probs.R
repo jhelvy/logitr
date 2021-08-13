@@ -28,7 +28,8 @@ probs_mnl_pref <- predictProbs(
   model = mnl_pref,
   alts  = alts,
   altID = "alt",
-  obsID = "obsID"
+  obsID = "obsID",
+  ci = 0.95
 )
 
 probs_mnl_pref

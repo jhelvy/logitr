@@ -95,6 +95,9 @@ simChoice <- function(df) {
 #' Defaults to `ci = 0.95`, reflecting a 95% CI.
 #' @param numDraws The number of draws to use in simulating uncertainty
 #' for the computed confidence interval.
+#' @param alpha The sensitivity of the computed confidence interval.
+#' No longer used as of v0.2.7 - if provided, a warning is shown and `ci`
+#' is computed from `alpha`.
 #'
 #' @return A data frame with the estimated choice probabilities for each
 #' alternative in `alts`.
@@ -129,8 +132,18 @@ predictProbs <- function(
   obsID     = NULL,
   computeCI = TRUE,
   ci        = 0.95,
-  numDraws  = 10^4
+  numDraws  = 10^4,
+  alpha
 ) {
+  # In v0.2.7, alpha was changed to ci
+  calls <- names(sapply(match.call(), deparse))[-1]
+  if (any("alpha" %in% calls)) {
+    ci <- 1 - 2*alpha
+    warning(
+      "Use 'ci' instead of 'alpha'...converting 'alpha = ", alpha,
+      "' to 'ci = ", ci, "'"
+    )
+  }
   predictInputsCheck(model, alts, altID, obsID)
   alts <- as.data.frame(alts)
   recoded <- recodeData(alts, model$inputs$pars, model$inputs$randPars)
