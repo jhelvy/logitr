@@ -228,6 +228,7 @@ getExitMessage <- function(x) {
 #' @name se
 #' @param object is an object of class `logitr`.
 #' @param ... further arguments.
+#' @export
 se <- function(object, ...) {
   UseMethod("se")
 }
