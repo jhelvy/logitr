@@ -4,11 +4,11 @@
 #'
 #' @name miscmethods.logitr
 #' @aliases logLik.logitr terms.logitr coef.logitr coef.summary.logitr
-#' summary.logitr print.logitr print.summary.logitr vcov.logitr
+#' summary.logitr print.logitr print.summary.logitr se.logitr vcov.logitr
 #' @param x is an object of class `logitr`.
 #' @param object is an object of class `logitr`.
 #' @param digits the number of digits for printing, defaults to `3`.
-#' @param width the width of the printing,
+#' @param width the width of the printing.
 #' @param ... further arguments.
 #'
 #' @rdname miscmethods.logitr
@@ -46,7 +46,7 @@ coef.summary.logitr <- function(object, ...) {
 summary.logitr <- function (object, ...) {
     object$modelInfoTable <- getModelInfoTable(object)
     coefs <- stats::coef(object)
-    standErr <- sqrt(diag(stats::vcov(object)))
+    standErr <- se(object)
     object$coefTable <- getCoefTable(coefs, standErr)
     object$statTable <- getStatTable(object)
     if (object$modelType == "mxl") {
@@ -223,6 +223,19 @@ getModelRun <- function(x) {
 getExitMessage <- function(x) {
   codes <- getStatusCodes()
   return(codes$message[which(codes$code == x$status)])
+}
+
+#' @name se
+#' @param object is an object of class `logitr`.
+#' @param ... further arguments.
+se <- function(object, ...) {
+  UseMethod("se")
+}
+
+#' @rdname miscmethods.logitr
+#' @export
+se.logitr <- function(object, ...) {
+  return(sqrt(diag(stats::vcov(object))))
 }
 
 #' @rdname miscmethods.logitr
