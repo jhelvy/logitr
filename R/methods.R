@@ -225,7 +225,8 @@ getExitMessage <- function(x) {
   return(codes$message[which(codes$code == x$status)])
 }
 
-#' @name se
+#' Get standard errors
+#'
 #' @param object is an object of class `logitr`.
 #' @param ... further arguments.
 #' @export
