@@ -285,7 +285,7 @@ getCovarianceRobust <- function(object) {
 getClusterModelInputs <- function (indices, mi, i) {
   X <- mi$data_diff$X[indices,]
   # Cast to matrix in cases where there is 1 independent variable
-  if (!is.matrix(X)) { X <- as.matrix(X) }
+  X <- checkMatrix(X)
   mi$data_diff$X <- X
   mi$data_diff$price <- mi$data_diff$price[indices]
   obsID <- mi$data_diff$obsID[indices]

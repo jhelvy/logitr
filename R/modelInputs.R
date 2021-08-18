@@ -5,7 +5,7 @@
 
 # Creates a list of the data and other information needed for running the model
 getModelInputs <- function(
-    data, choice, obsID, pars, randPars, price, randPrice, modelSpace, weights,
+    data, choice, obsID, pars , randPars, price, randPrice, modelSpace, weights,
     panelID, clusterID, robust, numMultiStarts, useAnalyticGrad, scaleInputs,
     startParBounds, standardDraws, numDraws, startVals, call, options
 ) {
@@ -266,7 +266,10 @@ scaleData <- function(data, modelSpace, parSetup, parIDs) {
 makeDiffData <- function(data) {
   # Subtracting out the chosen alternative makes things faster
   X_chosen <- data$X[data$choice == 1,]
+  X_chosen <- checkMatrix(X_chosen)
+  if (!is.matrix(X_chosen)) { X_chosen <- as.matrix(X_chosen) }
   X_diff <- (data$X - X_chosen[data$obsID,])[data$choice != 1,]
+  X_diff <- checkMatrix(X_diff)
   price_diff <- NULL
   if (!is.null(data$price)) {
     price_chosen <- data$price[data$choice == 1]

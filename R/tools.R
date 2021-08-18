@@ -105,3 +105,8 @@ isMnlModel <- function(parSetup) {
 isMxlModel <- function(parSetup) {
   return(!isMnlModel(parSetup))
 }
+
+checkMatrix <- function(x) {
+  if (!is.matrix(x)) { return(as.matrix(x)) }
+  return(x)
+}
