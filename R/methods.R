@@ -261,7 +261,7 @@ getCovarianceRobust <- function(object) {
     parIDs = object$parIDs,
     standardDraws = object$standardDraws,
     panel = !is.null(inputs$panelID),
-    data_diff = makeDiffData(object$data)
+    data_diff = makeDiffData(object$data, object$modelType)
   )
   clusterID <- modelInputs$data_diff$clusterID
   scaleFactors <- object$data$scaleFactors
