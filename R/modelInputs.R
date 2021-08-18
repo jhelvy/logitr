@@ -6,8 +6,8 @@
 # Creates a list of the data and other information needed for running the model
 getModelInputs <- function(
     data, choice, obsID, pars , randPars, price, randPrice, modelSpace, weights,
-    panelID, clusterID, robust, numMultiStarts, useAnalyticGrad, scaleInputs,
-    startParBounds, standardDraws, numDraws, startVals, call, options
+    panelID, clusterID, robust, startParBounds, startVals, numMultiStarts,
+    useAnalyticGrad, scaleInputs, standardDraws, numDraws, vcov, call, options
 ) {
 
   # Keep original input arguments
@@ -23,12 +23,13 @@ getModelInputs <- function(
     panelID         = panelID,
     clusterID       = clusterID,
     robust          = robust,
+    startParBounds  = startParBounds,
+    startVals       = startVals,
     numMultiStarts  = numMultiStarts,
     useAnalyticGrad = useAnalyticGrad,
     scaleInputs     = scaleInputs,
-    startParBounds  = startParBounds,
     numDraws        = numDraws,
-    startVals       = startVals
+    vcov            = vcov
   )
 
   # Check for valid inputs and options

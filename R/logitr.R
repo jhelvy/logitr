@@ -243,9 +243,9 @@ logitr <- function(
   data <- as.data.frame(data) # tibbles break things
 
   modelInputs <- getModelInputs(
-    data, choice, obsID, pars, randPars, price, randPrice, modelSpace, weights,
-    panelID, clusterID, robust, numMultiStarts, useAnalyticGrad, scaleInputs,
-    startParBounds, standardDraws, numDraws, startVals, call, options
+    data, choice, obsID, pars , randPars, price, randPrice, modelSpace, weights,
+    panelID, clusterID, robust, startParBounds, startVals, numMultiStarts,
+    useAnalyticGrad, scaleInputs, standardDraws, numDraws, vcov, call, options
   )
   allModels <- runMultistart(modelInputs)
   if (modelInputs$inputs$numMultiStarts > 1) {
