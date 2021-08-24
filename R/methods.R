@@ -4,11 +4,11 @@
 #'
 #' @name miscmethods.logitr
 #' @aliases logLik.logitr terms.logitr coef.logitr coef.summary.logitr
-#' summary.logitr print.logitr print.summary.logitr vcov.logitr
+#' summary.logitr print.logitr print.summary.logitr se.logitr vcov.logitr
 #' @param x is an object of class `logitr`.
 #' @param object is an object of class `logitr`.
 #' @param digits the number of digits for printing, defaults to `3`.
-#' @param width the width of the printing,
+#' @param width the width of the printing.
 #' @param ... further arguments.
 #'
 #' @rdname miscmethods.logitr
@@ -46,7 +46,7 @@ coef.summary.logitr <- function(object, ...) {
 summary.logitr <- function (object, ...) {
     object$modelInfoTable <- getModelInfoTable(object)
     coefs <- stats::coef(object)
-    standErr <- sqrt(diag(stats::vcov(object)))
+    standErr <- se(object)
     object$coefTable <- getCoefTable(coefs, standErr)
     object$statTable <- getStatTable(object)
     if (object$modelType == "mxl") {
@@ -225,6 +225,21 @@ getExitMessage <- function(x) {
   return(codes$message[which(codes$code == x$status)])
 }
 
+#' Get standard errors
+#'
+#' @param object is an object of class `logitr`.
+#' @param ... further arguments.
+#' @export
+se <- function(object, ...) {
+  UseMethod("se")
+}
+
+#' @rdname miscmethods.logitr
+#' @export
+se.logitr <- function(object, ...) {
+  return(sqrt(diag(stats::vcov(object))))
+}
+
 #' @rdname miscmethods.logitr
 #' @export
 vcov.logitr <- function(object, ...) {
@@ -261,7 +276,7 @@ getCovarianceRobust <- function(object) {
     parIDs = object$parIDs,
     standardDraws = object$standardDraws,
     panel = !is.null(inputs$panelID),
-    data_diff = makeDiffData(object$data)
+    data_diff = makeDiffData(object$data, object$modelType)
   )
   clusterID <- modelInputs$data_diff$clusterID
   scaleFactors <- object$data$scaleFactors
@@ -285,7 +300,7 @@ getCovarianceRobust <- function(object) {
 getClusterModelInputs <- function (indices, mi, i) {
   X <- mi$data_diff$X[indices,]
   # Cast to matrix in cases where there is 1 independent variable
-  if (!is.matrix(X)) { X <- as.matrix(X) }
+  X <- checkMatrix(X)
   mi$data_diff$X <- X
   mi$data_diff$price <- mi$data_diff$price[indices]
   obsID <- mi$data_diff$obsID[indices]

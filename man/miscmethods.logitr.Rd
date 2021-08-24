@@ -9,6 +9,7 @@
 \alias{summary.logitr}
 \alias{print.logitr}
 \alias{print.summary.logitr}
+\alias{se.logitr}
 \alias{vcov.logitr}
 \alias{print.logitr_wtp}
 \title{Methods for logitr objects}
@@ -37,6 +38,8 @@
   ...
 )
 
+\method{se}{logitr}(object, ...)
+
 \method{vcov}{logitr}(object, ...)
 
 \method{print}{logitr_wtp}(
@@ -55,7 +58,7 @@
 
 \item{digits}{the number of digits for printing, defaults to \code{3}.}
 
-\item{width}{the width of the printing,}
+\item{width}{the width of the printing.}
 }
 \description{
 Miscellaneous methods for \code{logitr} class objects.
