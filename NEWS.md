@@ -1,3 +1,10 @@
+# logitr 0.3.1
+
+- Bug fix: Cast X object to matrix for single-parameter models
+- Updated the logic for clustering with and without panel data
+- Added the `se.logitr()` method. 
+- Added the `vcov` argument to the `logitr()` function.
+
 # logitr 0.3.0
 
 ## Breaking changes with v0.2.0:
