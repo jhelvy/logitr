@@ -5,13 +5,13 @@ home:
   description: logitr estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using "Preference" space or "Willingness-to-pay" (WTP) space utility parameterizations.
 
 template:
-  bootstrap: 4
-  params:
-    bootswatch: cosmo
-
-twitter:
-    creator: "@JohnHelveston"
-    card: summary_large_image
+  opengraph:
+    image:
+      src: https://jhelvy.github.io/logitr/reference/figures/logo.png
+      alt: "Logo for the logitr package"
+    twitter:
+      creator: "@JohnHelveston"
+      card: summary
 
 navbar:
   title: "logitr"
