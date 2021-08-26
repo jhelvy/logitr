@@ -12,14 +12,18 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Basic Usage">
 <meta property="og:description" content="logitr">
-<meta property="og:image" content="https://jhelvy.github.io/logitr/logo.png">
+<meta property="og:image" content="https://jhelvy.github.io/logitr/reference/figures/logo.png">
+<meta property="og:image:alt" content="Logo for the logitr package">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@JohnHelveston">
+<meta name="twitter:site" content="@JohnHelveston">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -285,23 +289,23 @@
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, price <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
 <span class="co">#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
-<span class="co">#&gt; lambda         0.366555   0.024432  15.0029 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; feat           1.340699   0.359770   3.7265 0.0001941 ***</span>
-<span class="co">#&gt; brandhiland  -10.136219   0.585347 -17.3166 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandweight   -1.749094   0.181953  -9.6129 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandyoplait   2.003848   0.143568  13.9575 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; lambda         0.366555   0.024341  15.0592 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; feat           1.340699   0.359263   3.7318 0.0001901 ***</span>
+<span class="co">#&gt; brandhiland  -10.136219   0.581632 -17.4272 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandweight   -1.749094   0.180680  -9.6806 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandyoplait   2.003848   0.143531  13.9611 &lt; 2.2e-16 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre></div>
 <p>The <code><a href="../reference/wtp.html">wtp()</a></code> function divides the non-price parameters by the negative of the price parameter. Standard errors are estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. Similarly, the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function can be used to compare the WTP from a WTP space model with that computed from an equivalent preference space model:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, price <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
 <span class="co">#&gt;                       pref           wtp  difference</span>
-<span class="co">#&gt; lambda           0.3665546     0.3665832  0.00002867</span>
-<span class="co">#&gt; feat             1.3406987     1.3405926 -0.00010605</span>
-<span class="co">#&gt; brandhiland    -10.1362190   -10.1357635  0.00045548</span>
-<span class="co">#&gt; brandweight     -1.7490940    -1.7490826  0.00001133</span>
-<span class="co">#&gt; brandyoplait     2.0038476     2.0038208 -0.00002686</span>
-<span class="co">#&gt; logLik       -2656.8878790 -2656.8878779  0.00000106</span></code></pre></div>
+<span class="co">#&gt; lambda           0.3665546     0.3665843  0.00002971</span>
+<span class="co">#&gt; feat             1.3406987     1.3405666 -0.00013209</span>
+<span class="co">#&gt; brandhiland    -10.1362190   -10.1357356  0.00048344</span>
+<span class="co">#&gt; brandweight     -1.7490940    -1.7490777  0.00001624</span>
+<span class="co">#&gt; brandyoplait     2.0038476     2.0038233 -0.00002430</span>
+<span class="co">#&gt; logLik       -2656.8878790 -2656.8878779  0.00000107</span></code></pre></div>
 </div>
 <div id="mixed-logit-models" class="section level2">
 <h2 class="hasAnchor">
@@ -351,14 +355,14 @@
 
 <span class="va">probs</span>
 <span class="co">#&gt;     obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 49     13   1 0.43685145 0.41566305 0.45783107</span>
-<span class="co">#&gt; 50     13   2 0.03312986 0.02622516 0.04155751</span>
-<span class="co">#&gt; 51     13   3 0.19155548 0.17591601 0.20784621</span>
-<span class="co">#&gt; 52     13   4 0.33846321 0.31899169 0.35849350</span>
-<span class="co">#&gt; 165    42   1 0.60764778 0.57339735 0.64014578</span>
-<span class="co">#&gt; 166    42   2 0.02602007 0.01841249 0.03653957</span>
-<span class="co">#&gt; 167    42   3 0.17803313 0.16206924 0.19487412</span>
-<span class="co">#&gt; 168    42   4 0.18829902 0.16851368 0.20919378</span></code></pre></div>
+<span class="co">#&gt; 49     13   1 0.43685145 0.41624476 0.45807081</span>
+<span class="co">#&gt; 50     13   2 0.03312986 0.02639295 0.04171302</span>
+<span class="co">#&gt; 51     13   3 0.19155548 0.17632717 0.20763131</span>
+<span class="co">#&gt; 52     13   4 0.33846321 0.31794683 0.35839454</span>
+<span class="co">#&gt; 165    42   1 0.60764778 0.57447947 0.64020538</span>
+<span class="co">#&gt; 166    42   2 0.02602007 0.01846882 0.03657967</span>
+<span class="co">#&gt; 167    42   3 0.17803313 0.16231287 0.19440900</span>
+<span class="co">#&gt; 168    42   4 0.18829902 0.16790061 0.20924046</span></code></pre></div>
 <p>The resulting <code>probs</code> data frame contains the expected choice probabilities for each alternative. The low and high values show a 95% confidence interval, estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. You can change the CI level with the optional <code>ci</code> argument (e.g. a 90% CI is obtained with <code>ci = 0.90</code>).</p>
 <p>Choice probabilities can also be predicted used WTP space models. For example, the predicted choice probabilities using the <code>mnl_wtp</code> model are nearly identical with those from the <code>mnl_pref</code> model:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -371,14 +375,14 @@
 
 <span class="va">probs</span>
 <span class="co">#&gt;     obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 49     13   1 0.43686141 0.41516969 0.45789637</span>
-<span class="co">#&gt; 50     13   2 0.03312947 0.02653013 0.04226249</span>
-<span class="co">#&gt; 51     13   3 0.19154829 0.17614001 0.20814342</span>
-<span class="co">#&gt; 52     13   4 0.33846083 0.31874554 0.35841332</span>
-<span class="co">#&gt; 165    42   1 0.60767120 0.57262162 0.64015701</span>
-<span class="co">#&gt; 166    42   2 0.02601800 0.01837090 0.03651855</span>
-<span class="co">#&gt; 167    42   3 0.17802363 0.16216282 0.19480731</span>
-<span class="co">#&gt; 168    42   4 0.18828717 0.16799262 0.20898488</span></code></pre></div>
+<span class="co">#&gt; 49     13   1 0.43686138 0.41497617 0.45749766</span>
+<span class="co">#&gt; 50     13   2 0.03312956 0.02654019 0.04214854</span>
+<span class="co">#&gt; 51     13   3 0.19154817 0.17584435 0.20776648</span>
+<span class="co">#&gt; 52     13   4 0.33846088 0.31894800 0.35873572</span>
+<span class="co">#&gt; 165    42   1 0.60767178 0.57288536 0.63959012</span>
+<span class="co">#&gt; 166    42   2 0.02601781 0.01828043 0.03681448</span>
+<span class="co">#&gt; 167    42   3 0.17802351 0.16189110 0.19481896</span>
+<span class="co">#&gt; 168    42   4 0.18828690 0.16847991 0.20869657</span></code></pre></div>
 <p>See the <a href="predict_probs.html">“Predicting Choice Probabilities from Estimated Models”</a> vignette for more details.</p>
 </div>
 <div id="predicting-choices" class="section level2">
