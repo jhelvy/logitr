@@ -47,11 +47,7 @@
 
 
 <meta property="og:title" content="Function reference" />
-<meta property="og:image" content="https://jhelvy.github.io/logitr/reference/figures/logo.png" />
-<meta property="og:image:alt" content="Logo for the logitr package" />
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:creator" content="@JohnHelveston" />
-<meta name="twitter:site" content="@JohnHelveston" />
+<meta property="og:image" content="/logo.png" />
 
 
 
@@ -91,15 +87,12 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
-</li>
-<li>
-  <a href="../articles/basic_usage.html">Basic Usage</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -109,28 +102,31 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/utility_models.html">Utility Models in the Preference &amp; WTP Space</a>
+      <a href="../articles/basic_usage.html">Basic Usage</a>
     </li>
     <li>
       <a href="../articles/data_formatting.html">Data Formatting and Encoding</a>
     </li>
     <li>
-      <a href="../articles/mnl_models.html">Estimating Multinomial Logit Models</a>
-    </li>
-    <li>
-      <a href="../articles/mxl_models.html">Estimating Mixed Logit Models</a>
-    </li>
-    <li>
       <a href="../articles/interactions.html">Estimating Models with Interactions</a>
+    </li>
+    <li>
+      <a href="../articles/mnl_models.html">Estimating Multinomial Logit Models</a>
     </li>
     <li>
       <a href="../articles/mnl_models_weighted.html">Estimating Weighted Logit Models</a>
     </li>
     <li>
-      <a href="../articles/predict_probs.html">Predicting Choice Probabilities from Estimated Models</a>
+      <a href="../articles/mxl_models.html">Estimating Mixed Logit Models</a>
     </li>
     <li>
       <a href="../articles/predict_choices.html">Predicting Choices from Estimated Models</a>
+    </li>
+    <li>
+      <a href="../articles/predict_probs.html">Predicting Choice Probabilities from Estimated Models</a>
+    </li>
+    <li>
+      <a href="../articles/utility_models.html">Utility Models in the Preference &amp; WTP Space</a>
     </li>
   </ul>
 </li>
@@ -172,8 +168,8 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-encoding-data" class="hasAnchor"><a href="#section-encoding-data" class="anchor"></a>Encoding Data</h2>
-          <p class="section-desc"><p>Functions for encoding data prior to model estimation.</p></p>
+          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
+          <p class="section-desc"></p>
         </th>
       </tr>
       
@@ -184,94 +180,34 @@
       <tr>
         
         <td>
-          <p><code><a href="recodeData.html">recodeData()</a></code> </p>
+          <p><code><a href="cars_china.html">cars_china</a></code> </p>
         </td>
-        <td><p>Returns a list of the design matrix <code>X</code> and updated <code>pars</code> and
-<code>randPars</code> to include any dummy-coded categorical or interaction
-variables.</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-estimating-models" class="hasAnchor"><a href="#section-estimating-models" class="anchor"></a>Estimating Models</h2>
-          <p class="section-desc"><p>Functions for estimating multinomial logit models with preference space and WTP space utility parameterizations.</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
+        <td><p>Stated car choice observations by Chinese car buyers</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cars_us.html">cars_us</a></code> </p>
+        </td>
+        <td><p>Stated car choice observations by US car buyers</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="dummyCode.html">dummyCode()</a></code> </p>
+        </td>
+        <td><p>Add dummy-coded variables to data frame.</p></td>
+      </tr><tr>
         
         <td>
           <p><code><a href="logitr.html">logitr()</a></code> </p>
         </td>
         <td><p>The main function for estimating logit models</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-viewing-results" class="hasAnchor"><a href="#section-viewing-results" class="anchor"></a>Viewing Results</h2>
-          <p class="section-desc"><p>Functions for viewing the results of estimated models.</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
+      </tr><tr>
         
         <td>
           <p><code><a href="miscmethods.logitr.html">logLik(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">terms(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">coef(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">coef(<i>&lt;summary.logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">summary(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">print(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">print(<i>&lt;summary.logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">se(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">vcov(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">print(<i>&lt;logitr_wtp&gt;</i>)</a></code> </p>
         </td>
         <td><p>Methods for logitr objects</p></td>
       </tr><tr>
-        
-        <td>
-          <p><code><a href="statusCodes.html">statusCodes()</a></code> </p>
-        </td>
-        <td><p>View a description the nloptr status codes</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-computing-and-comparing-wtp" class="hasAnchor"><a href="#section-computing-and-comparing-wtp" class="anchor"></a>Computing and Comparing WTP</h2>
-          <p class="section-desc"><p>Functions for computing and comparing WTP from estimated models.</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="wtp.html">wtp()</a></code> </p>
-        </td>
-        <td><p>Get WTP from a preference space model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="wtpCompare.html">wtpCompare()</a></code> </p>
-        </td>
-        <td><p>Compare WTP from preference and WTP space models</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-predicting-choices-probabilities" class="hasAnchor"><a href="#section-predicting-choices-probabilities" class="anchor"></a>Predicting Choices &amp; Probabilities</h2>
-          <p class="section-desc"><p>Functions for predicting choices and choice probabilities for a set of alternatives.</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
         
         <td>
           <p><code><a href="predictChoices.html">predictChoices()</a></code> </p>
@@ -283,37 +219,50 @@ variables.</p></td>
           <p><code><a href="predictProbs.html">predictProbs()</a></code> </p>
         </td>
         <td><p>Predict expected choice probabilities</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-example-data-sets" class="hasAnchor"><a href="#section-example-data-sets" class="anchor"></a>Example Data Sets</h2>
-          <p class="section-desc"><p>Descriptions of data included with this package</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="recodeData.html">recodeData()</a></code> </p>
+        </td>
+        <td><p>Returns a list of the design matrix <code>X</code> and updated <code>pars</code> and
+<code>randPars</code> to include any dummy-coded categorical or interaction
+variables.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="se.html">se()</a></code> </p>
+        </td>
+        <td><p>Get standard errors</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="simulateShares.html">simulateShares()</a></code> </p>
+        </td>
+        <td><p>Simulate expected shares</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="statusCodes.html">statusCodes()</a></code> </p>
+        </td>
+        <td><p>View a description the nloptr status codes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="wtp.html">wtp()</a></code> </p>
+        </td>
+        <td><p>Get WTP from a preference space model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="wtpCompare.html">wtpCompare()</a></code> </p>
+        </td>
+        <td><p>Compare WTP from preference and WTP space models</p></td>
+      </tr><tr>
         
         <td>
           <p><code><a href="yogurt.html">yogurt</a></code> </p>
         </td>
         <td><p>Choice observations of yogurt purchases by 100 households</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cars_us.html">cars_us</a></code> </p>
-        </td>
-        <td><p>Stated car choice observations by US car buyers</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cars_china.html">cars_china</a></code> </p>
-        </td>
-        <td><p>Stated car choice observations by Chinese car buyers</p></td>
       </tr>
     </tbody>
     </table>
