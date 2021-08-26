@@ -1,0 +1,80 @@
+url: https://jhelvy.github.io/logitr/
+
+home:
+  title: Random utility logit models with preference and willingness to pay space parameterizations
+  description: logitr estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using "Preference" space or "Willingness-to-pay" (WTP) space utility parameterizations.
+
+template:
+  params:
+    bootswatch: cosmo
+  opengraph:
+    image:
+      src: https://jhelvy.github.io/logitr/reference/figures/logo.png
+      alt: "Logo for the logitr package"
+    twitter:
+      creator: "@JohnHelveston"
+      card: summary
+
+navbar:
+  title: "logitr"
+  left:
+    - icon: fa-home fa-lg
+      href: index.html
+    - text: "Reference"
+      href: reference/index.html
+    - text: "Basic Usage"
+      href: articles/basic_usage.html
+    - text: "Articles"
+      menu:
+        - text: "Utility Models in the Preference & WTP Space"
+          href: articles/utility_models.html
+        - text: "Data Formatting and Encoding"
+          href: articles/data_formatting.html
+        - text: "Estimating Multinomial Logit Models"
+          href: articles/mnl_models.html
+        - text: "Estimating Mixed Logit Models"
+          href: articles/mxl_models.html
+        - text: "Estimating Models with Interactions"
+          href: articles/interactions.html
+        - text: "Estimating Weighted Logit Models"
+          href: articles/mnl_models_weighted.html
+        - text: "Predicting Choice Probabilities from Estimated Models"
+          href: articles/predict_probs.html
+        - text: "Predicting Choices from Estimated Models"
+          href: articles/predict_choices.html
+    - text: "Changelog"
+      href: news/index.html
+
+reference:
+- title: "Encoding Data"
+  desc: "Functions for encoding data prior to model estimation."
+  contents:
+  - recodeData
+- title: "Estimating Models"
+  desc: "Functions for estimating multinomial logit models with preference space and WTP space utility parameterizations."
+  contents:
+  - logitr
+- title: "Viewing Results"
+  desc: "Functions for viewing the results of estimated models."
+  contents:
+  - summary.logitr
+  - coef.logitr
+  - vcov.logitr
+  - se.logitr
+  - statusCodes
+- title: "Computing and Comparing WTP"
+  desc: "Functions for computing and comparing WTP from estimated models."
+  contents:
+  - wtp
+  - wtpCompare
+- title: "Predicting Choices & Probabilities"
+  desc: "Functions for predicting choices and choice probabilities for a set of alternatives."
+  contents:
+  - predictChoices
+  - predictProbs
+- title: "Example Data Sets"
+  desc: "Descriptions of data included with this package"
+  contents:
+  - yogurt
+  - cars_us
+  - cars_china
