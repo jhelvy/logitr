@@ -130,7 +130,7 @@
 <div id="interactions-with-continuous-variables" class="section level1">
 <h1 class="hasAnchor">
 <a href="#interactions-with-continuous-variables" class="anchor"></a>Interactions with continuous variables</h1>
-<p>To add interactions between coefficients in your model, you can add additional arguments in the <code>pars</code> vector in the <code><a href="../reference/logitr.html">logitr()</a></code> function separated by the <code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code> symbol. For example, let’s say we want to interact <code>price</code> with <code>feat</code> in the following model:</p>
+<p>To add interactions between covariates in your model, you can add additional arguments in the <code>pars</code> vector in the <code><a href="../reference/logitr.html">logitr()</a></code> function separated by the <code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code> symbol. For example, let’s say we want to interact <code>price</code> with <code>feat</code> in the following model:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   data   <span class="op">=</span> <span class="va">yogurt</span>,
@@ -194,7 +194,7 @@
 <h1 class="hasAnchor">
 <a href="#interactions-with-discrete-variables" class="anchor"></a>Interactions with discrete variables</h1>
 <p>In the above example, both <code>price</code> and <code>feat</code> were continuous variables, so only a single interaction coefficient was needed.</p>
-<p>In the case of interacting <em>discrete</em> variables, multiple interactions coefficients will be estimated according to the number of levels in the discrete attribute. For example, the interaction of <code>price</code> with <code>brand</code> will require three new interactions - one for each level of the <code>brand</code> variable except the first “baseline” level:</p>
+<p>In the case of interacting <em>discrete</em> variables, multiple interactions coefficients will be estimated according to the number of levels in the discrete attribute. For example, the interaction of <code>price</code> with <code>brand</code> will require three new interactions - one for each level of the <code>brand</code> variable except the first reference level:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_price_brand</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   data   <span class="op">=</span> <span class="va">yogurt</span>,
@@ -248,11 +248,75 @@
 <span class="co">#&gt; Adj McFadden R2:            0.2071145</span>
 <span class="co">#&gt; Number of Observations:  2412.0000000</span></code></pre></div>
 </div>
+<div id="interactions-with-individual-specific-variables" class="section level1">
+<h1 class="hasAnchor">
+<a href="#interactions-with-individual-specific-variables" class="anchor"></a>Interactions with individual-specific variables</h1>
+<p>If you want to include interactions with individual-specific variables (for example, to assess the difference in an effect between groups of respondents), you should <strong>not</strong> include the individual-specific variable interactions using <code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code> in <code>pars</code>. This is because interactions inside <code>pars</code> automatically generate the interaction coefficient as well as coefficients for each covariate.</p>
+<p>For example, if you had a <code>group</code> variable that determined whether individuals belongs to group <code>A</code> or group <code>B</code>, including <code>price*group</code> in <code>pars</code> would create coefficients for <code>price</code>, <code>groupA</code>, and <code>price:groupA</code>, but the <code>groupA</code> coefficient would be unidentified. In this case, you should only include <code>price</code> and <code>price:groupA</code> in the model. For now, the only way to handle this situation is to manually create dummy-coded interaction variables to include in the model.</p>
+<p>To illustrate how one might do this, consider if the <code>yogurt</code> data frame had two groups of individuals: <code>A</code> and <code>B</code>. For simple illustration, I’ll define these groups arbitrarily based on whether or not the <code>obsID</code> is even or odd:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create group A dummies</span>
+<span class="va">yogurt</span><span class="op">$</span><span class="va">groupA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">yogurt</span><span class="op">$</span><span class="va">obsID</span> <span class="op">%%</span> <span class="fl">2</span> <span class="op">==</span> <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<p>An interaction between the <code>group</code> variable and <code>price</code> can be included in the model by first manually creating a <code>price_groupA</code> interaction variable and then including it in <code>pars</code>:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create dummy coefficients for group interaction with price</span>
+<span class="va">yogurt</span><span class="op">$</span><span class="va">price_groupA</span> <span class="op">&lt;-</span> <span class="va">yogurt</span><span class="op">$</span><span class="va">price</span><span class="op">*</span><span class="va">yogurt</span><span class="op">$</span><span class="va">groupA</span>
+
+<span class="va">model_price_group</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
+  data   <span class="op">=</span> <span class="va">yogurt</span>,
+  choice <span class="op">=</span> <span class="st">'choice'</span>,
+  obsID  <span class="op">=</span> <span class="st">'obsID'</span>,
+  pars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price_groupA'</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<pre><code>#&gt; Running Model...
+#&gt; Done!</code></pre>
+<p>The model now has attribute coefficients for <code>price</code>, <code>feat</code>, and <code>brand</code> as well as an interaction between the <code>group</code> and <code>price</code>:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_price_group</span><span class="op">)</span>
+<span class="co">#&gt; =================================================</span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; logitr(data = yogurt, choice = "choice", obsID = "obsID", pars = c("price", </span>
+<span class="co">#&gt;     "feat", "brand", "price_groupA"))</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Frequencies of alternatives:</span>
+<span class="co">#&gt;        1        2        3        4 </span>
+<span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Exit Status: 3, Optimization stopped because ftol_rel or ftol_abs was reached.</span>
+<span class="co">#&gt;                                 </span>
+<span class="co">#&gt; Model Type:    Multinomial Logit</span>
+<span class="co">#&gt; Model Space:          Preference</span>
+<span class="co">#&gt; Model Run:                1 of 1</span>
+<span class="co">#&gt; Iterations:                   26</span>
+<span class="co">#&gt; Elapsed Time:        0h:0m:0.07s</span>
+<span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span>
+<span class="co">#&gt; Weights Used?:             FALSE</span>
+<span class="co">#&gt; Robust?                    FALSE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Model Coefficients: </span>
+<span class="co">#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
+<span class="co">#&gt; price        -0.3680634  0.0273911 -13.4373 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; feat          0.4915271  0.1200725   4.0936 4.248e-05 ***</span>
+<span class="co">#&gt; brandhiland  -3.7155231  0.1454216 -25.5500 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandweight  -0.6411384  0.0544999 -11.7640 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandyoplait  0.7345568  0.0806444   9.1086 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; price_groupA  0.0030007  0.0254484   0.1179    0.9061    </span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="co">#&gt;                                      </span>
+<span class="co">#&gt; Log-Likelihood:         -2656.8808982</span>
+<span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span>
+<span class="co">#&gt; AIC:                     5325.7617965</span>
+<span class="co">#&gt; BIC:                     5360.4911000</span>
+<span class="co">#&gt; McFadden R2:                0.2054169</span>
+<span class="co">#&gt; Adj McFadden R2:            0.2036225</span>
+<span class="co">#&gt; Number of Observations:  2412.0000000</span></code></pre></div>
+</div>
 <div id="interactions-in-mixed-logit-models" class="section level1">
 <h1 class="hasAnchor">
 <a href="#interactions-in-mixed-logit-models" class="anchor"></a>Interactions in mixed logit models</h1>
-<p>Suppose I want to include an interaction between two variables and I also want one of those variables to be modeled as normally distributed across the population. The example below illustrates this cases, where a <code>price*feat</code> interaction is specified and the <code>feat</code> parameter is modeled as normally distributed by setting <code>randPars = c(feat = "n")</code>:randPars = c(feat = “n”)</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p>Suppose I want to include an interaction between two variables and I also want one of those variables to be modeled as normally distributed across the population. The example below illustrates this cases, where a <code>price*feat</code> interaction is specified and the <code>feat</code> parameter is modeled as normally distributed by setting <code>randPars = c(feat = "n")</code>:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_price_feat_mxl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   data     <span class="op">=</span> <span class="va">yogurt</span>,
   choice   <span class="op">=</span> <span class="st">'choice'</span>,
@@ -263,7 +327,7 @@
 <pre><code>#&gt; Running Model...
 #&gt; Done!</code></pre>
 <p>In this case, the <code>price*feat</code> interaction parameter is interpreted as a difference in the <code>feat_mu</code> parameter and price; that is, it an interaction in the <em>mean</em> <code>feat</code> parameter and <code>price</code>:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_price_feat_mxl</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; Call:</span>

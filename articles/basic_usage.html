@@ -288,12 +288,12 @@
 <p>For models in the preference space, a summary table of the computed WTP based on the estimated preference space parameters can be obtained with the <code><a href="../reference/wtp.html">wtp()</a></code> function. For example, the computed WTP from the previously estimated fixed parameter model can be obtained with the following command:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, price <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
-<span class="co">#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
-<span class="co">#&gt; lambda         0.366555   0.024394  15.0264 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; feat           1.340699   0.359633   3.7280  0.000193 ***</span>
-<span class="co">#&gt; brandhiland  -10.136219   0.584550 -17.3402 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandweight   -1.749094   0.182066  -9.6069 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandyoplait   2.003848   0.143657  13.9488 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt;                Estimate Std. Error  z-value Pr(&gt;|z|)    </span>
+<span class="co">#&gt; lambda         0.366555   0.024365  15.0446  &lt; 2e-16 ***</span>
+<span class="co">#&gt; feat           1.340699   0.359250   3.7319  0.00019 ***</span>
+<span class="co">#&gt; brandhiland  -10.136219   0.585032 -17.3259  &lt; 2e-16 ***</span>
+<span class="co">#&gt; brandweight   -1.749094   0.181646  -9.6291  &lt; 2e-16 ***</span>
+<span class="co">#&gt; brandyoplait   2.003848   0.143235  13.9899  &lt; 2e-16 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre></div>
 <p>The <code><a href="../reference/wtp.html">wtp()</a></code> function divides the non-price parameters by the negative of the price parameter. Standard errors are estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. Similarly, the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function can be used to compare the WTP from a WTP space model with that computed from an equivalent preference space model:</p>
@@ -355,14 +355,14 @@
 
 <span class="va">probs</span>
 <span class="co">#&gt;     obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 49     13   1 0.43685145 0.41545660 0.45834816</span>
-<span class="co">#&gt; 50     13   2 0.03312986 0.02632594 0.04180291</span>
-<span class="co">#&gt; 51     13   3 0.19155548 0.17618589 0.20767893</span>
-<span class="co">#&gt; 52     13   4 0.33846321 0.31815918 0.35865141</span>
-<span class="co">#&gt; 165    42   1 0.60764778 0.57346693 0.64057048</span>
-<span class="co">#&gt; 166    42   2 0.02602007 0.01858908 0.03697893</span>
-<span class="co">#&gt; 167    42   3 0.17803313 0.16200881 0.19467199</span>
-<span class="co">#&gt; 168    42   4 0.18829902 0.16824526 0.20942820</span></code></pre></div>
+<span class="co">#&gt; 49     13   1 0.43685145 0.41647611 0.45836179</span>
+<span class="co">#&gt; 50     13   2 0.03312986 0.02630721 0.04144195</span>
+<span class="co">#&gt; 51     13   3 0.19155548 0.17648567 0.20784542</span>
+<span class="co">#&gt; 52     13   4 0.33846321 0.31826042 0.35861540</span>
+<span class="co">#&gt; 165    42   1 0.60764778 0.57330134 0.63960245</span>
+<span class="co">#&gt; 166    42   2 0.02602007 0.01826064 0.03655956</span>
+<span class="co">#&gt; 167    42   3 0.17803313 0.16240351 0.19490273</span>
+<span class="co">#&gt; 168    42   4 0.18829902 0.16846641 0.20935452</span></code></pre></div>
 <p>The resulting <code>probs</code> data frame contains the expected choice probabilities for each alternative. The low and high values show a 95% confidence interval, estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. You can change the CI level with the optional <code>ci</code> argument (e.g. a 90% CI is obtained with <code>ci = 0.90</code>).</p>
 <p>Choice probabilities can also be predicted used WTP space models. For example, the predicted choice probabilities using the <code>mnl_wtp</code> model are nearly identical with those from the <code>mnl_pref</code> model:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -375,14 +375,14 @@
 
 <span class="va">probs</span>
 <span class="co">#&gt;     obsID alt  prob_mean   prob_low  prob_high</span>
-<span class="co">#&gt; 49     13   1 0.43686141 0.41505542 0.45782543</span>
-<span class="co">#&gt; 50     13   2 0.03312947 0.02646241 0.04239229</span>
-<span class="co">#&gt; 51     13   3 0.19154829 0.17629014 0.20771479</span>
-<span class="co">#&gt; 52     13   4 0.33846083 0.31868607 0.35889225</span>
-<span class="co">#&gt; 165    42   1 0.60767120 0.57268935 0.63972982</span>
-<span class="co">#&gt; 166    42   2 0.02601800 0.01827456 0.03676537</span>
-<span class="co">#&gt; 167    42   3 0.17802363 0.16200613 0.19467997</span>
-<span class="co">#&gt; 168    42   4 0.18828717 0.16788140 0.20878292</span></code></pre></div>
+<span class="co">#&gt; 49     13   1 0.43686141 0.41509952 0.45778341</span>
+<span class="co">#&gt; 50     13   2 0.03312947 0.02631492 0.04236653</span>
+<span class="co">#&gt; 51     13   3 0.19154829 0.17630190 0.20814419</span>
+<span class="co">#&gt; 52     13   4 0.33846083 0.31849789 0.35856695</span>
+<span class="co">#&gt; 165    42   1 0.60767120 0.57326659 0.64044301</span>
+<span class="co">#&gt; 166    42   2 0.02601800 0.01836751 0.03633438</span>
+<span class="co">#&gt; 167    42   3 0.17802363 0.16234678 0.19503076</span>
+<span class="co">#&gt; 168    42   4 0.18828717 0.16761405 0.20836309</span></code></pre></div>
 <p>See the <a href="predict_probs.html">“Predicting Choice Probabilities from Estimated Models”</a> vignette for more details.</p>
 </div>
 <div id="predicting-choices" class="section level2">
@@ -404,14 +404,14 @@
 <span class="co">#&gt; 1.2     1      0              0</span>
 <span class="co">#&gt; 1.3     1      1              0</span>
 <span class="co">#&gt; 1.4     1      0              0</span>
-<span class="co">#&gt; 2.5     2      1              0</span>
+<span class="co">#&gt; 2.5     2      1              1</span>
 <span class="co">#&gt; 2.6     2      0              0</span></code></pre></div>
 <p>The resulting <code>choices</code> data frame contains the same <code>alts</code> data frame with an additional column, <code>choice_predict</code>, which contains the predicted choices. You can quickly compute the accuracy by dividing the number of correctly predicted choices by the total number of choices:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">chosen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">choices</span>, <span class="va">choice</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>
 <span class="va">chosen</span><span class="op">$</span><span class="va">correct</span> <span class="op">&lt;-</span> <span class="va">chosen</span><span class="op">$</span><span class="va">choice</span> <span class="op">==</span> <span class="va">chosen</span><span class="op">$</span><span class="va">choice_predict</span>
 <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">chosen</span><span class="op">$</span><span class="va">correct</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">chosen</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.3685738</span></code></pre></div>
+<span class="co">#&gt; [1] 0.3739635</span></code></pre></div>
 <p>See the <a href="predict_choices.html">“Predicting Choices from Estimated Models”</a> vignette for more details.</p>
 </div>
   </div>
