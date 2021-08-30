@@ -30,6 +30,28 @@ model_price_brand <- logitr(
 summary(model_price_brand)
 
 # ============================================================================
+# Estimate homogeneous MNL models with individual-specific interactions
+
+# In this case, you don't want a coefficient for a specific group,
+# but rather just an interaction term with individuals from that group
+
+# Create group A dummies
+yogurt$groupA <- ifelse(yogurt$obsID %% 2 == 0, 1, 0)
+
+# Create dummy coefficients for group interaction with price
+yogurt$price_groupA <- yogurt$price*yogurt$groupA
+
+# Continuous variable interactions
+model_price_group <- logitr(
+  data   = yogurt,
+  choice = 'choice',
+  obsID  = 'obsID',
+  pars   = c('price', 'feat', 'brand', 'price_groupA')
+)
+
+summary(model_price_group)
+
+# ============================================================================
 # Estimate heterogeneous MXL models with interactions
 
 model_price_feat_mxl <- logitr(
@@ -44,10 +66,13 @@ model_price_feat_mxl <- logitr(
 # feat_mu value depending on price
 summary(model_price_feat_mxl)
 
+# ============================================================================
 # Save results
 saveRDS(model_price_feat,
   here::here('inst', 'extdata', 'int_model_price_feat.Rds'))
 saveRDS(model_price_brand,
   here::here('inst', 'extdata', 'int_model_price_brand.Rds'))
+saveRDS(model_price_group,
+  here::here('inst', 'extdata', 'model_price_group.Rds'))
 saveRDS(model_price_feat_mxl,
   here::here('inst', 'extdata', 'model_price_feat_mxl.Rds'))

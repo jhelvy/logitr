@@ -23,13 +23,15 @@ model_price_feat <- readRDS(
   here::here('inst', 'extdata', 'int_model_price_feat.Rds'))
 model_price_brand <- readRDS(
   here::here('inst', 'extdata', 'int_model_price_brand.Rds'))
+model_price_group <- readRDS(
+  here::here('inst', 'extdata', 'model_price_group.Rds'))
 model_price_feat_mxl <- readRDS(
   here::here('inst', 'extdata', 'model_price_feat_mxl.Rds'))
 ```
 
 # Interactions with continuous variables
 
-To add interactions between coefficients in your model, you can add additional arguments in the `pars` vector in the `logitr()` function separated by the `*` symbol. For example, let's say we want to interact `price` with `feat` in the following model:
+To add interactions between covariates in your model, you can add additional arguments in the `pars` vector in the `logitr()` function separated by the `*` symbol. For example, let's say we want to interact `price` with `feat` in the following model:
 
 ```{r, eval=FALSE}
 model <- logitr(
@@ -65,7 +67,7 @@ summary(model_price_feat)
 
 In the above example, both `price` and `feat` were continuous variables, so only a single interaction coefficient was needed.
 
-In the case of interacting _discrete_ variables, multiple interactions coefficients will be estimated according to the number of levels in the discrete attribute. For example, the interaction of `price` with `brand` will require three new interactions - one for each level of the `brand` variable except the first "baseline" level:
+In the case of interacting _discrete_ variables, multiple interactions coefficients will be estimated according to the number of levels in the discrete attribute. For example, the interaction of `price` with `brand` will require three new interactions - one for each level of the `brand` variable except the first reference level:
 
 ```{r, eval=FALSE}
 model_price_brand <- logitr(
@@ -86,9 +88,46 @@ The model now has three estimated coefficients for the `price*brand` effect:
 summary(model_price_brand)
 ```
 
+# Interactions with individual-specific variables
+
+If you want to include interactions with individual-specific variables (for example, to assess the difference in an effect between groups of respondents), you should **not** include the individual-specific variable interactions using `*` in `pars`. This is because interactions inside `pars` automatically generate the interaction coefficient as well as coefficients for each covariate. 
+
+For example, if you had a `group` variable that determined whether individuals belongs to group `A` or group `B`, including `price*group` in `pars` would create coefficients for `price`, `groupA`, and `price:groupA`, but the `groupA` coefficient would be unidentified. In this case, you should only include `price` and `price:groupA` in the model. For now, the only way to handle this situation is to manually create dummy-coded interaction variables to include in the model. 
+
+To illustrate how one might do this, consider if the `yogurt` data frame had two groups of individuals: `A` and `B`. For simple illustration, I'll define these groups arbitrarily based on whether or not the `obsID` is even or odd:
+
+```{r, eval=FALSE}
+# Create group A dummies
+yogurt$groupA <- ifelse(yogurt$obsID %% 2 == 0, 1, 0)
+```
+
+An interaction between the `group` variable and `price` can be included in the model by first manually creating a `price_groupA` interaction variable and then including it in `pars`:
+
+```{r, eval=FALSE}
+# Create dummy coefficients for group interaction with price
+yogurt$price_groupA <- yogurt$price*yogurt$groupA
+
+model_price_group <- logitr(
+  data   = yogurt,
+  choice = 'choice',
+  obsID  = 'obsID',
+  pars   = c('price', 'feat', 'brand', 'price_groupA')
+)
+```
+```
+#> Running Model...
+#> Done!
+```
+
+The model now has attribute coefficients for `price`, `feat`, and `brand` as well as an interaction between the `group` and `price`:
+
+```{r}
+summary(model_price_group)
+```
+
 # Interactions in mixed logit models
 
-Suppose I want to include an interaction between two variables and I also want one of those variables to be modeled as normally distributed across the population. The example below illustrates this cases, where a `price*feat` interaction is specified and the `feat` parameter is modeled as normally distributed by setting `randPars = c(feat = "n")`:randPars   = c(feat = "n")
+Suppose I want to include an interaction between two variables and I also want one of those variables to be modeled as normally distributed across the population. The example below illustrates this cases, where a `price*feat` interaction is specified and the `feat` parameter is modeled as normally distributed by setting `randPars = c(feat = "n")`:
 
 ```{r, eval=FALSE}
 model_price_feat_mxl <- logitr(
