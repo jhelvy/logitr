@@ -4,6 +4,7 @@
 - Updated the logic for clustering with and without panel data
 - Added the `se.logitr()` method. 
 - Added the `vcov` argument to the `logitr()` function.
+- Improved vignette on interaction models with individual-specific variable interactions.
 
 # logitr 0.3.0
 
