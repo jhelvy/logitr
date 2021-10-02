@@ -10,7 +10,7 @@
 #' @param object is an object of class `logitr`.
 #' @param digits the number of digits for printing, defaults to `3`.
 #' @param width the width of the printing.
-#' @param newData a `data.frame` for the `predict` method. Each row is an
+#' @param newdata a `data.frame` for the `predict` method. Each row is an
 #' alternative and each column an attribute corresponding to parameter names
 #' in the estimated model. Defaults to `NULL`, in which case the original data
 #' used to estimate the model are used.
@@ -358,7 +358,7 @@ print.logitr_wtp <- function (
 #' @export
 predict.logitr <- function(
   object,
-  newData       = NULL,
+  newdata       = NULL,
   obsID         = NULL,
   returnProbs   = TRUE,
   returnChoices = FALSE,
@@ -369,11 +369,11 @@ predict.logitr <- function(
   ...
 ) {
   d <- object$data
-  # If no newData is provided, use the data from the estimated object
-  if (is.null(newData)) {
+  # If no newdata is provided, use the data from the estimated object
+  if (is.null(newdata)) {
     data <- list(X = d$X, price = d$price, obsID = d$obsID)
   } else {
-    data <- formatNewData(object, newData, obsID)
+    data <- formatNewData(object, newdata, obsID)
   }
   getV <- getMnlV_pref
   getVDraws <- getMxlV_pref
@@ -394,23 +394,23 @@ predict.logitr <- function(
   }
 }
 
-formatNewData <- function(object, newData, obsID) {
-  predictInputsCheck(object, newData, obsID)
+formatNewData <- function(object, newdata, obsID) {
+  predictInputsCheck(object, newdata, obsID)
   inputs <- object$inputs
-  newData <- as.data.frame(newData) # tibbles break things
-  recoded <- recodeData(newData, inputs$pars, inputs$randPars)
+  newdata <- as.data.frame(newdata) # tibbles break things
+  recoded <- recodeData(newdata, inputs$pars, inputs$randPars)
   X <- recoded$X
-  predictParCheck(object, X) # Check if model pars match those from newData
+  predictParCheck(object, X) # Check if model pars match those from newdata
   price <- NA
   if (inputs$modelSpace == "wtp") {
-    price <- as.matrix(newData[, which(colnames(newData) == inputs$price)])
+    price <- as.matrix(newdata[, which(colnames(newdata) == inputs$price)])
   }
   if (is.null(obsID)) {
     obsIDName <- inputs$obsID # Use obsID from estimated object
   } else {
     obsIDName <- obsID
   }
-  obsID <- newData[, obsIDName]
+  obsID <- newdata[, obsIDName]
   return(list(X = X, price = price, obsID = obsID))
 }
 
