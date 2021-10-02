@@ -162,25 +162,19 @@ checkOptions <- function(options) {
   return(options)
 }
 
-predictInputsCheck <- function(model, alts, altID, obsID) {
+predictInputsCheck <- function(model, newData, obsID) {
   if (!is_logitr(model)) {
     stop(
       'The "model" argument must be a model estimated using the logitr() ',
       'function.'
     )
   }
-  if (missing(alts)) stop('"alts" needs to be specified')
-  if (missing(altID)) stop('"altID" needs to be specified')
-  if (! altID %in% names(alts)) {
-    stop(
-      'The "altID" argument refers to a column that does not exist in ',
-      'the "alts" data frame')
-  }
+  if (missing(newData)) stop('"newData" needs to be specified')
   if (!is.null(obsID)) {
-    if (! obsID %in% names(alts)) {
+    if (! obsID %in% names(newData)) {
       stop(
         'The "obsID" argument refers to a column that does not exist in ',
-        'the "alts" data frame')
+        'the "newData" data frame')
     }
   }
 }
@@ -197,10 +191,11 @@ predictParCheck <- function(model, X) {
     dataPars <- paste(dataNames, collapse = ", ")
     stop(paste0(
       'The coefficient names for the provided model do not correspond to ',
-      'variables in "alts".\n\n',
+      'variables in "newData".\n\n',
       'Expect columns:\n\t', modelPars, '\n\n',
-      'Encoded column names from provided `alts` object:\n\t', dataPars, '\n\n',
-      'If you have a factor variable in "alts", check that the factor ',
+      'Encoded column names from provided `newData` object:\n\t', dataPars,
+      '\n\n',
+      'If you have a factor variable in "newData", check that the factor ',
       'levels match those of the data used to estimate the model.'
     ))
   }

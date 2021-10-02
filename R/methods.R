@@ -16,8 +16,8 @@
 #' used to estimate the model are used.
 #' @param obsID The name of the column that identifies each set of
 #' alternatives in the data for the `predict` method. Required if predicting
-#' results for more than one set of alternatives. Defaults to `NULL` (for a
-#' single set of alternatives).
+#' results for more than one set of alternatives. Defaults to `NULL`, in which
+#' case the value for `obsID` from the estimated `object` is used.
 #' @param returnProbs for the `predict` method, if `TRUE` the predicted
 #' probabilities are returned. Defaults to `TRUE`.
 #' @param returnChoices for the `predict` method, if `TRUE` the predicted
@@ -358,15 +358,161 @@ print.logitr_wtp <- function (
 #' @export
 predict.logitr <- function(
   object,
-  newData,
-  obsID,
-  returnProbs = TRUE,
+  newData       = NULL,
+  obsID         = NULL,
+  returnProbs   = TRUE,
   returnChoices = FALSE,
-  returnData = FALSE,
-  computeCI = FALSE,
-  ci = 0.95,
-  numDraws = 10^4,
+  returnData    = FALSE,
+  computeCI     = FALSE,
+  ci            = 0.95,
+  numDraws      = 10^4,
   ...
 ) {
-  # Write code for predicting
+  d <- object$data
+  # If no newData is provided, use the data from the estimated object
+  if (is.null(newData)) {
+    data <- list(X = d$X, price = d$price, obsID = d$obsID)
+  } else {
+    data <- formatNewData(object, newData, obsID)
+  }
+  getV <- getMnlV_pref
+  getVDraws <- getMxlV_pref
+  if (model$inputs$modelSpace == "wtp") {
+    getVDraws <- getMxlV_wtp
+    getV <- getMnlV_wtp
+  }
+  if (model$modelType == "mxl") {
+    return(
+      mxlSimulation(
+        alts, model, price, X, altID, obsID, altIDName, obsIDName, numDraws,
+        ci, getV, getVDraws, computeCI))
+  } else {
+    return(
+      mnlSimulation(
+        alts, model, price, X, altID, obsID, altIDName, obsIDName, numDraws,
+        ci, getV, getVDraws, computeCI))
+  }
+}
+
+formatNewData <- function(object, newData, obsID) {
+  predictInputsCheck(object, newData, obsID)
+  inputs <- object$inputs
+  newData <- as.data.frame(newData) # tibbles break things
+  recoded <- recodeData(newData, inputs$pars, inputs$randPars)
+  X <- recoded$X
+  predictParCheck(object, X) # Check if model pars match those from newData
+  price <- NA
+  if (inputs$modelSpace == "wtp") {
+    price <- as.matrix(newData[, which(colnames(newData) == inputs$price)])
+  }
+  if (is.null(obsID)) {
+    obsIDName <- inputs$obsID # Use obsID from estimated object
+  } else {
+    obsIDName <- obsID
+  }
+  obsID <- newData[, obsIDName]
+  return(list(X = X, price = price, obsID = obsID))
+}
+
+predictLogit <- function(V, obsID) {
+  expV <- exp(V)
+  sumExpV <- rowsum(expV, group = obsID, reorder = FALSE)
+  reps <- table(obsID)
+  return(expV / sumExpV[rep(seq_along(reps), reps),])
+}
+
+mnlSimulation <- function(
+  alts, model, price, X, altID, obsID, altIDName, obsIDName, numDraws, ci,
+  getV, getVDraws, computeCI
+) {
+  # Compute mean probs
+  V <- getV(stats::coef(model), X, price)
+  meanProb <- predictLogit(V, obsID)
+  if (computeCI == FALSE) {
+    return(summarizeMeanProbs(meanProb, altID, obsID, altIDName, obsIDName))
+  }
+  # Compute uncertainty with simulation
+  betaUncDraws <- getUncertaintyDraws(model, numDraws)
+  betaUncDraws <- selectSimDraws(betaUncDraws, model$inputs$modelSpace, X)
+  VUncDraws <- getVDraws(betaUncDraws, X, price)
+  logitUncDraws <- predictLogit(VUncDraws, obsID)
+  return(summarizeUncProbs(
+    meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, ci))
+}
+
+mxlSimulation <- function(
+  alts, model, price, X, altID, obsID, altIDName, obsIDName, numDraws, ci,
+  getV, getVDraws, computeCI
+) {
+  # Compute mean probs
+  meanProb <- getSimPHat(stats::coef(model), model, X, price, obsID, getVDraws)
+  if (computeCI == FALSE) {
+    return(summarizeMeanProbs(meanProb, altID, obsID, altIDName, obsIDName))
+  }
+  # Compute uncertainty with simulation
+  betaUncDraws <- getUncertaintyDraws(model, numDraws)
+  logitUncDraws <- matrix(0, nrow = nrow(X), ncol = nrow(betaUncDraws))
+  for (i in seq_len(nrow(betaUncDraws))) {
+    pars <- betaUncDraws[i, ]
+    logitUncDraws[, i] <- getSimPHat(
+      pars, model, X, price, obsID, getVDraws)
+  }
+  return(summarizeUncProbs(
+    meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, ci))
+}
+
+getSimPHat <- function(pars, model, X, price, obsID, getVDraws) {
+  numDraws <- model$inputs$numDraws
+  parSetup <- model$parSetup
+  parIDs <- model$parIDs
+  standardDraws <- getStandardDraws(parIDs, numDraws)
+  betaDraws <- makeBetaDraws(pars, parIDs, numDraws, standardDraws)
+  colnames(betaDraws) <- names(parSetup)
+  betaDraws <- selectSimDraws(betaDraws, model$inputs$modelSpace, X)
+  VDraws <- getVDraws(betaDraws, X, price)
+  logitDraws <- predictLogit(VDraws, obsID)
+  return(rowMeans(logitDraws, na.rm = T))
+}
+
+selectSimDraws <- function(betaDraws, modelSpace, X) {
+  betaDraws <- as.data.frame(betaDraws)
+  if (modelSpace == "wtp") {
+    lambdaDraws <- betaDraws["lambda"]
+    gammaDraws <- betaDraws[colnames(X)]
+    betaDraws <- cbind(lambdaDraws, gammaDraws)
+  } else {
+    betaDraws <- betaDraws[colnames(X)]
+  }
+  return(as.matrix(betaDraws))
+}
+
+summarizeMeanProbs <- function(meanProb, altID, obsID, altIDName, obsIDName) {
+  probs <- as.data.frame(meanProb)
+  colnames(probs) <- "prob_mean"
+  probs[altIDName] <- altID
+  probs[obsIDName] <- obsID
+  return(probs[c(obsIDName, altIDName, "prob_mean")])
+}
+
+summarizeUncProbs <- function(
+  meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, ci
+) {
+  probs <- as.data.frame(t(apply(logitUncDraws, 1, getCI, ci)))
+  probs$mean <- as.numeric(meanProb)
+  colnames(probs) <- paste0("prob_", colnames(probs))
+  names <- c(obsIDName, altIDName, colnames(probs))
+  probs[altIDName] <- altID
+  probs[obsIDName] <- obsID
+  return(probs[names])
+}
+
+# Returns a confidence interval from a vector of data
+getCI <- function(data, ci = 0.95) {
+  alpha <- (1 - ci)/2
+  B <- mean(data, na.rm = T)
+  L <- stats::quantile(data, alpha, na.rm = T)
+  U <- stats::quantile(data, 1 - alpha, na.rm = T)
+  ests <- c(B, L, U)
+  names(ests) <- c("mean", "low", "high")
+  return(ests)
 }
