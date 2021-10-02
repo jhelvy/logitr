@@ -5,10 +5,32 @@
 #' @name miscmethods.logitr
 #' @aliases logLik.logitr terms.logitr coef.logitr coef.summary.logitr
 #' summary.logitr print.logitr print.summary.logitr se.logitr vcov.logitr
+#' predict.logitr
 #' @param x is an object of class `logitr`.
 #' @param object is an object of class `logitr`.
 #' @param digits the number of digits for printing, defaults to `3`.
 #' @param width the width of the printing.
+#' @param newData a `data.frame` for the `predict` method. Each row is an
+#' alternative and each column an attribute corresponding to parameter names
+#' in the estimated model. Defaults to `NULL`, in which case the original data
+#' used to estimate the model are used.
+#' @param obsID The name of the column that identifies each set of
+#' alternatives in the data for the `predict` method. Required if predicting
+#' results for more than one set of alternatives. Defaults to `NULL` (for a
+#' single set of alternatives).
+#' @param returnProbs for the `predict` method, if `TRUE` the predicted
+#' probabilities are returned. Defaults to `TRUE`.
+#' @param returnChoices for the `predict` method, if `TRUE` the predicted
+#' choices are returned. Defaults to `FALSE`.
+#' @param returnData for the `predict` method, if `TRUE` the data is also
+#' returned, otherwise only the predicted values (probs or choices) are
+#' returned. Defaults to `TRUE`.
+#' @param computeCI Should a confidence interval be computed for the `predict`
+#' method? Defaults to `FALSE`.
+#' @param ci The sensitivity of the computed confidence interval (CI) for the
+#' `predict` method. Defaults to `ci = 0.95`, reflecting a 95% CI.
+#' @param numDraws The number of draws to use in simulating uncertainty
+#' for the computed CI for the `predict` method. Defaults to 10^4.
 #' @param ... further arguments.
 #'
 #' @rdname miscmethods.logitr
@@ -330,4 +352,21 @@ print.logitr_wtp <- function (
   ...
 ) {
   stats::printCoefmat(x, digits = digits)
+}
+
+#' @rdname miscmethods.logitr
+#' @export
+predict.logitr <- function(
+  object,
+  newData,
+  obsID,
+  returnProbs = TRUE,
+  returnChoices = FALSE,
+  returnData = FALSE,
+  computeCI = FALSE,
+  ci = 0.95,
+  numDraws = 10^4,
+  ...
+) {
+  # Write code for predicting
 }
