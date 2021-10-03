@@ -29,7 +29,7 @@
 #' desired, set `ci` to a number between 0 and 1 to define the CI sensitivity.
 #' For example, `ci = 0.95` will return a 95% CI. Defaults to `NULL`, in which
 #' case no CI is computed.
-#' @param numDraws The number of draws to use in simulating uncertainty
+#' @param numDrawsCI The number of draws to use in simulating uncertainty
 #' for the computed CI. Defaults to 10^3.
 #' @return A data frame of predicted probabilities and / or choices.
 #' @export
@@ -71,7 +71,7 @@ predict.logitr <- function(
   output     = "probs",
   returnData = TRUE,
   ci         = NULL,
-  numDraws   = 10^3
+  numDrawsCI = 10^3
 ) {
   d <- object$data
   # If no newdata is provided, use the data from the estimated object
@@ -88,10 +88,10 @@ predict.logitr <- function(
   }
   if (object$modelType == "mxl") {
     probs <- getMxlProbs(
-        object, data, obsID, output, returnData, ci, numDraws, getV, getVDraws)
+       object, data, obsID, output, returnData, ci, numDrawsCI, getV, getVDraws)
   } else {
     probs <- getMnlProbs(
-        object, data, obsID, output, returnData, ci, numDraws, getV, getVDraws)
+       object, data, obsID, output, returnData, ci, numDrawsCI, getV, getVDraws)
   }
   return(probs)
 }
@@ -117,7 +117,7 @@ formatNewData <- function(object, newdata, obsID, output) {
 }
 
 getMnlProbs <- function(
-  object, data, obsID, output, returnData, ci, numDraws, getV, getVDraws
+  object, data, obsID, output, returnData, ci, numDrawsCI, getV, getVDraws
 ) {
   X <- data$X
   price <- data$price
@@ -132,7 +132,7 @@ getMnlProbs <- function(
     probs <- formatProbsMean(probs_mean, obsID, obsIDName)
   } else {
     # Compute uncertainty with simulation
-    betaUncDraws <- getUncertaintyDraws(object, numDraws)
+    betaUncDraws <- getUncertaintyDraws(object, numDrawsCI)
     betaUncDraws <- selectDraws(betaUncDraws, modelSpace, X)
     VUncDraws <- getVDraws(betaUncDraws, X, price)
     logitUncDraws <- predictLogit(VUncDraws, obsID)
@@ -142,7 +142,7 @@ getMnlProbs <- function(
 }
 
 getMxlProbs <- function(
-  object, data, obsID, output, returnData, ci, numDraws, getV, getVDraws
+  object, data, obsID, output, returnData, ci, numDrawsCI, getV, getVDraws
 ) {
   X <- data$X
   price <- data$price
@@ -161,7 +161,7 @@ getMxlProbs <- function(
     probs <- formatProbsMean(probs_mean, obsID, obsIDName)
   } else {
     # Compute uncertainty with simulation
-    betaUncDraws <- getUncertaintyDraws(object, numDraws)
+    betaUncDraws <- getUncertaintyDraws(object, numDrawsCI)
     logitUncDraws <- apply(
       betaUncDraws, 1, predictLogitDraws,
       parSetup, parIDs, modelSpace, X, price, obsID, numDrawsLogit, getVDraws)
@@ -258,12 +258,6 @@ simChoice <- function(df) {
   df$choice_predict <- result
   return(df)
 }
-
-
-
-
-
-
 
 #' Predict choices
 #'
