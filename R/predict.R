@@ -25,12 +25,12 @@
 #' @param returnData If `TRUE` the data is also returned, otherwise only the
 #' predicted values ("probs" and / or  "choices") are returned.
 #' Defaults to `TRUE`.
-#' @param computeCI Should a confidence interval be computed for predicted
-#' probabilities? Defaults to `FALSE`.
-#' @param ci The sensitivity of the computed confidence interval (CI).
-#' Defaults to `ci = 0.95`, reflecting a 95% CI.
+#' @param ci If a confidence interval (CI) for the predicted probabilities is
+#' desired, set `ci` to a number between 0 and 1 to define the CI sensitivity.
+#' For example, `ci = 0.95` will return a 95% CI. Defaults to `NULL`, in which
+#' case no CI is computed.
 #' @param numDraws The number of draws to use in simulating uncertainty
-#' for the computed CI. Defaults to 10^4.
+#' for the computed CI. Defaults to 10^3.
 #' @return A data frame of predicted probabilities and / or choices.
 #' @export
 #' @examples
@@ -43,6 +43,8 @@
 #'   obsID  = "obsID",
 #'   pars   = c("price", "feat", "brand")
 #' )
+#'
+#' # Predict probabilities
 #'
 #' # Create a set of alternatives for which to predict choice probabilities.
 #' # Each row is an alternative and each column an attribute. In this example,
@@ -68,9 +70,8 @@ predict.logitr <- function(
   obsID      = NULL,
   output     = "probs",
   returnData = TRUE,
-  computeCI  = FALSE,
-  ci         = 0.95,
-  numDraws   = 10^4
+  ci         = NULL,
+  numDraws   = 10^3
 ) {
   d <- object$data
   # If no newdata is provided, use the data from the estimated object
@@ -81,18 +82,16 @@ predict.logitr <- function(
   }
   getV <- getMnlV_pref
   getVDraws <- getMxlV_pref
-  if (model$inputs$modelSpace == "wtp") {
+  if (object$inputs$modelSpace == "wtp") {
     getVDraws <- getMxlV_wtp
     getV <- getMnlV_wtp
   }
-  if (model$modelType == "mxl") {
+  if (object$modelType == "mxl") {
     probs <- getMxlProbs(
-        object, data, obsID, output, returnData, computeCI, ci, numDraws,
-        getV, getVDraws)
+        object, data, obsID, output, returnData, ci, numDraws, getV, getVDraws)
   } else {
-    probs <- getMxlProbs(
-        object, data, obsID, output, returnData, computeCI, ci, numDraws,
-        getV, getVDraws)
+    probs <- getMnlProbs(
+        object, data, obsID, output, returnData, ci, numDraws, getV, getVDraws)
   }
   return(probs)
 }
@@ -118,8 +117,7 @@ formatNewData <- function(object, newdata, obsID, output) {
 }
 
 getMnlProbs <- function(
-  object, data, obsID, output, returnData, computeCI, ci, numDraws,
-  getV, getVDraws
+  object, data, obsID, output, returnData, ci, numDraws, getV, getVDraws
 ) {
   X <- data$X
   price <- data$price
@@ -130,7 +128,7 @@ getMnlProbs <- function(
   # Compute mean probs
   V <- getV(coefs, X, price)
   probs_mean <- predictLogit(V, obsID)
-  if (computeCI == FALSE) {
+  if (is.null(ci)) {
     probs <- formatProbsMean(probs_mean, obsID, obsIDName)
   } else {
     # Compute uncertainty with simulation
@@ -144,8 +142,7 @@ getMnlProbs <- function(
 }
 
 getMxlProbs <- function(
-  object, data, obsID, output, returnData, computeCI, ci, numDraws,
-  getV, getVDraws
+  object, data, obsID, output, returnData, ci, numDraws, getV, getVDraws
 ) {
   X <- data$X
   price <- data$price
@@ -160,7 +157,7 @@ getMxlProbs <- function(
   probs_mean <- predictLogitDraws(
     coefs, parSetup, parIDs, modelSpace, X, price, obsID, numDrawsLogit,
     getVDraws)
-  if (computeCI == FALSE) {
+  if (is.null(ci)) {
     probs <- formatProbsMean(probs_mean, obsID, obsIDName)
   } else {
     # Compute uncertainty with simulation
@@ -177,12 +174,12 @@ getMxlProbs <- function(
 # and returns only the draws for the vars in X
 selectDraws <- function(betaDraws, modelSpace, X) {
   names <- colnames(betaDraws)
+  gammaDraws <- betaDraws[,which(names %in% colnames(X))]
   if (modelSpace == "wtp") {
     lambdaDraws <- betaDraws[,which(names == "lambda")]
-    gammaDraws <- betaDraws[,which(names %in% colnames(X))]
     return(cbind(lambdaDraws, gammaDraws))
   }
-  return(betaDraws[,which(names %in% colnames(X))])
+  return(gammaDraws)
 }
 
 predictLogit <- function(V, obsID) {
@@ -214,7 +211,7 @@ formatProbsMean <- function(probs_mean, obsID, obsIDName) {
 }
 
 formatProbsUnc <- function(probs_mean, logitUncDraws, obsID, obsIDName, ci) {
-  probs_bounds <- as.data.frame(t(apply(logitUncDraws, 1, getCI, ci)))
+  probs_bounds <- getCI(logitUncDraws, ci)
   colnames(probs_bounds) <- paste0("prob_predict_", colnames(probs_bounds))
   probs <- cbind(prob_predict = probs_mean, probs_bounds)
   names <- c(obsIDName, colnames(probs))
@@ -222,14 +219,35 @@ formatProbsUnc <- function(probs_mean, logitUncDraws, obsID, obsIDName, ci) {
   return(probs[names])
 }
 
-# Returns a confidence interval from a vector of data
-getCI <- function(data, ci = 0.95) {
+getCI <- function(draws, ci = 0.95) {
   alpha <- (1 - ci)/2
-  lower <- stats::quantile(data, alpha, na.rm = T)
-  upper <- stats::quantile(data, 1 - alpha, na.rm = T)
-  result <- c(lower, upper)
+  probs <- c(alpha, 1 - alpha)
+  result <- apply(draws, 1, quantile_speed, probs = probs)
+  result <- as.data.frame(t(result))
   names(result) <- c("lower", "upper")
   return(result)
+}
+
+# quantile_speed is copied from this gist:
+# https://gist.github.com/sikli/f1775feb9736073cefee97ec81f6b193
+quantile_speed <- function(x, probs = c(0.1, 0.9), na.rm = FALSE) {
+
+  if (na.rm) x <- x[!is.na(x)]
+
+  n <- length(x)
+  index <- 1 + (n - 1) * probs
+
+  lo <- floor(index)
+  hi <- ceiling(index)
+
+  x  <- sort(x, partial = unique(c(lo, hi)))
+  qs <- x[lo]
+
+  i  <- 1:length(probs)
+  h  <- index - lo
+  qs <- (1 - h) * qs + h * x[hi]
+  qs
+
 }
 
 # Simulate choices based on probabilities
