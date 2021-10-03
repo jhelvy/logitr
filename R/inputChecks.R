@@ -162,7 +162,7 @@ checkOptions <- function(options) {
   return(options)
 }
 
-predictInputsCheck <- function(model, newdata, obsID) {
+predictInputsCheck <- function(model, newdata, obsID, output) {
   if (!is_logitr(model)) {
     stop(
       'The "model" argument must be a model estimated using the logitr() ',
@@ -176,6 +176,16 @@ predictInputsCheck <- function(model, newdata, obsID) {
         'The "obsID" argument refers to a column that does not exist in ',
         'the "newdata" data frame')
     }
+  }
+  outputTest <- identical(output, "probs") |
+                identical(output, "choices") |
+                identical(output, c("probs", "choices")) |
+                identical(output, c("choices", "probs"))
+  if (!outputTest) {
+      stop(
+        'output must be a vector containing "probs" (for returning ',
+        'predicted probabilities) and / or "choices" (for returning predicted ',
+        'choices).')
   }
 }
 

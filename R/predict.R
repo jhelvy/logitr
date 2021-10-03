@@ -67,7 +67,7 @@ predict.logitr <- function(
   newdata    = NULL,
   obsID      = NULL,
   output     = "probs",
-  returnData = FALSE,
+  returnData = TRUE,
   computeCI  = FALSE,
   ci         = 0.95,
   numDraws   = 10^4
@@ -77,7 +77,7 @@ predict.logitr <- function(
   if (is.null(newdata)) {
     data <- list(X = d$X, price = d$price, obsID = d$obsID)
   } else {
-    data <- formatNewData(object, newdata, obsID)
+    data <- formatNewData(object, newdata, obsID, output)
   }
   getV <- getMnlV_pref
   getVDraws <- getMxlV_pref
@@ -86,20 +86,19 @@ predict.logitr <- function(
     getV <- getMnlV_wtp
   }
   if (model$modelType == "mxl") {
-    return(
-      mxlSimulation(
-        object, data, obsID, numDraws, ci, getV, getVDraws, computeCI
-    ))
+    probs <- getMxlProbs(
+        object, data, obsID, output, returnData, computeCI, ci, numDraws,
+        getV, getVDraws)
   } else {
-    return(
-      mnlSimulation(
-        object, data, obsID, numDraws, ci, getV, getVDraws, computeCI
-    ))
+    probs <- getMxlProbs(
+        object, data, obsID, output, returnData, computeCI, ci, numDraws,
+        getV, getVDraws)
   }
+  return(probs)
 }
 
-formatNewData <- function(object, newdata, obsID) {
-  predictInputsCheck(object, newdata, obsID)
+formatNewData <- function(object, newdata, obsID, output) {
+  predictInputsCheck(object, newdata, obsID, output)
   inputs <- object$inputs
   newdata <- as.data.frame(newdata) # tibbles break things
   recoded <- recodeData(newdata, inputs$pars, inputs$randPars)
@@ -118,49 +117,72 @@ formatNewData <- function(object, newdata, obsID) {
   return(list(X = X, price = price, obsID = obsID))
 }
 
-
-
-
-
-
-mnlSimulation <- function(
-  alts, model, price, X, altID, obsID, altIDName, obsIDName, numDraws, ci,
-  getV, getVDraws, computeCI
+getMnlProbs <- function(
+  object, data, obsID, output, returnData, computeCI, ci, numDraws,
+  getV, getVDraws
 ) {
+  X <- data$X
+  price <- data$price
+  obsIDName <- obsID
+  obsID <- data$obsID
+  modelSpace <- object$inputs$modelSpace
+  coefs <- stats::coef(object)
   # Compute mean probs
-  V <- getV(stats::coef(model), X, price)
-  meanProb <- predictLogit(V, obsID)
+  V <- getV(coefs, X, price)
+  probs_mean <- predictLogit(V, obsID)
   if (computeCI == FALSE) {
-    return(summarizeMeanProbs(meanProb, altID, obsID, altIDName, obsIDName))
+    probs <- formatProbsMean(probs_mean, obsID, obsIDName)
+  } else {
+    # Compute uncertainty with simulation
+    betaUncDraws <- getUncertaintyDraws(object, numDraws)
+    betaUncDraws <- selectDraws(betaUncDraws, modelSpace, X)
+    VUncDraws <- getVDraws(betaUncDraws, X, price)
+    logitUncDraws <- predictLogit(VUncDraws, obsID)
+    probs <- formatProbsUnc(probs_mean, logitUncDraws, obsID, obsIDName, ci)
   }
-  # Compute uncertainty with simulation
-  betaUncDraws <- getUncertaintyDraws(model, numDraws)
-  betaUncDraws <- selectSimDraws(betaUncDraws, model$inputs$modelSpace, X)
-  VUncDraws <- getVDraws(betaUncDraws, X, price)
-  logitUncDraws <- predictLogit(VUncDraws, obsID)
-  return(summarizeUncProbs(
-    meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, ci))
+  return(probs)
 }
 
-mxlSimulation <- function(
-  alts, model, price, X, altID, obsID, altIDName, obsIDName, numDraws, ci,
-  getV, getVDraws, computeCI
+getMxlProbs <- function(
+  object, data, obsID, output, returnData, computeCI, ci, numDraws,
+  getV, getVDraws
 ) {
+  X <- data$X
+  price <- data$price
+  obsIDName <- obsID
+  obsID <- data$obsID
+  parSetup <- object$parSetup
+  parIDs <- object$parIDs
+  modelSpace <- object$inputs$modelSpace
+  numDrawsLogit <- object$inputs$numDraws
+  coefs <- stats::coef(object)
   # Compute mean probs
-  meanProb <- getSimPHat(stats::coef(model), model, X, price, obsID, getVDraws)
+  probs_mean <- predictLogitDraws(
+    coefs, parSetup, parIDs, modelSpace, X, price, obsID, numDrawsLogit,
+    getVDraws)
   if (computeCI == FALSE) {
-    return(summarizeMeanProbs(meanProb, altID, obsID, altIDName, obsIDName))
+    probs <- formatProbsMean(probs_mean, obsID, obsIDName)
+  } else {
+    # Compute uncertainty with simulation
+    betaUncDraws <- getUncertaintyDraws(object, numDraws)
+    logitUncDraws <- apply(
+      betaUncDraws, 1, predictLogitDraws,
+      parSetup, parIDs, modelSpace, X, price, obsID, numDrawsLogit, getVDraws)
+    probs <- formatProbsUnc(probs_mean, logitUncDraws, obsID, obsIDName, ci)
   }
-  # Compute uncertainty with simulation
-  betaUncDraws <- getUncertaintyDraws(model, numDraws)
-  logitUncDraws <- matrix(0, nrow = nrow(X), ncol = nrow(betaUncDraws))
-  for (i in seq_len(nrow(betaUncDraws))) {
-    pars <- betaUncDraws[i, ]
-    logitUncDraws[, i] <- getSimPHat(
-      pars, model, X, price, obsID, getVDraws)
+  return(probs)
+}
+
+# Reorders the columns depending on if the model is a WTP space model or not
+# and returns only the draws for the vars in X
+selectDraws <- function(betaDraws, modelSpace, X) {
+  names <- colnames(betaDraws)
+  if (modelSpace == "wtp") {
+    lambdaDraws <- betaDraws[,which(names == "lambda")]
+    gammaDraws <- betaDraws[,which(names %in% colnames(X))]
+    return(cbind(lambdaDraws, gammaDraws))
   }
-  return(summarizeUncProbs(
-    meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, ci))
+  return(betaDraws[,which(names %in% colnames(X))])
 }
 
 predictLogit <- function(V, obsID) {
@@ -170,47 +192,32 @@ predictLogit <- function(V, obsID) {
   return(expV / sumExpV[rep(seq_along(reps), reps),])
 }
 
-getSimPHat <- function(pars, model, X, price, obsID, getVDraws) {
-  numDraws <- model$inputs$numDraws
-  parSetup <- model$parSetup
-  parIDs <- model$parIDs
+predictLogitDraws <- function(
+  coefs, parSetup, parIDs, modelSpace, X, price, obsID, numDraws, getVDraws
+) {
   standardDraws <- getStandardDraws(parIDs, numDraws)
-  betaDraws <- makeBetaDraws(pars, parIDs, numDraws, standardDraws)
+  betaDraws <- makeBetaDraws(coefs, parIDs, numDraws, standardDraws)
   colnames(betaDraws) <- names(parSetup)
-  betaDraws <- selectSimDraws(betaDraws, model$inputs$modelSpace, X)
+  betaDraws <- selectDraws(betaDraws, modelSpace, X)
   VDraws <- getVDraws(betaDraws, X, price)
   logitDraws <- predictLogit(VDraws, obsID)
-  return(rowMeans(logitDraws, na.rm = T))
+  return(rowMeans(logitDraws, na.rm = TRUE))
 }
 
-selectSimDraws <- function(betaDraws, modelSpace, X) {
-  betaDraws <- as.data.frame(betaDraws)
-  if (modelSpace == "wtp") {
-    lambdaDraws <- betaDraws["lambda"]
-    gammaDraws <- betaDraws[colnames(X)]
-    betaDraws <- cbind(lambdaDraws, gammaDraws)
-  } else {
-    betaDraws <- betaDraws[colnames(X)]
-  }
-  return(as.matrix(betaDraws))
-}
+# Functions for formatting the probabilities
 
-summarizeMeanProbs <- function(meanProb, altID, obsID, altIDName, obsIDName) {
-  probs <- as.data.frame(meanProb)
-  colnames(probs) <- "prob_mean"
-  probs[altIDName] <- altID
+formatProbsMean <- function(probs_mean, obsID, obsIDName) {
+  probs <- as.data.frame(probs_mean)
+  colnames(probs) <- "prob_predict"
   probs[obsIDName] <- obsID
-  return(probs[c(obsIDName, altIDName, "prob_mean")])
+  return(probs[c(obsIDName, "prob_predict")])
 }
 
-summarizeUncProbs <- function(
-  meanProb, logitUncDraws, altID, obsID, altIDName, obsIDName, ci
-) {
-  probs <- as.data.frame(t(apply(logitUncDraws, 1, getCI, ci)))
-  probs$mean <- as.numeric(meanProb)
-  colnames(probs) <- paste0("prob_", colnames(probs))
-  names <- c(obsIDName, altIDName, colnames(probs))
-  probs[altIDName] <- altID
+formatProbsUnc <- function(probs_mean, logitUncDraws, obsID, obsIDName, ci) {
+  probs_bounds <- as.data.frame(t(apply(logitUncDraws, 1, getCI, ci)))
+  colnames(probs_bounds) <- paste0("prob_predict_", colnames(probs_bounds))
+  probs <- cbind(prob_predict = probs_mean, probs_bounds)
+  names <- c(obsIDName, colnames(probs))
   probs[obsIDName] <- obsID
   return(probs[names])
 }
@@ -218,26 +225,21 @@ summarizeUncProbs <- function(
 # Returns a confidence interval from a vector of data
 getCI <- function(data, ci = 0.95) {
   alpha <- (1 - ci)/2
-  B <- mean(data, na.rm = T)
-  L <- stats::quantile(data, alpha, na.rm = T)
-  U <- stats::quantile(data, 1 - alpha, na.rm = T)
-  ests <- c(B, L, U)
-  names(ests) <- c("mean", "low", "high")
-  return(ests)
+  lower <- stats::quantile(data, alpha, na.rm = T)
+  upper <- stats::quantile(data, 1 - alpha, na.rm = T)
+  result <- c(lower, upper)
+  names(result) <- c("lower", "upper")
+  return(result)
 }
 
+# Simulate choices based on probabilities
 simChoice <- function(df) {
   choices <- seq_len(nrow(df))
   result <- 0*choices
-  result[sample(x = choices, size = 1, prob = df$prob_mean)] <- 1
+  result[sample(x = choices, size = 1, prob = df$prob_predict)] <- 1
   df$choice_predict <- result
   return(df)
 }
-
-
-
-
-
 
 
 
