@@ -2,6 +2,131 @@
 # Functions for predicting choices and choice probabilities
 # ============================================================================
 
+#' Predict probabilities and / or choices
+#'
+#' This method is used for computing predicted probabilities and / or choices
+#' for either the data used for model estimation or a new data set consisting
+#' of a single or multiple sets of alternatives.
+#' @keywords logitr probabilities predict
+#'
+#' @param object is an object of class `logitr`.
+#' @param newdata a `data.frame`. Each row is an alternative and each column an
+#' attribute corresponding to parameter names in the estimated model. Defaults
+#' to `NULL`, in which case predictions are made on the original data used to
+#' estimate the model.
+#' @param obsID The name of the column that identifies each set of
+#' alternatives in the data. Required if predicting results for more than one
+#' set of alternatives. Defaults to `NULL`, in which case the value for `obsID`
+#' from the estimated `object` is used.
+#' @param output A character vector defining what to predict: `probs` for
+#' probabilities, `choices` for choices. If you want both outputs, use
+#' `c("probs", "choices")`. Choices are predicted randomly according to the
+#' predicted probabilities. Defaults to `"probs"`.
+#' @param returnData If `TRUE` the data is also returned, otherwise only the
+#' predicted values ("probs" and / or  "choices") are returned.
+#' Defaults to `TRUE`.
+#' @param computeCI Should a confidence interval be computed for predicted
+#' probabilities? Defaults to `FALSE`.
+#' @param ci The sensitivity of the computed confidence interval (CI).
+#' Defaults to `ci = 0.95`, reflecting a 95% CI.
+#' @param numDraws The number of draws to use in simulating uncertainty
+#' for the computed CI. Defaults to 10^4.
+#' @return A data frame of predicted probabilities and / or choices.
+#' @export
+#' @examples
+#' library(logitr)
+#'
+#' # Estimate a preference space model
+#' mnl_pref <- logitr(
+#'   data   = yogurt,
+#'   choice = "choice",
+#'   obsID  = "obsID",
+#'   pars   = c("price", "feat", "brand")
+#' )
+#'
+#' # Create a set of alternatives for which to predict choice probabilities.
+#' # Each row is an alternative and each column an attribute. In this example,
+#' # two of the choice observations from the yogurt dataset are used
+#' newdata <- subset(
+#'     yogurt, obsID %in% c(42, 13),
+#'     select = c('obsID', 'alt', 'price', 'feat', 'brand'))
+#' newdata
+#'
+#' # Predict choice probabilities using the estimated model
+#' predict(mnl_pref, newdata = newdata, obsID = "obsID")
+#'
+#' # Predict choice probabilities and choices using the estimated model
+#' predict(
+#'     mnl_pref,
+#'     newdata = newdata,
+#'     obsID = "obsID",
+#'     output = c("probs", "choices")
+#' )
+predict.logitr <- function(
+  object,
+  newdata    = NULL,
+  obsID      = NULL,
+  output     = "probs",
+  returnData = FALSE,
+  computeCI  = FALSE,
+  ci         = 0.95,
+  numDraws   = 10^4
+) {
+  d <- object$data
+  # If no newdata is provided, use the data from the estimated object
+  if (is.null(newdata)) {
+    data <- list(X = d$X, price = d$price, obsID = d$obsID)
+  } else {
+    data <- formatNewData(object, newdata, obsID)
+  }
+  getV <- getMnlV_pref
+  getVDraws <- getMxlV_pref
+  if (model$inputs$modelSpace == "wtp") {
+    getVDraws <- getMxlV_wtp
+    getV <- getMnlV_wtp
+  }
+  if (model$modelType == "mxl") {
+    return(
+      mxlSimulation(
+        alts, model, price, X, altID, obsID, altIDName, obsIDName, numDraws,
+        ci, getV, getVDraws, computeCI))
+  } else {
+    return(
+      mnlSimulation(
+        alts, model, price, X, altID, obsID, altIDName, obsIDName, numDraws,
+        ci, getV, getVDraws, computeCI))
+  }
+}
+
+formatNewData <- function(object, newdata, obsID) {
+  predictInputsCheck(object, newdata, obsID)
+  inputs <- object$inputs
+  newdata <- as.data.frame(newdata) # tibbles break things
+  recoded <- recodeData(newdata, inputs$pars, inputs$randPars)
+  X <- recoded$X
+  predictParCheck(object, X) # Check if model pars match those from newdata
+  price <- NA
+  if (inputs$modelSpace == "wtp") {
+    price <- as.matrix(newdata[, which(colnames(newdata) == inputs$price)])
+  }
+  if (is.null(obsID)) {
+    obsIDName <- inputs$obsID # Use obsID from estimated object
+  } else {
+    obsIDName <- obsID
+  }
+  obsID <- newdata[, obsIDName]
+  return(list(X = X, price = price, obsID = obsID))
+}
+
+
+
+
+
+
+
+
+
+
 #' Predict choices
 #'
 #' Returns the expected choices for a set of one or more alternatives based
