@@ -18,10 +18,8 @@
 #' alternatives in the data. Required if predicting results for more than one
 #' set of alternatives. Defaults to `NULL`, in which case the value for `obsID`
 #' from the estimated `object` is used.
-#' @param output A character vector defining what to predict: `probs` for
-#' probabilities, `choices` for choices. If you want both outputs, use
-#' `c("probs", "choices")`. Choices are predicted randomly according to the
-#' predicted probabilities. Defaults to `"probs"`.
+#' @param choices If `TRUE`, predicted choices will also be returned
+#' according to the predicted probabilities. Defaults to `FALSE`.
 #' @param returnData If `TRUE` the data is also returned, otherwise only the
 #' predicted values ("probs" and / or  "choices") are returned.
 #' Defaults to `TRUE`.
@@ -55,20 +53,15 @@
 #' newdata
 #'
 #' # Predict choice probabilities using the estimated model
-#' predict(mnl_pref, newdata = newdata, obsID = "obsID")
+#' predict(mnl_pref, newdata, obsID = "obsID")
 #'
-#' # Predict choice probabilities and choices using the estimated model
-#' predict(
-#'     mnl_pref,
-#'     newdata = newdata,
-#'     obsID = "obsID",
-#'     output = c("probs", "choices")
-#' )
+#' # Predict choices and probabilities using the estimated model
+#' predict(mnl_pref, newdata, obsID = "obsID", choices = TRUE)
 predict.logitr <- function(
   object,
   newdata    = NULL,
   obsID      = NULL,
-  output     = "probs",
+  choices    = TRUE,
   returnData = TRUE,
   ci         = NULL,
   numDrawsCI = 10^3
@@ -77,8 +70,9 @@ predict.logitr <- function(
   # If no newdata is provided, use the data from the estimated object
   if (is.null(newdata)) {
     data <- list(X = d$X, price = d$price, obsID = d$obsID)
+    obsID <- object$inputs$obsID
   } else {
-    data <- formatNewData(object, newdata, obsID, output)
+    data <- formatNewData(object, newdata, obsID)
   }
   getV <- getMnlV_pref
   getVDraws <- getMxlV_pref
@@ -87,17 +81,23 @@ predict.logitr <- function(
     getV <- getMnlV_wtp
   }
   if (object$modelType == "mxl") {
-    probs <- getMxlProbs(
-       object, data, obsID, output, returnData, ci, numDrawsCI, getV, getVDraws)
+    result <- getMxlProbs(
+       object, data, obsID, returnData, ci, numDrawsCI, getV, getVDraws)
   } else {
-    probs <- getMnlProbs(
-       object, data, obsID, output, returnData, ci, numDrawsCI, getV, getVDraws)
+    result <- getMnlProbs(
+       object, data, obsID, returnData, ci, numDrawsCI, getV, getVDraws)
   }
-  return(probs)
+  if (choices) {
+    result <- addChoices(result, obsID)
+  }
+  if (returnData) {
+    result <- addData(result, data)
+  }
+  return(result)
 }
 
-formatNewData <- function(object, newdata, obsID, output) {
-  predictInputsCheck(object, newdata, obsID, output)
+formatNewData <- function(object, newdata, obsID) {
+  predictInputsCheck(object, newdata, obsID)
   inputs <- object$inputs
   newdata <- as.data.frame(newdata) # tibbles break things
   recoded <- recodeData(newdata, inputs$pars, inputs$randPars)
@@ -117,7 +117,7 @@ formatNewData <- function(object, newdata, obsID, output) {
 }
 
 getMnlProbs <- function(
-  object, data, obsID, output, returnData, ci, numDrawsCI, getV, getVDraws
+  object, data, obsID, returnData, ci, numDrawsCI, getV, getVDraws
 ) {
   X <- data$X
   price <- data$price
@@ -142,7 +142,7 @@ getMnlProbs <- function(
 }
 
 getMxlProbs <- function(
-  object, data, obsID, output, returnData, ci, numDrawsCI, getV, getVDraws
+  object, data, obsID, returnData, ci, numDrawsCI, getV, getVDraws
 ) {
   X <- data$X
   price <- data$price
@@ -250,6 +250,13 @@ quantile_speed <- function(x, probs = c(0.1, 0.9), na.rm = FALSE) {
 
 }
 
+addChoices <- function(probs, obsID) {
+  choices <- split(probs, probs[obsID])
+  choices <- lapply(choices, simChoice)
+  probs$choice_predict <- do.call(rbind, choices)$choice_predict
+  return(probs)
+}
+
 # Simulate choices based on probabilities
 simChoice <- function(df) {
   choices <- seq_len(nrow(df))
@@ -257,6 +264,14 @@ simChoice <- function(df) {
   result[sample(x = choices, size = 1, prob = df$prob_predict)] <- 1
   df$choice_predict <- result
   return(df)
+}
+
+addData <- function(result, data) {
+  df <- as.data.frame(data$X)
+  if (length(data$price) > 1) {
+    df <- cbind(df, price = data$price)
+  }
+  return(cbind(result, df))
 }
 
 #' Predict choices
@@ -314,16 +329,6 @@ predictChoices <- function(model, alts, altID, obsID = NULL) {
     # v0.3.2
     .Deprecated("predict")
 }
-
-  # probs <- predictProbs(model, alts, altID, obsID, computeCI = FALSE)
-  # if (is.null(obsID)) {
-  #   obsID <- "obsID"
-  # }
-  # choices <- split(probs, probs[obsID])
-  # choices <- lapply(choices, simChoice)
-  # result <- do.call(rbind, choices)
-  # result <- result['choice_predict']
-  # return(cbind(alts, result))
 
 #' Predict expected choice probabilities
 #'
