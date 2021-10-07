@@ -61,7 +61,7 @@ predict.logitr <- function(
   object,
   newdata    = NULL,
   obsID      = NULL,
-  choices    = TRUE,
+  choices    = FALSE,
   returnData = TRUE,
   ci         = NULL,
   numDrawsCI = 10^3
@@ -119,24 +119,21 @@ formatNewData <- function(object, newdata, obsID) {
 getMnlProbs <- function(
   object, data, obsID, returnData, ci, numDrawsCI, getV, getVDraws
 ) {
-  X <- data$X
-  price <- data$price
   obsIDName <- obsID
-  obsID <- data$obsID
-  modelSpace <- object$inputs$modelSpace
-  coefs <- stats::coef(object)
   # Compute mean probs
-  V <- getV(coefs, X, price)
-  probs_mean <- predictLogit(V, obsID)
+  coefs <- stats::coef(object)
+  V <- getV(coefs, data$X, data$price)
+  probs_mean <- predictLogit(V, data$obsID)
   if (is.null(ci)) {
-    probs <- formatProbsMean(probs_mean, obsID, obsIDName)
+    probs <- formatProbsMean(probs_mean, data$obsID, obsIDName)
   } else {
     # Compute uncertainty with simulation
     betaUncDraws <- getUncertaintyDraws(object, numDrawsCI)
-    betaUncDraws <- selectDraws(betaUncDraws, modelSpace, X)
-    VUncDraws <- getVDraws(betaUncDraws, X, price)
-    logitUncDraws <- predictLogit(VUncDraws, obsID)
-    probs <- formatProbsUnc(probs_mean, logitUncDraws, obsID, obsIDName, ci)
+    betaUncDraws <- selectDraws(betaUncDraws, object$inputs$modelSpace, data$X)
+    VUncDraws <- getVDraws(betaUncDraws, data$X, data$price)
+    logitUncDraws <- predictLogit(VUncDraws, data$obsID)
+    probs <- formatProbsUnc(
+      probs_mean, logitUncDraws, data$obsID, obsIDName, ci)
   }
   return(probs)
 }
@@ -144,28 +141,19 @@ getMnlProbs <- function(
 getMxlProbs <- function(
   object, data, obsID, returnData, ci, numDrawsCI, getV, getVDraws
 ) {
-  X <- data$X
-  price <- data$price
   obsIDName <- obsID
-  obsID <- data$obsID
-  parSetup <- object$parSetup
-  parIDs <- object$parIDs
-  modelSpace <- object$inputs$modelSpace
-  numDrawsLogit <- object$inputs$numDraws
-  coefs <- stats::coef(object)
   # Compute mean probs
-  probs_mean <- predictLogitDraws(
-    coefs, parSetup, parIDs, modelSpace, X, price, obsID, numDrawsLogit,
-    getVDraws)
+  coefs <- stats::coef(object)
+  probs_mean <- predictLogitDraws(coefs, object, data, getVDraws)
   if (is.null(ci)) {
-    probs <- formatProbsMean(probs_mean, obsID, obsIDName)
+    probs <- formatProbsMean(probs_mean, data$obsID, obsIDName)
   } else {
     # Compute uncertainty with simulation
     betaUncDraws <- getUncertaintyDraws(object, numDrawsCI)
     logitUncDraws <- apply(
       betaUncDraws, 1, predictLogitDraws,
-      parSetup, parIDs, modelSpace, X, price, obsID, numDrawsLogit, getVDraws)
-    probs <- formatProbsUnc(probs_mean, logitUncDraws, obsID, obsIDName, ci)
+      object, data, getVDraws)
+    probs <- formatProbsUnc(probs_mean, logitUncDraws, data$obsID, obsIDName, ci)
   }
   return(probs)
 }
@@ -189,15 +177,15 @@ predictLogit <- function(V, obsID) {
   return(expV / sumExpV[rep(seq_along(reps), reps),])
 }
 
-predictLogitDraws <- function(
-  coefs, parSetup, parIDs, modelSpace, X, price, obsID, numDraws, getVDraws
-) {
-  standardDraws <- getStandardDraws(parIDs, numDraws)
-  betaDraws <- makeBetaDraws(coefs, parIDs, numDraws, standardDraws)
-  colnames(betaDraws) <- names(parSetup)
-  betaDraws <- selectDraws(betaDraws, modelSpace, X)
-  VDraws <- getVDraws(betaDraws, X, price)
-  logitDraws <- predictLogit(VDraws, obsID)
+predictLogitDraws <- function(coefs, object, data, getVDraws) {
+  modelSpace <- object$inputs$modelSpace
+  numDrawsLogit <- object$inputs$numDraws
+  standardDraws <- getStandardDraws(object$parIDs, numDrawsLogit)
+  betaDraws <- makeBetaDraws(coefs, object$parIDs, numDrawsLogit, standardDraws)
+  colnames(betaDraws) <- names(object$parSetup)
+  betaDraws <- selectDraws(betaDraws, modelSpace, data$X)
+  VDraws <- getVDraws(betaDraws, data$X, data$price)
+  logitDraws <- predictLogit(VDraws, data$obsID)
   return(rowMeans(logitDraws, na.rm = TRUE))
 }
 
