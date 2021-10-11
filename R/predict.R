@@ -186,9 +186,9 @@ selectDraws <- function(betaDraws, modelSpace, X) {
   gammaDraws <- betaDraws[,which(names %in% colnames(X))]
   if (modelSpace == "wtp") {
     lambdaDraws <- betaDraws[,which(names == "lambda")]
-    return(cbind(lambdaDraws, gammaDraws))
+    return(as.matrix(cbind(lambdaDraws, gammaDraws)))
   }
-  return(gammaDraws)
+  return(as.matrix(gammaDraws))
 }
 
 predictLogit <- function(V, obsID) {
