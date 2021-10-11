@@ -11,6 +11,7 @@
 \alias{print.summary.logitr}
 \alias{se.logitr}
 \alias{vcov.logitr}
+\alias{predict.logitr}
 \alias{print.logitr_wtp}
 \title{Methods for logitr objects}
 \usage{

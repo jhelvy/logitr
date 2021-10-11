@@ -3,6 +3,7 @@
 S3method(coef,logitr)
 S3method(coef,summary.logitr)
 S3method(logLik,logitr)
+S3method(predict,logitr)
 S3method(print,logitr)
 S3method(print,logitr_wtp)
 S3method(print,summary.logitr)

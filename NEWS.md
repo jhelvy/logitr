@@ -1,3 +1,8 @@
+# logitr 0.3.2
+
+- The `predictProbs()` and `predictChoices()` functions were depreciated.
+- A new `predict.logitr()` method was added for making probability and choice predictions from logitr class objects.
+
 # logitr 0.3.1
 
 - Bug fix: Cast X object to matrix for single-parameter models
