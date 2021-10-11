@@ -162,20 +162,40 @@ checkOptions <- function(options) {
   return(options)
 }
 
-predictInputsCheck <- function(model, newdata, obsID) {
-  if (!is_logitr(model)) {
+predictInputsCheck <- function(object, newdata, obsID, type, ci) {
+  if (!is_logitr(object)) {
     stop(
-      'The "model" argument must be a model estimated using the logitr() ',
+      'The "object" argument must be a object estimated using the logitr() ',
       'function.'
     )
   }
   if (missing(newdata)) stop('"newdata" needs to be specified')
-  if (is.null(obsID)) stop('"obsID" must be specified if newdata is not NULL')
-  if (!is.null(obsID)) {
-    if (! obsID %in% names(newdata)) {
-      stop(
-        'The "obsID" argument refers to a column that does not exist in ',
-        'the "newdata" data frame')
+  if (!is.null(newdata)) {
+    if (is.null(obsID)) {
+      stop('"obsID" must be specified if newdata is not NULL')
+    }
+    if (!is.null(obsID)) {
+      if (! obsID %in% names(newdata)) {
+        stop(
+          'The "obsID" argument refers to a column that does not exist in ',
+          'the "newdata" data frame')
+      }
+    }
+  }
+  typeTest <- identical(type, "probs") |
+    identical(type, "choices") |
+    identical(type, c("probs", "choices")) |
+    identical(type, c("choices", "probs"))
+  if (!typeTest) {
+    stop(
+      'type must be a vector containing "probs" (for returning ',
+      'predicted probabilities) and / or "choices" (for returning predicted ',
+      'choices)')
+  }
+  if (!is.null(ci)) {
+    ci_test <- (ci < 1) & (ci > 0)
+    if (!ci_test) {
+      stop("ci must be a number between 0 and 1")
     }
   }
 }

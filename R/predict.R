@@ -18,8 +18,10 @@
 #' alternatives in the data. Required if predicting results for more than one
 #' set of alternatives. Defaults to `NULL`, in which case the value for `obsID`
 #' from the estimated `object` is used.
-#' @param choices If `TRUE`, predicted choices will also be returned
-#' according to the predicted probabilities. Defaults to `FALSE`.
+#' @param type A character vector defining what to predict: `probs` for
+#' probabilities, `choices` for choices. If you want both outputs, use
+#' `c("probs", "choices")`. Choices are predicted randomly according to the
+#' predicted probabilities. Defaults to `"probs"`.
 #' @param returnData If `TRUE` the data is also returned, otherwise only the
 #' predicted values ("probs" and / or  "choices") are returned.
 #' Defaults to `TRUE`.
@@ -61,11 +63,12 @@ predict.logitr <- function(
   object,
   newdata    = NULL,
   obsID      = NULL,
-  choices    = FALSE,
+  type       = "probs",
   returnData = TRUE,
   ci         = NULL,
   numDrawsCI = 10^3
 ) {
+  predictInputsCheck(object, newdata, obsID, type, ci)
   d <- object$data
   # If no newdata is provided, use the data from the estimated object
   if (is.null(newdata)) {
@@ -80,6 +83,18 @@ predict.logitr <- function(
     getVDraws <- getMxlV_wtp
     getV <- getMnlV_wtp
   }
+
+  # Decide what to predict
+  predict_choice <- FALSE
+  predict_probs <- TRUE
+  if ("choices" %in% type) {
+    predict_choice <- TRUE
+  }
+  if (! ("probs" %in% type)) {
+    predict_probs <- FALSE
+    ci <- NULL
+  }
+
   if (object$modelType == "mxl") {
     result <- getMxlProbs(
        object, data, obsID, returnData, ci, numDrawsCI, getV, getVDraws)
@@ -87,8 +102,11 @@ predict.logitr <- function(
     result <- getMnlProbs(
        object, data, obsID, returnData, ci, numDrawsCI, getV, getVDraws)
   }
-  if (choices) {
+  if (predict_choice) {
     result <- addChoices(result, obsID)
+  }
+  if (!predict_probs) { # Remove prob_predict if "probs" not in type
+    result$prob_predict <- NULL
   }
   if (returnData) {
     result <- addData(result, data)
@@ -97,7 +115,6 @@ predict.logitr <- function(
 }
 
 formatNewData <- function(object, newdata, obsID) {
-  predictInputsCheck(object, newdata, obsID)
   inputs <- object$inputs
   newdata <- as.data.frame(newdata) # tibbles break things
   recoded <- recodeData(newdata, inputs$pars, inputs$randPars)
