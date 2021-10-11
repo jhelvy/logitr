@@ -44,21 +44,25 @@
 #'   pars   = c("price", "feat", "brand")
 #' )
 #'
-#' # Predict probabilities
+#' # Predict probabilities and / or choices
 #'
-#' # Create a set of alternatives for which to predict choice probabilities.
+#' # Predict probabilities for each alternative in the model data
+#' p <- predict(mnl_pref)
+#' head(p)
+#'
+#' # Create a set of alternatives for which to make predictions.
 #' # Each row is an alternative and each column an attribute. In this example,
 #' # two of the choice observations from the yogurt dataset are used
-#' newdata <- subset(
+#' alts <- subset(
 #'     yogurt, obsID %in% c(42, 13),
 #'     select = c('obsID', 'alt', 'price', 'feat', 'brand'))
-#' newdata
+#' alts
 #'
 #' # Predict choice probabilities using the estimated model
-#' predict(mnl_pref, newdata, obsID = "obsID")
+#' predict(mnl_pref, alts, obsID = "obsID")
 #'
 #' # Predict choices and probabilities using the estimated model
-#' predict(mnl_pref, newdata, obsID = "obsID", choices = TRUE)
+#' predict(mnl_pref, alts, obsID = "obsID", type = c("probs", "choices"))
 predict.logitr <- function(
   object,
   newdata    = NULL,
