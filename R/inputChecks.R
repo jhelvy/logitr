@@ -162,7 +162,7 @@ checkOptions <- function(options) {
   return(options)
 }
 
-predictInputsCheck <- function(object, newdata, obsID, type, ci) {
+predictInputsCheck <- function(object, newdata, obsID, price, type, ci) {
   if (!is_logitr(object)) {
     stop(
       'The "object" argument must be a object estimated using the logitr() ',
@@ -174,11 +174,28 @@ predictInputsCheck <- function(object, newdata, obsID, type, ci) {
     if (is.null(obsID)) {
       stop('"obsID" must be specified if newdata is not NULL')
     }
+    if (object$inputs$modelSpace == "wtp") {
+      if (is.null(price)) {
+        stop(
+          '"price" must be specified if "object" is a WTP space model and ',
+          'newdata is not NULL'
+        )
+      }
+    }
     if (!is.null(obsID)) {
       if (! obsID %in% names(newdata)) {
         stop(
           'The "obsID" argument refers to a column that does not exist in ',
-          'the "newdata" data frame')
+          'the "newdata" data frame'
+        )
+      }
+    }
+    if (!is.null(price)) {
+      if (! price %in% names(newdata)) {
+        stop(
+          'The "price" argument refers to a column that does not exist in ',
+          'the "newdata" data frame'
+        )
       }
     }
   }

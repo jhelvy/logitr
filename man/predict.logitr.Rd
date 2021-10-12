@@ -8,6 +8,7 @@
   object,
   newdata = NULL,
   obsID = NULL,
+  price = NULL,
   type = "probs",
   returnData = TRUE,
   ci = NULL,
@@ -23,9 +24,12 @@ to \code{NULL}, in which case predictions are made on the original data used to
 estimate the model.}
 
 \item{obsID}{The name of the column that identifies each set of
-alternatives in the data. Required if predicting results for more than one
-set of alternatives. Defaults to \code{NULL}, in which case the value for \code{obsID}
-from the estimated \code{object} is used.}
+alternatives in the data. Required if newdata != NULL. Defaults to \code{NULL},
+in which case the value for \code{obsID} from the data in \code{object} is used.}
+
+\item{price}{The name of the column that identifies the price variable.
+Required if the \code{object} is a WTP space model and if newdata != NULL.
+Defaults to \code{NULL}.}
 
 \item{type}{A character vector defining what to predict: \code{probs} for
 probabilities, \code{choices} for choices. If you want both outputs, use
@@ -63,21 +67,25 @@ mnl_pref <- logitr(
   pars   = c("price", "feat", "brand")
 )
 
-# Predict probabilities
+# Predict probabilities and / or choices
 
-# Create a set of alternatives for which to predict choice probabilities.
+# Predict probabilities for each alternative in the model data
+p <- predict(mnl_pref)
+head(p)
+
+# Create a set of alternatives for which to make predictions.
 # Each row is an alternative and each column an attribute. In this example,
 # two of the choice observations from the yogurt dataset are used
-newdata <- subset(
+alts <- subset(
     yogurt, obsID \%in\% c(42, 13),
     select = c('obsID', 'alt', 'price', 'feat', 'brand'))
-newdata
+alts
 
 # Predict choice probabilities using the estimated model
-predict(mnl_pref, newdata, obsID = "obsID")
+predict(mnl_pref, alts, obsID = "obsID")
 
 # Predict choices and probabilities using the estimated model
-predict(mnl_pref, newdata, obsID = "obsID", choices = TRUE)
+predict(mnl_pref, alts, obsID = "obsID", type = c("probs", "choices"))
 }
 \keyword{logitr}
 \keyword{predict}

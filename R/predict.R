@@ -15,9 +15,11 @@
 #' to `NULL`, in which case predictions are made on the original data used to
 #' estimate the model.
 #' @param obsID The name of the column that identifies each set of
-#' alternatives in the data. Required if predicting results for more than one
-#' set of alternatives. Defaults to `NULL`, in which case the value for `obsID`
-#' from the estimated `object` is used.
+#' alternatives in the data. Required if newdata != NULL. Defaults to `NULL`,
+#' in which case the value for `obsID` from the data in `object` is used.
+#' @param price The name of the column that identifies the price variable.
+#' Required if the `object` is a WTP space model and if newdata != NULL.
+#' Defaults to `NULL`.
 #' @param type A character vector defining what to predict: `probs` for
 #' probabilities, `choices` for choices. If you want both outputs, use
 #' `c("probs", "choices")`. Choices are predicted randomly according to the
@@ -67,12 +69,13 @@ predict.logitr <- function(
   object,
   newdata    = NULL,
   obsID      = NULL,
+  price      = NULL,
   type       = "probs",
   returnData = TRUE,
   ci         = NULL,
   numDrawsCI = 10^3
 ) {
-  predictInputsCheck(object, newdata, obsID, type, ci)
+  predictInputsCheck(object, newdata, obsID, price, type, ci)
   d <- object$data
   # If no newdata is provided, use the data from the estimated object
   if (is.null(newdata)) {
