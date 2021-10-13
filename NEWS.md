@@ -2,6 +2,7 @@
 
 - The `predictProbs()` and `predictChoices()` functions were depreciated.
 - A new `predict.logitr()` method was added for making probability and choice predictions from logitr class objects.
+- Fixed bug where the returned object contained the scaled data rather than the original, unscaled data
 
 # logitr 0.3.1
 

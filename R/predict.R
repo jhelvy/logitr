@@ -26,7 +26,7 @@
 #' predicted probabilities. Defaults to `"probs"`.
 #' @param returnData If `TRUE` the data is also returned, otherwise only the
 #' predicted values ("probs" and / or  "choices") are returned.
-#' Defaults to `TRUE`.
+#' Defaults to `FALSE`.
 #' @param ci If a confidence interval (CI) for the predicted probabilities is
 #' desired, set `ci` to a number between 0 and 1 to define the CI sensitivity.
 #' For example, `ci = 0.95` will return a 95% CI. Defaults to `NULL`, in which
@@ -71,7 +71,7 @@ predict.logitr <- function(
   obsID      = NULL,
   price      = NULL,
   type       = "probs",
-  returnData = TRUE,
+  returnData = FALSE,
   ci         = NULL,
   numDrawsCI = 10^3
 ) {

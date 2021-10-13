@@ -103,11 +103,13 @@ getModelInputs <- function(
 
   # Scale data
   if (scaleInputs) {
-    data <- scaleData(data, modelSpace, modelType, parIDs)
+    data_scaled <- scaleData(data, modelSpace, modelType, parIDs)
+  } else {
+    data_scaled <- data
   }
 
   # Make differenced data
-  data_diff <- makeDiffData(data, modelType)
+  data_diff <- makeDiffData(data_scaled, modelType)
 
   # Make modelInputs list
   modelInputs <- list(
