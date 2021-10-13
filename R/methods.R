@@ -280,7 +280,7 @@ getCovarianceRobust <- function(object) {
     data_diff = makeDiffData(object$data, object$modelType)
   )
   clusterID <- modelInputs$data_diff$clusterID
-  scaleFactors <- object$data$scaleFactors
+  scaleFactors <- object$scaleFactors
   parsUnscaled <- stats::coef(object)*scaleFactors
   gradMat <- matrix(NA, nrow = numClusters, ncol = length(parsUnscaled))
   clusters <- sort(unique(clusterID))

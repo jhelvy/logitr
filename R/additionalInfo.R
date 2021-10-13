@@ -6,7 +6,7 @@ appendModelInfo <- function(model, modelInputs) {
   parsUnscaled <- model$coef
   parNames <- c(modelInputs$parList$mu, modelInputs$parList$sigma)
   names(parsUnscaled) <- parNames
-  scaleFactors <- model$data$scaleFactors
+  scaleFactors <- modelInputs$scaleFactors
   if (model$fail) {
     coef <- parsUnscaled*NA
     gradient <- matrix(coef, ncol = 1)
@@ -25,7 +25,6 @@ appendModelInfo <- function(model, modelInputs) {
   model$gradient <- gradient
   model$hessian <- hessian
   model$nullLogLik <- nullLogLik
-  model$scaleFactors <- scaleFactors
   model$result <- NULL
   model$fail <- NULL
   return(model)

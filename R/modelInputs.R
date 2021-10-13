@@ -97,14 +97,15 @@ getModelInputs <- function(
     obsID     = obsID,
     panelID   = panelID,
     clusterID = clusterID,
-    weights   = weights,
-    scaleFactors = rep(1, length(parList$all))
+    weights   = weights
   )
 
   # Scale data
   if (scaleInputs) {
-    data_scaled <- scaleData(data, modelSpace, modelType, parIDs)
+    scaleFactors <- getScaleFactors(data, modelSpace, modelType, parIDs)
+    data_scaled <- scaleData(data, scaleFactors, modelSpace)
   } else {
+    scaleFactors <- rep(1, length(parList$all))
     data_scaled <- data
   }
 
@@ -120,6 +121,7 @@ getModelInputs <- function(
     price         = price,
     data          = data,
     data_diff     = data_diff,
+    scaleFactors  = scaleFactors,
     weightsUsed   = weightsUsed,
     numClusters   = numClusters,
     parSetup      = parSetup,
@@ -248,40 +250,47 @@ setupClusters <- function(inputs, panel, robust, weightsUsed) {
   return(inputs)
 }
 
-# Function that scales all the variables in X to be between 0 and 1:
-scaleData <- function(data, modelSpace, modelType, parIDs) {
+getScaleFactors <- function(data, modelSpace, modelType, parIDs) {
   price <- data$price
   X <- data$X
-  scaledX <- X
-  scaledPrice <- price
-  # Scale X data
-  scaleFactorsX <- rep(0, ncol(scaledX))
-  for (col in seq_len(ncol(scaledX))) {
-    var <- X[, col]
-    vals <- unique(var)
-    scalingFactor <- abs(max(vals) - min(vals))
-    scaledX[, col] <- var / scalingFactor
-    scaleFactorsX[col] <- scalingFactor
-  }
-  scaleFactors <- scaleFactorsX
-  names(scaleFactors) <- colnames(scaledX)
+  minX <- apply(X, 2, min)
+  maxX <- apply(X, 2, max)
+  scaleFactors <- abs(maxX - minX)
   # Scale price if WTP space model
   if (modelSpace == "wtp") {
     vals <- unique(price)
     scaleFactorPrice <- abs(max(vals) - min(vals))
-    scaledPrice <- price / scaleFactorPrice # Scale price
-    scaleFactorsX <- scaleFactorsX / scaleFactorPrice # Update scaleFactorsX
-    scaleFactors <- c(scaleFactorPrice, scaleFactorsX)
-    names(scaleFactors) <- c("lambda", colnames(scaledX))
+    scaleFactors <- scaleFactors / scaleFactorPrice # Update scaleFactorsX
+    scaleFactors <- c(scaleFactorPrice, scaleFactors)
+    names(scaleFactors) <- c("lambda", names(scaleFactorsX))
   }
   # If MXL model, need to replicate scale factors for sigma pars
   if (modelType == "mxl") {
     scaleFactors <- c(scaleFactors, scaleFactors[parIDs$random])
   }
-  data$X <- scaledX
-  data$price <- scaledPrice
-  data$scaleFactors <- scaleFactors
-  return(data)
+  return(scaleFactors)
+}
+
+# Function that scales all the variables in X to be between 0 and 1:
+scaleData <- function(data, scaleFactors, modelSpace) {
+  scaledPrice <- data$price
+  scaledX <- data$X
+  if (modelSpace == "wtp") {
+    scaledPrice <- scaledPrice / scaleFactors[1] # Scale price
+    scaleFactors <- scaleFactors[2:length(scaleFactors)]
+  }
+  for (col in seq_len(ncol(scaledX))) {
+    scaledX[, col] <- scaledX[, col] / scaleFactors[col]
+  }
+  return(list(
+    price     = scaledPrice,
+    X         = scaledX,
+    choice    = data$choice,
+    obsID     = data$obsID,
+    panelID   = data$panelID,
+    clusterID = data$clusterID,
+    weights   = data$weights
+  ))
 }
 
 makeDiffData <- function(data, modelType) {

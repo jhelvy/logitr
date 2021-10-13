@@ -78,7 +78,7 @@ makeModelTemplate <- function(modelInputs) {
     numClusters       = modelInputs$numClusters,
     parSetup          = modelInputs$parSetup,
     parIDs            = modelInputs$parIDs,
-    scaleFactors      = NA,
+    scaleFactors      = modelInputs$scaleFactors,
     standardDraws     = modelInputs$standardDraws,
     options           = modelInputs$options
   ),
