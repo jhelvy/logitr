@@ -5,7 +5,7 @@
 #' @name miscmethods.logitr
 #' @aliases logLik.logitr terms.logitr coef.logitr coef.summary.logitr
 #' summary.logitr print.logitr print.summary.logitr se.logitr vcov.logitr
-#' predict.logitr
+#' fitted.logitr, residuals.logitr
 #' @param x is an object of class `logitr`.
 #' @param object is an object of class `logitr`.
 #' @param digits the number of digits for printing, defaults to `3`.
@@ -331,4 +331,25 @@ print.logitr_wtp <- function (
   ...
 ) {
   stats::printCoefmat(x, digits = digits)
+}
+
+#' @rdname miscmethods.logitr
+#' @export
+fitted.logitr <- function(object) {
+  probs <- predict.logitr(object, type = "probs")
+  choice <- object$data$choice
+  fitted <- probs[which(choice == 1),]
+  names(fitted)[which(names(fitted) == 'prob_predict')] <- "fitted_value"
+  return(fitted)
+}
+
+#' @rdname miscmethods.logitr
+#' @export
+residuals.logitr <- function(object) {
+  fitted <- fitted.logitr(object)
+  reps <- table(object$data$obsID)
+  residuals <- fitted[rep(seq_along(reps), reps),]
+  residuals$residual <- object$data$choice - residuals$fitted_value
+  residuals$fitted_value <- NULL
+  return(residuals)
 }

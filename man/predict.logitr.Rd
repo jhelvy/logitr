@@ -10,7 +10,7 @@
   obsID = NULL,
   price = NULL,
   type = "probs",
-  returnData = TRUE,
+  returnData = FALSE,
   ci = NULL,
   numDrawsCI = 10^3
 )
@@ -38,7 +38,7 @@ predicted probabilities. Defaults to \code{"probs"}.}
 
 \item{returnData}{If \code{TRUE} the data is also returned, otherwise only the
 predicted values ("probs" and / or  "choices") are returned.
-Defaults to \code{TRUE}.}
+Defaults to \code{FALSE}.}
 
 \item{ci}{If a confidence interval (CI) for the predicted probabilities is
 desired, set \code{ci} to a number between 0 and 1 to define the CI sensitivity.
