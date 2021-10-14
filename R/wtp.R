@@ -2,12 +2,16 @@
 # Functions for computing the WTP from estimated models
 # ============================================================================
 
+wtp <- function(object, price) {
+  UseMethod("wtp")
+}
+
 #' Get WTP from a preference space model
 #'
 #' Returns the computed WTP from a preference space model.
 #' @keywords logitr wtp
 #'
-#' @param model The output of a "preference space" model estimated
+#' @param object The output of a "preference space" model estimated
 #' using the `logitr()` function.
 #' @param price The name of the parameter that identifies price.
 #'
@@ -31,16 +35,16 @@
 #'
 #' # Compute the WTP implied from the preference space model
 #' wtp(mnl_pref, price = "price")
-wtp <- function(model, price) {
-  wtpInputsCheck(model, price)
-  coefs <- stats::coef(model)
+wtp.logitr <- function(object, price) {
+  wtpInputsCheck(object, price)
+  coefs <- stats::coef(object)
   priceID <- which(names(coefs) == price)
   pricePar <- -1 * coefs[priceID]
   wtp_mean <- coefs / pricePar
   wtp_mean[priceID] <- -1 * coefs[priceID]
   names(wtp_mean)[priceID] <- "lambda"
   # Compute standErrs using simulation (draws from the varcov matrix)
-  draws <- getUncertaintyDraws(model, 10^5)
+  draws <- getUncertaintyDraws(object, 10^5)
   priceDraws <- repmatCol(-1 * draws[price], ncol(draws))
   wtpDraws <- draws / priceDraws
   wtpDraws[, priceID] <- draws[, priceID]
