@@ -5,7 +5,6 @@
 #' @name miscmethods.logitr
 #' @aliases logLik.logitr terms.logitr coef.logitr coef.summary.logitr
 #' summary.logitr print.logitr print.summary.logitr se.logitr vcov.logitr
-#' fitted.logitr, residuals.logitr
 #' @param x is an object of class `logitr`.
 #' @param object is an object of class `logitr`.
 #' @param digits the number of digits for printing, defaults to `3`.
@@ -333,20 +332,62 @@ print.logitr_wtp <- function (
   stats::printCoefmat(x, digits = digits)
 }
 
-#' @rdname miscmethods.logitr
+#' Extract Model Fitted Values
+#'
+#' Returns fitted values from an object of class `logitr`.
+#' @keywords logitr fitted fitted.values
+#'
+#' @param object is an object of class `logitr`.
+#'
+#' @return A data frame of the `obsID` and the fitted values extracted from
+#' `object`.
 #' @export
+#' @examples
+#' library(logitr)
+#'
+#' # Estimate a preference space model
+#' mnl_pref <- logitr(
+#'   data   = yogurt,
+#'   choice = "choice",
+#'   obsID  = "obsID",
+#'   pars   = c("price", "feat", "brand")
+#' )
+#'
+#' # Extract the fitted values from the model
+#' fitted(mnl_pref)
 fitted.logitr <- function(object) {
-  probs <- predict.logitr(object, type = "probs")
+  probs <- predict(object, type = "probs")
   choice <- object$data$choice
   fitted <- probs[which(choice == 1),]
   names(fitted)[which(names(fitted) == 'prob_predict')] <- "fitted_value"
   return(fitted)
 }
 
-#' @rdname miscmethods.logitr
+#' Extract Model Residuals
+#'
+#' Returns model residuals from an object of class `logitr`.
+#' @keywords logitr residuals resid
+#'
+#' @param object is an object of class `logitr`.
+#'
+#' @return A data frame of the `obsID` and the residuals (response minus fitted
+#' values) extracted from `object`.
 #' @export
+#' @examples
+#' library(logitr)
+#'
+#' # Estimate a preference space model
+#' mnl_pref <- logitr(
+#'   data   = yogurt,
+#'   choice = "choice",
+#'   obsID  = "obsID",
+#'   pars   = c("price", "feat", "brand")
+#' )
+#'
+#' # Extract the residuals from the model
+#' residuals(mnl_pref)
 residuals.logitr <- function(object) {
-  fitted <- fitted.logitr(object)
+  fitted <- fitted(object)
   reps <- table(object$data$obsID)
   residuals <- fitted[rep(seq_along(reps), reps),]
   residuals$residual <- object$data$choice - residuals$fitted_value

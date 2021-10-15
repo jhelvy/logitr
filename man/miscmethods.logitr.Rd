@@ -11,10 +11,7 @@
 \alias{print.summary.logitr}
 \alias{se.logitr}
 \alias{vcov.logitr}
-\alias{fitted.logitr,}
-\alias{residuals.logitr}
 \alias{print.logitr_wtp}
-\alias{fitted.logitr}
 \title{Methods for logitr objects}
 \usage{
 \method{logLik}{logitr}(object, ...)
@@ -51,10 +48,6 @@
   width = getOption("width"),
   ...
 )
-
-\method{fitted}{logitr}(object)
-
-\method{residuals}{logitr}(object)
 }
 \arguments{
 \item{object}{is an object of class \code{logitr}.}
