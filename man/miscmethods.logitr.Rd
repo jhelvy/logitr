@@ -9,8 +9,6 @@
 \alias{summary.logitr}
 \alias{print.logitr}
 \alias{print.summary.logitr}
-\alias{se.logitr}
-\alias{vcov.logitr}
 \alias{print.logitr_wtp}
 \title{Methods for logitr objects}
 \usage{
@@ -37,10 +35,6 @@
   width = getOption("width"),
   ...
 )
-
-\method{se}{logitr}(object, ...)
-
-\method{vcov}{logitr}(object, ...)
 
 \method{print}{logitr_wtp}(
   x,

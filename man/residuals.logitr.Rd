@@ -10,8 +10,8 @@
 \item{object}{is an object of class \code{logitr}.}
 }
 \value{
-A data frame of the \code{obsID} and the residuals extracted from
-\code{object}.
+A data frame of the \code{obsID} and the residuals (response minus fitted
+values) extracted from \code{object}.
 }
 \description{
 Returns model residuals from an object of class \code{logitr}.

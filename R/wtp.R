@@ -2,6 +2,35 @@
 # Functions for computing the WTP from estimated models
 # ============================================================================
 
+#' Get WTP estimates a preference space model
+#'
+#' Returns the computed WTP from a preference space model.
+#' @keywords logitr wtp
+#'
+#' @param object The output of a "preference space" model estimated
+#' using the `logitr()` function.
+#' @param price The name of the parameter that identifies price.
+#'
+#' @details
+#' Willingness to pay is computed by dividing the estimated parameters of a
+#' utility model in the "preference" space by the price parameter.
+#' Uncertainty is handled via simulation.
+#'
+#' @return A data frame of the WTP estimates.
+#' @export
+#' @examples
+#' library(logitr)
+#'
+#' # Estimate a preference space model
+#' mnl_pref <- logitr(
+#'   data   = yogurt,
+#'   choice = "choice",
+#'   obsID  = "obsID",
+#'   pars   = c("price", "feat", "brand")
+#' )
+#'
+#' # Compute the WTP implied from the preference space model
+#' wtp(mnl_pref, price = "price")
 wtp <- function(object, price) {
   UseMethod("wtp")
 }

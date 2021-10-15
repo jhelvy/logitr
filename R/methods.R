@@ -4,7 +4,7 @@
 #'
 #' @name miscmethods.logitr
 #' @aliases logLik.logitr terms.logitr coef.logitr coef.summary.logitr
-#' summary.logitr print.logitr print.summary.logitr se.logitr vcov.logitr
+#' summary.logitr print.logitr print.summary.logitr
 #' @param x is an object of class `logitr`.
 #' @param object is an object of class `logitr`.
 #' @param digits the number of digits for printing, defaults to `3`.
@@ -225,7 +225,7 @@ getExitMessage <- function(x) {
   return(codes$message[which(codes$code == x$status)])
 }
 
-#' Get standard errors
+#' Extract standard errors
 #'
 #' @param object is an object of class `logitr`.
 #' @param ... further arguments.
@@ -234,13 +234,21 @@ se <- function(object, ...) {
   UseMethod("se")
 }
 
-#' @rdname miscmethods.logitr
+#' Extract standard errors
+#'
+#' @param object is an object of class `logitr`.
+#' @param ... further arguments.
 #' @export
 se.logitr <- function(object, ...) {
   return(sqrt(diag(stats::vcov(object))))
 }
 
-#' @rdname miscmethods.logitr
+#' Calculate the variance-covariance matrix
+#'
+#' Returns the variance-covariance matrix of the main parameters of a fitted
+#' model object.
+#' @param object is an object of class `logitr`.
+#' @param ... further arguments.
 #' @export
 vcov.logitr <- function(object, ...) {
   clusterID <- object$data$clusterID
