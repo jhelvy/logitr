@@ -70,21 +70,23 @@ mnl_pref <- logitr(
 # Predict probabilities and / or choices
 
 # Predict probabilities for each alternative in the model data
-p <- predict(mnl_pref)
-head(p)
+probs <- predict(mnl_pref)
+head(probs)
 
 # Create a set of alternatives for which to make predictions.
-# Each row is an alternative and each column an attribute. In this example,
-# two of the choice observations from the yogurt dataset are used
-alts <- subset(
+# Each row is an alternative and each column an attribute.
+data <- subset(
     yogurt, obsID \%in\% c(42, 13),
     select = c('obsID', 'alt', 'price', 'feat', 'brand'))
-alts
+data
 
-# Predict choice probabilities using the estimated model
-predict(mnl_pref, alts, obsID = "obsID")
+# Predict probabilities using the estimated model
+predict(mnl_pref, newdata = data, obsID = "obsID")
 
-# Predict choices and probabilities using the estimated model
+# Predict choices
+predict(mnl_pref, newdata = data, obsID = "obsID", type = "choices")
+
+# Predict choices and probabilities
 predict(mnl_pref, alts, obsID = "obsID", type = c("probs", "choices"))
 }
 \keyword{logitr}

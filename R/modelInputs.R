@@ -104,6 +104,10 @@ getModelInputs <- function(
   if (scaleInputs) {
     scaleFactors <- getScaleFactors(data, modelSpace, modelType, parIDs)
     data_scaled <- scaleData(data, scaleFactors, modelSpace)
+    if (modelSpace == "wtp") {
+      n <- length(scaleFactors)
+      scaleFactors[2:n] <- scaleFactors[2:n] / scaleFactors[1]
+    }
   } else {
     scaleFactors <- rep(1, length(parList$all))
     data_scaled <- data
@@ -256,13 +260,13 @@ getScaleFactors <- function(data, modelSpace, modelType, parIDs) {
   minX <- apply(X, 2, min)
   maxX <- apply(X, 2, max)
   scaleFactors <- abs(maxX - minX)
+  scaleFactorNames <- names(scaleFactors)
   # Scale price if WTP space model
   if (modelSpace == "wtp") {
     vals <- unique(price)
     scaleFactorPrice <- abs(max(vals) - min(vals))
-    scaleFactors <- scaleFactors / scaleFactorPrice # Update scaleFactorsX
     scaleFactors <- c(scaleFactorPrice, scaleFactors)
-    names(scaleFactors) <- c("lambda", names(scaleFactorsX))
+    names(scaleFactors) <- c("lambda", scaleFactorNames)
   }
   # If MXL model, need to replicate scale factors for sigma pars
   if (modelType == "mxl") {

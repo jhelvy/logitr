@@ -49,21 +49,23 @@
 #' # Predict probabilities and / or choices
 #'
 #' # Predict probabilities for each alternative in the model data
-#' p <- predict(mnl_pref)
-#' head(p)
+#' probs <- predict(mnl_pref)
+#' head(probs)
 #'
 #' # Create a set of alternatives for which to make predictions.
-#' # Each row is an alternative and each column an attribute. In this example,
-#' # two of the choice observations from the yogurt dataset are used
-#' alts <- subset(
+#' # Each row is an alternative and each column an attribute.
+#' data <- subset(
 #'     yogurt, obsID %in% c(42, 13),
 #'     select = c('obsID', 'alt', 'price', 'feat', 'brand'))
-#' alts
+#' data
 #'
-#' # Predict choice probabilities using the estimated model
-#' predict(mnl_pref, alts, obsID = "obsID")
+#' # Predict probabilities using the estimated model
+#' predict(mnl_pref, newdata = data, obsID = "obsID")
 #'
-#' # Predict choices and probabilities using the estimated model
+#' # Predict choices
+#' predict(mnl_pref, newdata = data, obsID = "obsID", type = "choices")
+#'
+#' # Predict choices and probabilities
 #' predict(mnl_pref, alts, obsID = "obsID", type = c("probs", "choices"))
 predict.logitr <- function(
   object,
@@ -79,7 +81,7 @@ predict.logitr <- function(
   d <- object$data
   # If no newdata is provided, use the data from the estimated object
   if (is.null(newdata)) {
-    data <- list(X = d$X, price = d$price, obsID = d$obsID)
+    data <- list(X = d$X, price = d$price, obsID = d$obsID, choice = d$choice)
     obsID <- object$inputs$obsID
   } else {
     data <- formatNewData(object, newdata, obsID)
@@ -116,7 +118,7 @@ predict.logitr <- function(
     result$prob_predict <- NULL
   }
   if (returnData) {
-    result <- addData(result, data)
+    result <- addData(object, result, data)
   }
   return(result)
 }
@@ -278,10 +280,13 @@ simChoice <- function(df) {
   return(df)
 }
 
-addData <- function(result, data) {
+addData <- function(object, result, data) {
   df <- as.data.frame(data$X)
-  if (length(data$price) > 1) {
+  if (object$inputs$modelSpace == "wtp") {
     df <- cbind(df, price = data$price)
+  }
+  if (!is.null(data$choice)) {
+    df <- cbind(df, choice = data$choice)
   }
   return(cbind(result, df))
 }
