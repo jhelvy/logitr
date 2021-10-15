@@ -79,7 +79,7 @@ probs_mxl_pref
 
 probs_mxl_wtp <- predict(
   mxl_wtp,
-  newdata = alts,
+  newdata = data,
   obsID = "obsID",
   price = "price",
   ci = 0.95
@@ -117,16 +117,18 @@ ggsave(here::here('vignettes', 'probs.png'),
 
 # You can also predict choices using the type argument. For this example, I
 # will predict choices for every alternative in the data used to estimate the
-# model using the preference space MNL model:
-choices_mnl_pref <- predict(mnl_pref, type = "choices")
+# model using the preference space MNL model. I am also setting
+# returnData = TRUE so compare the predicted choice with the actual
+# choices
+choices_mnl_pref <- predict(mnl_pref, type = "choices", returnData = TRUE)
 head(choices_mnl_pref)
 
 # You can also make predictions using WTP space models as well as MXL models
 # in either space
-choices_mnl_wtp <- predict(mnl_wtp, type = "choices")
+choices_mnl_wtp <- predict(mnl_wtp, type = "choices", returnData = TRUE)
 head(choices_mnl_wtp)
 
-choices_mxl_pref <- predict(mxl_pref, type = "choices")
+choices_mxl_pref <- predict(mxl_pref, type = "choices", returnData = TRUE)
 head(choices_mxl_pref)
 
 choices_mxl_wtp <- predict(mxl_wtp, type = "choices", returnData = TRUE)
@@ -144,7 +146,6 @@ choices$model <- c(
   rep("mnl_wtp",  nrow(choices_mnl_wtp)),
   rep("mxl_pref", nrow(choices_mxl_pref)),
   rep("mxl_wtp",  nrow(choices_mxl_wtp)))
-
 
 # Compute prediction accuracy by model
 choices %>%
