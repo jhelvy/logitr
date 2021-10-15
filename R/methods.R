@@ -32,7 +32,7 @@ terms.logitr <- function(x, ...) {
 #' @rdname miscmethods.logitr
 #' @export
 coef.logitr <- function(object, ...) {
-    return(object$coef)
+    return(object$coefficients)
 }
 
 #' @rdname miscmethods.logitr
@@ -82,7 +82,7 @@ print.logitr <- function (
   if (!any(is.na(stats::coef(x)))) {
       cat("Coefficients:\n")
       print.default(
-        format(x$coef, digits = digits), print.gap = 2, quote = FALSE)
+        format(x$coefficients, digits = digits), print.gap = 2, quote = FALSE)
       print(x$logLik)
   } else {
     cat("No coefficients\n")
@@ -196,7 +196,7 @@ getRandParSummary <- function(object) {
   parIDs <- object$parIDs
   numDraws <- 10^4
   standardDraws <- getStandardDraws(parIDs, numDraws)
-  betaDraws <- makeBetaDraws(object$coef, parIDs, numDraws, standardDraws)
+  betaDraws <- makeBetaDraws(stats::coef(object), parIDs, numDraws, standardDraws)
   randParSummary <- apply(betaDraws, 2, summary)
   # Add names to summary
   distName <- rep("", length(parSetup))

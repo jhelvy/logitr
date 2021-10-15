@@ -140,7 +140,7 @@ to the \code{clusterID} argument and a warning is displayed.}
 \value{
 The function returns a list object containing the following objects.\tabular{ll}{
    Value \tab Description \cr
-   \code{coef} \tab The model coefficients at convergence. \cr
+   \code{coefficients} \tab The model coefficients at convergence. \cr
    \code{logLik} \tab The log-likelihood value at convergence. \cr
    \code{nullLogLik} \tab The null log-likelihood value (if all coefficients are 0). \cr
    \code{gradient} \tab The gradient of the log-likelihood at convergence. \cr
@@ -162,7 +162,7 @@ The function returns a list object containing the following objects.\tabular{ll}
    \code{weightsUsed} \tab \code{TRUE} or \code{FALSE} for whether weights were used in the model. \cr
    \code{numClusters} \tab The number of clusters. \cr
    \code{parSetup} \tab A summary of the distributional assumptions on each model parameter (\code{"f"}="fixed", \code{"n"}="normal distribution", \code{"ln"}="log-normal distribution"). \cr
-   \code{parIDs} \tab A list identifying the indices of each parameter in \code{coef} by a variety of types. \cr
+   \code{parIDs} \tab A list identifying the indices of each parameter in \code{coefficients} by a variety of types. \cr
    \code{scaleFactors} \tab A vector of the scaling factors used to scale each coefficient during estimation. \cr
    \code{standardDraws} \tab The draws used during maximum simulated likelihood (for MXL models). \cr
    \code{options} \tab A list of options for controlling the \code{nloptr()} optimization. Run \code{nloptr::nloptr.print.options()} for details. \cr

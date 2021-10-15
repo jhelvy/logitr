@@ -1,8 +1,14 @@
 # logitr 0.3.2
 
+## Larger changes:
+
 - The `predictProbs()` and `predictChoices()` functions were depreciated.
 - A new `predict.logitr()` method was added for making probability and choice predictions from logitr class objects.
 - Added new `fitted.logitr()` and `residuals.logitr()` methods.
+- Changed the name of the coefficients vector in the returned object from "coef" to "coefficients" to be consistent with other packages.
+
+## Bugs:
+
 - Fixed bug where the returned object contained the scaled data rather than the original, unscaled data
 
 # logitr 0.3.1

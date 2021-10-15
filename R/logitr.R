@@ -106,7 +106,7 @@
 #'
 #' |    Value    |    Description    |
 #' |:------------|:------------------|
-#' |`coef`|The model coefficients at convergence.|
+#' |`coefficients`|The model coefficients at convergence.|
 #' |`logLik`|The log-likelihood value at convergence.|
 #' |`nullLogLik`|The null log-likelihood value (if all coefficients are 0).|
 #' |`gradient`|The gradient of the log-likelihood at convergence.|
@@ -128,7 +128,7 @@
 #' |`weightsUsed`|`TRUE` or `FALSE` for whether weights were used in the model.|
 #' |`numClusters`|The number of clusters.|
 #' |`parSetup`|A summary of the distributional assumptions on each model parameter (`"f"`="fixed", `"n"`="normal distribution", `"ln"`="log-normal distribution").|
-#' |`parIDs`|A list identifying the indices of each parameter in `coef` by a variety of types.|
+#' |`parIDs`|A list identifying the indices of each parameter in `coefficients` by a variety of types.|
 #' |`scaleFactors`|A vector of the scaling factors used to scale each coefficient during estimation.|
 #' |`standardDraws`|The draws used during maximum simulated likelihood (for MXL models).|
 #' |`options`|A list of options for controlling the `nloptr()` optimization. Run `nloptr::nloptr.print.options()` for details.|

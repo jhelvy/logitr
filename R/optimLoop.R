@@ -33,7 +33,7 @@ runMultistart <- function(modelInputs) {
     # Add result values to model
     if (!is.null(result)) {
       model$fail <- FALSE
-      model$coef <- result$solution
+      model$coefficients <- result$solution
       # -1 for (+) rather than (-) LL
       model$logLik     <- as.numeric(-1*result$objective)
       model$iterations <- result$iterations
@@ -52,10 +52,9 @@ runMultistart <- function(modelInputs) {
 makeModelTemplate <- function(modelInputs) {
   # Make default values to return if the model fails
   pars <- modelInputs$parList$all
-  coefNA <- rep(NA, length(pars))
   result <- structure(list(
     fail              = TRUE,
-    coef              = coefNA,
+    coefficients      = rep(NA, length(pars)),
     logLik            = NA,
     nullLogLik        = NA,
     gradient          = NA,

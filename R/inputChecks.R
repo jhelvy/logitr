@@ -245,7 +245,7 @@ wtpInputsCheck <- function(model, price) {
   if (!is_logitr(model)) {
     stop('model must be a model estimated using the logitr() function.')
   }
-  if (! price %in% names(model$coef)) {
+  if (! price %in% names(stats::coef(model))) {
     stop('"price" must be the name of a coefficient in "model".')
   }
   if (model$inputs$modelSpace != "pref") {
@@ -263,7 +263,7 @@ wtpCompareInputsCheck <- function(model_pref, model_wtp, price) {
   if (!is_logitr(model_wtp)) {
     stop('"model_wtp" must be a model estimated using the logitr() function.')
   }
-  if (! price %in% names(model_pref$coef)) {
+  if (! price %in% names(stats::coef(model_pref))) {
     stop('"price" must be the name of a coefficient in "model_pref"')
   }
 }
