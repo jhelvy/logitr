@@ -31,36 +31,6 @@ A data frame with the predicted choices for each alternative in
 Returns the expected choices for a set of one or more alternatives based
 on the results from an estimated model.
 }
-\examples{
-library(logitr)
-
-# Estimate a preference space model
-mnl_pref <- logitr(
-  data   = yogurt,
-  choice = "choice",
-  obsID  = "obsID",
-  pars   = c("price", "feat", "brand")
-)
-
-# You can predict choices for any set of alternative, such as hold out
-# samples or within-sample. For this example, choices will be predicted for
-# the full yogurt data set, which was used to estimate the model.
-
-# Predict choices using the estimated preference space MNL model
-choices <- predictChoices(
-  model = mnl_pref,
-  alts  = yogurt,
-  altID = "alt",
-  obsID = "obsID"
-)
-
-head(choices)
-
-# Compute the accuracy
-chosen <-  subset(choices, choice == 1)
-chosen$correct <- chosen$choice == chosen$choice_predict
-sum(chosen$correct) / nrow(chosen) # \% correctly predicted
-}
 \keyword{choice}
 \keyword{logitr}
 \keyword{predict}

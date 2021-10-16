@@ -89,18 +89,12 @@ probs_mxl_wtp
 
 # Plot simulation results from each model:
 library(ggplot2)
-library(dplyr)
 
-probs <- rbind(
-  probs_mnl_pref, probs_mnl_wtp, probs_mxl_pref, probs_mxl_wtp) %>%
-  mutate(
-    model = c(rep("mnl_pref", 8), rep("mnl_wtp", 8),
-              rep("mxl_pref", 8), rep("mxl_wtp", 8)),
-    alt = rep(c("dannon", "hiland", "weight", "yoplait"), 8),
-    obs = paste0("Observation ID: ", obsID)
-  )
-
-probs <- ggplot(probs, aes(x = alt, y = prob_predict, fill = model)) +
+probs <- rbind(probs_mnl_pref, probs_mnl_wtp)
+probs$model <- c(rep("mnl_pref", 8), rep("mnl_wtp", 8))
+probs$alt <- rep(c("dannon", "hiland", "weight", "yoplait"), 4)
+probs$obs <- paste0("Observation ID: ", probs$obsID)
+probsPlot <- ggplot(probs, aes(x = alt, y = prob_predict, fill = model)) +
     geom_bar(stat = 'identity', width = 0.7, position = "dodge") +
     geom_errorbar(aes(ymin = prob_predict_lower, ymax = prob_predict_upper),
                   width = 0.2, position = position_dodge(width = 0.7)) +
@@ -110,7 +104,7 @@ probs <- ggplot(probs, aes(x = alt, y = prob_predict, fill = model)) +
     theme_bw()
 
 ggsave(here::here('vignettes', 'probs.png'),
-       probs, width = 7, height = 4, dpi = 300)
+       probsPlot, width = 7, height = 4, dpi = 300)
 
 
 

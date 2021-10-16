@@ -4,7 +4,7 @@
 \alias{fitted.logitr}
 \title{Extract Model Fitted Values}
 \usage{
-\method{fitted}{logitr}(object)
+\method{fitted}{logitr}(object, ...)
 }
 \arguments{
 \item{object}{is an object of class \code{logitr}.}

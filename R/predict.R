@@ -66,7 +66,7 @@
 #' predict(mnl_pref, newdata = data, obsID = "obsID", type = "choices")
 #'
 #' # Predict choices and probabilities
-#' predict(mnl_pref, alts, obsID = "obsID", type = c("probs", "choices"))
+#' predict(mnl_pref, newdata = data, obsID = "obsID", type = c("probs", "choices"))
 predict.logitr <- function(
   object,
   newdata    = NULL,
@@ -75,7 +75,8 @@ predict.logitr <- function(
   type       = "probs",
   returnData = FALSE,
   ci         = NULL,
-  numDrawsCI = 10^3
+  numDrawsCI = 10^3,
+  ...
 ) {
   predictInputsCheck(object, newdata, obsID, price, type, ci)
   d <- object$data
@@ -313,35 +314,6 @@ addData <- function(object, result, data) {
 #' @return A data frame with the predicted choices for each alternative in
 #' `alts`.
 #' @export
-#' @examples
-#' library(logitr)
-#'
-#' # Estimate a preference space model
-#' mnl_pref <- logitr(
-#'   data   = yogurt,
-#'   choice = "choice",
-#'   obsID  = "obsID",
-#'   pars   = c("price", "feat", "brand")
-#' )
-#'
-#' # You can predict choices for any set of alternative, such as hold out
-#' # samples or within-sample. For this example, choices will be predicted for
-#' # the full yogurt data set, which was used to estimate the model.
-#'
-#' # Predict choices using the estimated preference space MNL model
-#' choices <- predictChoices(
-#'   model = mnl_pref,
-#'   alts  = yogurt,
-#'   altID = "alt",
-#'   obsID = "obsID"
-#' )
-#'
-#' head(choices)
-#'
-#' # Compute the accuracy
-#' chosen <-  subset(choices, choice == 1)
-#' chosen$correct <- chosen$choice == chosen$choice_predict
-#' sum(chosen$correct) / nrow(chosen) # % correctly predicted
 predictChoices <- function(model, alts, altID, obsID = NULL) {
     # v0.3.2
     .Deprecated("predict")
@@ -376,29 +348,6 @@ predictChoices <- function(model, alts, altID, obsID = NULL) {
 #' @return A data frame with the estimated choice probabilities for each
 #' alternative in `alts`.
 #' @export
-#' @examples
-#' library(logitr)
-#'
-#' # Estimate a preference space model
-#' mnl_pref <- logitr(
-#'   data   = yogurt,
-#'   choice = "choice",
-#'   obsID  = "obsID",
-#'   pars   = c("price", "feat", "brand")
-#' )
-#'
-#' # Create a set of alternatives for which to predict choice probabilities.
-#' # Each row is an alternative and each column an attribute. In this example,
-#' # two of the choice observations from the yogurt dataset are used
-#' alts <- subset(
-#'     yogurt, obsID %in% c(42, 13),
-#'     select = c('obsID', 'alt', 'price', 'feat', 'brand'))
-#'
-#' alts
-#'
-#' # Predict choice probabilities using the estimated preference space MNL
-#' # model
-#' predictProbs(mnl_pref, alts, altID = "alt", obsID = "obsID")
 predictProbs <- function(
   model,
   alts,

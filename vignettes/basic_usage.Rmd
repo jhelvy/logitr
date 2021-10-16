@@ -167,66 +167,61 @@ Since mixed logit models also have non-convex log-likelihood functions, it is ag
 
 See the ["Estimating Mixed Logit Models"](mxl_models.html) vignette for more details.
 
-## Predicting choice probabilities
+## Predicting probabilities and choices
 
-Estimated models can be used to predict expected choices and choice probabilities for a set (or multiple sets) of alternatives based on an estimated model. As an example, consider predicting choice probabilities for two of the choice observations from the `yogurt` dataset:
+Estimated models can be used to predict probabilities and choices for a set (or multiple sets) of alternatives based on an estimated model. As an example, consider predicting choice probabilities for two of the choice observations from the `yogurt` dataset:
 
 ```{r}
-alts <- subset(
+data <- subset(
   yogurt, obsID %in% c(42, 13),
   select = c('obsID', 'alt', 'choice', 'price', 'feat', 'brand')
 )
 
-alts
+data
 ```
 
-In the example below, the expected choice probabilities for these two sets of alternatives are computed using the fixed parameter `mnl_pref` model:
+In the example below, the probabilities for these two sets of alternatives are computed using the fixed parameter `mnl_pref` model using the `predict()` method:
 
 ```{r}
-probs <- predictProbs(
-  model = mnl_pref,
-  alts  = alts,
-  altID = "alt",
-  obsID = "obsID"
+probs <- predict(
+  mnl_pref,
+  newdata = data,
+  obsID = "obsID", 
+  ci = 0.95
 )
 
 probs
 ```
 
-The resulting `probs` data frame contains the expected choice probabilities for each alternative. The low and high values show a 95% confidence interval, estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. You can change the CI level with the optional `ci` argument (e.g. a 90% CI is obtained with `ci = 0.90`).
+The resulting `probs` data frame contains the expected choice probabilities for each alternative. The lower and upper predictions reflect a 95% confidence interval (controlled by the `ci` argument), which are estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. The default is `ci = NULL`, in which case no CI predictions are made.
 
-Choice probabilities can also be predicted used WTP space models. For example, the predicted choice probabilities using the `mnl_wtp` model are nearly identical with those from the `mnl_pref` model:
+WTP space models can also be used to predict probabilities. The only additional requirement is that if predictions are being made on a different data set using `newdata`, you must use the `price` argument to specify the column in `newdata` that corresponds to "price":
 
 ```{r}
-probs <- predictProbs(
-  model = mnl_wtp,
-  alts  = alts,
-  altID = "alt",
-  obsID = "obsID"
+probs <- predict(
+  mnl_wtp,
+  newdata = data,
+  obsID = "obsID",
+  price = "price"
 )
 
 probs
 ```
 
-See the ["Predicting Choice Probabilities from Estimated Models"](predict_probs.html) vignette for more details.
 
-## Predicting choices
-
-Similar to the `predictProbs()` function, the `predictChoices()` function can be used to predict choices using the results of an estimated model. In the example below, choices are predicted for the entire `yogurt` dataset, which was used to the estimate the `mnl_pref` model:
+You can also use the `predict()` method to predict choices. To do this, set `type = "choices"` (which defaults to `"probs"` for returning predicted probabilities). If no new data are provided for the `newdata` argument, then choices will be predicted for every alternative in the original data used to estimate the model. In the example below the `returnData` argument is also set to `TRUE` so that the predicted choices can be compared to the actual ones.
 
 ```{r}
-choices <- predictChoices(
-  model = mnl_pref,
-  alts  = yogurt,
-  altID = "alt",
-  obsID = "obsID"
+choices <- predict(
+  mnl_pref,
+  type = "choices",
+  returnData = TRUE
 )
 
-# Preview actual and predicted choices
 head(choices[c('obsID', 'choice', 'choice_predict')])
 ```
 
-The resulting `choices` data frame contains the same `alts` data frame with an additional column, `choice_predict`, which contains the predicted choices. You can quickly compute the accuracy by dividing the number of correctly predicted choices by the total number of choices:
+You can quickly compute the accuracy by dividing the number of correctly predicted choices by the total number of choices:
 
 ```{r}
 chosen <- subset(choices, choice == 1)
@@ -234,4 +229,4 @@ chosen$correct <- chosen$choice == chosen$choice_predict
 sum(chosen$correct) / nrow(chosen)
 ```
 
-See the ["Predicting Choices from Estimated Models"](predict_choices.html) vignette for more details.
+See the ["Predicting Probabilities and Choices from Estimated Models"](predict.html) vignette for more details about making predictions.

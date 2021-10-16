@@ -87,7 +87,7 @@ predict(mnl_pref, newdata = data, obsID = "obsID")
 predict(mnl_pref, newdata = data, obsID = "obsID", type = "choices")
 
 # Predict choices and probabilities
-predict(mnl_pref, alts, obsID = "obsID", type = c("probs", "choices"))
+predict(mnl_pref, newdata = data, obsID = "obsID", type = c("probs", "choices"))
 }
 \keyword{logitr}
 \keyword{predict}

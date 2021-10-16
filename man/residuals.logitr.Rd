@@ -4,7 +4,7 @@
 \alias{residuals.logitr}
 \title{Extract Model Residuals}
 \usage{
-\method{residuals}{logitr}(object)
+\method{residuals}{logitr}(object, ...)
 }
 \arguments{
 \item{object}{is an object of class \code{logitr}.}
