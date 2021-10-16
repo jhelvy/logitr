@@ -25,6 +25,7 @@ logitr(
   standardDraws = NULL,
   numDraws = 50,
   vcov = FALSE,
+  predict = TRUE,
   options = list(print_level = 0, xtol_rel = 1e-06, xtol_abs = 1e-06, ftol_rel = 1e-06,
     ftol_abs = 1e-06, maxeval = 1000, algorithm = "NLOPT_LD_LBFGS"),
   parNames,
@@ -113,6 +114,9 @@ maximum simulated likelihood. Defaults to \code{50}.}
 matrix and coefficient standard errors in the returned object.
 Defaults to \code{FALSE}.}
 
+\item{predict}{If \code{FALSE}, predicted probabilities, fitted values, and
+residuals are not included in the returned object. Defaults to \code{TRUE}.}
+
 \item{options}{A list of options for controlling the \code{nloptr()} optimization.
 Run \code{nloptr::nloptr.print.options()} for details.}
 
@@ -145,6 +149,9 @@ The function returns a list object containing the following objects.\tabular{ll}
    \code{nullLogLik} \tab The null log-likelihood value (if all coefficients are 0). \cr
    \code{gradient} \tab The gradient of the log-likelihood at convergence. \cr
    \code{hessian} \tab The hessian of the log-likelihood at convergence. \cr
+   \code{probabilities} \tab Predicted probabilities. Not returned if \code{predict = FALSE}. \cr
+   \code{fitted.values} \tab Fitted values. Not returned if \code{predict = FALSE}. \cr
+   \code{residuals} \tab Residuals. Not returned if \code{predict = FALSE}. \cr
    \code{startPars} \tab The starting values used. \cr
    \code{multistartNumber} \tab The multistart run number for this model. \cr
    \code{multistartSummary} \tab A summary of the log-likelihood values for each multistart run (if more than one multistart was used). \cr

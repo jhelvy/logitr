@@ -23,6 +23,7 @@ test_that("getStartPars returns all 0s for first iteration in a multistart loop 
     standardDraws = NULL,
     numDraws = 50,
     vcov = FALSE,
+    predict = TRUE,
     call = NULL,
     options         = list(
       print_level = 0,
@@ -64,6 +65,7 @@ test_that("getStartPars returns user-provided starting parameters for first iter
     standardDraws = NULL,
     numDraws = 50,
     vcov = FALSE,
+    predict = TRUE,
     call = NULL,
     options         = list(
       print_level = 0,

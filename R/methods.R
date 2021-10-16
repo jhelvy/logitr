@@ -346,6 +346,8 @@ print.logitr_wtp <- function (
 #' @keywords logitr fitted fitted.values
 #'
 #' @param object is an object of class `logitr`.
+#' @param probs Predicted probabilities for an object of class `logitr` to use
+#' in computing fitted values Defaults to `NULL`.
 #' @param ... further arguments.
 #'
 #' @return A data frame of the `obsID` and the fitted values extracted from
@@ -364,8 +366,10 @@ print.logitr_wtp <- function (
 #'
 #' # Extract the fitted values from the model
 #' fitted(mnl_pref)
-fitted.logitr <- function(object, ...) {
-  probs <- stats::predict(object, type = "probs")
+fitted.logitr <- function(object, probs = NULL, ...) {
+  if (is.null(probs)) {
+    probs <- stats::predict(object, type = "probs")
+  }
   choice <- object$data$choice
   fitted <- probs[which(choice == 1),]
   names(fitted)[which(names(fitted) == 'prob_predict')] <- "fitted_value"
@@ -378,6 +382,8 @@ fitted.logitr <- function(object, ...) {
 #' @keywords logitr residuals resid
 #'
 #' @param object is an object of class `logitr`.
+#' @param fitted Fitted values for an object of class `logitr` to use in
+#' computing residuals. Defaults to `NULL`.
 #' @param ... further arguments.
 #'
 #' @return A data frame of the `obsID` and the residuals (response minus fitted
@@ -396,8 +402,10 @@ fitted.logitr <- function(object, ...) {
 #'
 #' # Extract the residuals from the model
 #' residuals(mnl_pref)
-residuals.logitr <- function(object, ...) {
-  fitted <- fitted(object)
+residuals.logitr <- function(object, fitted = NULL, ...) {
+  if (is.null(fitted)) {
+    fitted <- stats::fitted(object)
+  }
   reps <- table(object$data$obsID)
   residuals <- fitted[rep(seq_along(reps), reps),]
   residuals$residual <- object$data$choice - residuals$fitted_value

@@ -4,10 +4,13 @@
 \alias{residuals.logitr}
 \title{Extract Model Residuals}
 \usage{
-\method{residuals}{logitr}(object, ...)
+\method{residuals}{logitr}(object, fitted = NULL, ...)
 }
 \arguments{
 \item{object}{is an object of class \code{logitr}.}
+
+\item{fitted}{Fitted values for an object of class \code{logitr} to use in
+computing residuals. Defaults to \code{NULL}.}
 
 \item{...}{further arguments.}
 }

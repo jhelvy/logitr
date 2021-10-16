@@ -69,6 +69,8 @@
 #' @param vcov Set to `TRUE` to evaluate and include the variance-covariance
 #' matrix and coefficient standard errors in the returned object.
 #' Defaults to `FALSE`.
+#' @param predict If `FALSE`, predicted probabilities, fitted values, and
+#' residuals are not included in the returned object. Defaults to `TRUE`.
 #' @param options A list of options for controlling the `nloptr()` optimization.
 #' Run `nloptr::nloptr.print.options()` for details.
 #' @param choiceName No longer used as of v0.2.3 - if provided, this is passed
@@ -111,6 +113,9 @@
 #' |`nullLogLik`|The null log-likelihood value (if all coefficients are 0).|
 #' |`gradient`|The gradient of the log-likelihood at convergence.|
 #' |`hessian`|The hessian of the log-likelihood at convergence.|
+#' |`probabilities`|Predicted probabilities. Not returned if `predict = FALSE`.|
+#' |`fitted.values`|Fitted values. Not returned if `predict = FALSE`.|
+#' |`residuals`|Residuals. Not returned if `predict = FALSE`.|
 #' |`startPars`|The starting values used.|
 #' |`multistartNumber`|The multistart run number for this model.|
 #' |`multistartSummary`|A summary of the log-likelihood values for each multistart run (if more than one multistart was used).|
@@ -189,6 +194,7 @@ logitr <- function(
   standardDraws   = NULL,
   numDraws        = 50,
   vcov            = FALSE,
+  predict         = TRUE,
   options         = list(
     print_level = 0,
     xtol_rel    = 1.0e-6,
@@ -245,7 +251,8 @@ logitr <- function(
   modelInputs <- getModelInputs(
     data, choice, obsID, pars , randPars, price, randPrice, modelSpace, weights,
     panelID, clusterID, robust, startParBounds, startVals, numMultiStarts,
-    useAnalyticGrad, scaleInputs, standardDraws, numDraws, vcov, call, options
+    useAnalyticGrad, scaleInputs, standardDraws, numDraws, vcov, predict, call,
+    options
   )
   allModels <- runMultistart(modelInputs)
   if (modelInputs$inputs$numMultiStarts > 1) {
@@ -259,6 +266,15 @@ logitr <- function(
   if (vcov) {
     model$vcov <- vcov(model)
     model$se <- sqrt(diag(model$vcov))
+  }
+  if (predict) {
+    model$probabilities <- stats::predict(model)
+    model$fitted.values <- stats::fitted(model, probs = model$probabilities)
+    model$residuals <- stats::residuals(model, fitted = model$fitted.values)
+  } else {
+    model$probabilities <- NULL
+    model$fitted.values <- NULL
+    model$residuals <- NULL
   }
   message("Done!")
   return(model)

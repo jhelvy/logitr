@@ -4,10 +4,13 @@
 \alias{fitted.logitr}
 \title{Extract Model Fitted Values}
 \usage{
-\method{fitted}{logitr}(object, ...)
+\method{fitted}{logitr}(object, probs = NULL, ...)
 }
 \arguments{
 \item{object}{is an object of class \code{logitr}.}
+
+\item{probs}{Predicted probabilities for an object of class \code{logitr} to use
+in computing fitted values Defaults to \code{NULL}.}
 
 \item{...}{further arguments.}
 }

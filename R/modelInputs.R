@@ -7,7 +7,8 @@
 getModelInputs <- function(
     data, choice, obsID, pars , randPars, price, randPrice, modelSpace, weights,
     panelID, clusterID, robust, startParBounds, startVals, numMultiStarts,
-    useAnalyticGrad, scaleInputs, standardDraws, numDraws, vcov, call, options
+    useAnalyticGrad, scaleInputs, standardDraws, numDraws, vcov, predict, call,
+    options
 ) {
 
   # Keep original input arguments
@@ -29,7 +30,8 @@ getModelInputs <- function(
     useAnalyticGrad = useAnalyticGrad,
     scaleInputs     = scaleInputs,
     numDraws        = numDraws,
-    vcov            = vcov
+    vcov            = vcov,
+    predict         = predict
   )
 
   # Check for valid inputs and options
