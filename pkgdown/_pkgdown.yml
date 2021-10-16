@@ -38,10 +38,8 @@ navbar:
           href: articles/interactions.html
         - text: "Estimating Weighted Logit Models"
           href: articles/mnl_models_weighted.html
-        - text: "Predicting Choice Probabilities from Estimated Models"
-          href: articles/predict_probs.html
-        - text: "Predicting Choices from Estimated Models"
-          href: articles/predict_choices.html
+        - text: "Predicting Probabilities and Choices from Estimated Models"
+          href: articles/predict.html
     - text: "Changelog"
       href: news/index.html
 
