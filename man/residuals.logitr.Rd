@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{object}{is an object of class \code{logitr}.}
+
+\item{...}{further arguments.}
 }
 \value{
 A data frame of the \code{obsID} and the residuals (response minus fitted

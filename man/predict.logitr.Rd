@@ -12,7 +12,8 @@
   type = "probs",
   returnData = FALSE,
   ci = NULL,
-  numDrawsCI = 10^3
+  numDrawsCI = 10^3,
+  ...
 )
 }
 \arguments{
@@ -47,6 +48,8 @@ case no CI is computed.}
 
 \item{numDrawsCI}{The number of draws to use in simulating uncertainty
 for the computed CI. Defaults to 10^3.}
+
+\item{...}{further arguments.}
 }
 \value{
 A data frame of predicted probabilities and / or choices.

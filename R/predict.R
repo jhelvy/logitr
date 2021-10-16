@@ -33,6 +33,7 @@
 #' case no CI is computed.
 #' @param numDrawsCI The number of draws to use in simulating uncertainty
 #' for the computed CI. Defaults to 10^3.
+#' @param ... further arguments.
 #' @return A data frame of predicted probabilities and / or choices.
 #' @export
 #' @examples
