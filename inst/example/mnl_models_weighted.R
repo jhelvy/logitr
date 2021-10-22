@@ -9,10 +9,10 @@ library('logitr')
 
 # Estimate an unweighted MNL model in the WTP Space using a multistart
 mnl_wtp_unweighted <- logitr(
-  data   = cars_us,
-  choice = 'choice',
-  obsID  = 'obsnum',
-  pars   = c(
+  data    = cars_us,
+  outcome = 'choice',
+  obsID   = 'obsnum',
+  pars    = c(
     'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100', 'bev150',
     'american', 'japanese', 'chinese', 'skorean', 'phevFastcharge',
     'bevFastcharge','opCost', 'accelTime'),
@@ -28,10 +28,10 @@ summary(mnl_wtp_unweighted)
 
 # Estimate a weighted MNL model in the WTP Space using a multistart
 mnl_wtp_weighted <- logitr(
-  data   = cars_us,
-  choice = 'choice',
-  obsID  = 'obsnum',
-  pars   = c(
+  data    = cars_us,
+  outcome = 'choice',
+  obsID   = 'obsnum',
+  pars    = c(
     'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100', 'bev150',
     'american', 'japanese', 'chinese', 'skorean', 'phevFastcharge',
     'bevFastcharge','opCost', 'accelTime'),

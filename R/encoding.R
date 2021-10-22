@@ -23,7 +23,7 @@ dummyCode <- function(df, vars) {
 #' well as two vectors (`pars` and `randPars`) with discrete (categorical)
 #' variables and interaction variables added to `X`, `pars`, and
 #' `randPars`.
-#' @param data The choice data, formatted as a `data.frame` object.
+#' @param data The data, formatted as a `data.frame` object.
 #' @param pars The names of the parameters to be estimated in the model.
 #' Must be the same as the column names in the `data` argument. For WTP space
 #' models, do not include price in `pars`.

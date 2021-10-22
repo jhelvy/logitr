@@ -72,7 +72,7 @@ makeModelTemplate <- function(modelInputs) {
     call              = modelInputs$call,
     inputs            = modelInputs$inputs,
     data              = modelInputs$data,
-    numObs            = sum(modelInputs$data$choice),
+    numObs            = sum(modelInputs$data$outcome),
     numParams         = length(pars),
     freq              = modelInputs$freq,
     modelType         = modelInputs$modelType,

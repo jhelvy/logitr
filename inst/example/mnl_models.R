@@ -9,10 +9,10 @@ library('logitr')
 
 # Run a MNL model in the Preference Space:
 mnl_pref <- logitr(
-  data   = yogurt,
-  choice = 'choice',
-  obsID  = 'obsID',
-  pars   = c('price', 'feat', 'brand')
+  data    = yogurt,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c('price', 'feat', 'brand')
 )
 
 # Print a summary of the results:
@@ -28,7 +28,7 @@ wtp_mnl_pref
 # Run a MNL model in the WTP Space using a multistart:
 mnl_wtp <- logitr(
   data       = yogurt,
-  choice     = 'choice',
+  outcome    = 'choice',
   obsID      = 'obsID',
   pars       = c('feat', 'brand'),
   price      = 'price',

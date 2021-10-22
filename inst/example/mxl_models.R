@@ -13,7 +13,7 @@ head(yogurt)
 # Multistart MXL model in the Preference Space
 mxl_pref <- logitr(
   data     = yogurt,
-  choice   = 'choice',
+  outcome  = 'choice',
   obsID    = 'obsID',
   pars     = c('price', 'feat', 'brand'),
   randPars = c(feat = 'n', brand = 'n'),
@@ -32,7 +32,7 @@ wtp_mxl_pref
 # Multistart MXL model in the WTP Space
 mxl_wtp <- logitr(
   data       = yogurt,
-  choice     = 'choice',
+  outcome    = 'choice',
   obsID      = 'obsID',
   pars       = c('feat', 'brand'),
   price      = 'price',

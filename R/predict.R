@@ -41,10 +41,10 @@
 #'
 #' # Estimate a preference space model
 #' mnl_pref <- logitr(
-#'   data   = yogurt,
-#'   choice = "choice",
-#'   obsID  = "obsID",
-#'   pars   = c("price", "feat", "brand")
+#'   data    = yogurt,
+#'   outcome = "choice",
+#'   obsID   = "obsID",
+#'   pars    = c("price", "feat", "brand")
 #' )
 #'
 #' # Predict probabilities and / or choices
@@ -83,7 +83,7 @@ predict.logitr <- function(
   d <- object$data
   # If no newdata is provided, use the data from the estimated object
   if (is.null(newdata)) {
-    data <- list(X = d$X, price = d$price, obsID = d$obsID, choice = d$choice)
+    data <- list(X = d$X, price = d$price, obsID = d$obsID, outcome = d$outcome)
     obsID <- object$inputs$obsID
   } else {
     data <- formatNewData(object, newdata, obsID)
@@ -287,8 +287,8 @@ addData <- function(object, result, data) {
   if (object$inputs$modelSpace == "wtp") {
     df <- cbind(df, price = data$price)
   }
-  if (!is.null(data$choice)) {
-    df <- cbind(df, choice = data$choice)
+  if (!is.null(data$outcome)) {
+    df <- cbind(df, outcome = data$outcome)
   }
   return(cbind(result, df))
 }

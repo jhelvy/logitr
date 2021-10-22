@@ -5,15 +5,15 @@
 
 # Creates a list of the data and other information needed for running the model
 getModelInputs <- function(
-    data, choice, obsID, pars , randPars, price, randPrice, modelSpace, weights,
-    panelID, clusterID, robust, startParBounds, startVals, numMultiStarts,
-    useAnalyticGrad, scaleInputs, standardDraws, numDraws, vcov, predict, call,
-    options
+    data, outcome, obsID, pars , randPars, price, randPrice, modelSpace,
+    weights, panelID, clusterID, robust, startParBounds, startVals,
+    numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, numDraws, vcov,
+    predict, call, options
 ) {
 
   # Keep original input arguments
   inputs <- list(
-    choice          = choice,
+    outcome         = outcome,
     obsID           = obsID,
     pars            = pars,
     randPars        = randPars,
@@ -53,7 +53,7 @@ getModelInputs <- function(
   obsID <- as.matrix(data[obsID])
   reps <- as.numeric(table(obsID))
   obsID <- rep(seq_along(reps), reps) # Make sure obsID is sequential number
-  choice <- as.matrix(data[choice])
+  outcome <- as.matrix(data[outcome])
   modelType <- "mnl"
   if (isMxlModel(parSetup)) { modelType <- "mxl" }
 
@@ -95,7 +95,7 @@ getModelInputs <- function(
   data <- list(
     price     = price,
     X         = X,
-    choice    = choice,
+    outcome   = outcome,
     obsID     = obsID,
     panelID   = panelID,
     clusterID = clusterID,
@@ -123,7 +123,7 @@ getModelInputs <- function(
     call          = call,
     inputs        = inputs,
     modelType     = modelType,
-    freq          = getFrequencyCounts(obsID, choice),
+    freq          = getFrequencyCounts(obsID, outcome),
     price         = price,
     data          = data,
     data_diff     = data_diff,
@@ -291,7 +291,7 @@ scaleData <- function(data, scaleFactors, modelSpace) {
   return(list(
     price     = scaledPrice,
     X         = scaledX,
-    choice    = data$choice,
+    outcome   = data$outcome,
     obsID     = data$obsID,
     panelID   = data$panelID,
     clusterID = data$clusterID,
@@ -301,28 +301,28 @@ scaleData <- function(data, scaleFactors, modelSpace) {
 
 makeDiffData <- function(data, modelType) {
   # Subtracting out the chosen alternative makes things faster
-  X_chosen <- data$X[data$choice == 1,]
+  X_chosen <- data$X[data$outcome == 1,]
   X_chosen <- checkMatrix(X_chosen)
   if (!is.matrix(X_chosen)) { X_chosen <- as.matrix(X_chosen) }
-  X_diff <- (data$X - X_chosen[data$obsID,])[data$choice != 1,]
+  X_diff <- (data$X - X_chosen[data$obsID,])[data$outcome != 1,]
   X_diff <- checkMatrix(X_diff)
   price_diff <- NULL
   if (!is.null(data$price)) {
-    price_chosen <- data$price[data$choice == 1]
-    price_diff <- (data$price - price_chosen[data$obsID])[data$choice != 1]
+    price_chosen <- data$price[data$outcome == 1]
+    price_diff <- (data$price - price_chosen[data$obsID])[data$outcome != 1]
   }
   panelID <- data$panelID
-  weights <- data$weights[data$choice == 1]
+  weights <- data$weights[data$outcome == 1]
   if (!is.null(panelID) & (modelType == "mxl")) {
-    panelID <- data$panelID[data$choice == 1]
+    panelID <- data$panelID[data$outcome == 1]
     weights <- unique(data.frame(panelID = panelID, weights = weights))$weights
   }
   return(list(
     price     = price_diff,
     X         = X_diff,
-    obsID     = data$obsID[data$choice != 1],
+    obsID     = data$obsID[data$outcome != 1],
     panelID   = panelID,
-    clusterID = data$clusterID[data$choice != 1],
+    clusterID = data$clusterID[data$outcome != 1],
     weights   = weights
   ))
 }
@@ -406,10 +406,10 @@ setEvalFunctions <- function(modelType, useAnalyticGrad) {
   return(evalFuncs)
 }
 
-getFrequencyCounts <- function(obsID, choice) {
+getFrequencyCounts <- function(obsID, outcome) {
   obsIDCounts <- table(obsID)
   alt <- sequence(obsIDCounts)
-  freq <- table(alt, choice)
+  freq <- table(alt, outcome)
   freq <- freq[, which(colnames(freq) == "1")]
   return(freq)
 }

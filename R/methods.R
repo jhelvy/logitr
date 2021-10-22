@@ -358,10 +358,10 @@ print.logitr_wtp <- function (
 #'
 #' # Estimate a preference space model
 #' mnl_pref <- logitr(
-#'   data   = yogurt,
-#'   choice = "choice",
-#'   obsID  = "obsID",
-#'   pars   = c("price", "feat", "brand")
+#'   data    = yogurt,
+#'   outcome = "choice",
+#'   obsID   = "obsID",
+#'   pars    = c("price", "feat", "brand")
 #' )
 #'
 #' # Extract the fitted values from the model
@@ -370,8 +370,8 @@ fitted.logitr <- function(object, probs = NULL, ...) {
   if (is.null(probs)) {
     probs <- stats::predict(object, type = "probs")
   }
-  choice <- object$data$choice
-  fitted <- probs[which(choice == 1),]
+  outcome <- object$data$outcome
+  fitted <- probs[which(outcome == 1),]
   names(fitted)[which(names(fitted) == 'prob_predict')] <- "fitted_value"
   return(fitted)
 }
@@ -394,10 +394,10 @@ fitted.logitr <- function(object, probs = NULL, ...) {
 #'
 #' # Estimate a preference space model
 #' mnl_pref <- logitr(
-#'   data   = yogurt,
-#'   choice = "choice",
-#'   obsID  = "obsID",
-#'   pars   = c("price", "feat", "brand")
+#'   data    = yogurt,
+#'   outcome = "choice",
+#'   obsID   = "obsID",
+#'   pars    = c("price", "feat", "brand")
 #' )
 #'
 #' # Extract the residuals from the model
@@ -408,7 +408,7 @@ residuals.logitr <- function(object, fitted = NULL, ...) {
   }
   reps <- table(object$data$obsID)
   residuals <- fitted[rep(seq_along(reps), reps),]
-  residuals$residual <- object$data$choice - residuals$fitted_value
+  residuals$residual <- object$data$outcome - residuals$fitted_value
   residuals$fitted_value <- NULL
   return(residuals)
 }

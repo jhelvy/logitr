@@ -100,7 +100,7 @@ probsPlot <- ggplot(probs, aes(x = alt, y = prob_predict, fill = model)) +
                   width = 0.2, position = position_dodge(width = 0.7)) +
     facet_wrap(vars(obs)) +
     scale_y_continuous(limits = c(0, 1)) +
-    labs(x = 'Alternative', y = 'Expected Choice Probabilities') +
+    labs(x = 'Alternative', y = 'Expected Probabilities') +
     theme_bw()
 
 ggsave(here::here('vignettes', 'probs.png'),

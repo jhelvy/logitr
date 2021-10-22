@@ -9,10 +9,10 @@ library('logitr')
 
 # Continuous variable interactions
 model_price_feat <- logitr(
-  data   = yogurt,
-  choice = 'choice',
-  obsID  = 'obsID',
-  pars   = c('price', 'feat', 'brand', 'price*feat')
+  data    = yogurt,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c('price', 'feat', 'brand', 'price*feat')
 )
 
 # The model now has an estimated coefficient for the `price*feat` effect:
@@ -20,10 +20,10 @@ summary(model_price_feat)
 
 # Discrete variable interactions
 model_price_brand <- logitr(
-  data   = yogurt,
-  choice = 'choice',
-  obsID  = 'obsID',
-  pars   = c('price', 'feat', 'brand', 'price*brand')
+  data    = yogurt,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c('price', 'feat', 'brand', 'price*brand')
 )
 
 # The model now has three estimated coefficients for the `price*brand` effect:
@@ -43,10 +43,10 @@ yogurt$price_groupA <- yogurt$price*yogurt$groupA
 
 # Continuous variable interactions
 model_price_group <- logitr(
-  data   = yogurt,
-  choice = 'choice',
-  obsID  = 'obsID',
-  pars   = c('price', 'feat', 'brand', 'price_groupA')
+  data    = yogurt,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c('price', 'feat', 'brand', 'price_groupA')
 )
 
 summary(model_price_group)
@@ -56,7 +56,7 @@ summary(model_price_group)
 
 model_price_feat_mxl <- logitr(
   data     = yogurt,
-  choice   = 'choice',
+  outcome  = 'choice',
   obsID    = 'obsID',
   pars     = c('price', 'feat', 'brand', 'price*feat'),
   randPars = c(feat = "n")

@@ -68,8 +68,7 @@ reference:
 - title: "Predicting Choices & Probabilities"
   desc: "Functions for predicting choices and choice probabilities for a set of alternatives."
   contents:
-  - predictChoices
-  - predictProbs
+  - predict.logitr
 - title: "Example Data Sets"
   desc: "Descriptions of data included with this package"
   contents:

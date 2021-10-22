@@ -13,10 +13,10 @@
 #' function to minimize the negative log-likelihood function.
 #' @keywords logitr mnl mxl wtp willingness-to-pay mixed logit
 #'
-#' @param data The choice data, formatted as a `data.frame` object.
-#' @param choice The name of the column that identifies the choice variable.
-#' @param obsID The name of the column that identifies each choice
-#' observation.
+#' @param data The data, formatted as a `data.frame` object.
+#' @param outcome The name of the column that identifies the outcome variable,
+#' which should be coded with a `1` for `TRUE` and `0` for `FALSE`.
+#' @param obsID The name of the column that identifies each observation.
 #' @param pars The names of the parameters to be estimated in the model.
 #' Must be the same as the column names in the `data` argument. For WTP space
 #' models, do not include price in `pars`.
@@ -128,7 +128,7 @@
 #' |`data`|A list of the original data provided to `logitr()` broken up into components used during model estimation.|
 #' |`numObs`|The number of observations.|
 #' |`numParams`|The number of model parameters.|
-#' |`freq`|The frequency counts of each choice alternative.|
+#' |`freq`|The frequency counts of each alternative.|
 #' |`modelType`|The model type, `'mnl'` for multinomial logit or `'mxl'` for mixed logit.|
 #' |`weightsUsed`|`TRUE` or `FALSE` for whether weights were used in the model.|
 #' |`numClusters`|The number of clusters.|
@@ -147,16 +147,16 @@
 #'
 #' # Estimate a MNL model in the Preference space
 #' mnl_pref <- logitr(
-#'   data   = yogurt,
-#'   choice = "choice",
-#'   obsID  = "obsID",
-#'   pars   = c("price", "feat", "brand")
+#'   data    = yogurt,
+#'   outcome = "choice",
+#'   obsID   = "obsID",
+#'   pars    = c("price", "feat", "brand")
 #' )
 #'
 #' # Estimate a MNL model in the WTP space, using a 10-run multistart
 #' mnl_wtp <- logitr(
 #'   data           = yogurt,
-#'   choice         = "choice",
+#'   outcome        = "choice",
 #'   obsID          = "obsID",
 #'   pars           = c("feat", "brand"),
 #'   price          = "price",
@@ -167,15 +167,15 @@
 #' # Estimate a MXL model in the Preference space with "feat" and "brand"
 #' # following normal distributions
 #' mxl_pref <- logitr(
-#'   data   = yogurt,
-#'   choice = "choice",
-#'   obsID  = "obsID",
-#'   pars   = c("price", "feat", "brand"),
+#'   data     = yogurt,
+#'   outcome  = "choice",
+#'   obsID    = "obsID",
+#'   pars     = c("price", "feat", "brand"),
 #'   randPars = c(feat = "n", brand = "n")
 #' )
 logitr <- function(
   data,
-  choice,
+  outcome,
   obsID,
   pars,
   price           = NULL,
@@ -223,7 +223,7 @@ logitr <- function(
   }
   if (any("choiceName" %in% calls)) {
     choice <- choiceName
-    warning("Use 'choice' instead of 'choiceName'")
+    warning("Use 'outcome' instead of 'choiceName'")
   }
   if (any("obsIDName" %in% calls)) {
     obsID <- obsIDName
@@ -249,10 +249,10 @@ logitr <- function(
   data <- as.data.frame(data) # tibbles break things
 
   modelInputs <- getModelInputs(
-    data, choice, obsID, pars , randPars, price, randPrice, modelSpace, weights,
-    panelID, clusterID, robust, startParBounds, startVals, numMultiStarts,
-    useAnalyticGrad, scaleInputs, standardDraws, numDraws, vcov, predict, call,
-    options
+    data, outcome, obsID, pars , randPars, price, randPrice, modelSpace,
+    weights, panelID, clusterID, robust, startParBounds, startVals,
+    numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, numDraws,
+    vcov, predict, call, options
   )
   allModels <- runMultistart(modelInputs)
   if (modelInputs$inputs$numMultiStarts > 1) {
