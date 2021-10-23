@@ -9,7 +9,7 @@ variables.}
 recodeData(data, pars, randPars)
 }
 \arguments{
-\item{data}{The choice data, formatted as a \code{data.frame} object.}
+\item{data}{The data, formatted as a \code{data.frame} object.}
 
 \item{pars}{The names of the parameters to be estimated in the model.
 Must be the same as the column names in the \code{data} argument. For WTP space

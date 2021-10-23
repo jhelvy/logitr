@@ -4,11 +4,7 @@
 # Load logitr package
 library('logitr')
 
-# Preview the yogurt data
-head(yogurt)
-
-# ============================================================================
-# Estimate heterogeneous MXL models
+# Models that can take longer to estimate so the vignettes build faster
 
 # Multistart MXL model in the Preference Space
 mxl_pref <- logitr(
@@ -22,12 +18,8 @@ mxl_pref <- logitr(
   numMultiStarts = 10
 )
 
-# View summary of model
-summary(mxl_pref)
-
-# Get the WTP implied from the preference space model
-wtp_mxl_pref <- wtp(mxl_pref, price = 'price')
-wtp_mxl_pref
+# Extract the wtp estimates
+wtp_mxl_pref <- wtp(mxl_pref, "price")
 
 # Multistart MXL model in the WTP Space
 mxl_wtp <- logitr(
@@ -46,11 +38,8 @@ mxl_wtp <- logitr(
   startVals = wtp_mxl_pref$Estimate
 )
 
-# View summary of model
-summary(mxl_wtp)
-
-# Compare WTP from each space
-wtpCompare(mxl_pref, mxl_wtp, price = 'price')
+# Compare results
+wtpCompare(mxl_pref, mxl_wtp, "price")
 
 # Save results
 saveRDS(mxl_pref, here::here('inst', 'extdata', 'mxl_pref.Rds'))

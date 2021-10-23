@@ -34,10 +34,10 @@ library(logitr)
 
 # Estimate a MNL model in the Preference space
 mnl_pref <- logitr(
-  data   = yogurt,
-  choice = "choice",
-  obsID  = "obsID",
-  pars   = c("price", "feat", "brand")
+  data    = yogurt,
+  outcome = "choice",
+  obsID   = "obsID",
+  pars    = c("price", "feat", "brand")
 )
 
 # Compute the WTP implied from the preference space model
@@ -47,7 +47,7 @@ wtp_mnl_pref <- wtp(mnl_pref, price = "price")
 # from the preference space model as starting points
 mnl_wtp <- logitr(
   data       = yogurt,
-  choice     = "choice",
+  outcome    = "choice",
   obsID      = "obsID",
   pars       = c("feat", "brand"),
   price      = "price",

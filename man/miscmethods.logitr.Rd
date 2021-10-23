@@ -44,7 +44,8 @@
 )
 }
 \arguments{
-\item{object}{is an object of class \code{logitr}.}
+\item{object}{is an object of class \code{logitr} (a model estimated using
+the 'logitr()` function).}
 
 \item{...}{further arguments.}
 

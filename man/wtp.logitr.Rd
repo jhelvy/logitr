@@ -7,8 +7,8 @@
 \method{wtp}{logitr}(object, price)
 }
 \arguments{
-\item{object}{The output of a "preference space" model estimated
-using the \code{logitr()} function.}
+\item{object}{is an object of class \code{logitr} (a model estimated using
+the 'logitr()` function).}
 
 \item{price}{The name of the parameter that identifies price.}
 }
@@ -28,10 +28,10 @@ library(logitr)
 
 # Estimate a preference space model
 mnl_pref <- logitr(
-  data   = yogurt,
-  choice = "choice",
-  obsID  = "obsID",
-  pars   = c("price", "feat", "brand")
+  data    = yogurt,
+  outcome = "choice",
+  obsID   = "obsID",
+  pars    = c("price", "feat", "brand")
 )
 
 # Compute the WTP implied from the preference space model

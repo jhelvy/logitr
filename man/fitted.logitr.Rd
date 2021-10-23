@@ -7,7 +7,8 @@
 \method{fitted}{logitr}(object, probs = NULL, ...)
 }
 \arguments{
-\item{object}{is an object of class \code{logitr}.}
+\item{object}{is an object of class \code{logitr} (a model estimated using
+the 'logitr()` function).}
 
 \item{probs}{Predicted probabilities for an object of class \code{logitr} to use
 in computing fitted values Defaults to \code{NULL}.}
@@ -26,10 +27,10 @@ library(logitr)
 
 # Estimate a preference space model
 mnl_pref <- logitr(
-  data   = yogurt,
-  choice = "choice",
-  obsID  = "obsID",
-  pars   = c("price", "feat", "brand")
+  data    = yogurt,
+  outcome = "choice",
+  obsID   = "obsID",
+  pars    = c("price", "feat", "brand")
 )
 
 # Extract the fitted values from the model

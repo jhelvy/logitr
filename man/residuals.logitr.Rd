@@ -7,7 +7,8 @@
 \method{residuals}{logitr}(object, fitted = NULL, ...)
 }
 \arguments{
-\item{object}{is an object of class \code{logitr}.}
+\item{object}{is an object of class \code{logitr} (a model estimated using
+the 'logitr()` function).}
 
 \item{fitted}{Fitted values for an object of class \code{logitr} to use in
 computing residuals. Defaults to \code{NULL}.}
@@ -26,10 +27,10 @@ library(logitr)
 
 # Estimate a preference space model
 mnl_pref <- logitr(
-  data   = yogurt,
-  choice = "choice",
-  obsID  = "obsID",
-  pars   = c("price", "feat", "brand")
+  data    = yogurt,
+  outcome = "choice",
+  obsID   = "obsID",
+  pars    = c("price", "feat", "brand")
 )
 
 # Extract the residuals from the model

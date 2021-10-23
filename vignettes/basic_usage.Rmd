@@ -15,12 +15,6 @@ knitr::opts_chunk$set(
   fig.retina = 3,
   comment = "#>"
 )
-library(logitr)
-# Read in results from already estimated models  so that the
-# examples aren't actually run when building this page, otherwise it'll
-# take much longer to build
-mnl_pref <- readRDS(here::here('inst', 'extdata', 'mnl_pref.Rds'))
-mnl_wtp  <- readRDS(here::here('inst', 'extdata', 'mnl_wtp.Rds'))
 ```
 
 ```{r, child=here::here('man', 'rmdchunks', 'header.Rmd')}
@@ -35,7 +29,7 @@ The ["Data Formatting and Encoding"](data_formatting.html) vignette has more det
 
 ## Model specification interface
 
-Models are specified and estimated using the `logitr()` function. The `data` argument should be set to the data frame containing the choice data, and the `choice` and `obsID` arguments should be set to the column names in the data frame that correspond to the choice dummy variable column and the observation ID column, respectively. All variables to be used as model covariates should be provided as a vector of column names to the `pars` argument. Each variable in the vector is additively included as a covariate in the utility model, with the interpretation that they represent utilities in preference space models and WTPs in a WTP space model.
+Models are specified and estimated using the `logitr()` function. The `data` argument should be set to the data frame containing the data, and the `outcome` and `obsID` arguments should be set to the column names in the data frame that correspond to the outcome dummy variable column and the observation ID column, respectively. All variables to be used as model covariates should be provided as a vector of column names to the `pars` argument. Each variable in the vector is additively included as a covariate in the utility model, with the interpretation that they represent utilities in preference space models and WTPs in a WTP space model.
 
 For example, consider a preference space model where the utility for yogurt is given by the following utility model:
 
@@ -45,12 +39,14 @@ For example, consider a preference space model where the utility for yogurt is g
 \noindent
 where $p_{j}$ is `price`, $x_{j1}$ is `feat`, and $x_{j2-4}$ are dummy-coded variables for each `brand` (with the fourth brand representing the reference level). This model can be estimated using the `logitr()` function as follows:
 
-```{r, eval=FALSE}
+```{r}
+library(logitr)
+
 mnl_pref <- logitr(
-    data   = yogurt,
-    choice = "choice",
-    obsID  = "obsID",
-    pars   = c("price", "feat", "brand")
+    data    = yogurt,
+    outcome = "choice",
+    obsID   = "obsID",
+    pars    = c("price", "feat", "brand")
 )
 ```
 
@@ -62,13 +58,13 @@ The equivalent model in the WTP space is given by the following utility model:
 \noindent
 To specify this model, the user should move `"price"` from the `pars` argument to the `price` argument and set the `modelSpace` argument to `"wtp"` (`"pref"` is the default value):
 
-```{r, eval=FALSE}
+```{r}
 mnl_wtp <- logitr(
-    data   = yogurt,
-    choice = "choice",
-    obsID  = "obsID",
-    pars   = c("feat", "brand"),
-    price  = "price",
+    data    = yogurt,
+    outcome = "choice",
+    obsID   = "obsID",
+    pars    = c("feat", "brand"),
+    price   = "price",
     modelSpace = "wtp"
 )
 ```
@@ -86,11 +82,11 @@ Since WTP space models have non-convex log-likelihood functions, it is recommend
 
 ```{r}
 mnl_wtp <- logitr(
-    data   = yogurt,
-    choice = "choice",
-    obsID  = "obsID",
-    pars   = c("feat", "brand"),
-    price  = "price",
+    data    = yogurt,
+    outcome = "choice",
+    obsID   = "obsID",
+    pars    = c("feat", "brand"),
+    price   = "price",
     modelSpace = "wtp",
     numMultiStarts = 10
 )
@@ -114,6 +110,12 @@ You can also extract other values of interest at the solution, such as:
 coef(mnl_pref)
 ```
 
+**The coefficient standard errors**
+
+```{r}
+se(mnl_pref)
+```
+
 **The log-likelihood**
 
 ```{r}
@@ -124,12 +126,6 @@ logLik(mnl_pref)
 
 ```{r}
 vcov(mnl_pref)
-```
-
-**The coefficient standard errors**
-
-```{r}
-sqrt(diag(vcov(mnl_pref)))
 ```
 
 ## Computing and comparing WTP
@@ -155,7 +151,7 @@ For example, assume the observed utility for yogurts was $v_{j} = \alpha p_{j} +
 ```{r, eval=FALSE}
 mxl_pref <- logitr(
     data     = yogurt,
-    choice   = 'choice',
+    outcome  = 'choice',
     obsID    = 'obsID',
     pars     = c('price', 'feat', 'brand'),
     randPars = c(feat = 'n', brand = 'n'),
@@ -167,9 +163,9 @@ Since mixed logit models also have non-convex log-likelihood functions, it is ag
 
 See the ["Estimating Mixed Logit Models"](mxl_models.html) vignette for more details.
 
-## Predicting probabilities and choices
+## Predicting probabilities and outcomes
 
-Estimated models can be used to predict probabilities and choices for a set (or multiple sets) of alternatives based on an estimated model. As an example, consider predicting choice probabilities for two of the choice observations from the `yogurt` dataset:
+Estimated models can be used to predict probabilities and outcomes for a set (or multiple sets) of alternatives based on an estimated model. As an example, consider predicting probabilities for two of the choice observations from the `yogurt` dataset:
 
 ```{r}
 data <- subset(
@@ -193,9 +189,9 @@ probs <- predict(
 probs
 ```
 
-The resulting `probs` data frame contains the expected choice probabilities for each alternative. The lower and upper predictions reflect a 95% confidence interval (controlled by the `ci` argument), which are estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. The default is `ci = NULL`, in which case no CI predictions are made.
+The resulting `probs` data frame contains the expected probabilities for each alternative. The lower and upper predictions reflect a 95% confidence interval (controlled by the `ci` argument), which are estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. The default is `ci = NULL`, in which case no CI predictions are made.
 
-WTP space models can also be used to predict probabilities. The only additional requirement is that if predictions are being made on a different data set using `newdata`, you must use the `price` argument to specify the column in `newdata` that corresponds to "price":
+WTP space models can also be used to make predictions. The only additional requirement is that if predictions are being made on a different data set using the `newdata` argument, you must also specify the `price` argument to identify which column in `newdata` corresponds to "price":
 
 ```{r}
 probs <- predict(
@@ -208,24 +204,23 @@ probs <- predict(
 probs
 ```
 
-
-You can also use the `predict()` method to predict choices. To do this, set `type = "choices"` (which defaults to `"probs"` for returning predicted probabilities). If no new data are provided for the `newdata` argument, then choices will be predicted for every alternative in the original data used to estimate the model. In the example below the `returnData` argument is also set to `TRUE` so that the predicted choices can be compared to the actual ones.
+You can also use the `predict()` method to predict outcomes by setting `type = "outcome"` (the default value is `"prob"` for predicting probabilities). If no new data are provided for the `newdata` argument, then choices will be predicted for every alternative in the original data used to estimate the model. In the example below the `returnData` argument is also set to `TRUE` so that the predicted choices can be compared to the actual ones.
 
 ```{r}
-choices <- predict(
+outcomes <- predict(
   mnl_pref,
-  type = "choices",
+  type = "outcome",
   returnData = TRUE
 )
 
-head(choices[c('obsID', 'choice', 'choice_predict')])
+head(outcomes[c('obsID', 'choice', 'predicted_outcome')])
 ```
 
 You can quickly compute the accuracy by dividing the number of correctly predicted choices by the total number of choices:
 
 ```{r}
-chosen <- subset(choices, choice == 1)
-chosen$correct <- chosen$choice == chosen$choice_predict
+chosen <- subset(outcomes, choice == 1)
+chosen$correct <- chosen$choice == chosen$predicted_outcome
 sum(chosen$correct) / nrow(chosen)
 ```
 

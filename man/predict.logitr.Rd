@@ -2,14 +2,14 @@
 % Please edit documentation in R/predict.R
 \name{predict.logitr}
 \alias{predict.logitr}
-\title{Predict probabilities and / or choices}
+\title{Predict probabilities and / or outcomes}
 \usage{
 \method{predict}{logitr}(
   object,
   newdata = NULL,
   obsID = NULL,
   price = NULL,
-  type = "probs",
+  type = "prob",
   returnData = FALSE,
   ci = NULL,
   numDrawsCI = 10^3,
@@ -17,7 +17,8 @@
 )
 }
 \arguments{
-\item{object}{is an object of class \code{logitr}.}
+\item{object}{is an object of class \code{logitr} (a model estimated using
+the 'logitr()` function).}
 
 \item{newdata}{a \code{data.frame}. Each row is an alternative and each column an
 attribute corresponding to parameter names in the estimated model. Defaults
@@ -32,13 +33,13 @@ in which case the value for \code{obsID} from the data in \code{object} is used.
 Required if the \code{object} is a WTP space model and if newdata != NULL.
 Defaults to \code{NULL}.}
 
-\item{type}{A character vector defining what to predict: \code{probs} for
-probabilities, \code{choices} for choices. If you want both outputs, use
-\code{c("probs", "choices")}. Choices are predicted randomly according to the
-predicted probabilities. Defaults to \code{"probs"}.}
+\item{type}{A character vector defining what to predict: \code{prob} for
+probabilities, \code{outcomes} for outcomes. If you want both outputs, use
+\code{c("prob", "outcome")}. Outcomes are predicted randomly according to the
+predicted probabilities. Defaults to \code{"prob"}.}
 
 \item{returnData}{If \code{TRUE} the data is also returned, otherwise only the
-predicted values ("probs" and / or  "choices") are returned.
+predicted values ("prob" and / or  "outcome") are returned.
 Defaults to \code{FALSE}.}
 
 \item{ci}{If a confidence interval (CI) for the predicted probabilities is
@@ -52,10 +53,10 @@ for the computed CI. Defaults to 10^3.}
 \item{...}{further arguments.}
 }
 \value{
-A data frame of predicted probabilities and / or choices.
+A data frame of predicted probabilities and / or outcomes.
 }
 \description{
-This method is used for computing predicted probabilities and / or choices
+This method is used for computing predicted probabilities and / or outcomes
 for either the data used for model estimation or a new data set consisting
 of a single or multiple sets of alternatives.
 }
@@ -64,13 +65,13 @@ library(logitr)
 
 # Estimate a preference space model
 mnl_pref <- logitr(
-  data   = yogurt,
-  choice = "choice",
-  obsID  = "obsID",
-  pars   = c("price", "feat", "brand")
+  data    = yogurt,
+  outcome = "choice",
+  obsID   = "obsID",
+  pars    = c("price", "feat", "brand")
 )
 
-# Predict probabilities and / or choices
+# Predict probabilities and / or outcomes
 
 # Predict probabilities for each alternative in the model data
 probs <- predict(mnl_pref)
@@ -86,11 +87,11 @@ data
 # Predict probabilities using the estimated model
 predict(mnl_pref, newdata = data, obsID = "obsID")
 
-# Predict choices
-predict(mnl_pref, newdata = data, obsID = "obsID", type = "choices")
+# Predict outcomes
+predict(mnl_pref, newdata = data, obsID = "obsID", type = "outcome")
 
-# Predict choices and probabilities
-predict(mnl_pref, newdata = data, obsID = "obsID", type = c("probs", "choices"))
+# Predict outcomes and probabilities
+predict(mnl_pref, newdata = data, obsID = "obsID", type = c("prob", "outcome"))
 }
 \keyword{logitr}
 \keyword{predict}
