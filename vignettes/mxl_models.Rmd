@@ -45,15 +45,11 @@ This example will estimate the following mixed logit model in the preference spa
 
 where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ have units of utility. In the example below, we will model $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ as normally distributed across the population. As a result, the model will estimate two parameters for each of these coefficients: a mean (`par_mu`) and a standard deviation (`par_sigma`).
 
-To estimate the model, first load the **logitr** package:
-
-```{r eval=FALSE}
-library(logitr)
-```
-
 Estimate the model using the `logitr()` function:
 
 ```{r eval=FALSE}
+library(logitr)
+
 mxl_pref <- logitr(
   data     = yogurt,
   choice   = 'choice',
@@ -101,12 +97,6 @@ This example will estimate the following mixed logit model in the WTP space:
 ```
 
 where the parameters $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ have units of dollars and $\lambda$ is the scale parameter. In the example below, we will model $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ as normally distributed across the population. As a result, the model will estimate two parameters for each of these coefficients: a mean (`par_mu`) and a standard deviation (`par_sigma`).
-
-To estimate the model, first load the **logitr** package:
-
-```{r eval=FALSE}
-library(logitr)
-```
 
 Estimate the model using the `logitr()` function:
 

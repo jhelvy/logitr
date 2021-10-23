@@ -1,8 +1,8 @@
 ---
-title: "Predicting Probabilities and Choices from Estimated Models"
+title: "Predicting Probabilities and Outcomes with Estimated Models"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Predicting Probabilities and Choices from Estimated Models}
+  %\VignetteIndexEntry{Predicting Probabilities and Outcomes with Estimated Models}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 bibliography: "`r here::here('vignettes', 'library.bib')`"
@@ -18,11 +18,10 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-library(logitr)
 set.seed(5678)
 ```
 
-Once a model has been estimated, it can be used to predict probabilities and / or choices for a set of alternatives. This vignette demonstrates examples of how to so using the `predict()` method along with an estimated model.
+Once a model has been estimated, it can be used to predict probabilities and / or outcomes for a set of alternatives. This vignette demonstrates examples of how to so using the `predict()` method along with an estimated model.
 
 You can make predictions for any set of alternatives, so long as the columns in the alternatives correspond to estimated coefficients in your model. By default, if no new data are provided via the `newdata` argument, then predictions will be made for the original data used to estimate the model.
 
@@ -35,11 +34,13 @@ Predictions can be made using both preference space and WTP space models, as wel
 In the example below, a preference space MNL model is estimated (`mnl_pref`) and then used to predict probabilities for the data used to estimate the model:
 
 ```{r}
+library(logitr)
+
 mnl_pref <- logitr(
-  data   = yogurt,
-  choice = 'choice',
-  obsID  = 'obsID',
-  pars   = c('price', 'feat', 'brand')
+  data    = yogurt,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c('price', 'feat', 'brand')
 )
 
 probs <- predict(mnl_pref)
@@ -69,7 +70,7 @@ probs_mnl_pref <- predict(
 probs_mnl_pref
 ```
 
-You can also obtain the upper and lower bounds of a confidence interval for predicted probabilities by including the `ci` argument. For example, a 95% CI is obtained with `ci = 0.95`:
+You can also obtain the upper and lower bounds of a confidence interval for predicted probabilities by including the `ci` argument, which are estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. For example, a 95% CI is obtained with `ci = 0.95`:
 
 ```{r}
 probs_mnl_pref <- predict(
@@ -82,19 +83,17 @@ probs_mnl_pref <- predict(
 probs_mnl_pref
 ```
 
-The lower and upper bounds computed reflect a confidence interval estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986].
-
 ## WTP space models
 
-WTP space models estimated using `logitr()` can also be used to predict probabilities. The only additional requirement is that if predictions are being made on a different data set using `newdata`, you must use the `price` argument to specify the column in `newdata` that corresponds to "price". In the example below, a WTP space model is estimated and used to predict probabilities for the same `data` data frame as in the previous examples:
+WTP space models estimated using `logitr()` can also be used to predict probabilities. The only additional requirement is that if predictions are being made on a different data set using the `newdata` argument, you must also specify the `price` argument to identify which column in `newdata` corresponds to "price". In the example below, a WTP space model is estimated and used to predict probabilities for the same `data` data frame as in the previous examples:
 
 ```{r}
 mnl_wtp <- logitr(
-  data       = yogurt,
-  choice     = 'choice',
-  obsID      = 'obsID',
-  pars       = c('feat', 'brand'),
-  price      = 'price',
+  data    = yogurt,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c('feat', 'brand'),
+  price   = 'price',
   modelSpace = 'wtp',
   numMultiStarts = 10
 )
@@ -110,7 +109,7 @@ probs_mnl_wtp <- predict(
 probs_mnl_wtp
 ```
 
-Here is a bar chart comparing the predicted choice probabilities from the preference space and WTP space models. Since both models are equivalent except in different spaces, the predicted choice probabilities are identical:
+Here is a bar chart comparing the predicted probabilities from the preference space and WTP space models. Since both models are equivalent except in different spaces, the predicted probabilities are identical:
 
 ```{r, eval=FALSE}
 library(ggplot2)
@@ -119,9 +118,9 @@ probs <- rbind(probs_mnl_pref, probs_mnl_wtp)
 probs$model <- c(rep("mnl_pref", 8), rep("mnl_wtp", 8))
 probs$alt <- rep(c("dannon", "hiland", "weight", "yoplait"), 4)
 probs$obs <- paste0("Observation ID: ", probs$obsID)
-ggplot(probs, aes(x = alt, y = prob_predict, fill = model)) +
+ggplot(probs, aes(x = alt, y = predicted_prob, fill = model)) +
     geom_bar(stat = 'identity', width = 0.7, position = "dodge") +
-    geom_errorbar(aes(ymin = prob_predict_lower, ymax = prob_predict_upper),
+    geom_errorbar(aes(ymin = predicted_prob_lower, ymax = predicted_prob_upper),
                   width = 0.2, position = position_dodge(width = 0.7)) +
     facet_wrap(vars(obs)) +
     scale_y_continuous(limits = c(0, 1)) +
@@ -133,30 +132,30 @@ ggplot(probs, aes(x = alt, y = prob_predict, fill = model)) +
 knitr::include_graphics('probs.png')
 ```
 
-# Predicting choices
+# Predicting outcomes
 
-You can also use the `predict()` method to predict choices. To do this, set `type = "choices"` (which defaults to `"probs"` for returning predicted probabilities). Again, if no new data are provided for the `newdata` argument, then choices will be predicted for every alternative in the original data used to estimate the model.
+You can also use the `predict()` method to predict outcomes by setting `type = "outcome"` (the default value is `"prob"` for predicting probabilities). If no new data are provided for the `newdata` argument, then outcomes will be predicted for every alternative in the original data used to estimate the model.
 
-In the examples below the `returnData` argument is also set to `TRUE` so that the predicted choices can be compared to the actual ones. Here are two sets of predictions, one using the estimated preference space model and the other using the WTP space model. The predicted choices may vary across different iterations of the same code since they are chosen according to the predicted probabilities, and thus there is a chance other choices may be made.
+In the examples below the `returnData` argument is also set to `TRUE` so that the predicted outcomes can be compared to the actual ones. Here are two sets of predictions, one using the estimated preference space model and the other using the WTP space model. The predicted outcomes may vary across different iterations of the same code since they are chosen according to the predicted probabilities, and thus there is a chance other outcomes may be made.
 
 ```{r}
-choices_mnl_pref <- predict(mnl_pref, type = "choices", returnData = TRUE)
-head(choices_mnl_pref)
+outcomes_mnl_pref <- predict(mnl_pref, type = "outcome", returnData = TRUE)
+head(outcomes_mnl_pref)
 
-choices_mnl_wtp <- predict(mnl_wtp, type = "choices", returnData = TRUE)
-head(choices_mnl_wtp)
+outcomes_mnl_wtp <- predict(mnl_wtp, type = "outcome", returnData = TRUE)
+head(outcomes_mnl_wtp)
 ```
 
 The accuracy of each model can be computed by dividing the number of correctly predicted choices by the total number of choices:
 
 ```{r}
-chosen_pref <- subset(choices_mnl_pref, choice == 1)
-chosen_pref$correct <- chosen_pref$choice == chosen_pref$choice_predict
+chosen_pref <- subset(outcomes_mnl_pref, choice == 1)
+chosen_pref$correct <- chosen_pref$choice == chosen_pref$predicted_outcome
 accuracy_pref <- sum(chosen_pref$correct) / nrow(chosen_pref)
 accuracy_pref
 
-chosen_wtp <- subset(choices_mnl_wtp, choice == 1)
-chosen_wtp$correct <- chosen_wtp$choice == chosen_wtp$choice_predict
+chosen_wtp <- subset(outcomes_mnl_wtp, choice == 1)
+chosen_wtp$correct <- chosen_wtp$choice == chosen_wtp$predicted_outcome
 accuracy_wtp <- sum(chosen_wtp$correct) / nrow(chosen_wtp)
 accuracy_wtp
 ```

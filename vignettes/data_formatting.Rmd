@@ -41,7 +41,7 @@ Variables are modeled as either continuous or discrete based on their data _type
 
 In contrast, categorical variables (i.e. `character` or `factor` type variables) are by default estimated with a coefficient for all but the first level, which serves as the reference level. The default reference level is determined alphabetically, but it can also be set by modifying the factor levels for that variable. For example, the default reference level for the `brand` variable is `"dannon"` as it is alphabetically first. To set `"weight"` as the reference level, the factor levels can be modified using the `factor()` function:
 
-```{r, eval=FALSE}
+```{r}
 yogurt2 <- yogurt
 
 brands <- c("weight", "hiland", "yoplait", "dannon")
@@ -64,7 +64,7 @@ head(yogurt2)
 
 Now I can use those columns as covariates:
 
-```{r, eval=FALSE}
+```{r}
 mnl_pref_dummies <- logitr(
   data    = yogurt2,
   outcome = 'choice',
@@ -72,11 +72,6 @@ mnl_pref_dummies <- logitr(
   pars    = c(
     'price', 'feat', 'brand_yoplait', 'brand_dannon', 'brand_weight')
 )
-```
-```
-Running Model...
-Done!
-```
-```{r}
+
 summary(mnl_pref_dummies)
 ```

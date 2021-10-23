@@ -16,12 +16,6 @@ knitr::opts_chunk$set(
   fig.retina = 3,
   comment = "#>"
 )
-library(logitr)
-# Read in results from already estimated models  so that the
-# examples aren't actually run when building this page, otherwise it'll
-# take much longer to build
-mnl_pref <- readRDS(here::here('inst', 'extdata', 'mnl_pref.Rds'))
-mnl_wtp  <- readRDS(here::here('inst', 'extdata', 'mnl_wtp.Rds'))
 ```
 
 This vignette demonstrates an example of how to use the `logitr()` function to estimate multinomial logit (MNL) models with preference space and WTP space utility parameterizations.
@@ -45,25 +39,17 @@ This example will estimate the following homogeneous multinomial logit model in 
 
 where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ have units of utility.
 
-To estimate the model, first load the **logitr** package:
-
-```{r, eval=FALSE}
-library(logitr)
-```
-
 Estimate the model using the `logitr()` function:
 
-```{r, eval=FALSE}
+```{r}
+library(logitr)
+
 mnl_pref <- logitr(
-  data   = yogurt,
-  choice = 'choice',
-  obsID  = 'obsID',
-  pars   = c('price', 'feat', 'brand')
+  data    = yogurt,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c('price', 'feat', 'brand')
 )
-```
-```
-#> Running Model...
-#> Done!
 ```
 
 Print a summary of the results:
@@ -96,34 +82,20 @@ where the parameters $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ have uni
 
 Estimate the model using the `logitr()` function:
 
-```{r eval=FALSE}
+```{r}
 mnl_wtp <- logitr(
-  data       = yogurt,
-  choice     = 'choice',
-  obsID      = 'obsID',
-  pars       = c('feat', 'brand'),
-  price      = 'price',
+  data    = yogurt,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c('feat', 'brand'),
+  price   = 'price',
   modelSpace = 'wtp',
   # Since WTP space models are non-convex, run a multistart
   numMultiStarts = 10,
   # Use the computed WTP from the preference space model as the starting
   # values for the first run:
-  startVals = wtp_mnl_pref$Estimate)
+  startVals = wtp_mnl_pref$Estimate
 )
-```
-```
-#> Running Multistart 1 of 10...
-#> NOTE: Using user-provided starting values for this run
-#> Running Multistart 2 of 10...
-#> Running Multistart 3 of 10...
-#> Running Multistart 4 of 10...
-#> Running Multistart 5 of 10...
-#> Running Multistart 6 of 10...
-#> Running Multistart 7 of 10...
-#> Running Multistart 8 of 10...
-#> Running Multistart 9 of 10...
-#> Running Multistart 10 of 10...
-#> Done!
 ```
 
 Print a summary of the results:

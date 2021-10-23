@@ -204,7 +204,7 @@ probs <- predict(
 probs
 ```
 
-You can also use the `predict()` method to predict outcomes by setting `type = "outcome"` (the default value is `"prob"` for predicting probabilities). If no new data are provided for the `newdata` argument, then choices will be predicted for every alternative in the original data used to estimate the model. In the example below the `returnData` argument is also set to `TRUE` so that the predicted choices can be compared to the actual ones.
+You can also use the `predict()` method to predict outcomes by setting `type = "outcome"` (the default value is `"prob"` for predicting probabilities). If no new data are provided for the `newdata` argument, then outcomes will be predicted for every alternative in the original data used to estimate the model. In the example below the `returnData` argument is also set to `TRUE` so that the predicted outcomes can be compared to the actual ones.
 
 ```{r}
 outcomes <- predict(

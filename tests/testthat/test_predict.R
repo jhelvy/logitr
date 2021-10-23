@@ -2,10 +2,10 @@ context("predict method")
 library(logitr)
 
 model <- logitr(
-    data   = yogurt,
-    choice = 'choice',
-    obsID  = 'obsID',
-    pars   = c('price', 'feat', 'brand')
+    data    = yogurt,
+    outcome = 'choice',
+    obsID   = 'obsID',
+    pars    = c('price', 'feat', 'brand')
 )
 
 data <- subset(
@@ -25,33 +25,33 @@ test_that("predict() uses newdata if provided", {
 test_that("predict() returns the correct user-specified prediction types", {
   x <- predict(model, newdata = data, obsID = "obsID")
   expect_true(
-    (! "choice_predict" %in% names(x)) &
-    ("prob_predict" %in% names(x))
+    (! "predicted_outcome" %in% names(x)) &
+    ("predicted_prob" %in% names(x))
   )
-  x <- predict(model, newdata = data, obsID = "obsID", type = "probs")
+  x <- predict(model, newdata = data, obsID = "obsID", type = "prob")
   expect_true(
-    (! "choice_predict" %in% names(x)) &
-    ("prob_predict" %in% names(x))
+    (! "predicted_outcome" %in% names(x)) &
+    ("predicted_prob" %in% names(x))
   )
-  x <- predict(model, newdata = data, obsID = "obsID", type = "choices")
+  x <- predict(model, newdata = data, obsID = "obsID", type = "outcome")
   expect_true(
-    ("choice_predict" %in% names(x)) &
-    (! "prob_predict" %in% names(x))
+    ("predicted_outcome" %in% names(x)) &
+    (! "predicted_prob" %in% names(x))
   )
   x <- predict(
     model, newdata = data, obsID = "obsID",
-    type = c("choices", "probs")
+    type = c("outcome", "prob")
   )
   expect_true(
-    ("choice_predict" %in% names(x)) &
-    ("prob_predict" %in% names(x))
+    ("predicted_outcome" %in% names(x)) &
+    ("predicted_prob" %in% names(x))
   )
   x <- predict(
     model, newdata = data, obsID = "obsID",
-    type = c("probs", "choices")
+    type = c("prob", "outcome")
   )
   expect_true(
-    ("choice_predict" %in% names(x)) &
-    ("prob_predict" %in% names(x))
+    ("predicted_outcome" %in% names(x)) &
+    ("predicted_prob" %in% names(x))
   )
 })
