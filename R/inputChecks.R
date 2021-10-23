@@ -199,15 +199,21 @@ predictInputsCheck <- function(object, newdata, obsID, price, type, ci) {
       }
     }
   }
-  typeTest <- identical(type, "probs") |
-    identical(type, "choices") |
-    identical(type, c("probs", "choices")) |
-    identical(type, c("choices", "probs"))
+  if ("probs" %in% type) {
+    stop('Use "prob" instead of "probs" in the type argument')
+  }
+  if ("outcomes" %in% type) {
+    stop('Use "outcome" instead of "outcomes" in the type argument')
+  }
+  typeTest <- identical(type, "prob") |
+    identical(type, "outcome") |
+    identical(type, c("prob", "outcome")) |
+    identical(type, c("outcome", "prob"))
   if (!typeTest) {
     stop(
-      'type must be a vector containing "probs" (for returning ',
-      'predicted probabilities) and / or "choices" (for returning predicted ',
-      'choices)')
+      'type must be a vector containing "prob" (for returning ',
+      'predicted probabilities) and / or "outcome" (for returning predicted ',
+      'outcomes)')
   }
   if (!is.null(ci)) {
     ci_test <- (ci < 1) & (ci > 0)

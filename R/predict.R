@@ -1,10 +1,10 @@
 # ============================================================================
-# Functions for predicting choices and choice probabilities
+# Functions for predicting probabilities and outcomes
 # ============================================================================
 
-#' Predict probabilities and / or choices
+#' Predict probabilities and / or outcomes
 #'
-#' This method is used for computing predicted probabilities and / or choices
+#' This method is used for computing predicted probabilities and / or outcomes
 #' for either the data used for model estimation or a new data set consisting
 #' of a single or multiple sets of alternatives.
 #' @keywords logitr probabilities predict
@@ -21,12 +21,12 @@
 #' @param price The name of the column that identifies the price variable.
 #' Required if the `object` is a WTP space model and if newdata != NULL.
 #' Defaults to `NULL`.
-#' @param type A character vector defining what to predict: `probs` for
-#' probabilities, `choices` for choices. If you want both outputs, use
-#' `c("probs", "choices")`. Choices are predicted randomly according to the
-#' predicted probabilities. Defaults to `"probs"`.
+#' @param type A character vector defining what to predict: `prob` for
+#' probabilities, `outcomes` for outcomes. If you want both outputs, use
+#' `c("prob", "outcome")`. Outcomes are predicted randomly according to the
+#' predicted probabilities. Defaults to `"prob"`.
 #' @param returnData If `TRUE` the data is also returned, otherwise only the
-#' predicted values ("probs" and / or  "choices") are returned.
+#' predicted values ("prob" and / or  "outcome") are returned.
 #' Defaults to `FALSE`.
 #' @param ci If a confidence interval (CI) for the predicted probabilities is
 #' desired, set `ci` to a number between 0 and 1 to define the CI sensitivity.
@@ -35,7 +35,7 @@
 #' @param numDrawsCI The number of draws to use in simulating uncertainty
 #' for the computed CI. Defaults to 10^3.
 #' @param ... further arguments.
-#' @return A data frame of predicted probabilities and / or choices.
+#' @return A data frame of predicted probabilities and / or outcomes.
 #' @export
 #' @examples
 #' library(logitr)
@@ -48,7 +48,7 @@
 #'   pars    = c("price", "feat", "brand")
 #' )
 #'
-#' # Predict probabilities and / or choices
+#' # Predict probabilities and / or outcomes
 #'
 #' # Predict probabilities for each alternative in the model data
 #' probs <- predict(mnl_pref)
@@ -64,17 +64,17 @@
 #' # Predict probabilities using the estimated model
 #' predict(mnl_pref, newdata = data, obsID = "obsID")
 #'
-#' # Predict choices
-#' predict(mnl_pref, newdata = data, obsID = "obsID", type = "choices")
+#' # Predict outcomes
+#' predict(mnl_pref, newdata = data, obsID = "obsID", type = "outcome")
 #'
-#' # Predict choices and probabilities
-#' predict(mnl_pref, newdata = data, obsID = "obsID", type = c("probs", "choices"))
+#' # Predict outcomes and probabilities
+#' predict(mnl_pref, newdata = data, obsID = "obsID", type = c("prob", "outcome"))
 predict.logitr <- function(
   object,
   newdata    = NULL,
   obsID      = NULL,
   price      = NULL,
-  type       = "probs",
+  type       = "prob",
   returnData = FALSE,
   ci         = NULL,
   numDrawsCI = 10^3,
@@ -97,13 +97,13 @@ predict.logitr <- function(
   }
 
   # Decide what to predict
-  predict_choice <- FALSE
-  predict_probs <- TRUE
-  if ("choices" %in% type) {
-    predict_choice <- TRUE
+  predict_outcome <- FALSE
+  predict_prob <- TRUE
+  if ("outcome" %in% type) {
+    predict_outcome <- TRUE
   }
-  if (! ("probs" %in% type)) {
-    predict_probs <- FALSE
+  if (! ("prob" %in% type)) {
+    predict_prob <- FALSE
     ci <- NULL
   }
 
@@ -114,11 +114,11 @@ predict.logitr <- function(
     result <- getMnlProbs(
        object, data, obsID, returnData, ci, numDrawsCI, getV, getVDraws)
   }
-  if (predict_choice) {
-    result <- addChoices(result, obsID)
+  if (predict_outcome) {
+    result <- addOutcomes(result, obsID)
   }
-  if (!predict_probs) { # Remove prob_predict if "probs" not in type
-    result$prob_predict <- NULL
+  if (!predict_prob) { # Remove predicted_prob if "prob" not in type
+    result$predicted_prob <- NULL
   }
   if (returnData) {
     result <- addData(object, result, data)
@@ -222,15 +222,15 @@ predictLogitDraws <- function(coefs, object, data, getVDraws) {
 
 formatProbsMean <- function(probs_mean, obsID, obsIDName) {
   probs <- as.data.frame(probs_mean)
-  colnames(probs) <- "prob_predict"
+  colnames(probs) <- "predicted_prob"
   probs[obsIDName] <- obsID
-  return(probs[c(obsIDName, "prob_predict")])
+  return(probs[c(obsIDName, "predicted_prob")])
 }
 
 formatProbsUnc <- function(probs_mean, logitUncDraws, obsID, obsIDName, ci) {
   probs_bounds <- getCI(logitUncDraws, ci)
-  colnames(probs_bounds) <- paste0("prob_predict_", colnames(probs_bounds))
-  probs <- cbind(prob_predict = probs_mean, probs_bounds)
+  colnames(probs_bounds) <- paste0("predicted_prob_", colnames(probs_bounds))
+  probs <- cbind(predicted_prob = probs_mean, probs_bounds)
   names <- c(obsIDName, colnames(probs))
   probs[obsIDName] <- obsID
   return(probs[names])
@@ -267,19 +267,19 @@ quantile_speed <- function(x, probs = c(0.1, 0.9), na.rm = FALSE) {
 
 }
 
-addChoices <- function(probs, obsID) {
-  choices <- split(probs, probs[obsID])
-  choices <- lapply(choices, simChoice)
-  probs$choice_predict <- do.call(rbind, choices)$choice_predict
+addOutcomes <- function(probs, obsID) {
+  outcomes <- split(probs, probs[obsID])
+  outcomes <- lapply(outcomes, simOutcome)
+  probs$predicted_outcome <- do.call(rbind, outcomes)$predicted_outcome
   return(probs)
 }
 
-# Simulate choices based on probabilities
-simChoice <- function(df) {
-  choices <- seq_len(nrow(df))
-  result <- 0*choices
-  result[sample(x = choices, size = 1, prob = df$prob_predict)] <- 1
-  df$choice_predict <- result
+# Simulate outcomes based on probabilities
+simOutcome <- function(df) {
+  outcomes <- seq_len(nrow(df))
+  result <- 0*outcomes
+  result[sample(x = outcomes, size = 1, prob = df$predicted_prob)] <- 1
+  df$predicted_outcome <- result
   return(df)
 }
 

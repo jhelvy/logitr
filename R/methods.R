@@ -373,11 +373,11 @@ print.logitr_wtp <- function (
 #' fitted(mnl_pref)
 fitted.logitr <- function(object, probs = NULL, ...) {
   if (is.null(probs)) {
-    probs <- stats::predict(object, type = "probs")
+    probs <- stats::predict(object, type = "prob")
   }
   outcome <- object$data$outcome
   fitted <- probs[which(outcome == 1),]
-  names(fitted)[which(names(fitted) == 'prob_predict')] <- "fitted_value"
+  names(fitted)[which(names(fitted) == 'predicted_prob')] <- "fitted_value"
   return(fitted)
 }
 
@@ -414,7 +414,8 @@ residuals.logitr <- function(object, fitted = NULL, ...) {
   }
   reps <- table(object$data$obsID)
   residuals <- fitted[rep(seq_along(reps), reps),]
-  residuals$residual <- object$data$outcome - residuals$fitted_value
+  resids <- object$data$outcome - residuals$fitted_value
   residuals$fitted_value <- NULL
+  residuals$residual <- as.vector(resids)
   return(residuals)
 }
