@@ -1,12 +1,13 @@
-# logitr 0.3.2
+# logitr 0.4.0
 
 ## Larger changes:
 
-- The `predictProbs()` and `predictChoices()` functions were depreciated.
 - A new `predict.logitr()` method was added for making probability and choice predictions from logitr class objects.
+- The `predictProbs()` and `predictChoices()` functions were depreciated.
 - Added new `fitted.logitr()` and `residuals.logitr()` methods.
 - Added optional `predict` argument to the main `logitr()` function which controls whether predicted probabilities, fitted.values, and residuals are included in the returned object. Default setting is TRUE.
 - Changed the name of the coefficients vector in the returned object from "coef" to "coefficients" to be consistent with other packages.
+- Changed the argument name from "choice" to "outcome" to be more general
 
 ## Bugs:
 
