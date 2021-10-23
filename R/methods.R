@@ -6,7 +6,8 @@
 #' @aliases logLik.logitr terms.logitr coef.logitr coef.summary.logitr
 #' summary.logitr print.logitr print.summary.logitr
 #' @param x is an object of class `logitr`.
-#' @param object is an object of class `logitr`.
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
 #' @param digits the number of digits for printing, defaults to `3`.
 #' @param width the width of the printing.
 #' @param ... further arguments.
@@ -227,7 +228,8 @@ getExitMessage <- function(x) {
 
 #' Extract standard errors
 #'
-#' @param object is an object of class `logitr`.
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
 #' @param ... further arguments.
 #' @export
 se <- function(object, ...) {
@@ -236,7 +238,8 @@ se <- function(object, ...) {
 
 #' Extract standard errors
 #'
-#' @param object is an object of class `logitr`.
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
 #' @param ... further arguments.
 #' @export
 se.logitr <- function(object, ...) {
@@ -247,7 +250,8 @@ se.logitr <- function(object, ...) {
 #'
 #' Returns the variance-covariance matrix of the main parameters of a fitted
 #' model object.
-#' @param object is an object of class `logitr`.
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
 #' @param ... further arguments.
 #' @export
 vcov.logitr <- function(object, ...) {
@@ -345,7 +349,8 @@ print.logitr_wtp <- function (
 #' Returns fitted values from an object of class `logitr`.
 #' @keywords logitr fitted fitted.values
 #'
-#' @param object is an object of class `logitr`.
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
 #' @param probs Predicted probabilities for an object of class `logitr` to use
 #' in computing fitted values Defaults to `NULL`.
 #' @param ... further arguments.
@@ -381,7 +386,8 @@ fitted.logitr <- function(object, probs = NULL, ...) {
 #' Returns model residuals from an object of class `logitr`.
 #' @keywords logitr residuals resid
 #'
-#' @param object is an object of class `logitr`.
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
 #' @param fitted Fitted values for an object of class `logitr` to use in
 #' computing residuals. Defaults to `NULL`.
 #' @param ... further arguments.

@@ -7,8 +7,8 @@
 #' Returns the computed WTP from a preference space model.
 #' @keywords logitr wtp
 #'
-#' @param object The output of a "preference space" model estimated
-#' using the `logitr()` function.
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
 #' @param price The name of the parameter that identifies price.
 #'
 #' @details
@@ -40,8 +40,8 @@ wtp <- function(object, price) {
 #' Returns the computed WTP from a preference space model.
 #' @keywords logitr wtp
 #'
-#' @param object The output of a "preference space" model estimated
-#' using the `logitr()` function.
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
 #' @param price The name of the parameter that identifies price.
 #'
 #' @details
