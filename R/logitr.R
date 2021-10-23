@@ -73,8 +73,10 @@
 #' residuals are not included in the returned object. Defaults to `TRUE`.
 #' @param options A list of options for controlling the `nloptr()` optimization.
 #' Run `nloptr::nloptr.print.options()` for details.
+#' @param choice No longer used as of v0.4.0 - if provided, this is passed
+#' to the `outcome` argument and a warning is displayed.
 #' @param choiceName No longer used as of v0.2.3 - if provided, this is passed
-#' to the `choice` argument and a warning is displayed.
+#' to the `outcome` argument and a warning is displayed.
 #' @param obsIDName No longer used as of v0.2.3 - if provided, this is passed
 #' to the `obsID` argument and a warning is displayed.
 #' @param parNames No longer used as of v0.2.3 - if provided, this is passed
@@ -204,6 +206,7 @@ logitr <- function(
     maxeval     = 1000,
     algorithm   = "NLOPT_LD_LBFGS"
   ),
+  choice, # Outdated argument names as of v0.4.0
   parNames, # Outdated argument names as of v0.2.3
   choiceName,
   obsIDName,
@@ -219,31 +222,53 @@ logitr <- function(
   calls <- names(sapply(call, deparse))[-1]
   if (any("parNames" %in% calls)) {
     pars <- parNames
-    warning("Use 'pars' instead of 'parNames'")
+    warning(
+      "The 'parNames' argument is outdate as of v0.2.3. Use 'pars' instead"
+    )
   }
   if (any("choiceName" %in% calls)) {
-    choice <- choiceName
-    warning("Use 'outcome' instead of 'choiceName'")
+    outcome <- choiceName
+    warning(
+      "The 'choiceName' argument is outdate as of v0.2.3. Use 'outcome' instead"
+    )
+  }
+  if (any("choice" %in% calls)) {
+    outcome <- choice
+    warning(
+      "The 'choice' argument is outdate as of v0.4.0. Use 'outcome' instead"
+    )
   }
   if (any("obsIDName" %in% calls)) {
     obsID <- obsIDName
-    warning("Use 'obsID' instead of 'obsIDName'")
+    warning(
+      "The 'obsIDName' argument is outdate as of v0.2.3. Use 'obsID' instead"
+    )
   }
   if (any("priceName" %in% calls)) {
     price <- priceName
-    warning("Use 'price' instead of 'priceName'")
+    warning(
+      "The 'priceName' argument is outdate as of v0.2.3. Use 'price' instead"
+    )
   }
   if (any("weightsName" %in% calls)) {
     weights <- weightsName
-    warning("Use 'weights' instead of 'weightsName'")
+    warning(
+      "The 'weightsName' argument is outdate as of v0.2.3. Use 'weights' ",
+      "instead"
+    )
   }
   if (any("clusterName" %in% calls)) {
     clusterID <- clusterName
-    warning("Use 'clusterID' instead of 'clusterName'")
+    warning(
+      "The 'clusterName' argument is outdate as of v0.2.3. Use 'clusterID' ",
+      "instead"
+    )
   }
   if (any("cluster" %in% calls)) {
     clusterID <- cluster
-    warning("Use 'clusterID' instead of 'cluster'")
+    warning(
+      "The 'cluster' argument is outdate as of v0.2.3. Use 'clusterID' instead"
+    )
   }
 
   data <- as.data.frame(data) # tibbles break things
