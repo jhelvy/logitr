@@ -191,7 +191,7 @@ probs
 
 The resulting `probs` data frame contains the expected probabilities for each alternative. The lower and upper predictions reflect a 95% confidence interval (controlled by the `ci` argument), which are estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. The default is `ci = NULL`, in which case no CI predictions are made.
 
-WTP space models can also be used to make predictions. The only additional requirement is that if predictions are being made on a different data set using the `newdata` argument, you must also specify the `price` argument to identify which column in `newdata` corresponds to "price":
+WTP space models can also be used to predict probabilities, but the `price` argument must be specified for predictions being made on a new data set:
 
 ```{r}
 probs <- predict(

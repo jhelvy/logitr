@@ -47,14 +47,14 @@ probs <- predict(mnl_pref)
 head(probs)
 ```
 
-The `predict()` method returns a data frame containing the observation ID as well as the predicted probabilities. Should you want the original data to also be returned in the data frame, set `returnData = TRUE`:
+The `predict()` method returns a data frame containing the observation ID as well as the predicted probabilities. The original data can also be returned in the data frame by setting `returnData = TRUE`:
 
 ```{r}
 probs <- predict(mnl_pref, returnData = TRUE)
 head(probs)
 ```
 
-To make predictions for a new set of alternatives, use the `newdata` argument. As an example, we can use two of the choice observations from the `yogurt` dataset:
+To make predictions for a new set of alternatives, use the `newdata` argument. The example below makes predictions for just two of the choice observations from the `yogurt` dataset:
 
 ```{r}
 data <- subset(
@@ -70,7 +70,7 @@ probs_mnl_pref <- predict(
 probs_mnl_pref
 ```
 
-You can also obtain the upper and lower bounds of a confidence interval for predicted probabilities by including the `ci` argument, which are estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. For example, a 95% CI is obtained with `ci = 0.95`:
+The upper and lower bounds of a confidence interval for predicted probabilities can also be obtained by including the `ci` argument. For example, a 95% CI is obtained with `ci = 0.95`:
 
 ```{r}
 probs_mnl_pref <- predict(
@@ -83,9 +83,11 @@ probs_mnl_pref <- predict(
 probs_mnl_pref
 ```
 
+These bounds are estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986].
+
 ## WTP space models
 
-WTP space models estimated using `logitr()` can also be used to predict probabilities. The only additional requirement is that if predictions are being made on a different data set using the `newdata` argument, you must also specify the `price` argument to identify which column in `newdata` corresponds to "price". In the example below, a WTP space model is estimated and used to predict probabilities for the same `data` data frame as in the previous examples:
+WTP space models can also be used to predict probabilities, but the `price` argument must be specified for predictions being made on a new data set. In the example below, a WTP space model is estimated and used to predict probabilities for the same `data` data frame as in the previous examples:
 
 ```{r}
 mnl_wtp <- logitr(
@@ -134,27 +136,27 @@ knitr::include_graphics('probs.png')
 
 # Predicting outcomes
 
-You can also use the `predict()` method to predict outcomes by setting `type = "outcome"` (the default value is `"prob"` for predicting probabilities). If no new data are provided for the `newdata` argument, then outcomes will be predicted for every alternative in the original data used to estimate the model.
+The `predict()` method can also be used to predict outcomes by setting `type = "outcome"` (the default is `"prob"` for predicting probabilities). If no new data are provided for the `newdata` argument, then outcomes will be predicted for every alternative in the original data used to estimate the model.
 
-In the examples below the `returnData` argument is also set to `TRUE` so that the predicted outcomes can be compared to the actual ones. Here are two sets of predictions, one using the estimated preference space model and the other using the WTP space model. The predicted outcomes may vary across different iterations of the same code since they are chosen according to the predicted probabilities, and thus there is a chance other outcomes may be made.
+In the examples below, outcomes are predicted using the estimated preference space model and using the WTP space model. The `returnData` argument is also set to `TRUE` so that the predicted outcomes can be compared to the actual choices made:
 
 ```{r}
-outcomes_mnl_pref <- predict(mnl_pref, type = "outcome", returnData = TRUE)
-head(outcomes_mnl_pref)
+outcomes_pref <- predict(mnl_pref, type = "outcome", returnData = TRUE)
+head(outcomes_pref)
 
-outcomes_mnl_wtp <- predict(mnl_wtp, type = "outcome", returnData = TRUE)
-head(outcomes_mnl_wtp)
+outcomes_wtp <- predict(mnl_wtp, type = "outcome", returnData = TRUE)
+head(outcomes_wtp)
 ```
 
 The accuracy of each model can be computed by dividing the number of correctly predicted choices by the total number of choices:
 
 ```{r}
-chosen_pref <- subset(outcomes_mnl_pref, choice == 1)
+chosen_pref <- subset(outcomes_pref, choice == 1)
 chosen_pref$correct <- chosen_pref$choice == chosen_pref$predicted_outcome
 accuracy_pref <- sum(chosen_pref$correct) / nrow(chosen_pref)
 accuracy_pref
 
-chosen_wtp <- subset(outcomes_mnl_wtp, choice == 1)
+chosen_wtp <- subset(outcomes_wtp, choice == 1)
 chosen_wtp$correct <- chosen_wtp$choice == chosen_wtp$predicted_outcome
 accuracy_wtp <- sum(chosen_wtp$correct) / nrow(chosen_wtp)
 accuracy_wtp
