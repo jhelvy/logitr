@@ -29,7 +29,7 @@ The ["Data Formatting and Encoding"](data_formatting.html) vignette has more det
 
 ## Model specification interface
 
-Models are specified and estimated using the `logitr()` function. The `data` argument should be set to the data frame containing the data, and the `outcome` and `obsID` arguments should be set to the column names in the data frame that correspond to the outcome dummy variable column and the observation ID column, respectively. All variables to be used as model covariates should be provided as a vector of column names to the `pars` argument. Each variable in the vector is additively included as a covariate in the utility model, with the interpretation that they represent utilities in preference space models and WTPs in a WTP space model.
+Models are specified and estimated using the `logitr()` function. The `data` argument should be set to the data frame containing the data, and the `outcome` and `obsID` arguments should be set to the column names in the data frame that correspond to the dummy-coded outcome (choice) variable and the observation ID variable, respectively. All variables to be used as model covariates should be provided as a vector of column names to the `pars` argument. Each variable in the vector is additively included as a covariate in the utility model, with the interpretation that they represent utilities in preference space models and WTPs in a WTP space model.
 
 For example, consider a preference space model where the utility for yogurt is given by the following utility model:
 
