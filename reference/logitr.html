@@ -90,7 +90,7 @@ function to minimize the negative log-likelihood function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -134,10 +134,7 @@ function to minimize the negative log-likelihood function." />
       <a href="../articles/mnl_models_weighted.html">Estimating Weighted Logit Models</a>
     </li>
     <li>
-      <a href="../articles/predict_probs.html">Predicting Choice Probabilities from Estimated Models</a>
-    </li>
-    <li>
-      <a href="../articles/predict_choices.html">Predicting Choices from Estimated Models</a>
+      <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
   </ul>
 </li>
@@ -182,7 +179,7 @@ function to minimize the negative log-likelihood function.</p>
 
     <pre class="usage"><span class='fu'>logitr</span><span class='op'>(</span>
   <span class='va'>data</span>,
-  <span class='va'>choice</span>,
+  <span class='va'>outcome</span>,
   <span class='va'>obsID</span>,
   <span class='va'>pars</span>,
   price <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -201,8 +198,10 @@ function to minimize the negative log-likelihood function.</p>
   standardDraws <span class='op'>=</span> <span class='cn'>NULL</span>,
   numDraws <span class='op'>=</span> <span class='fl'>50</span>,
   vcov <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  predict <span class='op'>=</span> <span class='cn'>TRUE</span>,
   options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>print_level <span class='op'>=</span> <span class='fl'>0</span>, xtol_rel <span class='op'>=</span> <span class='fl'>1e-06</span>, xtol_abs <span class='op'>=</span> <span class='fl'>1e-06</span>, ftol_rel <span class='op'>=</span> <span class='fl'>1e-06</span>,
     ftol_abs <span class='op'>=</span> <span class='fl'>1e-06</span>, maxeval <span class='op'>=</span> <span class='fl'>1000</span>, algorithm <span class='op'>=</span> <span class='st'>"NLOPT_LD_LBFGS"</span><span class='op'>)</span>,
+  <span class='va'>choice</span>,
   <span class='va'>parNames</span>,
   <span class='va'>choiceName</span>,
   <span class='va'>obsIDName</span>,
@@ -217,16 +216,16 @@ function to minimize the negative log-likelihood function.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>The choice data, formatted as a <code>data.frame</code> object.</p></td>
+      <td><p>The data, formatted as a <code>data.frame</code> object.</p></td>
     </tr>
     <tr>
-      <th>choice</th>
-      <td><p>The name of the column that identifies the choice variable.</p></td>
+      <th>outcome</th>
+      <td><p>The name of the column that identifies the outcome variable,
+which should be coded with a <code>1</code> for <code>TRUE</code> and <code>0</code> for <code>FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>obsID</th>
-      <td><p>The name of the column that identifies each choice
-observation.</p></td>
+      <td><p>The name of the column that identifies each observation.</p></td>
     </tr>
     <tr>
       <th>pars</th>
@@ -332,9 +331,19 @@ matrix and coefficient standard errors in the returned object.
 Defaults to <code>FALSE</code>.</p></td>
     </tr>
     <tr>
+      <th>predict</th>
+      <td><p>If <code>FALSE</code>, predicted probabilities, fitted values, and
+residuals are not included in the returned object. Defaults to <code>TRUE</code>.</p></td>
+    </tr>
+    <tr>
       <th>options</th>
       <td><p>A list of options for controlling the <code>nloptr()</code> optimization.
 Run <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for details.</p></td>
+    </tr>
+    <tr>
+      <th>choice</th>
+      <td><p>No longer used as of v0.4.0 - if provided, this is passed
+to the <code>outcome</code> argument and a warning is displayed.</p></td>
     </tr>
     <tr>
       <th>parNames</th>
@@ -344,7 +353,7 @@ to the <code>pars</code> argument and a warning is displayed.</p></td>
     <tr>
       <th>choiceName</th>
       <td><p>No longer used as of v0.2.3 - if provided, this is passed
-to the <code>choice</code> argument and a warning is displayed.</p></td>
+to the <code>outcome</code> argument and a warning is displayed.</p></td>
     </tr>
     <tr>
       <th>obsIDName</th>
@@ -377,11 +386,14 @@ to the <code>clusterID</code> argument and a warning is displayed.</p></td>
 
     <p>The function returns a list object containing the following objects.</p><table class='table'>
 <tr><td>Value</td><td>Description</td></tr>
-<tr><td><code>coef</code></td><td>The model coefficients at convergence.</td></tr>
+<tr><td><code>coefficients</code></td><td>The model coefficients at convergence.</td></tr>
 <tr><td><code>logLik</code></td><td>The log-likelihood value at convergence.</td></tr>
 <tr><td><code>nullLogLik</code></td><td>The null log-likelihood value (if all coefficients are 0).</td></tr>
 <tr><td><code>gradient</code></td><td>The gradient of the log-likelihood at convergence.</td></tr>
 <tr><td><code>hessian</code></td><td>The hessian of the log-likelihood at convergence.</td></tr>
+<tr><td><code>probabilities</code></td><td>Predicted probabilities. Not returned if <code>predict = FALSE</code>.</td></tr>
+<tr><td><code>fitted.values</code></td><td>Fitted values. Not returned if <code>predict = FALSE</code>.</td></tr>
+<tr><td><code>residuals</code></td><td>Residuals. Not returned if <code>predict = FALSE</code>.</td></tr>
 <tr><td><code>startPars</code></td><td>The starting values used.</td></tr>
 <tr><td><code>multistartNumber</code></td><td>The multistart run number for this model.</td></tr>
 <tr><td><code>multistartSummary</code></td><td>A summary of the log-likelihood values for each multistart run (if more than one multistart was used).</td></tr>
@@ -394,12 +406,12 @@ to the <code>clusterID</code> argument and a warning is displayed.</p></td>
 <tr><td><code>data</code></td><td>A list of the original data provided to <code>logitr()</code> broken up into components used during model estimation.</td></tr>
 <tr><td><code>numObs</code></td><td>The number of observations.</td></tr>
 <tr><td><code>numParams</code></td><td>The number of model parameters.</td></tr>
-<tr><td><code>freq</code></td><td>The frequency counts of each choice alternative.</td></tr>
+<tr><td><code>freq</code></td><td>The frequency counts of each alternative.</td></tr>
 <tr><td><code>modelType</code></td><td>The model type, <code>'mnl'</code> for multinomial logit or <code>'mxl'</code> for mixed logit.</td></tr>
 <tr><td><code>weightsUsed</code></td><td><code>TRUE</code> or <code>FALSE</code> for whether weights were used in the model.</td></tr>
 <tr><td><code>numClusters</code></td><td>The number of clusters.</td></tr>
 <tr><td><code>parSetup</code></td><td>A summary of the distributional assumptions on each model parameter (<code>"f"</code>="fixed", <code>"n"</code>="normal distribution", <code>"ln"</code>="log-normal distribution").</td></tr>
-<tr><td><code>parIDs</code></td><td>A list identifying the indices of each parameter in <code>coef</code> by a variety of types.</td></tr>
+<tr><td><code>parIDs</code></td><td>A list identifying the indices of each parameter in <code>coefficients</code> by a variety of types.</td></tr>
 <tr><td><code>scaleFactors</code></td><td>A vector of the scaling factors used to scale each coefficient during estimation.</td></tr>
 <tr><td><code>standardDraws</code></td><td>The draws used during maximum simulated likelihood (for MXL models).</td></tr>
 <tr><td><code>options</code></td><td>A list of options for controlling the <code>nloptr()</code> optimization. Run <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nloptr::nloptr.print.options()</a></code> for details.</td></tr>
@@ -432,16 +444,16 @@ Run <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nlo
 
 <span class='co'># Estimate a MNL model in the Preference space</span>
 <span class='va'>mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'>logitr</span><span class='op'>(</span>
-  data   <span class='op'>=</span> <span class='va'>yogurt</span>,
-  choice <span class='op'>=</span> <span class='st'>"choice"</span>,
-  obsID  <span class='op'>=</span> <span class='st'>"obsID"</span>,
-  pars   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
+  data    <span class='op'>=</span> <span class='va'>yogurt</span>,
+  outcome <span class='op'>=</span> <span class='st'>"choice"</span>,
+  obsID   <span class='op'>=</span> <span class='st'>"obsID"</span>,
+  pars    <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
 <span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
 <span class='co'># Estimate a MNL model in the WTP space, using a 10-run multistart</span>
 <span class='va'>mnl_wtp</span> <span class='op'>&lt;-</span> <span class='fu'>logitr</span><span class='op'>(</span>
   data           <span class='op'>=</span> <span class='va'>yogurt</span>,
-  choice         <span class='op'>=</span> <span class='st'>"choice"</span>,
+  outcome        <span class='op'>=</span> <span class='st'>"choice"</span>,
   obsID          <span class='op'>=</span> <span class='st'>"obsID"</span>,
   pars           <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>,
   price          <span class='op'>=</span> <span class='st'>"price"</span>,
@@ -449,13 +461,13 @@ Run <code><a href='https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html'>nlo
   numMultiStarts <span class='op'>=</span> <span class='fl'>10</span>
 <span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Running Multistart 1 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 2 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 3 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 4 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 5 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 6 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 7 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 8 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 9 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Running Multistart 10 of 10...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
-<span class='co'># Estimate a MXL model in the Preference space with "feat" and "brand"</span>
-<span class='co'># following normal distributions</span>
+<span class='co'># Estimate a MXL model in the Preference space with "feat"</span>
+<span class='co'># following a normal distribution</span>
 <span class='va'>mxl_pref</span> <span class='op'>&lt;-</span> <span class='fu'>logitr</span><span class='op'>(</span>
-  data   <span class='op'>=</span> <span class='va'>yogurt</span>,
-  choice <span class='op'>=</span> <span class='st'>"choice"</span>,
-  obsID  <span class='op'>=</span> <span class='st'>"obsID"</span>,
-  pars   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>,
+  data     <span class='op'>=</span> <span class='va'>yogurt</span>,
+  outcome  <span class='op'>=</span> <span class='st'>"choice"</span>,
+  obsID    <span class='op'>=</span> <span class='st'>"obsID"</span>,
+  pars     <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>,
   randPars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>feat <span class='op'>=</span> <span class='st'>"n"</span>, brand <span class='op'>=</span> <span class='st'>"n"</span><span class='op'>)</span>
 <span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div></pre>

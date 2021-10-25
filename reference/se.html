@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get standard errors — se • logitr</title>
+<title>Extract standard errors — se • logitr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Get standard errors — se" />
-<meta property="og:description" content="Get standard errors" />
+<meta property="og:title" content="Extract standard errors — se" />
+<meta property="og:description" content="Extract standard errors" />
 <meta property="og:image" content="https://jhelvy.github.io/logitr/reference/figures/logo.png" />
 <meta property="og:image:alt" content="Logo for the logitr package" />
 <meta name="twitter:card" content="summary" />
@@ -84,7 +84,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -128,10 +128,7 @@
       <a href="../articles/mnl_models_weighted.html">Estimating Weighted Logit Models</a>
     </li>
     <li>
-      <a href="../articles/predict_probs.html">Predicting Choice Probabilities from Estimated Models</a>
-    </li>
-    <li>
-      <a href="../articles/predict_choices.html">Predicting Choices from Estimated Models</a>
+      <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
   </ul>
 </li>
@@ -159,13 +156,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get standard errors</h1>
+    <h1>Extract standard errors</h1>
     <small class="dont-index">Source: <a href='https://github.com/jhelvy/logitr/blob/master/R/methods.R'><code>R/methods.R</code></a></small>
     <div class="hidden name"><code>se.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Get standard errors</p>
+    <p>Extract standard errors</p>
     </div>
 
     <pre class="usage"><span class='fu'>se</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -175,7 +172,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>is an object of class <code>logitr</code>.</p></td>
+      <td><p>is an object of class <code>logitr</code> (a model estimated using
+the 'logitr()` function).</p></td>
     </tr>
     <tr>
       <th>...</th>

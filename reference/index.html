@@ -83,7 +83,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -127,10 +127,7 @@
       <a href="../articles/mnl_models_weighted.html">Estimating Weighted Logit Models</a>
     </li>
     <li>
-      <a href="../articles/predict_probs.html">Predicting Choice Probabilities from Estimated Models</a>
-    </li>
-    <li>
-      <a href="../articles/predict_choices.html">Predicting Choices from Estimated Models</a>
+      <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
   </ul>
 </li>
@@ -224,9 +221,33 @@ variables.</p></td>
       <tr>
         
         <td>
-          <p><code><a href="miscmethods.logitr.html">logLik(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">terms(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">coef(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">coef(<i>&lt;summary.logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">summary(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">print(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">print(<i>&lt;summary.logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">se(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">vcov(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">print(<i>&lt;logitr_wtp&gt;</i>)</a></code> </p>
+          <p><code><a href="miscmethods.logitr.html">logLik(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">terms(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">coef(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">coef(<i>&lt;summary.logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">summary(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">print(<i>&lt;logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">print(<i>&lt;summary.logitr&gt;</i>)</a></code> <code><a href="miscmethods.logitr.html">print(<i>&lt;logitr_wtp&gt;</i>)</a></code> </p>
         </td>
         <td><p>Methods for logitr objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="se.logitr.html">se(<i>&lt;logitr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract standard errors</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="vcov.logitr.html">vcov(<i>&lt;logitr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Calculate the variance-covariance matrix</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fitted.logitr.html">fitted(<i>&lt;logitr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract Model Fitted Values</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="residuals.logitr.html">residuals(<i>&lt;logitr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract Model Residuals</p></td>
       </tr><tr>
         
         <td>
@@ -251,7 +272,7 @@ variables.</p></td>
         <td>
           <p><code><a href="wtp.html">wtp()</a></code> </p>
         </td>
-        <td><p>Get WTP from a preference space model</p></td>
+        <td><p>Get WTP estimates a preference space model</p></td>
       </tr><tr>
         
         <td>
@@ -262,8 +283,8 @@ variables.</p></td>
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-predicting-choices-probabilities" class="hasAnchor"><a href="#section-predicting-choices-probabilities" class="anchor"></a>Predicting Choices &amp; Probabilities</h2>
-          <p class="section-desc"><p>Functions for predicting choices and choice probabilities for a set of alternatives.</p></p>
+          <h2 id="section-predicting-probabilities-outcomes" class="hasAnchor"><a href="#section-predicting-probabilities-outcomes" class="anchor"></a>Predicting Probabilities &amp; Outcomes</h2>
+          <p class="section-desc"><p>Functions for predicting probabilities and outcomes.</p></p>
         </th>
       </tr>
       
@@ -274,15 +295,9 @@ variables.</p></td>
       <tr>
         
         <td>
-          <p><code><a href="predictChoices.html">predictChoices()</a></code> </p>
+          <p><code><a href="predict.logitr.html">predict(<i>&lt;logitr&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Predict choices</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="predictProbs.html">predictProbs()</a></code> </p>
-        </td>
-        <td><p>Predict expected choice probabilities</p></td>
+        <td><p>Predict probabilities and / or outcomes</p></td>
       </tr>
     </tbody><tbody>
       <tr>

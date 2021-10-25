@@ -85,7 +85,7 @@ of alternatives based on the results from an estimated model." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -129,10 +129,7 @@ of alternatives based on the results from an estimated model." />
       <a href="../articles/mnl_models_weighted.html">Estimating Weighted Logit Models</a>
     </li>
     <li>
-      <a href="../articles/predict_probs.html">Predicting Choice Probabilities from Estimated Models</a>
-    </li>
-    <li>
-      <a href="../articles/predict_choices.html">Predicting Choices from Estimated Models</a>
+      <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
   </ul>
 </li>
@@ -234,48 +231,6 @@ is computed from <code>alpha</code>.</p></td>
     <p>A data frame with the estimated choice probabilities for each
 alternative in <code>alts</code>.</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/jhelvy/logitr'>logitr</a></span><span class='op'>)</span>
-
-<span class='co'># Estimate a preference space model</span>
-<span class='va'>mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
-  data   <span class='op'>=</span> <span class='va'>yogurt</span>,
-  choice <span class='op'>=</span> <span class='st'>"choice"</span>,
-  obsID  <span class='op'>=</span> <span class='st'>"obsID"</span>,
-  pars   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
-<span class='co'># Create a set of alternatives for which to predict choice probabilities.</span>
-<span class='co'># Each row is an alternative and each column an attribute. In this example,</span>
-<span class='co'># two of the choice observations from the yogurt dataset are used</span>
-<span class='va'>alts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span>
-    <span class='va'>yogurt</span>, <span class='va'>obsID</span> <span class='op'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>42</span>, <span class='fl'>13</span><span class='op'>)</span>,
-    select <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'obsID'</span>, <span class='st'>'alt'</span>, <span class='st'>'price'</span>, <span class='st'>'feat'</span>, <span class='st'>'brand'</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='va'>alts</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 8 × 5</span>
-#&gt;   obsID   alt price  feat brand  
-#&gt;   <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  
-#&gt; <span style='color: #BCBCBC;'>1</span>    13     1  8.1      0 dannon 
-#&gt; <span style='color: #BCBCBC;'>2</span>    13     2  5.00     0 hiland 
-#&gt; <span style='color: #BCBCBC;'>3</span>    13     3  8.60     0 weight 
-#&gt; <span style='color: #BCBCBC;'>4</span>    13     4 10.8      0 yoplait
-#&gt; <span style='color: #BCBCBC;'>5</span>    42     1  6.30     0 dannon 
-#&gt; <span style='color: #BCBCBC;'>6</span>    42     2  6.10     1 hiland 
-#&gt; <span style='color: #BCBCBC;'>7</span>    42     3  7.90     0 weight 
-#&gt; <span style='color: #BCBCBC;'>8</span>    42     4 11.5      0 yoplait</div><div class='input'>
-<span class='co'># Predict choice probabilities using the estimated preference space MNL</span>
-<span class='co'># model</span>
-<span class='fu'>predictProbs</span><span class='op'>(</span><span class='va'>mnl_pref</span>, <span class='va'>alts</span>, altID <span class='op'>=</span> <span class='st'>"alt"</span>, obsID <span class='op'>=</span> <span class='st'>"obsID"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;   obsID alt  prob_mean   prob_low  prob_high
-#&gt; 1    13   1 0.43685145 0.41554699 0.45810929
-#&gt; 2    13   2 0.03312986 0.02631244 0.04162911
-#&gt; 3    13   3 0.19155548 0.17633994 0.20796671
-#&gt; 4    13   4 0.33846321 0.31859959 0.35844433
-#&gt; 5    42   1 0.60764778 0.57394212 0.63985643
-#&gt; 6    42   2 0.02602007 0.01839683 0.03646474
-#&gt; 7    42   3 0.17803313 0.16205847 0.19465715
-#&gt; 8    42   4 0.18829902 0.16870180 0.20935022</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

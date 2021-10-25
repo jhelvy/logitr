@@ -42,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -86,10 +86,7 @@
       <a href="../articles/mnl_models_weighted.html">Estimating Weighted Logit Models</a>
     </li>
     <li>
-      <a href="../articles/predict_probs.html">Predicting Choice Probabilities from Estimated Models</a>
-    </li>
-    <li>
-      <a href="../articles/predict_choices.html">Predicting Choices from Estimated Models</a>
+      <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
   </ul>
 </li>
@@ -183,25 +180,22 @@
 \label{eq:mnlPrefExample}
 \end{equation}\]</span></p>
 <p>where the parameters <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span>, and <span class="math inline">\(\beta_4\)</span> have units of utility.</p>
-<p>To estimate the model, first load the <strong>logitr</strong> package:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr">logitr</a></span><span class="op">)</span></code></pre></div>
 <p>Estimate the model using the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data   <span class="op">=</span> <span class="va">yogurt</span>,
-  choice <span class="op">=</span> <span class="st">'choice'</span>,
-  obsID  <span class="op">=</span> <span class="st">'obsID'</span>,
-  pars   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/jhelvy/logitr">"logitr"</a></span><span class="op">)</span>
+
+<span class="va">mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
+  data    <span class="op">=</span> <span class="va">yogurt</span>,
+  outcome <span class="op">=</span> <span class="st">'choice'</span>,
+  obsID   <span class="op">=</span> <span class="st">'obsID'</span>,
+  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
-<pre><code>#&gt; Running Model...
-#&gt; Done!</code></pre>
 <p>Print a summary of the results:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; Call:</span>
-<span class="co">#&gt; logitr(data = yogurt, choice = "choice", obsID = "obsID", pars = c("price", </span>
+<span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span>
 <span class="co">#&gt;     "feat", "brand"))</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Frequencies of alternatives:</span>
@@ -237,20 +231,20 @@
 <span class="co">#&gt; Adj McFadden R2:            0.2039195</span>
 <span class="co">#&gt; Number of Observations:  2412.0000000</span></code></pre></div>
 <p>View the estimated model coefficients:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span>
 <span class="co">#&gt;        price         feat  brandhiland  brandweight brandyoplait </span>
 <span class="co">#&gt;   -0.3665546    0.4914392   -3.7154773   -0.6411384    0.7345195</span></code></pre></div>
 <p>Compute the WTP implied from the preference space model:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wtp_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, price <span class="op">=</span>  <span class="st">"price"</span><span class="op">)</span>
 <span class="va">wtp_mnl_pref</span>
 <span class="co">#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
-<span class="co">#&gt; lambda         0.366555   0.024368  15.0425 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; feat           1.340699   0.359884   3.7254  0.000195 ***</span>
-<span class="co">#&gt; brandhiland  -10.136219   0.586403 -17.2854 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandweight   -1.749094   0.181837  -9.6190 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandyoplait   2.003848   0.143278  13.9857 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; lambda         0.366555   0.024348  15.0550 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; feat           1.340699   0.357881   3.7462 0.0001795 ***</span>
+<span class="co">#&gt; brandhiland  -10.136219   0.583614 -17.3680 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandweight   -1.749094   0.181478  -9.6380 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandyoplait   2.003848   0.143591  13.9552 &lt; 2.2e-16 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre></div>
 </div>
@@ -271,39 +265,28 @@
 \end{equation}\]</span></p>
 <p>where the parameters <span class="math inline">\(\omega_1\)</span>, <span class="math inline">\(\omega_2\)</span>, <span class="math inline">\(\omega_3\)</span>, and <span class="math inline">\(\omega_4\)</span> have units of dollars and <span class="math inline">\(\lambda\)</span> is the scale parameter.</p>
 <p>Estimate the model using the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>mnl_wtp &lt;-<span class="st"> </span><span class="kw">logitr</span>(</span>
-<span id="cb7-2"><a href="#cb7-2"></a>  <span class="dt">data       =</span> yogurt,</span>
-<span id="cb7-3"><a href="#cb7-3"></a>  <span class="dt">choice     =</span> <span class="st">'choice'</span>,</span>
-<span id="cb7-4"><a href="#cb7-4"></a>  <span class="dt">obsID      =</span> <span class="st">'obsID'</span>,</span>
-<span id="cb7-5"><a href="#cb7-5"></a>  <span class="dt">pars       =</span> <span class="kw">c</span>(<span class="st">'feat'</span>, <span class="st">'brand'</span>),</span>
-<span id="cb7-6"><a href="#cb7-6"></a>  <span class="dt">price      =</span> <span class="st">'price'</span>,</span>
-<span id="cb7-7"><a href="#cb7-7"></a>  <span class="dt">modelSpace =</span> <span class="st">'wtp'</span>,</span>
-<span id="cb7-8"><a href="#cb7-8"></a>  <span class="co"># Since WTP space models are non-convex, run a multistart</span></span>
-<span id="cb7-9"><a href="#cb7-9"></a>  <span class="dt">numMultiStarts =</span> <span class="dv">10</span>,</span>
-<span id="cb7-10"><a href="#cb7-10"></a>  <span class="co"># Use the computed WTP from the preference space model as the starting</span></span>
-<span id="cb7-11"><a href="#cb7-11"></a>  <span class="co"># values for the first run:</span></span>
-<span id="cb7-12"><a href="#cb7-12"></a>  <span class="dt">startVals =</span> wtp_mnl_pref<span class="op">$</span>Estimate)</span>
-<span id="cb7-13"><a href="#cb7-13"></a><span class="er">)</span></span></code></pre></div>
-<pre><code>#&gt; Running Multistart 1 of 10...
-#&gt; NOTE: Using user-provided starting values for this run
-#&gt; Running Multistart 2 of 10...
-#&gt; Running Multistart 3 of 10...
-#&gt; Running Multistart 4 of 10...
-#&gt; Running Multistart 5 of 10...
-#&gt; Running Multistart 6 of 10...
-#&gt; Running Multistart 7 of 10...
-#&gt; Running Multistart 8 of 10...
-#&gt; Running Multistart 9 of 10...
-#&gt; Running Multistart 10 of 10...
-#&gt; Done!</code></pre>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
+  data    <span class="op">=</span> <span class="va">yogurt</span>,
+  outcome <span class="op">=</span> <span class="st">'choice'</span>,
+  obsID   <span class="op">=</span> <span class="st">'obsID'</span>,
+  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>,
+  price   <span class="op">=</span> <span class="st">'price'</span>,
+  modelSpace <span class="op">=</span> <span class="st">'wtp'</span>,
+  <span class="co"># Since WTP space models are non-convex, run a multistart</span>
+  numMultiStarts <span class="op">=</span> <span class="fl">10</span>,
+  <span class="co"># Use the computed WTP from the preference space model as the starting</span>
+  <span class="co"># values for the first run:</span>
+  startVals <span class="op">=</span> <span class="va">wtp_mnl_pref</span><span class="op">$</span><span class="va">Estimate</span>
+<span class="op">)</span></code></pre></div>
 <p>Print a summary of the results:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mnl_wtp</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; Call:</span>
-<span class="co">#&gt; logitr(data = yogurt, choice = "choice", obsID = "obsID", pars = c("feat", </span>
-<span class="co">#&gt;     "brand"), price = "price", modelSpace = "wtp", numMultiStarts = 10, </span>
-<span class="co">#&gt;     startVals = wtp_mnl_pref$Estimate)</span>
+<span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("feat", </span>
+<span class="co">#&gt;     "brand"), price = "price", modelSpace = "wtp", startVals = wtp_mnl_pref$Estimate, </span>
+<span class="co">#&gt;     numMultiStarts = 10)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Frequencies of alternatives:</span>
 <span class="co">#&gt;        1        2        3        4 </span>
@@ -312,15 +295,15 @@
 <span class="co">#&gt; Summary Of Multistart Runs:</span>
 <span class="co">#&gt;    Log Likelihood Iterations Exit Status</span>
 <span class="co">#&gt; 1       -2656.888         84           3</span>
-<span class="co">#&gt; 2       -2656.888         54           3</span>
-<span class="co">#&gt; 3       -2656.888         42           3</span>
-<span class="co">#&gt; 4       -2656.888         47           3</span>
-<span class="co">#&gt; 5       -2656.888         38           3</span>
-<span class="co">#&gt; 6       -2803.814         90           3</span>
-<span class="co">#&gt; 7       -2804.458         88           3</span>
-<span class="co">#&gt; 8       -2656.888         41           3</span>
-<span class="co">#&gt; 9       -2656.888         48           3</span>
-<span class="co">#&gt; 10      -2656.888         41           3</span>
+<span class="co">#&gt; 2       -2656.888         38           3</span>
+<span class="co">#&gt; 3       -2656.888         44           3</span>
+<span class="co">#&gt; 4       -2656.888         63           3</span>
+<span class="co">#&gt; 5       -2656.888         61           3</span>
+<span class="co">#&gt; 6       -2804.997         78           3</span>
+<span class="co">#&gt; 7       -2656.888         43           3</span>
+<span class="co">#&gt; 8       -2656.888         39           3</span>
+<span class="co">#&gt; 9       -2656.888         42           3</span>
+<span class="co">#&gt; 10      -2656.888         47           3</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Use statusCodes() to view the meaning of each status code</span>
 <span class="co">#&gt; </span>
@@ -328,50 +311,50 @@
 <span class="co">#&gt;                                  </span>
 <span class="co">#&gt; Model Type:     Multinomial Logit</span>
 <span class="co">#&gt; Model Space:   Willingness-to-Pay</span>
-<span class="co">#&gt; Model Run:               10 of 10</span>
-<span class="co">#&gt; Iterations:                    41</span>
-<span class="co">#&gt; Elapsed Time:         0h:0m:0.08s</span>
+<span class="co">#&gt; Model Run:                4 of 10</span>
+<span class="co">#&gt; Iterations:                    63</span>
+<span class="co">#&gt; Elapsed Time:         0h:0m:0.11s</span>
 <span class="co">#&gt; Algorithm:         NLOPT_LD_LBFGS</span>
 <span class="co">#&gt; Weights Used?:              FALSE</span>
 <span class="co">#&gt; Robust?                     FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
 <span class="co">#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
-<span class="co">#&gt; lambda         0.366584   0.024366  15.0449 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; feat           1.340574   0.355865   3.7671 0.0001652 ***</span>
-<span class="co">#&gt; brandhiland  -10.135737   0.576084 -17.5942 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandweight   -1.749078   0.179897  -9.7227 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandyoplait   2.003825   0.142377  14.0741 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; lambda         0.366583   0.024366  15.0447 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; feat           1.340684   0.355872   3.7673  0.000165 ***</span>
+<span class="co">#&gt; brandhiland  -10.135758   0.576091 -17.5940 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandweight   -1.749090   0.179899  -9.7226 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandyoplait   2.003826   0.142377  14.0741 &lt; 2.2e-16 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log-Likelihood:         -2656.8878779</span>
+<span class="co">#&gt; Log-Likelihood:         -2656.8878780</span>
 <span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span>
-<span class="co">#&gt; AIC:                     5323.7757559</span>
+<span class="co">#&gt; AIC:                     5323.7757560</span>
 <span class="co">#&gt; BIC:                     5352.7168000</span>
 <span class="co">#&gt; McFadden R2:                0.2054148</span>
 <span class="co">#&gt; Adj McFadden R2:            0.2039195</span>
 <span class="co">#&gt; Number of Observations:  2412.0000000</span></code></pre></div>
 <p>View the estimated model coefficients:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mnl_wtp</span><span class="op">)</span>
 <span class="co">#&gt;       lambda         feat  brandhiland  brandweight brandyoplait </span>
-<span class="co">#&gt;    0.3665839    1.3405740  -10.1357369   -1.7490782    2.0038251</span></code></pre></div>
+<span class="co">#&gt;    0.3665832    1.3406841  -10.1357583   -1.7490898    2.0038264</span></code></pre></div>
 </div>
 <div id="compare-wtp-from-both-models" class="section level1">
 <h1 class="hasAnchor">
 <a href="#compare-wtp-from-both-models" class="anchor"></a>Compare WTP from both models</h1>
 <p>Since WTP space models are non-convex, you cannot be certain that the model reached a global solution, even when using a multi-start. However, homogeneous models in the <em>preference</em> space are convex, so you are guaranteed to find the global solution in that space. Therefore, it can be useful to compute the WTP from the preference space model and compare it against the WTP from the WTP space model. If the WTP values and log-likelihood values from the two model spaces are equal, then the WTP space model is likely at a global solution.</p>
 <p>To compare the WTP and log-likelihood values between the preference space and WTP space models, use the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, price <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span>
 <span class="co">#&gt;                       pref           wtp  difference</span>
-<span class="co">#&gt; lambda           0.3665546     0.3665839  0.00002939</span>
-<span class="co">#&gt; feat             1.3406987     1.3405740 -0.00012474</span>
-<span class="co">#&gt; brandhiland    -10.1362190   -10.1357369  0.00048212</span>
-<span class="co">#&gt; brandweight     -1.7490940    -1.7490782  0.00001577</span>
-<span class="co">#&gt; brandyoplait     2.0038476     2.0038251 -0.00002253</span>
-<span class="co">#&gt; logLik       -2656.8878790 -2656.8878779  0.00000107</span></code></pre></div>
+<span class="co">#&gt; lambda           0.3665546     0.3665832  0.00002859</span>
+<span class="co">#&gt; feat             1.3406987     1.3406841 -0.00001462</span>
+<span class="co">#&gt; brandhiland    -10.1362190   -10.1357583  0.00046070</span>
+<span class="co">#&gt; brandweight     -1.7490940    -1.7490898  0.00000418</span>
+<span class="co">#&gt; brandyoplait     2.0038476     2.0038264 -0.00002126</span>
+<span class="co">#&gt; logLik       -2656.8878790 -2656.8878780  0.00000101</span></code></pre></div>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">

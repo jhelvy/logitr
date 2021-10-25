@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get WTP from a preference space model — wtp • logitr</title>
+<title>Get WTP estimates a preference space model — wtp • logitr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,7 +46,7 @@
 
 
 
-<meta property="og:title" content="Get WTP from a preference space model — wtp" />
+<meta property="og:title" content="Get WTP estimates a preference space model — wtp" />
 <meta property="og:description" content="Returns the computed WTP from a preference space model." />
 <meta property="og:image" content="https://jhelvy.github.io/logitr/reference/figures/logo.png" />
 <meta property="og:image:alt" content="Logo for the logitr package" />
@@ -84,7 +84,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -128,10 +128,7 @@
       <a href="../articles/mnl_models_weighted.html">Estimating Weighted Logit Models</a>
     </li>
     <li>
-      <a href="../articles/predict_probs.html">Predicting Choice Probabilities from Estimated Models</a>
-    </li>
-    <li>
-      <a href="../articles/predict_choices.html">Predicting Choices from Estimated Models</a>
+      <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
   </ul>
 </li>
@@ -159,7 +156,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get WTP from a preference space model</h1>
+    <h1>Get WTP estimates a preference space model</h1>
     <small class="dont-index">Source: <a href='https://github.com/jhelvy/logitr/blob/master/R/wtp.R'><code>R/wtp.R</code></a></small>
     <div class="hidden name"><code>wtp.Rd</code></div>
     </div>
@@ -168,15 +165,15 @@
     <p>Returns the computed WTP from a preference space model.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>wtp</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>price</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>wtp</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>price</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>model</th>
-      <td><p>The output of a "preference space" model estimated
-using the <code><a href='logitr.html'>logitr()</a></code> function.</p></td>
+      <th>object</th>
+      <td><p>is an object of class <code>logitr</code> (a model estimated using
+the 'logitr()` function).</p></td>
     </tr>
     <tr>
       <th>price</th>
@@ -198,20 +195,20 @@ Uncertainty is handled via simulation.</p>
 
 <span class='co'># Estimate a preference space model</span>
 <span class='va'>mnl_pref</span> <span class='op'>&lt;-</span> <span class='fu'><a href='logitr.html'>logitr</a></span><span class='op'>(</span>
-  data   <span class='op'>=</span> <span class='va'>yogurt</span>,
-  choice <span class='op'>=</span> <span class='st'>"choice"</span>,
-  obsID  <span class='op'>=</span> <span class='st'>"obsID"</span>,
-  pars   <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
+  data    <span class='op'>=</span> <span class='va'>yogurt</span>,
+  outcome <span class='op'>=</span> <span class='st'>"choice"</span>,
+  obsID   <span class='op'>=</span> <span class='st'>"obsID"</span>,
+  pars    <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"price"</span>, <span class='st'>"feat"</span>, <span class='st'>"brand"</span><span class='op'>)</span>
 <span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Running Model...</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='input'>
 <span class='co'># Compute the WTP implied from the preference space model</span>
 <span class='fu'>wtp</span><span class='op'>(</span><span class='va'>mnl_pref</span>, price <span class='op'>=</span> <span class='st'>"price"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;               Estimate Std. Error  z-value  Pr(&gt;|z|)    
-#&gt; lambda         0.36656    0.02442  15.0102 &lt; 2.2e-16 ***
-#&gt; feat           1.34070    0.35884   3.7362 0.0001868 ***
-#&gt; brandhiland  -10.13622    0.58488 -17.3304 &lt; 2.2e-16 ***
-#&gt; brandweight   -1.74909    0.18105  -9.6606 &lt; 2.2e-16 ***
-#&gt; brandyoplait   2.00385    0.14302  14.0115 &lt; 2.2e-16 ***
+</div><div class='output co'>#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    
+#&gt; lambda         0.366555   0.024366  15.0435 &lt; 2.2e-16 ***
+#&gt; feat           1.340699   0.360676   3.7172 0.0002015 ***
+#&gt; brandhiland  -10.136219   0.584997 -17.3270 &lt; 2.2e-16 ***
+#&gt; brandweight   -1.749094   0.182209  -9.5994 &lt; 2.2e-16 ***
+#&gt; brandyoplait   2.003848   0.143801  13.9348 &lt; 2.2e-16 ***
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</div></pre>
   </div>

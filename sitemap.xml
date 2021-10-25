@@ -13,10 +13,16 @@
     <loc>https://jhelvy.github.io/logitr//reference/dummyCode.html</loc>
   </url>
   <url>
+    <loc>https://jhelvy.github.io/logitr//reference/fitted.logitr.html</loc>
+  </url>
+  <url>
     <loc>https://jhelvy.github.io/logitr//reference/logitr.html</loc>
   </url>
   <url>
     <loc>https://jhelvy.github.io/logitr//reference/miscmethods.logitr.html</loc>
+  </url>
+  <url>
+    <loc>https://jhelvy.github.io/logitr//reference/predict.logitr.html</loc>
   </url>
   <url>
     <loc>https://jhelvy.github.io/logitr//reference/predictChoices.html</loc>
@@ -28,7 +34,13 @@
     <loc>https://jhelvy.github.io/logitr//reference/recodeData.html</loc>
   </url>
   <url>
+    <loc>https://jhelvy.github.io/logitr//reference/residuals.logitr.html</loc>
+  </url>
+  <url>
     <loc>https://jhelvy.github.io/logitr//reference/se.html</loc>
+  </url>
+  <url>
+    <loc>https://jhelvy.github.io/logitr//reference/se.logitr.html</loc>
   </url>
   <url>
     <loc>https://jhelvy.github.io/logitr//reference/simulateShares.html</loc>
@@ -37,7 +49,13 @@
     <loc>https://jhelvy.github.io/logitr//reference/statusCodes.html</loc>
   </url>
   <url>
+    <loc>https://jhelvy.github.io/logitr//reference/vcov.logitr.html</loc>
+  </url>
+  <url>
     <loc>https://jhelvy.github.io/logitr//reference/wtp.html</loc>
+  </url>
+  <url>
+    <loc>https://jhelvy.github.io/logitr//reference/wtp.logitr.html</loc>
   </url>
   <url>
     <loc>https://jhelvy.github.io/logitr//reference/wtpCompare.html</loc>
@@ -64,10 +82,7 @@
     <loc>https://jhelvy.github.io/logitr//articles/mxl_models.html</loc>
   </url>
   <url>
-    <loc>https://jhelvy.github.io/logitr//articles/predict_choices.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr//articles/predict_probs.html</loc>
+    <loc>https://jhelvy.github.io/logitr//articles/predict.html</loc>
   </url>
   <url>
     <loc>https://jhelvy.github.io/logitr//articles/utility_models.html</loc>

@@ -8,10 +8,9 @@ articles:
   mnl_models: mnl_models.html
   mnl_models_weighted: mnl_models_weighted.html
   mxl_models: mxl_models.html
-  predict_choices: predict_choices.html
-  predict_probs: predict_probs.html
+  predict: predict.html
   utility_models: utility_models.html
-last_built: 2021-08-30T17:11Z
+last_built: 2021-10-25T16:43Z
 urls:
   reference: https://jhelvy.github.io/logitr//reference
   article: https://jhelvy.github.io/logitr//articles

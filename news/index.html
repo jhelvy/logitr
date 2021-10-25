@@ -83,7 +83,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -127,10 +127,7 @@
       <a href="../articles/mnl_models_weighted.html">Estimating Weighted Logit Models</a>
     </li>
     <li>
-      <a href="../articles/predict_probs.html">Predicting Choice Probabilities from Estimated Models</a>
-    </li>
-    <li>
-      <a href="../articles/predict_choices.html">Predicting Choices from Estimated Models</a>
+      <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
   </ul>
 </li>
@@ -162,6 +159,30 @@
       <small>Source: <a href='https://github.com/jhelvy/logitr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="logitr-040" class="section level1">
+<h1 class="page-header" data-toc-text="0.4.0">
+<a href="#logitr-040" class="anchor"></a>logitr 0.4.0<small> Unreleased </small>
+</h1>
+<div id="larger-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#larger-changes" class="anchor"></a>Larger changes:</h2>
+<ul>
+<li>A new <code><a href="../reference/predict.logitr.html">predict.logitr()</a></code> method was added for making probability and choice predictions from logitr class objects.</li>
+<li>The <code><a href="../reference/predictProbs.html">predictProbs()</a></code> and <code><a href="../reference/predictChoices.html">predictChoices()</a></code> functions were depreciated.</li>
+<li>Added new <code><a href="../reference/fitted.logitr.html">fitted.logitr()</a></code> and <code><a href="../reference/residuals.logitr.html">residuals.logitr()</a></code> methods.</li>
+<li>Added optional <code>predict</code> argument to the main <code><a href="../reference/logitr.html">logitr()</a></code> function which controls whether predicted probabilities, fitted.values, and residuals are included in the returned object. Default setting is TRUE.</li>
+<li>Changed the name of the coefficients vector in the returned object from “coef” to “coefficients” to be consistent with other packages.</li>
+<li>Changed the argument name from “choice” to “outcome” to be more general</li>
+</ul>
+</div>
+<div id="bugs" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bugs" class="anchor"></a>Bugs:</h2>
+<ul>
+<li>Fixed bug where the returned object contained the scaled data rather than the original, unscaled data</li>
+</ul>
+</div>
+</div>
     <div id="logitr-031" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.1">
 <a href="#logitr-031" class="anchor"></a>logitr 0.3.1<small> Unreleased </small>
@@ -169,7 +190,7 @@
 <ul>
 <li>Bug fix: Cast X object to matrix for single-parameter models</li>
 <li>Updated the logic for clustering with and without panel data</li>
-<li>Added the <code><a href="../reference/miscmethods.logitr.html">se.logitr()</a></code> method.</li>
+<li>Added the <code><a href="../reference/se.logitr.html">se.logitr()</a></code> method.</li>
 <li>Added the <code>vcov</code> argument to the <code><a href="../reference/logitr.html">logitr()</a></code> function.</li>
 <li>Improved vignette on interaction models with individual-specific variable interactions.</li>
 </ul>
@@ -193,7 +214,7 @@
 <li>Added support for panel data in the log-likelihood function and gradients.</li>
 <li>Several argument names in the <code><a href="../reference/logitr.html">logitr()</a></code> function were changed to make them easier to understand: <code>choiceName</code> became <code>choice</code>, <code>obsIDName</code> became <code>obsID</code>, <code>parNames</code> became <code>pars</code>, <code>priceName</code> became <code>price</code>, <code>weightsName</code> became <code>weights</code>, <code>clusterName</code> became <code>cluster</code>. If used, old names will be passed to the new argument names and a warning will be displayed.</li>
 <li>The log-likelihood and gradient functions were overhauled to improve computational efficiency, resulting in substantially faster estimation for all models.</li>
-<li>The following new methods were introduced: <code><a href="../reference/miscmethods.logitr.html">print.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">logLik.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">coef.summary.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">vcov.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">terms.logitr()</a></code>
+<li>The following new methods were introduced: <code><a href="../reference/miscmethods.logitr.html">print.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">logLik.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">coef.summary.logitr()</a></code>, <code><a href="../reference/vcov.logitr.html">vcov.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">terms.logitr()</a></code>
 </li>
 </ul>
 </div>
@@ -252,7 +273,7 @@
 <ul>
 <li>Improved <code><a href="../reference/miscmethods.logitr.html">summary.logitr()</a></code> and <code><a href="../reference/miscmethods.logitr.html">coef.logitr()</a></code> methods for better printing, using <code><a href="https://rdrr.io/r/stats/printCoefmat.html">printCoefmat()</a></code>
 </li>
-<li>Added new methods: <code><a href="../reference/miscmethods.logitr.html">print.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">logLik.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">coef.summary.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">vcov.logitr()</a></code>
+<li>Added new methods: <code><a href="../reference/miscmethods.logitr.html">print.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">logLik.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">coef.summary.logitr()</a></code>, <code><a href="../reference/vcov.logitr.html">vcov.logitr()</a></code>
 </li>
 <li>Removed option for keeping all model outputs.</li>
 <li>Added input checks for <code><a href="../reference/wtp.html">wtp()</a></code> and <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> functions</li>
@@ -323,9 +344,9 @@
 <li>Added tests for encoding functions</li>
 <li>Added covariance matrix to model export</li>
 </ul>
-<div id="bugs" class="section level2">
+<div id="bugs-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bugs" class="anchor"></a>Bugs</h2>
+<a href="#bugs-1" class="anchor"></a>Bugs</h2>
 <ul>
 <li>When simulating shares from a WTP model, only accepted a price named “price” rather than something else such as “Price” - fixed this.</li>
 <li>In <code><a href="../reference/simulateShares.html">simulateShares()</a></code>, the shares were not correctly computed with a WTP space model because price was still being multiplied by -1. This has been corrected.</li>
@@ -378,9 +399,9 @@
 <li>Added <code>algorithm</code> to the <code>options</code> input, with the default being set to <code>"NLOPT_LD_LBFGS"</code>.</li>
 </ul>
 </div>
-<div id="bugs-1" class="section level2">
+<div id="bugs-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bugs-1" class="anchor"></a>Bugs</h2>
+<a href="#bugs-2" class="anchor"></a>Bugs</h2>
 <ul>
 <li>Fixed tiny bug in <code>getParTypes()</code> function - previously was not returning the correct <code>parNames</code> for continuous vs. discrete variables.</li>
 <li>Added an input check to make sure the modelSpace argument is either <code>"pref"</code> or <code>"wtp"</code>.</li>
