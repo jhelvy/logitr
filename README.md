@@ -8,7 +8,7 @@
 [![CRAN
 status](https://www.r-pkg.org/badges/version/logitr)](https://CRAN.R-project.org/package=logitr)
 [![Travis build
-status](https://travis-ci.com/jhelvy/logitr.svg?branch=master)](https://travis-ci.com/jhelvy/logitr)
+status](https://app.travis-ci.com/jhelvy/logitr.svg?branch=master)](https://app.travis-ci.com/github/jhelvy/logitr)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/logitr?color=blue)](https://cran.r-project.org/package=logitr)
 <!-- badges: end -->
 
@@ -18,17 +18,17 @@ parameterizations](https://jhelvy.github.io/logitr/articles/utility_models.html)
 
 The latest version includes support for:
 
-  - Homogeneous multinomial logit (MNL) models
-  - Heterogeneous mixed logit (MXL) models with normal and log-normal
+-   Homogeneous multinomial logit (MNL) models
+-   Heterogeneous mixed logit (MXL) models with normal and log-normal
     parameter distributions.
-  - Preference space and WTP space utility parameterizations.
-  - Weighted models to differentially weight individual choice
+-   Preference space and WTP space utility parameterizations.
+-   Weighted models to differentially weight individual choice
     observations.
-  - Functions for computing WTP from preference space models.
-  - Functions for predicting expected choices and choice probabilities
+-   Functions for computing WTP from preference space models.
+-   Functions for predicting expected choices and choice probabilities
     for a set (or multiple sets) of alternatives based on an estimated
     model.
-  - An option to run a multistart optimization loop that uses different
+-   An option to run a multistart optimization loop that uses different
     random starting points in each iteration to search for different
     local minima (useful for non-convex problems like MXL models or
     models with WTP space parameterizations).
@@ -36,8 +36,8 @@ The latest version includes support for:
 Note: MXL models assume uncorrelated heterogeneity covariances and are
 estimated using maximum simulated likelihood based on the algorithms in
 Kenneth Train’s book [*Discrete Choice Methods with Simulation, 2nd
-Edition (New York: Cambridge University
-Press, 2009)*](https://eml.berkeley.edu/books/choice2.html).
+Edition (New York: Cambridge University Press,
+2009)*](https://eml.berkeley.edu/books/choice2.html).
 
 ## Installation
 
@@ -69,9 +69,9 @@ for details on how to use **logitr** to estimate models.
 
 ## Author, Version, and License Information
 
-  - Author: *John Paul Helveston* <https://www.jhelvy.com/>
-  - Date First Written: *Sunday, September 28, 2014*
-  - License:
+-   Author: *John Paul Helveston* <https://www.jhelvy.com/>
+-   Date First Written: *Sunday, September 28, 2014*
+-   License:
     [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
 
 ## Citation Information
@@ -82,15 +82,15 @@ it if you cited it - you can get the citation by typing
 
 ``` r
 citation("logitr")
-#> 
+#>
 #> To cite logitr in publications use:
-#> 
+#>
 #>   John Paul Helveston (2021). logitr: Random utility logit models with
 #>   preference and willingness to pay space parameterizations. R package
 #>   version 0.4.0
-#> 
+#>
 #> A BibTeX entry for LaTeX users is
-#> 
+#>
 #>   @Manual{,
 #>     title = {logitr: Random Utility Logit Models with Preference and Willingness to Pay Space Parameterizations},
 #>     author = {John Paul Helveston},
