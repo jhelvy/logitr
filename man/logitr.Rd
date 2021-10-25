@@ -228,8 +228,8 @@ mnl_wtp <- logitr(
   numMultiStarts = 10
 )
 
-# Estimate a MXL model in the Preference space with "feat" and "brand"
-# following normal distributions
+# Estimate a MXL model in the Preference space with "feat"
+# following a normal distribution
 mxl_pref <- logitr(
   data     = yogurt,
   outcome  = "choice",
