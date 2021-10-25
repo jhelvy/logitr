@@ -108,11 +108,9 @@ predict.logitr <- function(
   }
 
   if (object$modelType == "mxl") {
-    result <- getMxlProbs(
-       object, data, obsID, returnData, ci, numDrawsCI, getV, getVDraws)
+    result <- getMxlProbs(object, data, obsID, ci, numDrawsCI, getV, getVDraws)
   } else {
-    result <- getMnlProbs(
-       object, data, obsID, returnData, ci, numDrawsCI, getV, getVDraws)
+    result <- getMnlProbs(object, data, obsID, ci, numDrawsCI, getV, getVDraws)
   }
   if (predict_outcome) {
     result <- addOutcomes(result, obsID)
@@ -121,7 +119,7 @@ predict.logitr <- function(
     result$predicted_prob <- NULL
   }
   if (returnData) {
-    result <- addData(object, result, data)
+    result <- addData(object, result, data, newdata)
   }
   return(result)
 }
@@ -145,9 +143,7 @@ formatNewData <- function(object, newdata, obsID) {
   return(list(X = X, price = price, obsID = obsID))
 }
 
-getMnlProbs <- function(
-  object, data, obsID, returnData, ci, numDrawsCI, getV, getVDraws
-) {
+getMnlProbs <- function(object, data, obsID, ci, numDrawsCI, getV, getVDraws) {
   obsIDName <- obsID
   # Compute mean probs
   coefs <- stats::coef(object)
@@ -167,9 +163,7 @@ getMnlProbs <- function(
   return(probs)
 }
 
-getMxlProbs <- function(
-  object, data, obsID, returnData, ci, numDrawsCI, getV, getVDraws
-) {
+getMxlProbs <- function(object, data, obsID, ci, numDrawsCI, getV, getVDraws) {
   obsIDName <- obsID
   # Compute mean probs
   coefs <- stats::coef(object)
@@ -283,13 +277,17 @@ simOutcome <- function(df) {
   return(df)
 }
 
-addData <- function(object, result, data) {
-  df <- as.data.frame(data$X)
-  if (object$inputs$modelSpace == "wtp") {
-    df <- cbind(df, price = data$price)
-  }
-  if (!is.null(data$outcome)) {
-    df <- cbind(df, outcome = data$outcome)
+addData <- function(object, result, data, newdata) {
+  if (!is.null(newdata)) {
+      df <- newdata[which(! names(newdata) %in% names(result))]
+  } else {
+    df <- as.data.frame(data$X)
+    if (object$inputs$modelSpace == "wtp") {
+      df <- cbind(df, price = data$price)
+    }
+    if (!is.null(data$outcome)) {
+      df <- cbind(df, outcome = data$outcome)
+    }
   }
   return(cbind(result, df))
 }
