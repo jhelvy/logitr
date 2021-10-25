@@ -51,30 +51,6 @@ alternative in \code{alts}.
 Returns the expected choice probabilities for a single set or multiple sets
 of alternatives based on the results from an estimated model.
 }
-\examples{
-library(logitr)
-
-# Estimate a preference space model
-mnl_pref <- logitr(
-  data   = yogurt,
-  choice = "choice",
-  obsID  = "obsID",
-  pars   = c("price", "feat", "brand")
-)
-
-# Create a set of alternatives for which to predict choice probabilities.
-# Each row is an alternative and each column an attribute. In this example,
-# two of the choice observations from the yogurt dataset are used
-alts <- subset(
-    yogurt, obsID \%in\% c(42, 13),
-    select = c('obsID', 'alt', 'price', 'feat', 'brand'))
-
-alts
-
-# Predict choice probabilities using the estimated preference space MNL
-# model
-predictProbs(mnl_pref, alts, altID = "alt", obsID = "obsID")
-}
 \keyword{logitr}
 \keyword{predict}
 \keyword{probabilities}

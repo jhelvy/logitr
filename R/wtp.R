@@ -2,13 +2,13 @@
 # Functions for computing the WTP from estimated models
 # ============================================================================
 
-#' Get WTP from a preference space model
+#' Get WTP estimates a preference space model
 #'
 #' Returns the computed WTP from a preference space model.
 #' @keywords logitr wtp
 #'
-#' @param model The output of a "preference space" model estimated
-#' using the `logitr()` function.
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
 #' @param price The name of the parameter that identifies price.
 #'
 #' @details
@@ -23,24 +23,57 @@
 #'
 #' # Estimate a preference space model
 #' mnl_pref <- logitr(
-#'   data   = yogurt,
-#'   choice = "choice",
-#'   obsID  = "obsID",
-#'   pars   = c("price", "feat", "brand")
+#'   data    = yogurt,
+#'   outcome = "choice",
+#'   obsID   = "obsID",
+#'   pars    = c("price", "feat", "brand")
 #' )
 #'
 #' # Compute the WTP implied from the preference space model
 #' wtp(mnl_pref, price = "price")
-wtp <- function(model, price) {
-  wtpInputsCheck(model, price)
-  coefs <- stats::coef(model)
+wtp <- function(object, price) {
+  UseMethod("wtp")
+}
+
+#' Get WTP from a preference space model
+#'
+#' Returns the computed WTP from a preference space model.
+#' @keywords logitr wtp
+#'
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
+#' @param price The name of the parameter that identifies price.
+#'
+#' @details
+#' Willingness to pay is computed by dividing the estimated parameters of a
+#' utility model in the "preference" space by the price parameter.
+#' Uncertainty is handled via simulation.
+#'
+#' @return A data frame of the WTP estimates.
+#' @export
+#' @examples
+#' library(logitr)
+#'
+#' # Estimate a preference space model
+#' mnl_pref <- logitr(
+#'   data    = yogurt,
+#'   outcome = "choice",
+#'   obsID   = "obsID",
+#'   pars    = c("price", "feat", "brand")
+#' )
+#'
+#' # Compute the WTP implied from the preference space model
+#' wtp(mnl_pref, price = "price")
+wtp.logitr <- function(object, price) {
+  wtpInputsCheck(object, price)
+  coefs <- stats::coef(object)
   priceID <- which(names(coefs) == price)
   pricePar <- -1 * coefs[priceID]
   wtp_mean <- coefs / pricePar
   wtp_mean[priceID] <- -1 * coefs[priceID]
   names(wtp_mean)[priceID] <- "lambda"
   # Compute standErrs using simulation (draws from the varcov matrix)
-  draws <- getUncertaintyDraws(model, 10^5)
+  draws <- getUncertaintyDraws(object, 10^5)
   priceDraws <- repmatCol(-1 * draws[price], ncol(draws))
   wtpDraws <- draws / priceDraws
   wtpDraws[, priceID] <- draws[, priceID]
@@ -76,10 +109,10 @@ wtp <- function(model, price) {
 #'
 #' # Estimate a MNL model in the Preference space
 #' mnl_pref <- logitr(
-#'   data   = yogurt,
-#'   choice = "choice",
-#'   obsID  = "obsID",
-#'   pars   = c("price", "feat", "brand")
+#'   data    = yogurt,
+#'   outcome = "choice",
+#'   obsID   = "obsID",
+#'   pars    = c("price", "feat", "brand")
 #' )
 #'
 #' # Compute the WTP implied from the preference space model
@@ -89,7 +122,7 @@ wtp <- function(model, price) {
 #' # from the preference space model as starting points
 #' mnl_wtp <- logitr(
 #'   data       = yogurt,
-#'   choice     = "choice",
+#'   outcome    = "choice",
 #'   obsID      = "obsID",
 #'   pars       = c("feat", "brand"),
 #'   price      = "price",

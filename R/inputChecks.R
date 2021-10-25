@@ -162,25 +162,63 @@ checkOptions <- function(options) {
   return(options)
 }
 
-predictInputsCheck <- function(model, alts, altID, obsID) {
-  if (!is_logitr(model)) {
+predictInputsCheck <- function(object, newdata, obsID, price, type, ci) {
+  if (!is_logitr(object)) {
     stop(
-      'The "model" argument must be a model estimated using the logitr() ',
+      'The "object" argument must be a object estimated using the logitr() ',
       'function.'
     )
   }
-  if (missing(alts)) stop('"alts" needs to be specified')
-  if (missing(altID)) stop('"altID" needs to be specified')
-  if (! altID %in% names(alts)) {
-    stop(
-      'The "altID" argument refers to a column that does not exist in ',
-      'the "alts" data frame')
+  if (missing(newdata)) stop('"newdata" needs to be specified')
+  if (!is.null(newdata)) {
+    if (is.null(obsID)) {
+      stop('"obsID" must be specified if newdata is not NULL')
+    }
+    if (object$inputs$modelSpace == "wtp") {
+      if (is.null(price)) {
+        stop(
+          '"price" must be specified if "object" is a WTP space model and ',
+          'newdata is not NULL'
+        )
+      }
+    }
+    if (!is.null(obsID)) {
+      if (! obsID %in% names(newdata)) {
+        stop(
+          'The "obsID" argument refers to a column that does not exist in ',
+          'the "newdata" data frame'
+        )
+      }
+    }
+    if (!is.null(price)) {
+      if (! price %in% names(newdata)) {
+        stop(
+          'The "price" argument refers to a column that does not exist in ',
+          'the "newdata" data frame'
+        )
+      }
+    }
   }
-  if (!is.null(obsID)) {
-    if (! obsID %in% names(alts)) {
-      stop(
-        'The "obsID" argument refers to a column that does not exist in ',
-        'the "alts" data frame')
+  if ("probs" %in% type) {
+    stop('Use "prob" instead of "probs" in the type argument')
+  }
+  if ("outcomes" %in% type) {
+    stop('Use "outcome" instead of "outcomes" in the type argument')
+  }
+  typeTest <- identical(type, "prob") |
+    identical(type, "outcome") |
+    identical(type, c("prob", "outcome")) |
+    identical(type, c("outcome", "prob"))
+  if (!typeTest) {
+    stop(
+      'type must be a vector containing "prob" (for returning ',
+      'predicted probabilities) and / or "outcome" (for returning predicted ',
+      'outcomes)')
+  }
+  if (!is.null(ci)) {
+    ci_test <- (ci < 1) & (ci > 0)
+    if (!ci_test) {
+      stop("ci must be a number between 0 and 1")
     }
   }
 }
@@ -197,10 +235,11 @@ predictParCheck <- function(model, X) {
     dataPars <- paste(dataNames, collapse = ", ")
     stop(paste0(
       'The coefficient names for the provided model do not correspond to ',
-      'variables in "alts".\n\n',
+      'variables in "newdata".\n\n',
       'Expect columns:\n\t', modelPars, '\n\n',
-      'Encoded column names from provided `alts` object:\n\t', dataPars, '\n\n',
-      'If you have a factor variable in "alts", check that the factor ',
+      'Encoded column names from provided `newdata` object:\n\t', dataPars,
+      '\n\n',
+      'If you have a factor variable in "newdata", check that the factor ',
       'levels match those of the data used to estimate the model.'
     ))
   }
@@ -212,7 +251,7 @@ wtpInputsCheck <- function(model, price) {
   if (!is_logitr(model)) {
     stop('model must be a model estimated using the logitr() function.')
   }
-  if (! price %in% names(model$coef)) {
+  if (! price %in% names(stats::coef(model))) {
     stop('"price" must be the name of a coefficient in "model".')
   }
   if (model$inputs$modelSpace != "pref") {
@@ -230,7 +269,7 @@ wtpCompareInputsCheck <- function(model_pref, model_wtp, price) {
   if (!is_logitr(model_wtp)) {
     stop('"model_wtp" must be a model estimated using the logitr() function.')
   }
-  if (! price %in% names(model_pref$coef)) {
+  if (! price %in% names(stats::coef(model_pref))) {
     stop('"price" must be the name of a coefficient in "model_pref"')
   }
 }

@@ -9,8 +9,6 @@
 \alias{summary.logitr}
 \alias{print.logitr}
 \alias{print.summary.logitr}
-\alias{se.logitr}
-\alias{vcov.logitr}
 \alias{print.logitr_wtp}
 \title{Methods for logitr objects}
 \usage{
@@ -38,10 +36,6 @@
   ...
 )
 
-\method{se}{logitr}(object, ...)
-
-\method{vcov}{logitr}(object, ...)
-
 \method{print}{logitr_wtp}(
   x,
   digits = max(3, getOption("digits") - 2),
@@ -50,7 +44,8 @@
 )
 }
 \arguments{
-\item{object}{is an object of class \code{logitr}.}
+\item{object}{is an object of class \code{logitr} (a model estimated using
+the 'logitr()` function).}
 
 \item{...}{further arguments.}
 

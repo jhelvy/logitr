@@ -1,0 +1,163 @@
+---
+title: "Predicting Probabilities and Outcomes with Estimated Models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Predicting Probabilities and Outcomes with Estimated Models}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+bibliography: "`r here::here('vignettes', 'library.bib')`"
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.path   = "figs/",
+  fig.retina = 3,
+  comment = "#>"
+)
+
+set.seed(5678)
+```
+
+Once a model has been estimated, it can be used to predict probabilities and / or outcomes for a set of alternatives. This vignette demonstrates examples of how to so using the `predict()` method along with an estimated model.
+
+You can make predictions for any set of alternatives, so long as the columns in the alternatives correspond to estimated coefficients in your model. By default, if no new data are provided via the `newdata` argument, then predictions will be made for the original data used to estimate the model.
+
+Predictions can be made using both preference space and WTP space models, as well as multinomial logit and mixed logit models. For mixed logit models, heterogeneity is modeled by simulating draws from the population estimates of the estimated model.
+
+# Predicting probabilities
+
+## Preference space models
+
+In the example below, a preference space MNL model is estimated (`mnl_pref`) and then used to predict probabilities for the data used to estimate the model:
+
+```{r}
+library("logitr")
+
+mnl_pref <- logitr(
+  data    = yogurt,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c('price', 'feat', 'brand')
+)
+
+probs <- predict(mnl_pref)
+head(probs)
+```
+
+The `predict()` method returns a data frame containing the observation ID as well as the predicted probabilities. The original data can also be returned in the data frame by setting `returnData = TRUE`:
+
+```{r}
+probs <- predict(mnl_pref, returnData = TRUE)
+head(probs)
+```
+
+To make predictions for a new set of alternatives, use the `newdata` argument. The example below makes predictions for just two of the choice observations from the `yogurt` dataset:
+
+```{r}
+data <- subset(
+  yogurt, obsID %in% c(42, 13),
+  select = c('obsID', 'alt', 'price', 'feat', 'brand'))
+
+probs_mnl_pref <- predict(
+  mnl_pref,
+  newdata = data,
+  obsID = "obsID",
+)
+
+probs_mnl_pref
+```
+
+The `ci` argument can be used to obtain upper and lower bounds of a confidence interval for predicted probabilities, which are estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. For example, a 95% CI is obtained with `ci = 0.95`:
+
+```{r}
+probs_mnl_pref <- predict(
+  mnl_pref,
+  newdata = data,
+  obsID = "obsID",
+  ci = 0.95
+)
+
+probs_mnl_pref
+```
+
+## WTP space models
+
+WTP space models can also be used to predict probabilities, but the `price` argument must be specified for predictions being made on a new data set. In the example below, a WTP space model is estimated and used to predict probabilities for the same `data` data frame as in the previous examples:
+
+```{r}
+mnl_wtp <- logitr(
+  data    = yogurt,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c('feat', 'brand'),
+  price   = 'price',
+  modelSpace = 'wtp',
+  numMultiStarts = 10
+)
+
+probs_mnl_wtp <- predict(
+  mnl_wtp,
+  newdata = data,
+  obsID = "obsID",
+  price = "price",
+  ci = 0.95
+)
+
+probs_mnl_wtp
+```
+
+Here is a bar chart comparing the predicted probabilities from the preference space and WTP space models. Since both models are equivalent except in different spaces, the predicted probabilities are identical:
+
+```{r, eval=FALSE}
+library("ggplot2")
+
+probs <- rbind(probs_mnl_pref, probs_mnl_wtp)
+probs$model <- c(rep("mnl_pref", 8), rep("mnl_wtp", 8))
+probs$alt <- rep(c("dannon", "hiland", "weight", "yoplait"), 4)
+probs$obs <- paste0("Observation ID: ", probs$obsID)
+ggplot(probs, aes(x = alt, y = predicted_prob, fill = model)) +
+    geom_bar(stat = 'identity', width = 0.7, position = "dodge") +
+    geom_errorbar(aes(ymin = predicted_prob_lower, ymax = predicted_prob_upper),
+                  width = 0.2, position = position_dodge(width = 0.7)) +
+    facet_wrap(vars(obs)) +
+    scale_y_continuous(limits = c(0, 1)) +
+    labs(x = 'Alternative', y = 'Expected Choice Probabilities') +
+    theme_bw()
+```
+
+```{r probabilities, echo=FALSE}
+knitr::include_graphics('probs.png')
+```
+
+# Predicting outcomes
+
+The `predict()` method can also be used to predict outcomes by setting `type = "outcome"` (the default is `"prob"` for predicting probabilities). In the examples below, outcomes are predicted using the same preference space and WTP space models as in the previous examples. The `returnData` argument is also set to `TRUE` so that the predicted outcomes can be compared to the actual choices made:
+
+```{r}
+outcomes_pref <- predict(mnl_pref, type = "outcome", returnData = TRUE)
+head(outcomes_pref)
+
+outcomes_wtp <- predict(mnl_wtp, type = "outcome", returnData = TRUE)
+head(outcomes_wtp)
+```
+
+The accuracy of each model can be computed by dividing the number of correctly predicted choices by the total number of choices:
+
+```{r}
+chosen_pref <- subset(outcomes_pref, choice == 1)
+chosen_pref$correct <- chosen_pref$choice == chosen_pref$predicted_outcome
+accuracy_pref <- sum(chosen_pref$correct) / nrow(chosen_pref)
+accuracy_pref
+
+chosen_wtp <- subset(outcomes_wtp, choice == 1)
+chosen_wtp$correct <- chosen_wtp$choice == chosen_wtp$predicted_outcome
+accuracy_wtp <- sum(chosen_wtp$correct) / nrow(chosen_wtp)
+accuracy_wtp
+```
+
+These results show that both models correctly predicted choice for approximately `r scales::percent(round(accuracy_pref, 2))` of the observations in the `yogurt` data frame, which is significantly better than random (25%).
+
+# References

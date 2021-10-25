@@ -3,29 +3,27 @@
 # ============================================================================
 
 appendModelInfo <- function(model, modelInputs) {
-  parsUnscaled <- model$coef
+  parsUnscaled <- model$coefficients
   parNames <- c(modelInputs$parList$mu, modelInputs$parList$sigma)
   names(parsUnscaled) <- parNames
-  scaleFactors <- model$data$scaleFactors
+  scaleFactors <- modelInputs$scaleFactors
   if (model$fail) {
-    coef <- parsUnscaled*NA
-    gradient <- matrix(coef, ncol = 1)
+    gradient <- matrix(parsUnscaled*NA, ncol = 1)
     row.names(gradient) <- parNames
     hessian <- matrix(NA, nrow = length(parNames), ncol = length(parNames))
     row.names(hessian) <- parNames
     colnames(hessian) <- parNames
     nullLogLik <- NA
   } else {
-    coef       <- getCoefs(parsUnscaled, scaleFactors, modelInputs)
-    gradient   <- getGradient(parsUnscaled, scaleFactors, modelInputs)
-    hessian    <- getHessian(parsUnscaled, scaleFactors, modelInputs)
-    nullLogLik <- -1 * modelInputs$evalFuncs$negLL(coef * 0, modelInputs)
+    coefficients <- getCoefs(parsUnscaled, scaleFactors, modelInputs)
+    gradient     <- getGradient(parsUnscaled, scaleFactors, modelInputs)
+    hessian      <- getHessian(parsUnscaled, scaleFactors, modelInputs)
+    nullLogLik   <- -1*modelInputs$evalFuncs$negLL(coefficients*0, modelInputs)
   }
-  model$coef <- coef
+  model$coefficients <- coefficients
   model$gradient <- gradient
   model$hessian <- hessian
   model$nullLogLik <- nullLogLik
-  model$scaleFactors <- scaleFactors
   model$result <- NULL
   model$fail <- NULL
   return(model)

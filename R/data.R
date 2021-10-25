@@ -19,10 +19,6 @@
 #' `price` | price of yogurt
 #' `feat` | dummy for whether a newspaper advertisement was shown to the customer (`1` or `0`)
 #' `brand` | yogurt brand: `"yoplait"`, `"dannon"`, `"hiland"`, or `"weight"` (for weight watcher)
-#' `dannon` | dummy variable for the `"dannon"` brand (`1` or `0`)
-#' `hiland` | dummy variable for the `"hiland"` brand (`1` or `0`)
-#' `weight` | dummy variable for the `"weight"` brand (`1` or `0`)
-#' `yoplait` | dummy variable for the `"yoplait"` brand (`1` or `0`)
 #'
 #' @docType data
 #'

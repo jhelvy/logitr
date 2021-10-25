@@ -13,10 +13,10 @@
 #' function to minimize the negative log-likelihood function.
 #' @keywords logitr mnl mxl wtp willingness-to-pay mixed logit
 #'
-#' @param data The choice data, formatted as a `data.frame` object.
-#' @param choice The name of the column that identifies the choice variable.
-#' @param obsID The name of the column that identifies each choice
-#' observation.
+#' @param data The data, formatted as a `data.frame` object.
+#' @param outcome The name of the column that identifies the outcome variable,
+#' which should be coded with a `1` for `TRUE` and `0` for `FALSE`.
+#' @param obsID The name of the column that identifies each observation.
 #' @param pars The names of the parameters to be estimated in the model.
 #' Must be the same as the column names in the `data` argument. For WTP space
 #' models, do not include price in `pars`.
@@ -69,10 +69,14 @@
 #' @param vcov Set to `TRUE` to evaluate and include the variance-covariance
 #' matrix and coefficient standard errors in the returned object.
 #' Defaults to `FALSE`.
+#' @param predict If `FALSE`, predicted probabilities, fitted values, and
+#' residuals are not included in the returned object. Defaults to `TRUE`.
 #' @param options A list of options for controlling the `nloptr()` optimization.
 #' Run `nloptr::nloptr.print.options()` for details.
+#' @param choice No longer used as of v0.4.0 - if provided, this is passed
+#' to the `outcome` argument and a warning is displayed.
 #' @param choiceName No longer used as of v0.2.3 - if provided, this is passed
-#' to the `choice` argument and a warning is displayed.
+#' to the `outcome` argument and a warning is displayed.
 #' @param obsIDName No longer used as of v0.2.3 - if provided, this is passed
 #' to the `obsID` argument and a warning is displayed.
 #' @param parNames No longer used as of v0.2.3 - if provided, this is passed
@@ -106,11 +110,14 @@
 #'
 #' |    Value    |    Description    |
 #' |:------------|:------------------|
-#' |`coef`|The model coefficients at convergence.|
+#' |`coefficients`|The model coefficients at convergence.|
 #' |`logLik`|The log-likelihood value at convergence.|
 #' |`nullLogLik`|The null log-likelihood value (if all coefficients are 0).|
 #' |`gradient`|The gradient of the log-likelihood at convergence.|
 #' |`hessian`|The hessian of the log-likelihood at convergence.|
+#' |`probabilities`|Predicted probabilities. Not returned if `predict = FALSE`.|
+#' |`fitted.values`|Fitted values. Not returned if `predict = FALSE`.|
+#' |`residuals`|Residuals. Not returned if `predict = FALSE`.|
 #' |`startPars`|The starting values used.|
 #' |`multistartNumber`|The multistart run number for this model.|
 #' |`multistartSummary`|A summary of the log-likelihood values for each multistart run (if more than one multistart was used).|
@@ -123,12 +130,12 @@
 #' |`data`|A list of the original data provided to `logitr()` broken up into components used during model estimation.|
 #' |`numObs`|The number of observations.|
 #' |`numParams`|The number of model parameters.|
-#' |`freq`|The frequency counts of each choice alternative.|
+#' |`freq`|The frequency counts of each alternative.|
 #' |`modelType`|The model type, `'mnl'` for multinomial logit or `'mxl'` for mixed logit.|
 #' |`weightsUsed`|`TRUE` or `FALSE` for whether weights were used in the model.|
 #' |`numClusters`|The number of clusters.|
 #' |`parSetup`|A summary of the distributional assumptions on each model parameter (`"f"`="fixed", `"n"`="normal distribution", `"ln"`="log-normal distribution").|
-#' |`parIDs`|A list identifying the indices of each parameter in `coef` by a variety of types.|
+#' |`parIDs`|A list identifying the indices of each parameter in `coefficients` by a variety of types.|
 #' |`scaleFactors`|A vector of the scaling factors used to scale each coefficient during estimation.|
 #' |`standardDraws`|The draws used during maximum simulated likelihood (for MXL models).|
 #' |`options`|A list of options for controlling the `nloptr()` optimization. Run `nloptr::nloptr.print.options()` for details.|
@@ -142,16 +149,16 @@
 #'
 #' # Estimate a MNL model in the Preference space
 #' mnl_pref <- logitr(
-#'   data   = yogurt,
-#'   choice = "choice",
-#'   obsID  = "obsID",
-#'   pars   = c("price", "feat", "brand")
+#'   data    = yogurt,
+#'   outcome = "choice",
+#'   obsID   = "obsID",
+#'   pars    = c("price", "feat", "brand")
 #' )
 #'
 #' # Estimate a MNL model in the WTP space, using a 10-run multistart
 #' mnl_wtp <- logitr(
 #'   data           = yogurt,
-#'   choice         = "choice",
+#'   outcome        = "choice",
 #'   obsID          = "obsID",
 #'   pars           = c("feat", "brand"),
 #'   price          = "price",
@@ -159,18 +166,18 @@
 #'   numMultiStarts = 10
 #' )
 #'
-#' # Estimate a MXL model in the Preference space with "feat" and "brand"
-#' # following normal distributions
+#' # Estimate a MXL model in the Preference space with "feat"
+#' # following a normal distribution
 #' mxl_pref <- logitr(
-#'   data   = yogurt,
-#'   choice = "choice",
-#'   obsID  = "obsID",
-#'   pars   = c("price", "feat", "brand"),
+#'   data     = yogurt,
+#'   outcome  = "choice",
+#'   obsID    = "obsID",
+#'   pars     = c("price", "feat", "brand"),
 #'   randPars = c(feat = "n", brand = "n")
 #' )
 logitr <- function(
   data,
-  choice,
+  outcome,
   obsID,
   pars,
   price           = NULL,
@@ -189,6 +196,7 @@ logitr <- function(
   standardDraws   = NULL,
   numDraws        = 50,
   vcov            = FALSE,
+  predict         = TRUE,
   options         = list(
     print_level = 0,
     xtol_rel    = 1.0e-6,
@@ -198,6 +206,7 @@ logitr <- function(
     maxeval     = 1000,
     algorithm   = "NLOPT_LD_LBFGS"
   ),
+  choice, # Outdated argument names as of v0.4.0
   parNames, # Outdated argument names as of v0.2.3
   choiceName,
   obsIDName,
@@ -213,39 +222,62 @@ logitr <- function(
   calls <- names(sapply(call, deparse))[-1]
   if (any("parNames" %in% calls)) {
     pars <- parNames
-    warning("Use 'pars' instead of 'parNames'")
+    warning(
+      "The 'parNames' argument is outdate as of v0.2.3. Use 'pars' instead"
+    )
   }
   if (any("choiceName" %in% calls)) {
-    choice <- choiceName
-    warning("Use 'choice' instead of 'choiceName'")
+    outcome <- choiceName
+    warning(
+      "The 'choiceName' argument is outdate as of v0.2.3. Use 'outcome' instead"
+    )
+  }
+  if (any("choice" %in% calls)) {
+    outcome <- choice
+    warning(
+      "The 'choice' argument is outdate as of v0.4.0. Use 'outcome' instead"
+    )
   }
   if (any("obsIDName" %in% calls)) {
     obsID <- obsIDName
-    warning("Use 'obsID' instead of 'obsIDName'")
+    warning(
+      "The 'obsIDName' argument is outdate as of v0.2.3. Use 'obsID' instead"
+    )
   }
   if (any("priceName" %in% calls)) {
     price <- priceName
-    warning("Use 'price' instead of 'priceName'")
+    warning(
+      "The 'priceName' argument is outdate as of v0.2.3. Use 'price' instead"
+    )
   }
   if (any("weightsName" %in% calls)) {
     weights <- weightsName
-    warning("Use 'weights' instead of 'weightsName'")
+    warning(
+      "The 'weightsName' argument is outdate as of v0.2.3. Use 'weights' ",
+      "instead"
+    )
   }
   if (any("clusterName" %in% calls)) {
     clusterID <- clusterName
-    warning("Use 'clusterID' instead of 'clusterName'")
+    warning(
+      "The 'clusterName' argument is outdate as of v0.2.3. Use 'clusterID' ",
+      "instead"
+    )
   }
   if (any("cluster" %in% calls)) {
     clusterID <- cluster
-    warning("Use 'clusterID' instead of 'cluster'")
+    warning(
+      "The 'cluster' argument is outdate as of v0.2.3. Use 'clusterID' instead"
+    )
   }
 
   data <- as.data.frame(data) # tibbles break things
 
   modelInputs <- getModelInputs(
-    data, choice, obsID, pars , randPars, price, randPrice, modelSpace, weights,
-    panelID, clusterID, robust, startParBounds, startVals, numMultiStarts,
-    useAnalyticGrad, scaleInputs, standardDraws, numDraws, vcov, call, options
+    data, outcome, obsID, pars , randPars, price, randPrice, modelSpace,
+    weights, panelID, clusterID, robust, startParBounds, startVals,
+    numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, numDraws,
+    vcov, predict, call, options
   )
   allModels <- runMultistart(modelInputs)
   if (modelInputs$inputs$numMultiStarts > 1) {
@@ -259,6 +291,15 @@ logitr <- function(
   if (vcov) {
     model$vcov <- vcov(model)
     model$se <- sqrt(diag(model$vcov))
+  }
+  if (predict) {
+    model$probabilities <- stats::predict(model)
+    model$fitted.values <- stats::fitted(model, probs = model$probabilities)
+    model$residuals <- stats::residuals(model, fitted = model$fitted.values)
+  } else {
+    model$probabilities <- NULL
+    model$fitted.values <- NULL
+    model$residuals <- NULL
   }
   message("Done!")
   return(model)

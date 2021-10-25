@@ -16,14 +16,6 @@ knitr::opts_chunk$set(
   fig.retina = 3,
   comment = "#>"
 )
-library(logitr)
-# Read in results from already estimated models  so that the
-# examples aren't actually run when building this page, otherwise it'll
-# take much longer to build
-mnl_wtp_unweighted <- readRDS(
-  here::here('inst', 'extdata', 'mnl_wtp_unweighted.Rds'))
-mnl_wtp_weighted <- readRDS(
-  here::here('inst', 'extdata', 'mnl_wtp_weighted.Rds'))
 ```
 
 This vignette demonstrates an example of how to use the `logitr()` function with the `weights` argument to estimate weighted logit models.
@@ -67,15 +59,11 @@ where all the $\omega$ parameters have units of dollars and $\lambda$ is the sca
 
 # Unweighted model
 
-To estimate the model, first load the **logitr** package:
-
-```{r eval=FALSE}
-library(logitr)
-```
-
 Estimate the unweighted model using the `logitr()` function. In this example, I have set `robust = TRUE` since it will also be `TRUE` in the weighted model:
 
-```{r eval=FALSE}
+```{r}
+library("logitr")
+
 mnl_wtp_unweighted <- logitr(
   data   = cars_us,
   choice = 'choice',
@@ -91,19 +79,8 @@ mnl_wtp_unweighted <- logitr(
   numMultiStarts = 10
 )
 ```
-```
-#> Running Multistart 1 of 10...
-#> Running Multistart 2 of 10...
-#> Running Multistart 3 of 10...
-#> Running Multistart 4 of 10...
-#> Running Multistart 5 of 10...
-#> Running Multistart 6 of 10...
-#> Running Multistart 7 of 10...
-#> Running Multistart 8 of 10...
-#> Running Multistart 9 of 10...
-#> Running Multistart 10 of 10...
-#> Done!
-```
+
+Print a summary of the results:
 
 ```{r}
 summary(mnl_wtp_unweighted)
@@ -115,8 +92,7 @@ To estimate the weighted model, simply add the `weights` argument to the call to
 
 ```{r}
 summary(cars_us$weights)
-```
-```{r eval=FALSE}
+
 mnl_wtp_weighted <- logitr(
   data   = cars_us,
   choice = 'choice',
@@ -131,19 +107,6 @@ mnl_wtp_weighted <- logitr(
   robust = TRUE,
   numMultiStarts = 10
 )
-```
-```
-#> Running Multistart 1 of 10...
-#> Running Multistart 2 of 10...
-#> Running Multistart 3 of 10...
-#> Running Multistart 4 of 10...
-#> Running Multistart 5 of 10...
-#> Running Multistart 6 of 10...
-#> Running Multistart 7 of 10...
-#> Running Multistart 8 of 10...
-#> Running Multistart 9 of 10...
-#> Running Multistart 10 of 10...
-#> Done!
 ```
 
 Print a summary of the results:

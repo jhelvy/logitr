@@ -15,16 +15,6 @@ knitr::opts_chunk$set(
   fig.retina = 3,
   comment = "#>"
 )
-library(logitr)
-# Read in results from already estimated models  so that the
-# examples aren't actually run when building this page, otherwise it'll
-# take much longer to build
-mnl_pref_dannon <- readRDS(
-  here::here('inst', 'extdata', 'mnl_pref_dannon.Rds'))
-mnl_pref_weight <- readRDS(
-  here::here('inst', 'extdata', 'mnl_pref_weight.Rds'))
-mnl_pref_dummies <- readRDS(
-  here::here('inst', 'extdata', 'mnl_pref_dummies.Rds'))
 ```
 
 ```{r, child=here::here('man', 'rmdchunks', 'header.Rmd')}
@@ -35,9 +25,11 @@ mnl_pref_dummies <- readRDS(
 ```{r, child=here::here('man', 'rmdchunks', 'dataFormat.Rmd')}
 ```
 
-The {logitr} package contains several example data sets that illustrate this data structure. For example, the `yogurt` contains observations of yogurt purchases by a panel of 100 households [@Jain1994]. Choice is identified by the `choice` column, the observation ID is identified by the `obsID` column, and the columns `price`, `feat`, and `brand` can be used as model covariates (brand is also broken out into additional dummy-coded columns):
+The {logitr} package contains several example data sets that illustrate this data structure. For example, the `yogurt` contains observations of yogurt purchases by a panel of 100 households [@Jain1994]. Choice is identified by the `choice` column, the observation ID is identified by the `obsID` column, and the columns `price`, `feat`, and `brand` can be used as model covariates:
 
 ```{r}
+library("logitr")
+
 head(yogurt)
 ```
 
@@ -49,9 +41,11 @@ Variables are modeled as either continuous or discrete based on their data _type
 
 In contrast, categorical variables (i.e. `character` or `factor` type variables) are by default estimated with a coefficient for all but the first level, which serves as the reference level. The default reference level is determined alphabetically, but it can also be set by modifying the factor levels for that variable. For example, the default reference level for the `brand` variable is `"dannon"` as it is alphabetically first. To set `"weight"` as the reference level, the factor levels can be modified using the `factor()` function:
 
-```{r, eval=FALSE}
+```{r}
+yogurt2 <- yogurt
+
 brands <- c("weight", "hiland", "yoplait", "dannon")
-yogurt$brand <- factor(yogurt$brand, levels = brands)
+yogurt2$brand <- factor(yogurt2$brand, levels = brands)
 ```
 
 # Creating dummy coded variables
@@ -59,30 +53,25 @@ yogurt$brand <- factor(yogurt$brand, levels = brands)
 If you wish to make dummy-coded variables yourself to use them in a model, I recommend using the `dummy_cols()` function from the [{fastDummies}](https://github.com/jacobkap/fastDummies) package. For example, in the code below, I create dummy-coded columns for the `brand` variable and then use those variables as covariates in a model:
 
 ```{r}
-yogurt <- fastDummies::dummy_cols(yogurt, "brand")
+yogurt2 <- fastDummies::dummy_cols(yogurt2, "brand")
 ```
 
-The `yogurt` data frame now has new dummy-coded columns for brand (it actually already had these, but now there are additional ones):
+The `yogurt2` data frame now has new dummy-coded columns for brand:
 
 ```{r}
-head(yogurt)
+head(yogurt2)
 ```
 
 Now I can use those columns as covariates:
 
-```{r, eval=FALSE}
+```{r}
 mnl_pref_dummies <- logitr(
-  data   = yogurt,
-  choice = 'choice',
-  obsID  = 'obsID',
-  pars   = c(
+  data    = yogurt2,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c(
     'price', 'feat', 'brand_yoplait', 'brand_dannon', 'brand_weight')
 )
-```
-```
-Running Model...
-Done!
-```
-```{r}
+
 summary(mnl_pref_dummies)
 ```

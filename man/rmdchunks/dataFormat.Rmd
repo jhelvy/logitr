@@ -1,5 +1,5 @@
-The {logitr} package requires that data be structured in a  `data.frame` and arranged in "long" or "tidy" format [@Wickham2014]. Each row should be an alternative from a choice observation. The choice observations do not have to be symmetric, meaning they can have a "ragged" structure where different choice observations have different numbers of alternatives. The data must also include variables for each of the following:
+The {logitr} package requires that data be structured in a  `data.frame` and arranged in a "long" format [@Wickham2014] where each row contains data on a single alternative from a choice observation. The choice observations do not have to be symmetric, meaning they can have a "ragged" structure where different choice observations have different numbers of alternatives. The data must also include variables for each of the following:
 
-- **Choice**: A dummy variable that identifies which alternative was chosen (`1` is chosen, `0` is not chosen). Only one alternative should be chosen per choice observation.
+- **Outcome**: A dummy-coded variable that identifies which alternative was chosen (`1` is chosen, `0` is not chosen). Only one alternative should have a `1` per choice observation.
 - **Observation ID**: A sequence of repeated numbers that identifies each unique choice observation. For example, if the first three choice observations had 2 alternatives each, then the first 6 rows of the `obsID` variable would be `1, 1, 2, 2, 3, 3`.
 - **Covariates**: Other variables that will be used as model covariates.

@@ -33,7 +33,7 @@ runMultistart <- function(modelInputs) {
     # Add result values to model
     if (!is.null(result)) {
       model$fail <- FALSE
-      model$coef <- result$solution
+      model$coefficients <- result$solution
       # -1 for (+) rather than (-) LL
       model$logLik     <- as.numeric(-1*result$objective)
       model$iterations <- result$iterations
@@ -52,14 +52,16 @@ runMultistart <- function(modelInputs) {
 makeModelTemplate <- function(modelInputs) {
   # Make default values to return if the model fails
   pars <- modelInputs$parList$all
-  coefNA <- rep(NA, length(pars))
   result <- structure(list(
     fail              = TRUE,
-    coef              = coefNA,
+    coefficients      = rep(NA, length(pars)),
     logLik            = NA,
     nullLogLik        = NA,
     gradient          = NA,
     hessian           = NA,
+    probabilities     = NA,
+    fitted.values     = NA,
+    residuals         = NA,
     startPars         = NA,
     multistartNumber  = NA,
     multistartSummary = NULL,
@@ -70,7 +72,7 @@ makeModelTemplate <- function(modelInputs) {
     call              = modelInputs$call,
     inputs            = modelInputs$inputs,
     data              = modelInputs$data,
-    numObs            = sum(modelInputs$data$choice),
+    numObs            = sum(modelInputs$data$outcome),
     numParams         = length(pars),
     freq              = modelInputs$freq,
     modelType         = modelInputs$modelType,
@@ -78,7 +80,7 @@ makeModelTemplate <- function(modelInputs) {
     numClusters       = modelInputs$numClusters,
     parSetup          = modelInputs$parSetup,
     parIDs            = modelInputs$parIDs,
-    scaleFactors      = NA,
+    scaleFactors      = modelInputs$scaleFactors,
     standardDraws     = modelInputs$standardDraws,
     options           = modelInputs$options
   ),

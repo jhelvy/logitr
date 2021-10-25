@@ -38,10 +38,8 @@ navbar:
           href: articles/interactions.html
         - text: "Estimating Weighted Logit Models"
           href: articles/mnl_models_weighted.html
-        - text: "Predicting Choice Probabilities from Estimated Models"
-          href: articles/predict_probs.html
-        - text: "Predicting Choices from Estimated Models"
-          href: articles/predict_choices.html
+        - text: "Predicting Probabilities and Outcomes with Estimated Models"
+          href: articles/predict.html
     - text: "Changelog"
       href: news/index.html
 
@@ -59,19 +57,21 @@ reference:
   contents:
   - summary.logitr
   - coef.logitr
-  - vcov.logitr
   - se.logitr
+  - logLik.logitr
+  - vcov.logitr
+  - fitted.logitr
+  - residuals.logitr
   - statusCodes
 - title: "Computing and Comparing WTP"
   desc: "Functions for computing and comparing WTP from estimated models."
   contents:
   - wtp
   - wtpCompare
-- title: "Predicting Choices & Probabilities"
-  desc: "Functions for predicting choices and choice probabilities for a set of alternatives."
+- title: "Predicting Probabilities & Outcomes"
+  desc: "Functions for predicting probabilities and outcomes."
   contents:
-  - predictChoices
-  - predictProbs
+  - predict.logitr
 - title: "Example Data Sets"
   desc: "Descriptions of data included with this package"
   contents:

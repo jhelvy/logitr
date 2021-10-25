@@ -15,46 +15,32 @@ knitr::opts_chunk$set(
   fig.retina = 3,
   comment = "#>"
 )
-library(logitr)
-# Read in results from already estimated models  so that the
-# examples aren't actually run when building this page, otherwise it'll
-# take much longer to build
-model_price_feat <- readRDS(
-  here::here('inst', 'extdata', 'int_model_price_feat.Rds'))
-model_price_brand <- readRDS(
-  here::here('inst', 'extdata', 'int_model_price_brand.Rds'))
-model_price_group <- readRDS(
-  here::here('inst', 'extdata', 'model_price_group.Rds'))
-model_price_feat_mxl <- readRDS(
-  here::here('inst', 'extdata', 'model_price_feat_mxl.Rds'))
 ```
 
 # Interactions with continuous variables
 
 To add interactions between covariates in your model, you can add additional arguments in the `pars` vector in the `logitr()` function separated by the `*` symbol. For example, let's say we want to interact `price` with `feat` in the following model:
 
-```{r, eval=FALSE}
+```{r}
+library("logitr")
+
 model <- logitr(
-  data   = yogurt,
-  choice = 'choice',
-  obsID  = 'obsID',
-  pars   = c('price', 'feat', 'brand')
+  data    = yogurt,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c('price', 'feat', 'brand')
 )
 ```
 
 To do so, I could add `"price*feat"` to the `pars` vector:
 
-```{r, eval=FALSE}
+```{r}
 model_price_feat <- logitr(
-  data   = yogurt,
-  choice = 'choice',
-  obsID  = 'obsID',
-  pars   = c('price', 'feat', 'brand', 'price*feat')
+  data    = yogurt,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c('price', 'feat', 'brand', 'price*feat')
 )
-```
-```
-#> Running Model...
-#> Done!
 ```
 
 The model now has an estimated coefficient for the `price*feat` effect:
@@ -69,17 +55,13 @@ In the above example, both `price` and `feat` were continuous variables, so only
 
 In the case of interacting _discrete_ variables, multiple interactions coefficients will be estimated according to the number of levels in the discrete attribute. For example, the interaction of `price` with `brand` will require three new interactions - one for each level of the `brand` variable except the first reference level:
 
-```{r, eval=FALSE}
+```{r}
 model_price_brand <- logitr(
-  data   = yogurt,
-  choice = 'choice',
-  obsID  = 'obsID',
-  pars   = c('price', 'feat', 'brand', 'price*brand')
+  data    = yogurt,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c('price', 'feat', 'brand', 'price*brand')
 )
-```
-```
-#> Running Model...
-#> Done!
 ```
 
 The model now has three estimated coefficients for the `price*brand` effect:
@@ -96,27 +78,23 @@ For example, if you had a `group` variable that determined whether individuals b
 
 To illustrate how one might do this, consider if the `yogurt` data frame had two groups of individuals: `A` and `B`. For simple illustration, I'll define these groups arbitrarily based on whether or not the `obsID` is even or odd:
 
-```{r, eval=FALSE}
+```{r}
 # Create group A dummies
 yogurt$groupA <- ifelse(yogurt$obsID %% 2 == 0, 1, 0)
 ```
 
 An interaction between the `group` variable and `price` can be included in the model by first manually creating a `price_groupA` interaction variable and then including it in `pars`:
 
-```{r, eval=FALSE}
+```{r}
 # Create dummy coefficients for group interaction with price
 yogurt$price_groupA <- yogurt$price*yogurt$groupA
 
 model_price_group <- logitr(
-  data   = yogurt,
-  choice = 'choice',
-  obsID  = 'obsID',
-  pars   = c('price', 'feat', 'brand', 'price_groupA')
+  data    = yogurt,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c('price', 'feat', 'brand', 'price_groupA')
 )
-```
-```
-#> Running Model...
-#> Done!
 ```
 
 The model now has attribute coefficients for `price`, `feat`, and `brand` as well as an interaction between the `group` and `price`:
@@ -129,18 +107,14 @@ summary(model_price_group)
 
 Suppose I want to include an interaction between two variables and I also want one of those variables to be modeled as normally distributed across the population. The example below illustrates this cases, where a `price*feat` interaction is specified and the `feat` parameter is modeled as normally distributed by setting `randPars = c(feat = "n")`:
 
-```{r, eval=FALSE}
+```{r}
 model_price_feat_mxl <- logitr(
-  data     = yogurt,
-  choice   = 'choice',
-  obsID    = 'obsID',
-  pars     = c('price', 'feat', 'brand', 'price*feat'),
+  data    = yogurt,
+  outcome = 'choice',
+  obsID   = 'obsID',
+  pars    = c('price', 'feat', 'brand', 'price*feat'),
   randPars = c(feat = "n")
 )
-```
-```
-#> Running Model...
-#> Done!
 ```
 
 In this case, the `price*feat` interaction parameter is interpreted as a difference in the `feat_mu` parameter and price; that is, it an interaction in the _mean_ `feat` parameter and `price`:

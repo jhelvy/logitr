@@ -6,7 +6,7 @@
 \usage{
 logitr(
   data,
-  choice,
+  outcome,
   obsID,
   pars,
   price = NULL,
@@ -25,8 +25,10 @@ logitr(
   standardDraws = NULL,
   numDraws = 50,
   vcov = FALSE,
+  predict = TRUE,
   options = list(print_level = 0, xtol_rel = 1e-06, xtol_abs = 1e-06, ftol_rel = 1e-06,
     ftol_abs = 1e-06, maxeval = 1000, algorithm = "NLOPT_LD_LBFGS"),
+  choice,
   parNames,
   choiceName,
   obsIDName,
@@ -37,12 +39,12 @@ logitr(
 )
 }
 \arguments{
-\item{data}{The choice data, formatted as a \code{data.frame} object.}
+\item{data}{The data, formatted as a \code{data.frame} object.}
 
-\item{choice}{The name of the column that identifies the choice variable.}
+\item{outcome}{The name of the column that identifies the outcome variable,
+which should be coded with a \code{1} for \code{TRUE} and \code{0} for \code{FALSE}.}
 
-\item{obsID}{The name of the column that identifies each choice
-observation.}
+\item{obsID}{The name of the column that identifies each observation.}
 
 \item{pars}{The names of the parameters to be estimated in the model.
 Must be the same as the column names in the \code{data} argument. For WTP space
@@ -113,14 +115,20 @@ maximum simulated likelihood. Defaults to \code{50}.}
 matrix and coefficient standard errors in the returned object.
 Defaults to \code{FALSE}.}
 
+\item{predict}{If \code{FALSE}, predicted probabilities, fitted values, and
+residuals are not included in the returned object. Defaults to \code{TRUE}.}
+
 \item{options}{A list of options for controlling the \code{nloptr()} optimization.
 Run \code{nloptr::nloptr.print.options()} for details.}
+
+\item{choice}{No longer used as of v0.4.0 - if provided, this is passed
+to the \code{outcome} argument and a warning is displayed.}
 
 \item{parNames}{No longer used as of v0.2.3 - if provided, this is passed
 to the \code{pars} argument and a warning is displayed.}
 
 \item{choiceName}{No longer used as of v0.2.3 - if provided, this is passed
-to the \code{choice} argument and a warning is displayed.}
+to the \code{outcome} argument and a warning is displayed.}
 
 \item{obsIDName}{No longer used as of v0.2.3 - if provided, this is passed
 to the \code{obsID} argument and a warning is displayed.}
@@ -140,11 +148,14 @@ to the \code{clusterID} argument and a warning is displayed.}
 \value{
 The function returns a list object containing the following objects.\tabular{ll}{
    Value \tab Description \cr
-   \code{coef} \tab The model coefficients at convergence. \cr
+   \code{coefficients} \tab The model coefficients at convergence. \cr
    \code{logLik} \tab The log-likelihood value at convergence. \cr
    \code{nullLogLik} \tab The null log-likelihood value (if all coefficients are 0). \cr
    \code{gradient} \tab The gradient of the log-likelihood at convergence. \cr
    \code{hessian} \tab The hessian of the log-likelihood at convergence. \cr
+   \code{probabilities} \tab Predicted probabilities. Not returned if \code{predict = FALSE}. \cr
+   \code{fitted.values} \tab Fitted values. Not returned if \code{predict = FALSE}. \cr
+   \code{residuals} \tab Residuals. Not returned if \code{predict = FALSE}. \cr
    \code{startPars} \tab The starting values used. \cr
    \code{multistartNumber} \tab The multistart run number for this model. \cr
    \code{multistartSummary} \tab A summary of the log-likelihood values for each multistart run (if more than one multistart was used). \cr
@@ -157,12 +168,12 @@ The function returns a list object containing the following objects.\tabular{ll}
    \code{data} \tab A list of the original data provided to \code{logitr()} broken up into components used during model estimation. \cr
    \code{numObs} \tab The number of observations. \cr
    \code{numParams} \tab The number of model parameters. \cr
-   \code{freq} \tab The frequency counts of each choice alternative. \cr
+   \code{freq} \tab The frequency counts of each alternative. \cr
    \code{modelType} \tab The model type, \code{'mnl'} for multinomial logit or \code{'mxl'} for mixed logit. \cr
    \code{weightsUsed} \tab \code{TRUE} or \code{FALSE} for whether weights were used in the model. \cr
    \code{numClusters} \tab The number of clusters. \cr
    \code{parSetup} \tab A summary of the distributional assumptions on each model parameter (\code{"f"}="fixed", \code{"n"}="normal distribution", \code{"ln"}="log-normal distribution"). \cr
-   \code{parIDs} \tab A list identifying the indices of each parameter in \code{coef} by a variety of types. \cr
+   \code{parIDs} \tab A list identifying the indices of each parameter in \code{coefficients} by a variety of types. \cr
    \code{scaleFactors} \tab A vector of the scaling factors used to scale each coefficient during estimation. \cr
    \code{standardDraws} \tab The draws used during maximum simulated likelihood (for MXL models). \cr
    \code{options} \tab A list of options for controlling the \code{nloptr()} optimization. Run \code{nloptr::nloptr.print.options()} for details. \cr
@@ -200,16 +211,16 @@ library(logitr)
 
 # Estimate a MNL model in the Preference space
 mnl_pref <- logitr(
-  data   = yogurt,
-  choice = "choice",
-  obsID  = "obsID",
-  pars   = c("price", "feat", "brand")
+  data    = yogurt,
+  outcome = "choice",
+  obsID   = "obsID",
+  pars    = c("price", "feat", "brand")
 )
 
 # Estimate a MNL model in the WTP space, using a 10-run multistart
 mnl_wtp <- logitr(
   data           = yogurt,
-  choice         = "choice",
+  outcome        = "choice",
   obsID          = "obsID",
   pars           = c("feat", "brand"),
   price          = "price",
@@ -217,13 +228,13 @@ mnl_wtp <- logitr(
   numMultiStarts = 10
 )
 
-# Estimate a MXL model in the Preference space with "feat" and "brand"
-# following normal distributions
+# Estimate a MXL model in the Preference space with "feat"
+# following a normal distribution
 mxl_pref <- logitr(
-  data   = yogurt,
-  choice = "choice",
-  obsID  = "obsID",
-  pars   = c("price", "feat", "brand"),
+  data     = yogurt,
+  outcome  = "choice",
+  obsID    = "obsID",
+  pars     = c("price", "feat", "brand"),
   randPars = c(feat = "n", brand = "n")
 )
 }

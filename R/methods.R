@@ -4,9 +4,10 @@
 #'
 #' @name miscmethods.logitr
 #' @aliases logLik.logitr terms.logitr coef.logitr coef.summary.logitr
-#' summary.logitr print.logitr print.summary.logitr se.logitr vcov.logitr
+#' summary.logitr print.logitr print.summary.logitr
 #' @param x is an object of class `logitr`.
-#' @param object is an object of class `logitr`.
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
 #' @param digits the number of digits for printing, defaults to `3`.
 #' @param width the width of the printing.
 #' @param ... further arguments.
@@ -31,7 +32,7 @@ terms.logitr <- function(x, ...) {
 #' @rdname miscmethods.logitr
 #' @export
 coef.logitr <- function(object, ...) {
-    return(object$coef)
+    return(object$coefficients)
 }
 
 #' @rdname miscmethods.logitr
@@ -81,7 +82,7 @@ print.logitr <- function (
   if (!any(is.na(stats::coef(x)))) {
       cat("Coefficients:\n")
       print.default(
-        format(x$coef, digits = digits), print.gap = 2, quote = FALSE)
+        format(x$coefficients, digits = digits), print.gap = 2, quote = FALSE)
       print(x$logLik)
   } else {
     cat("No coefficients\n")
@@ -195,7 +196,7 @@ getRandParSummary <- function(object) {
   parIDs <- object$parIDs
   numDraws <- 10^4
   standardDraws <- getStandardDraws(parIDs, numDraws)
-  betaDraws <- makeBetaDraws(object$coef, parIDs, numDraws, standardDraws)
+  betaDraws <- makeBetaDraws(stats::coef(object), parIDs, numDraws, standardDraws)
   randParSummary <- apply(betaDraws, 2, summary)
   # Add names to summary
   distName <- rep("", length(parSetup))
@@ -225,22 +226,33 @@ getExitMessage <- function(x) {
   return(codes$message[which(codes$code == x$status)])
 }
 
-#' Get standard errors
+#' Extract standard errors
 #'
-#' @param object is an object of class `logitr`.
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
 #' @param ... further arguments.
 #' @export
 se <- function(object, ...) {
   UseMethod("se")
 }
 
-#' @rdname miscmethods.logitr
+#' Extract standard errors
+#'
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
+#' @param ... further arguments.
 #' @export
 se.logitr <- function(object, ...) {
   return(sqrt(diag(stats::vcov(object))))
 }
 
-#' @rdname miscmethods.logitr
+#' Calculate the variance-covariance matrix
+#'
+#' Returns the variance-covariance matrix of the main parameters of a fitted
+#' model object.
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
+#' @param ... further arguments.
 #' @export
 vcov.logitr <- function(object, ...) {
   clusterID <- object$data$clusterID
@@ -279,7 +291,7 @@ getCovarianceRobust <- function(object) {
     data_diff = makeDiffData(object$data, object$modelType)
   )
   clusterID <- modelInputs$data_diff$clusterID
-  scaleFactors <- object$data$scaleFactors
+  scaleFactors <- object$scaleFactors
   parsUnscaled <- stats::coef(object)*scaleFactors
   gradMat <- matrix(NA, nrow = numClusters, ncol = length(parsUnscaled))
   clusters <- sort(unique(clusterID))
@@ -330,4 +342,80 @@ print.logitr_wtp <- function (
   ...
 ) {
   stats::printCoefmat(x, digits = digits)
+}
+
+#' Extract Model Fitted Values
+#'
+#' Returns fitted values from an object of class `logitr`.
+#' @keywords logitr fitted fitted.values
+#'
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
+#' @param probs Predicted probabilities for an object of class `logitr` to use
+#' in computing fitted values Defaults to `NULL`.
+#' @param ... further arguments.
+#'
+#' @return A data frame of the `obsID` and the fitted values extracted from
+#' `object`.
+#' @export
+#' @examples
+#' library(logitr)
+#'
+#' # Estimate a preference space model
+#' mnl_pref <- logitr(
+#'   data    = yogurt,
+#'   outcome = "choice",
+#'   obsID   = "obsID",
+#'   pars    = c("price", "feat", "brand")
+#' )
+#'
+#' # Extract the fitted values from the model
+#' fitted(mnl_pref)
+fitted.logitr <- function(object, probs = NULL, ...) {
+  if (is.null(probs)) {
+    probs <- stats::predict(object, type = "prob")
+  }
+  outcome <- object$data$outcome
+  fitted <- probs[which(outcome == 1),]
+  names(fitted)[which(names(fitted) == 'predicted_prob')] <- "fitted_value"
+  return(fitted)
+}
+
+#' Extract Model Residuals
+#'
+#' Returns model residuals from an object of class `logitr`.
+#' @keywords logitr residuals resid
+#'
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
+#' @param fitted Fitted values for an object of class `logitr` to use in
+#' computing residuals. Defaults to `NULL`.
+#' @param ... further arguments.
+#'
+#' @return A data frame of the `obsID` and the residuals (response minus fitted
+#' values) extracted from `object`.
+#' @export
+#' @examples
+#' library(logitr)
+#'
+#' # Estimate a preference space model
+#' mnl_pref <- logitr(
+#'   data    = yogurt,
+#'   outcome = "choice",
+#'   obsID   = "obsID",
+#'   pars    = c("price", "feat", "brand")
+#' )
+#'
+#' # Extract the residuals from the model
+#' residuals(mnl_pref)
+residuals.logitr <- function(object, fitted = NULL, ...) {
+  if (is.null(fitted)) {
+    fitted <- stats::fitted(object)
+  }
+  reps <- table(object$data$obsID)
+  residuals <- fitted[rep(seq_along(reps), reps),]
+  resids <- object$data$outcome - residuals$fitted_value
+  residuals$fitted_value <- NULL
+  residuals$residual <- as.vector(resids)
+  return(residuals)
 }
