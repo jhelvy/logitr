@@ -240,11 +240,11 @@
 <code class="sourceCode R"><span class="va">wtp_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, price <span class="op">=</span>  <span class="st">"price"</span><span class="op">)</span>
 <span class="va">wtp_mnl_pref</span>
 <span class="co">#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
-<span class="co">#&gt; lambda         0.366555   0.024394  15.0262 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; feat           1.340699   0.359396   3.7304 0.0001912 ***</span>
-<span class="co">#&gt; brandhiland  -10.136219   0.585449 -17.3136 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandweight   -1.749094   0.181689  -9.6269 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandyoplait   2.003848   0.144055  13.9103 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; lambda         0.366555   0.024361  15.0467 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; feat           1.340699   0.358736   3.7373  0.000186 ***</span>
+<span class="co">#&gt; brandhiland  -10.136219   0.584941 -17.3286 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandweight   -1.749094   0.181770  -9.6226 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandyoplait   2.003848   0.143123  14.0009 &lt; 2.2e-16 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre></div>
 </div>
@@ -295,14 +295,14 @@
 <span class="co">#&gt; Summary Of Multistart Runs:</span>
 <span class="co">#&gt;    Log Likelihood Iterations Exit Status</span>
 <span class="co">#&gt; 1       -2656.888         84           3</span>
-<span class="co">#&gt; 2       -2804.746         85           3</span>
-<span class="co">#&gt; 3       -2656.888         42           3</span>
-<span class="co">#&gt; 4       -2806.025         67           3</span>
-<span class="co">#&gt; 5       -2656.888         39           3</span>
-<span class="co">#&gt; 6       -2656.888         48           3</span>
-<span class="co">#&gt; 7       -2656.888         44           3</span>
-<span class="co">#&gt; 8       -2656.888         37           3</span>
-<span class="co">#&gt; 9       -2656.888         42           3</span>
+<span class="co">#&gt; 2       -2656.888         52           3</span>
+<span class="co">#&gt; 3       -2804.528         84           4</span>
+<span class="co">#&gt; 4       -2804.695         83           3</span>
+<span class="co">#&gt; 5       -2656.888         63           3</span>
+<span class="co">#&gt; 6       -2804.684         92           3</span>
+<span class="co">#&gt; 7       -2656.888         39           3</span>
+<span class="co">#&gt; 8       -2656.888         59           3</span>
+<span class="co">#&gt; 9       -2804.164         87           3</span>
 <span class="co">#&gt; 10      -2656.888         38           3</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Use statusCodes() to view the meaning of each status code</span>
@@ -312,25 +312,25 @@
 <span class="co">#&gt; Model Type:     Multinomial Logit</span>
 <span class="co">#&gt; Model Space:   Willingness-to-Pay</span>
 <span class="co">#&gt; Model Run:                8 of 10</span>
-<span class="co">#&gt; Iterations:                    37</span>
-<span class="co">#&gt; Elapsed Time:         0h:0m:0.06s</span>
+<span class="co">#&gt; Iterations:                    59</span>
+<span class="co">#&gt; Elapsed Time:         0h:0m:0.11s</span>
 <span class="co">#&gt; Algorithm:         NLOPT_LD_LBFGS</span>
 <span class="co">#&gt; Weights Used?:              FALSE</span>
 <span class="co">#&gt; Robust?                     FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
 <span class="co">#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
-<span class="co">#&gt; lambda         0.366589   0.024366  15.0452 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; feat           1.340396   0.355852   3.7667 0.0001654 ***</span>
-<span class="co">#&gt; brandhiland  -10.135563   0.576057 -17.5947 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandweight   -1.749160   0.179902  -9.7229 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandyoplait   2.003808   0.142376  14.0741 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; lambda         0.366584   0.024366  15.0449 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; feat           1.340577   0.355865   3.7671 0.0001652 ***</span>
+<span class="co">#&gt; brandhiland  -10.135727   0.576082 -17.5942 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandweight   -1.749080   0.179897  -9.7227 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandyoplait   2.003815   0.142377  14.0740 &lt; 2.2e-16 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log-Likelihood:         -2656.8878784</span>
+<span class="co">#&gt; Log-Likelihood:         -2656.8878779</span>
 <span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span>
-<span class="co">#&gt; AIC:                     5323.7757567</span>
+<span class="co">#&gt; AIC:                     5323.7757559</span>
 <span class="co">#&gt; BIC:                     5352.7168000</span>
 <span class="co">#&gt; McFadden R2:                0.2054148</span>
 <span class="co">#&gt; Adj McFadden R2:            0.2039195</span>
@@ -339,7 +339,7 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mnl_wtp</span><span class="op">)</span>
 <span class="co">#&gt;       lambda         feat  brandhiland  brandweight brandyoplait </span>
-<span class="co">#&gt;    0.3665885    1.3403961  -10.1355629   -1.7491604    2.0038075</span></code></pre></div>
+<span class="co">#&gt;    0.3665844    1.3405772  -10.1357267   -1.7490804    2.0038152</span></code></pre></div>
 </div>
 <div id="compare-wtp-from-both-models" class="section level1">
 <h1 class="hasAnchor">
@@ -349,12 +349,12 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, price <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span>
 <span class="co">#&gt;                       pref           wtp  difference</span>
-<span class="co">#&gt; lambda           0.3665546     0.3665885  0.00003396</span>
-<span class="co">#&gt; feat             1.3406987     1.3403961 -0.00030259</span>
-<span class="co">#&gt; brandhiland    -10.1362190   -10.1355629  0.00065607</span>
-<span class="co">#&gt; brandweight     -1.7490940    -1.7491604 -0.00006640</span>
-<span class="co">#&gt; brandyoplait     2.0038476     2.0038075 -0.00004008</span>
-<span class="co">#&gt; logLik       -2656.8878790 -2656.8878784  0.00000064</span></code></pre></div>
+<span class="co">#&gt; lambda           0.3665546     0.3665844  0.00002984</span>
+<span class="co">#&gt; feat             1.3406987     1.3405772 -0.00012150</span>
+<span class="co">#&gt; brandhiland    -10.1362190   -10.1357267  0.00049236</span>
+<span class="co">#&gt; brandweight     -1.7490940    -1.7490804  0.00001359</span>
+<span class="co">#&gt; brandyoplait     2.0038476     2.0038152 -0.00003241</span>
+<span class="co">#&gt; logLik       -2656.8878790 -2656.8878779  0.00000106</span></code></pre></div>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">
