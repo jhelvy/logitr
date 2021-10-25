@@ -40,7 +40,7 @@ For example, consider a preference space model where the utility for yogurt is g
 where $p_{j}$ is `price`, $x_{j1}$ is `feat`, and $x_{j2-4}$ are dummy-coded variables for each `brand` (with the fourth brand representing the reference level). This model can be estimated using the `logitr()` function as follows:
 
 ```{r}
-library(logitr)
+library("logitr")
 
 mnl_pref <- logitr(
     data    = yogurt,

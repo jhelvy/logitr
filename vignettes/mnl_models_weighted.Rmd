@@ -62,7 +62,7 @@ where all the $\omega$ parameters have units of dollars and $\lambda$ is the sca
 Estimate the unweighted model using the `logitr()` function. In this example, I have set `robust = TRUE` since it will also be `TRUE` in the weighted model:
 
 ```{r}
-library(logitr)
+library("logitr")
 
 mnl_wtp_unweighted <- logitr(
   data   = cars_us,

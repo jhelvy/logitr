@@ -34,7 +34,7 @@ Predictions can be made using both preference space and WTP space models, as wel
 In the example below, a preference space MNL model is estimated (`mnl_pref`) and then used to predict probabilities for the data used to estimate the model:
 
 ```{r}
-library(logitr)
+library("logitr")
 
 mnl_pref <- logitr(
   data    = yogurt,
@@ -70,7 +70,7 @@ probs_mnl_pref <- predict(
 probs_mnl_pref
 ```
 
-The upper and lower bounds of a confidence interval for predicted probabilities can also be obtained by including the `ci` argument. For example, a 95% CI is obtained with `ci = 0.95`:
+The `ci` argument can be used to obtain upper and lower bounds of a confidence interval for predicted probabilities, which are estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. For example, a 95% CI is obtained with `ci = 0.95`:
 
 ```{r}
 probs_mnl_pref <- predict(
@@ -82,8 +82,6 @@ probs_mnl_pref <- predict(
 
 probs_mnl_pref
 ```
-
-These bounds are estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986].
 
 ## WTP space models
 
@@ -114,7 +112,7 @@ probs_mnl_wtp
 Here is a bar chart comparing the predicted probabilities from the preference space and WTP space models. Since both models are equivalent except in different spaces, the predicted probabilities are identical:
 
 ```{r, eval=FALSE}
-library(ggplot2)
+library("ggplot2")
 
 probs <- rbind(probs_mnl_pref, probs_mnl_wtp)
 probs$model <- c(rep("mnl_pref", 8), rep("mnl_wtp", 8))
@@ -136,9 +134,7 @@ knitr::include_graphics('probs.png')
 
 # Predicting outcomes
 
-The `predict()` method can also be used to predict outcomes by setting `type = "outcome"` (the default is `"prob"` for predicting probabilities). If no new data are provided for the `newdata` argument, then outcomes will be predicted for every alternative in the original data used to estimate the model.
-
-In the examples below, outcomes are predicted using the estimated preference space model and using the WTP space model. The `returnData` argument is also set to `TRUE` so that the predicted outcomes can be compared to the actual choices made:
+The `predict()` method can also be used to predict outcomes by setting `type = "outcome"` (the default is `"prob"` for predicting probabilities). In the examples below, outcomes are predicted using the same preference space and WTP space models as in the previous examples. The `returnData` argument is also set to `TRUE` so that the predicted outcomes can be compared to the actual choices made:
 
 ```{r}
 outcomes_pref <- predict(mnl_pref, type = "outcome", returnData = TRUE)

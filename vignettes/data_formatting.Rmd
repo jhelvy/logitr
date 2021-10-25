@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 The {logitr} package contains several example data sets that illustrate this data structure. For example, the `yogurt` contains observations of yogurt purchases by a panel of 100 households [@Jain1994]. Choice is identified by the `choice` column, the observation ID is identified by the `obsID` column, and the columns `price`, `feat`, and `brand` can be used as model covariates:
 
 ```{r}
-library(logitr)
+library("logitr")
 
 head(yogurt)
 ```

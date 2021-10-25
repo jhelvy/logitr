@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 To add interactions between covariates in your model, you can add additional arguments in the `pars` vector in the `logitr()` function separated by the `*` symbol. For example, let's say we want to interact `price` with `feat` in the following model:
 
 ```{r}
-library(logitr)
+library("logitr")
 
 model <- logitr(
   data    = yogurt,

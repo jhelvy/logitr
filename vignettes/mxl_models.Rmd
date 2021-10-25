@@ -48,7 +48,7 @@ where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ ha
 Estimate the model using the `logitr()` function:
 
 ```{r eval=FALSE}
-library(logitr)
+library("logitr")
 
 mxl_pref <- logitr(
   data     = yogurt,
