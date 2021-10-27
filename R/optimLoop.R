@@ -2,51 +2,32 @@
 # Functions for running the optimization
 # ============================================================================
 
-runMultistart <- function(modelInputs) {
-
+runMultistart <- function(modelInputs, numCores) {
   numMultiStarts <- modelInputs$inputs$numMultiStarts
-  modelTemplate <- makeModelTemplate(modelInputs)
-  models <- list()
-
-  # Run multistart loop
-  for (i in 1:numMultiStarts) {
-
-    # Print run number
-    if (numMultiStarts == 1) {
-      message("Running Model...")
-    } else {
-      message("Running Multistart ", i, " of ", numMultiStarts, "...")
-    }
-
-    # Attempt to estimate model
-    startTime <- proc.time()
-    startPars <- getStartPars(modelInputs, i)
-    model <- modelTemplate
-    result <- NULL
-    tryCatch(
-      {
-        result <- runModel(modelInputs, startPars)
-      },
-      error = function(e) {}
-    )
-
-    # Add result values to model
-    if (!is.null(result)) {
-      model$fail <- FALSE
-      model$coefficients <- result$solution
-      # -1 for (+) rather than (-) LL
-      model$logLik     <- as.numeric(-1*result$objective)
-      model$iterations <- result$iterations
-      model$status     <- result$status
-      model$message    <- result$message
-    }
-
-    model$startPars <- startPars
-    model$multistartNumber <- i
-    model$time <- proc.time() - startTime
-    models[[i]] <- model
+  if (numMultiStarts == 1) {
+    message("Running model...")
+  } else {
+    message(
+      "Running ", numMultiStarts, "-iteration multistart using ", numCores,
+      " cores...")
   }
-  return(models)
+  model <- makeModelTemplate(modelInputs)
+  result <- suppressMessages(
+    suppressWarnings(
+      parallel::mclapply(
+        seq(numMultiStarts),
+        runSingleModel,
+        modelInputs = modelInputs,
+        model = model,
+        mc.cores = numCores)
+  ))
+  # Replace iterations that had an error with template model
+  errors <- sapply(result, inherits, what = "try-error")
+  if (any(errors)) {
+    badIDs <- which(errors)
+    result[badIDs] <- lapply(result[badIDs], function(x) x <- model)
+  }
+  return(result)
 }
 
 makeModelTemplate <- function(modelInputs) {
@@ -87,6 +68,27 @@ makeModelTemplate <- function(modelInputs) {
   class = "logitr"
   )
   return(result)
+}
+
+runSingleModel <- function(i, modelInputs, model) {
+  time <- system.time({
+    startPars <- getStartPars(modelInputs, i)
+    result <- NULL
+    result <- runModel(modelInputs, startPars)
+    if (!is.null(result)) {
+      # Didn't fail, so add result values to model
+      model$fail <- FALSE
+      model$coefficients <- result$solution
+      model$logLik <- as.numeric(-1*result$objective) # -1 for (+) LL
+      model$iterations <- result$iterations
+      model$status <- result$status
+      model$message <- result$message
+    }
+    model$startPars <- startPars
+    model$multistartNumber <- i
+  })
+  model$time <- time
+  return(model)
 }
 
 getStartPars <- function(modelInputs, i) {

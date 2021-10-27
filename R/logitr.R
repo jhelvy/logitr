@@ -66,6 +66,9 @@
 #' matrix of standard normal draws if desired. Defaults to `NULL`.
 #' @param numDraws The number of Halton draws to use for MXL models for the
 #' maximum simulated likelihood. Defaults to `50`.
+#' @param numCores The number of cores to use for parallel processing. Defaults
+#' to `NULL`, in which case the number of cores is computed to be
+#' `parallel::detectCores() - 1`.
 #' @param vcov Set to `TRUE` to evaluate and include the variance-covariance
 #' matrix and coefficient standard errors in the returned object.
 #' Defaults to `FALSE`.
@@ -195,6 +198,7 @@ logitr <- function(
   scaleInputs     = TRUE,
   standardDraws   = NULL,
   numDraws        = 50,
+  numCores        = NULL,
   vcov            = FALSE,
   predict         = TRUE,
   options         = list(
@@ -273,13 +277,16 @@ logitr <- function(
 
   data <- as.data.frame(data) # tibbles break things
 
+  # Set number of cores for parallel processing
+  numCores <- setNumCores(numCores)
+
   modelInputs <- getModelInputs(
     data, outcome, obsID, pars , randPars, price, randPrice, modelSpace,
     weights, panelID, clusterID, robust, startParBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, numDraws,
     vcov, predict, call, options
   )
-  allModels <- runMultistart(modelInputs)
+  allModels <- runMultistart(modelInputs, numCores)
   if (modelInputs$inputs$numMultiStarts > 1) {
     summary <- getMultistartSummary(allModels)
     model <- getBestModel(allModels, summary)
@@ -328,4 +335,25 @@ getBestModel <- function(allModels, summary) {
     index <- 1
   }
   return(allModels[[index]])
+}
+
+setNumCores <- function(numCores) {
+  coresAvailable <- parallel::detectCores()
+  maxCores <- coresAvailable - 1
+  if (is.null(numCores)) {
+    return(maxCores)
+  } else if (!is.numeric(numCores)) {
+    warning(
+      "Non-numeric value provided for numCores...setting numCores to ",
+      maxCores
+    )
+    return(maxCores)
+  } else if (numCores > coresAvailable) {
+    warning(
+      "Cannot use ", numCores, " because your machine only has ",
+      coresAvailable, " available...setting numCores to ", maxCores
+    )
+    return(maxCores)
+  }
+  return(numCores)
 }
