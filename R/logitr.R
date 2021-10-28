@@ -340,6 +340,13 @@ getBestModel <- function(allModels, summary) {
 setNumCores <- function(numCores) {
   coresAvailable <- parallel::detectCores()
   maxCores <- coresAvailable - 1
+  # CRAN checks limits you to 2 cores, see this SO issue:
+  # https://stackoverflow.com/questions/50571325/r-cran-check-fail-when-using-parallel-functions
+  chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
+  if (nzchar(chk) && chk == "TRUE") {
+    # use 2 cores in CRAN/Travis/AppVeyor
+    return(2L)
+  }
   if (is.null(numCores)) {
     return(maxCores)
   } else if (!is.numeric(numCores)) {
