@@ -7,20 +7,24 @@ runMultistart <- function(modelInputs, numCores) {
   if (numMultiStarts == 1) {
     message("Running model...")
   } else {
+      ending <- ifelse(numCores == 1, " core...", " cores...")
     message(
-      "Running ", numMultiStarts, "-iteration multistart using ", numCores,
-      " cores...")
+      "Running a ", numMultiStarts, "-iteration multistart using ", numCores,
+      ending)
   }
   model <- makeModelTemplate(modelInputs)
-  result <- suppressMessages(
-    suppressWarnings(
-      parallel::mclapply(
-        seq(numMultiStarts),
-        runSingleModel,
-        modelInputs = modelInputs,
-        model = model,
-        mc.cores = numCores)
-  ))
+  if (Sys.info()[['sysname']] == 'Windows') {
+      result <- multistartPsock(numMultiStarts, modelInputs, model, numCores)
+  } else {
+      result <- suppressMessages(suppressWarnings(
+        parallel::mclapply(
+          seq(numMultiStarts),
+          runSingleModel,
+          modelInputs = modelInputs,
+          model = model,
+          mc.cores = numCores)
+      ))
+  }
   # Replace iterations that had an error with template model
   errors <- sapply(result, inherits, what = "try-error")
   if (any(errors)) {
@@ -68,6 +72,23 @@ makeModelTemplate <- function(modelInputs) {
   class = "logitr"
   )
   return(result)
+}
+
+multistartPsock <- function(numMultiStarts, modelInputs, model, numCores) {
+    cl <- parallel::makeCluster(numCores, "PSOCK")
+    parallel::clusterExport(
+        cl = cl,
+        varlist = c("numMultiStarts", "modelInputs", "model", "numCores"))
+    result <- suppressMessages(suppressWarnings(
+      parallel::parLapply(
+        cl = cl,
+        fun = runSingleModel,
+        seq = seq(numMultiStarts),
+        modelInputs = modelInputs,
+        model = model)
+    ))
+    parallel::stopCluster(cl)
+    return(result)
 }
 
 runSingleModel <- function(i, modelInputs, model) {
