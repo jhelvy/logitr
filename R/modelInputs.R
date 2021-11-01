@@ -7,8 +7,8 @@
 getModelInputs <- function(
     data, outcome, obsID, pars , randPars, price, randPrice, modelSpace,
     weights, panelID, clusterID, robust, startParBounds, startVals,
-    numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, numDraws, vcov,
-    predict, call, options
+    numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, numDraws,
+    numCores, vcov, predict, call, options
 ) {
 
   # Keep original input arguments
@@ -30,6 +30,7 @@ getModelInputs <- function(
     useAnalyticGrad = useAnalyticGrad,
     scaleInputs     = scaleInputs,
     numDraws        = numDraws,
+    numCores        = numCores,
     vcov            = vcov,
     predict         = predict
   )
@@ -37,6 +38,9 @@ getModelInputs <- function(
   # Check for valid inputs and options
   runInputChecks(data, inputs)
   options <- checkOptions(options)
+
+  # Set number of cores for parallel processing
+  numCores <- setNumCores(numCores)
 
   # Get the design matrix, recoding parameters that are categorical
   # or have interactions
@@ -137,6 +141,7 @@ getModelInputs <- function(
     standardDraws = standardDraws,
     nrowX         = nrow(data_diff$X),
     panel         = panel,
+    numCores      = numCores,
     options       = options
   )
 
@@ -151,6 +156,34 @@ getModelInputs <- function(
   modelInputs$evalFuncs <- setEvalFunctions(modelType, useAnalyticGrad)
 
   return(modelInputs)
+}
+
+setNumCores <- function(numCores) {
+  coresAvailable <- parallel::detectCores()
+  maxCores <- coresAvailable - 1
+  # CRAN checks limits you to 2 cores, see this SO issue:
+  # https://stackoverflow.com/questions/50571325/r-cran-check-fail-when-using-parallel-functions
+  chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
+  if (nzchar(chk) && chk == "TRUE") {
+    # use 2 cores in CRAN/Travis/AppVeyor
+    return(2L)
+  }
+  if (is.null(numCores)) {
+    return(maxCores)
+  } else if (!is.numeric(numCores)) {
+    warning(
+      "Non-numeric value provided for numCores...setting numCores to ",
+      maxCores
+    )
+    return(maxCores)
+  } else if (numCores > coresAvailable) {
+    warning(
+      "Cannot use ", numCores, " cores because your machine only has ",
+      coresAvailable, " available...setting numCores to ", maxCores
+    )
+    return(maxCores)
+  }
+  return(numCores)
 }
 
 definePrice <- function(data, inputs) {
