@@ -76,7 +76,7 @@ Interactions between covariates can be entered in the `pars` vector separated by
 
 Both of these examples are multinomial logit models with fixed parameters. See the ["Estimating Multinomial Logit Models"](mnl_models.html) vignette for more details.
 
-## Multi-start estimation
+## Parallelized multi-start estimation
 
 Since WTP space models have non-convex log-likelihood functions, it is recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima. This is implemented using the `numMultiStarts` argument, e.g.:
 
@@ -91,6 +91,8 @@ mnl_wtp <- logitr(
     numMultiStarts = 10
 )
 ```
+
+The multi-start is parallelized by default for faster estimation, and the number of cores / workers to use can be manually set using the `numCores` argument. If `numCores` is not provide, then the number of cores is set to `parallel::detectCores() - 1` (the max cores allowed is capped at `parallel::detectCores()`).
 
 ## Viewing results
 
