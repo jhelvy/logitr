@@ -14,12 +14,13 @@ runMultistart <- function(modelInputs, numCores) {
   }
   model <- makeModelTemplate(modelInputs)
   if (Sys.info()[['sysname']] == 'Windows') {
-      result <- multistartPsock(numMultiStarts, modelInputs, model, numCores)
+      result <- multistartPsock(
+          numMultiStarts, modelInputs, model, numCores)
   } else {
       result <- suppressMessages(suppressWarnings(
         parallel::mclapply(
           seq(numMultiStarts),
-          runSingleModel,
+          runModel,
           modelInputs = modelInputs,
           model = model,
           mc.cores = numCores)
@@ -76,14 +77,12 @@ makeModelTemplate <- function(modelInputs) {
 
 multistartPsock <- function(numMultiStarts, modelInputs, model, numCores) {
     cl <- parallel::makeCluster(numCores, "PSOCK")
-    parallel::clusterExport(
-        cl = cl,
-        varlist = c("numMultiStarts", "modelInputs", "model", "numCores"))
+    parallel::clusterExport(cl, c("modelInputs", "model"))
     result <- suppressMessages(suppressWarnings(
       parallel::parLapply(
         cl = cl,
-        fun = runSingleModel,
-        seq = seq(numMultiStarts),
+        seq(numMultiStarts),
+        runModel,
         modelInputs = modelInputs,
         model = model)
     ))
@@ -91,11 +90,22 @@ multistartPsock <- function(numMultiStarts, modelInputs, model, numCores) {
     return(result)
 }
 
-runSingleModel <- function(i, modelInputs, model) {
+runModel <- function(i, modelInputs, model) {
   time <- system.time({
     startPars <- getStartPars(modelInputs, i)
     result <- NULL
-    result <- runModel(modelInputs, startPars)
+    tryCatch(
+      {
+        if (i == 4) {stop()}
+        result <- nloptr::nloptr(
+          x0     = startPars,
+          eval_f = modelInputs$evalFuncs$objective,
+          mi     = modelInputs,
+          opts   = modelInputs$options
+        )
+      },
+      error = function(e) {}
+    )
     if (!is.null(result)) {
       # Didn't fail, so add result values to model
       model$fail <- FALSE
@@ -166,14 +176,4 @@ checkStartPars <- function(startPars, modelInputs, i) {
     }
   }
   return(startPars)
-}
-
-runModel <- function(modelInputs, startPars) {
-  model <- nloptr::nloptr(
-    x0     = startPars,
-    eval_f = modelInputs$evalFuncs$objective,
-    mi     = modelInputs,
-    opts   = modelInputs$options
-  )
-  return(model)
 }
