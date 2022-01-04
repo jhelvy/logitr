@@ -5,11 +5,11 @@
 runMultistart <- function(modelInputs) {
   numMultiStarts <- modelInputs$inputs$numMultiStarts
   modelInputsList <- makeModelInputsList(modelInputs, numMultiStarts)
-  if (numMultiStarts == 1) {
+  numCores <- modelInputs$numCores
+  if ((numMultiStarts == 1) | (numCores == 1)) {
     message("Running model...")
     return(lapply(modelInputsList, runModel))
   }
-  numCores <- modelInputs$numCores
   printMultistartHeader(modelInputs, numMultiStarts, numCores)
   if (Sys.info()[['sysname']] == 'Windows') {
     cl <- parallel::makeCluster(numCores, "PSOCK")
