@@ -233,32 +233,46 @@ formatProbsUnc <- function(probs_mean, logitUncDraws, obsID, obsIDName, ci) {
 getCI <- function(draws, ci = 0.95) {
   alpha <- (1 - ci)/2
   probs <- c(alpha, 1 - alpha)
-  result <- apply(draws, 1, quantile_speed, probs = probs)
+  result <- apply(draws, 1, fquantile, probs = probs)
   result <- as.data.frame(t(result))
   names(result) <- c("lower", "upper")
   return(result)
 }
 
-# quantile_speed is copied from this gist:
-# https://gist.github.com/sikli/f1775feb9736073cefee97ec81f6b193
-quantile_speed <- function(x, probs = c(0.1, 0.9), na.rm = FALSE) {
-
+#' Predict probabilities and / or outcomes
+#'
+#' This function is a faster implementation of the "type 7" `quantile()`
+#' algorithm and is modified from this gist:
+#' https://gist.github.com/sikli/f1775feb9736073cefee97ec81f6b193
+#' It returns sample quantiles corresponding to the given probabilities.
+#' The smallest observation corresponds to a probability of 0 and the largest
+#' to a probability of 1. For speed, output quantile names are removed as are
+#' error handling such as checking if x are factors, or if probs lie outside
+#' the `[0,1]` range.
+#' @param x numeric vector whose sample quantiles are wanted. `NA` and `NaN`
+#' values are not allowed in numeric vectors unless `na.rm` is `TRUE`.
+#' @param probs numeric vector of probabilities with values in `[0,1]`.
+#' (Values up to `2e-14` outside that range are accepted and moved to the
+#' nearby endpoint.)
+#' @param na.rm logical; if `TRUE`, any `NA` and `NaN`'s are removed from `x`
+#' before the quantiles are computed.
+#' @return A vector of length `length(probs)` is returned;
+#' @export
+#' @examples
+#' library(logitr)
+#'
+fquantile <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE) {
   if (na.rm) x <- x[!is.na(x)]
-
   n <- length(x)
   index <- 1 + (n - 1) * probs
-
   lo <- floor(index)
   hi <- ceiling(index)
-
   x  <- sort(x, partial = unique(c(lo, hi)))
   qs <- x[lo]
-
   i  <- 1:length(probs)
   h  <- index - lo
   qs <- (1 - h) * qs + h * x[hi]
-  qs
-
+  return(qs)
 }
 
 addOutcomes <- function(probs, obsID) {

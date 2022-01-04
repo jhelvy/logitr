@@ -1,6 +1,7 @@
 # logitr 0.5.0
 
-- This version parallelizes the multistart optimization loop.
+- The multistart optimization loop is now parallelized.
+- Exported the `fquantile()` function, which is a faster implementation of the `stats::quantile()` function.
 
 # logitr 0.4.0
 
