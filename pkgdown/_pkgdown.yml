@@ -80,3 +80,7 @@ reference:
   - yogurt
   - cars_us
   - cars_china
+- title: "Other Helpers"
+  desc: "Other helper functions."
+  contents:
+  - fquantile
