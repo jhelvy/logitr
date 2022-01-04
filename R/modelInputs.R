@@ -163,8 +163,8 @@ setNumCores <- function(numCores) {
   maxCores <- coresAvailable - 1
   # CRAN checks limits you to 2 cores, see this SO issue:
   # https://stackoverflow.com/questions/50571325/r-cran-check-fail-when-using-parallel-functions
-  chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
-  if (nzchar(chk) && chk == "TRUE") {
+  chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
+  if (nzchar(chk) && (chk != "false")) {
     # use 2 cores in CRAN/Travis/AppVeyor
     return(2L)
   }
