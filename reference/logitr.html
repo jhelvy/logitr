@@ -279,7 +279,7 @@ Run <code><a href="https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html" cla
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running model...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Done!</span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># Estimate a MNL model in the WTP space, using a 10-run multistart</span></span>
+<span class="r-in"><span class="co"># Estimate a MNL model in the WTP space, using a 5-run multistart</span></span>
 <span class="r-in"><span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu">logitr</span><span class="op">(</span></span>
 <span class="r-in">  data           <span class="op">=</span> <span class="va">yogurt</span>,</span>
 <span class="r-in">  outcome        <span class="op">=</span> <span class="st">"choice"</span>,</span>
@@ -287,10 +287,10 @@ Run <code><a href="https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html" cla
 <span class="r-in">  pars           <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span>,</span>
 <span class="r-in">  price          <span class="op">=</span> <span class="st">"price"</span>,</span>
 <span class="r-in">  modelSpace     <span class="op">=</span> <span class="st">"wtp"</span>,</span>
-<span class="r-in">  numMultiStarts <span class="op">=</span> <span class="fl">10</span></span>
+<span class="r-in">  numMultiStarts <span class="op">=</span> <span class="fl">5</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running multistart...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   Iterations: 10</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   Iterations: 5</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   Cores: 2</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Done!</span>
 <span class="r-in"></span>
@@ -301,7 +301,7 @@ Run <code><a href="https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html" cla
 <span class="r-in">  outcome  <span class="op">=</span> <span class="st">"choice"</span>,</span>
 <span class="r-in">  obsID    <span class="op">=</span> <span class="st">"obsID"</span>,</span>
 <span class="r-in">  pars     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span>,</span>
-<span class="r-in">  randPars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">"n"</span>, brand <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span>
+<span class="r-in">  randPars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running model...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Done!</span>
