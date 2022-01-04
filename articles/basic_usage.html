@@ -290,12 +290,12 @@
 <p>For models in the preference space, a summary table of the computed WTP based on the estimated preference space parameters can be obtained with the <code><a href="../reference/wtp.html">wtp()</a></code> function. For example, the computed WTP from the previously estimated fixed parameter model can be obtained with the following command:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, price <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
-<span class="co">#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
-<span class="co">#&gt; lambda         0.366555   0.024373  15.0397 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; feat           1.340699   0.358658   3.7381 0.0001854 ***</span>
-<span class="co">#&gt; brandhiland  -10.136219   0.585617 -17.3086 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandweight   -1.749094   0.181149  -9.6555 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandyoplait   2.003848   0.143405  13.9733 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt;               Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
+<span class="co">#&gt; lambda         0.36656    0.02443  15.0044 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; feat           1.34070    0.35963   3.7280  0.000193 ***</span>
+<span class="co">#&gt; brandhiland  -10.13622    0.58480 -17.3328 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandweight   -1.74909    0.18181  -9.6203 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandyoplait   2.00385    0.14338  13.9760 &lt; 2.2e-16 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre></div>
 <p>The <code><a href="../reference/wtp.html">wtp()</a></code> function divides the non-price parameters by the negative of the price parameter. Standard errors are estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. Similarly, the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function can be used to compare the WTP from a WTP space model with that computed from an equivalent preference space model:</p>
@@ -357,14 +357,14 @@
 
 <span class="va">probs</span>
 <span class="co">#&gt;     obsID predicted_prob predicted_prob_lower predicted_prob_upper</span>
-<span class="co">#&gt; 49     13     0.43685145           0.41537314           0.45885336</span>
-<span class="co">#&gt; 50     13     0.03312986           0.02649758           0.04163223</span>
-<span class="co">#&gt; 51     13     0.19155548           0.17619457           0.20712431</span>
-<span class="co">#&gt; 52     13     0.33846321           0.31630751           0.35919316</span>
-<span class="co">#&gt; 165    42     0.60764778           0.57222198           0.64006202</span>
-<span class="co">#&gt; 166    42     0.02602007           0.01819354           0.03608688</span>
-<span class="co">#&gt; 167    42     0.17803313           0.16161178           0.19409681</span>
-<span class="co">#&gt; 168    42     0.18829902           0.16832723           0.20849036</span></code></pre></div>
+<span class="co">#&gt; 49     13     0.43685145           0.41541753           0.45726441</span>
+<span class="co">#&gt; 50     13     0.03312986           0.02648765           0.04167726</span>
+<span class="co">#&gt; 51     13     0.19155548           0.17588239           0.20783419</span>
+<span class="co">#&gt; 52     13     0.33846321           0.31933803           0.35955808</span>
+<span class="co">#&gt; 165    42     0.60764778           0.57331754           0.63904065</span>
+<span class="co">#&gt; 166    42     0.02602007           0.01852402           0.03616920</span>
+<span class="co">#&gt; 167    42     0.17803313           0.16131625           0.19467463</span>
+<span class="co">#&gt; 168    42     0.18829902           0.16945269           0.20861712</span></code></pre></div>
 <p>The resulting <code>probs</code> data frame contains the expected probabilities for each alternative. The lower and upper predictions reflect a 95% confidence interval (controlled by the <code>ci</code> argument), which are estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. The default is <code>ci = NULL</code>, in which case no CI predictions are made.</p>
 <p>WTP space models can also be used to predict probabilities, but the <code>price</code> argument must be specified for predictions being made on a new data set:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -399,14 +399,14 @@
 <span class="co">#&gt; 2     1      0                 0</span>
 <span class="co">#&gt; 3     1      1                 0</span>
 <span class="co">#&gt; 4     1      0                 0</span>
-<span class="co">#&gt; 5     2      1                 1</span>
+<span class="co">#&gt; 5     2      1                 0</span>
 <span class="co">#&gt; 6     2      0                 0</span></code></pre></div>
 <p>You can quickly compute the accuracy by dividing the number of correctly predicted choices by the total number of choices:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">chosen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">outcomes</span>, <span class="va">choice</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>
 <span class="va">chosen</span><span class="op">$</span><span class="va">correct</span> <span class="op">&lt;-</span> <span class="va">chosen</span><span class="op">$</span><span class="va">choice</span> <span class="op">==</span> <span class="va">chosen</span><span class="op">$</span><span class="va">predicted_outcome</span>
 <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">chosen</span><span class="op">$</span><span class="va">correct</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">chosen</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.3797678</span></code></pre></div>
+<span class="co">#&gt; [1] 0.384743</span></code></pre></div>
 <p>See the <a href="predict.html">“Predicting Probabilities and Choices from Estimated Models”</a> vignette for more details about making predictions.</p>
 </div>
   </div>
