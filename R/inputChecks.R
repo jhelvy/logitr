@@ -36,93 +36,21 @@ runInputChecks <- function(data, inputs) {
 
   dataColumnNames <- colnames(data)
 
-  # Check panel name
-  if (! is.null(inputs$panelID)) {
-    if (! inputs$panelID %in% dataColumnNames) {
-      stop(
-        'You have specified a panelID name that is not present in the data ',
-        'provided:\n', as.character(inputs$panelID),
-        '\nPlease double-check the provided argument for "panelID".'
-      )
-    }
-  }
-
-  # Check cluster name
-  if (! is.null(inputs$clusterID)) {
-    if (! inputs$clusterID %in% dataColumnNames) {
-      stop(
-        'You have specified a clusterID name that is not present in the data ',
-        'provided:\n', as.character(inputs$clusterID),
-        '\nPlease double-check the provided argument for "clusterID".'
-      )
-    }
-  }
-
-  # Check weights name
-  if (! is.null(inputs$weights)) {
-    if (! inputs$weights %in% dataColumnNames) {
-      stop(
-        'You have specified a weights name that is not present in the data ',
-        'provided:\n', as.character(inputs$weights),
-        '\nPlease double-check the provided argument for "weights".'
-      )
-    }
-  }
+  # Check if any of the argument names are missing in the data
+  missingInData(inputs, "panelID", dataColumnNames)
+  missingInData(inputs, "clusterID", dataColumnNames)
+  missingInData(inputs, "weights", dataColumnNames)
+  missingInData(inputs, "randPars", dataColumnNames)
 
   # Separate out pars with and without interactions
   ints <- grepl("\\*", inputs$pars)
   parsInt <- inputs$pars[ints == TRUE]
   parsNoInt <- inputs$pars[ints == FALSE]
-
-  # Check if provided pars are in the data
-  if (length(parsNoInt) > 0) {
-    missingFixedPars <- c()
-    for (par in parsNoInt) {
-      if (! par %in% dataColumnNames) {
-        missingFixedPars <- c(missingFixedPars, par)
-      }
-    }
-    if (length(missingFixedPars) > 0) {
-      stop(
-        'You have specified a fixed parameter name(s) that is/are not present ',
-        'in the data provided:\n', as.list(missingFixedPars),
-        '\nPlease double-check the provided argument for "pars".'
-      )
-    }
-  }
   if (length(parsInt) > 0) {
     parsInt <- unique(unlist(strsplit(parsInt, "\\*")))
-    missingIntPars <- c()
-    for (par in parsInt) {
-      if (! par %in% dataColumnNames) {
-        missingIntPars <- c(missingIntPars, par)
-      }
-    }
-    if (length(missingIntPars) > 0) {
-      stop(
-        'You have specified an interaction parameter name(s) that is/are ',
-        'not present in the data provided:\n', as.list(missingIntPars),
-        '\nPlease double-check the provided argument for "pars".'
-      )
-    }
   }
-
-  # Check all random parameter names
-  if (! is.null(inputs$randPars)) {
-    missingRandPars <- c()
-    for (par in names(inputs$randPars)) {
-      if (! par %in% dataColumnNames) {
-        missingRandPars <- c(missingFixedPars, par)
-      }
-      if (length(missingRandPars) > 0) {
-      stop(
-        'You have specified a random parameter name(s) that is/are not ',
-        'present in the data provided:\n', as.list(missingRandPars),
-        '\nPlease double-check the provided argument for "randPars".'
-      )
-      }
-    }
-  }
+  inputs$pars <- c(parsInt, parsNoInt)
+  missingInData(inputs, "pars", dataColumnNames)
 
   # Make sure the number of multistarts and numDraws are positive
   if (inputs$numMultiStarts < 1) {
@@ -133,6 +61,20 @@ runInputChecks <- function(data, inputs) {
     stop('"numDraws" must be a positive integer')
   }
 
+}
+
+missingInData <- function(inputs, var, dataColumnNames) {
+  vals <- inputs[[var]]
+  if (! is.null(vals)) {
+    test <- ! vals %in% dataColumnNames
+    if (any(test)) {
+      missing <- paste(vals[which(test)], collapse = ", ")
+      stop(
+        'The following specified names for "', var, '" are not present in the ',
+        'data:\n', missing
+      )
+    }
+  }
 }
 
 # Need to check if the user-provided list of options omits any of these
