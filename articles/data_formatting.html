@@ -30,6 +30,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -42,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
       </span>
     </div>
 
@@ -96,7 +98,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/jhelvy/logitr/">
+  <a href="https://github.com/jhelvy/logitr/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -117,7 +119,7 @@
       <h1 data-toc-skip>Data Formatting and Encoding</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/jhelvy/logitr/blob/master/vignettes/data_formatting.Rmd"><code>vignettes/data_formatting.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jhelvy/logitr/blob/HEAD/vignettes/data_formatting.Rmd" class="external-link"><code>vignettes/data_formatting.Rmd</code></a></small>
       <div class="hidden name"><code>data_formatting.Rmd</code></div>
 
     </div>
@@ -125,9 +127,9 @@
     
     
 
-<div id="basic-required-format" class="section level1">
-<h1 class="hasAnchor">
-<a href="#basic-required-format" class="anchor"></a>Basic required format</h1>
+<div class="section level1">
+<h1 id="basic-required-format">Basic required format<a class="anchor" aria-label="anchor" href="#basic-required-format"></a>
+</h1>
 <p>The {logitr} package requires that data be structured in a <code>data.frame</code> and arranged in a “long” format <span class="citation">[@Wickham2014]</span> where each row contains data on a single alternative from a choice observation. The choice observations do not have to be symmetric, meaning they can have a “ragged” structure where different choice observations have different numbers of alternatives. The data must also include variables for each of the following:</p>
 <ul>
 <li>
@@ -139,9 +141,9 @@
 </ul>
 <p>The {logitr} package contains several example data sets that illustrate this data structure. For example, the <code>yogurt</code> contains observations of yogurt purchases by a panel of 100 households <span class="citation">[@Jain1994]</span>. Choice is identified by the <code>choice</code> column, the observation ID is identified by the <code>obsID</code> column, and the columns <code>price</code>, <code>feat</code>, and <code>brand</code> can be used as model covariates:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/jhelvy/logitr">"logitr"</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/jhelvy/logitr" class="external-link">"logitr"</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">yogurt</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">yogurt</span><span class="op">)</span>
 <span class="co">#&gt;   id obsID alt choice price feat   brand</span>
 <span class="co">#&gt; 1  1     1   1      0   8.1    0  dannon</span>
 <span class="co">#&gt; 2  1     1   2      0   6.1    0  hiland</span>
@@ -151,47 +153,47 @@
 <span class="co">#&gt; 6  1     2   2      0   6.4    0  hiland</span></code></pre></div>
 <p>This data set also includes an <code>alt</code> variable that determines the alternatives included in the choice set of each observation and an <code>id</code> variable that determines the individual as the data have a panel structure containing multiple choice observations from each individual.</p>
 </div>
-<div id="continuous-versus-discrete-variables" class="section level1">
-<h1 class="hasAnchor">
-<a href="#continuous-versus-discrete-variables" class="anchor"></a>Continuous versus discrete variables</h1>
+<div class="section level1">
+<h1 id="continuous-versus-discrete-variables">Continuous versus discrete variables<a class="anchor" aria-label="anchor" href="#continuous-versus-discrete-variables"></a>
+</h1>
 <p>Variables are modeled as either continuous or discrete based on their data <em>type</em>. Numeric variables are by default estimated with a single “slope” coefficient. For example, consider a data frame that contains a <code>price</code> variable with the levels $10, $15, and $20. Adding <code>price</code> to the <code>pars</code> argument in the main <code><a href="../reference/logitr.html">logitr()</a></code> function would result in a single <code>price</code> coefficient for the “slope” of the change in price.</p>
-<p>In contrast, categorical variables (i.e. <code>character</code> or <code>factor</code> type variables) are by default estimated with a coefficient for all but the first level, which serves as the reference level. The default reference level is determined alphabetically, but it can also be set by modifying the factor levels for that variable. For example, the default reference level for the <code>brand</code> variable is <code>"dannon"</code> as it is alphabetically first. To set <code>"weight"</code> as the reference level, the factor levels can be modified using the <code><a href="https://rdrr.io/r/base/factor.html">factor()</a></code> function:</p>
+<p>In contrast, categorical variables (i.e. <code>character</code> or <code>factor</code> type variables) are by default estimated with a coefficient for all but the first level, which serves as the reference level. The default reference level is determined alphabetically, but it can also be set by modifying the factor levels for that variable. For example, the default reference level for the <code>brand</code> variable is <code>"dannon"</code> as it is alphabetically first. To set <code>"weight"</code> as the reference level, the factor levels can be modified using the <code><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor()</a></code> function:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">yogurt2</span> <span class="op">&lt;-</span> <span class="va">yogurt</span>
 
-<span class="va">brands</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"weight"</span>, <span class="st">"hiland"</span>, <span class="st">"yoplait"</span>, <span class="st">"dannon"</span><span class="op">)</span>
-<span class="va">yogurt2</span><span class="op">$</span><span class="va">brand</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">yogurt2</span><span class="op">$</span><span class="va">brand</span>, levels <span class="op">=</span> <span class="va">brands</span><span class="op">)</span></code></pre></div>
+<span class="va">brands</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"weight"</span>, <span class="st">"hiland"</span>, <span class="st">"yoplait"</span>, <span class="st">"dannon"</span><span class="op">)</span>
+<span class="va">yogurt2</span><span class="op">$</span><span class="va">brand</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">yogurt2</span><span class="op">$</span><span class="va">brand</span>, levels <span class="op">=</span> <span class="va">brands</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="creating-dummy-coded-variables" class="section level1">
-<h1 class="hasAnchor">
-<a href="#creating-dummy-coded-variables" class="anchor"></a>Creating dummy coded variables</h1>
-<p>If you wish to make dummy-coded variables yourself to use them in a model, I recommend using the <code>dummy_cols()</code> function from the <a href="https://github.com/jacobkap/fastDummies">{fastDummies}</a> package. For example, in the code below, I create dummy-coded columns for the <code>brand</code> variable and then use those variables as covariates in a model:</p>
+<div class="section level1">
+<h1 id="creating-dummy-coded-variables">Creating dummy coded variables<a class="anchor" aria-label="anchor" href="#creating-dummy-coded-variables"></a>
+</h1>
+<p>If you wish to make dummy-coded variables yourself to use them in a model, I recommend using the <code>dummy_cols()</code> function from the <a href="https://github.com/jacobkap/fastDummies" class="external-link">{fastDummies}</a> package. For example, in the code below, I create dummy-coded columns for the <code>brand</code> variable and then use those variables as covariates in a model:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">yogurt2</span> <span class="op">&lt;-</span> <span class="fu">fastDummies</span><span class="fu">::</span><span class="fu"><a href="https://jacobkap.github.io/fastDummies/reference/dummy_cols.html">dummy_cols</a></span><span class="op">(</span><span class="va">yogurt2</span>, <span class="st">"brand"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">yogurt2</span> <span class="op">&lt;-</span> <span class="fu">fastDummies</span><span class="fu">::</span><span class="fu"><a href="https://jacobkap.github.io/fastDummies/reference/dummy_cols.html" class="external-link">dummy_cols</a></span><span class="op">(</span><span class="va">yogurt2</span>, <span class="st">"brand"</span><span class="op">)</span></code></pre></div>
 <p>The <code>yogurt2</code> data frame now has new dummy-coded columns for brand:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">yogurt2</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 6 × 11</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">yogurt2</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 11</span></span>
 <span class="co">#&gt;      id obsID   alt choice price  feat brand   brand_weight brand_hiland</span>
-<span class="co">#&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;          &lt;int&gt;        &lt;int&gt;</span>
-<span class="co">#&gt; 1     1     1     1      0  8.1      0 dannon             0            0</span>
-<span class="co">#&gt; 2     1     1     2      0  6.10     0 hiland             0            1</span>
-<span class="co">#&gt; 3     1     1     3      1  7.90     0 weight             1            0</span>
-<span class="co">#&gt; 4     1     1     4      0 10.8      0 yoplait            0            0</span>
-<span class="co">#&gt; 5     1     2     1      1  9.80     0 dannon             0            0</span>
-<span class="co">#&gt; 6     1     2     2      0  6.40     0 hiland             0            1</span>
-<span class="co">#&gt; # … with 2 more variables: brand_yoplait &lt;int&gt;, brand_dannon &lt;int&gt;</span></code></pre></div>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     1     1     1      0  8.1      0 dannon             0            0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     1     1     2      0  6.10     0 hiland             0            1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     1     1     3      1  7.90     0 weight             1            0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     1     1     4      0 10.8      0 yoplait            0            0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     1     2     1      1  9.80     0 dannon             0            0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     1     2     2      0  6.40     0 hiland             0            1</span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 2 more variables: brand_yoplait &lt;int&gt;, brand_dannon &lt;int&gt;</span></span></code></pre></div>
 <p>Now I can use those columns as covariates:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mnl_pref_dummies</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   data    <span class="op">=</span> <span class="va">yogurt2</span>,
   outcome <span class="op">=</span> <span class="st">'choice'</span>,
   obsID   <span class="op">=</span> <span class="st">'obsID'</span>,
-  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
     <span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand_yoplait'</span>, <span class="st">'brand_dannon'</span>, <span class="st">'brand_weight'</span><span class="op">)</span>
 <span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mnl_pref_dummies</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mnl_pref_dummies</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; logitr(data = yogurt2, outcome = "choice", obsID = "obsID", pars = c("price", </span>
@@ -207,7 +209,7 @@
 <span class="co">#&gt; Model Space:          Preference</span>
 <span class="co">#&gt; Model Run:                1 of 1</span>
 <span class="co">#&gt; Iterations:                   18</span>
-<span class="co">#&gt; Elapsed Time:        0h:0m:0.04s</span>
+<span class="co">#&gt; Elapsed Time:        0h:0m:0.03s</span>
 <span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span>
 <span class="co">#&gt; Weights Used?:             FALSE</span>
 <span class="co">#&gt; Robust?                    FALSE</span>
@@ -243,11 +245,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by John Helveston.</p>
+  <p></p>
+<p>Developed by John Helveston.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -255,6 +259,8 @@
 
   
 
+
+  
 
   </body>
 </html>

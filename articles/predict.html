@@ -30,6 +30,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -42,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
       </span>
     </div>
 
@@ -96,7 +98,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/jhelvy/logitr/">
+  <a href="https://github.com/jhelvy/logitr/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -117,35 +119,35 @@
       <h1 data-toc-skip>Predicting Probabilities and Outcomes with Estimated Models</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/jhelvy/logitr/blob/master/vignettes/predict.Rmd"><code>vignettes/predict.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jhelvy/logitr/blob/HEAD/vignettes/predict.Rmd" class="external-link"><code>vignettes/predict.Rmd</code></a></small>
       <div class="hidden name"><code>predict.Rmd</code></div>
 
     </div>
 
     
     
-<p>Once a model has been estimated, it can be used to predict probabilities and / or outcomes for a set of alternatives. This vignette demonstrates examples of how to so using the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> method along with an estimated model.</p>
+<p>Once a model has been estimated, it can be used to predict probabilities and / or outcomes for a set of alternatives. This vignette demonstrates examples of how to so using the <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> method along with an estimated model.</p>
 <p>You can make predictions for any set of alternatives, so long as the columns in the alternatives correspond to estimated coefficients in your model. By default, if no new data are provided via the <code>newdata</code> argument, then predictions will be made for the original data used to estimate the model.</p>
 <p>Predictions can be made using both preference space and WTP space models, as well as multinomial logit and mixed logit models. For mixed logit models, heterogeneity is modeled by simulating draws from the population estimates of the estimated model.</p>
-<div id="predicting-probabilities" class="section level1">
-<h1 class="hasAnchor">
-<a href="#predicting-probabilities" class="anchor"></a>Predicting probabilities</h1>
-<div id="preference-space-models" class="section level2">
-<h2 class="hasAnchor">
-<a href="#preference-space-models" class="anchor"></a>Preference space models</h2>
+<div class="section level1">
+<h1 id="predicting-probabilities">Predicting probabilities<a class="anchor" aria-label="anchor" href="#predicting-probabilities"></a>
+</h1>
+<div class="section level2">
+<h2 id="preference-space-models">Preference space models<a class="anchor" aria-label="anchor" href="#preference-space-models"></a>
+</h2>
 <p>In the example below, a preference space MNL model is estimated (<code>mnl_pref</code>) and then used to predict probabilities for the data used to estimate the model:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/jhelvy/logitr">"logitr"</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/jhelvy/logitr" class="external-link">"logitr"</a></span><span class="op">)</span>
 
 <span class="va">mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   data    <span class="op">=</span> <span class="va">yogurt</span>,
   outcome <span class="op">=</span> <span class="st">'choice'</span>,
   obsID   <span class="op">=</span> <span class="st">'obsID'</span>,
-  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>
+  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>
 <span class="op">)</span>
 
-<span class="va">probs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">probs</span><span class="op">)</span>
+<span class="va">probs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">probs</span><span class="op">)</span>
 <span class="co">#&gt;   obsID predicted_prob</span>
 <span class="co">#&gt; 1     1     0.41802407</span>
 <span class="co">#&gt; 2     1     0.02118240</span>
@@ -153,10 +155,10 @@
 <span class="co">#&gt; 4     1     0.32387615</span>
 <span class="co">#&gt; 5     2     0.26643822</span>
 <span class="co">#&gt; 6     2     0.02255486</span></code></pre></div>
-<p>The <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> method returns a data frame containing the observation ID as well as the predicted probabilities. The original data can also be returned in the data frame by setting <code>returnData = TRUE</code>:</p>
+<p>The <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> method returns a data frame containing the observation ID as well as the predicted probabilities. The original data can also be returned in the data frame by setting <code>returnData = TRUE</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">probs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, returnData <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">probs</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">probs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, returnData <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">probs</span><span class="op">)</span>
 <span class="co">#&gt;   obsID predicted_prob price feat brandhiland brandweight brandyoplait choice</span>
 <span class="co">#&gt; 1     1     0.41802407   8.1    0           0           0            0      0</span>
 <span class="co">#&gt; 2     1     0.02118240   6.1    0           1           0            0      0</span>
@@ -166,11 +168,11 @@
 <span class="co">#&gt; 6     2     0.02255486   6.4    0           1           0            0      0</span></code></pre></div>
 <p>To make predictions for a new set of alternatives, use the <code>newdata</code> argument. The example below makes predictions for just two of the choice observations from the <code>yogurt</code> dataset:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span>
-  <span class="va">yogurt</span>, <span class="va">obsID</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">13</span><span class="op">)</span>,
-  select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'obsID'</span>, <span class="st">'alt'</span>, <span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span>
+  <span class="va">yogurt</span>, <span class="va">obsID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">13</span><span class="op">)</span>,
+  select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'obsID'</span>, <span class="st">'alt'</span>, <span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span><span class="op">)</span>
 
-<span class="va">probs_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span>
+<span class="va">probs_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span>
   <span class="va">mnl_pref</span>,
   newdata <span class="op">=</span> <span class="va">data</span>,
   obsID <span class="op">=</span> <span class="st">"obsID"</span>,
@@ -188,7 +190,7 @@
 <span class="co">#&gt; 168    42     0.18829902</span></code></pre></div>
 <p>The <code>ci</code> argument can be used to obtain upper and lower bounds of a confidence interval for predicted probabilities, which are estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">(Krinsky and Robb 1986)</span>. For example, a 95% CI is obtained with <code>ci = 0.95</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">probs_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span>
+<code class="sourceCode R"><span class="va">probs_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span>
   <span class="va">mnl_pref</span>,
   newdata <span class="op">=</span> <span class="va">data</span>,
   obsID <span class="op">=</span> <span class="st">"obsID"</span>,
@@ -206,22 +208,22 @@
 <span class="co">#&gt; 167    42     0.17803313           0.16220968           0.19451696</span>
 <span class="co">#&gt; 168    42     0.18829902           0.16778560           0.20931234</span></code></pre></div>
 </div>
-<div id="wtp-space-models" class="section level2">
-<h2 class="hasAnchor">
-<a href="#wtp-space-models" class="anchor"></a>WTP space models</h2>
+<div class="section level2">
+<h2 id="wtp-space-models">WTP space models<a class="anchor" aria-label="anchor" href="#wtp-space-models"></a>
+</h2>
 <p>WTP space models can also be used to predict probabilities, but the <code>price</code> argument must be specified for predictions being made on a new data set. In the example below, a WTP space model is estimated and used to predict probabilities for the same <code>data</code> data frame as in the previous examples:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
   data    <span class="op">=</span> <span class="va">yogurt</span>,
   outcome <span class="op">=</span> <span class="st">'choice'</span>,
   obsID   <span class="op">=</span> <span class="st">'obsID'</span>,
-  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>,
+  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>,
   price   <span class="op">=</span> <span class="st">'price'</span>,
   modelSpace <span class="op">=</span> <span class="st">'wtp'</span>,
   numMultiStarts <span class="op">=</span> <span class="fl">10</span>
 <span class="op">)</span>
 
-<span class="va">probs_mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span>
+<span class="va">probs_mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span>
   <span class="va">mnl_wtp</span>,
   newdata <span class="op">=</span> <span class="va">data</span>,
   obsID <span class="op">=</span> <span class="st">"obsID"</span>,
@@ -241,30 +243,30 @@
 <span class="co">#&gt; 168    42     0.18828717            0.1690269           0.21036219</span></code></pre></div>
 <p>Here is a bar chart comparing the predicted probabilities from the preference space and WTP space models. Since both models are equivalent except in different spaces, the predicted probabilities are identical:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org">"ggplot2"</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org" class="external-link">"ggplot2"</a></span><span class="op">)</span>
 
-<span class="va">probs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">probs_mnl_pref</span>, <span class="va">probs_mnl_wtp</span><span class="op">)</span>
-<span class="va">probs</span><span class="op">$</span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"mnl_pref"</span>, <span class="fl">8</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"mnl_wtp"</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span>
-<span class="va">probs</span><span class="op">$</span><span class="va">alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"dannon"</span>, <span class="st">"hiland"</span>, <span class="st">"weight"</span>, <span class="st">"yoplait"</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span>
-<span class="va">probs</span><span class="op">$</span><span class="va">obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Observation ID: "</span>, <span class="va">probs</span><span class="op">$</span><span class="va">obsID</span><span class="op">)</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">probs</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">alt</span>, y <span class="op">=</span> <span class="va">predicted_prob</span>, fill <span class="op">=</span> <span class="va">model</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">'identity'</span>, width <span class="op">=</span> <span class="fl">0.7</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html">geom_errorbar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">predicted_prob_lower</span>, ymax <span class="op">=</span> <span class="va">predicted_prob_upper</span><span class="op">)</span>,
-                  width <span class="op">=</span> <span class="fl">0.2</span>, position <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html">position_dodge</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html">vars</a></span><span class="op">(</span><span class="va">obs</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'Alternative'</span>, y <span class="op">=</span> <span class="st">'Expected Choice Probabilities'</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<span class="va">probs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">probs_mnl_pref</span>, <span class="va">probs_mnl_wtp</span><span class="op">)</span>
+<span class="va">probs</span><span class="op">$</span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"mnl_pref"</span>, <span class="fl">8</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"mnl_wtp"</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span>
+<span class="va">probs</span><span class="op">$</span><span class="va">alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dannon"</span>, <span class="st">"hiland"</span>, <span class="st">"weight"</span>, <span class="st">"yoplait"</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span>
+<span class="va">probs</span><span class="op">$</span><span class="va">obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Observation ID: "</span>, <span class="va">probs</span><span class="op">$</span><span class="va">obsID</span><span class="op">)</span>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">probs</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">alt</span>, y <span class="op">=</span> <span class="va">predicted_prob</span>, fill <span class="op">=</span> <span class="va">model</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">'identity'</span>, width <span class="op">=</span> <span class="fl">0.7</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html" class="external-link">geom_errorbar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">predicted_prob_lower</span>, ymax <span class="op">=</span> <span class="va">predicted_prob_upper</span><span class="op">)</span>,
+                  width <span class="op">=</span> <span class="fl">0.2</span>, position <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html" class="external-link">position_dodge</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">obs</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'Alternative'</span>, y <span class="op">=</span> <span class="st">'Expected Choice Probabilities'</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="probs.png"><!-- --></p>
 </div>
 </div>
-<div id="predicting-outcomes" class="section level1">
-<h1 class="hasAnchor">
-<a href="#predicting-outcomes" class="anchor"></a>Predicting outcomes</h1>
-<p>The <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> method can also be used to predict outcomes by setting <code>type = "outcome"</code> (the default is <code>"prob"</code> for predicting probabilities). In the examples below, outcomes are predicted using the same preference space and WTP space models as in the previous examples. The <code>returnData</code> argument is also set to <code>TRUE</code> so that the predicted outcomes can be compared to the actual choices made:</p>
+<div class="section level1">
+<h1 id="predicting-outcomes">Predicting outcomes<a class="anchor" aria-label="anchor" href="#predicting-outcomes"></a>
+</h1>
+<p>The <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> method can also be used to predict outcomes by setting <code>type = "outcome"</code> (the default is <code>"prob"</code> for predicting probabilities). In the examples below, outcomes are predicted using the same preference space and WTP space models as in the previous examples. The <code>returnData</code> argument is also set to <code>TRUE</code> so that the predicted outcomes can be compared to the actual choices made:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">outcomes_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, type <span class="op">=</span> <span class="st">"outcome"</span>, returnData <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">outcomes_pref</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">outcomes_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, type <span class="op">=</span> <span class="st">"outcome"</span>, returnData <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">outcomes_pref</span><span class="op">)</span>
 <span class="co">#&gt;   obsID predicted_outcome price feat brandhiland brandweight brandyoplait</span>
 <span class="co">#&gt; 1     1                 1   8.1    0           0           0            0</span>
 <span class="co">#&gt; 2     1                 0   6.1    0           1           0            0</span>
@@ -280,8 +282,8 @@
 <span class="co">#&gt; 5      1</span>
 <span class="co">#&gt; 6      0</span>
 
-<span class="va">outcomes_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">mnl_wtp</span>, type <span class="op">=</span> <span class="st">"outcome"</span>, returnData <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">outcomes_wtp</span><span class="op">)</span>
+<span class="va">outcomes_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_wtp</span>, type <span class="op">=</span> <span class="st">"outcome"</span>, returnData <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">outcomes_wtp</span><span class="op">)</span>
 <span class="co">#&gt;   obsID predicted_outcome feat brandhiland brandweight brandyoplait price</span>
 <span class="co">#&gt; 1     1                 1    0           0           0            0   8.1</span>
 <span class="co">#&gt; 2     1                 0    0           1           0            0   6.1</span>
@@ -298,22 +300,22 @@
 <span class="co">#&gt; 6      0</span></code></pre></div>
 <p>The accuracy of each model can be computed by dividing the number of correctly predicted choices by the total number of choices:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">chosen_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">outcomes_pref</span>, <span class="va">choice</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">chosen_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">outcomes_pref</span>, <span class="va">choice</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>
 <span class="va">chosen_pref</span><span class="op">$</span><span class="va">correct</span> <span class="op">&lt;-</span> <span class="va">chosen_pref</span><span class="op">$</span><span class="va">choice</span> <span class="op">==</span> <span class="va">chosen_pref</span><span class="op">$</span><span class="va">predicted_outcome</span>
-<span class="va">accuracy_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">chosen_pref</span><span class="op">$</span><span class="va">correct</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">chosen_pref</span><span class="op">)</span>
+<span class="va">accuracy_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">chosen_pref</span><span class="op">$</span><span class="va">correct</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">chosen_pref</span><span class="op">)</span>
 <span class="va">accuracy_pref</span>
 <span class="co">#&gt; [1] 0.3888889</span>
 
-<span class="va">chosen_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">outcomes_wtp</span>, <span class="va">choice</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>
+<span class="va">chosen_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">outcomes_wtp</span>, <span class="va">choice</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>
 <span class="va">chosen_wtp</span><span class="op">$</span><span class="va">correct</span> <span class="op">&lt;-</span> <span class="va">chosen_wtp</span><span class="op">$</span><span class="va">choice</span> <span class="op">==</span> <span class="va">chosen_wtp</span><span class="op">$</span><span class="va">predicted_outcome</span>
-<span class="va">accuracy_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">chosen_wtp</span><span class="op">$</span><span class="va">correct</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">chosen_wtp</span><span class="op">)</span>
+<span class="va">accuracy_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">chosen_wtp</span><span class="op">$</span><span class="va">correct</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">chosen_wtp</span><span class="op">)</span>
 <span class="va">accuracy_wtp</span>
 <span class="co">#&gt; [1] 0.3909619</span></code></pre></div>
 <p>These results show that both models correctly predicted choice for approximately 39% of the observations in the <code>yogurt</code> data frame, which is significantly better than random (25%).</p>
 </div>
-<div id="references" class="section level1 unnumbered">
-<h1 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h1>
+<div class="section level1 unnumbered">
+<h1 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h1>
 <div id="refs" class="references">
 <div id="ref-Krinsky1986">
 <p>Krinsky, Itzhak, and A Leslie Robb. 1986. “On Approximating the Statistical Properties of Elasticities.” <em>The Review of Economics and Statistics</em>, 715–19.</p>
@@ -333,11 +335,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by John Helveston.</p>
+  <p></p>
+<p>Developed by John Helveston.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -345,6 +349,8 @@
 
   
 
+
+  
 
   </body>
 </html>
