@@ -46,5 +46,6 @@ A data frame with the estimated shares for each alternative in
 This function has been depreciated since logitr version 0.1.4. Use
 \code{predictProbs()} instead.
 }
+\keyword{internal}
 \keyword{logitr}
 \keyword{simulation}

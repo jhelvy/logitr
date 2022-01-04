@@ -51,6 +51,7 @@ alternative in \code{alts}.
 Returns the expected choice probabilities for a single set or multiple sets
 of alternatives based on the results from an estimated model.
 }
+\keyword{internal}
 \keyword{logitr}
 \keyword{predict}
 \keyword{probabilities}

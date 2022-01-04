@@ -313,6 +313,7 @@ addData <- function(object, result, data, newdata) {
 #'
 #' @return A data frame with the predicted choices for each alternative in
 #' `alts`.
+#' @keywords internal
 #' @export
 predictChoices <- function(model, alts, altID, obsID = NULL) {
     # v0.3.2
@@ -347,6 +348,7 @@ predictChoices <- function(model, alts, altID, obsID = NULL) {
 #'
 #' @return A data frame with the estimated choice probabilities for each
 #' alternative in `alts`.
+#' @keywords internal
 #' @export
 predictProbs <- function(
   model,
@@ -387,6 +389,7 @@ predictProbs <- function(
 #'
 #' @return A data frame with the estimated shares for each alternative in
 #' `alts`.
+#' @keywords internal
 #' @export
 simulateShares <- function(
   model,

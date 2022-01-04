@@ -32,6 +32,7 @@ Returns the expected choices for a set of one or more alternatives based
 on the results from an estimated model.
 }
 \keyword{choice}
+\keyword{internal}
 \keyword{logitr}
 \keyword{predict}
 \keyword{simulation}

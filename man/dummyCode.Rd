@@ -18,3 +18,4 @@ A a dataframe with new dummy-coded variables added.
 \description{
 This function is depreciated. Use fastDummies::dummy_cols() instead.
 }
+\keyword{internal}

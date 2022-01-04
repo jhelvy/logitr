@@ -9,6 +9,7 @@
 #' @param vars The variables in the data frame for which you want to
 #' create new dummy coded variables.
 #' @return A a dataframe with new dummy-coded variables added.
+#' @keywords internal
 #' @export
 dummyCode <- function(df, vars) {
   # v0.1.3
