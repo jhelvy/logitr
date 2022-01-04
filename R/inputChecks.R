@@ -37,10 +37,10 @@ runInputChecks <- function(data, inputs) {
   dataColumnNames <- colnames(data)
 
   # Check if any of the argument names are missing in the data
-  missingInData(inputs, "panelID", dataColumnNames)
-  missingInData(inputs, "clusterID", dataColumnNames)
-  missingInData(inputs, "weights", dataColumnNames)
-  missingInData(inputs, "randPars", dataColumnNames)
+  missingInData(inputs$panelID, "panelID", dataColumnNames)
+  missingInData(inputs$clusterID, "clusterID", dataColumnNames)
+  missingInData(inputs$weights, "weights", dataColumnNames)
+  missingInData(names(inputs$randPars), "randPars", dataColumnNames)
 
   # Separate out pars with and without interactions
   ints <- grepl("\\*", inputs$pars)
@@ -49,8 +49,7 @@ runInputChecks <- function(data, inputs) {
   if (length(parsInt) > 0) {
     parsInt <- unique(unlist(strsplit(parsInt, "\\*")))
   }
-  inputs$pars <- c(parsInt, parsNoInt)
-  missingInData(inputs, "pars", dataColumnNames)
+  missingInData(c(parsInt, parsNoInt), "pars", dataColumnNames)
 
   # Make sure the number of multistarts and numDraws are positive
   if (inputs$numMultiStarts < 1) {
@@ -63,8 +62,7 @@ runInputChecks <- function(data, inputs) {
 
 }
 
-missingInData <- function(inputs, var, dataColumnNames) {
-  vals <- inputs[[var]]
+missingInData <- function(vals, var, dataColumnNames) {
   if (! is.null(vals)) {
     test <- ! vals %in% dataColumnNames
     if (any(test)) {
