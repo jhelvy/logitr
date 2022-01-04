@@ -26,10 +26,10 @@ The latest version includes support for:
 -   Functions for computing WTP from preference space models.
 -   Functions for predicting expected probabilities and outcomes for
     sets of alternatives based on an estimated model.
--   An optional parallelized multistart optimization loop that uses
-    different random starting points in each iteration to search for
-    different local minima (useful for non-convex problems like MXL
-    models or models with WTP space parameterizations).
+-   A parallelized multistart optimization loop that uses different
+    random starting points in each iteration to search for different
+    local minima (useful for non-convex problems like MXL models or
+    models with WTP space parameterizations).
 
 Note: MXL models assume uncorrelated heterogeneity covariances and are
 estimated using maximum simulated likelihood based on the algorithms in

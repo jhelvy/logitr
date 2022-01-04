@@ -58,6 +58,7 @@ reference:
   - summary.logitr
   - coef.logitr
   - se.logitr
+  - se
   - logLik.logitr
   - vcov.logitr
   - fitted.logitr
@@ -67,6 +68,7 @@ reference:
   desc: "Functions for computing and comparing WTP from estimated models."
   contents:
   - wtp
+  - wtp.logitr
   - wtpCompare
 - title: "Predicting Probabilities & Outcomes"
   desc: "Functions for predicting probabilities and outcomes."
