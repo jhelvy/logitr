@@ -66,10 +66,10 @@
 #' matrix of standard normal draws if desired. Defaults to `NULL`.
 #' @param numDraws The number of Halton draws to use for MXL models for the
 #' maximum simulated likelihood. Defaults to `50`.
-#' @param numCores The number of cores to use for parallel processing. Defaults
-#' to `NULL`, in which case the number of cores is set to
-#' `parallel::detectCores() - 1`. Max cores allowed is capped at
-#' `parallel::detectCores()`.
+#' @param numCores The number of cores to use for parallel processing of the
+#' multistart. Set to `1` to serially run the multistart. Defaults to `NULL`,
+#' in which case the number of cores is set to `parallel::detectCores() - 1`.
+#' Max cores allowed is capped at `parallel::detectCores()`.
 #' @param vcov Set to `TRUE` to evaluate and include the variance-covariance
 #' matrix and coefficient standard errors in the returned object.
 #' Defaults to `FALSE`.

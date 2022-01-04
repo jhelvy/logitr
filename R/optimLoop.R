@@ -4,9 +4,13 @@
 
 runMultistart <- function(modelInputs) {
   numMultiStarts <- modelInputs$inputs$numMultiStarts
+  modelInputsList <- makeModelInputsList(modelInputs, numMultiStarts)
+  if (numMultiStarts == 1) {
+    message("Running model...")
+    return(lapply(modelInputsList, runModel))
+  }
   numCores <- modelInputs$numCores
   printMultistartHeader(modelInputs, numMultiStarts, numCores)
-  modelInputsList <- makeModelInputsList(modelInputs, numMultiStarts)
   if (Sys.info()[['sysname']] == 'Windows') {
     cl <- parallel::makeCluster(numCores, "PSOCK")
     result <- suppressMessages(suppressWarnings(
@@ -22,15 +26,11 @@ runMultistart <- function(modelInputs) {
 }
 
 printMultistartHeader <- function(modelInputs, numMultiStarts, numCores) {
-  if (numMultiStarts == 1) {
-    message("Running model...")
-  } else {
-    message(
-      "Running multistart...\n",
-      "  Iterations: ", numMultiStarts, "\n",
-      "  Cores: ", numCores
-    )
-  }
+  message(
+    "Running multistart...\n",
+    "  Iterations: ", numMultiStarts, "\n",
+    "  Cores: ", numCores
+  )
   if (!is.null(modelInputs$inputs$startVals)) {
     message("  NOTE: Using user-provided starting values for first iteration")
   }
