@@ -12,9 +12,9 @@ status](https://app.travis-ci.com/jhelvy/logitr.svg?branch=master)](https://app.
 [![](http://cranlogs.r-pkg.org/badges/grand-total/logitr?color=blue)](https://cran.r-project.org/package=logitr)
 <!-- badges: end -->
 
-Fast estimation of multinomial (MNL) and mixed logit (MXL) models in R
-with “Preference” space or “Willingness-to-pay” (WTP) space [utility
-parameterizations](https://jhelvy.github.io/logitr/articles/utility_models.html).
+logitr: Fast Estimation of Multinomial (MNL) and Mixed Logit (MXL)
+Models with Preference Space and Willingness to Pay Space [Utility
+Parameterizations](https://jhelvy.github.io/logitr/articles/utility_models.html)
 
 The latest version includes support for:
 
@@ -22,13 +22,11 @@ The latest version includes support for:
 -   Heterogeneous mixed logit (MXL) models with normal and log-normal
     parameter distributions.
 -   Preference space and WTP space utility parameterizations.
--   Weighted models to differentially weight individual choice
-    observations.
+-   Weighted models to differentially weight individual observations.
 -   Functions for computing WTP from preference space models.
--   Functions for predicting expected choices and choice probabilities
-    for a set (or multiple sets) of alternatives based on an estimated
-    model.
--   An option to run a multistart optimization loop that uses different
+-   Functions for predicting expected probabilities and outcomes for
+    sets of alternatives based on an estimated model.
+-   A parallelized multistart optimization loop that uses different
     random starting points in each iteration to search for different
     local minima (useful for non-convex problems like MXL models or
     models with WTP space parameterizations).
@@ -82,20 +80,20 @@ it if you cited it - you can get the citation by typing
 
 ``` r
 citation("logitr")
-#>
+#> 
 #> To cite logitr in publications use:
-#>
-#>   John Paul Helveston (2021). logitr: Random utility logit models with
-#>   preference and willingness to pay space parameterizations. R package
-#>   version 0.4.0
-#>
+#> 
+#>   John Paul Helveston (2021). logitr: Fast Estimation of Multinomial
+#>   and Mixed Logit Models with Preference Space and Willingness to Pay
+#>   Space Utility Parameterizations. R package version 0.5.0
+#> 
 #> A BibTeX entry for LaTeX users is
-#>
+#> 
 #>   @Manual{,
-#>     title = {logitr: Random Utility Logit Models with Preference and Willingness to Pay Space Parameterizations},
+#>     title = {logitr: Fast Estimation of Multinomial and Mixed Logit Models with Preference Space and Willingness to Pay Space Utility Parameterizations},
 #>     author = {John Paul Helveston},
 #>     year = {2021},
-#>     note = {R package version 0.4.0},
+#>     note = {R package version 0.5.0},
 #>     url = {https://jhelvy.github.io/logitr/},
 #>   }
 ```

@@ -24,6 +24,7 @@ logitr(
   scaleInputs = TRUE,
   standardDraws = NULL,
   numDraws = 50,
+  numCores = NULL,
   vcov = FALSE,
   predict = TRUE,
   options = list(print_level = 0, xtol_rel = 1e-06, xtol_abs = 1e-06, ftol_rel = 1e-06,
@@ -110,6 +111,11 @@ matrix of standard normal draws if desired. Defaults to \code{NULL}.}
 
 \item{numDraws}{The number of Halton draws to use for MXL models for the
 maximum simulated likelihood. Defaults to \code{50}.}
+
+\item{numCores}{The number of cores to use for parallel processing of the
+multistart. Set to \code{1} to serially run the multistart. Defaults to \code{NULL},
+in which case the number of cores is set to \code{parallel::detectCores() - 1}.
+Max cores allowed is capped at \code{parallel::detectCores()}.}
 
 \item{vcov}{Set to \code{TRUE} to evaluate and include the variance-covariance
 matrix and coefficient standard errors in the returned object.

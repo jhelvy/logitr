@@ -3,97 +3,55 @@
 # ============================================================================
 
 runMultistart <- function(modelInputs) {
-
   numMultiStarts <- modelInputs$inputs$numMultiStarts
-  modelTemplate <- makeModelTemplate(modelInputs)
-  models <- list()
-
-  # Run multistart loop
-  for (i in 1:numMultiStarts) {
-
-    # Print run number
-    if (numMultiStarts == 1) {
-      message("Running Model...")
-    } else {
-      message("Running Multistart ", i, " of ", numMultiStarts, "...")
-    }
-
-    # Attempt to estimate model
-    startTime <- proc.time()
-    startPars <- getStartPars(modelInputs, i)
-    model <- modelTemplate
-    result <- NULL
-    tryCatch(
-      {
-        result <- runModel(modelInputs, startPars)
-      },
-      error = function(e) {}
-    )
-
-    # Add result values to model
-    if (!is.null(result)) {
-      model$fail <- FALSE
-      model$coefficients <- result$solution
-      # -1 for (+) rather than (-) LL
-      model$logLik     <- as.numeric(-1*result$objective)
-      model$iterations <- result$iterations
-      model$status     <- result$status
-      model$message    <- result$message
-    }
-
-    model$startPars <- startPars
-    model$multistartNumber <- i
-    model$time <- proc.time() - startTime
-    models[[i]] <- model
+  modelInputsList <- makeModelInputsList(modelInputs, numMultiStarts)
+  if (numMultiStarts == 1) {
+    message("Running model...")
+    return(lapply(modelInputsList, runModel))
   }
-  return(models)
+  numCores <- modelInputs$numCores
+  printMultistartHeader(modelInputs, numMultiStarts, numCores)
+  if (Sys.info()[['sysname']] == 'Windows') {
+    cl <- parallel::makeCluster(numCores, "PSOCK")
+    result <- suppressMessages(suppressWarnings(
+      parallel::parLapply(cl = cl, modelInputsList, runModel)
+    ))
+    parallel::stopCluster(cl)
+  } else {
+    result <- suppressMessages(suppressWarnings(
+      parallel::mclapply(modelInputsList, runModel, mc.cores = numCores)
+    ))
+  }
+  return(result)
 }
 
-makeModelTemplate <- function(modelInputs) {
-  # Make default values to return if the model fails
-  pars <- modelInputs$parList$all
-  result <- structure(list(
-    fail              = TRUE,
-    coefficients      = rep(NA, length(pars)),
-    logLik            = NA,
-    nullLogLik        = NA,
-    gradient          = NA,
-    hessian           = NA,
-    probabilities     = NA,
-    fitted.values     = NA,
-    residuals         = NA,
-    startPars         = NA,
-    multistartNumber  = NA,
-    multistartSummary = NULL,
-    time              = NA,
-    iterations        = NA,
-    message           = "Generic failure code.",
-    status            = -1,
-    call              = modelInputs$call,
-    inputs            = modelInputs$inputs,
-    data              = modelInputs$data,
-    numObs            = sum(modelInputs$data$outcome),
-    numParams         = length(pars),
-    freq              = modelInputs$freq,
-    modelType         = modelInputs$modelType,
-    weightsUsed       = modelInputs$weightsUsed,
-    numClusters       = modelInputs$numClusters,
-    parSetup          = modelInputs$parSetup,
-    parIDs            = modelInputs$parIDs,
-    scaleFactors      = modelInputs$scaleFactors,
-    standardDraws     = modelInputs$standardDraws,
-    options           = modelInputs$options
-  ),
-  class = "logitr"
+printMultistartHeader <- function(modelInputs, numMultiStarts, numCores) {
+  message(
+    "Running multistart...\n",
+    "  Iterations: ", numMultiStarts, "\n",
+    "  Cores: ", numCores
   )
-  return(result)
+  if (!is.null(modelInputs$inputs$startVals)) {
+    message("  NOTE: Using user-provided starting values for first iteration")
+  }
+}
+
+makeModelInputsList <- function(modelInputs, numMultiStarts) {
+  # Make repeated list of modelInputs
+  modelInputs$model <- makeModelTemplate(modelInputs)
+  modelInputsList <- rep(list(modelInputs), numMultiStarts)
+  # Add starting parameters and multistartNumber for each modelInputs
+  for (i in 1:numMultiStarts) {
+    modelInputsList[[i]]$model$startPars <- getStartPars(modelInputs, i)
+    modelInputsList[[i]]$model$multistartNumber <- i
+  }
+  return(modelInputsList)
 }
 
 getStartPars <- function(modelInputs, i) {
   startPars <- getRandomStartPars(modelInputs)
   if (i == 1) {
-    if (! (is.null(modelInputs$inputs$startVals))) {
-      message("NOTE: Using user-provided starting values for this run")
+    if (!is.null(modelInputs$inputs$startVals)) {
       userStartPars <- modelInputs$inputs$startVals
       if (length(userStartPars) != length(startPars)) {
         stop(
@@ -145,12 +103,71 @@ checkStartPars <- function(startPars, modelInputs, i) {
   return(startPars)
 }
 
-runModel <- function(modelInputs, startPars) {
-  model <- nloptr::nloptr(
-    x0     = startPars,
-    eval_f = modelInputs$evalFuncs$objective,
-    mi     = modelInputs,
-    opts   = modelInputs$options
+makeModelTemplate <- function(modelInputs) {
+  # Make default values to return if the model fails
+  pars <- modelInputs$parList$all
+  result <- structure(list(
+    fail              = TRUE,
+    coefficients      = rep(NA, length(pars)),
+    logLik            = NA,
+    nullLogLik        = NA,
+    gradient          = NA,
+    hessian           = NA,
+    probabilities     = NA,
+    fitted.values     = NA,
+    residuals         = NA,
+    startPars         = NA,
+    multistartNumber  = NA,
+    multistartSummary = NULL,
+    time              = NA,
+    iterations        = NA,
+    message           = "Generic failure code.",
+    status            = -1,
+    call              = modelInputs$call,
+    inputs            = modelInputs$inputs,
+    data              = modelInputs$data,
+    numObs            = sum(modelInputs$data$outcome),
+    numParams         = length(pars),
+    freq              = modelInputs$freq,
+    modelType         = modelInputs$modelType,
+    weightsUsed       = modelInputs$weightsUsed,
+    numClusters       = modelInputs$numClusters,
+    parSetup          = modelInputs$parSetup,
+    parIDs            = modelInputs$parIDs,
+    scaleFactors      = modelInputs$scaleFactors,
+    standardDraws     = modelInputs$standardDraws,
+    options           = modelInputs$options
+  ),
+  class = "logitr"
   )
+  return(result)
+}
+
+runModel <- function(modelInputs) {
+  time <- system.time({
+    model <- modelInputs$model
+    result <- NULL
+    tryCatch(
+      {
+        result <- nloptr::nloptr(
+          x0     = modelInputs$model$startPars,
+          eval_f = modelInputs$evalFuncs$objective,
+          mi     = modelInputs,
+          opts   = modelInputs$options
+        )
+      },
+      error = function(e) {}
+    )
+    if (!is.null(result)) {
+      # Didn't fail, so add result values to model
+      model$fail <- FALSE
+      model$coefficients <- result$solution
+      model$logLik <- as.numeric(-1*result$objective) # -1 for (+) LL
+      model$iterations <- result$iterations
+      model$status <- result$status
+      model$message <- result$message
+    }
+  })
+  model$time <- time
   return(model)
 }
