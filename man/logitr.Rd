@@ -223,7 +223,7 @@ mnl_pref <- logitr(
   pars    = c("price", "feat", "brand")
 )
 
-# Estimate a MNL model in the WTP space, using a 10-run multistart
+# Estimate a MNL model in the WTP space, using a 5-run multistart
 mnl_wtp <- logitr(
   data           = yogurt,
   outcome        = "choice",
@@ -231,7 +231,7 @@ mnl_wtp <- logitr(
   pars           = c("feat", "brand"),
   price          = "price",
   modelSpace     = "wtp",
-  numMultiStarts = 10
+  numMultiStarts = 5
 )
 
 # Estimate a MXL model in the Preference space with "feat"
@@ -241,7 +241,7 @@ mxl_pref <- logitr(
   outcome  = "choice",
   obsID    = "obsID",
   pars     = c("price", "feat", "brand"),
-  randPars = c(feat = "n", brand = "n")
+  randPars = c(feat = "n")
 )
 }
 \keyword{logit}
