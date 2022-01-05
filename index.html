@@ -30,8 +30,6 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
-
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -44,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
       </span>
     </div>
 
@@ -98,7 +96,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/jhelvy/logitr/" class="external-link">
+  <a href="https://github.com/jhelvy/logitr/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -115,9 +113,9 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div class="section level1">
-<div class="page-header"><h1 id="logitr-">logitr <a href="https://jhelvy.github.io/logitr/"><img src="reference/figures/logo.png" align="right" height="139"></a>
-<a class="anchor" aria-label="anchor" href="#logitr-"></a>
+<div id="logitr-" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#logitr-" class="anchor"></a>logitr <a href="https://jhelvy.github.io/logitr/"><img src="reference/figures/logo.png" align="right" height="139"></a>
 </h1></div>
 <!-- badges: start -->
 
@@ -132,44 +130,44 @@
 <li>Functions for predicting expected probabilities and outcomes for sets of alternatives based on an estimated model.</li>
 <li>A parallelized multistart optimization loop that uses different random starting points in each iteration to search for different local minima (useful for non-convex problems like MXL models or models with WTP space parameterizations).</li>
 </ul>
-<p>Note: MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in Kenneth Train’s book <a href="https://eml.berkeley.edu/books/choice2.html" class="external-link"><em>Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)</em></a>.</p>
-<div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h2>
+<p>Note: MXL models assume uncorrelated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in Kenneth Train’s book <a href="https://eml.berkeley.edu/books/choice2.html"><em>Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)</em></a>.</p>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install {logitr} from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"logitr"</span><span class="op">)</span></code></pre></div>
-<p>or you can install the development version of {logitr} from <a href="https://github.com/jhelvy/logitr" class="external-link">GitHub</a>:</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"logitr"</span><span class="op">)</span></code></pre></div>
+<p>or you can install the development version of {logitr} from <a href="https://github.com/jhelvy/logitr">GitHub</a>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"jhelvy/logitr"</span><span class="op">)</span></code></pre></div>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"jhelvy/logitr"</span><span class="op">)</span></code></pre></div>
 <p>Load the library with:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr" class="external-link">logitr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr">logitr</a></span><span class="op">)</span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="basic-usage">Basic Usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
-</h2>
+<div id="basic-usage" class="section level2">
+<h2 class="hasAnchor">
+<a href="#basic-usage" class="anchor"></a>Basic Usage</h2>
 <p>View the <a href="https://jhelvy.github.io/logitr/articles/basic_usage.html">basic usage</a> page for details on how to use <strong>logitr</strong> to estimate models.</p>
 </div>
-<div class="section level2">
-<h2 id="author-version-and-license-information">Author, Version, and License Information<a class="anchor" aria-label="anchor" href="#author-version-and-license-information"></a>
-</h2>
+<div id="author-version-and-license-information" class="section level2">
+<h2 class="hasAnchor">
+<a href="#author-version-and-license-information" class="anchor"></a>Author, Version, and License Information</h2>
 <ul>
-<li>Author: <em>John Paul Helveston</em> <a href="https://www.jhelvy.com/" class="external-link uri">https://www.jhelvy.com/</a>
+<li>Author: <em>John Paul Helveston</em> <a href="https://www.jhelvy.com/" class="uri">https://www.jhelvy.com/</a>
 </li>
 <li>Date First Written: <em>Sunday, September 28, 2014</em>
 </li>
-<li>License: <a href="https://github.com/jhelvy/logitr/blob/master/LICENSE.md" class="external-link">MIT</a>
+<li>License: <a href="https://github.com/jhelvy/logitr/blob/master/LICENSE.md">MIT</a>
 </li>
 </ul>
 </div>
-<div class="section level2">
-<h2 id="citation-information">Citation Information<a class="anchor" aria-label="anchor" href="#citation-information"></a>
-</h2>
-<p>If you use this package for in a publication, I would greatly appreciate it if you cited it - you can get the citation by typing <code>citation("logitr")</code> into R:</p>
+<div id="citation-information" class="section level2">
+<h2 class="hasAnchor">
+<a href="#citation-information" class="anchor"></a>Citation Information</h2>
+<p>If you use this package for in a publication, I would greatly appreciate it if you cited it - you can get the citation by typing <code><a href="https://rdrr.io/r/utils/citation.html">citation("logitr")</a></code> into R:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"logitr"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span><span class="op">(</span><span class="st">"logitr"</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; To cite logitr in publications use:</span>
 <span class="co">#&gt; </span>
@@ -192,59 +190,55 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2 data-toc-skip>Links</h2>
+<h2>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://cloud.r-project.org/package=logitr" class="external-link">View on CRAN</a></li>
-<li><a href="https://github.com/jhelvy/logitr/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/jhelvy/logitr/issues" class="external-link">Report a bug</a></li>
+<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=logitr">https://​cloud.r-project.org/​package=logitr</a>
+</li>
+<li>Browse source code at <br><a href="https://github.com/jhelvy/logitr/">https://​github.com/​jhelvy/​logitr/​</a>
+</li>
+<li>Report a bug at <br><a href="https://github.com/jhelvy/logitr/issues">https://​github.com/​jhelvy/​logitr/​issues</a>
+</li>
 </ul>
 </div>
-
 <div class="license">
-<h2 data-toc-skip>License</h2>
+<h2>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
-
-
 <div class="citation">
-<h2 data-toc-skip>Citation</h2>
+<h2>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing logitr</a></li>
+<li><a href="authors.html">Citing logitr</a></li>
 </ul>
 </div>
-
 <div class="developers">
-<h2 data-toc-skip>Developers</h2>
+<h2>Developers</h2>
 <ul class="list-unstyled">
-<li>John Helveston <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0002-2657-9191" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li><a href="authors.html">More about authors...</a></li>
+<li>John Helveston <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0002-2657-9191" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
+  <div class="dev-status">
+<h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://CRAN.R-project.org/package=logitr" class="external-link"><img src="https://www.r-pkg.org/badges/version/logitr" alt="CRAN status"></a></li>
-<li><a href="https://app.travis-ci.com/github/jhelvy/logitr" class="external-link"><img src="https://app.travis-ci.com/jhelvy/logitr.svg?branch=master" alt="Travis build status"></a></li>
-<li><a href="https://cran.r-project.org/package=logitr" class="external-link"><img src="http://cranlogs.r-pkg.org/badges/grand-total/logitr?color=blue"></a></li>
+<li><a href="https://CRAN.R-project.org/package=logitr"><img src="https://www.r-pkg.org/badges/version/logitr" alt="CRAN status"></a></li>
+<li><a href="https://app.travis-ci.com/github/jhelvy/logitr"><img src="https://app.travis-ci.com/jhelvy/logitr.svg?branch=master" alt="Travis build status"></a></li>
+<li><a href="https://cran.r-project.org/package=logitr"><img src="http://cranlogs.r-pkg.org/badges/grand-total/logitr?color=blue"></a></li>
 </ul>
 </div>
-
-  </div>
+</div>
 </div>
 
 
       <footer><div class="copyright">
-  <p></p>
-<p>Developed by John Helveston.</p>
+  <p>Developed by John Helveston.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
@@ -252,8 +246,6 @@
 
   
 
-
-  
 
   </body>
 </html>
