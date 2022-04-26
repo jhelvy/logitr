@@ -1,3 +1,7 @@
+# logitr 0.5.1
+
+- Patched a bug in how standard errors were being computed when clustering. The source of the error was in re-scaling results post-estimation.
+
 # logitr 0.5.0
 
 - The multistart optimization loop is now parallelized.

@@ -31,8 +31,6 @@ appendModelInfo <- function(model, modelInputs) {
 
 getCoefs <- function(parsUnscaled, scaleFactors, modelInputs) {
   pars <- parsUnscaled / scaleFactors
-  sigmaNames <- modelInputs$parList$sigma
-  pars[sigmaNames] <- abs(pars[sigmaNames]) # Make sigmas positive
   return(pars)
 }
 

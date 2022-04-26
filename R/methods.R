@@ -292,13 +292,13 @@ getCovarianceRobust <- function(object) {
   )
   clusterID <- modelInputs$data_diff$clusterID
   scaleFactors <- object$scaleFactors
-  parsUnscaled <- stats::coef(object)*scaleFactors
-  gradMat <- matrix(NA, nrow = numClusters, ncol = length(parsUnscaled))
+  pars <- stats::coef(object)
+  gradMat <- matrix(NA, nrow = numClusters, ncol = length(pars))
   clusters <- sort(unique(clusterID))
   for (i in seq_len(length(clusters))) {
     indices <- which(clusterID == i)
     tempMI <- getClusterModelInputs(indices, modelInputs, i)
-    gradMat[i, ] <- getGradient(parsUnscaled, scaleFactors, tempMI)
+    gradMat[i, ] <- -1 * modelInputs$evalFuncs$negGradLL(pars, tempMI)
   }
   gradMeanMat <- repmat(matrix(colMeans(gradMat), nrow = 1), numClusters, 1)
   diffMat <- gradMat - gradMeanMat

@@ -334,9 +334,7 @@ scaleData <- function(data, scaleFactors, modelSpace) {
 
 makeDiffData <- function(data, modelType) {
   # Subtracting out the chosen alternative makes things faster
-  X_chosen <- data$X[data$outcome == 1,]
-  X_chosen <- checkMatrix(X_chosen)
-  if (!is.matrix(X_chosen)) { X_chosen <- as.matrix(X_chosen) }
+  X_chosen <- checkMatrix(data$X[data$outcome == 1,])
   X_diff <- (data$X - X_chosen[data$obsID,])[data$outcome != 1,]
   X_diff <- checkMatrix(X_diff)
   price_diff <- NULL
