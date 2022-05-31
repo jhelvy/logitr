@@ -187,10 +187,10 @@ getMxlHessLL <- function(pars, mi) {
 updatePartials <- function(partials, parIDs, betaDraws, n) {
   if (length(parIDs$logNormal) > 0) {
     for (id in parIDs$logNormal) {
-      id_sigma <- id + n$vars - n$parsFixed
+      id_sd <- id + n$vars - n$parsFixed
       betaMat <- repmat(matrix(betaDraws[,id], nrow = 1), n$rowX, 1)
       partials[[id]] <- partials[[id]]*betaMat
-      partials[[id_sigma]] <- partials[[id_sigma]]*betaMat
+      partials[[id_sd]] <- partials[[id_sd]]*betaMat
     }
   }
   return(partials)
@@ -268,11 +268,11 @@ mxlNegGradLL_wtp <- function(
   partials <- updatePartials(partials, parIDs, betaDraws, n)
   # Now adjust the partials for the lambda and omega parameters
   lambdaDraws <- repmat(matrix(betaDraws[,1], nrow = 1), n$rowX, 1)
-  partial_lambda_mu <- VDraws / lambdaDraws
-  partials[[1]] <- partial_lambda_mu
+  partial_lambda_mean <- VDraws / lambdaDraws
+  partials[[1]] <- partial_lambda_mean
   if (!is.null(randPrice)) {
-    lambda_sigmaID <- parIDs$lambdaIDs[2]
-    partials[[lambda_sigmaID]] <- partials[[lambda_sigmaID]]*partial_lambda_mu
+    lambda_sdID <- parIDs$lambdaIDs[2]
+    partials[[lambda_sdID]] <- partials[[lambda_sdID]]*partial_lambda_mean
   }
   for (id in parIDs$omegaIDs) {
     partials[[id]] <- partials[[id]]*lambdaDraws

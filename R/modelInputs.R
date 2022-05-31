@@ -235,26 +235,26 @@ getParSetup <- function(pars, price, randPars, randPrice) {
 }
 
 getParNames <- function(parSetup, n, correlation) {
-  # For mxl models, need both 'mu' and 'sigma' parameters
+  # For mxl models, need both mean and sd parameters
   names <- names(parSetup)
-  names_mu <- names
-  names_sigma <- names(parSetup)[which(parSetup != "f")]
+  names_mean <- names
+  names_sd <- names(parSetup)[which(parSetup != "f")]
   if (n$parsRandom > 0) {
       if (correlation) {
-          diags <- as.data.frame(utils::combn(names_sigma, 2))
+          diags <- as.data.frame(utils::combn(names_sd, 2))
           diags_names <- unlist(lapply(diags, function(x) paste(x[1], x[2], sep = "_")))
-          sigma_names <- c()
-          for (name in names_sigma) {
-              sigma_name <- paste(name, name, sep = "_")
+          sd_names <- c()
+          for (name in names_sd) {
+              sd_name <- paste(name, name, sep = "_")
               diags_name <- diags_names[which(diags[1,] == name)]
-              sigma_names <- c(sigma_names, sigma_name, diags_name)
+              sd_names <- c(sd_names, sd_name, diags_name)
           }
-          names_sigma <- sigma_names
+          names_sd <- sd_names
       }
-    names_sigma <- paste("sd", names_sigma, sep = "_")
+    names_sd <- paste("sd", names_sd, sep = "_")
   }
-  names_all <- c(names_mu, names_sigma)
-  return(list(mu = names_mu, sigma = names_sigma, all = names_all))
+  names_all <- c(names_mean, names_sd)
+  return(list(mean = names_mean, sd = names_sd, all = names_all))
 }
 
 getParIDs <- function(
@@ -337,7 +337,7 @@ getScaleFactors <- function(
     scaleFactors <- c(scaleFactorPrice, scaleFactors)
     names(scaleFactors) <- c("lambda", scaleFactorNames)
   }
-  # If MXL model, need to replicate scale factors for sigma pars
+  # If MXL model, need to replicate scale factors for sd pars
   if (modelType == "mxl") {
       sfRand <- scaleFactors[parIDs$random]
       if (correlation) {

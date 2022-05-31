@@ -76,10 +76,10 @@ getRandomStartPars <- function(mi) {
   bounds <- mi$inputs$startParBounds
   lower <- bounds[1]
   upper <- bounds[2]
-  # For mxl models, need both '_mu' and '_sigma' parameters
-  pars_mu <- stats::runif(length(parNames$mu), lower, upper)
-  pars_sigma <- stats::runif(length(parNames$sigma), lower, upper)
-  startPars <- c(pars_mu, pars_sigma)
+  # For mxl models, need both mean and sd parameters
+  pars_mean <- stats::runif(length(parNames$mean), lower, upper)
+  pars_sd <- stats::runif(length(parNames$sd), lower, upper)
+  startPars <- c(pars_mean, pars_sd)
   names(startPars) <- parNames$all
   return(startPars)
 }
@@ -91,7 +91,7 @@ checkStartPars <- function(startPars, mi, i) {
   }
   # For correlated sd parameters in mxl models, set sd pars to 0.1
   if (mi$inputs$correlation) {
-      startPars[mi$parNames$sigma] <- 0.1
+      startPars[mi$parNames$sd] <- 0.1
   }
   # For log-normal parameters, force positivity
   parIDs <- mi$parIDs

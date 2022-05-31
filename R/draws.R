@@ -16,8 +16,8 @@ makeBetaDraws <- function(pars, parIDs, n, standardDraws, correlation) {
   scaledDraws <- standardDraws
   scaledDraws[,parIDs$random] <- scaledDraws[,parIDs$random] %*% lowerMat
   # Now shift the draws according to the means
-  muMat <- matrix(rep(pars_mean, n$draws), ncol = n$vars, byrow = TRUE)
-  betaDraws <- muMat + scaledDraws
+  meanMat <- matrix(rep(pars_mean, n$draws), ncol = n$vars, byrow = TRUE)
+  betaDraws <- meanMat + scaledDraws
   # Exponentiate draws for those with logN distribution
   if (length(parIDs$logNormal) > 0) {
     betaDraws[, parIDs$logNormal] <- exp(betaDraws[, parIDs$logNormal])
