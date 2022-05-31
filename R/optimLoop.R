@@ -2,57 +2,57 @@
 # Functions for running the optimization
 # ============================================================================
 
-runMultistart <- function(modelInputs) {
-  numMultiStarts <- modelInputs$inputs$numMultiStarts
-  modelInputsList <- makeModelInputsList(modelInputs, numMultiStarts)
-  numCores <- modelInputs$numCores
+runMultistart <- function(mi) {
+  numMultiStarts <- mi$n$multiStarts
+  miList <- makeModelInputsList(mi, numMultiStarts)
+  numCores <- mi$n$cores
   if ((numMultiStarts == 1) | (numCores == 1)) {
     message("Running model...")
-    return(lapply(modelInputsList, runModel))
+    return(lapply(miList, runModel))
   }
-  printMultistartHeader(modelInputs, numMultiStarts, numCores)
+  printMultistartHeader(mi$inputs$startVals, numMultiStarts, numCores)
   if (Sys.info()[['sysname']] == 'Windows') {
     cl <- parallel::makeCluster(numCores, "PSOCK")
     result <- suppressMessages(suppressWarnings(
-      parallel::parLapply(cl = cl, modelInputsList, runModel)
+      parallel::parLapply(cl = cl, miList, runModel)
     ))
     parallel::stopCluster(cl)
   } else {
     result <- suppressMessages(suppressWarnings(
-      parallel::mclapply(modelInputsList, runModel, mc.cores = numCores)
+      parallel::mclapply(miList, runModel, mc.cores = numCores)
     ))
   }
   return(result)
 }
 
-printMultistartHeader <- function(modelInputs, numMultiStarts, numCores) {
+printMultistartHeader <- function(startVals, numMultiStarts, numCores) {
   message(
     "Running multistart...\n",
     "  Iterations: ", numMultiStarts, "\n",
     "  Cores: ", numCores
   )
-  if (!is.null(modelInputs$inputs$startVals)) {
+  if (!is.null(startVals)) {
     message("  NOTE: Using user-provided starting values for first iteration")
   }
 }
 
-makeModelInputsList <- function(modelInputs, numMultiStarts) {
+makeModelInputsList <- function(mi, numMultiStarts) {
   # Make repeated list of modelInputs
-  modelInputs$model <- makeModelTemplate(modelInputs)
-  modelInputsList <- rep(list(modelInputs), numMultiStarts)
+  mi$model <- makeModelTemplate(mi)
+  miList <- rep(list(mi), numMultiStarts)
   # Add starting parameters and multistartNumber for each modelInputs
   for (i in 1:numMultiStarts) {
-    modelInputsList[[i]]$model$startPars <- getStartPars(modelInputs, i)
-    modelInputsList[[i]]$model$multistartNumber <- i
+    miList[[i]]$model$startPars <- getStartPars(mi, i)
+    miList[[i]]$model$multistartNumber <- i
   }
-  return(modelInputsList)
+  return(miList)
 }
 
-getStartPars <- function(modelInputs, i) {
-  startPars <- getRandomStartPars(modelInputs)
+getStartPars <- function(mi, i) {
+  startPars <- getRandomStartPars(mi)
   if (i == 1) {
-    if (!is.null(modelInputs$inputs$startVals)) {
-      userStartPars <- modelInputs$inputs$startVals
+    if (!is.null(mi$inputs$startVals)) {
+      userStartPars <- mi$inputs$startVals
       if (length(userStartPars) != length(startPars)) {
         stop(
           "Number of user-provided starting values do not match number ",
@@ -65,33 +65,36 @@ getStartPars <- function(modelInputs, i) {
       startPars <- 0 * startPars
     }
   }
-  startPars <- checkStartPars(startPars, modelInputs, i)
+  startPars <- checkStartPars(startPars, mi, i)
   return(startPars)
 }
 
 # Returns randomly drawn starting parameters from a uniform distribution
 # between modelInputs$inputs$startParBounds
-getRandomStartPars <- function(modelInputs) {
-  parList <- modelInputs$parList
-  bounds <- modelInputs$inputs$startParBounds
+getRandomStartPars <- function(mi) {
+  parNames <- mi$parNames
+  bounds <- mi$inputs$startParBounds
   lower <- bounds[1]
   upper <- bounds[2]
   # For mxl models, need both '_mu' and '_sigma' parameters
-  pars_mu <- stats::runif(length(parList$mu), lower, upper)
-  pars_sigma <- stats::runif(length(parList$sigma), lower, upper)
+  pars_mu <- stats::runif(length(parNames$mu), lower, upper)
+  pars_sigma <- stats::runif(length(parNames$sigma), lower, upper)
   startPars <- c(pars_mu, pars_sigma)
-  names(startPars) <- parList$all
+  names(startPars) <- parNames$all
   return(startPars)
 }
 
-# For lambda and logN parameters must start with positive numbers
-checkStartPars <- function(startPars, modelInputs, i) {
-  if (modelInputs$inputs$modelSpace == "wtp") {
+checkStartPars <- function(startPars, mi, i) {
+  if (mi$inputs$modelSpace == "wtp") {
     # Force starting with lambda = 1 for WTP space models for stability
     startPars[1] <- 1
   }
+  # For correlated sd parameters in mxl models, set sd pars to 0.1
+  if (mi$inputs$correlation) {
+      startPars[mi$parNames$sigma] <- 0.1
+  }
   # For log-normal parameters, force positivity
-  parIDs <- modelInputs$parIDs
+  parIDs <- mi$parIDs
   lnIDs <- parIDs$logNormal
   if (length(lnIDs) > 0) {
     if (i == 1) {
@@ -103,9 +106,9 @@ checkStartPars <- function(startPars, modelInputs, i) {
   return(startPars)
 }
 
-makeModelTemplate <- function(modelInputs) {
+makeModelTemplate <- function(mi) {
   # Make default values to return if the model fails
-  pars <- modelInputs$parList$all
+  pars <- mi$parNames$all
   result <- structure(list(
     fail              = TRUE,
     coefficients      = rep(NA, length(pars)),
@@ -113,9 +116,9 @@ makeModelTemplate <- function(modelInputs) {
     nullLogLik        = NA,
     gradient          = NA,
     hessian           = NA,
-    probabilities     = NA,
-    fitted.values     = NA,
-    residuals         = NA,
+    probabilities     = NULL,
+    fitted.values     = NULL,
+    residuals         = NULL,
     startPars         = NA,
     multistartNumber  = NA,
     multistartSummary = NULL,
@@ -123,49 +126,49 @@ makeModelTemplate <- function(modelInputs) {
     iterations        = NA,
     message           = "Generic failure code.",
     status            = -1,
-    call              = modelInputs$call,
-    inputs            = modelInputs$inputs,
-    data              = modelInputs$data,
-    numObs            = sum(modelInputs$data$outcome),
-    numParams         = length(pars),
-    freq              = modelInputs$freq,
-    modelType         = modelInputs$modelType,
-    weightsUsed       = modelInputs$weightsUsed,
-    numClusters       = modelInputs$numClusters,
-    parSetup          = modelInputs$parSetup,
-    parIDs            = modelInputs$parIDs,
-    scaleFactors      = modelInputs$scaleFactors,
-    standardDraws     = modelInputs$standardDraws,
-    options           = modelInputs$options
+    call              = mi$call,
+    date              = mi$date,
+    version           = mi$version,
+    inputs            = mi$inputs,
+    data              = mi$data,
+    n                 = mi$n,
+    freq              = mi$freq,
+    modelType         = mi$modelType,
+    weightsUsed       = mi$weightsUsed,
+    parSetup          = mi$parSetup,
+    parIDs            = mi$parIDs,
+    scaleFactors      = mi$scaleFactors,
+    standardDraws     = mi$standardDraws,
+    options           = mi$options
   ),
   class = "logitr"
   )
   return(result)
 }
 
-runModel <- function(modelInputs) {
+runModel <- function(mi) {
   time <- system.time({
-    model <- modelInputs$model
+    model <- mi$model
     result <- NULL
     tryCatch(
       {
         result <- nloptr::nloptr(
-          x0     = modelInputs$model$startPars,
-          eval_f = modelInputs$evalFuncs$objective,
-          mi     = modelInputs,
-          opts   = modelInputs$options
+          x0     = mi$model$startPars,
+          eval_f = mi$evalFuncs$objective,
+          mi     = mi,
+          opts   = mi$options
         )
       },
       error = function(e) {}
     )
     if (!is.null(result)) {
       # Didn't fail, so add result values to model
-      model$fail <- FALSE
+      model$fail         <- FALSE
       model$coefficients <- result$solution
-      model$logLik <- as.numeric(-1*result$objective) # -1 for (+) LL
-      model$iterations <- result$iterations
-      model$status <- result$status
-      model$message <- result$message
+      model$logLik       <- as.numeric(-1*result$objective) # -1 for (+) LL
+      model$iterations   <- result$iterations
+      model$status       <- result$status
+      model$message      <- result$message
     }
   })
   model$time <- time

@@ -3,19 +3,21 @@
 # ============================================================================
 
 # Returns shifted normal draws for each parameter
-makeBetaDraws <- function(pars, parIDs, numDraws, standardDraws) {
-  numBetas <- length(parIDs$fixed) + length(parIDs$random)
-  pars_mu <- as.numeric(pars[seq_len(numBetas)])
-  muMat <- matrix(rep(pars_mu, numDraws), ncol = length(pars_mu), byrow = T)
-  pars_sigma <- rep(0, numBetas)
-  pars_sigma[parIDs$random] <- as.numeric(pars[(numBetas + 1):length(pars)])
-  sigmaMat <- matrix(
-    rep(pars_sigma, numDraws),
-    ncol = length(pars_sigma),
-    byrow = TRUE
-  )
-  # Shift draws by mu and sigma
-  betaDraws <- muMat + standardDraws * sigmaMat
+makeBetaDraws <- function(pars, parIDs, n, standardDraws, correlation) {
+  pars_mu <- pars[seq_len(n$vars)]
+  pars_sigma <- pars[(n$vars + 1):n$pars]
+  # First scale the draws according to the covariance matrix
+  if (correlation) {
+    lowerMat <- matrix(0, n$parsRandom, n$parsRandom)
+    lowerMat[lower.tri(lowerMat, diag = TRUE)] <- pars_sigma
+  } else {
+    lowerMat <- diag(pars_sigma)
+  }
+  scaledDraws <- standardDraws
+  scaledDraws[,parIDs$random] <- scaledDraws[,parIDs$random] %*% lowerMat
+  # Now shift the draws according to the means
+  muMat <- matrix(rep(pars_mu, n$draws), ncol = n$vars, byrow = TRUE)
+  betaDraws <- muMat + scaledDraws
   # Exponentiate draws for those with logN distribution
   if (length(parIDs$logNormal) > 0) {
     betaDraws[, parIDs$logNormal] <- exp(betaDraws[, parIDs$logNormal])

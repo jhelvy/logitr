@@ -8,7 +8,7 @@ getModelInputs <- function(
     data, outcome, obsID, pars , randPars, price, randPrice, modelSpace,
     weights, panelID, clusterID, robust, startParBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, numDraws,
-    numCores, vcov, predict, call, options
+    numCores, vcov, predict, correlation, call, options
 ) {
 
   # Keep original input arguments
@@ -32,15 +32,13 @@ getModelInputs <- function(
     numDraws        = numDraws,
     numCores        = numCores,
     vcov            = vcov,
-    predict         = predict
+    predict         = predict,
+    correlation     = correlation
   )
 
   # Check for valid inputs and options
   runInputChecks(data, inputs)
   options <- checkOptions(options)
-
-  # Set number of cores for parallel processing
-  numCores <- setNumCores(numCores)
 
   # Get the design matrix, recoding parameters that are categorical
   # or have interactions
@@ -49,21 +47,41 @@ getModelInputs <- function(
   pars <- recoded$pars
   randPars <- recoded$randPars
   price <- definePrice(data, inputs)
+  outcome <- as.matrix(data[outcome])
 
-  # Set up other data
-  parSetup <- getParSetup(pars, price, randPars, randPrice)
-  parIDs <- getParIDs(parSetup, modelSpace, randPrice)
-  parList <- getParList(parSetup, parIDs$random)
+  # Setup obsID
   obsID <- as.matrix(data[obsID])
   reps <- as.numeric(table(obsID))
   obsID <- rep(seq_along(reps), reps) # Make sure obsID is sequential number
-  outcome <- as.matrix(data[outcome])
+
+  # Setup panelID
+  panel <- !is.null(inputs$panelID)
+  if (panel) {
+      panelID <- as.matrix(data[panelID])
+      reps <- as.numeric(table(panelID))
+      panelID <- rep(seq_along(reps), reps) # Make sure it's a sequential number
+  }
+
+  # Set up other objects defining aspects of model
+  parSetup <- getParSetup(pars, price, randPars, randPrice)
   modelType <- "mnl"
   if (isMxlModel(parSetup)) { modelType <- "mxl" }
+  n <- list( # stores counts variables
+    vars        = length(parSetup),
+    parsFixed   = length(which(parSetup == "f")),
+    parsRandom  = length(which(parSetup != "f")),
+    draws       = numDraws,
+    multiStarts = numMultiStarts,
+    obs         = sum(outcome),
+    cores       = setNumCores(numCores) # cores for parallel processing
+  )
+  parNames <- getParNames(parSetup, n, correlation)
+  n$pars <- length(parNames$all)
+  parIDs <- getParIDs(parSetup, n, modelSpace, modelType, randPrice, correlation)
 
   # Add names to startVals (if provided)
   if (!is.null(startVals)) {
-    names(startVals) <- parList$all
+    names(startVals) <- parNames$all
     inputs$startVals <- startVals
   }
 
@@ -75,16 +93,8 @@ getModelInputs <- function(
     weightsUsed <- TRUE
   }
 
-  # Setup panelID
-  panel <- !is.null(inputs$panelID)
-  if (panel) {
-    panelID <- as.matrix(data[panelID])
-    reps <- as.numeric(table(panelID))
-    panelID <- rep(seq_along(reps), reps) # Make sure it's a sequential number
-  }
-
   # Setup clusters
-  numClusters <- 0
+  n$clusters <- 0
   inputs <- setupClusters(inputs, panel, robust, weightsUsed)
   if (!is.null(inputs$clusterID)) {
     if (robust == FALSE) {
@@ -92,7 +102,7 @@ getModelInputs <- function(
       inputs$robust <- TRUE
     }
     clusterID <- as.matrix(data[inputs$clusterID])
-    numClusters <- length(unique(clusterID))
+    n$clusters <- length(unique(clusterID))
   }
 
   # Make data object
@@ -108,23 +118,28 @@ getModelInputs <- function(
 
   # Scale data
   if (scaleInputs) {
-    scaleFactors <- getScaleFactors(data, modelSpace, modelType, parIDs)
+    scaleFactors <- getScaleFactors(
+        data, modelSpace, modelType, parIDs, parNames, n, correlation
+    )
     data_scaled <- scaleData(data, scaleFactors, modelSpace)
     if (modelSpace == "wtp") {
-      n <- length(scaleFactors)
-      scaleFactors[2:n] <- scaleFactors[2:n] / scaleFactors[1]
+      n_sf <- length(scaleFactors)
+      scaleFactors[2:n_sf] <- scaleFactors[2:n_sf] / scaleFactors[1]
     }
   } else {
-    scaleFactors <- rep(1, length(parList$all))
+    scaleFactors <- rep(1, length(parNames$all))
     data_scaled <- data
   }
 
   # Make differenced data
   data_diff <- makeDiffData(data_scaled, modelType)
+  n$rowX <- nrow(data_diff$X)
 
   # Make modelInputs list
   modelInputs <- list(
     call          = call,
+    date          = format(Sys.time(), "%a %b %d %X %Y"),
+    version       = as.character(packageVersion("logitr")),
     inputs        = inputs,
     modelType     = modelType,
     freq          = getFrequencyCounts(obsID, outcome),
@@ -133,15 +148,12 @@ getModelInputs <- function(
     data_diff     = data_diff,
     scaleFactors  = scaleFactors,
     weightsUsed   = weightsUsed,
-    numClusters   = numClusters,
     parSetup      = parSetup,
     parIDs        = parIDs,
-    parList       = parList,
-    numBetas      = length(parSetup),
+    parNames      = parNames,
+    n             = n,
     standardDraws = standardDraws,
-    nrowX         = nrow(data_diff$X),
     panel         = panel,
-    numCores      = numCores,
     options       = options
   )
 
@@ -222,18 +234,51 @@ getParSetup <- function(pars, price, randPars, randPrice) {
   return(parSetup)
 }
 
-getParIDs <- function(parSetup, modelSpace, randPrice) {
+getParNames <- function(parSetup, n, correlation) {
+  # For mxl models, need both 'mu' and 'sigma' parameters
+  names <- names(parSetup)
+  names_mu <- names
+  names_sigma <- names(parSetup)[which(parSetup != "f")]
+  if (n$parsRandom > 0) {
+      if (correlation) {
+          diags <- as.data.frame(utils::combn(names_sigma, 2))
+          diags_names <- unlist(lapply(diags, function(x) paste(x[1], x[2], sep = "_")))
+          sigma_names <- c()
+          for (name in names_sigma) {
+              sigma_name <- paste(name, name, sep = "_")
+              diags_name <- diags_names[which(diags[1,] == name)]
+              sigma_names <- c(sigma_names, sigma_name, diags_name)
+          }
+          names_sigma <- sigma_names
+      }
+    names_sigma <- paste("sd", names_sigma, sep = "_")
+  }
+  names_all <- c(names_mu, names_sigma)
+  return(list(mu = names_mu, sigma = names_sigma, all = names_all))
+}
+
+getParIDs <- function(
+  parSetup, n, modelSpace, modelType, randPrice, correlation
+) {
   parIDs <- list(
     fixed     = which(parSetup == "f"),
     random    = which(parSetup != "f"),
     normal    = which(parSetup == "n"),
     logNormal = which(parSetup == "ln")
   )
+  if (modelType == "mxl") {
+      if (correlation) {
+          incs <- seq(n$parsRandom, 1, -1)
+          ids <- cumsum(c(1, incs))[1:n$parsRandom]
+          sd <-  seq(n$pars)
+          parIDs$sdDiag <- sd[n$vars + ids]
+          parIDs$sdOffDiag <- sd[-c(seq(n$vars), n$vars + ids)]
+      }
+  }
   # Make lambda & omega IDs for WTP space models
   if (modelSpace == "wtp") {
     lambdaIDs <- 1
-    numPars <- length(parIDs$fixed) + 2*length(parIDs$random)
-    omegaIDs <- seq(numPars)
+    omegaIDs <- seq(n$pars)
     if (!is.null(randPrice)) {
       lambdaIDs <- c(lambdaIDs, length(parSetup) + 1)
     }
@@ -242,19 +287,6 @@ getParIDs <- function(parSetup, modelSpace, randPrice) {
     parIDs$omegaIDs <- omegaIDs
   }
   return(parIDs)
-}
-
-getParList <- function(parSetup, randParIDs) {
-  # For mxl models, need both '_mu' and '_sigma' parameters
-  names <- names(parSetup)
-  names_mu <- names
-  names_sigma <- names[randParIDs]
-  if (length(randParIDs) > 0) {
-    names_mu[randParIDs] <- paste(names[randParIDs], "mu", sep = "_")
-    names_sigma <- paste(names_sigma, "sigma", sep = "_")
-  }
-  names_all <- c(names_mu, names_sigma)
-  return(list(mu = names_mu, sigma = names_sigma, all = names_all))
 }
 
 setupClusters <- function(inputs, panel, robust, weightsUsed) {
@@ -289,7 +321,9 @@ setupClusters <- function(inputs, panel, robust, weightsUsed) {
   return(inputs)
 }
 
-getScaleFactors <- function(data, modelSpace, modelType, parIDs) {
+getScaleFactors <- function(
+  data, modelSpace, modelType, parIDs, parNames, n, correlation
+) {
   price <- data$price
   X <- data$X
   minX <- apply(X, 2, min)
@@ -305,7 +339,22 @@ getScaleFactors <- function(data, modelSpace, modelType, parIDs) {
   }
   # If MXL model, need to replicate scale factors for sigma pars
   if (modelType == "mxl") {
-    scaleFactors <- c(scaleFactors, scaleFactors[parIDs$random])
+      sfRand <- scaleFactors[parIDs$random]
+      if (correlation) {
+        sf <- rep(1, length(parNames$all))
+        sf[seq(n$vars)] <- scaleFactors
+        sf[parIDs$sdDiag] <- sfRand
+        diags <- as.data.frame(utils::combn(names(sfRand), 2))
+        sfOffDiags <- c()
+        for (i in 1:ncol(diags)) {
+          sfOffDiags <- c(sfOffDiags, prod(scaleFactors[diags[,i]]))
+        }
+        sf[parIDs$sdOffDiag] <- sfOffDiags
+        names(sf) <- parNames$all
+        scaleFactors <- sf
+      } else {
+        scaleFactors <- c(scaleFactors, sfRand)
+      }
   }
   return(scaleFactors)
 }
@@ -334,7 +383,9 @@ scaleData <- function(data, scaleFactors, modelSpace) {
 
 makeDiffData <- function(data, modelType) {
   # Subtracting out the chosen alternative makes things faster
-  X_chosen <- checkMatrix(data$X[data$outcome == 1,])
+  X_chosen <- data$X[data$outcome == 1,]
+  X_chosen <- checkMatrix(X_chosen)
+  if (!is.matrix(X_chosen)) { X_chosen <- as.matrix(X_chosen) }
   X_diff <- (data$X - X_chosen[data$obsID,])[data$outcome != 1,]
   X_diff <- checkMatrix(X_diff)
   price_diff <- NULL
@@ -361,34 +412,52 @@ makeDiffData <- function(data, modelType) {
 makeMxlDraws <- function(modelInputs) {
   draws <- modelInputs$standardDraws
   if (is.null(draws)) {
-    draws <- getStandardDraws(
-      modelInputs$parIDs, modelInputs$inputs$numDraws)
-  } else if (ncol(draws) != modelInputs$numBetas) {
+    draws <- getStandardDraws(modelInputs$parIDs, modelInputs$n$draws)
+  } else if (ncol(draws) != modelInputs$n$vars) {
     # If user provides draws, make sure there are enough columns
     stop(
       "The number of columns in the user-provided draws do not match the ",
-      "specified number of parameters")
+      "required number. Please use draws with ", modelInputs$n$vars, " columns"
+    )
   }
   return(draws)
 }
 
-makePartials <- function(modelInputs) {
-  numBetas <- modelInputs$numBetas
-  numDraws <- modelInputs$inputs$numDraws
-  X <- modelInputs$data_diff$X
-  if (modelInputs$inputs$modelSpace == "wtp") {
+makePartials <- function(mi) {
+  n <- mi$n
+  X <- mi$data_diff$X
+  if (mi$inputs$modelSpace == "wtp") {
     X <- cbind(1, X)
   }
   X2 <- repmat(X, 1, 2)
   partials <- list()
   draws <- cbind(
-    matrix(1, ncol = numBetas, nrow = numDraws), modelInputs$standardDraws)
-  for (i in seq_len(2*numBetas)) {
-    X_temp <- X2[,rep(i, numDraws)]
+    matrix(1, ncol = n$vars, nrow = n$draws), mi$standardDraws)
+  for (i in seq_len(2*n$vars)) {
+    X_temp <- X2[,rep(i, n$draws)]
     draws_temp <- repmat(matrix(draws[, i], nrow = 1), nrow(X_temp), 1)
     partials[[i]] <- X_temp*draws_temp
   }
-  return(partials[c(1:numBetas, numBetas + modelInputs$parIDs$random)])
+  sdIDs <- n$vars + mi$parIDs$random
+  if (! mi$inputs$correlation) {
+    return(partials[c(1:n$vars, sdIDs)])
+  }
+  draws <- mi$standardDraws[,mi$parIDs$random]
+  X <- X2[,sdIDs]
+  IDs <- as.data.frame(utils::combn(seq(length(sdIDs)), 2))
+  partialDiags <- partials[sdIDs]
+  partialOffDiags <- list()
+  for (i in 1:ncol(IDs)) {
+    id <- IDs[,i]
+    X_temp <- X[,rep(id[1], n$draws)]
+    draws_temp <- repmat(matrix(draws[, id[2]], nrow = 1), nrow(X_temp), 1)
+    partialOffDiags[[i]] <- X_temp*draws_temp
+  }
+  result <- lapply(seq(n$pars), function(x) x)
+  result[1:n$vars] <- partials[1:n$vars]
+  result[mi$parIDs$sdDiag] <- partialDiags
+  result[mi$parIDs$sdOffDiag] <- partialOffDiags
+  return(result)
 }
 
 setLogitFunctions <- function(modelSpace) {

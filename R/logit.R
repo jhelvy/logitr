@@ -1,4 +1,4 @@
-# # ============================================================================
+# ============================================================================
 # Logit and log-likelihood functions
 #
 # The log-likelihood function is given as the negative log-likelihood
@@ -54,6 +54,8 @@ getMnlNegGradLL <- function(pars, mi) {
 
 getMnlHessLL <- function(pars, mi) {
   # Need to define analytic hessian - use numeric approximation for now
+  # Note that this is only used post-estimation, so there are only marginal
+  # benefits in terms of speed improvements from specifying an analytic hessian
   return(getNumericHessLL(pars, mi))
 }
 
@@ -72,6 +74,8 @@ mnlNegGradLL_pref <- function(pars, V, expV, X, obsID, logit, weights) {
 
 mnlHessLL_pref <- function(pars, mi) {
   # Need to define analytic hessian - use numeric approximation for now
+  # Note that this is only used post-estimation, so there are only marginal
+  # benefits in terms of speed improvements from specifying an analytic hessian
   return(getNumericHessLL(pars, mi))
 }
 
@@ -96,6 +100,8 @@ mnlNegGradLL_wtp <- function(pars, V, expV, X, obsID, logit, weights) {
 
 mnlHessLL_wtp <- function(pars, mi) {
   # Need to define analytic hessian - use numeric approximation for now
+  # Note that this is only used post-estimation, so there are only marginal
+  # benefits in terms of speed improvements from specifying an analytic hessian
   return(getNumericHessLL(pars, mi))
 }
 
@@ -107,8 +113,9 @@ mnlHessLL_wtp <- function(pars, mi) {
 mxlNegLLAndGradLL <- function(pars, mi) {
   d <- mi$data_diff
   betaDraws <- makeBetaDraws(
-    pars, mi$parIDs, mi$inputs$numDraws, mi$standardDraws)
-  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price)
+    pars, mi$parIDs, mi$n, mi$standardDraws, mi$inputs$correlation
+  )
+  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price, mi$n)
   expVDraws <- exp(VDraws)
   logitDraws <- getLogit(expVDraws, d$obsID)
   logitDrawsPanel <- logitDraws
@@ -122,8 +129,8 @@ mxlNegLLAndGradLL <- function(pars, mi) {
     objective = negLL(pHat, d$weights),
     gradient = mi$logitFuncs$mxlNegGradLL(
       betaDraws, VDraws, expVDraws, logitDraws, logitDrawsPanel, pHat,
-      mi$partials, d$obsID, d$panelID, mi$parIDs, d$weights, mi$numBetas,
-      mi$nrowX, mi$inputs$numDraws, mi$inputs$randPrice, mi$panel)
+      mi$partials, d$obsID, d$panelID, mi$parIDs, d$weights, mi$n,
+      mi$inputs$randPrice, mi$panel)
   ))
 }
 
@@ -131,8 +138,9 @@ mxlNegLLAndGradLL <- function(pars, mi) {
 getMxlNegLL <- function(pars, mi) {
   d <- mi$data_diff
   betaDraws <- makeBetaDraws(
-    pars, mi$parIDs, mi$inputs$numDraws, mi$standardDraws)
-  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price)
+    pars, mi$parIDs, mi$n, mi$standardDraws, mi$inputs$correlation
+  )
+  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price, mi$n)
   expVDraws <- exp(VDraws)
   logitDraws <- getLogit(expVDraws, d$obsID)
   logitDrawsPanel <- logitDraws
@@ -148,8 +156,9 @@ getMxlNegLL <- function(pars, mi) {
 getMxlNegGradLL <- function(pars, mi) {
   d <- mi$data_diff
   betaDraws <- makeBetaDraws(
-    pars, mi$parIDs, mi$inputs$numDraws, mi$standardDraws)
-  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price)
+    pars, mi$parIDs, mi$n, mi$standardDraws, mi$inputs$correlation
+  )
+  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price, mi$n)
   expVDraws <- exp(VDraws)
   logitDraws <- getLogit(expVDraws, d$obsID)
   logitDrawsPanel <- logitDraws
@@ -161,14 +170,52 @@ getMxlNegGradLL <- function(pars, mi) {
   }
   return(mi$logitFuncs$mxlNegGradLL(
       betaDraws, VDraws, expVDraws, logitDraws, logitDrawsPanel, pHat,
-      mi$partials, d$obsID, d$panelID, mi$parIDs, d$weights, mi$numBetas,
-      mi$nrowX, mi$inputs$numDraws, mi$inputs$randPrice, mi$panel)
+      mi$partials, d$obsID, d$panelID, mi$parIDs, d$weights, mi$n,
+      mi$inputs$randPrice, mi$panel)
   )
 }
 
 getMxlHessLL <- function(pars, mi) {
   # Need to define analytic hessian - use numeric approximation for now
+  # Note that this is only used post-estimation, so there are only marginal
+  # benefits in terms of speed improvements from specifying an analytic hessian
   return(getNumericHessLL(pars, mi))
+}
+
+# Updates each of the partials matrices based on if the parameter follows
+# a log-normal distribution
+updatePartials <- function(partials, parIDs, betaDraws, n) {
+  if (length(parIDs$logNormal) > 0) {
+    for (id in parIDs$logNormal) {
+      id_sigma <- id + n$vars - n$parsFixed
+      betaMat <- repmat(matrix(betaDraws[,id], nrow = 1), n$rowX, 1)
+      partials[[id]] <- partials[[id]]*betaMat
+      partials[[id_sigma]] <- partials[[id_sigma]]*betaMat
+    }
+  }
+  return(partials)
+}
+
+computeMxlNegGradLL <- function(
+  expVDraws, logitDraws, logitDrawsPanel, partials, obsID, panelID, weights,
+  pHat, n, panel
+) {
+  if (panel) {
+    grads <- lapply(partials, function(x) {
+      rowSums(logitDrawsPanel * rowsum(
+        logitDraws * rowsum(x*expVDraws, group = obsID, reorder = FALSE),
+        group = panelID)
+      )
+    })
+  } else {
+    grads <- lapply(partials, function(x) {
+      rowSums(logitDraws^2 * rowsum(
+        x*expVDraws, group = obsID, reorder = FALSE)
+      )
+    })
+  }
+  grad <- matrix(unlist(grads), ncol = length(partials), byrow = FALSE)
+  return(t(grad) %*% (weights / (pHat * n$draws)))
 }
 
 # ============================================================================
@@ -176,20 +223,20 @@ getMxlHessLL <- function(pars, mi) {
 # ============================================================================
 
 # Returns the observed utility
-getMxlV_pref <- function(betaDraws, X, p) {
+getMxlV_pref <- function(betaDraws, X, p, n) {
   return(X %*% t(betaDraws))
 }
 
 mxlNegGradLL_pref <- function(
   betaDraws, VDraws, expVDraws, logitDraws, logitDrawsPanel, pHat, partials,
-  obsID, panelID, parIDs, weights, numBetas, nrowX, numDraws, randPrice, panel
+  obsID, panelID, parIDs, weights, n, randPrice, panel
 ) {
   # First, adjust partials for any log-normal parameters
-  partials <- updatePartials(partials, parIDs, betaDraws, nrowX, numBetas)
+  partials <- updatePartials(partials, parIDs, betaDraws, n)
   # Now compute the gradient
   return(computeMxlNegGradLL(
     expVDraws, logitDraws, logitDrawsPanel, partials, obsID, panelID, weights,
-    pHat, numDraws, panel)
+    pHat, n, panel)
   )
 }
 
@@ -200,66 +247,27 @@ mxlHessLL_pref <- function(pars, mi) {
   return(getNumericHessLL(pars, mi))
 }
 
-# Updates each of the partials matrices based on if the parameter follows
-# a log-normal distribution
-updatePartials <- function(partials, parIDs, betaDraws, nrowX, numBetas) {
-  if (length(parIDs$logNormal) > 0) {
-    numFixed <- length(parIDs$fixed)
-    for (id in parIDs$logNormal) {
-      id_sigma <- id + numBetas - numFixed
-      betaMat <- repmat(matrix(betaDraws[,id], nrow = 1), nrowX, 1)
-      partials[[id]] <- partials[[id]]*betaMat
-      partials[[id_sigma]] <- partials[[id_sigma]]*betaMat
-    }
-  }
-  return(partials)
-}
-
-computeMxlNegGradLL <- function(
-  expVDraws, logitDraws, logitDrawsPanel, partials, obsID, panelID, weights,
-  pHat, numDraws, panel
-) {
-  if (panel) {
-    grads <- lapply(partials, function(x) {
-      rowSums(logitDrawsPanel*rowsum(
-        logitDraws * rowsum(x*expVDraws, group = obsID, reorder = FALSE),
-        group = panelID)
-      )
-    })
-  } else {
-    logitDrawsSq <- logitDraws^2
-    grads <- lapply(partials, function(x) {
-      rowSums(
-        logitDrawsSq * rowsum(x*expVDraws, group = obsID, reorder = FALSE)
-      )
-    })
-  }
-  grad <- matrix(unlist(grads), ncol = length(partials), byrow = FALSE)
-  return(t(grad) %*% (weights / (pHat * numDraws)))
-}
-
 # ============================================================================
 # WTP Space Logit Functions - MXL models
 # ============================================================================
 
 # Returns the observed utility
-getMxlV_wtp <- function(betaDraws, X, p) {
-  numDraws <- nrow(betaDraws)
+getMxlV_wtp <- function(betaDraws, X, p, n) {
   lambdaDraws <- matrix(
-    rep(betaDraws[, 1], nrow(X)), ncol = numDraws, byrow = T)
-  gammaDraws <- matrix(betaDraws[, 2:ncol(betaDraws)], nrow = numDraws)
-  pMat <- matrix(rep(p, numDraws), ncol = numDraws, byrow = F)
+    rep(betaDraws[, 1], nrow(X)), ncol = n$draws, byrow = T)
+  gammaDraws <- matrix(betaDraws[, 2:ncol(betaDraws)], nrow = n$draws)
+  pMat <- matrix(rep(p, n$draws), ncol = n$draws, byrow = F)
   return(lambdaDraws * (X %*% t(gammaDraws) - pMat))
 }
 
 mxlNegGradLL_wtp <- function(
   betaDraws, VDraws, expVDraws, logitDraws, logitDrawsPanel, pHat, partials,
-  obsID, panelID, parIDs, weights, numBetas, nrowX, numDraws, randPrice, panel
+  obsID, panelID, parIDs, weights, n, randPrice, panel
 ) {
   # First, adjust partials for any log-normal parameters
-  partials <- updatePartials(partials, parIDs, betaDraws, nrowX, numBetas)
+  partials <- updatePartials(partials, parIDs, betaDraws, n)
   # Now adjust the partials for the lambda and omega parameters
-  lambdaDraws <- repmat(matrix(betaDraws[,1], nrow = 1), nrowX, 1)
+  lambdaDraws <- repmat(matrix(betaDraws[,1], nrow = 1), n$rowX, 1)
   partial_lambda_mu <- VDraws / lambdaDraws
   partials[[1]] <- partial_lambda_mu
   if (!is.null(randPrice)) {
@@ -272,7 +280,7 @@ mxlNegGradLL_wtp <- function(
   # Now compute the gradient
   return(computeMxlNegGradLL(
     expVDraws, logitDraws, logitDrawsPanel, partials, obsID, panelID, weights,
-    pHat, numDraws, panel)
+    pHat, n, panel)
   )
 }
 
