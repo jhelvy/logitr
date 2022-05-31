@@ -139,7 +139,7 @@ getModelInputs <- function(
   modelInputs <- list(
     call          = call,
     date          = format(Sys.time(), "%a %b %d %X %Y"),
-    version       = as.character(packageVersion("logitr")),
+    version       = as.character(utils::packageVersion("logitr")),
     inputs        = inputs,
     modelType     = modelType,
     freq          = getFrequencyCounts(obsID, outcome),
