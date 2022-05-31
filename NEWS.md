@@ -1,3 +1,7 @@
+# logitr 0.6.0
+
+- Added the `correlation` argument to include correlated heterogeneity
+
 # logitr 0.5.1
 
 - Patched a bug in how standard errors were being computed when clustering. The source of the error was in re-scaling results post-estimation.
