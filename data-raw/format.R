@@ -4,12 +4,13 @@ library(dplyr)
 library(tidyr)
 library(readr)
 library(fastDummies)
+library(mlogit)
 
 yogurt_raw <- read_csv(here::here("data-raw", "yogurt_raw.csv"))
 cars_china <- read_csv(here::here('data-raw', 'cars_china.csv'))
 cars_us    <- read_csv(here::here('data-raw', 'cars_us.csv'))
 
-# Yogurt data ---------------------------------------------------------------
+# Yogurt data ----
 
 # Raw data variables:
 # id      = individuals identifiers
@@ -31,7 +32,7 @@ yogurt <- yogurt_raw %>%
 # Save the formatted dataset
 usethis::use_data(yogurt, overwrite = TRUE)
 
-# Cars data -------------------------------------------------------------------
+# Cars data ----
 
 # Raw data variables:
 
@@ -60,7 +61,7 @@ usethis::use_data(yogurt, overwrite = TRUE)
 usethis::use_data(cars_us, overwrite = TRUE)
 usethis::use_data(cars_china, overwrite = TRUE)
 
-# Simulated SP mode choice data from {apollo} package
+# Simulated SP mode choice data from {apollo} package ----
 
 apolloModeChoiceData <- apollo::apollo_modeChoiceData %>%
   # Only use SP data
@@ -110,3 +111,18 @@ apolloModeChoiceData <- apollo::apollo_modeChoiceData %>%
 
 # Save the dataset
 usethis::use_data(apolloModeChoiceData, overwrite = TRUE)
+
+# Electricity data ----
+
+data("Electricity")
+electricity <- data.frame(mlogit.data(
+    Electricity, id.var = "id", choice = "choice",
+    varying = 3:26, shape = "wide", sep = "")) %>%
+    rename(obsID = chid) %>%
+    select(-idx) %>%
+    mutate(choice = ifelse(choice, 1, 0)) %>%
+    # Reorder columns
+    select(id, obsID, choice, everything())
+
+# Save the dataset
+usethis::use_data(electricity, overwrite = TRUE)
