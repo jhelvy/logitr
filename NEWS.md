@@ -1,6 +1,7 @@
 # logitr 0.6.0
 
-- Added the `correlation` argument to include correlated heterogeneity
+- Added the `correlation` argument to include correlated heterogeneity.
+- Added a couple input checks for the `obsID` and `outcome` arguments.
 
 # logitr 0.5.1
 
