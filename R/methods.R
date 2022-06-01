@@ -260,6 +260,10 @@ se.logitr <- function(object, ...) {
 #' @param ... further arguments.
 #' @export
 vcov.logitr <- function(object, ...) {
+  if (!is.null(object$vcov)) {
+      # vcov was already computed during model estimation
+      return(object$vcov)
+  }
   if (is.null(object$data$clusterID) | object$inputs$robust == FALSE) {
     return(getCovarianceNonRobust(object$hessian))
   }
