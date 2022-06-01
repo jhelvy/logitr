@@ -201,16 +201,31 @@ getRandParSummary <- function(object) {
   n <- object$n
   n$draws <- 10^4
   standardDraws <- getStandardDraws(parIDs, n$draws)
-  betaDraws <- makeBetaDraws(stats::coef(object), parIDs, n, standardDraws, object$inputs$correlation)
+  betaDraws <- makeBetaDraws(
+      stats::coef(object), parIDs, n, standardDraws, object$inputs$correlation)
   randParSummary <- apply(betaDraws, 2, summary)
   # Add names to summary
   distName <- rep("", length(parSetup))
   distName[parIDs$normal] <- "normal"
   distName[parIDs$logNormal] <- "log-normal"
+  distName[parIDs$cNormal] <- "zero-censored normal"
   summaryNames <- paste(names(parSetup), " (", distName, ")", sep = "")
   colnames(randParSummary) <- summaryNames
-  randParSummary <- t(randParSummary[, parIDs$random])
-  return(as.data.frame(randParSummary))
+  randParSummary <- as.data.frame(t(randParSummary[, parIDs$random]))
+  row.names(randParSummary) <- names(parIDs$random)
+  # Set min and max values for unbounded distributions
+  if (length(parIDs$normal) > 0) {
+      randParSummary[parIDs$normal,]$Min. <- -Inf
+      randParSummary[parIDs$normal,]$Max. <- Inf
+  }
+  if (length(parIDs$logNormal) > 0) {
+      randParSummary[parIDs$logNormal,]$Min. <- 0
+      randParSummary[parIDs$logNormal,]$Max. <- Inf
+  }
+  if (length(parIDs$cNormal) > 0) {
+      randParSummary[parIDs$cNormal,]$Max. <- Inf
+  }
+  return(randParSummary)
 }
 
 getModelType <- function(x) {

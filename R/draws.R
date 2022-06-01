@@ -18,9 +18,13 @@ makeBetaDraws <- function(pars, parIDs, n, standardDraws, correlation) {
   # Now shift the draws according to the means
   meanMat <- matrix(rep(pars_mean, n$draws), ncol = n$vars, byrow = TRUE)
   betaDraws <- meanMat + scaledDraws
-  # Exponentiate draws for those with logN distribution
+  # log-normal draws: Exponentiate
   if (length(parIDs$logNormal) > 0) {
     betaDraws[, parIDs$logNormal] <- exp(betaDraws[, parIDs$logNormal])
+  }
+  # Censored normal draws: Censor
+  if (length(parIDs$cNormal) > 0) {
+    betaDraws[, parIDs$cNormal] <- pmax(betaDraws[, parIDs$cNormal], 0)
   }
   return(betaDraws)
 }

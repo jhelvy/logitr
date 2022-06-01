@@ -287,7 +287,8 @@ getParIDs <- function(
     fixed     = which(parSetup == "f"),
     random    = which(parSetup != "f"),
     normal    = which(parSetup == "n"),
-    logNormal = which(parSetup == "ln")
+    logNormal = which(parSetup == "ln"),
+    cNormal   = which(parSetup == "cn")
   )
   if (modelType == "mxl") {
       if (correlation) {
