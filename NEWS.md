@@ -2,6 +2,7 @@
 
 - Added the `correlation` argument to include correlated heterogeneity.
 - Added a couple input checks for the `obsID` and `outcome` arguments.
+- `vcov.logitr()` method now returns `object$vcov` if the user set `vcov = TRUE` during estimation (avoids a redundant calculation of `vcov`).
 
 # logitr 0.5.1
 
