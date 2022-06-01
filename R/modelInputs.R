@@ -50,9 +50,7 @@ getModelInputs <- function(
   outcome <- as.matrix(data[outcome])
 
   # Setup obsID
-  obsID <- as.matrix(data[obsID])
-  reps <- as.numeric(table(obsID))
-  obsID <- rep(seq_along(reps), reps) # Make sure obsID is sequential number
+  obsID <- makeObsID(data, obsID, outcome)
 
   # Setup panelID
   panel <- !is.null(inputs$panelID)
@@ -168,6 +166,31 @@ getModelInputs <- function(
   modelInputs$evalFuncs <- setEvalFunctions(modelType, useAnalyticGrad)
 
   return(modelInputs)
+}
+
+makeObsID <- function(data, obsID, outcome) {
+  obsID <- as.vector(as.matrix(data[obsID]))
+  # Make sure obsID is in sequential order with no repeated IDs
+  reps <- table(obsID)
+  obsIDCheck <- as.numeric(rep(names(reps), as.numeric(reps)))
+  if (!all(obsID == obsIDCheck)) {
+    stop(
+      "The 'obsID' variable provided has repeated ID values. It must be a ",
+      "sequentially increasing numeric value identifying the rows of each ",
+      "observation, such as 1,1,1,2,2,2...double check the variable provided ",
+      "for 'obsID'."
+    )
+  }
+  # Make sure that each observation ID has only one outcome
+  outcomeCheck <- tapply(outcome, obsID, function(x) sum(x))
+  if (! all(outcomeCheck == 1)) {
+    stop(
+      "Each observation outcome (identified by the 'obsID' variable) must ",
+      "have only one value equal to 1 and all others equal to 0. Double check ",
+      "the variables provided for 'obsID' and 'outcome'."
+    )
+  }
+  return(obsID)
 }
 
 setNumCores <- function(numCores) {

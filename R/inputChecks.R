@@ -6,9 +6,9 @@ runInputChecks <- function(data, inputs) {
   if (! is.null(inputs$price)) {
     if (inputs$price %in% inputs$pars) {
       stop(
-        'The value you provided for the "price" argument is also included ',
-        'in your "pars" argument. If you are estimating a WTP space model',
-        ', you should remove the price name from your "pars" argument and ',
+        'The value provided for the "price" argument is also included ',
+        'in the "pars" argument. If you are estimating a WTP space model',
+        ', you should remove the price name from the "pars" argument and ',
         'provide it separately with the "price" argument.'
       )
     }
