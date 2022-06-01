@@ -147,3 +147,58 @@
 #'
 #' head(cars_china)
 "cars_china"
+
+#' Simulated SP dataset of mode choice (from the {apollo} package).
+#'
+#' A simulated dataset containing 7,000 mode choices among four alternatives.
+#' Data comes from 500 individuals, each with 14 stated stated preference
+#' (SP) observations. There are 7,000 choices in total.
+#' Each observation contains attributes for the alternatives,
+#' availability of alternatives, and characteristics of the
+#' individuals.
+#' @format
+#' Variable | Description
+#' -------- | ---------------------------------------------
+#' `ID` | individual identifiers
+#' `obsID` | identifier for unique choice observation
+#' `altID` | alternative in each choice observation
+#' `qID` | Numeric. Consecutive ID of SP choice tasks.
+#' `choice` | dummy code for choice (1 or 0)
+#' `mode` | Character describing mode: "air", "rail", "car", "bus"
+#' `time` | Travel time in minutes.
+#' `cost` | cost (in GBP) of trip.
+#' `access` | Access time in minutes.
+#' `service` | Numeric. Additional services: 1 for no-frills, 2 for wifi, 3 for food.}
+#' `mode_air` | Dummy coefficient for "air" mode.
+#' `mode_bus` | Dummy coefficient for "bus" mode.
+#' `mode_car` | Dummy coefficient for "car" mode.
+#' `mode_rail` | Dummy coefficient for "rail" mode.
+#' `service_no_frills` | Dummy coefficient for "no-frills" additional service.
+#' `service_wifi` | Dummy coefficient for "wifi" additional service.
+#' `service_food` | Dummy coefficient for "food" additional service.
+#' `time_car` | Travel time (in minutes) for car trip.
+#' `time_bus` | Travel time (in minutes) for bus trip.
+#' `time_air` | Travel time (in minutes) for air trip.
+#' `time_rail` | Travel time (in minutes) for rail trip.
+#' `female` | Numeric. Sex of individual. 1 for female, 0 for male.
+#' `business` | Numeric. Purpose of the trip. 1 for business, 0 for other.
+#' `income` | Numeric. Income (in GBP per annum) of the individual.
+#'
+#' @docType data
+#'
+#' @usage data(apolloModeChoiceData)
+#'
+#' @keywords datasets
+#'
+#' @references Hess, S. & Palma, D. (2019), Apollo: a flexible, powerful and customisable freeware package for choice model estimation and application, Journal of Choice Modelling, Volume 32, September 2019.
+#' \doi{10.1016/j.jocm.2019.100170}
+#'
+#' @source Data imported from the apollo package \href{https://www.rdocumentation.org/packages/apollo/versions/0.2.6/topics/apollo_modeChoiceData}{archive}
+#'
+#' @examples
+#' data(apolloModeChoiceData)
+#'
+#' head(apolloModeChoiceData)
+"apolloModeChoiceData"
+
+
