@@ -211,8 +211,7 @@ getRandParSummary <- function(object) {
   distName[parIDs$cNormal] <- "zero-censored normal"
   summaryNames <- paste(names(parSetup), " (", distName, ")", sep = "")
   colnames(randParSummary) <- summaryNames
-  randParSummary <- as.data.frame(t(randParSummary[, parIDs$random]))
-  row.names(randParSummary) <- names(parIDs$random)
+  randParSummary <- as.data.frame(t(randParSummary))
   # Set min and max values for unbounded distributions
   if (length(parIDs$normal) > 0) {
       randParSummary[parIDs$normal,]$Min. <- -Inf
@@ -225,6 +224,9 @@ getRandParSummary <- function(object) {
   if (length(parIDs$cNormal) > 0) {
       randParSummary[parIDs$cNormal,]$Max. <- Inf
   }
+  # Add names and drop fixed pars
+  randParSummary <- randParSummary[parIDs$random,]
+  row.names(randParSummary) <- names(parIDs$random)
   return(randParSummary)
 }
 
