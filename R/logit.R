@@ -189,23 +189,8 @@ updatePartials <- function(partials, parIDs, betaDraws, n) {
   lnIDs <- parIDs$logNormal
   if (length(lnIDs) > 0) {
     for (i in 1:length(lnIDs)) {
-      randID <- lnIDs[i]
-      sdID <- parIDs$sdDiag[names(randID)]
-      betaMat <- repmat(matrix(betaDraws[,randID], nrow = 1), n$rowX, 1)
-      ids <- c(randID, sdID)
-      for (j in ids) {
-        partials[[j]] <- partials[[j]]*betaMat
-      }
-    }
-  }
-  # Censored-normal
-  cnIDs <- parIDs$cNormal
-  if (length(cnIDs) > 0) {
-    for (i in 1:length(cnIDs)) {
-      randID <- cnIDs[i]
-      sdID <- parIDs$sdDiag[names(randID)]
-      betaMat <- repmat(matrix(betaDraws[,randID], nrow = 1), n$rowX, 1)
-      ids <- c(randID, sdID)
+      ids <- parIDs$partial_lnIDs[[i]]
+      betaMat <- repmat(matrix(betaDraws[,i], nrow = 1), n$rowX, 1)
       for (j in ids) {
         partials[[j]] <- partials[[j]]*betaMat
       }

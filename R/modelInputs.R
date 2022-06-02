@@ -291,16 +291,33 @@ getParIDs <- function(
     cNormal   = which(parSetup == "cn")
   )
   if (modelType == "mxl") {
-      sd <-  seq(n$pars)
-      ids <- seq(n$parsRandom)
-      parIDs$sdDiag <- sd[n$vars + ids]
-      if (correlation) {
-          incs <- seq(n$parsRandom, 1, -1)
-          ids <- cumsum(c(1, incs))[1:n$parsRandom]
-          parIDs$sdDiag <- sd[n$vars + ids]
-          parIDs$sdOffDiag <- sd[-c(seq(n$vars), n$vars + ids)]
+    allIDs  <- seq(n$pars)
+    diagIDs <- seq(n$parsRandom)
+    if (correlation) {
+      incs  <- seq(n$parsRandom, 1, -1)
+      diagIDs <- cumsum(c(1, incs))[1:n$parsRandom]
+      parIDs$sdOffDiag <- allIDs[-c(seq(n$vars), n$vars + diagIDs)]
+    }
+    parIDs$sdDiag <- allIDs[n$vars + diagIDs]
+    names(parIDs$sdDiag) <- names(parIDs$random)
+    # For log-normal parameters, set the IDs for updating partials in
+    # gradient calculations (used in updatePartials() function in logit.R)
+    lnIDs <- parIDs$logNormal
+    partial_lnIDs <- list()
+    if (length(lnIDs) > 0) {
+      for (i in 1:length(lnIDs)) {
+        parID <- lnIDs[i]
+        sdID  <- parIDs$sdDiag[names(parID)]
+        if (correlation) {
+          lowerMat <- matrix(0, n$parsRandom, n$parsRandom)
+          lowerMat[lower.tri(lowerMat, diag = TRUE)] <- (n$vars + 1):n$pars
+          sdID <- lowerMat[,parID]
+          sdID <- sdID[which(sdID != 0)]
+        }
+        partial_lnIDs[[i]] <- c(parID, sdID)
       }
-      names(parIDs$sdDiag) <- names(parIDs$random)
+      parIDs$partial_lnIDs <- partial_lnIDs
+    }
   }
   # Make lambda & omega IDs for WTP space models
   if (modelSpace == "wtp") {
