@@ -183,14 +183,32 @@ getMxlHessLL <- function(pars, mi) {
 }
 
 # Updates each of the partials matrices based on if the parameter follows
-# a log-normal distribution
+# a log-normal or censored-normal distribution
 updatePartials <- function(partials, parIDs, betaDraws, n) {
-  if (length(parIDs$logNormal) > 0) {
-    for (id in parIDs$logNormal) {
-      id_sd <- id + n$vars - n$parsFixed
-      betaMat <- repmat(matrix(betaDraws[,id], nrow = 1), n$rowX, 1)
-      partials[[id]] <- partials[[id]]*betaMat
-      partials[[id_sd]] <- partials[[id_sd]]*betaMat
+  # Log-normal
+  lnIDs <- parIDs$logNormal
+  if (length(lnIDs) > 0) {
+    for (i in 1:length(lnIDs)) {
+      randID <- lnIDs[i]
+      sdID <- parIDs$sdDiag[names(randID)]
+      betaMat <- repmat(matrix(betaDraws[,randID], nrow = 1), n$rowX, 1)
+      ids <- c(randID, sdID)
+      for (j in ids) {
+        partials[[j]] <- partials[[j]]*betaMat
+      }
+    }
+  }
+  # Censored-normal
+  cnIDs <- parIDs$cNormal
+  if (length(cnIDs) > 0) {
+    for (i in 1:length(cnIDs)) {
+      randID <- cnIDs[i]
+      sdID <- parIDs$sdDiag[names(randID)]
+      betaMat <- repmat(matrix(betaDraws[,randID], nrow = 1), n$rowX, 1)
+      ids <- c(randID, sdID)
+      for (j in ids) {
+        partials[[j]] <- partials[[j]]*betaMat
+      }
     }
   }
   return(partials)

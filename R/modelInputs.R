@@ -291,13 +291,16 @@ getParIDs <- function(
     cNormal   = which(parSetup == "cn")
   )
   if (modelType == "mxl") {
+      sd <-  seq(n$pars)
+      ids <- seq(n$parsRandom)
+      parIDs$sdDiag <- sd[n$vars + ids]
       if (correlation) {
           incs <- seq(n$parsRandom, 1, -1)
           ids <- cumsum(c(1, incs))[1:n$parsRandom]
-          sd <-  seq(n$pars)
           parIDs$sdDiag <- sd[n$vars + ids]
           parIDs$sdOffDiag <- sd[-c(seq(n$vars), n$vars + ids)]
       }
+      names(parIDs$sdDiag) <- names(parIDs$random)
   }
   # Make lambda & omega IDs for WTP space models
   if (modelSpace == "wtp") {
@@ -469,7 +472,6 @@ makePartials <- function(mi) {
   draws <- mi$standardDraws[,mi$parIDs$random]
   X <- X2[,sdIDs]
   IDs <- as.data.frame(utils::combn(seq(length(sdIDs)), 2))
-  partialDiags <- partials[sdIDs]
   partialOffDiags <- list()
   for (i in 1:ncol(IDs)) {
     id <- IDs[,i]
@@ -479,7 +481,7 @@ makePartials <- function(mi) {
   }
   result <- lapply(seq(n$pars), function(x) x)
   result[1:n$vars] <- partials[1:n$vars]
-  result[mi$parIDs$sdDiag] <- partialDiags
+  result[mi$parIDs$sdDiag] <- partials[sdIDs]
   result[mi$parIDs$sdOffDiag] <- partialOffDiags
   return(result)
 }
