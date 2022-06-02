@@ -95,13 +95,9 @@ checkStartPars <- function(startPars, mi, i) {
   }
   # For log-normal parameters, force positivity
   parIDs <- mi$parIDs
-  lnIDs <- parIDs$logNormal
+  lnIDs <- parIDs$ln
   if (length(lnIDs) > 0) {
-    if (i == 1) {
-      startPars[lnIDs] <- 1
-    } else {
-      startPars[lnIDs] <- stats::runif(length(lnIDs), 0.1, 1)
-    }
+    startPars[lnIDs] <- stats::runif(length(lnIDs), 0.1, 0.5)
   }
   return(startPars)
 }

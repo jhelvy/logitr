@@ -205,28 +205,31 @@ getRandParSummary <- function(object) {
       stats::coef(object), parIDs, n, standardDraws, object$inputs$correlation)
   randParSummary <- apply(betaDraws, 2, summary)
   # Add names to summary
+  nIDs <- parIDs$n
+  lnIDs <- parIDs$ln
+  cnIDs <- parIDs$cn
   distName <- rep("", length(parSetup))
-  distName[parIDs$normal] <- "normal"
-  distName[parIDs$logNormal] <- "log-normal"
-  distName[parIDs$cNormal] <- "zero-censored normal"
+  distName[nIDs] <- "normal"
+  distName[lnIDs] <- "log-normal"
+  distName[cnIDs] <- "zero-censored normal"
   summaryNames <- paste(names(parSetup), " (", distName, ")", sep = "")
   colnames(randParSummary) <- summaryNames
   randParSummary <- as.data.frame(t(randParSummary))
   # Set min and max values for unbounded distributions
-  if (length(parIDs$normal) > 0) {
-      randParSummary[parIDs$normal,]$Min. <- -Inf
-      randParSummary[parIDs$normal,]$Max. <- Inf
+  if (length(nIDs) > 0) {
+      randParSummary[nIDs,]$Min. <- -Inf
+      randParSummary[nIDs,]$Max. <- Inf
   }
-  if (length(parIDs$logNormal) > 0) {
-      randParSummary[parIDs$logNormal,]$Min. <- 0
-      randParSummary[parIDs$logNormal,]$Max. <- Inf
+  if (length(lnIDs) > 0) {
+      randParSummary[lnIDs,]$Min. <- 0
+      randParSummary[lnIDs,]$Max. <- Inf
   }
-  if (length(parIDs$cNormal) > 0) {
-      randParSummary[parIDs$cNormal,]$Max. <- Inf
+  if (length(cnIDs) > 0) {
+      randParSummary[cnIDs,]$Max. <- Inf
   }
   # Add names and drop fixed pars
-  randParSummary <- randParSummary[parIDs$random,]
-  row.names(randParSummary) <- names(parIDs$random)
+  randParSummary <- randParSummary[parIDs$r,]
+  row.names(randParSummary) <- names(parIDs$r)
   return(randParSummary)
 }
 

@@ -284,11 +284,11 @@ getParIDs <- function(
   parSetup, n, modelSpace, modelType, randPrice, correlation
 ) {
   parIDs <- list(
-    fixed     = which(parSetup == "f"),
-    random    = which(parSetup != "f"),
-    normal    = which(parSetup == "n"),
-    logNormal = which(parSetup == "ln"),
-    cNormal   = which(parSetup == "cn")
+    f  = which(parSetup == "f"),
+    r  = which(parSetup != "f"),
+    n  = which(parSetup == "n"),
+    ln = which(parSetup == "ln"),
+    cn = which(parSetup == "cn")
   )
   if (modelType == "mxl") {
     allIDs  <- seq(n$pars)
@@ -299,10 +299,10 @@ getParIDs <- function(
       parIDs$sdOffDiag <- allIDs[-c(seq(n$vars), n$vars + diagIDs)]
     }
     parIDs$sdDiag <- allIDs[n$vars + diagIDs]
-    names(parIDs$sdDiag) <- names(parIDs$random)
+    names(parIDs$sdDiag) <- names(parIDs$r)
     # For log-normal parameters, set the IDs for updating partials in
     # gradient calculations (used in updatePartials() function in logit.R)
-    lnIDs <- parIDs$logNormal
+    lnIDs <- parIDs$ln
     partial_lnIDs <- list()
     if (length(lnIDs) > 0) {
       for (i in 1:length(lnIDs)) {
@@ -389,7 +389,7 @@ getScaleFactors <- function(
   }
   # If MXL model, need to replicate scale factors for sd pars
   if (modelType == "mxl") {
-      sfRand <- scaleFactors[parIDs$random]
+      sfRand <- scaleFactors[parIDs$r]
       if (correlation) {
         sf <- rep(1, length(parNames$all))
         sf[seq(n$vars)] <- scaleFactors
@@ -488,11 +488,11 @@ makePartials <- function(mi) {
     draws_temp <- repmat(matrix(draws[, i], nrow = 1), nrow(X_temp), 1)
     partials[[i]] <- X_temp*draws_temp
   }
-  sdIDs <- n$vars + mi$parIDs$random
+  sdIDs <- n$vars + mi$parIDs$r
   if (! mi$inputs$correlation) {
     return(partials[c(1:n$vars, sdIDs)])
   }
-  draws <- mi$standardDraws[,mi$parIDs$random]
+  draws <- mi$standardDraws[,mi$parIDs$r]
   X <- X2[,sdIDs]
   IDs <- as.data.frame(utils::combn(seq(length(sdIDs)), 2))
   partialOffDiags <- list()

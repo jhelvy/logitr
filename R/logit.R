@@ -186,7 +186,7 @@ getMxlHessLL <- function(pars, mi) {
 # a log-normal or censored-normal distribution
 updatePartials <- function(partials, parIDs, betaDraws, n) {
   # Log-normal
-  lnIDs <- parIDs$logNormal
+  lnIDs <- parIDs$ln
   if (length(lnIDs) > 0) {
     for (i in 1:length(lnIDs)) {
       ids <- parIDs$partial_lnIDs[[i]]
@@ -277,8 +277,8 @@ mxlNegGradLL_wtp <- function(
     lambda_sdID <- parIDs$lambdaIDs[2]
     partials[[lambda_sdID]] <- partials[[lambda_sdID]]*partial_lambda_mean
     # Account for if lambda is log-normally distributed
-    if (length(parIDs$logNormal) > 0) {
-      if (parIDs$logNormal[1] == 1) {
+    if (length(parIDs$ln) > 0) {
+      if (parIDs$ln[1] == 1) {
         partials[[1]] <- partials[[1]]*lambdaDraws
       }
     }

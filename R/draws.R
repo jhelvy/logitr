@@ -14,25 +14,25 @@ makeBetaDraws <- function(pars, parIDs, n, standardDraws, correlation) {
     lowerMat <- diag(pars_sd, ncol = length(pars_sd))
   }
   scaledDraws <- standardDraws
-  scaledDraws[,parIDs$random] <- scaledDraws[,parIDs$random] %*% lowerMat
+  scaledDraws[,parIDs$r] <- scaledDraws[,parIDs$r] %*% lowerMat
   # Now shift the draws according to the means
   meanMat <- matrix(rep(pars_mean, n$draws), ncol = n$vars, byrow = TRUE)
   betaDraws <- meanMat + scaledDraws
   # log-normal draws: Exponentiate
-  if (length(parIDs$logNormal) > 0) {
-    betaDraws[, parIDs$logNormal] <- exp(betaDraws[, parIDs$logNormal])
+  if (length(parIDs$ln) > 0) {
+    betaDraws[, parIDs$ln] <- exp(betaDraws[, parIDs$ln])
   }
   # Censored normal draws: Censor
-  if (length(parIDs$cNormal) > 0) {
-    betaDraws[, parIDs$cNormal] <- pmax(betaDraws[, parIDs$cNormal], 0)
+  if (length(parIDs$cn) > 0) {
+    betaDraws[, parIDs$cn] <- pmax(betaDraws[, parIDs$cn], 0)
   }
   return(betaDraws)
 }
 
 getStandardDraws <- function(parIDs, numDraws) {
-  numBetas <- length(parIDs$fixed) + length(parIDs$random)
+  numBetas <- length(parIDs$f) + length(parIDs$r)
   draws <- as.matrix(randtoolbox::halton(numDraws, numBetas, normal = TRUE))
-  draws[, parIDs$fixed] <- 0 * draws[, parIDs$fixed]
+  draws[, parIDs$f] <- 0 * draws[, parIDs$f]
   return(draws)
 }
 
