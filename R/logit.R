@@ -196,6 +196,17 @@ updatePartials <- function(partials, parIDs, betaDraws, n) {
       }
     }
   }
+  # censored-normal
+  cnIDs <- parIDs$cn
+  if (length(cnIDs) > 0) {
+    for (i in 1:length(cnIDs)) {
+      ids <- parIDs$partial_cnIDs[[i]]
+      betaMat <- repmat(matrix(as.numeric(betaDraws[,cnIDs[i]] > 0), nrow = 1), n$rowX, 1)
+      for (j in ids) {
+        partials[[j]] <- partials[[j]] * betaMat
+      }
+    }
+  }
   return(partials)
 }
 

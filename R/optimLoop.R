@@ -89,9 +89,9 @@ checkStartPars <- function(startPars, mi, i) {
     # Force starting with lambda = 1 for WTP space models for stability
     startPars[1] <- 1
   }
-  # For correlated sd parameters in mxl models, set sd pars to 0.1
+  # For correlated parameters in mxl models, set sd pars to between [0.1, 0.5]
   if (mi$inputs$correlation) {
-      startPars[mi$parNames$sd] <- 0.1
+    startPars[mi$parNames$sd] <- stats::runif(length(mi$parNames$sd), 0.1, 0.5)
   }
   # For log-normal parameters, force positivity
   parIDs <- mi$parIDs

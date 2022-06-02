@@ -302,21 +302,13 @@ getParIDs <- function(
     names(parIDs$sdDiag) <- names(parIDs$r)
     # For log-normal parameters, set the IDs for updating partials in
     # gradient calculations (used in updatePartials() function in logit.R)
-    lnIDs <- parIDs$ln
-    partial_lnIDs <- list()
-    if (length(lnIDs) > 0) {
-      for (i in 1:length(lnIDs)) {
-        parID <- lnIDs[i]
-        sdID  <- parIDs$sdDiag[names(parID)]
-        if (correlation) {
-          lowerMat <- matrix(0, n$parsRandom, n$parsRandom)
-          lowerMat[lower.tri(lowerMat, diag = TRUE)] <- (n$vars + 1):n$pars
-          sdID <- lowerMat[,i]
-          sdID <- sdID[which(sdID != 0)]
-        }
-        partial_lnIDs[[i]] <- c(parID, sdID)
-      }
-      parIDs$partial_lnIDs <- partial_lnIDs
+    if (length(parIDs$ln) > 0) {
+      parIDs$partial_lnIDs <- getPartialIDs(parIDs, parIDs$ln, n)
+    }
+    # For censored-normal parameters, set the IDs for updating partials in
+    # gradient calculations (used in updatePartials() function in logit.R)
+    if (length(parIDs$cn) > 0) {
+      parIDs$partial_cnIDs <- getPartialIDs(parIDs, parIDs$cn, n)
     }
   }
   # Make lambda & omega IDs for WTP space models
@@ -337,6 +329,23 @@ getParIDs <- function(
     parIDs$omegaIDs <- omegaIDs
   }
   return(parIDs)
+}
+
+getPartialIDs <- function(parIDs, IDs, n) {
+  partial_IDs <- list()
+  for (i in 1:length(IDs)) {
+    parID <- IDs[i]
+    sdID  <- parIDs$sdDiag[names(parID)]
+    if (correlation) {
+      lowerMat <- matrix(0, n$parsRandom, n$parsRandom)
+      lowerMat[lower.tri(lowerMat, diag = TRUE)] <- (n$vars + 1):n$pars
+      index <- which(names(parIDs$r) == names(parID))
+      sdID <- lowerMat[, index]
+      sdID <- sdID[which(sdID != 0)]
+    }
+    partial_IDs[[i]] <- c(parID, sdID)
+  }
+  return(partial_IDs)
 }
 
 setupClusters <- function(inputs, panel, robust, weightsUsed) {
