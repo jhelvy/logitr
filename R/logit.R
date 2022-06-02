@@ -190,7 +190,7 @@ updatePartials <- function(partials, parIDs, betaDraws, n) {
   if (length(lnIDs) > 0) {
     for (i in 1:length(lnIDs)) {
       ids <- parIDs$partial_lnIDs[[i]]
-      betaMat <- repmat(matrix(betaDraws[,i], nrow = 1), n$rowX, 1)
+      betaMat <- repmat(matrix(betaDraws[,lnIDs[i]], nrow = 1), n$rowX, 1)
       for (j in ids) {
         partials[[j]] <- partials[[j]]*betaMat
       }
@@ -276,9 +276,21 @@ mxlNegGradLL_wtp <- function(
   if (!is.null(randPrice)) {
     lambda_sdID <- parIDs$lambdaIDs[2]
     partials[[lambda_sdID]] <- partials[[lambda_sdID]]*partial_lambda_mean
+    # Account for if lambda is log-normally distributed
+    if (length(parIDs$logNormal) > 0) {
+      if (parIDs$logNormal[1] == 1) {
+        partials[[1]] <- partials[[1]]*lambdaDraws
+      }
+    }
   }
   for (id in parIDs$omegaIDs) {
     partials[[id]] <- partials[[id]]*lambdaDraws
+  }
+  # Account for lambda in correlated pars
+  if (!is.null(randPrice)) {
+    for (id in parIDs$lambdaOffDiag) {
+      partials[[id]] <- partials[[id]] / lambdaDraws * partial_lambda_mean
+    }
   }
   # Now compute the gradient
   return(computeMxlNegGradLL(

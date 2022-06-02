@@ -311,7 +311,7 @@ getParIDs <- function(
         if (correlation) {
           lowerMat <- matrix(0, n$parsRandom, n$parsRandom)
           lowerMat[lower.tri(lowerMat, diag = TRUE)] <- (n$vars + 1):n$pars
-          sdID <- lowerMat[,parID]
+          sdID <- lowerMat[,i]
           sdID <- sdID[which(sdID != 0)]
         }
         partial_lnIDs[[i]] <- c(parID, sdID)
@@ -325,6 +325,12 @@ getParIDs <- function(
     omegaIDs <- seq(n$pars)
     if (!is.null(randPrice)) {
       lambdaIDs <- c(lambdaIDs, length(parSetup) + 1)
+      if (correlation) {
+        lowerMat <- matrix(0, n$parsRandom, n$parsRandom)
+        lowerMat[lower.tri(lowerMat, diag = TRUE)] <- (n$vars + 1):n$pars
+        lambdaOffDiag <- lowerMat[,1]
+        parIDs$lambdaOffDiag <- lambdaOffDiag[2:length(lambdaOffDiag)]
+      }
     }
     omegaIDs <- omegaIDs[-lambdaIDs]
     parIDs$lambdaIDs <- lambdaIDs
