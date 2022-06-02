@@ -126,7 +126,6 @@ makeModelTemplate <- function(mi) {
     date              = mi$date,
     version           = mi$version,
     inputs            = mi$inputs,
-    data              = mi$data,
     n                 = mi$n,
     freq              = mi$freq,
     modelType         = mi$modelType,

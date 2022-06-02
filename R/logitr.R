@@ -337,6 +337,7 @@ getBestModel <- function(allModels, summary) {
 }
 
 appendModelInfo <- function(model, mi) {
+  model$data <- mi$data
   parsUnscaled <- model$coefficients
   parNames <- mi$parNames$all
   names(parsUnscaled) <- parNames
