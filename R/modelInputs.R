@@ -303,12 +303,12 @@ getParIDs <- function(
     # For log-normal parameters, set the IDs for updating partials in
     # gradient calculations (used in updatePartials() function in logit.R)
     if (length(parIDs$ln) > 0) {
-      parIDs$partial_lnIDs <- getPartialIDs(parIDs, parIDs$ln, n)
+      parIDs$partial_lnIDs <- getPartialIDs(parIDs, parIDs$ln, n, correlation)
     }
     # For censored-normal parameters, set the IDs for updating partials in
     # gradient calculations (used in updatePartials() function in logit.R)
     if (length(parIDs$cn) > 0) {
-      parIDs$partial_cnIDs <- getPartialIDs(parIDs, parIDs$cn, n)
+      parIDs$partial_cnIDs <- getPartialIDs(parIDs, parIDs$cn, n, correlation)
     }
   }
   # Make lambda & omega IDs for WTP space models
@@ -331,7 +331,7 @@ getParIDs <- function(
   return(parIDs)
 }
 
-getPartialIDs <- function(parIDs, IDs, n) {
+getPartialIDs <- function(parIDs, IDs, n, correlation) {
   partial_IDs <- list()
   for (i in 1:length(IDs)) {
     parID <- IDs[i]
