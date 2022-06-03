@@ -5,6 +5,7 @@ library(logitr)
 # Common settings across all test
 yogurt$neg_price <- -1*yogurt$price
 data            = as.data.frame(yogurt)
+data            = subset(data, data$id < 30)
 outcome         = 'choice'
 obsID           = 'obsID'
 price           = NULL

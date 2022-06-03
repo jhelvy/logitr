@@ -5,6 +5,7 @@ library(logitr)
 # Common settings across all test
 yogurt$neg_price <- -1*yogurt$price
 data            = as.data.frame(yogurt)
+data            = subset(data, data$id < 30)
 outcome         = 'choice'
 obsID           = 'obsID'
 modelSpace      = "wtp"
@@ -50,6 +51,7 @@ grad_check <- function(
   # Creates random starting points
   mi <- makeModelInputsList(mi, numMultiStarts)[[1]]
   pars <- mi$model$startPars
+
   # Compute gradients
   grad_analytic <- as.vector(mi$evalFuncs$negGradLL(pars, mi))
   grad_numeric <- as.vector(getNumericNegGradLL(pars, mi))
@@ -61,6 +63,8 @@ grad_check <- function(
   check$diff <- round(check$analytic - check$numeric, 4)
   return(sum(check$diff) == 0)
 }
+
+# MNL ----
 
 test_that("Gradients for MNL", {
 
@@ -86,6 +90,8 @@ test_that("Gradients for MNL", {
     scaleInputs = FALSE
   ))
 })
+
+# MXL Normal ----
 
 test_that("Gradients MXL, normal parameters", {
 
@@ -249,6 +255,8 @@ test_that("Gradients MXL, normal parameters", {
 
 })
 
+# MXL Log-normal ----
+
 test_that("Gradients for MXL, log-normal parameters", {
 
   # Scaled?      FALSE
@@ -410,6 +418,8 @@ test_that("Gradients for MXL, log-normal parameters", {
   ))
 
 })
+
+# MXL Censored-normal ----
 
 test_that("Gradients for MXL, censored-normal parameters", {
 
