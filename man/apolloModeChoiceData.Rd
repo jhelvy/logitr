@@ -16,7 +16,7 @@
    \code{time} \tab Travel time in minutes. \cr
    \code{cost} \tab cost (in GBP) of trip. \cr
    \code{access} \tab Access time in minutes. \cr
-   \code{service} \tab Numeric. Additional services: 1 for no-frills, 2 for wifi, 3 for food.} \cr
+   \code{service} \tab Numeric. Additional services: 1 for no-frills, 2 for wifi, 3 for food. \cr
    \code{mode_air} \tab Dummy coefficient for "air" mode. \cr
    \code{mode_bus} \tab Dummy coefficient for "bus" mode. \cr
    \code{mode_car} \tab Dummy coefficient for "car" mode. \cr
