@@ -22,7 +22,7 @@ This vignette demonstrates an example of how to use the `logitr()` function with
 
 # The data
 
-```{r, child=here::here('man', 'rmdchunks', 'carsDataDescription.Rmd')}
+```{r, child='rmdchunks/carsDataDescription.Rmd'}
 ```
 
 In the utility models described below, the data variables are represented as follows:
@@ -52,7 +52,7 @@ In the utility models described below, the data variables are represented as fol
 
 In this example, we'll estimate two versions of the following utility model in the WTP space: one without weights and one with weights. Notation is taken from Helveston et al. [-@Helveston2015]:
 
-```{r, child=here::here('man', 'rmdchunks', 'mnlWtpCarsExample.Rmd')}
+```{r, child='rmdchunks/mnlWtpCarsExample.Rmd'}
 ```
 
 where all the $\omega$ parameters have units of dollars and $\lambda$ is the scale parameter.
