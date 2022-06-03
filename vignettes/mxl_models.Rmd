@@ -52,7 +52,7 @@ library("logitr")
 
 mxl_pref <- logitr(
   data     = yogurt,
-  choice   = 'choice',
+  outcome  = 'choice',
   obsID    = 'obsID',
   pars     = c('price', 'feat', 'brand'),
   randPars = c(feat = 'n', brand = 'n'),
@@ -96,7 +96,7 @@ Estimate the model using the `logitr()` function:
 ```{r eval=FALSE}
 mxl_wtp <- logitr(
   data       = yogurt,
-  choice     = 'choice',
+  outcome    = 'choice',
   obsID      = 'obsID',
   pars       = c('feat', 'brand'),
   price      = 'price',
