@@ -80,6 +80,8 @@ reference:
   - yogurt
   - cars_us
   - cars_china
+  - apolloModeChoiceData
+  - electricity
 - title: "Other Helpers"
   desc: "Other helper functions."
   contents:
