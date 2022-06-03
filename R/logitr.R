@@ -174,10 +174,12 @@
 #'
 #' # Estimate a MXL model in the Preference space with "feat"
 #' # following a normal distribution
+#' # Panel structure is accounted for in this example using "panelID"
 #' mxl_pref <- logitr(
 #'   data     = yogurt,
 #'   outcome  = "choice",
 #'   obsID    = "obsID",
+#'   panelID  = "id",
 #'   pars     = c("price", "feat", "brand"),
 #'   randPars = c(feat = "n")
 #' )

@@ -22,9 +22,22 @@ library(logitr)
 # take much longer to build
 mxl_pref <- readRDS(here::here('inst', 'extdata', 'mxl_pref.Rds'))
 mxl_wtp  <- readRDS(here::here('inst', 'extdata', 'mxl_wtp.Rds'))
+mxl_pref_cor <- readRDS(here::here('inst', 'extdata', 'mxl_pref_cor.Rds'))
 ```
 
 This vignette demonstrates an example of how to use the `logitr()` function to estimate mixed logit (MXL) models with preference space and WTP space utility parameterizations.
+
+# Supported distributions
+
+In mixed logit models, parameters are assumed to follow a particular distribution. This is implemented in `logitr` with the `randPars` argument, which should be a named vector defining which distribution to use for each random parameter. In the example below, we set `randPars = c(feat = 'n', brand = 'n')` so that `feat` and `brand` are normally distributed. Mixed logit models will estimate a mean and standard deviation of the underlying normal distribution for each random coefficient.
+
+The current version of the package includes the following distributions:
+
+- Normal: `"n"`
+- Log-normal: `"ln"`
+- Zero-censored normal: `"cn"`
+
+Note that log-normal or zero-censored normal parameters force positivity, so when using these you may need to use the negative of a value. For example, the "price" coefficient is typically negative, so if modeling "price" with a log-normal or zero-censored normal distribution you should convert "price" to the negative of price in the data prior to estimating the model.
 
 # The data
 
@@ -43,9 +56,11 @@ This example will estimate the following mixed logit model in the preference spa
 ```{r, child=here::here('man', 'rmdchunks', 'mnlPrefExample.Rmd')}
 ```
 
-where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ have units of utility. In the example below, we will model $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ as normally distributed across the population. As a result, the model will estimate two parameters for each of these coefficients: a mean (`par_mu`) and a standard deviation (`par_sigma`).
+where the parameters $\alpha$, $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ have units of utility. In the example below, we will model $\beta_1$, $\beta_2$, $\beta_3$, and $\beta_4$ as **normally distributed** across the population. As a result, the model will estimate a mean and standard deviation for each of these coefficients.
 
-Estimate the model using the `logitr()` function:
+Note that since the `yogurt` data has a panel structure (i.e. multiple choice observations for each respondent), it is necessary to set the `panelID` argument to the `id` variable, which identifies the individual. This will use the panel version of the log-likelihood (see [Train 2009 chapter 6](https://eml.berkeley.edu/books/choice2nd/Ch06_p134-150.pdf), section 6.7 for details).
+
+Finally, as with WTP space models, it is recommended to use a multistart search for mixed logit models as they are non-convex. This is implemented in the example below by setting `numMultiStarts = 10`:
 
 ```{r eval=FALSE}
 library("logitr")
@@ -54,9 +69,9 @@ mxl_pref <- logitr(
   data     = yogurt,
   outcome  = 'choice',
   obsID    = 'obsID',
+  panelID  = 'id',
   pars     = c('price', 'feat', 'brand'),
   randPars = c(feat = 'n', brand = 'n'),
-  # You should run a multistart for MXL models since they are non-convex
   numMultiStarts = 10
 )
 ```
@@ -89,23 +104,21 @@ This example will estimate the following mixed logit model in the WTP space:
 ```{r, child=here::here('man', 'rmdchunks', 'mnlWtpExample.Rmd')}
 ```
 
-where the parameters $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ have units of dollars and $\lambda$ is the scale parameter. In the example below, we will model $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ as normally distributed across the population. As a result, the model will estimate two parameters for each of these coefficients: a mean (`par_mu`) and a standard deviation (`par_sigma`).
+where the parameters $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ have units of dollars and $\lambda$ is the scale parameter. In the example below, we will model $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ as normally distributed across the population. Note that this is a slightly different assumption than in the preference space model. In the WTP space, we are assuming that the WTP for these features is normally-distributed (as opposed to the preference space model where the utility coefficients are assumed to follow a normal distribution).
 
-Estimate the model using the `logitr()` function:
+In the example below, we also use a 10-iteration multistart. We also set the starting values for the first iteration to the computed WTP from the preference space model:
 
 ```{r eval=FALSE}
 mxl_wtp <- logitr(
   data       = yogurt,
   outcome    = 'choice',
   obsID      = 'obsID',
+  panelID    = 'id',
   pars       = c('feat', 'brand'),
   price      = 'price',
   randPars   = c(feat = 'n', brand = 'n'),
   modelSpace = 'wtp',
-  # You should run a multistart for MXL models since they are non-convex
   numMultiStarts = 10,
-  # Use the computed WTP from the preference space model as the starting
-  # values for the first run:
   startVals = wtp_mxl_pref$Estimate
 )
 ```
@@ -130,5 +143,36 @@ wtpCompare(mxl_pref, mxl_wtp, price = 'price')
 ```
 
 Note that the WTP will not necessarily be the same between preference space and WTP space MXL models. This is because the distributional assumptions in MXL models imply different distributions on WTP depending on the model space. See Train and Weeks [-@Train2005] and Sonnier, Ainslie, and Otter [-@Sonnier2007] for details on this topic.
+
+# Correlated heterogeneity
+
+By default, `logitr` assumes that mixed logit models have uncorrelated heterogeneity. However, correlated heterogeneity can be implemented by setting `correlation = TRUE` for models in either space (preference or WTP). The example below shows the results for the same mixed logit model in the preference space as above but now with correlated heterogeneity:
+
+```{r eval=FALSE}
+library("logitr")
+
+mxl_pref_cor <- logitr(
+  data     = yogurt,
+  outcome  = 'choice',
+  obsID    = 'obsID',
+  panelID  = 'id',
+  pars     = c('price', 'feat', 'brand'),
+  randPars = c(feat = 'n', brand = 'n'),
+  numMultiStarts = 10,
+  correlation = TRUE
+)
+```
+```
+#> Running multistart...
+#>   Iterations: 10
+#>   Cores: 3
+#> Done!
+```
+
+Print a summary of the results:
+
+```{r}
+summary(mxl_pref_cor)
+```
 
 # References
