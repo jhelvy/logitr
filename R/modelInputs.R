@@ -131,6 +131,11 @@ getModelInputs <- function(
 
   # Make differenced data
   data_diff <- makeDiffData(data_scaled, modelType)
+  if (scaleInputs) {
+      data_diff_unscaled <- makeDiffData(data, modelType)
+  } else {
+      data_diff_unscaled <- data_diff
+  }
   n$rowX <- nrow(data_diff$X)
 
   # Make modelInputs list
@@ -144,6 +149,7 @@ getModelInputs <- function(
     price         = price,
     data          = data,
     data_diff     = data_diff,
+    data_diff_unscaled = data_diff_unscaled,
     scaleFactors  = scaleFactors,
     weightsUsed   = weightsUsed,
     parSetup      = parSetup,
@@ -158,7 +164,10 @@ getModelInputs <- function(
   # Add mixed logit inputs
   if (modelType == "mxl") {
     modelInputs$standardDraws <- makeMxlDraws(modelInputs)
-    modelInputs$partials <- makePartials(modelInputs)
+    modelInputs$partials <- makePartials(modelInputs, data_diff)
+    # Need unscaled version of partials for computing hessian
+    modelInputs$partials_unscaled <- makePartials(
+      modelInputs, data_diff_unscaled)
   }
 
   # Set logit and eval functions
@@ -482,9 +491,9 @@ makeMxlDraws <- function(modelInputs) {
   return(draws)
 }
 
-makePartials <- function(mi) {
+makePartials <- function(mi, data) {
   n <- mi$n
-  X <- mi$data_diff$X
+  X <- data$X
   if (mi$inputs$modelSpace == "wtp") {
     X <- cbind(1, X)
   }

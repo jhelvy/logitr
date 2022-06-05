@@ -352,10 +352,17 @@ appendModelInfo <- function(model, mi) {
     colnames(hessian) <- parNames
     nullLogLik <- NA
   } else {
+    # Re-scale coefficients
     coefficients <- parsUnscaled / scaleFactors
-    gradient     <- -1 * mi$evalFuncs$negGradLL(parsUnscaled, mi)
-    hessian      <- getHessian(parsUnscaled, scaleFactors, mi)
-    nullLogLik   <- -1*mi$evalFuncs$negLL(parsUnscaled*0, mi)
+    # Make unscaled version of model inputs to compute gradient and hessian
+    mi_unscaled <- mi
+    mi_unscaled$data_diff <- mi$data_diff_unscaled
+    if (mi$modelType == 'mxl') {
+      mi_unscaled$partials <- mi$data_diff_unscaled
+    }
+    gradient   <- -1 * mi$evalFuncs$negGradLL(coefficients, mi_unscaled)
+    hessian    <- getHessian(coefficients, mi_unscaled)
+    nullLogLik <- -1*mi$evalFuncs$negLL(coefficients*0, mi_unscaled)
   }
   model$coefficients <- coefficients
   model$gradient <- gradient
@@ -366,20 +373,15 @@ appendModelInfo <- function(model, mi) {
   return(model)
 }
 
-getHessian <- function(parsUnscaled, scaleFactors, modelInputs) {
-  parNames <- modelInputs$parNames$all
-  if (any(is.na(parsUnscaled))) {
-    # Model failed - return a matrix of NA values
-    hessian <- matrix(NA, nrow = length(parNames), ncol = length(parNames))
-  } else {
-    hessian <- modelInputs$evalFuncs$hessLL(parsUnscaled, modelInputs)
-    if (modelInputs$inputs$scaleInputs) {
-      sf <- matrix(scaleFactors, ncol = 1)
-      sfMat <- sf %*% t(sf)
-      hessian <- hessian * sfMat
+getHessian <- function(coefficients, mi) {
+    parNames <- mi$parNames$all
+    if (any(is.na(coefficients))) {
+        # Model failed - return a matrix of NA values
+        hessian <- matrix(NA, nrow = length(parNames), ncol = length(parNames))
+    } else {
+        hessian <- mi$evalFuncs$hessLL(coefficients, mi)
     }
-  }
-  colnames(hessian) <- parNames
-  row.names(hessian) <- parNames
-  return(hessian)
+    colnames(hessian) <- parNames
+    row.names(hessian) <- parNames
+    return(hessian)
 }
