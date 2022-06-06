@@ -17,12 +17,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, child='rmdchunks/header.Rmd'}
+```{r, child='../man/rmdchunks/header.Rmd'}
 ```
 
 ## Data format
 
-```{r, child='rmdchunks/dataFormat.Rmd'}
+```{r, child='../man/rmdchunks/dataFormat.Rmd'}
 ```
 
 The ["Data Formatting and Encoding"](data_formatting.html) vignette has more details about the required data format.
@@ -33,7 +33,7 @@ Models are specified and estimated using the `logitr()` function. The `data` arg
 
 For example, consider a preference space model where the utility for yogurt is given by the following utility model:
 
-```{r, child='rmdchunks/yogurtUtilityPref.Rmd'}
+```{r, child='../man/rmdchunks/yogurtUtilityPref.Rmd'}
 ```
 
 \noindent
@@ -52,7 +52,7 @@ mnl_pref <- logitr(
 
 The equivalent model in the WTP space is given by the following utility model:
 
-```{r, child='rmdchunks/yogurtUtilityWtp.Rmd'}
+```{r, child='../man/rmdchunks/yogurtUtilityWtp.Rmd'}
 ```
 
 \noindent
