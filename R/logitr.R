@@ -358,7 +358,7 @@ appendModelInfo <- function(model, mi) {
     mi_unscaled <- mi
     mi_unscaled$data_diff <- mi$data_diff_unscaled
     if (mi$modelType == 'mxl') {
-      mi_unscaled$partials <- mi$data_diff_unscaled
+      mi_unscaled$partials <- mi$partials_unscaled
     }
     gradient   <- -1 * mi$evalFuncs$negGradLL(coefficients, mi_unscaled)
     hessian    <- getHessian(coefficients, mi_unscaled)

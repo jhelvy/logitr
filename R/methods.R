@@ -353,7 +353,7 @@ getClusterModelInputs <- function (indices, mi, i) {
   mi$data_diff$weights <- weights
   mi$data_diff$clusterID <- NULL
   if (isMxlModel(mi$parSetup)) {
-    mi$partials <- makePartials(mi)
+    mi$partials <- makePartials(mi, mi$data_diff)
   }
   mi$n$rowX <- nrow(X)
   return(mi)
