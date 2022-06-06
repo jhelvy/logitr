@@ -339,43 +339,54 @@ getBestModel <- function(allModels, summary) {
 }
 
 appendModelInfo <- function(model, mi) {
+  fail <- model$fail
+  if (! fail) { model$fail <- NULL }
+  # Add model data
   model$data <- mi$data
-  parsUnscaled <- model$coefficients
-  parNames <- mi$parNames$all
-  names(parsUnscaled) <- parNames
-  scaleFactors <- mi$scaleFactors
-  if (model$fail) {
-    gradient <- matrix(parsUnscaled*NA, ncol = 1)
-    row.names(gradient) <- parNames
-    hessian <- matrix(NA, nrow = length(parNames), ncol = length(parNames))
-    row.names(hessian) <- parNames
-    colnames(hessian) <- parNames
-    nullLogLik <- NA
-  } else {
-    # Re-scale coefficients
-    coefficients <- parsUnscaled / scaleFactors
-    # Make unscaled version of model inputs to compute gradient and hessian
-    mi_unscaled <- mi
-    mi_unscaled$data_diff <- mi$data_diff_unscaled
-    if (mi$modelType == 'mxl') {
-      mi_unscaled$partials <- mi$partials_unscaled
-    }
-    gradient   <- -1 * mi$evalFuncs$negGradLL(coefficients, mi_unscaled)
-    hessian    <- getHessian(coefficients, mi_unscaled)
-    nullLogLik <- -1*mi$evalFuncs$negLL(coefficients*0, mi_unscaled)
-  }
+  # Get coefficients (re-scale if needed)
+  coefficients <- getCoefficients(model, mi, fail)
   model$coefficients <- coefficients
-  model$gradient <- gradient
-  model$hessian <- hessian
-  model$nullLogLik <- nullLogLik
-  model$result <- NULL
-  model$fail <- NULL
+  # Make unscaled version of model inputs to compute gradient and hessian
+  mi_unscaled <- mi
+  mi_unscaled$data_diff <- mi$data_diff_unscaled
+  if (mi$modelType == 'mxl') {
+    mi_unscaled$partials <- mi$partials_unscaled
+  }
+  model$gradient <- getGradient(coefficients, mi_unscaled, fail)
+  model$hessian  <- getHessian(coefficients, mi_unscaled, fail)
+  model$nullLogLik <- getNullLogLik(coefficients, mi_unscaled, fail)
   return(model)
 }
 
-getHessian <- function(coefficients, mi) {
+getCoefficients <- function(model, mi, fail) {
+  parsUnscaled <- model$coefficients
+  names(parsUnscaled) <- mi$parNames$all
+  if (fail | (! mi$inputs$scaleInputs)) {
+    return(parsUnscaled)
+  }
+  # Re-scale coefficients
+  scaleFactors <- mi$scaleFactors
+  # Adjust any log-normal parameters
+  lnIDs <- mi$parIDs$ln
+  if (length(lnIDs) > 0) {
+    parsUnscaled[lnIDs] <- parsUnscaled[lnIDs] - log(scaleFactors[lnIDs])
+    scaleFactors[unlist(mi$parIDs$partial_lnIDs)] <- 1
+  }
+  return(parsUnscaled / scaleFactors)
+}
+
+getGradient <- function(coefficients, mi, fail) {
+  if (fail) {
+    gradient <- matrix(coefficients*NA, ncol = 1)
+    row.names(gradient) <- names(coefficients)
+    return(gradient)
+  }
+  return(-1 * mi$evalFuncs$negGradLL(coefficients, mi))
+}
+
+getHessian <- function(coefficients, mi, fail) {
     parNames <- mi$parNames$all
-    if (any(is.na(coefficients))) {
+    if ((fail) | (any(is.na(coefficients)))) {
         # Model failed - return a matrix of NA values
         hessian <- matrix(NA, nrow = length(parNames), ncol = length(parNames))
     } else {
@@ -384,4 +395,9 @@ getHessian <- function(coefficients, mi) {
     colnames(hessian) <- parNames
     row.names(hessian) <- parNames
     return(hessian)
+}
+
+getNullLogLik <- function(coefficients, mi, fail) {
+  if (fail) { return(NA) }
+  return(-1*mi$evalFuncs$negLL(coefficients*0, mi))
 }
