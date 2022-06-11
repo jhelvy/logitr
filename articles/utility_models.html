@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.1.9000</span>
       </span>
     </div>
 
@@ -63,7 +63,7 @@
   <a href="../articles/basic_usage.html">Basic Usage</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -133,9 +133,9 @@
 <li>Estimate a discrete choice model in the “WTP space” where parameters have units of WTP.</li>
 </ol>
 <p>While the two procedures generally produce the same estimates of WTP for homogenous models, the same is not true for heterogeneous models where model parameters are assumed to follow a specific distribution, such as normal or log-normal <span class="citation">(Train and Weeks 2005)</span>. For example, in a preference space specification, a normally distributed attribute parameter divided by a log-normally distributed price parameter produces a strange WTP distribution with large tails. In contrast, a WTP space specification allows the modeler to directly assume WTP is normally distributed. The  package was developed to enable modelers to choose between these two utility spaces when estimating multinomial logit models.</p>
-<div class="section level1">
-<h1 id="the-random-utility-model-in-two-spaces">The random utility model in two spaces<a class="anchor" aria-label="anchor" href="#the-random-utility-model-in-two-spaces"></a>
-</h1>
+<div class="section level2">
+<h2 id="the-random-utility-model-in-two-spaces">The random utility model in two spaces<a class="anchor" aria-label="anchor" href="#the-random-utility-model-in-two-spaces"></a>
+</h2>
 <p>The random utility model is a well-established framework in many fields for estimating consumer preferences from observed consumer choices <span class="citation">(Louviere, Hensher, and Swait 2000; Train 2009)</span>. Random utility models assume that consumers choose the alternative <span class="math inline">\(j\)</span> a set of alternatives that has the greatest utility <span class="math inline">\(u_{j}\)</span>. Utility is a random variable that is modeled as <span class="math inline">\(u_{j} = v_{j} + \varepsilon_{j}\)</span>, where <span class="math inline">\(v_{j}\)</span> is the “observed utility” (a function of the observed attributes such that <span class="math inline">\(v_{j} = f(\mathrm{\mathbf{x}}_{j})\)</span>) and <span class="math inline">\(\varepsilon_{j}\)</span> is a random variable representing the portion of utility unobservable to the modeler.</p>
 <p>Adopting the same notation as in Helveston et al. <span class="citation">(2018)</span>, consider the following utility model:</p>
 <p><span class="math display">\[\begin{equation}
@@ -192,9 +192,9 @@
 <p>Here <span class="math inline">\(\mathbf{ω}\)</span> represents the marginal WTP for changes in each non-price attribute, and <span class="math inline">\(\lambda\)</span> represents the scale of the deterministic portion of utility relative to the standardized scale of the random error term.</p>
 <p>The utility models in equations  and  represent the preference space and WTP space utility specifications, respectively. In equation , WTP is estimated as <span class="math inline">\(\hat{\mathbf{β}} / \hat{- \alpha}\)</span>; in equation , WTP is simply <span class="math inline">\(\hat{\mathbf{ω}}\)</span>.</p>
 </div>
-<div class="section level1 unnumbered">
-<h1 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
-</h1>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references">
 <div id="ref-Helveston2018">
 <p>Helveston, John Paul, Elea McDonnell Feit, and Jeremy J. Michalek. 2018. “Pooling stated and revealed preference data in the presence of RP endogeneity.” <em>Transportation Research Part B: Methodological</em> 109: 70–89.</p>
@@ -229,7 +229,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.1.9000</span>
       </span>
     </div>
 
@@ -63,7 +63,7 @@
   <a href="../articles/basic_usage.html">Basic Usage</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -129,12 +129,12 @@
 <p>Once a model has been estimated, it can be used to predict probabilities and / or outcomes for a set of alternatives. This vignette demonstrates examples of how to so using the <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> method along with an estimated model.</p>
 <p>You can make predictions for any set of alternatives, so long as the columns in the alternatives correspond to estimated coefficients in your model. By default, if no new data are provided via the <code>newdata</code> argument, then predictions will be made for the original data used to estimate the model.</p>
 <p>Predictions can be made using both preference space and WTP space models, as well as multinomial logit and mixed logit models. For mixed logit models, heterogeneity is modeled by simulating draws from the population estimates of the estimated model.</p>
-<div class="section level1">
-<h1 id="predicting-probabilities">Predicting probabilities<a class="anchor" aria-label="anchor" href="#predicting-probabilities"></a>
-</h1>
 <div class="section level2">
-<h2 id="preference-space-models">Preference space models<a class="anchor" aria-label="anchor" href="#preference-space-models"></a>
+<h2 id="predicting-probabilities">Predicting probabilities<a class="anchor" aria-label="anchor" href="#predicting-probabilities"></a>
 </h2>
+<div class="section level3">
+<h3 id="preference-space-models">Preference space models<a class="anchor" aria-label="anchor" href="#preference-space-models"></a>
+</h3>
 <p>In the example below, a preference space MNL model is estimated (<code>mnl_pref</code>) and then used to predict probabilities for the data used to estimate the model:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/jhelvy/logitr" class="external-link">"logitr"</a></span><span class="op">)</span>
@@ -208,9 +208,9 @@
 <span class="co">#&gt; 167    42     0.17803313           0.16220968           0.19451696</span>
 <span class="co">#&gt; 168    42     0.18829902           0.16778560           0.20931234</span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="wtp-space-models">WTP space models<a class="anchor" aria-label="anchor" href="#wtp-space-models"></a>
-</h2>
+<div class="section level3">
+<h3 id="wtp-space-models">WTP space models<a class="anchor" aria-label="anchor" href="#wtp-space-models"></a>
+</h3>
 <p>WTP space models can also be used to predict probabilities, but the <code>price</code> argument must be specified for predictions being made on a new data set. In the example below, a WTP space model is estimated and used to predict probabilities for the same <code>data</code> data frame as in the previous examples:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
@@ -233,14 +233,14 @@
 
 <span class="va">probs_mnl_wtp</span>
 <span class="co">#&gt;     obsID predicted_prob predicted_prob_lower predicted_prob_upper</span>
-<span class="co">#&gt; 49     13     0.43686141            0.4150104           0.45763800</span>
-<span class="co">#&gt; 50     13     0.03312947            0.0264018           0.04199374</span>
-<span class="co">#&gt; 51     13     0.19154829            0.1762276           0.20793471</span>
-<span class="co">#&gt; 52     13     0.33846083            0.3179991           0.36036829</span>
-<span class="co">#&gt; 165    42     0.60767120            0.5731094           0.63796349</span>
-<span class="co">#&gt; 166    42     0.02601800            0.0183839           0.03553807</span>
-<span class="co">#&gt; 167    42     0.17802363            0.1620413           0.19536440</span>
-<span class="co">#&gt; 168    42     0.18828717            0.1690269           0.21036219</span></code></pre></div>
+<span class="co">#&gt; 49     13     0.43686141           0.41626125           0.45759058</span>
+<span class="co">#&gt; 50     13     0.03312947           0.02631329           0.04204450</span>
+<span class="co">#&gt; 51     13     0.19154829           0.17587351           0.20824388</span>
+<span class="co">#&gt; 52     13     0.33846083           0.31824968           0.35810533</span>
+<span class="co">#&gt; 165    42     0.60767120           0.57426109           0.63738465</span>
+<span class="co">#&gt; 166    42     0.02601800           0.01817677           0.03564045</span>
+<span class="co">#&gt; 167    42     0.17802363           0.16251472           0.19536331</span>
+<span class="co">#&gt; 168    42     0.18828717           0.16746411           0.20889147</span></code></pre></div>
 <p>Here is a bar chart comparing the predicted probabilities from the preference space and WTP space models. Since both models are equivalent except in different spaces, the predicted probabilities are identical:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org" class="external-link">"ggplot2"</a></span><span class="op">)</span>
@@ -260,9 +260,9 @@
 <p><img src="probs.png"><!-- --></p>
 </div>
 </div>
-<div class="section level1">
-<h1 id="predicting-outcomes">Predicting outcomes<a class="anchor" aria-label="anchor" href="#predicting-outcomes"></a>
-</h1>
+<div class="section level2">
+<h2 id="predicting-outcomes">Predicting outcomes<a class="anchor" aria-label="anchor" href="#predicting-outcomes"></a>
+</h2>
 <p>The <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> method can also be used to predict outcomes by setting <code>type = "outcome"</code> (the default is <code>"prob"</code> for predicting probabilities). In the examples below, outcomes are predicted using the same preference space and WTP space models as in the previous examples. The <code>returnData</code> argument is also set to <code>TRUE</code> so that the predicted outcomes can be compared to the actual choices made:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">outcomes_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, type <span class="op">=</span> <span class="st">"outcome"</span>, returnData <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
@@ -313,9 +313,9 @@
 <span class="co">#&gt; [1] 0.3909619</span></code></pre></div>
 <p>These results show that both models correctly predicted choice for approximately 39% of the observations in the <code>yogurt</code> data frame, which is significantly better than random (25%).</p>
 </div>
-<div class="section level1 unnumbered">
-<h1 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
-</h1>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references">
 <div id="ref-Krinsky1986">
 <p>Krinsky, Itzhak, and A Leslie Robb. 1986. “On Approximating the Statistical Properties of Elasticities.” <em>The Review of Economics and Statistics</em>, 715–19.</p>
@@ -341,7 +341,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

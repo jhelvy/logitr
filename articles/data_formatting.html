@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.1.9000</span>
       </span>
     </div>
 
@@ -63,7 +63,7 @@
   <a href="../articles/basic_usage.html">Basic Usage</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -127,9 +127,9 @@
     
     
 
-<div class="section level1">
-<h1 id="basic-required-format">Basic required format<a class="anchor" aria-label="anchor" href="#basic-required-format"></a>
-</h1>
+<div class="section level2">
+<h2 id="basic-required-format">Basic required format<a class="anchor" aria-label="anchor" href="#basic-required-format"></a>
+</h2>
 <p>The {logitr} package requires that data be structured in a <code>data.frame</code> and arranged in a “long” format <span class="citation">[@Wickham2014]</span> where each row contains data on a single alternative from a choice observation. The choice observations do not have to be symmetric, meaning they can have a “ragged” structure where different choice observations have different numbers of alternatives. The data must also include variables for each of the following:</p>
 <ul>
 <li>
@@ -153,9 +153,9 @@
 <span class="co">#&gt; 6  1     2   2      0   6.4    0  hiland</span></code></pre></div>
 <p>This data set also includes an <code>alt</code> variable that determines the alternatives included in the choice set of each observation and an <code>id</code> variable that determines the individual as the data have a panel structure containing multiple choice observations from each individual.</p>
 </div>
-<div class="section level1">
-<h1 id="continuous-versus-discrete-variables">Continuous versus discrete variables<a class="anchor" aria-label="anchor" href="#continuous-versus-discrete-variables"></a>
-</h1>
+<div class="section level2">
+<h2 id="continuous-versus-discrete-variables">Continuous versus discrete variables<a class="anchor" aria-label="anchor" href="#continuous-versus-discrete-variables"></a>
+</h2>
 <p>Variables are modeled as either continuous or discrete based on their data <em>type</em>. Numeric variables are by default estimated with a single “slope” coefficient. For example, consider a data frame that contains a <code>price</code> variable with the levels $10, $15, and $20. Adding <code>price</code> to the <code>pars</code> argument in the main <code><a href="../reference/logitr.html">logitr()</a></code> function would result in a single <code>price</code> coefficient for the “slope” of the change in price.</p>
 <p>In contrast, categorical variables (i.e. <code>character</code> or <code>factor</code> type variables) are by default estimated with a coefficient for all but the first level, which serves as the reference level. The default reference level is determined alphabetically, but it can also be set by modifying the factor levels for that variable. For example, the default reference level for the <code>brand</code> variable is <code>"dannon"</code> as it is alphabetically first. To set <code>"weight"</code> as the reference level, the factor levels can be modified using the <code><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor()</a></code> function:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -164,9 +164,9 @@
 <span class="va">brands</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"weight"</span>, <span class="st">"hiland"</span>, <span class="st">"yoplait"</span>, <span class="st">"dannon"</span><span class="op">)</span>
 <span class="va">yogurt2</span><span class="op">$</span><span class="va">brand</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">yogurt2</span><span class="op">$</span><span class="va">brand</span>, levels <span class="op">=</span> <span class="va">brands</span><span class="op">)</span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="creating-dummy-coded-variables">Creating dummy coded variables<a class="anchor" aria-label="anchor" href="#creating-dummy-coded-variables"></a>
-</h1>
+<div class="section level2">
+<h2 id="creating-dummy-coded-variables">Creating dummy coded variables<a class="anchor" aria-label="anchor" href="#creating-dummy-coded-variables"></a>
+</h2>
 <p>If you wish to make dummy-coded variables yourself to use them in a model, I recommend using the <code>dummy_cols()</code> function from the <a href="https://github.com/jacobkap/fastDummies" class="external-link">{fastDummies}</a> package. For example, in the code below, I create dummy-coded columns for the <code>brand</code> variable and then use those variables as covariates in a model:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">yogurt2</span> <span class="op">&lt;-</span> <span class="fu">fastDummies</span><span class="fu">::</span><span class="fu"><a href="https://jacobkap.github.io/fastDummies/reference/dummy_cols.html" class="external-link">dummy_cols</a></span><span class="op">(</span><span class="va">yogurt2</span>, <span class="st">"brand"</span><span class="op">)</span></code></pre></div>
@@ -195,6 +195,11 @@
 
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mnl_pref_dummies</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Model estimated on: Sat Jun 11 09:58:09 2022 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Using logitr version: 0.5.1.9000 </span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; logitr(data = yogurt2, outcome = "choice", obsID = "obsID", pars = c("price", </span>
 <span class="co">#&gt;     "feat", "brand_yoplait", "brand_dannon", "brand_weight"))</span>
@@ -209,7 +214,7 @@
 <span class="co">#&gt; Model Space:          Preference</span>
 <span class="co">#&gt; Model Run:                1 of 1</span>
 <span class="co">#&gt; Iterations:                   18</span>
-<span class="co">#&gt; Elapsed Time:        0h:0m:0.03s</span>
+<span class="co">#&gt; Elapsed Time:        0h:0m:0.04s</span>
 <span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span>
 <span class="co">#&gt; Weights Used?:             FALSE</span>
 <span class="co">#&gt; Robust?                    FALSE</span>
@@ -251,7 +256,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

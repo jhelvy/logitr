@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.1.9000</span>
       </span>
     </div>
 
@@ -35,7 +35,7 @@
   <a href="../articles/basic_usage.html">Basic Usage</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -85,6 +85,19 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="0.6.0" id="logitr-060">logitr 0.6.0<a class="anchor" aria-label="anchor" href="#logitr-060"></a></h2>
+<ul><li>Added the <code>correlation</code> argument to include correlated heterogeneity.</li>
+<li>Added a couple input checks for the <code>obsID</code> and <code>outcome</code> arguments.</li>
+<li>
+<code><a href="../reference/vcov.logitr.html">vcov.logitr()</a></code> method now returns <code>object$vcov</code> if the user set <code>vcov = TRUE</code> during estimation (avoids a redundant calculation of <code>vcov</code>).</li>
+<li>Added new datasets: <code>apolloModeChoiceData</code>, <code>electricity</code>
+</li>
+<li>Added support for new mixed logit distributions: zero-censored normal</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.5.1" id="logitr-051">logitr 0.5.1<a class="anchor" aria-label="anchor" href="#logitr-051"></a></h2>
+<ul><li>Patched a bug in how standard errors were being computed when clustering. The source of the error was in re-scaling results post-estimation.</li></ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.5.0" id="logitr-050">logitr 0.5.0<small>2022-01-04</small><a class="anchor" aria-label="anchor" href="#logitr-050"></a></h2>
 <ul><li>The multistart optimization loop is now parallelized.</li>
 <li>Exported the <code><a href="../reference/fquantile.html">fquantile()</a></code> function, which is a faster implementation of the <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">stats::quantile()</a></code> function.</li>
@@ -102,8 +115,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="bugs-0-4-0">Bugs:<a class="anchor" aria-label="anchor" href="#bugs-0-4-0"></a></h3>
-<ul><li>Fixed bug where the returned object contained the scaled data rather than the original, unscaled data</li>
-</ul></div>
+<ul><li>Fixed bug where the returned object contained the scaled data rather than the original, unscaled data</li></ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.3.1" id="logitr-031">logitr 0.3.1<a class="anchor" aria-label="anchor" href="#logitr-031"></a></h2>
@@ -234,8 +246,7 @@
 <h2 class="page-header" data-toc-text="0.1.0" id="logitr-010">logitr 0.1.0<small>2021-01-19</small><a class="anchor" aria-label="anchor" href="#logitr-010"></a></h2>
 <div class="section level3">
 <h3 id="summary-of-larger-updates-0-1-0">Summary of larger updates:<a class="anchor" aria-label="anchor" href="#summary-of-larger-updates-0-1-0"></a></h3>
-<ul><li>v0.1.0 Submitted to CRAN!</li>
-</ul></div>
+<ul><li>v0.1.0 Submitted to CRAN!</li></ul></div>
 <div class="section level3">
 <h3 id="summary-of-smaller-updates-0-1-0">Summary of smaller updates:<a class="anchor" aria-label="anchor" href="#summary-of-smaller-updates-0-1-0"></a></h3>
 <ul><li>Reduced the length of the title in DESCRIPTION to less than 65 characters.</li>
@@ -263,8 +274,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="summary-of-smaller-updates-0-0-5">Summary of smaller updates:<a class="anchor" aria-label="anchor" href="#summary-of-smaller-updates-0-0-5"></a></h3>
-<ul><li>Added new documentation for prepping data:
-<ul><li>overall structure</li>
+<ul><li>Added new documentation for prepping data:<ul><li>overall structure</li>
 <li>dummyCode() function</li>
 <li>handling interactions</li>
 </ul></li>
@@ -302,8 +312,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="summary-of-smaller-updates-0-0-3">Summary of smaller updates:<a class="anchor" aria-label="anchor" href="#summary-of-smaller-updates-0-0-3"></a></h3>
-<ul><li>Updated the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and main <code><a href="../reference/logitr.html">logitr()</a></code> functions to keep the basic information (run #, log-likelihood value, number of iterations, and output status) whenever <code>numMultistarts</code> &gt; 1. Previously this information was only kept if <code>keepAllRuns</code> was set to <code>TRUE</code>.</li>
-</ul></div>
+<ul><li>Updated the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and main <code><a href="../reference/logitr.html">logitr()</a></code> functions to keep the basic information (run #, log-likelihood value, number of iterations, and output status) whenever <code>numMultistarts</code> &gt; 1. Previously this information was only kept if <code>keepAllRuns</code> was set to <code>TRUE</code>.</li></ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.2" id="logitr-002">logitr 0.0.2<a class="anchor" aria-label="anchor" href="#logitr-002"></a></h2>
@@ -348,7 +357,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

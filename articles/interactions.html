@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.1.9000</span>
       </span>
     </div>
 
@@ -63,7 +63,7 @@
   <a href="../articles/basic_usage.html">Basic Usage</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -126,9 +126,9 @@
 
     
     
-<div class="section level1">
-<h1 id="interactions-with-continuous-variables">Interactions with continuous variables<a class="anchor" aria-label="anchor" href="#interactions-with-continuous-variables"></a>
-</h1>
+<div class="section level2">
+<h2 id="interactions-with-continuous-variables">Interactions with continuous variables<a class="anchor" aria-label="anchor" href="#interactions-with-continuous-variables"></a>
+</h2>
 <p>To add interactions between covariates in your model, you can add additional arguments in the <code>pars</code> vector in the <code><a href="../reference/logitr.html">logitr()</a></code> function separated by the <code>*</code> symbol. For example, let’s say we want to interact <code>price</code> with <code>feat</code> in the following model:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/jhelvy/logitr" class="external-link">"logitr"</a></span><span class="op">)</span>
@@ -151,6 +151,11 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_price_feat</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Model estimated on: Sat Jun 11 09:58:13 2022 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Using logitr version: 0.5.1.9000 </span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span>
 <span class="co">#&gt;     "feat", "brand", "price*feat"))</span>
@@ -189,9 +194,9 @@
 <span class="co">#&gt; Adj McFadden R2:            0.2040234</span>
 <span class="co">#&gt; Number of Observations:  2412.0000000</span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="interactions-with-discrete-variables">Interactions with discrete variables<a class="anchor" aria-label="anchor" href="#interactions-with-discrete-variables"></a>
-</h1>
+<div class="section level2">
+<h2 id="interactions-with-discrete-variables">Interactions with discrete variables<a class="anchor" aria-label="anchor" href="#interactions-with-discrete-variables"></a>
+</h2>
 <p>In the above example, both <code>price</code> and <code>feat</code> were continuous variables, so only a single interaction coefficient was needed.</p>
 <p>In the case of interacting <em>discrete</em> variables, multiple interactions coefficients will be estimated according to the number of levels in the discrete attribute. For example, the interaction of <code>price</code> with <code>brand</code> will require three new interactions - one for each level of the <code>brand</code> variable except the first reference level:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -205,6 +210,11 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_price_brand</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Model estimated on: Sat Jun 11 09:58:13 2022 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Using logitr version: 0.5.1.9000 </span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span>
 <span class="co">#&gt;     "feat", "brand", "price*brand"))</span>
@@ -230,7 +240,7 @@
 <span class="co">#&gt; feat                0.421899   0.122578  3.4419 0.0005777 ***</span>
 <span class="co">#&gt; brandhiland        -1.691789   0.623149 -2.7149 0.0066295 ** </span>
 <span class="co">#&gt; brandweight        -2.228475   0.561641 -3.9678 7.254e-05 ***</span>
-<span class="co">#&gt; brandyoplait        0.438702   0.450424  0.9740 0.3300688    </span>
+<span class="co">#&gt; brandyoplait        0.438702   0.450424  0.9740 0.3300689    </span>
 <span class="co">#&gt; price:brandhiland  -0.434271   0.115531 -3.7589 0.0001707 ***</span>
 <span class="co">#&gt; price:brandweight   0.199919   0.069830  2.8629 0.0041973 ** </span>
 <span class="co">#&gt; price:brandyoplait  0.033233   0.050372  0.6598 0.5094089    </span>
@@ -245,9 +255,9 @@
 <span class="co">#&gt; Adj McFadden R2:            0.2071145</span>
 <span class="co">#&gt; Number of Observations:  2412.0000000</span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="interactions-with-individual-specific-variables">Interactions with individual-specific variables<a class="anchor" aria-label="anchor" href="#interactions-with-individual-specific-variables"></a>
-</h1>
+<div class="section level2">
+<h2 id="interactions-with-individual-specific-variables">Interactions with individual-specific variables<a class="anchor" aria-label="anchor" href="#interactions-with-individual-specific-variables"></a>
+</h2>
 <p>If you want to include interactions with individual-specific variables (for example, to assess the difference in an effect between groups of respondents), you should <strong>not</strong> include the individual-specific variable interactions using <code>*</code> in <code>pars</code>. This is because interactions inside <code>pars</code> automatically generate the interaction coefficient as well as coefficients for each covariate.</p>
 <p>For example, if you had a <code>group</code> variable that determined whether individuals belongs to group <code>A</code> or group <code>B</code>, including <code>price*group</code> in <code>pars</code> would create coefficients for <code>price</code>, <code>groupA</code>, and <code>price:groupA</code>, but the <code>groupA</code> coefficient would be unidentified. In this case, you should only include <code>price</code> and <code>price:groupA</code> in the model. For now, the only way to handle this situation is to manually create dummy-coded interaction variables to include in the model.</p>
 <p>To illustrate how one might do this, consider if the <code>yogurt</code> data frame had two groups of individuals: <code>A</code> and <code>B</code>. For simple illustration, I’ll define these groups arbitrarily based on whether or not the <code>obsID</code> is even or odd:</p>
@@ -269,6 +279,11 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_price_group</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Model estimated on: Sat Jun 11 09:58:14 2022 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Using logitr version: 0.5.1.9000 </span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span>
 <span class="co">#&gt;     "feat", "brand", "price_groupA"))</span>
@@ -307,9 +322,9 @@
 <span class="co">#&gt; Adj McFadden R2:            0.2036225</span>
 <span class="co">#&gt; Number of Observations:  2412.0000000</span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="interactions-in-mixed-logit-models">Interactions in mixed logit models<a class="anchor" aria-label="anchor" href="#interactions-in-mixed-logit-models"></a>
-</h1>
+<div class="section level2">
+<h2 id="interactions-in-mixed-logit-models">Interactions in mixed logit models<a class="anchor" aria-label="anchor" href="#interactions-in-mixed-logit-models"></a>
+</h2>
 <p>Suppose I want to include an interaction between two variables and I also want one of those variables to be modeled as normally distributed across the population. The example below illustrates this cases, where a <code>price*feat</code> interaction is specified and the <code>feat</code> parameter is modeled as normally distributed by setting <code>randPars = c(feat = "n")</code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_price_feat_mxl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
@@ -323,6 +338,11 @@
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_price_feat_mxl</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Model estimated on: Sat Jun 11 09:58:14 2022 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Using logitr version: 0.5.1.9000 </span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span>
 <span class="co">#&gt;     "feat", "brand", "price*feat"), randPars = c(feat = "n"))</span>
@@ -345,12 +365,12 @@
 <span class="co">#&gt; Model Coefficients: </span>
 <span class="co">#&gt;               Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
 <span class="co">#&gt; price        -0.388138   0.027026 -14.3615 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; feat_mu       0.829059   0.552235   1.5013    0.1333    </span>
+<span class="co">#&gt; feat          0.829059   0.552235   1.5013    0.1333    </span>
 <span class="co">#&gt; brandhiland  -3.991584   0.165893 -24.0612 &lt; 2.2e-16 ***</span>
 <span class="co">#&gt; brandweight  -0.662161   0.055780 -11.8709 &lt; 2.2e-16 ***</span>
 <span class="co">#&gt; brandyoplait  0.787758   0.086233   9.1352 &lt; 2.2e-16 ***</span>
 <span class="co">#&gt; price:feat   -0.076752   0.071063  -1.0800    0.2801    </span>
-<span class="co">#&gt; feat_sigma    2.341209   0.493326   4.7458 2.077e-06 ***</span>
+<span class="co">#&gt; sd_feat      -2.341209   0.493326  -4.7458 2.077e-06 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt;                                      </span>
@@ -363,8 +383,8 @@
 <span class="co">#&gt; Number of Observations:  2412.0000000</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Summary of 10k Draws for Random Coefficients: </span>
-<span class="co">#&gt;        Min.    1st Qu.    Median      Mean  3rd Qu.     Max.</span>
-<span class="co">#&gt; 1 -8.270551 -0.7516536 0.8272703 0.8257815 2.405655 9.283538</span></code></pre></div>
+<span class="co">#&gt;      Min.    1st Qu.    Median     Mean  3rd Qu. Max.</span>
+<span class="co">#&gt; feat -Inf -0.7475368 0.8308482 0.832337 2.409772  Inf</span></code></pre></div>
 </div>
   </div>
 
@@ -385,7 +405,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>
