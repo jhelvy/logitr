@@ -1,14 +1,16 @@
-## code to prepare data to include in logitr package
+## code to prepare data included in logitr package
 
 library(dplyr)
 library(tidyr)
 library(readr)
+library(fastDummies)
+library(mlogit)
 
 yogurt_raw <- read_csv(here::here("data-raw", "yogurt_raw.csv"))
 cars_china <- read_csv(here::here('data-raw', 'cars_china.csv'))
 cars_us    <- read_csv(here::here('data-raw', 'cars_us.csv'))
 
-# Yogurt data ---------------------------------------------------------------
+# Yogurt data ----
 
 # Raw data variables:
 # id      = individuals identifiers
@@ -30,7 +32,7 @@ yogurt <- yogurt_raw %>%
 # Save the formatted dataset
 usethis::use_data(yogurt, overwrite = TRUE)
 
-# Cars data -------------------------------------------------------------------
+# Cars data ----
 
 # Raw data variables:
 
@@ -58,3 +60,69 @@ usethis::use_data(yogurt, overwrite = TRUE)
 # Save the datasets
 usethis::use_data(cars_us, overwrite = TRUE)
 usethis::use_data(cars_china, overwrite = TRUE)
+
+# Simulated SP mode choice data from {apollo} package ----
+
+apolloModeChoiceData <- apollo::apollo_modeChoiceData %>%
+  # Only use SP data
+  filter(SP == 1) %>%
+  # Reshape data into "long" format
+  pivot_longer(names_to = "var", values_to = "val", av_car:service_rail) %>%
+  separate(var, into = c("var", "mode"), sep = "_") %>%
+  pivot_wider(names_from = var, values_from = val) %>%
+  # Fill in created NA values for access and service
+  mutate(
+    access = ifelse(is.na(access), 0, access),
+    service = ifelse(is.na(service), 0, service)
+  ) %>%
+  # Dummy-code the mode and service variables
+  dummy_cols(c("mode", "service")) %>%
+  # Drop service 0 level
+  select(-service_0) %>%
+  # Rename service variables
+  rename(
+      service_no_frills = service_1,
+      service_wifi = service_2,
+      service_food = service_3) %>%
+  # Make mode-specific time variables
+  mutate(
+      time_car = time*mode_car,
+      time_bus = time*mode_bus,
+      time_air = time*mode_air,
+      time_rail = time*mode_rail) %>%
+  # Create obsID and altID variables
+  mutate(
+      obsID = rep(seq(n() / 4), each = 4),
+      altID = rep(seq(1, 4), times = 14*500)) %>%
+  # Define dummy-coded choice column
+  mutate(choice = ifelse(choice == altID, 1, 0)) %>%
+  # Drop rows where alternative wasn't available
+  filter(av == 1) %>%
+  # Re-define altID
+  group_by(obsID) %>%
+  mutate(altID = seq(n())) %>%
+  ungroup() %>%
+  # Drop RP and SP identifiers (all SP data), and av (all available)
+  select(-RP, -SP, -RP_journey, -av) %>%
+  # Reorder columns
+  select(
+    ID, obsID, altID, qID = SP_task, choice,
+    mode:time_rail, female:income, everything())
+
+# Save the dataset
+usethis::use_data(apolloModeChoiceData, overwrite = TRUE)
+
+# Electricity data ----
+
+data("Electricity")
+electricity <- data.frame(mlogit.data(
+    Electricity, id.var = "id", choice = "choice",
+    varying = 3:26, shape = "wide", sep = "")) %>%
+    rename(obsID = chid) %>%
+    select(-idx) %>%
+    mutate(choice = ifelse(choice, 1, 0)) %>%
+    # Reorder columns
+    select(id, obsID, choice, everything())
+
+# Save the dataset
+usethis::use_data(electricity, overwrite = TRUE)

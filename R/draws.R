@@ -3,30 +3,36 @@
 # ============================================================================
 
 # Returns shifted normal draws for each parameter
-makeBetaDraws <- function(pars, parIDs, numDraws, standardDraws) {
-  numBetas <- length(parIDs$fixed) + length(parIDs$random)
-  pars_mu <- as.numeric(pars[seq_len(numBetas)])
-  muMat <- matrix(rep(pars_mu, numDraws), ncol = length(pars_mu), byrow = T)
-  pars_sigma <- rep(0, numBetas)
-  pars_sigma[parIDs$random] <- as.numeric(pars[(numBetas + 1):length(pars)])
-  sigmaMat <- matrix(
-    rep(pars_sigma, numDraws),
-    ncol = length(pars_sigma),
-    byrow = TRUE
-  )
-  # Shift draws by mu and sigma
-  betaDraws <- muMat + standardDraws * sigmaMat
-  # Exponentiate draws for those with logN distribution
-  if (length(parIDs$logNormal) > 0) {
-    betaDraws[, parIDs$logNormal] <- exp(betaDraws[, parIDs$logNormal])
+makeBetaDraws <- function(pars, parIDs, n, standardDraws, correlation) {
+  pars_mean <- pars[seq_len(n$vars)]
+  pars_sd <- pars[(n$vars + 1):n$pars]
+  # First scale the draws according to the covariance matrix
+  if (correlation) {
+    lowerMat <- matrix(0, n$parsRandom, n$parsRandom)
+    lowerMat[lower.tri(lowerMat, diag = TRUE)] <- pars_sd
+  } else {
+    lowerMat <- diag(pars_sd, ncol = length(pars_sd))
+  }
+  scaledDraws <- standardDraws
+  scaledDraws[,parIDs$r] <- scaledDraws[,parIDs$r] %*% lowerMat
+  # Now shift the draws according to the means
+  meanMat <- matrix(rep(pars_mean, n$draws), ncol = n$vars, byrow = TRUE)
+  betaDraws <- meanMat + scaledDraws
+  # log-normal draws: Exponentiate
+  if (length(parIDs$ln) > 0) {
+    betaDraws[, parIDs$ln] <- exp(betaDraws[, parIDs$ln])
+  }
+  # Censored normal draws: Censor
+  if (length(parIDs$cn) > 0) {
+    betaDraws[, parIDs$cn] <- pmax(betaDraws[, parIDs$cn], 0)
   }
   return(betaDraws)
 }
 
 getStandardDraws <- function(parIDs, numDraws) {
-  numBetas <- length(parIDs$fixed) + length(parIDs$random)
+  numBetas <- length(parIDs$f) + length(parIDs$r)
   draws <- as.matrix(randtoolbox::halton(numDraws, numBetas, normal = TRUE))
-  draws[, parIDs$fixed] <- 0 * draws[, parIDs$fixed]
+  draws[, parIDs$f] <- 0 * draws[, parIDs$f]
   return(draws)
 }
 

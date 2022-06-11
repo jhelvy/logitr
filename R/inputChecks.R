@@ -6,9 +6,9 @@ runInputChecks <- function(data, inputs) {
   if (! is.null(inputs$price)) {
     if (inputs$price %in% inputs$pars) {
       stop(
-        'The value you provided for the "price" argument is also included ',
-        'in your "pars" argument. If you are estimating a WTP space model',
-        ', you should remove the price name from your "pars" argument and ',
+        'The value provided for the "price" argument is also included ',
+        'in the "pars" argument. If you are estimating a WTP space model',
+        ', you should remove the price name from the "pars" argument and ',
         'provide it separately with the "price" argument.'
       )
     }
@@ -34,9 +34,16 @@ runInputChecks <- function(data, inputs) {
     )
   }
 
-  dataColumnNames <- colnames(data)
+  # Check that randPars names match those in pars
+  missing <- setdiff(names(inputs$randPars), inputs$pars)
+  if (length(missing) > 0) {
+    stop(
+      missing[1], " provided in 'randPars' is missing from 'pars'"
+    )
+  }
 
   # Check if any of the argument names are missing in the data
+  dataColumnNames <- colnames(data)
   missingInData(inputs$panelID, "panelID", dataColumnNames)
   missingInData(inputs$clusterID, "clusterID", dataColumnNames)
   missingInData(inputs$weights, "weights", dataColumnNames)
@@ -55,9 +62,18 @@ runInputChecks <- function(data, inputs) {
   if (inputs$numMultiStarts < 1) {
     stop('"numMultiStarts" must be a positive integer')
   }
-
   if (inputs$numDraws < 1) {
     stop('"numDraws" must be a positive integer')
+  }
+
+  # If using correlation, make sure that there are at least 2 random pars
+  if (inputs$correlation) {
+    if (length(inputs$randPars) < 2) {
+      stop(
+        "If correlation = TRUE, you must have at least two random parameters ",
+        "in the 'randPars' argument"
+      )
+    }
   }
 
 }
@@ -68,7 +84,7 @@ missingInData <- function(vals, var, dataColumnNames) {
     if (any(test)) {
       missing <- paste(vals[which(test)], collapse = ", ")
       stop(
-        'The following specified names for "', var, '" are not present in the ',
+        'The following specified names for "', var, '" are missing in the ',
         'data:\n', missing
       )
     }

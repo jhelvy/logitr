@@ -17,8 +17,8 @@
 logLik.logitr <- function(object, ...) {
   return(structure(
     object$logLik,
-    df    = object$numParams,
-    null  = sum(object$freq * log(object$freq / object$numObs)),
+    df    = object$n$pars,
+    null  = sum(object$freq * log(object$freq / object$n$obs)),
     class = "logLik"
   ))
 }
@@ -71,7 +71,7 @@ print.logitr <- function (
   cat("A", modelType, "model estimated in the", modelSpace, "space\n\n")
   cat("Exit Status: ", x$status, ", ", getExitMessage(x), "\n\n", sep = "")
   # Print which run was "best" if a multistart was used
-  if (x$inputs$numMultiStarts > 1) {
+  if (x$n$multiStarts > 1) {
     modelRun <- getModelRun(x)
     cat(
       "Results below are from run", modelRun, "multistart runs\n",
@@ -101,6 +101,10 @@ print.summary.logitr <- function(
   ...
 ) {
   cat("=================================================", "\n", sep = "")
+  if (is.null(x$date)) {x$date <- "date missing"}
+  if (is.null(x$version)) {x$date <- "version missing"}
+  cat("\nModel estimated on:", x$date, "\n")
+  cat("\nUsing logitr version:", x$version, "\n\n")
   cat("Call:\n")
   print(x$call)
   cat("\n")
@@ -148,8 +152,8 @@ getModelInfoTable <- function(object) {
     modelInfoTable <- rbind(modelInfoTable, panelID)
     row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Panel ID:"
   }
-  if (!is.null(object$numClusters)) {
-    if (object$numClusters > 0) {
+  if (!is.null(object$n$clusters)) {
+    if (object$n$clusters > 0) {
       modelInfoTable <- rbind(modelInfoTable, object$inputs$clusterID)
       row.names(modelInfoTable)[nrow(modelInfoTable)] <- "Cluster ID:"
     }
@@ -172,19 +176,19 @@ getCoefTable <- function(coefs, standErr) {
 
 getStatTable <- function(object) {
   aic <- stats::AIC(object)
-  bic <- round(log(object$numObs) * object$numParams - 2 * object$logLik, 4)
+  bic <- round(log(object$n$obs) * object$n$pars - 2 * object$logLik, 4)
   mcR2 <- 1 - (object$logLik / object$nullLogLik)
-  adjMcR2 <- 1 - ((object$logLik - object$numParams) / object$nullLogLik)
+  adjMcR2 <- 1 - ((object$logLik - object$n$pars) / object$nullLogLik)
   statTable <- data.frame(c(
-    object$logLik, object$nullLogLik, aic, bic, mcR2, adjMcR2, object$numObs
+    object$logLik, object$nullLogLik, aic, bic, mcR2, adjMcR2, object$n$obs
   ))
   colnames(statTable) <- ""
   row.names(statTable) <- c(
     "Log-Likelihood:", "Null Log-Likelihood:", "AIC:", "BIC:", "McFadden R2:",
     "Adj McFadden R2:" , "Number of Observations:")
-  if (!is.null(object$numClusters)) { # Added for backwards compatibility
-    if (object$numClusters > 0) {
-      statTable <- rbind(statTable, object$numClusters)
+  if (!is.null(object$n$clusters)) { # Added for backwards compatibility
+    if (object$n$clusters > 0) {
+      statTable <- rbind(statTable, object$n$clusters)
       row.names(statTable)[nrow(statTable)] <- "Number of Clusters"
     }
   }
@@ -194,18 +198,39 @@ getStatTable <- function(object) {
 getRandParSummary <- function(object) {
   parSetup <- object$parSetup
   parIDs <- object$parIDs
-  numDraws <- 10^4
-  standardDraws <- getStandardDraws(parIDs, numDraws)
-  betaDraws <- makeBetaDraws(stats::coef(object), parIDs, numDraws, standardDraws)
+  n <- object$n
+  n$draws <- 10^4
+  standardDraws <- getStandardDraws(parIDs, n$draws)
+  betaDraws <- makeBetaDraws(
+      stats::coef(object), parIDs, n, standardDraws, object$inputs$correlation)
   randParSummary <- apply(betaDraws, 2, summary)
   # Add names to summary
+  nIDs <- parIDs$n
+  lnIDs <- parIDs$ln
+  cnIDs <- parIDs$cn
   distName <- rep("", length(parSetup))
-  distName[parIDs$normal] <- "normal"
-  distName[parIDs$logNormal] <- "log-normal"
+  distName[nIDs] <- "normal"
+  distName[lnIDs] <- "log-normal"
+  distName[cnIDs] <- "zero-censored normal"
   summaryNames <- paste(names(parSetup), " (", distName, ")", sep = "")
   colnames(randParSummary) <- summaryNames
-  randParSummary <- t(randParSummary[, parIDs$random])
-  return(as.data.frame(randParSummary))
+  randParSummary <- as.data.frame(t(randParSummary))
+  # Set min and max values for unbounded distributions
+  if (length(nIDs) > 0) {
+      randParSummary[nIDs,]$Min. <- -Inf
+      randParSummary[nIDs,]$Max. <- Inf
+  }
+  if (length(lnIDs) > 0) {
+      randParSummary[lnIDs,]$Min. <- 0
+      randParSummary[lnIDs,]$Max. <- Inf
+  }
+  if (length(cnIDs) > 0) {
+      randParSummary[cnIDs,]$Max. <- Inf
+  }
+  # Add names and drop fixed pars
+  randParSummary <- randParSummary[parIDs$r,]
+  row.names(randParSummary) <- names(parIDs$r)
+  return(randParSummary)
 }
 
 getModelType <- function(x) {
@@ -218,7 +243,7 @@ getModelSpace <- function(x) {
 }
 
 getModelRun <- function(x) {
-  return(paste(x$multistartNumber, "of", x$inputs$numMultiStarts))
+  return(paste(x$multistartNumber, "of", x$n$multiStarts))
 }
 
 getExitMessage <- function(x) {
@@ -255,8 +280,11 @@ se.logitr <- function(object, ...) {
 #' @param ... further arguments.
 #' @export
 vcov.logitr <- function(object, ...) {
-  clusterID <- object$data$clusterID
-  if (is.null(clusterID) | object$inputs$robust == FALSE) {
+  if (!is.null(object$vcov)) {
+      # vcov was already computed during model estimation
+      return(object$vcov)
+  }
+  if (is.null(object$data$clusterID) | object$inputs$robust == FALSE) {
     return(getCovarianceNonRobust(object$hessian))
   }
   return(getCovarianceRobust(object))
@@ -274,24 +302,22 @@ getCovarianceNonRobust <- function(hessian) {
 }
 
 getCovarianceRobust <- function(object) {
-  numClusters <- object$numClusters
+  numClusters <- object$n$clusters
   inputs <- object$inputs
   parSetup <- object$parSetup
   modelInputs <- list(
     logitFuncs = setLogitFunctions(inputs$modelSpace),
-    evalFuncs = setEvalFunctions(object$modelType, inputs$useAnalyticGrad),
-    inputs = inputs,
-    modelType = object$modelType,
-    numBetas = length(parSetup),
-    numDraws = inputs$numDraws,
-    parSetup = parSetup,
-    parIDs = object$parIDs,
+    evalFuncs  = setEvalFunctions(object$modelType, inputs$useAnalyticGrad),
+    inputs     = inputs,
+    modelType  = object$modelType,
+    n          = object$n,
+    parSetup   = parSetup,
+    parIDs     = object$parIDs,
+    panel      = !is.null(inputs$panelID),
     standardDraws = object$standardDraws,
-    panel = !is.null(inputs$panelID),
     data_diff = makeDiffData(object$data, object$modelType)
   )
   clusterID <- modelInputs$data_diff$clusterID
-  scaleFactors <- object$scaleFactors
   pars <- stats::coef(object)
   gradMat <- matrix(NA, nrow = numClusters, ncol = length(pars))
   clusters <- sort(unique(clusterID))
@@ -327,9 +353,9 @@ getClusterModelInputs <- function (indices, mi, i) {
   mi$data_diff$weights <- weights
   mi$data_diff$clusterID <- NULL
   if (isMxlModel(mi$parSetup)) {
-    mi$partials <- makePartials(mi)
+    mi$partials <- makePartials(mi, mi$data_diff)
   }
-  mi$nrowX <- nrow(X)
+  mi$n$rowX <- nrow(X)
   return(mi)
 }
 
