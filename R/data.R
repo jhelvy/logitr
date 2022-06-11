@@ -239,7 +239,7 @@
 #' @references Croissant, Y. (2020). Estimation of Random Utility Models in R: The mlogit Package. Journal of Statistical Software, 95(11), 1–41.
 #' \doi{10.18637/jss.v095.i11}
 #'
-#' @source [Kenneth Train's home page](https://elsa.berkeley.edu/~train/)
+#' @source [Kenneth Train's home page](https://eml.berkeley.edu/~train/)
 #'
 #' @examples
 #' data(electricity)

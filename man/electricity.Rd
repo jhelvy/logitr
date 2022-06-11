@@ -20,7 +20,7 @@
 }
 }
 \source{
-\href{https://elsa.berkeley.edu/~train/}{Kenneth Train's home page}
+\href{https://eml.berkeley.edu/~train/}{Kenneth Train's home page}
 }
 \usage{
 data(electricity)
