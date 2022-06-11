@@ -1,10 +1,10 @@
 # logitr 0.6.0
 
 - Added the `correlation` argument to include correlated heterogeneity.
-- Added a couple input checks for the `obsID` and `outcome` arguments.
-- `vcov.logitr()` method now returns `object$vcov` if the user set `vcov = TRUE` during estimation (avoids a redundant calculation of `vcov`).
-- Added new datasets: `apolloModeChoiceData`, `electricity`
 - Added support for new mixed logit distributions: zero-censored normal
+- Added new input checks for the `obsID` and `outcome` arguments.
+- `vcov.logitr()` method now returns `object$vcov` if the user set `vcov = TRUE` during estimation (avoids a redundant calculation of `vcov`, which is more efficient).
+- Added new datasets: `apolloModeChoiceData`, `electricity`
 
 # logitr 0.5.1
 
