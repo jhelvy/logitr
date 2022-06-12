@@ -1,3 +1,7 @@
+# logitr 0.6.1
+
+- Fixes error on some of the gradient tests from 0.6.0 release. The gradient tests were sensitive to the random starting parameters, so I modified how the starting parameters were set for the first iteration of a multistart loop such that they would be more consistent.
+
 # logitr 0.6.0
 
 - Added the `correlation` argument to include correlated heterogeneity.
