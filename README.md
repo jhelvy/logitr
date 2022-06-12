@@ -92,7 +92,7 @@ citation("logitr")
 #> 
 #> To cite logitr in publications use:
 #> 
-#>   John Paul Helveston (2021). logitr: Fast Estimation of Multinomial
+#>   John Paul Helveston (2022). logitr: Fast Estimation of Multinomial
 #>   and Mixed Logit Models with Preference Space and Willingness to Pay
 #>   Space Utility Parameterizations. R package version 0.6.1
 #> 
@@ -101,7 +101,7 @@ citation("logitr")
 #>   @Manual{,
 #>     title = {logitr: Fast Estimation of Multinomial and Mixed Logit Models with Preference Space and Willingness to Pay Space Utility Parameterizations},
 #>     author = {John Paul Helveston},
-#>     year = {2021},
+#>     year = {2022},
 #>     note = {R package version 0.6.1},
 #>     url = {https://jhelvy.github.io/logitr/},
 #>   }
