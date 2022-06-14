@@ -51,21 +51,9 @@ makeModelInputsList <- function(mi, numMultiStarts) {
 getStartPars <- function(mi, i) {
   startPars <- getRandomStartPars(mi)
   if (i == 1) {
-    if (!is.null(mi$inputs$startVals)) {
-      userStartPars <- mi$inputs$startVals
-      if (length(userStartPars) != length(startPars)) {
-        stop(
-          "Number of user-provided starting values do not match number ",
-          "of model parameters."
-        )
-      }
-      return(userStartPars)
-    } else {
-      # For first run only, use all 0s as the starting parameters
-      startPars <- 0 * startPars
-    }
+    return(firstIterStartPars(startPars, mi))
   }
-  startPars <- checkStartPars(startPars, mi, i)
+  startPars <- checkStartPars(startPars, mi)
   return(startPars)
 }
 
@@ -84,12 +72,46 @@ getRandomStartPars <- function(mi) {
   return(startPars)
 }
 
+firstIterStartPars <- function(startPars, mi) {
+  if (!is.null(mi$inputs$startVals)) {
+    userStartPars <- mi$inputs$startVals
+    if (length(userStartPars) != length(startPars)) {
+      stop(
+        "Number of user-provided starting values do not match number ",
+        "of model parameters."
+      )
+    } else {
+      startPars[1:length(startPars)] <- userStartPars
+      return(startPars)
+    }
+  }
+  startPars <- 0 * startPars
+  # For correlated parameters in mxl models, set sd pars to 0.1
+  if (mi$inputs$correlation) {
+    startPars[mi$parNames$sd] <- 0.1
+  }
+  # For log-normal or censored-normal parameters, set pars
+  lnIDs <- mi$parIDs$ln
+  if (length(lnIDs) > 0) {
+    startPars[lnIDs] <- 0.1
+  }
+  cnIDs <- mi$parIDs$cn
+  if (length(cnIDs) > 0) {
+    startPars[cnIDs] <- 0.1
+  }
+  if (mi$inputs$modelSpace == "wtp") {
+    # Force starting with lambda = 1 for WTP space models for stability
+    startPars[1] <- 1
+  }
+  return(startPars)
+}
+
 # Sets tighter bounds on starting parameters for stability in these cases:
 # - SD parameters for MXL models with correlation
 # - Log-normal parameters in MXL models (must be positive)
 # - Censored-normal parameters in MXL models (must be positive)
 # - Lambda term in WTP space models (always start at 1)
-checkStartPars <- function(startPars, mi, i) {
+checkStartPars <- function(startPars, mi) {
   # For correlated parameters in mxl models, set sd pars to between [0.1, 0.2]
   if (mi$inputs$correlation) {
     startPars[mi$parNames$sd] <- stats::runif(length(mi$parNames$sd), 0.1, 0.2)

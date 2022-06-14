@@ -42,19 +42,20 @@ grad_check <- function(
   panelID     = NULL,
   scaleInputs = TRUE
 ) {
+  # Creates random starting points
   mi <- getModelInputs(
     data, outcome, obsID, pars, randPars, price, randPrice, modelSpace,
     weights, panelID, clusterID, robust, startParBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, numDraws,
     numCores, vcov, predict, correlation, call, options
   )
-  # Creates random starting points
   mi <- makeModelInputsList(mi, numMultiStarts)[[1]]
   pars <- mi$model$startPars
 
   # Compute gradients
   grad_analytic <- as.vector(mi$evalFuncs$negGradLL(pars, mi))
   grad_numeric <- as.vector(getNumericNegGradLL(pars, mi))
+
   # Compare
   check <- data.frame(
       analytic = grad_analytic,
