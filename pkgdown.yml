@@ -1,5 +1,5 @@
 pandoc: 2.7.3
-pkgdown: 2.0.3
+pkgdown: 2.0.4
 pkgdown_sha: ~
 articles:
   basic_usage: basic_usage.html
@@ -10,7 +10,7 @@ articles:
   mxl_models: mxl_models.html
   predict: predict.html
   utility_models: utility_models.html
-last_built: 2022-06-11T09:57Z
+last_built: 2022-06-14T17:34Z
 urls:
   reference: https://jhelvy.github.io/logitr/reference
   article: https://jhelvy.github.io/logitr/articles

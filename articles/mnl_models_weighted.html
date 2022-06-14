@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.1</span>
       </span>
     </div>
 
@@ -265,9 +265,9 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mnl_wtp_unweighted</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Model estimated on: Sat Jun 11 09:58:25 2022 </span>
+<span class="co">#&gt; Model estimated on: Tue Jun 14 17:35:29 2022 </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Using logitr version: 0.5.1.9000 </span>
+<span class="co">#&gt; Using logitr version: 0.6.1 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; logitr(data = cars_us, outcome = "choice", obsID = "obsnum", </span>
@@ -284,14 +284,14 @@
 <span class="co">#&gt;    Log Likelihood Iterations Exit Status</span>
 <span class="co">#&gt; 1       -4616.952         26           3</span>
 <span class="co">#&gt; 2       -4616.952         30           3</span>
-<span class="co">#&gt; 3       -4616.952         36           3</span>
-<span class="co">#&gt; 4       -4616.952         35           3</span>
-<span class="co">#&gt; 5       -4616.952         35           3</span>
-<span class="co">#&gt; 6       -4616.952         33           3</span>
-<span class="co">#&gt; 7       -4616.952         32           3</span>
-<span class="co">#&gt; 8       -4616.952         30           3</span>
-<span class="co">#&gt; 9       -4616.952         34           3</span>
-<span class="co">#&gt; 10      -4616.952         33           3</span>
+<span class="co">#&gt; 3       -4616.952         30           3</span>
+<span class="co">#&gt; 4       -4616.952         33           3</span>
+<span class="co">#&gt; 5       -4616.952         33           3</span>
+<span class="co">#&gt; 6       -4616.952         35           3</span>
+<span class="co">#&gt; 7       -4616.952         31           3</span>
+<span class="co">#&gt; 8       -4616.952         34           3</span>
+<span class="co">#&gt; 9       -4616.952         31           3</span>
+<span class="co">#&gt; 10      -4616.952         31           3</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Use statusCodes() to view the meaning of each status code</span>
 <span class="co">#&gt; </span>
@@ -365,9 +365,9 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mnl_wtp_weighted</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Model estimated on: Sat Jun 11 09:58:29 2022 </span>
+<span class="co">#&gt; Model estimated on: Tue Jun 14 17:35:34 2022 </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Using logitr version: 0.5.1.9000 </span>
+<span class="co">#&gt; Using logitr version: 0.6.1 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; logitr(data = cars_us, outcome = "choice", obsID = "obsnum", </span>
@@ -384,15 +384,15 @@
 <span class="co">#&gt; Summary Of Multistart Runs:</span>
 <span class="co">#&gt;    Log Likelihood Iterations Exit Status</span>
 <span class="co">#&gt; 1       -3425.633         19           3</span>
-<span class="co">#&gt; 2       -3425.630         31           3</span>
-<span class="co">#&gt; 3       -3425.630         33           3</span>
-<span class="co">#&gt; 4       -3425.630         34           3</span>
-<span class="co">#&gt; 5       -3425.630         31           3</span>
-<span class="co">#&gt; 6       -3425.630         32           3</span>
-<span class="co">#&gt; 7       -3425.630         34           3</span>
+<span class="co">#&gt; 2       -3425.630         29           3</span>
+<span class="co">#&gt; 3       -3425.630         32           3</span>
+<span class="co">#&gt; 4       -3425.630         31           3</span>
+<span class="co">#&gt; 5       -3425.630         28           3</span>
+<span class="co">#&gt; 6       -3425.630         29           3</span>
+<span class="co">#&gt; 7       -3425.630         35           3</span>
 <span class="co">#&gt; 8       -3425.630         30           3</span>
-<span class="co">#&gt; 9       -3425.630         29           3</span>
-<span class="co">#&gt; 10      -3425.630         38           3</span>
+<span class="co">#&gt; 9       -3425.630         33           3</span>
+<span class="co">#&gt; 10      -3425.630         29           3</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Use statusCodes() to view the meaning of each status code</span>
 <span class="co">#&gt; </span>
@@ -400,9 +400,9 @@
 <span class="co">#&gt;                                  </span>
 <span class="co">#&gt; Model Type:     Multinomial Logit</span>
 <span class="co">#&gt; Model Space:   Willingness-to-Pay</span>
-<span class="co">#&gt; Model Run:                2 of 10</span>
-<span class="co">#&gt; Iterations:                    31</span>
-<span class="co">#&gt; Elapsed Time:         0h:0m:0.23s</span>
+<span class="co">#&gt; Model Run:                7 of 10</span>
+<span class="co">#&gt; Iterations:                    35</span>
+<span class="co">#&gt; Elapsed Time:          0h:0m:0.4s</span>
 <span class="co">#&gt; Algorithm:         NLOPT_LD_LBFGS</span>
 <span class="co">#&gt; Weights Used?:               TRUE</span>
 <span class="co">#&gt; Cluster ID:                obsnum</span>
@@ -410,28 +410,28 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model Coefficients: </span>
 <span class="co">#&gt;                   Estimate  Std. Error z-value  Pr(&gt;|z|)    </span>
-<span class="co">#&gt; lambda           0.0522804   0.0040686 12.8498 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; hev             -1.1790985   2.9133111 -0.4047 0.6856775    </span>
-<span class="co">#&gt; phev10           0.0272896   3.1279546  0.0087 0.9930390    </span>
-<span class="co">#&gt; phev20           1.6947999   3.0996554  0.5468 0.5845365    </span>
-<span class="co">#&gt; phev40           2.6489104   2.9851311  0.8874 0.3748807    </span>
-<span class="co">#&gt; bev75          -20.1369028   3.6670966 -5.4912 3.991e-08 ***</span>
-<span class="co">#&gt; bev100         -19.4973273   3.6255659 -5.3777 7.543e-08 ***</span>
-<span class="co">#&gt; bev150         -13.6915793   3.4926367 -3.9201 8.850e-05 ***</span>
-<span class="co">#&gt; american         8.1870606   2.4052410  3.4038 0.0006645 ***</span>
-<span class="co">#&gt; japanese         0.9337122   2.3603257  0.3956 0.6924103    </span>
-<span class="co">#&gt; chinese        -19.0068506   2.8538734 -6.6600 2.738e-11 ***</span>
-<span class="co">#&gt; skorean         -9.5112728   2.5234554 -3.7691 0.0001638 ***</span>
-<span class="co">#&gt; phevFastcharge   3.9419410   2.3623188  1.6687 0.0951819 .  </span>
-<span class="co">#&gt; bevFastcharge    3.3415126   2.8086496  1.1897 0.2341556    </span>
-<span class="co">#&gt; opCost          -1.5974760   0.1948351 -8.1991 2.220e-16 ***</span>
-<span class="co">#&gt; accelTime       -1.1717333   0.4834616 -2.4236 0.0153661 *  </span>
+<span class="co">#&gt; lambda           0.0522806   0.0040689 12.8489 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; hev             -1.1763777   2.9133107 -0.4038 0.6863641    </span>
+<span class="co">#&gt; phev10           0.0268422   3.1280073  0.0086 0.9931532    </span>
+<span class="co">#&gt; phev20           1.6941837   3.0996997  0.5466 0.5846784    </span>
+<span class="co">#&gt; phev40           2.6490264   2.9851586  0.8874 0.3748642    </span>
+<span class="co">#&gt; bev75          -20.1358184   3.6670844 -5.4910 3.998e-08 ***</span>
+<span class="co">#&gt; bev100         -19.4960090   3.6255379 -5.3774 7.556e-08 ***</span>
+<span class="co">#&gt; bev150         -13.6906478   3.4926371 -3.9199 8.860e-05 ***</span>
+<span class="co">#&gt; american         8.1884953   2.4053220  3.4043 0.0006633 ***</span>
+<span class="co">#&gt; japanese         0.9351301   2.3603596  0.3962 0.6919714    </span>
+<span class="co">#&gt; chinese        -19.0065741   2.8539553 -6.6597 2.743e-11 ***</span>
+<span class="co">#&gt; skorean         -9.5094540   2.5233754 -3.7685 0.0001642 ***</span>
+<span class="co">#&gt; phevFastcharge   3.9445502   2.3624354  1.6697 0.0949794 .  </span>
+<span class="co">#&gt; bevFastcharge    3.3417790   2.8086534  1.1898 0.2341190    </span>
+<span class="co">#&gt; opCost          -1.5975446   0.1948475 -8.1990 2.220e-16 ***</span>
+<span class="co">#&gt; accelTime       -1.1718344   0.4834673 -2.4238 0.0153585 *  </span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log-Likelihood:         -3425.6302890</span>
+<span class="co">#&gt; Log-Likelihood:         -3425.6302852</span>
 <span class="co">#&gt; Null Log-Likelihood:    -4360.5909275</span>
-<span class="co">#&gt; AIC:                     6883.2605781</span>
+<span class="co">#&gt; AIC:                     6883.2605705</span>
 <span class="co">#&gt; BIC:                     6989.7997000</span>
 <span class="co">#&gt; McFadden R2:                0.2144115</span>
 <span class="co">#&gt; Adj McFadden R2:            0.2107422</span>
@@ -448,22 +448,22 @@
   Weighted   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mnl_wtp_weighted</span><span class="op">)</span>
 <span class="op">)</span>
 <span class="co">#&gt;                  Unweighted     Weighted</span>
-<span class="co">#&gt; lambda           0.07387776   0.05228040</span>
-<span class="co">#&gt; hev              0.80682602  -1.17909850</span>
-<span class="co">#&gt; phev10           1.16499818   0.02728959</span>
-<span class="co">#&gt; phev20           1.64739765   1.69479989</span>
-<span class="co">#&gt; phev40           2.57953096   2.64891043</span>
-<span class="co">#&gt; bev75          -16.04589966 -20.13690275</span>
-<span class="co">#&gt; bev100         -13.00330902 -19.49732731</span>
-<span class="co">#&gt; bev150          -9.57369897 -13.69157931</span>
-<span class="co">#&gt; american         2.34294510   8.18706062</span>
-<span class="co">#&gt; japanese        -0.37569387   0.93371225</span>
-<span class="co">#&gt; chinese        -10.27060451 -19.00685057</span>
-<span class="co">#&gt; skorean         -6.03201950  -9.51127284</span>
-<span class="co">#&gt; phevFastcharge   2.87970966   3.94194102</span>
-<span class="co">#&gt; bevFastcharge    2.91871408   3.34151264</span>
-<span class="co">#&gt; opCost          -1.63605116  -1.59747599</span>
-<span class="co">#&gt; accelTime       -1.69708921  -1.17173329</span></code></pre></div>
+<span class="co">#&gt; lambda           0.07387776   0.05228057</span>
+<span class="co">#&gt; hev              0.80682602  -1.17637768</span>
+<span class="co">#&gt; phev10           1.16499818   0.02684219</span>
+<span class="co">#&gt; phev20           1.64739765   1.69418368</span>
+<span class="co">#&gt; phev40           2.57953096   2.64902645</span>
+<span class="co">#&gt; bev75          -16.04589966 -20.13581838</span>
+<span class="co">#&gt; bev100         -13.00330902 -19.49600903</span>
+<span class="co">#&gt; bev150          -9.57369897 -13.69064780</span>
+<span class="co">#&gt; american         2.34294510   8.18849531</span>
+<span class="co">#&gt; japanese        -0.37569387   0.93513008</span>
+<span class="co">#&gt; chinese        -10.27060451 -19.00657409</span>
+<span class="co">#&gt; skorean         -6.03201950  -9.50945404</span>
+<span class="co">#&gt; phevFastcharge   2.87970966   3.94455023</span>
+<span class="co">#&gt; bevFastcharge    2.91871408   3.34177902</span>
+<span class="co">#&gt; opCost          -1.63605116  -1.59754461</span>
+<span class="co">#&gt; accelTime       -1.69708921  -1.17183437</span></code></pre></div>
 <p>Here is a comparison of the log-likelihood for the weighted and unweighted models:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
@@ -501,7 +501,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer>

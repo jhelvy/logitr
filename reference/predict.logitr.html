@@ -19,7 +19,7 @@ of a single or multiple sets of alternatives."><meta property="og:image" content
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.1</span>
       </span>
     </div>
 
@@ -113,42 +113,61 @@ of a single or multiple sets of alternatives.</p>
     <dl><dt>object</dt>
 <dd><p>is an object of class <code>logitr</code> (a model estimated using
 the 'logitr()` function).</p></dd>
+
+
 <dt>newdata</dt>
 <dd><p>a <code>data.frame</code>. Each row is an alternative and each column an
 attribute corresponding to parameter names in the estimated model. Defaults
 to <code>NULL</code>, in which case predictions are made on the original data used to
 estimate the model.</p></dd>
+
+
 <dt>obsID</dt>
 <dd><p>The name of the column that identifies each set of
 alternatives in the data. Required if newdata != NULL. Defaults to <code>NULL</code>,
 in which case the value for <code>obsID</code> from the data in <code>object</code> is used.</p></dd>
+
+
 <dt>price</dt>
 <dd><p>The name of the column that identifies the price variable.
 Required if the <code>object</code> is a WTP space model and if newdata != NULL.
 Defaults to <code>NULL</code>.</p></dd>
+
+
 <dt>type</dt>
 <dd><p>A character vector defining what to predict: <code>prob</code> for
 probabilities, <code>outcomes</code> for outcomes. If you want both outputs, use
 <code>c("prob", "outcome")</code>. Outcomes are predicted randomly according to the
 predicted probabilities. Defaults to <code>"prob"</code>.</p></dd>
+
+
 <dt>returnData</dt>
 <dd><p>If <code>TRUE</code> the data is also returned, otherwise only the
 predicted values ("prob" and / or  "outcome") are returned.
 Defaults to <code>FALSE</code>.</p></dd>
+
+
 <dt>ci</dt>
 <dd><p>If a confidence interval (CI) for the predicted probabilities is
 desired, set <code>ci</code> to a number between 0 and 1 to define the CI sensitivity.
 For example, <code>ci = 0.95</code> will return a 95% CI. Defaults to <code>NULL</code>, in which
 case no CI is computed.</p></dd>
+
+
 <dt>numDrawsCI</dt>
 <dd><p>The number of draws to use in simulating uncertainty
 for the computed CI. Defaults to 10^3.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>further arguments.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data frame of predicted probabilities and / or outcomes.</p>
+    
+
+<p>A data frame of predicted probabilities and / or outcomes.</p>
     </div>
 
     <div id="ref-examples">
@@ -211,13 +230,13 @@ for the computed CI. Defaults to 10^3.</p></dd>
 <span class="r-in"><span class="co"># Predict outcomes</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, newdata <span class="op">=</span> <span class="va">data</span>, obsID <span class="op">=</span> <span class="st">"obsID"</span>, type <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   obsID predicted_outcome</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    13                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    13                 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    13                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    13                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    13                 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    13                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42                 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    42                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42                 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8    42                 0</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Predict outcomes and probabilities</span></span>
@@ -227,9 +246,9 @@ for the computed CI. Defaults to 10^3.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    13     0.03312986                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    13     0.19155548                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    13     0.33846321                 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42     0.60764778                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42     0.60764778                 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    42     0.02602007                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42     0.17803313                 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42     0.17803313                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8    42     0.18829902                 0</span>
 </code></pre></div>
     </div>
@@ -245,7 +264,7 @@ for the computed CI. Defaults to 10^3.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.1</span>
       </span>
     </div>
 
@@ -85,14 +85,17 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.6.0" id="logitr-060">logitr 0.6.0<a class="anchor" aria-label="anchor" href="#logitr-060"></a></h2>
+<h2 class="page-header" data-toc-text="0.6.1" id="logitr-061">logitr 0.6.1<small>2022-06-12</small><a class="anchor" aria-label="anchor" href="#logitr-061"></a></h2>
+<ul><li>Fixes error on some of the gradient tests from 0.6.0 release. The gradient tests were sensitive to the random starting parameters, so I modified how the starting parameters were set for the first iteration of a multistart loop such that they would be more consistent.</li></ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.6.0" id="logitr-060">logitr 0.6.0<small>2022-06-11</small><a class="anchor" aria-label="anchor" href="#logitr-060"></a></h2>
 <ul><li>Added the <code>correlation</code> argument to include correlated heterogeneity.</li>
-<li>Added a couple input checks for the <code>obsID</code> and <code>outcome</code> arguments.</li>
+<li>Added support for new mixed logit distributions: zero-censored normal</li>
+<li>Added new input checks for the <code>obsID</code> and <code>outcome</code> arguments.</li>
 <li>
-<code><a href="../reference/vcov.logitr.html">vcov.logitr()</a></code> method now returns <code>object$vcov</code> if the user set <code>vcov = TRUE</code> during estimation (avoids a redundant calculation of <code>vcov</code>).</li>
+<code><a href="../reference/vcov.logitr.html">vcov.logitr()</a></code> method now returns <code>object$vcov</code> if the user set <code>vcov = TRUE</code> during estimation (avoids a redundant calculation of <code>vcov</code>, which is more efficient).</li>
 <li>Added new datasets: <code>apolloModeChoiceData</code>, <code>electricity</code>
 </li>
-<li>Added support for new mixed logit distributions: zero-censored normal</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.5.1" id="logitr-051">logitr 0.5.1<a class="anchor" aria-label="anchor" href="#logitr-051"></a></h2>
@@ -357,7 +360,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

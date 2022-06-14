@@ -18,7 +18,7 @@ predictProbs() instead."><meta property="og:image" content="https://jhelvy.githu
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.1</span>
       </span>
     </div>
 
@@ -108,30 +108,45 @@ predictProbs() instead."><meta property="og:image" content="https://jhelvy.githu
     <dl><dt>model</dt>
 <dd><p>The output of a model estimated model using the <code><a href="logitr.html">logitr()</a></code>
 function.</p></dd>
+
+
 <dt>alts</dt>
 <dd><p>A data frame of a set of alternatives for which to simulate
 shares. Each row is an alternative and each column an attribute
 corresponding to parameter names in the estimated model.</p></dd>
+
+
 <dt>obsIDName</dt>
 <dd><p>The name of the column that identifies each set of
 alternatives. Required if simulating results for more than one set of
 alternatives. Defaults to <code>NULL</code> (for a single set of alternatives).</p></dd>
+
+
 <dt>priceName</dt>
 <dd><p>The name of the parameter that identifies price. Only
 required for WTP space models. Defaults to <code>NULL</code>.</p></dd>
+
+
 <dt>computeCI</dt>
 <dd><p>Should a confidence interval be computed?
 Defaults to <code>TRUE</code>.</p></dd>
+
+
 <dt>alpha</dt>
 <dd><p>The sensitivity of the computed confidence interval.
 Defaults to <code>alpha = 0.025</code>, reflecting a 95% CI.</p></dd>
+
+
 <dt>numDraws</dt>
 <dd><p>The number of draws to use in simulating uncertainty
 for the computed confidence interval.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data frame with the estimated shares for each alternative in
+    
+
+<p>A data frame with the estimated shares for each alternative in
 <code>alts</code>.</p>
     </div>
 
@@ -147,7 +162,7 @@ for the computed confidence interval.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

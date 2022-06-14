@@ -24,7 +24,7 @@ randPars."><meta property="og:image" content="https://jhelvy.github.io/logitr/re
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.1</span>
       </span>
     </div>
 
@@ -109,18 +109,25 @@ variables and interaction variables added to <code>X</code>, <code>pars</code>, 
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>The data, formatted as a <code>data.frame</code> object.</p></dd>
+
+
 <dt>pars</dt>
 <dd><p>The names of the parameters to be estimated in the model.
 Must be the same as the column names in the <code>data</code> argument. For WTP space
 models, do not include price in <code>pars</code>.</p></dd>
+
+
 <dt>randPars</dt>
 <dd><p>A named vector whose names are the random parameters and
 values the distribution: <code>'n'</code> for normal or <code>'ln'</code> for log-normal.
 Defaults to <code>NULL</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of the design matrix (<code>X</code>) and two vectors (<code>pars</code> and
+    
+
+<p>A list of the design matrix (<code>X</code>) and two vectors (<code>pars</code> and
 <code>randPars</code>) with discrete (categorical) variables and interaction variables
 added.</p>
     </div>
@@ -174,7 +181,7 @@ added.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

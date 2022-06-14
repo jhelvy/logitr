@@ -24,7 +24,7 @@ the [0,1] range.'><meta property="og:image" content="https://jhelvy.github.io/lo
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.1</span>
       </span>
     </div>
 
@@ -112,17 +112,24 @@ the <code>[0,1]</code> range.</p>
     <dl><dt>x</dt>
 <dd><p>numeric vector whose sample quantiles are wanted. <code>NA</code> and <code>NaN</code>
 values are not allowed in numeric vectors unless <code>na.rm</code> is <code>TRUE</code>.</p></dd>
+
+
 <dt>probs</dt>
 <dd><p>numeric vector of probabilities with values in <code>[0,1]</code>.
 (Values up to <code>2e-14</code> outside that range are accepted and moved to the
 nearby endpoint.)</p></dd>
+
+
 <dt>na.rm</dt>
 <dd><p>logical; if <code>TRUE</code>, any <code>NA</code> and <code>NaN</code>'s are removed from <code>x</code>
 before the quantiles are computed.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A vector of length <code>length(probs)</code> is returned;</p>
+    
+
+<p>A vector of length <code>length(probs)</code> is returned;</p>
     </div>
 
     <div id="ref-examples">
@@ -143,7 +150,7 @@ before the quantiles are computed.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>
