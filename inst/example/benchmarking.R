@@ -120,7 +120,7 @@ apollo_control_1 <- list(
     indivID         = "id",
     mixing          = TRUE,
     analyticGrad    = TRUE,
-    outputDirectory = NULL,
+    outputDirectory = file.path('inst', 'extdata'),
     panelData       = TRUE,
     nCores          = 1
 )
@@ -169,6 +169,9 @@ apollo_randCoeff <- function(apollo_beta, apollo_inputs) {
 
 # Set fixed levels
 apollo_fixed <- NULL
+
+# Have to set a global apollo_beta value for parallel processing
+apollo_beta <- start_pars
 
 # Define probabilities function
 
@@ -393,7 +396,6 @@ for (i in 1:length(numDraws)) {
 
 # First, compare that the models reached similar solutions
 
-
 # Compare log-likelihoods at solution
 logLiks <- c()
 for (i in 1:length(numDraws)) {
@@ -402,7 +404,7 @@ for (i in 1:length(numDraws)) {
         unlist(lapply(models[[i]], function(x) logLik(x)))
     )
 }
-packages <- c("logitr", "mixl", "mlogit", "gmnl", "apollo1", "apollo2")
+packages <- c("logitr", "mixl1", "mixl3", "mlogit", "gmnl", "apollo1", "apollo3")
 ll_df <- data.frame(
     package = rep(packages, length(numDraws)),
     logLik   = logLiks,
@@ -447,22 +449,30 @@ table_mult
 # Visualize estimation times
 
 # Make the figure
-plotColors <- c("black", "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00")
-fig2 <- runtimes %>%
+plotColors <- c("black", RColorBrewer::brewer.pal(n = 5, name = "Set1"), "gold")
+fig2data <- runtimes %>%
+    mutate(
+        package = fct_recode(package,
+            "apollo (1 core)" = "apollo1",
+            "apollo (3 cores)" = "apollo3",
+            "mixl (1 core)" = "mixl1",
+            "mixl (3 cores)" = "mixl3"
+        )
+    )
+fig2 <- fig2data %>%
     ggplot(aes(x = numDraws, y = time_sec, color = package)) +
     geom_line() +
     geom_point() +
     geom_text_repel(
-        data = runtimes %>% filter(numDraws == max(numDraws)),
+        data = fig2data %>% filter(numDraws == max(numDraws)),
         aes(label = package),
-        hjust = 0, nudge_x = 20, direction = "y",
-        size = 5
+        hjust = 0, nudge_x = 40, direction = "y",
+        size = 4, segment.size = 0
     ) +
     scale_x_continuous(
-        limits = c(0, 1100),
+        limits = c(0, 1400),
         breaks = numDraws,
         labels = scales::comma) +
-    scale_y_continuous(limits = c(0, 600)) +
     scale_color_manual(values = plotColors) +
     guides(
         point = guide_legend(override.aes = list(label = "")),
@@ -477,6 +487,8 @@ fig2 <- runtimes %>%
         x = "Number of random draws",
         y = "Computation time (seconds)"
     )
+
+fig2
 
 # Save run time data frame
 write_csv(runtimes, here::here('inst', 'extdata', 'runtimes.csv'))
