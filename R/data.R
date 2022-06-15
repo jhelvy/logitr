@@ -38,6 +38,8 @@
 #' head(yogurt)
 "yogurt"
 
+
+
 #' Stated car choice observations by US car buyers
 #'
 #' Data from Helveston et al. (2015) containing 448 stated choice observations
@@ -92,6 +94,8 @@
 #'
 #' head(cars_us)
 "cars_us"
+
+
 
 #' Stated car choice observations by Chinese car buyers
 #'
@@ -148,6 +152,8 @@
 #' head(cars_china)
 "cars_china"
 
+
+
 #' Simulated SP dataset of mode choice (from the {apollo} package).
 #'
 #' A simulated dataset containing 7,000 mode choices among four alternatives.
@@ -203,15 +209,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
 #' Stated preference data for the choice of electricity suppliers (from {mlogit} package)
 #'
 #' A sample of 2308 households in the United States.
@@ -246,3 +243,34 @@
 #'
 #' head(electricity)
 "electricity"
+
+
+
+#' Data frame of run times for logitr benchmark
+#'
+#' This data frame contains the run times for a benchmark comparing the
+#' relative computation time to estimate a preference space mixed logit model
+#' using the following R packages: {logitr}, {mixl}, {mlogit}, {gmnl}, and
+#' {apollo}. The run times are exported from the Google colab notebook here:
+#' https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing
+#'
+#' @format
+#' Variable | Description
+#' -------- | ---------------------------------------------
+#' `package` | Name of the package. Any appended numbers indicate the number of cores used (e.g. apollo2 means the apollo package with 2 cores).
+#' `time_sec` | The estimation time in seconds.
+#' `numDraws` | The number of random draws used during estimation.
+#'
+#' @docType data
+#'
+#' @usage data(runtimes)
+#'
+#' @keywords datasets
+#'
+#' @source [This](https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing) Google colab notebook
+#'
+#' @examples
+#' data(runtimes)
+#'
+#' head(runtimes)
+"runtimes"
