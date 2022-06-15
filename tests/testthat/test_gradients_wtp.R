@@ -36,16 +36,16 @@ options         = list(
 # Function for comparing gradients - only includes arguments to vary in tests
 grad_check <- function(
   pars        = c('feat', 'brand'),
-  price       = "price",
+  scalePar    = "price",
   randPars    = NULL,
-  randPrice   = NULL,
+  randScale   = NULL,
   correlation = FALSE,
   panelID     = NULL,
   scaleInputs = TRUE
 ) {
   # Creates random starting points
   mi <- getModelInputs(
-    data, outcome, obsID, pars, randPars, price, randPrice, modelSpace,
+    data, outcome, obsID, pars, randPars, scalePar, randScale, modelSpace,
     weights, panelID, clusterID, robust, startParBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
     numDraws, numCores, vcov, predict, correlation, call, options
@@ -73,9 +73,9 @@ test_that("Gradients for MNL", {
   # Scaled? TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = NULL,
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = FALSE,
     panelID     = NULL,
     scaleInputs = TRUE
@@ -84,9 +84,9 @@ test_that("Gradients for MNL", {
   # Scaled? FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = NULL,
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = FALSE,
     panelID     = NULL,
     scaleInputs = FALSE
@@ -102,9 +102,9 @@ test_that("Gradients MXL, normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "n", brand = "n"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = FALSE,
     panelID     = NULL,
     scaleInputs = FALSE
@@ -115,9 +115,9 @@ test_that("Gradients MXL, normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "n", brand = "n"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = FALSE,
     panelID     = NULL,
     scaleInputs = TRUE
@@ -128,9 +128,9 @@ test_that("Gradients MXL, normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "n", brand = "n"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = TRUE,
     panelID     = NULL,
     scaleInputs = FALSE
@@ -141,9 +141,9 @@ test_that("Gradients MXL, normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "n", brand = "n"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = FALSE,
     panelID     = 'id',
     scaleInputs = FALSE
@@ -154,9 +154,9 @@ test_that("Gradients MXL, normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "n", brand = "n"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = TRUE,
     panelID     = NULL,
     scaleInputs = TRUE
@@ -167,9 +167,9 @@ test_that("Gradients MXL, normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "n", brand = "n"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = TRUE,
     panelID     = 'id',
     scaleInputs = FALSE
@@ -180,9 +180,9 @@ test_that("Gradients MXL, normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "n", brand = "n"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = FALSE,
     panelID     = 'id',
     scaleInputs = TRUE
@@ -193,24 +193,24 @@ test_that("Gradients MXL, normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "n", brand = "n"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = TRUE,
     panelID     = 'id',
     scaleInputs = TRUE
   ))
 
-  # Additional checks with random price parameters
+  # Additional checks with random scalePar parameters
 
   # Scaled?      TRUE
   # Correlation? FALSE
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "n", brand = "n"),
-    randPrice   = "n",
+    randScale   = "n",
     correlation = FALSE,
     panelID     = 'id',
     scaleInputs = TRUE
@@ -221,9 +221,9 @@ test_that("Gradients MXL, normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "n", brand = "n"),
-    randPrice   = "n",
+    randScale   = "n",
     correlation = FALSE,
     panelID     = NULL,
     scaleInputs = TRUE
@@ -234,9 +234,9 @@ test_that("Gradients MXL, normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "n", brand = "n"),
-    randPrice   = "n",
+    randScale   = "n",
     correlation = TRUE,
     panelID     = 'id',
     scaleInputs = TRUE
@@ -247,9 +247,9 @@ test_that("Gradients MXL, normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "n", brand = "n"),
-    randPrice   = "n",
+    randScale   = "n",
     correlation = TRUE,
     panelID     = NULL,
     scaleInputs = TRUE
@@ -266,9 +266,9 @@ test_that("Gradients for MXL, log-normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "ln", brand = "ln"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = FALSE,
     panelID     = NULL,
     scaleInputs = FALSE
@@ -279,9 +279,9 @@ test_that("Gradients for MXL, log-normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "ln", brand = "ln"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = FALSE,
     panelID     = NULL,
     scaleInputs = TRUE
@@ -292,9 +292,9 @@ test_that("Gradients for MXL, log-normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "ln", brand = "ln"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = TRUE,
     panelID     = NULL,
     scaleInputs = FALSE
@@ -305,9 +305,9 @@ test_that("Gradients for MXL, log-normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "ln", brand = "ln"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = FALSE,
     panelID     = 'id',
     scaleInputs = FALSE
@@ -318,9 +318,9 @@ test_that("Gradients for MXL, log-normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "ln", brand = "ln"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = TRUE,
     panelID     = NULL,
     scaleInputs = TRUE
@@ -331,9 +331,9 @@ test_that("Gradients for MXL, log-normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "ln", brand = "ln"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = TRUE,
     panelID     = 'id',
     scaleInputs = FALSE
@@ -344,9 +344,9 @@ test_that("Gradients for MXL, log-normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "ln", brand = "ln"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = FALSE,
     panelID     = 'id',
     scaleInputs = TRUE
@@ -357,9 +357,9 @@ test_that("Gradients for MXL, log-normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "ln", brand = "ln"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = TRUE,
     panelID     = 'id',
     scaleInputs = TRUE
@@ -372,9 +372,9 @@ test_that("Gradients for MXL, log-normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "neg_price",
+    scalePar    = "neg_price",
     randPars    = c(feat = "ln", brand = "ln"),
-    randPrice   = "ln",
+    randScale   = "ln",
     correlation = FALSE,
     panelID     = 'id',
     scaleInputs = TRUE
@@ -385,9 +385,9 @@ test_that("Gradients for MXL, log-normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "neg_price",
+    scalePar    = "neg_price",
     randPars    = c(feat = "ln", brand = "ln"),
-    randPrice   = "ln",
+    randScale   = "ln",
     correlation = FALSE,
     panelID     = NULL,
     scaleInputs = TRUE
@@ -398,9 +398,9 @@ test_that("Gradients for MXL, log-normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "neg_price",
+    scalePar    = "neg_price",
     randPars    = c(feat = "ln", brand = "ln"),
-    randPrice   = "ln",
+    randScale   = "ln",
     correlation = TRUE,
     panelID     = 'id',
     scaleInputs = TRUE
@@ -411,9 +411,9 @@ test_that("Gradients for MXL, log-normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "neg_price",
+    scalePar    = "neg_price",
     randPars    = c(feat = "ln", brand = "ln"),
-    randPrice   = "ln",
+    randScale   = "ln",
     correlation = TRUE,
     panelID     = NULL,
     scaleInputs = TRUE
@@ -430,9 +430,9 @@ test_that("Gradients for MXL, censored-normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "cn", brand = "cn"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = FALSE,
     panelID     = NULL,
     scaleInputs = FALSE
@@ -443,9 +443,9 @@ test_that("Gradients for MXL, censored-normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "cn", brand = "cn"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = FALSE,
     panelID     = NULL,
     scaleInputs = TRUE
@@ -456,9 +456,9 @@ test_that("Gradients for MXL, censored-normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "cn", brand = "cn"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = TRUE,
     panelID     = NULL,
     scaleInputs = FALSE
@@ -469,9 +469,9 @@ test_that("Gradients for MXL, censored-normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "cn", brand = "cn"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = FALSE,
     panelID     = 'id',
     scaleInputs = FALSE
@@ -482,9 +482,9 @@ test_that("Gradients for MXL, censored-normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "cn", brand = "cn"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = TRUE,
     panelID     = NULL,
     scaleInputs = TRUE
@@ -495,9 +495,9 @@ test_that("Gradients for MXL, censored-normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "cn", brand = "cn"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = TRUE,
     panelID     = 'id',
     scaleInputs = FALSE
@@ -508,9 +508,9 @@ test_that("Gradients for MXL, censored-normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "cn", brand = "cn"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = FALSE,
     panelID     = 'id',
     scaleInputs = TRUE
@@ -521,9 +521,9 @@ test_that("Gradients for MXL, censored-normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "price",
+    scalePar    = "price",
     randPars    = c(feat = "cn", brand = "cn"),
-    randPrice   = NULL,
+    randScale   = NULL,
     correlation = TRUE,
     panelID     = 'id',
     scaleInputs = TRUE
@@ -536,9 +536,9 @@ test_that("Gradients for MXL, censored-normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "neg_price",
+    scalePar    = "neg_price",
     randPars    = c(feat = "cn", brand = "cn"),
-    randPrice   = "cn",
+    randScale   = "cn",
     correlation = FALSE,
     panelID     = 'id',
     scaleInputs = TRUE
@@ -549,9 +549,9 @@ test_that("Gradients for MXL, censored-normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "neg_price",
+    scalePar    = "neg_price",
     randPars    = c(feat = "cn", brand = "cn"),
-    randPrice   = "cn",
+    randScale   = "cn",
     correlation = FALSE,
     panelID     = NULL,
     scaleInputs = TRUE
@@ -562,9 +562,9 @@ test_that("Gradients for MXL, censored-normal parameters", {
   # panel?       TRUE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "neg_price",
+    scalePar    = "neg_price",
     randPars    = c(feat = "cn", brand = "cn"),
-    randPrice   = "cn",
+    randScale   = "cn",
     correlation = TRUE,
     panelID     = 'id',
     scaleInputs = TRUE
@@ -575,9 +575,9 @@ test_that("Gradients for MXL, censored-normal parameters", {
   # panel?       FALSE
   expect_true(grad_check(
     pars        = c('feat', 'brand'),
-    price       = "neg_price",
+    scalePar    = "neg_price",
     randPars    = c(feat = "cn", brand = "cn"),
-    randPrice   = "cn",
+    randScale   = "cn",
     correlation = TRUE,
     panelID     = NULL,
     scaleInputs = TRUE

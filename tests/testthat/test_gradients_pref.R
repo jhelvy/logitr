@@ -8,9 +8,9 @@ data            = as.data.frame(yogurt)
 data            = subset(data, data$id < 30)
 outcome         = 'choice'
 obsID           = 'obsID'
-price           = NULL
+scalePar        = NULL
 modelSpace      = "pref"
-randPrice       = NULL
+randScale       = NULL
 clusterID       = NULL
 weights         = NULL
 robust          = FALSE
@@ -45,7 +45,7 @@ grad_check <- function(
 ) {
   # Creates random starting points
   mi <- getModelInputs(
-    data, outcome, obsID, pars, randPars, price, randPrice, modelSpace,
+    data, outcome, obsID, pars, randPars, scalePar, randScale, modelSpace,
     weights, panelID, clusterID, robust, startParBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
     numDraws, numCores, vcov, predict, correlation, call, options
