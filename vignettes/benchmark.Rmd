@@ -18,6 +18,8 @@ knitr::opts_chunk$set(
   fig.retina = 3
 )
 library(logitr)
+library(tidyverse)
+library(kableExtra)
 ```
 
 
@@ -37,47 +39,58 @@ Benchmarks will always vary for every run of a benchmarking code, even when run 
 
 ## Comparing run times 
 
-The {logitr} package includes a `runtimes` data frame that is exported from the [Google Colab](https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing) notebook used to conduct the benchmark. The table below summarizes compares the run times for each package:
+The {logitr} package includes a `runtimes` data frame that is exported from the [Google Colab](https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing) notebook used to conduct the benchmark. The tables below summarize the run times for each package and how many times slower they are relative to {logitr}.
 
 ```{r}
-# First clean up the 
-runtimes <- runtimes %>%
-    mutate(
-        package = fct_recode(package,
-            "apollo (1 core)" = "apollo1",
-            "apollo (2 cores)" = "apollo2",
-            "mixl (1 core)" = "mixl1",
-            "mixl (2 cores)" = "mixl2"
-        )
-    ) %>% 
-    
-runtimes <- data.frame(
-    package = rep(packages, length(numDraws)),
-    time_sec = time,
-    numDraws = rep(numDraws, each = length(packages))
-)
-```
-
-# Save run times data frame
-write_csv(runtimes, 'runtimes.csv')
-
-# Compute speed comparison tables
 logitr_time <- runtimes %>%
     filter(package == "logitr") %>%
     rename(time_logitr = time_sec)
-temp <- runtimes %>%
-    # Compute % time slower than {logitr}
+time_compare <- runtimes %>%
     left_join(select(logitr_time, -package), by = "numDraws") %>%
     mutate(mult = round(time_sec/ time_logitr, 1)) %>%
     select(-time_logitr)
-table_time <- temp %>%
+# Compare raw times
+time_compare %>%
     select(-mult) %>%
-    pivot_wider(names_from = numDraws, values_from = time_sec)
-table_time
-table_mult <- temp %>%
+    pivot_wider(names_from = numDraws, values_from = time_sec) %>% 
+    kbl()
+# Compare how many times slower compared to logitr
+time_compare %>%
     select(-time_sec) %>%
-    pivot_wider(names_from = numDraws, values_from = mult)
-table_mult
+    pivot_wider(names_from = numDraws, values_from = mult) %>% 
+    kbl()
+```
 
-The code below plots the relative run times from the Colab notebook, which were exported from the notebook and are included as a data frame called `runtimes` in the {logitr} package.
+The code below plots the relative run times from the Colab notebook.
 
+```{r benchmark-plot, fig.width = 8, fig.height=5}
+plotColors <- c("black", RColorBrewer::brewer.pal(n = 5, name = "Set1"), "gold")
+runtimes %>% 
+    ggplot(aes(x = numDraws, y = time_sec, color = package)) +
+    geom_line() +
+    geom_point() +
+    geom_text_repel(
+        data = . %>% filter(numDraws == max(numDraws)),
+        aes(label = package),
+        hjust = 0, nudge_x = 40, direction = "y",
+        size = 4, segment.size = 0
+    ) +
+    scale_x_continuous(
+        limits = c(0, 1400),
+        breaks = numDraws,
+        labels = scales::comma) +
+    scale_color_manual(values = plotColors) +
+    guides(
+        point = guide_legend(override.aes = list(label = "")),
+        color = guide_legend(override.aes = list(label = ""))) +
+    theme_minimal_hgrid(font_family = font_main, font_size = 16) +
+    theme(
+        legend.position = "none",
+        axis.line.x = element_blank(),
+        axis.ticks.x = element_blank()
+    ) +
+    labs(
+        x = "Number of random draws",
+        y = "Computation time (seconds)"
+    )
+```
