@@ -17,19 +17,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.retina = 3
 )
-
-# Load libraries for making figure
-library(tidyverse)
-library(cowplot)
-library(ggrepel)
-
-# Load logitr for runtimes data frame
-library(logitr)
-
-# For tables
-library(kableExtra)
 ```
-
 
 {logitr} is faster than most other packages with similar functionality. To demonstrate this, a benchmark was conducted by estimating the same preference space mixed logit model using the following R packages:
 
@@ -50,6 +38,11 @@ Benchmarks will always vary for every run of a benchmarking code, even when run 
 The {logitr} package includes a `runtimes` data frame that is exported from the [Google Colab](https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing) notebook used to conduct the benchmark. The tables below summarize the run times for each package and how many times slower they are relative to {logitr}.
 
 ```{r}
+library(logitr)
+library(dplyr)
+library(tidyr)
+library(kableExtra) # For tables
+
 numDraws <- unique(runtimes$numDraws)
 logitr_time <- runtimes %>%
     filter(package == "logitr") %>%
@@ -73,7 +66,9 @@ time_compare %>%
 The code below plots the relative run times from the Colab notebook.
 
 ```{r, eval=FALSE}
-font_main <- "Fira Sans Condensed"
+library(ggplot2)
+library(ggrepel)
+
 plotColors <- c("black", RColorBrewer::brewer.pal(n = 5, name = "Set1"), "gold")
 benchmark <- runtimes %>% 
     ggplot(aes(x = numDraws, y = time_sec, color = package)) +
@@ -86,7 +81,7 @@ benchmark <- runtimes %>%
         size = 4.5, segment.size = 0
     ) +
     scale_x_continuous(
-        limits = c(0, 1400),
+        limits = c(0, 1200),
         breaks = numDraws,
         labels = scales::comma) +
     scale_y_continuous(limits = c(0, 300), breaks = seq(0, 300, 100)) +
@@ -94,8 +89,10 @@ benchmark <- runtimes %>%
     guides(
         point = guide_legend(override.aes = list(label = "")),
         color = guide_legend(override.aes = list(label = ""))) +
-    theme_minimal_hgrid(font_family = font_main, font_size = 18) +
+    theme_bw(base_size = 18) +
     theme(
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
         legend.position = "none",
         axis.line.x = element_blank(),
         axis.ticks.x = element_blank()
@@ -109,7 +106,7 @@ benchmark
 ```
 
 ```{r, eval=FALSE, echo=FALSE}
-ggsave('benchmark.png', benchmark, width = 6, height = 4.5)
+ggsave('benchmark.png', benchmark, width = 8.5, height = 6)
 ```
 
 ```{r probabilities, echo=FALSE}
