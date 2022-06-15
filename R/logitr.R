@@ -83,6 +83,10 @@
 #' residuals are not included in the returned object. Defaults to `TRUE`.
 #' @param options A list of options for controlling the `nloptr()` optimization.
 #' Run `nloptr::nloptr.print.options()` for details.
+#' @param price No longer used as of v0.7.0 - if provided, this is passed
+#' to the `scalePar` argument and a warning is displayed.
+#' @param randPrice No longer used as of v0.7.0 - if provided, this is passed
+#' to the `randScale` argument and a warning is displayed.
 #' @param choice No longer used as of v0.4.0 - if provided, this is passed
 #' to the `outcome` argument and a warning is displayed.
 #' @param choiceName No longer used as of v0.2.3 - if provided, this is passed

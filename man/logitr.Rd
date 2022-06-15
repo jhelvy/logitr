@@ -139,6 +139,12 @@ residuals are not included in the returned object. Defaults to \code{TRUE}.}
 \item{options}{A list of options for controlling the \code{nloptr()} optimization.
 Run \code{nloptr::nloptr.print.options()} for details.}
 
+\item{price}{No longer used as of v0.7.0 - if provided, this is passed
+to the \code{scalePar} argument and a warning is displayed.}
+
+\item{randPrice}{No longer used as of v0.7.0 - if provided, this is passed
+to the \code{randScale} argument and a warning is displayed.}
+
 \item{choice}{No longer used as of v0.4.0 - if provided, this is passed
 to the \code{outcome} argument and a warning is displayed.}
 
