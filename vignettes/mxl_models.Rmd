@@ -93,7 +93,7 @@ The above summary table prints summaries of the estimated coefficients as well a
 Compute the WTP implied from the preference space model:
 
 ```{r}
-wtp_mxl_pref <- wtp(mxl_pref, price =  "price")
+wtp_mxl_pref <- wtp(mxl_pref, scalePar =  "price")
 wtp_mxl_pref
 ```
 
@@ -115,7 +115,7 @@ mxl_wtp <- logitr(
   obsID      = 'obsID',
   panelID    = 'id',
   pars       = c('feat', 'brand'),
-  price      = 'price',
+  scalePar   = 'price',
   randPars   = c(feat = 'n', brand = 'n'),
   modelSpace = 'wtp',
   numMultiStarts = 10,
@@ -139,7 +139,7 @@ summary(mxl_wtp)
 If you want to compare the WTP from the two different model spaces, use the `wtpCompare()` function:
 
 ```{r}
-wtpCompare(mxl_pref, mxl_wtp, price = 'price')
+wtpCompare(mxl_pref, mxl_wtp, scalePar = 'price')
 ```
 
 Note that the WTP will not necessarily be the same between preference space and WTP space MXL models. This is because the distributional assumptions in MXL models imply different distributions on WTP depending on the model space. See Train and Weeks [-@Train2005] and Sonnier, Ainslie, and Otter [-@Sonnier2007] for details on this topic.

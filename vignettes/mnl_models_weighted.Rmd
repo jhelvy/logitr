@@ -72,7 +72,7 @@ mnl_wtp_unweighted <- logitr(
     'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100', 'bev150',
     'american', 'japanese', 'chinese', 'skorean', 'phevFastcharge',
     'bevFastcharge','opCost', 'accelTime'),
-  price      = 'price',
+  scalePar   = 'price',
   modelSpace = 'wtp',
   robust     = TRUE,
   # Since WTP space models are non-convex, run a multistart
@@ -101,7 +101,7 @@ mnl_wtp_weighted <- logitr(
     'hev', 'phev10', 'phev20', 'phev40', 'bev75', 'bev100', 'bev150',
     'american', 'japanese', 'chinese', 'skorean', 'phevFastcharge',
     'bevFastcharge','opCost', 'accelTime'),
-  price      = 'price',
+  scalePar   = 'price',
   modelSpace = 'wtp',
   weights    = 'weights', # This enables the weights
   robust     = TRUE,
