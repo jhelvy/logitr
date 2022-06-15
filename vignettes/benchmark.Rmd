@@ -8,3 +8,18 @@ vignette: >
 bibliography: "`r here::here('vignettes', 'library.bib')`"
 ---
 
+{logitr} is faster than most other packages with similar functionality. To demonstrate this, a benchmark was conducted by estimating the same preference space mixed logit model using the following R packages:
+
+- {logitr}
+- {mixl}
+- {mlogit}
+- {gmnl}
+- {apollo}
+
+The benchmark can be viewed at this Google Colab notebook:
+
+https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing
+
+Benchmarks will *always* vary for every run of a benchmarking code, even when run on the same machine due to variations in background processes. Thus, if you run this code yourself on a different machine, your results may vary, though the overall order and trends in terms of each package's relative speed should be similar to those from the Colab notebook.
+
+The code below plots the relative run times from the Colab notebook, which were exported from the notebook and are included as a data frame called `runtimes` in the {logitr} package.
