@@ -40,6 +40,8 @@ navbar:
           href: articles/mnl_models_weighted.html
         - text: "Predicting Probabilities and Outcomes with Estimated Models"
           href: articles/predict.html
+        - text: "Benchmarking estimation speed against other packages"
+          href: articles/benchmark.html
     - text: "Changelog"
       href: news/index.html
 
