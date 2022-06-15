@@ -5,7 +5,7 @@
 
 # Creates a list of the data and other information needed for running the model
 getModelInputs <- function(
-    data, outcome, obsID, pars , randPars, price, randPrice, modelSpace,
+    data, outcome, obsID, pars , randPars, scalePar, randPrice, modelSpace,
     weights, panelID, clusterID, robust, startParBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
     numDraws, numCores, vcov, predict, correlation, call, options
@@ -17,7 +17,7 @@ getModelInputs <- function(
     obsID           = obsID,
     pars            = pars,
     randPars        = randPars,
-    price           = price,
+    scalePar        = scalePar,
     randPrice       = randPrice,
     modelSpace      = modelSpace,
     weights         = weights,
@@ -47,7 +47,7 @@ getModelInputs <- function(
   X <- recoded$X
   pars <- recoded$pars
   randPars <- recoded$randPars
-  price <- definePrice(data, inputs)
+  scalePar <- defineScalePar(data, inputs)
   outcome <- as.matrix(data[outcome])
 
   # Setup obsID
@@ -62,7 +62,7 @@ getModelInputs <- function(
   }
 
   # Set up other objects defining aspects of model
-  parSetup <- getParSetup(pars, price, randPars, randPrice)
+  parSetup <- getParSetup(pars, scalePar, randPars, randPrice)
 
   # Define model type
   modelType <- "mnl"
@@ -112,7 +112,7 @@ getModelInputs <- function(
 
   # Make data object
   data <- list(
-    price     = price,
+    scalePar  = scalePar,
     X         = X,
     outcome   = outcome,
     obsID     = obsID,
@@ -153,7 +153,7 @@ getModelInputs <- function(
     inputs        = inputs,
     modelType     = modelType,
     freq          = getFrequencyCounts(obsID, outcome),
-    price         = price,
+    scalePar      = scalePar,
     data          = data,
     data_diff     = data_diff,
     data_diff_unscaled = data_diff_unscaled,
@@ -238,24 +238,24 @@ setNumCores <- function(numCores) {
   return(numCores)
 }
 
-definePrice <- function(data, inputs) {
+defineScalePar <- function(data, inputs) {
   if (inputs$modelSpace == "pref") {
     return(NULL)
   }
   if (inputs$modelSpace == "wtp") {
-    price <- data[, which(names(data) == inputs$price)]
-    if (! typeof(price) %in% c("integer", "double")) {
+    scalePar <- data[, which(names(data) == inputs$scalePar)]
+    if (! typeof(scalePar) %in% c("integer", "double")) {
       stop(
-        'Please make sure the price column in your data defined by the ',
-        '"price" argument is encoded as a numeric data type. Price must ',
-        'be numeric for WTP space models.'
+        'Please make sure the "scalePar" column in your data ',
+        'is encoded as a numeric data type. Scale must ',
+        'be numeric and continuous.'
       )
     }
   }
-  return(as.matrix(price))
+  return(as.matrix(scalePar))
 }
 
-getParSetup <- function(pars, price, randPars, randPrice) {
+getParSetup <- function(pars, scalePar, randPars, randPrice) {
   parSetup <- rep("f", length(pars))
   for (i in seq_len(length(pars))) {
     name <- pars[i]
@@ -264,7 +264,7 @@ getParSetup <- function(pars, price, randPars, randPrice) {
     }
   }
   names(parSetup) <- pars
-  if (is.null(price) == F) {
+  if (is.null(scalePar) == F) {
     if (is.null(randPrice)) {
       randPrice <- "f"
     }
@@ -400,17 +400,17 @@ setupClusters <- function(inputs, panel, robust, weightsUsed) {
 getScaleFactors <- function(
   data, modelSpace, modelType, parIDs, parNames, n, correlation
 ) {
-  price <- data$price
+  scalePar <- data$scalePar
   X <- data$X
   minX <- apply(X, 2, min)
   maxX <- apply(X, 2, max)
   scaleFactors <- abs(maxX - minX)
   scaleFactorNames <- names(scaleFactors)
-  # Scale price if WTP space model
+  # Scale scalePar if WTP space model
   if (modelSpace == "wtp") {
-    vals <- unique(price)
-    scaleFactorPrice <- abs(max(vals) - min(vals))
-    scaleFactors <- c(scaleFactorPrice, scaleFactors)
+    vals <- unique(scalePar)
+    scaleFactorScalePar <- abs(max(vals) - min(vals))
+    scaleFactors <- c(scaleFactorScalePar, scaleFactors)
     names(scaleFactors) <- c("lambda", scaleFactorNames)
   }
   # If MXL model, need to replicate scale factors for sd pars
@@ -437,17 +437,17 @@ getScaleFactors <- function(
 
 # Function that scales all the variables in X to be between 0 and 1:
 scaleData <- function(data, scaleFactors, modelSpace) {
-  scaledPrice <- data$price
+  scaledScalePar <- data$scalePar
   scaledX <- data$X
   if (modelSpace == "wtp") {
-    scaledPrice <- scaledPrice / scaleFactors[1] # Scale price
+    scaledScalePar <- scaledScalePar / scaleFactors[1] # Scale scalePar
     scaleFactors <- scaleFactors[2:length(scaleFactors)]
   }
   for (col in seq_len(ncol(scaledX))) {
     scaledX[, col] <- scaledX[, col] / scaleFactors[col]
   }
   return(list(
-    price     = scaledPrice,
+    scalePar  = scaledScalePar,
     X         = scaledX,
     outcome   = data$outcome,
     obsID     = data$obsID,
@@ -464,10 +464,10 @@ makeDiffData <- function(data, modelType) {
   if (!is.matrix(X_chosen)) { X_chosen <- as.matrix(X_chosen) }
   X_diff <- (data$X - X_chosen[data$obsID,])[data$outcome != 1,]
   X_diff <- checkMatrix(X_diff)
-  price_diff <- NULL
-  if (!is.null(data$price)) {
-    price_chosen <- data$price[data$outcome == 1]
-    price_diff <- (data$price - price_chosen[data$obsID])[data$outcome != 1]
+  scalePar_diff <- NULL
+  if (!is.null(data$scalePar)) {
+    scalePar_chosen <- data$scalePar[data$outcome == 1]
+    scalePar_diff <- (data$scalePar - scalePar_chosen[data$obsID])[data$outcome != 1]
   }
   panelID <- data$panelID
   weights <- data$weights[data$outcome == 1]
@@ -476,7 +476,7 @@ makeDiffData <- function(data, modelType) {
     weights <- unique(data.frame(panelID = panelID, weights = weights))$weights
   }
   return(list(
-    price     = price_diff,
+    scalePar  = scalePar_diff,
     X         = X_diff,
     obsID     = data$obsID[data$outcome != 1],
     panelID   = panelID,

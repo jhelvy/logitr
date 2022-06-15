@@ -3,20 +3,20 @@
 # ============================================================================
 
 runInputChecks <- function(data, inputs) {
-  if (! is.null(inputs$price)) {
-    if (inputs$price %in% inputs$pars) {
+  if (! is.null(inputs$scalePar)) {
+    if (inputs$scalePar %in% inputs$pars) {
       stop(
-        'The value provided for the "price" argument is also included ',
+        'The value provided for the "scalePar" argument is also included ',
         'in the "pars" argument. If you are estimating a WTP space model',
-        ', you should remove the price name from the "pars" argument and ',
-        'provide it separately with the "price" argument.'
+        ', you should remove the "scalePar" name from the "pars" argument and ',
+        'provide it separately with the "scalePar" argument.'
       )
     }
     if (inputs$modelSpace != "wtp") {
       stop(
-        'The "price" argument should only be used for WTP space models. ',
+        'The "scalePar" argument should only be used for WTP space models. ',
         'Please either set the "modelSpace" argument to "wtp" or remove the ',
-        '"price" argument.'
+        '"scalePar" argument.'
       )
     }
   }
@@ -26,11 +26,12 @@ runInputChecks <- function(data, inputs) {
       'lower case (defaults to "pref").'
     )
   }
-  if ((inputs$modelSpace == 'wtp') & is.null(inputs$price)) {
+  if ((inputs$modelSpace == 'wtp') & is.null(inputs$scalePar)) {
     stop(
       'You are estimating a WTP space model but have not provided a ',
-      '"price" argument. Please set "price" equal to the name of the ',
-      'column in your data frame that represents "price".'
+      '"scalePar" argument. Please set "scalePar" equal to the name of the ',
+      'column in your data frame that represents "price" (or another ',
+      'continuous numeric variable to scale by, such as "time").'
     )
   }
 
@@ -123,7 +124,7 @@ checkOptions <- function(options) {
   return(options)
 }
 
-predictInputsCheck <- function(object, newdata, obsID, price, type, ci) {
+predictInputsCheck <- function(object, newdata, obsID, scalePar, type, ci) {
   if (!is_logitr(object)) {
     stop(
       'The "object" argument must be a object estimated using the logitr() ',
@@ -136,9 +137,9 @@ predictInputsCheck <- function(object, newdata, obsID, price, type, ci) {
       stop('"obsID" must be specified if newdata is not NULL')
     }
     if (object$inputs$modelSpace == "wtp") {
-      if (is.null(price)) {
+      if (is.null(scalePar)) {
         stop(
-          '"price" must be specified if "object" is a WTP space model and ',
+          '"scalePar" must be specified if "object" is a WTP space model and ',
           'newdata is not NULL'
         )
       }
@@ -151,10 +152,10 @@ predictInputsCheck <- function(object, newdata, obsID, price, type, ci) {
         )
       }
     }
-    if (!is.null(price)) {
-      if (! price %in% names(newdata)) {
+    if (!is.null(scalePar)) {
+      if (! scalePar %in% names(newdata)) {
         stop(
-          'The "price" argument refers to a column that does not exist in ',
+          'The "scalePar" argument refers to a column that does not exist in ',
           'the "newdata" data frame'
         )
       }
@@ -206,31 +207,31 @@ predictParCheck <- function(model, X) {
   }
 }
 
-wtpInputsCheck <- function(model, price) {
+wtpInputsCheck <- function(model, scalePar) {
   if (missing(model)) stop('"model" needs to be specified')
-  if (missing(price)) stop('"price" needs to be specified')
+  if (missing(scalePar)) stop('"scalePar" needs to be specified')
   if (!is_logitr(model)) {
     stop('model must be a model estimated using the logitr() function.')
   }
-  if (! price %in% names(stats::coef(model))) {
-    stop('"price" must be the name of a coefficient in "model".')
+  if (! scalePar %in% names(stats::coef(model))) {
+    stop('"scalePar" must be the name of a coefficient in "model".')
   }
   if (model$inputs$modelSpace != "pref") {
     stop('model must be a preference space model.')
   }
 }
 
-wtpCompareInputsCheck <- function(model_pref, model_wtp, price) {
+wtpCompareInputsCheck <- function(model_pref, model_wtp, scalePar) {
   if (missing(model_pref)) stop('"model_pref" needs to be specified')
   if (missing(model_wtp)) stop('"model_wtp" needs to be specified')
-  if (missing(price)) stop('"price" needs to be specified')
+  if (missing(scalePar)) stop('"scalePar" needs to be specified')
   if (!is_logitr(model_pref)) {
     stop('"model_pref" must be a model estimated using the logitr() function.')
   }
   if (!is_logitr(model_wtp)) {
     stop('"model_wtp" must be a model estimated using the logitr() function.')
   }
-  if (! price %in% names(stats::coef(model_pref))) {
-    stop('"price" must be the name of a coefficient in "model_pref"')
+  if (! scalePar %in% names(stats::coef(model_pref))) {
+    stop('"scalePar" must be the name of a coefficient in "model_pref"')
   }
 }

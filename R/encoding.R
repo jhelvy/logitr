@@ -27,7 +27,8 @@ dummyCode <- function(df, vars) {
 #' @param data The data, formatted as a `data.frame` object.
 #' @param pars The names of the parameters to be estimated in the model.
 #' Must be the same as the column names in the `data` argument. For WTP space
-#' models, do not include price in `pars`.
+#' models, do not include price in `pars` - it should instead be defined by
+#' the `scalePar` argument.
 #' @param randPars A named vector whose names are the random parameters and
 #' values the distribution: `'n'` for normal or `'ln'` for log-normal.
 #' Defaults to `NULL`.

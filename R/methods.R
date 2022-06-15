@@ -340,7 +340,7 @@ getClusterModelInputs <- function (indices, mi, i) {
   # Cast to matrix in cases where there is 1 independent variable
   X <- checkMatrix(X)
   mi$data_diff$X <- X
-  mi$data_diff$price <- mi$data_diff$price[indices]
+  mi$data_diff$scalePar <- mi$data_diff$scalePar[indices]
   obsID <- mi$data_diff$obsID[indices]
   unique_obsID <- unique(obsID)
   mi$data_diff$obsID <- obsID

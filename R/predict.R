@@ -18,9 +18,9 @@
 #' @param obsID The name of the column that identifies each set of
 #' alternatives in the data. Required if newdata != NULL. Defaults to `NULL`,
 #' in which case the value for `obsID` from the data in `object` is used.
-#' @param price The name of the column that identifies the price variable.
-#' Required if the `object` is a WTP space model and if newdata != NULL.
-#' Defaults to `NULL`.
+#' @param scalePar The name of the column that identifies the scale variable,
+#' which is typically "price" for WTP space models, but could be any
+#' continuous variable, such as "time". Defaults to `NULL`.
 #' @param type A character vector defining what to predict: `prob` for
 #' probabilities, `outcomes` for outcomes. If you want both outputs, use
 #' `c("prob", "outcome")`. Outcomes are predicted randomly according to the
@@ -73,18 +73,22 @@ predict.logitr <- function(
   object,
   newdata    = NULL,
   obsID      = NULL,
-  price      = NULL,
+  scalePar   = NULL,
   type       = "prob",
   returnData = FALSE,
   ci         = NULL,
   numDrawsCI = 10^3,
   ...
 ) {
-  predictInputsCheck(object, newdata, obsID, price, type, ci)
+  predictInputsCheck(object, newdata, obsID, scalePar, type, ci)
   d <- object$data
   # If no newdata is provided, use the data from the estimated object
   if (is.null(newdata)) {
-    data <- list(X = d$X, price = d$price, obsID = d$obsID, outcome = d$outcome)
+    data <- list(
+      X        = d$X,
+      scalePar = d$scalePar,
+      obsID    = d$obsID,
+      outcome  = d$outcome)
     obsID <- object$inputs$obsID
   } else {
     data <- formatNewData(object, newdata, obsID)
@@ -130,9 +134,10 @@ formatNewData <- function(object, newdata, obsID) {
   recoded <- recodeData(newdata, inputs$pars, inputs$randPars)
   X <- recoded$X
   predictParCheck(object, X) # Check if model pars match those from newdata
-  price <- NA
+  scalePar <- NA
   if (inputs$modelSpace == "wtp") {
-    price <- as.matrix(newdata[, which(colnames(newdata) == inputs$price)])
+    scalePar <- as.matrix(
+      newdata[, which(colnames(newdata) == inputs$scalePar)])
   }
   if (is.null(obsID)) {
     obsIDName <- inputs$obsID # Use obsID from estimated object
@@ -140,14 +145,14 @@ formatNewData <- function(object, newdata, obsID) {
     obsIDName <- obsID
   }
   obsID <- newdata[, obsIDName]
-  return(list(X = X, price = price, obsID = obsID))
+  return(list(X = X, scalePar = scalePar, obsID = obsID))
 }
 
 getMnlProbs <- function(object, data, obsID, ci, numDrawsCI, getV, getVDraws) {
   obsIDName <- obsID
   # Compute mean probs
   coefs <- stats::coef(object)
-  V <- getV(coefs, data$X, data$price)
+  V <- getV(coefs, data$X, data$scalePar)
   probs_mean <- predictLogit(V, data$obsID)
   if (is.null(ci)) {
     probs <- formatProbsMean(probs_mean, data$obsID, obsIDName)
@@ -157,7 +162,7 @@ getMnlProbs <- function(object, data, obsID, ci, numDrawsCI, getV, getVDraws) {
     n$draws <- numDrawsCI
     betaUncDraws <- getUncertaintyDraws(object, numDrawsCI)
     betaUncDraws <- selectDraws(betaUncDraws, object$inputs$modelSpace, data$X)
-    VUncDraws <- getVDraws(betaUncDraws, data$X, data$price, n)
+    VUncDraws <- getVDraws(betaUncDraws, data$X, data$scalePar, n)
     logitUncDraws <- predictLogit(VUncDraws, data$obsID)
     probs <- formatProbsUnc(
       probs_mean, logitUncDraws, data$obsID, obsIDName, ci)
@@ -210,7 +215,7 @@ predictLogitDraws <- function(coefs, object, data, getVDraws) {
   )
   colnames(betaDraws) <- names(object$parSetup)
   betaDraws <- selectDraws(betaDraws, modelSpace, data$X)
-  VDraws <- getVDraws(betaDraws, data$X, data$price, object$n)
+  VDraws <- getVDraws(betaDraws, data$X, data$scalePar, object$n)
   logitDraws <- predictLogit(VDraws, data$obsID)
   return(rowMeans(logitDraws, na.rm = TRUE))
 }
@@ -300,7 +305,7 @@ addData <- function(object, result, data, newdata) {
   } else {
     df <- as.data.frame(data$X)
     if (object$inputs$modelSpace == "wtp") {
-      df <- cbind(df, price = data$price)
+      df <- cbind(df, scalePar = data$scalePar)
     }
     if (!is.null(data$outcome)) {
       df <- cbind(df, outcome = data$outcome)
@@ -418,5 +423,5 @@ simulateShares <- function(
   numDraws = 10^4
 ) {
     # v0.1.4
-    .Deprecated("predictProbs")
+    .Deprecated("predict")
 }

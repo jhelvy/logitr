@@ -25,7 +25,7 @@ getLogit <- function(expV, obsID) {
 
 mnlNegLLAndGradLL <- function(pars, mi) {
   d <- mi$data_diff
-  V <- mi$logitFuncs$getMnlV(pars, d$X, d$price)
+  V <- mi$logitFuncs$getMnlV(pars, d$X, d$scalePar)
   expV <- exp(V)
   logit <- getLogit(expV, d$obsID)
   return(list(
@@ -37,7 +37,7 @@ mnlNegLLAndGradLL <- function(pars, mi) {
 
 getMnlNegLL <- function(pars, mi) {
   d <- mi$data_diff
-  V <- mi$logitFuncs$getMnlV(pars, d$X, d$price)
+  V <- mi$logitFuncs$getMnlV(pars, d$X, d$scalePar)
   expV <- exp(V)
   logit <- getLogit(expV, d$obsID)
   return(negLL(logit, d$weights))
@@ -45,7 +45,7 @@ getMnlNegLL <- function(pars, mi) {
 
 getMnlNegGradLL <- function(pars, mi) {
   d <- mi$data_diff
-  V <- mi$logitFuncs$getMnlV(pars, d$X, d$price)
+  V <- mi$logitFuncs$getMnlV(pars, d$X, d$scalePar)
   expV <- exp(V)
   logit <- getLogit(expV, d$obsID)
   return(mi$logitFuncs$mnlNegGradLL(
@@ -63,7 +63,7 @@ getMnlHessLL <- function(pars, mi) {
 # Preference Space Logit Functions - MNL models
 # ============================================================================
 
-getMnlV_pref <- function(pars, X, price) {
+getMnlV_pref <- function(pars, X, scalePar) {
   return(X %*% pars)
 }
 
@@ -115,7 +115,7 @@ mxlNegLLAndGradLL <- function(pars, mi) {
   betaDraws <- makeBetaDraws(
     pars, mi$parIDs, mi$n, mi$standardDraws, mi$inputs$correlation
   )
-  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price, mi$n)
+  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$scalePar, mi$n)
   expVDraws <- exp(VDraws)
   logitDraws <- getLogit(expVDraws, d$obsID)
   logitDrawsPanel <- logitDraws
@@ -140,7 +140,7 @@ getMxlNegLL <- function(pars, mi) {
   betaDraws <- makeBetaDraws(
     pars, mi$parIDs, mi$n, mi$standardDraws, mi$inputs$correlation
   )
-  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price, mi$n)
+  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$scalePar, mi$n)
   expVDraws <- exp(VDraws)
   logitDraws <- getLogit(expVDraws, d$obsID)
   logitDrawsPanel <- logitDraws
@@ -158,7 +158,7 @@ getMxlNegGradLL <- function(pars, mi) {
   betaDraws <- makeBetaDraws(
     pars, mi$parIDs, mi$n, mi$standardDraws, mi$inputs$correlation
   )
-  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price, mi$n)
+  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$scalePar, mi$n)
   expVDraws <- exp(VDraws)
   logitDraws <- getLogit(expVDraws, d$obsID)
   logitDrawsPanel <- logitDraws

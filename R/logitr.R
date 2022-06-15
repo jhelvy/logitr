@@ -19,9 +19,10 @@
 #' @param obsID The name of the column that identifies each observation.
 #' @param pars The names of the parameters to be estimated in the model.
 #' Must be the same as the column names in the `data` argument. For WTP space
-#' models, do not include price in `pars`.
-#' @param price The name of the column that identifies the price variable.
-#' Required for WTP space models. Defaults to `NULL`.
+#' models, do not include the `scalePar` variable in `pars`.
+#' @param scalePar The name of the column that identifies the scale variable,
+#' which is typically "price" for WTP space models, but could be any
+#' continuous variable, such as "time". Defaults to `NULL`.
 #' @param randPars A named vector whose names are the random parameters and
 #' values the distribution: `'n'` for normal or `'ln'` for log-normal.
 #' Defaults to `NULL`.
@@ -91,7 +92,7 @@
 #' @param parNames No longer used as of v0.2.3 - if provided, this is passed
 #' to the `pars` argument and a warning is displayed.
 #' @param priceName No longer used as of v0.2.3 - if provided, this is passed
-#' to the `price` argument and a warning is displayed.
+#' to the `scalePar` argument and a warning is displayed.
 #' @param weightsName No longer used as of v0.2.3 - if provided, this is passed
 #' to the `weights` argument and a warning is displayed.
 #' @param clusterName No longer used as of v0.2.3 - if provided, this is passed
@@ -170,7 +171,7 @@
 #'   outcome        = "choice",
 #'   obsID          = "obsID",
 #'   pars           = c("feat", "brand"),
-#'   price          = "price",
+#'   scalePar       = "price",
 #'   modelSpace     = "wtp",
 #'   numMultiStarts = 5
 #' )
@@ -191,7 +192,7 @@ logitr <- function(
   outcome,
   obsID,
   pars,
-  price           = NULL,
+  scalePar        = NULL,
   randPars        = NULL,
   randPrice       = NULL,
   modelSpace      = "pref",
@@ -284,11 +285,17 @@ logitr <- function(
       "The 'cluster' argument is outdate as of v0.2.3. Use 'clusterID' instead"
     )
   }
+  if (any("price" %in% calls)) {
+    scalePar <- price
+    warning(
+      "The 'price' argument is outdate as of v0.7.0. Use 'scalePar' instead"
+    )
+  }
 
   data <- as.data.frame(data) # tibbles break things
 
   modelInputs <- getModelInputs(
-    data, outcome, obsID, pars, randPars, price, randPrice, modelSpace,
+    data, outcome, obsID, pars, randPars, scalePar, randPrice, modelSpace,
     weights, panelID, clusterID, robust, startParBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
     numDraws, numCores, vcov, predict, correlation, call, options
