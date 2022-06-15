@@ -67,7 +67,12 @@ values the distribution: \code{'n'} for normal, \code{'ln'} for log-normal, or
 normal, \code{'ln'} for log-normal, or \code{'cn'} for zero-censored normal. Only used
 for WTP space MXL models. Defaults to \code{NULL}.}
 
-\item{modelSpace}{Set to \code{'wtp'} for WTP space models. Defaults to \code{"pref"}.}
+\item{modelSpace}{Optional argument to set model space as \code{'wtp'} for WTP
+space models or \code{"pref"} for preference space models. No longer used as of
+package verion 0.7.0. Instead, this variable is determined based on whether
+the \code{scalePar} argument is specified. If \code{scalePar = NULL} (the default),
+the model will be estimated in the preference space, otherwise it will be
+estimated as a WTP space model. Defaults to \code{"pref"}.}
 
 \item{weights}{The name of the column that identifies the weights to be
 used in model estimation. Defaults to \code{NULL}.}
@@ -248,7 +253,6 @@ mnl_wtp <- logitr(
   obsID          = "obsID",
   pars           = c("feat", "brand"),
   scalePar       = "price",
-  modelSpace     = "wtp",
   numMultiStarts = 5
 )
 
