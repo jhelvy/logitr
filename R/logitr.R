@@ -221,6 +221,8 @@ logitr <- function(
     maxeval     = 1000,
     algorithm   = "NLOPT_LD_LBFGS"
   ),
+  price, # Outdated argument names as of v0.7.0
+  randPrice, # Outdated argument names as of v0.7.0
   choice, # Outdated argument names as of v0.4.0
   parNames, # Outdated argument names as of v0.2.3
   choiceName,
