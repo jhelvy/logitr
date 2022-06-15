@@ -200,7 +200,7 @@ getRandParSummary <- function(object) {
   parIDs <- object$parIDs
   n <- object$n
   n$draws <- 10^4
-  standardDraws <- getStandardDraws(parIDs, n$draws)
+  standardDraws <- getStandardDraws(parIDs, n$draws, 'halton')
   betaDraws <- makeBetaDraws(
       stats::coef(object), parIDs, n, standardDraws, object$inputs$correlation)
   randParSummary <- apply(betaDraws, 2, summary)

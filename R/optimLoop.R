@@ -164,6 +164,7 @@ makeModelTemplate <- function(mi) {
     parIDs            = mi$parIDs,
     scaleFactors      = mi$scaleFactors,
     standardDraws     = mi$standardDraws,
+    drawType          = mi$drawType,
     options           = mi$options
   ),
   class = "logitr"
