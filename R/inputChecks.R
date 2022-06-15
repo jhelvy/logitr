@@ -165,7 +165,7 @@ predictInputsCheck <- function(object, newdata, obsID, scalePar, type, ci) {
 predictParCheck <- function(model, X) {
   modelPars <- names(model$parSetup)
   if (model$inputs$modelSpace == "wtp") {
-    # Drop lambda parameter
+    # Drop scale parameter (lambda)
     modelPars <- modelPars[2:length(modelPars)]
   }
   dataNames <- colnames(X)

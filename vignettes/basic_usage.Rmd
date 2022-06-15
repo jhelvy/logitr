@@ -56,7 +56,7 @@ The equivalent model in the WTP space is given by the following utility model:
 ```
 
 \noindent
-To specify this model, the user should move `"price"` from the `pars` argument to the `scalePar` argument:
+To specify this model, simply move `"price"` from the `pars` argument to the `scalePar` argument:
 
 ```{r}
 mnl_wtp <- logitr(

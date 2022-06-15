@@ -100,7 +100,7 @@ firstIterStartPars <- function(startPars, mi) {
     startPars[cnIDs] <- 0.1
   }
   if (mi$inputs$modelSpace == "wtp") {
-    # Force starting with lambda = 1 for WTP space models for stability
+    # Force starting with scalePar = 1 for WTP space models for stability
     startPars[1] <- 1
   }
   return(startPars)
@@ -110,7 +110,7 @@ firstIterStartPars <- function(startPars, mi) {
 # - SD parameters for MXL models with correlation
 # - Log-normal parameters in MXL models (must be positive)
 # - Censored-normal parameters in MXL models (must be positive)
-# - Lambda term in WTP space models (always start at 1)
+# - scalePar term in WTP space models (always start at 1)
 checkStartPars <- function(startPars, mi) {
   # For correlated parameters in mxl models, set sd pars to between [0.1, 0.2]
   if (mi$inputs$correlation) {
@@ -126,7 +126,7 @@ checkStartPars <- function(startPars, mi) {
     startPars[cnIDs] <- stats::runif(length(cnIDs), 0.1, 0.2)
   }
   if (mi$inputs$modelSpace == "wtp") {
-    # Force starting with lambda = 1 for WTP space models for stability
+    # Force starting with scalePar = 1 for WTP space models for stability
     startPars[1] <- 1
   }
   return(startPars)

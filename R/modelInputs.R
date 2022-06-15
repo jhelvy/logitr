@@ -276,7 +276,7 @@ getParSetup <- function(pars, scalePar, randPars, randScale) {
       randScale <- "f"
     }
     parSetup <- c(randScale, parSetup)
-    names(parSetup)[1] <- "lambda"
+    names(parSetup)[1] <- "scalePar"
   }
   return(parSetup)
 }
@@ -418,7 +418,7 @@ getScaleFactors <- function(
     vals <- unique(scalePar)
     scaleFactorScalePar <- abs(max(vals) - min(vals))
     scaleFactors <- c(scaleFactorScalePar, scaleFactors)
-    names(scaleFactors) <- c("lambda", scaleFactorNames)
+    names(scaleFactors) <- c("scalePar", scaleFactorNames)
   }
   # If MXL model, need to replicate scale factors for sd pars
   if (modelType == "mxl") {
