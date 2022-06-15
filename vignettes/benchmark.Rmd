@@ -8,6 +8,19 @@ vignette: >
 bibliography: "`r here::here('vignettes', 'library.bib')`"
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 7.252,
+  fig.height = 4,
+  comment = "#>",
+  fig.retina = 3
+)
+library(logitr)
+```
+
+
 {logitr} is faster than most other packages with similar functionality. To demonstrate this, a benchmark was conducted by estimating the same preference space mixed logit model using the following R packages:
 
 - {logitr}
@@ -20,6 +33,51 @@ The benchmark can be viewed at this Google Colab notebook:
 
 https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing
 
-Benchmarks will *always* vary for every run of a benchmarking code, even when run on the same machine due to variations in background processes. Thus, if you run this code yourself on a different machine, your results may vary, though the overall order and trends in terms of each package's relative speed should be similar to those from the Colab notebook.
+Benchmarks will always vary for every run of a benchmarking code, even when run on the same machine due to variations in background processes. Thus, if you run this code yourself on a different machine, your results may vary, though the overall order and trends in terms of each package's relative speed should be similar to those from the Colab notebook.
+
+## Comparing run times 
+
+The {logitr} package includes a `runtimes` data frame that is exported from the [Google Colab](https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing) notebook used to conduct the benchmark. The table below summarizes compares the run times for each package:
+
+```{r}
+# First clean up the 
+runtimes <- runtimes %>%
+    mutate(
+        package = fct_recode(package,
+            "apollo (1 core)" = "apollo1",
+            "apollo (2 cores)" = "apollo2",
+            "mixl (1 core)" = "mixl1",
+            "mixl (2 cores)" = "mixl2"
+        )
+    ) %>% 
+    
+runtimes <- data.frame(
+    package = rep(packages, length(numDraws)),
+    time_sec = time,
+    numDraws = rep(numDraws, each = length(packages))
+)
+```
+
+# Save run times data frame
+write_csv(runtimes, 'runtimes.csv')
+
+# Compute speed comparison tables
+logitr_time <- runtimes %>%
+    filter(package == "logitr") %>%
+    rename(time_logitr = time_sec)
+temp <- runtimes %>%
+    # Compute % time slower than {logitr}
+    left_join(select(logitr_time, -package), by = "numDraws") %>%
+    mutate(mult = round(time_sec/ time_logitr, 1)) %>%
+    select(-time_logitr)
+table_time <- temp %>%
+    select(-mult) %>%
+    pivot_wider(names_from = numDraws, values_from = time_sec)
+table_time
+table_mult <- temp %>%
+    select(-time_sec) %>%
+    pivot_wider(names_from = numDraws, values_from = mult)
+table_mult
 
 The code below plots the relative run times from the Colab notebook, which were exported from the notebook and are included as a data frame called `runtimes` in the {logitr} package.
+

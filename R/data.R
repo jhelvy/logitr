@@ -257,7 +257,7 @@
 #' @format
 #' Variable | Description
 #' -------- | ---------------------------------------------
-#' `package` | Name of the package. Any appended numbers indicate the number of cores used (e.g. apollo2 means the apollo package with 2 cores).
+#' `package` | Package name.
 #' `time_sec` | The estimation time in seconds.
 #' `numDraws` | The number of random draws used during estimation.
 #'

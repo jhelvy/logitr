@@ -7,7 +7,7 @@
 \format{
 \tabular{ll}{
    Variable \tab Description \cr
-   \code{package} \tab Name of the package. Any appended numbers indicate the number of cores used (e.g. apollo2 means the apollo package with 2 cores). \cr
+   \code{package} \tab Package name. \cr
    \code{time_sec} \tab The estimation time in seconds. \cr
    \code{numDraws} \tab The number of random draws used during estimation. \cr
 }
