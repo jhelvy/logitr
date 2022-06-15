@@ -58,6 +58,11 @@ runInputChecks <- function(data, inputs) {
   }
   missingInData(c(parsInt, parsNoInt), "pars", dataColumnNames)
 
+  # Make sure the drawType is either 'halton' or 'sobol'
+  if (! inputs$drawType %in% c('halton', 'sobol')) {
+    stop("drawType must be either 'halton' or 'sobol'")
+  }
+
   # Make sure the number of multistarts and numDraws are positive
   if (inputs$numMultiStarts < 1) {
     stop('"numMultiStarts" must be a positive integer')

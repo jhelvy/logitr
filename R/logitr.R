@@ -66,6 +66,9 @@
 #' generated during each call to `logitr` (the same draws are used during each
 #' multistart iteration). The user can override those draws by providing a
 #' matrix of standard normal draws if desired. Defaults to `NULL`.
+#' @param drawType Specify the draw type as a character: `"halton"`
+#' (the default) or `"sobol"` (recommended for models with more than 5
+#' random parameters).
 #' @param numDraws The number of Halton draws to use for MXL models for the
 #' maximum simulated likelihood. Defaults to `50`.
 #' @param numCores The number of cores to use for parallel processing of the
@@ -203,6 +206,7 @@ logitr <- function(
   useAnalyticGrad = TRUE,
   scaleInputs     = TRUE,
   standardDraws   = NULL,
+  drawType        = 'halton',
   numDraws        = 50,
   numCores        = NULL,
   vcov            = FALSE,
@@ -286,8 +290,8 @@ logitr <- function(
   modelInputs <- getModelInputs(
     data, outcome, obsID, pars, randPars, price, randPrice, modelSpace,
     weights, panelID, clusterID, robust, startParBounds, startVals,
-    numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, numDraws,
-    numCores, vcov, predict, correlation, call, options
+    numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
+    numDraws, numCores, vcov, predict, correlation, call, options
   )
 
   allModels <- runMultistart(modelInputs)

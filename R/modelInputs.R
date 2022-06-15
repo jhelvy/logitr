@@ -7,8 +7,8 @@
 getModelInputs <- function(
     data, outcome, obsID, pars , randPars, price, randPrice, modelSpace,
     weights, panelID, clusterID, robust, startParBounds, startVals,
-    numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, numDraws,
-    numCores, vcov, predict, correlation, call, options
+    numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
+    numDraws, numCores, vcov, predict, correlation, call, options
 ) {
 
   # Keep original input arguments
@@ -29,6 +29,7 @@ getModelInputs <- function(
     numMultiStarts  = numMultiStarts,
     useAnalyticGrad = useAnalyticGrad,
     scaleInputs     = scaleInputs,
+    drawType        = drawType,
     numDraws        = numDraws,
     numCores        = numCores,
     vcov            = vcov,
@@ -62,9 +63,15 @@ getModelInputs <- function(
 
   # Set up other objects defining aspects of model
   parSetup <- getParSetup(pars, price, randPars, randPrice)
+
+  # Define model type
   modelType <- "mnl"
-  if (isMxlModel(parSetup)) { modelType <- "mxl" }
-  n <- list( # stores counts variables
+  if (isMxlModel(parSetup)) {
+    modelType <- "mxl"
+  }
+
+  # Create n object, which stores counts of various variables
+  n <- list(
     vars        = length(parSetup),
     parsFixed   = length(which(parSetup == "f")),
     parsRandom  = length(which(parSetup != "f")),
@@ -157,6 +164,7 @@ getModelInputs <- function(
     parNames      = parNames,
     n             = n,
     standardDraws = standardDraws,
+    drawType      = drawType,
     panel         = panel,
     options       = options
   )
@@ -478,9 +486,21 @@ makeDiffData <- function(data, modelType) {
 }
 
 makeMxlDraws <- function(modelInputs) {
+  # Message about using Sobol draws with large number of random parameters
+  if (length(modelInputs$parIDs$r) > 5) {
+    if (modelInputs$drawType == 'halton') {
+      message(
+        "Since your model has 5 or more random parameters, it is ",
+        "recommended that you use Sobol instead of Halton draws. ",
+        "You can implement this by setting drawType = 'sobol'. \n\n",
+        "It is also recommended that you use at least 200 draws, which ",
+        "can be implemented by setting numDraws = 200")
+    }
+  }
   draws <- modelInputs$standardDraws
   if (is.null(draws)) {
-    draws <- getStandardDraws(modelInputs$parIDs, modelInputs$n$draws)
+    draws <- getStandardDraws(
+        modelInputs$parIDs, modelInputs$n$draws, modelInputs$drawType)
   } else if (ncol(draws) != modelInputs$n$vars) {
     # If user provides draws, make sure there are enough columns
     stop(
