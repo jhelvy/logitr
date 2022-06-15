@@ -4,13 +4,15 @@
 \alias{wtp}
 \title{Get WTP estimates a preference space model}
 \usage{
-wtp(object, price)
+wtp(object, scalePar)
 }
 \arguments{
 \item{object}{is an object of class \code{logitr} (a model estimated using
 the 'logitr()` function).}
 
-\item{price}{The name of the parameter that identifies price.}
+\item{scalePar}{The name of the column that identifies the scale variable,
+which is typically "price" for WTP space models, but could be any
+continuous variable, such as "time".}
 }
 \value{
 A data frame of the WTP estimates.
@@ -20,8 +22,9 @@ Returns the computed WTP from a preference space model.
 }
 \details{
 Willingness to pay is computed by dividing the estimated parameters of a
-utility model in the "preference" space by the price parameter.
-Uncertainty is handled via simulation.
+utility model in the "preference" space by the scale parameter, which is
+should be price to obtain WTP estimates. Uncertainty is handled via
+simulation.
 }
 \examples{
 library(logitr)
@@ -35,7 +38,7 @@ mnl_pref <- logitr(
 )
 
 # Compute the WTP implied from the preference space model
-wtp(mnl_pref, price = "price")
+wtp(mnl_pref, scalePar = "price")
 }
 \keyword{logitr}
 \keyword{wtp}

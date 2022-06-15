@@ -4,7 +4,7 @@
 \alias{wtpCompare}
 \title{Compare WTP from preference and WTP space models}
 \usage{
-wtpCompare(model_pref, model_wtp, price)
+wtpCompare(model_pref, model_wtp, scalePar)
 }
 \arguments{
 \item{model_pref}{The output of a "preference space" model estimated using
@@ -13,7 +13,9 @@ the \code{logitr()} function.}
 \item{model_wtp}{The output of a "willingness to pay space" model estimated
 using the \code{logitr()} function.}
 
-\item{price}{The name of the parameter that identifies price.}
+\item{scalePar}{The name of the column that identifies the scale variable,
+which is typically "price" for WTP space models, but could be any
+continuous variable, such as "time".}
 }
 \value{
 A data frame comparing the WTP estimates from preference space and
@@ -25,9 +27,10 @@ model.
 }
 \details{
 Willingness to pay (WTP) is first computed from the preference space model
-by dividing the estimated parameters by the price parameter. Then those
-estimates are compared against the WTP values directly estimated from the
-"WTP" space model. Uncertainty is handled via simulation.
+by dividing the estimated parameters by the scale parameter (typically
+"price" to obtain WTP estimates). Then those estimates are compared against
+the WTP values directly estimated from the "WTP" space model. Uncertainty is
+handled via simulation.
 }
 \examples{
 library(logitr)
@@ -41,7 +44,7 @@ mnl_pref <- logitr(
 )
 
 # Compute the WTP implied from the preference space model
-wtp_mnl_pref <- wtp(mnl_pref, price = "price")
+wtp_mnl_pref <- wtp(mnl_pref, scalePar = "price")
 
 # Estimate a MNL model in the WTP Space, using the computed WTP values
 # from the preference space model as starting points
@@ -50,13 +53,13 @@ mnl_wtp <- logitr(
   outcome    = "choice",
   obsID      = "obsID",
   pars       = c("feat", "brand"),
-  price      = "price",
+  scalePar   = "price",
   modelSpace = "wtp",
   startVals  = wtp_mnl_pref$Estimate
 )
 
 # Compare the WTP between the two spaces
-wtpCompare(mnl_pref, mnl_wtp, price = "price")
+wtpCompare(mnl_pref, mnl_wtp, scalePar = "price")
 }
 \keyword{logitr}
 \keyword{wtp}

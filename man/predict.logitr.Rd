@@ -8,7 +8,7 @@
   object,
   newdata = NULL,
   obsID = NULL,
-  price = NULL,
+  scalePar = NULL,
   type = "prob",
   returnData = FALSE,
   ci = NULL,
@@ -29,9 +29,9 @@ estimate the model.}
 alternatives in the data. Required if newdata != NULL. Defaults to \code{NULL},
 in which case the value for \code{obsID} from the data in \code{object} is used.}
 
-\item{price}{The name of the column that identifies the price variable.
-Required if the \code{object} is a WTP space model and if newdata != NULL.
-Defaults to \code{NULL}.}
+\item{scalePar}{The name of the column that identifies the scale variable,
+which is typically "price" for WTP space models, but could be any
+continuous variable, such as "time". Defaults to \code{NULL}.}
 
 \item{type}{A character vector defining what to predict: \code{prob} for
 probabilities, \code{outcomes} for outcomes. If you want both outputs, use
