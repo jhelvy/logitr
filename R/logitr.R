@@ -24,11 +24,11 @@
 #' which is typically "price" for WTP space models, but could be any
 #' continuous variable, such as "time". Defaults to `NULL`.
 #' @param randPars A named vector whose names are the random parameters and
-#' values the distribution: `'n'` for normal or `'ln'` for log-normal.
-#' Defaults to `NULL`.
-#' @param randPrice The random distribution for the price parameter: `'n'` for
-#' normal or `'ln'` for log-normal. Only used for WTP space MXL models.
-#' Defaults to `NULL`.
+#' values the distribution: `'n'` for normal, `'ln'` for log-normal, or
+#' `'cn'` for zero-censored normal. Defaults to `NULL`.
+#' @param randScale The random distribution for the scale parameter: `'n'` for
+#' normal, `'ln'` for log-normal, or `'cn'` for zero-censored normal. Only used
+#' for WTP space MXL models. Defaults to `NULL`.
 #' @param modelSpace Set to `'wtp'` for WTP space models. Defaults to `"pref"`.
 #' @param weights The name of the column that identifies the weights to be
 #' used in model estimation. Defaults to `NULL`.
@@ -194,7 +194,7 @@ logitr <- function(
   pars,
   scalePar        = NULL,
   randPars        = NULL,
-  randPrice       = NULL,
+  randScale       = NULL,
   modelSpace      = "pref",
   weights         = NULL,
   panelID         = NULL,
@@ -238,64 +238,70 @@ logitr <- function(
   if (any("parNames" %in% calls)) {
     pars <- parNames
     warning(
-      "The 'parNames' argument is outdate as of v0.2.3. Use 'pars' instead"
+      "The 'parNames' argument is outdated as of v0.2.3. Use 'pars' instead"
     )
   }
   if (any("choiceName" %in% calls)) {
     outcome <- choiceName
     warning(
-      "The 'choiceName' argument is outdate as of v0.2.3. Use 'outcome' instead"
+      "The 'choiceName' argument is outdated as of v0.2.3. Use 'outcome' instead"
     )
   }
   if (any("choice" %in% calls)) {
     outcome <- choice
     warning(
-      "The 'choice' argument is outdate as of v0.4.0. Use 'outcome' instead"
+      "The 'choice' argument is outdated as of v0.4.0. Use 'outcome' instead"
     )
   }
   if (any("obsIDName" %in% calls)) {
     obsID <- obsIDName
     warning(
-      "The 'obsIDName' argument is outdate as of v0.2.3. Use 'obsID' instead"
+      "The 'obsIDName' argument is outdated as of v0.2.3. Use 'obsID' instead"
     )
   }
   if (any("priceName" %in% calls)) {
     price <- priceName
     warning(
-      "The 'priceName' argument is outdate as of v0.2.3. Use 'price' instead"
+      "The 'priceName' argument is outdated as of v0.2.3. Use 'price' instead"
     )
   }
   if (any("weightsName" %in% calls)) {
     weights <- weightsName
     warning(
-      "The 'weightsName' argument is outdate as of v0.2.3. Use 'weights' ",
+      "The 'weightsName' argument is outdated as of v0.2.3. Use 'weights' ",
       "instead"
     )
   }
   if (any("clusterName" %in% calls)) {
     clusterID <- clusterName
     warning(
-      "The 'clusterName' argument is outdate as of v0.2.3. Use 'clusterID' ",
+      "The 'clusterName' argument is outdated as of v0.2.3. Use 'clusterID' ",
       "instead"
     )
   }
   if (any("cluster" %in% calls)) {
     clusterID <- cluster
     warning(
-      "The 'cluster' argument is outdate as of v0.2.3. Use 'clusterID' instead"
+      "The 'cluster' argument is outdated as of v0.2.3. Use 'clusterID' instead"
     )
   }
   if (any("price" %in% calls)) {
     scalePar <- price
     warning(
-      "The 'price' argument is outdate as of v0.7.0. Use 'scalePar' instead"
+      "The 'price' argument is outdated as of v0.7.0. Use 'scalePar' instead"
+    )
+  }
+  if (any("randPrice" %in% calls)) {
+    randScale <- randPrice
+    warning(
+      "The 'randPrice' argument is outdated as of v0.7.0. Use 'randScale' instead"
     )
   }
 
   data <- as.data.frame(data) # tibbles break things
 
   modelInputs <- getModelInputs(
-    data, outcome, obsID, pars, randPars, scalePar, randPrice, modelSpace,
+    data, outcome, obsID, pars, randPars, scalePar, randScale, modelSpace,
     weights, panelID, clusterID, robust, startParBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
     numDraws, numCores, vcov, predict, correlation, call, options

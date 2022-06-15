@@ -5,7 +5,7 @@
 
 # Creates a list of the data and other information needed for running the model
 getModelInputs <- function(
-    data, outcome, obsID, pars , randPars, scalePar, randPrice, modelSpace,
+    data, outcome, obsID, pars , randPars, scalePar, randScale, modelSpace,
     weights, panelID, clusterID, robust, startParBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
     numDraws, numCores, vcov, predict, correlation, call, options
@@ -18,7 +18,7 @@ getModelInputs <- function(
     pars            = pars,
     randPars        = randPars,
     scalePar        = scalePar,
-    randPrice       = randPrice,
+    randScale       = randScale,
     modelSpace      = modelSpace,
     weights         = weights,
     panelID         = panelID,
@@ -62,7 +62,7 @@ getModelInputs <- function(
   }
 
   # Set up other objects defining aspects of model
-  parSetup <- getParSetup(pars, scalePar, randPars, randPrice)
+  parSetup <- getParSetup(pars, scalePar, randPars, randScale)
 
   # Define model type
   modelType <- "mnl"
@@ -82,7 +82,7 @@ getModelInputs <- function(
   )
   parNames <- getParNames(parSetup, n, correlation)
   n$pars <- length(parNames$all)
-  parIDs <- getParIDs(parSetup, n, modelSpace, modelType, randPrice, correlation)
+  parIDs <- getParIDs(parSetup, n, modelSpace, modelType, randScale,correlation)
 
   # Add names to startVals (if provided)
   if (!is.null(startVals)) {
@@ -255,7 +255,7 @@ defineScalePar <- function(data, inputs) {
   return(as.matrix(scalePar))
 }
 
-getParSetup <- function(pars, scalePar, randPars, randPrice) {
+getParSetup <- function(pars, scalePar, randPars, randScale) {
   parSetup <- rep("f", length(pars))
   for (i in seq_len(length(pars))) {
     name <- pars[i]
@@ -265,10 +265,10 @@ getParSetup <- function(pars, scalePar, randPars, randPrice) {
   }
   names(parSetup) <- pars
   if (is.null(scalePar) == F) {
-    if (is.null(randPrice)) {
-      randPrice <- "f"
+    if (is.null(randScale)) {
+      randScale <- "f"
     }
-    parSetup <- c(randPrice, parSetup)
+    parSetup <- c(randScale, parSetup)
     names(parSetup)[1] <- "lambda"
   }
   return(parSetup)
@@ -298,7 +298,7 @@ getParNames <- function(parSetup, n, correlation) {
 }
 
 getParIDs <- function(
-  parSetup, n, modelSpace, modelType, randPrice, correlation
+  parSetup, n, modelSpace, modelType, randScale, correlation
 ) {
   parIDs <- list(
     f  = which(parSetup == "f"),
@@ -332,7 +332,7 @@ getParIDs <- function(
   if (modelSpace == "wtp") {
     lambdaIDs <- 1
     omegaIDs <- seq(n$pars)
-    if (!is.null(randPrice)) {
+    if (!is.null(randScale)) {
       lambdaIDs <- c(lambdaIDs, length(parSetup) + 1)
       if (correlation) {
         lowerMat <- matrix(0, n$parsRandom, n$parsRandom)
