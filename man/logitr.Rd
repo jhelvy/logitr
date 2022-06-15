@@ -24,6 +24,7 @@ logitr(
   useAnalyticGrad = TRUE,
   scaleInputs = TRUE,
   standardDraws = NULL,
+  drawType = "halton",
   numDraws = 50,
   numCores = NULL,
   vcov = FALSE,
@@ -112,6 +113,10 @@ feature off. Defaults to \code{TRUE}.}
 generated during each call to \code{logitr} (the same draws are used during each
 multistart iteration). The user can override those draws by providing a
 matrix of standard normal draws if desired. Defaults to \code{NULL}.}
+
+\item{drawType}{Specify the draw type as a character: \code{"halton"}
+(the default) or \code{"sobol"} (recommended for models with more than 5
+random parameters).}
 
 \item{numDraws}{The number of Halton draws to use for MXL models for the
 maximum simulated likelihood. Defaults to \code{50}.}
