@@ -29,7 +29,12 @@
 #' @param randScale The random distribution for the scale parameter: `'n'` for
 #' normal, `'ln'` for log-normal, or `'cn'` for zero-censored normal. Only used
 #' for WTP space MXL models. Defaults to `NULL`.
-#' @param modelSpace Set to `'wtp'` for WTP space models. Defaults to `"pref"`.
+#' @param modelSpace Optional argument to set model space as `'wtp'` for WTP
+#' space models or `"pref"` for preference space models. No longer used as of
+#' package verion 0.7.0. Instead, this variable is determined based on whether
+#' the `scalePar` argument is specified. If `scalePar = NULL` (the default),
+#' the model will be estimated in the preference space, otherwise it will be
+#' estimated as a WTP space model. Defaults to `"pref"`.
 #' @param weights The name of the column that identifies the weights to be
 #' used in model estimation. Defaults to `NULL`.
 #' @param panelID The name of the column that identifies the individual (for
@@ -176,7 +181,6 @@
 #'   obsID          = "obsID",
 #'   pars           = c("feat", "brand"),
 #'   scalePar       = "price",
-#'   modelSpace     = "wtp",
 #'   numMultiStarts = 5
 #' )
 #'

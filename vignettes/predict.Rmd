@@ -94,7 +94,6 @@ mnl_wtp <- logitr(
   obsID   = 'obsID',
   pars    = c('feat', 'brand'),
   scalePar = 'price',
-  modelSpace = 'wtp',
   numMultiStarts = 10
 )
 

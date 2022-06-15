@@ -129,13 +129,12 @@ wtp.logitr <- function(object, scalePar) {
 #' # Estimate a MNL model in the WTP Space, using the computed WTP values
 #' # from the preference space model as starting points
 #' mnl_wtp <- logitr(
-#'   data       = yogurt,
-#'   outcome    = "choice",
-#'   obsID      = "obsID",
-#'   pars       = c("feat", "brand"),
-#'   scalePar   = "price",
-#'   modelSpace = "wtp",
-#'   startVals  = wtp_mnl_pref$Estimate
+#'   data      = yogurt,
+#'   outcome   = "choice",
+#'   obsID     = "obsID",
+#'   pars      = c("feat", "brand"),
+#'   scalePar  = "price",
+#'   startVals = wtp_mnl_pref$Estimate
 #' )
 #'
 #' # Compare the WTP between the two spaces

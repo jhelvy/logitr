@@ -8,31 +8,9 @@ runInputChecks <- function(data, inputs) {
       stop(
         'The value provided for the "scalePar" argument is also included ',
         'in the "pars" argument. If you are estimating a WTP space model',
-        ', you should remove the "scalePar" name from the "pars" argument and ',
-        'provide it separately with the "scalePar" argument.'
+        ', you should remove the "scalePar" name from the "pars" argument.'
       )
     }
-    if (inputs$modelSpace != "wtp") {
-      stop(
-        'The "scalePar" argument should only be used for WTP space models. ',
-        'Please either set the "modelSpace" argument to "wtp" or remove the ',
-        '"scalePar" argument.'
-      )
-    }
-  }
-  if (! inputs$modelSpace %in% c('pref', 'wtp')) {
-    stop(
-      'The "modelSpace" argument must be set to either "pref" or "wtp", all ',
-      'lower case (defaults to "pref").'
-    )
-  }
-  if ((inputs$modelSpace == 'wtp') & is.null(inputs$scalePar)) {
-    stop(
-      'You are estimating a WTP space model but have not provided a ',
-      '"scalePar" argument. Please set "scalePar" equal to the name of the ',
-      'column in your data frame that represents "price" (or another ',
-      'continuous numeric variable to scale by, such as "time").'
-    )
   }
 
   # Check that randPars names match those in pars
@@ -81,7 +59,6 @@ runInputChecks <- function(data, inputs) {
       )
     }
   }
-
 }
 
 missingInData <- function(vals, var, dataColumnNames) {

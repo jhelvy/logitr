@@ -56,7 +56,7 @@ The equivalent model in the WTP space is given by the following utility model:
 ```
 
 \noindent
-To specify this model, the user should move `"price"` from the `pars` argument to the `scalePar` argument and set the `modelSpace` argument to `"wtp"` (`"pref"` is the default value):
+To specify this model, the user should move `"price"` from the `pars` argument to the `scalePar` argument:
 
 ```{r}
 mnl_wtp <- logitr(
@@ -64,8 +64,7 @@ mnl_wtp <- logitr(
     outcome = "choice",
     obsID   = "obsID",
     pars    = c("feat", "brand"),
-    scalePar = "price",
-    modelSpace = "wtp"
+    scalePar = "price"
 )
 ```
 
@@ -87,7 +86,6 @@ mnl_wtp <- logitr(
     obsID   = "obsID",
     pars    = c("feat", "brand"),
     scalePar = "price",
-    modelSpace = "wtp",
     numMultiStarts = 10
 )
 ```

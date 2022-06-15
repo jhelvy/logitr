@@ -89,7 +89,6 @@ mnl_wtp <- logitr(
   obsID   = 'obsID',
   pars    = c('feat', 'brand'),
   scalePar = 'price',
-  modelSpace = 'wtp',
   # Since WTP space models are non-convex, run a multistart
   numMultiStarts = 10,
   # Use the computed WTP from the preference space model as the starting
