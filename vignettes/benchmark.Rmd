@@ -17,8 +17,16 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.retina = 3
 )
-library(logitr)
+
+# Load libraries for making figure
 library(tidyverse)
+library(cowplot)
+library(ggrepel)
+
+# Load logitr for runtimes data frame
+library(logitr)
+
+# For tables
 library(kableExtra)
 ```
 
@@ -42,6 +50,7 @@ Benchmarks will always vary for every run of a benchmarking code, even when run 
 The {logitr} package includes a `runtimes` data frame that is exported from the [Google Colab](https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing) notebook used to conduct the benchmark. The tables below summarize the run times for each package and how many times slower they are relative to {logitr}.
 
 ```{r}
+numDraws <- unique(runtimes$numDraws)
 logitr_time <- runtimes %>%
     filter(package == "logitr") %>%
     rename(time_logitr = time_sec)
@@ -63,9 +72,10 @@ time_compare %>%
 
 The code below plots the relative run times from the Colab notebook.
 
-```{r benchmark-plot, fig.width = 8, fig.height=5}
+```{r, eval=FALSE}
+font_main <- "Fira Sans Condensed"
 plotColors <- c("black", RColorBrewer::brewer.pal(n = 5, name = "Set1"), "gold")
-runtimes %>% 
+benchmark <- runtimes %>% 
     ggplot(aes(x = numDraws, y = time_sec, color = package)) +
     geom_line() +
     geom_point() +
@@ -73,17 +83,18 @@ runtimes %>%
         data = . %>% filter(numDraws == max(numDraws)),
         aes(label = package),
         hjust = 0, nudge_x = 40, direction = "y",
-        size = 4, segment.size = 0
+        size = 4.5, segment.size = 0
     ) +
     scale_x_continuous(
         limits = c(0, 1400),
         breaks = numDraws,
         labels = scales::comma) +
+    scale_y_continuous(limits = c(0, 300), breaks = seq(0, 300, 100)) +
     scale_color_manual(values = plotColors) +
     guides(
         point = guide_legend(override.aes = list(label = "")),
         color = guide_legend(override.aes = list(label = ""))) +
-    theme_minimal_hgrid(font_family = font_main, font_size = 16) +
+    theme_minimal_hgrid(font_family = font_main, font_size = 18) +
     theme(
         legend.position = "none",
         axis.line.x = element_blank(),
@@ -93,4 +104,14 @@ runtimes %>%
         x = "Number of random draws",
         y = "Computation time (seconds)"
     )
+
+benchmark
+```
+
+```{r, eval=FALSE, echo=FALSE}
+ggsave('benchmark.png', benchmark, width = 6, height = 4.5)
+```
+
+```{r probabilities, echo=FALSE}
+knitr::include_graphics('benchmark.png')
 ```
