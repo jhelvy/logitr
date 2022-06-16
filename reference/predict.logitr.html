@@ -63,6 +63,9 @@ of a single or multiple sets of alternatives."><meta property="og:image" content
     <li>
       <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
+    <li>
+      <a href="../articles/benchmark.html">Benchmarking estimation speed against other packages</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -99,7 +102,6 @@ of a single or multiple sets of alternatives.</p>
   <span class="va">object</span>,
   newdata <span class="op">=</span> <span class="cn">NULL</span>,
   obsID <span class="op">=</span> <span class="cn">NULL</span>,
-  price <span class="op">=</span> <span class="cn">NULL</span>,
   type <span class="op">=</span> <span class="st">"prob"</span>,
   returnData <span class="op">=</span> <span class="cn">FALSE</span>,
   ci <span class="op">=</span> <span class="cn">NULL</span>,
@@ -126,12 +128,6 @@ estimate the model.</p></dd>
 <dd><p>The name of the column that identifies each set of
 alternatives in the data. Required if newdata != NULL. Defaults to <code>NULL</code>,
 in which case the value for <code>obsID</code> from the data in <code>object</code> is used.</p></dd>
-
-
-<dt>price</dt>
-<dd><p>The name of the column that identifies the price variable.
-Required if the <code>object</code> is a WTP space model and if newdata != NULL.
-Defaults to <code>NULL</code>.</p></dd>
 
 
 <dt>type</dt>
@@ -234,9 +230,9 @@ for the computed CI. Defaults to 10^3.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    13                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    13                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    13                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42                 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    42                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42                 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8    42                 0</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Predict outcomes and probabilities</span></span>
@@ -244,11 +240,11 @@ for the computed CI. Defaults to 10^3.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   obsID predicted_prob predicted_outcome</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    13     0.43685145                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    13     0.03312986                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    13     0.19155548                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    13     0.33846321                 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42     0.60764778                 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    13     0.19155548                 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    13     0.33846321                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42     0.60764778                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    42     0.02602007                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42     0.17803313                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42     0.17803313                 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8    42     0.18829902                 0</span>
 </code></pre></div>
     </div>

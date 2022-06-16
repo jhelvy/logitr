@@ -90,6 +90,9 @@
     <li>
       <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
+    <li>
+      <a href="../articles/benchmark.html">Benchmarking estimation speed against other packages</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -179,45 +182,60 @@
         \varepsilon_{j},
 \label{eq:yogurtUtilityWtp}
 \end{equation}\]</span></p>
-<p> To specify this model, the user should move <code>"price"</code> from the <code>pars</code> argument to the <code>price</code> argument and set the <code>modelSpace</code> argument to <code>"wtp"</code> (<code>"pref"</code> is the default value):</p>
+<p> To specify this model, simply move <code>"price"</code> from the <code>pars</code> argument to the <code>scalePar</code> argument:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-    data    <span class="op">=</span> <span class="va">yogurt</span>,
-    outcome <span class="op">=</span> <span class="st">"choice"</span>,
-    obsID   <span class="op">=</span> <span class="st">"obsID"</span>,
-    pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span>,
-    price   <span class="op">=</span> <span class="st">"price"</span>,
-    modelSpace <span class="op">=</span> <span class="st">"wtp"</span>
+    data     <span class="op">=</span> <span class="va">yogurt</span>,
+    outcome  <span class="op">=</span> <span class="st">"choice"</span>,
+    obsID    <span class="op">=</span> <span class="st">"obsID"</span>,
+    pars     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span>,
+    scalePar <span class="op">=</span> <span class="st">"price"</span>
 <span class="op">)</span></code></pre></div>
-<p> In the above model, the variables in <code>pars</code> are marginal WTPs, whereas in the preference space model they are marginal utilities. Note that in the WTP space model price is separately specified with the <code>price</code> argument as it acts as a scaling term and does not reflect a marginal WTP.</p>
-<p>Interactions between covariates can be entered in the <code>pars</code> vector separated by the <code>*</code> symbol. For example, an interaction between <code>price</code> with <code>feat</code> in the above preference space model could be included by specifying <code>pars = c("price", "feat", "brand", "price*feat")</code>, or even more concisely just <code>pars = c("price*feat", "brand")</code> as the interaction between <code>price</code> and <code>feat</code> will produce individual parameters for <code>price</code> and <code>feat</code> in addition to the interaction parameter.</p>
+<p> In the above model, the variables in <code>pars</code> are marginal WTPs, whereas in the preference space model they are marginal utilities. Price is separately specified with the <code>scalePar</code> argument because it acts as a scaling term in WTP space models. While price is the most typical scaling variable, other continuous variables can also be used, such as time.</p>
+<p>Interactions between covariates can be entered in the <code>pars</code> vector separated by the <code>*</code> symbol. For example, an interaction between <code>price</code> with <code>feat</code> in a preference space model could be included by specifying <code>pars = c("price", "feat", "brand", "price*feat")</code>, or even more concisely just <code>pars = c("price*feat", "brand")</code> as the interaction between <code>price</code> and <code>feat</code> will produce individual parameters for <code>price</code> and <code>feat</code> in addition to the interaction parameter.</p>
 <p>Both of these examples are multinomial logit models with fixed parameters. See the <a href="mnl_models.html">“Estimating Multinomial Logit Models”</a> vignette for more details.</p>
 </div>
 <div class="section level2">
 <h2 id="parallelized-multi-start-estimation">Parallelized multi-start estimation<a class="anchor" aria-label="anchor" href="#parallelized-multi-start-estimation"></a>
 </h2>
-<p>Since WTP space models have non-convex log-likelihood functions, it is recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima. This is implemented using the <code>numMultiStarts</code> argument, e.g.:</p>
+<p>Since WTP space models are non-linear and have non-convex log-likelihood functions, it is recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima. This is implemented using the <code>numMultiStarts</code> argument, e.g.:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-    data    <span class="op">=</span> <span class="va">yogurt</span>,
-    outcome <span class="op">=</span> <span class="st">"choice"</span>,
-    obsID   <span class="op">=</span> <span class="st">"obsID"</span>,
-    pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span>,
-    price   <span class="op">=</span> <span class="st">"price"</span>,
-    modelSpace <span class="op">=</span> <span class="st">"wtp"</span>,
+    data     <span class="op">=</span> <span class="va">yogurt</span>,
+    outcome  <span class="op">=</span> <span class="st">"choice"</span>,
+    obsID    <span class="op">=</span> <span class="st">"obsID"</span>,
+    pars     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span>,
+    scalePar <span class="op">=</span> <span class="st">"price"</span>,
     numMultiStarts <span class="op">=</span> <span class="fl">10</span>
 <span class="op">)</span></code></pre></div>
-<p>The multi-start is parallelized by default for faster estimation, and the number of cores / workers to use can be manually set using the <code>numCores</code> argument. If <code>numCores</code> is not provide, then the number of cores is set to <code>parallel::detectCores() - 1</code> (the max cores allowed is capped at <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>).</p>
+<p>The multi-start is parallelized by default for faster estimation, and the number of cores to use can be manually set using the <code>numCores</code> argument. If <code>numCores</code> is not provide, then the number of cores is set to <code>parallel::detectCores() - 1</code>. For models with larger data sets, you may need to set <code>numCores = 1</code> to avoid memory overflow issues.</p>
+</div>
+<div class="section level2">
+<h2 id="mixed-logit-models">Mixed logit models<a class="anchor" aria-label="anchor" href="#mixed-logit-models"></a>
+</h2>
+<p>To estimate a mixed logit model, use the <code>randPars</code> argument in the <code><a href="../reference/logitr.html">logitr()</a></code> function to denote which parameters will be modeled with a distribution. The current package version supports normal (<code>"n"</code>), log-normal (<code>"ln"</code>), and zero-censored normal (<code>"cn"</code>) distributions.</p>
+<p>For example, assume the observed utility for yogurts was <span class="math inline">\(v_{j} = \alpha p_{j} + \beta_1 x_{j1} + \beta_2 x_{j2} + \beta_3 x_{j3} + \beta_4 x_{j4}\)</span>, where <span class="math inline">\(p_{j}\)</span> is <code>price</code>, <span class="math inline">\(x_{j1}\)</span> is <code>feat</code>, and <span class="math inline">\(x_{j2-4}\)</span> are dummy-coded variables for <code>brand</code>. To model <code>feat</code> as well as each of the brands as normally-distributed, set <code>randPars = c(feat = "n", brand = "n")</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
+    data     <span class="op">=</span> <span class="va">yogurt</span>,
+    outcome  <span class="op">=</span> <span class="st">'choice'</span>,
+    obsID    <span class="op">=</span> <span class="st">'obsID'</span>,
+    pars     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>,
+    randPars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">'n'</span>, brand <span class="op">=</span> <span class="st">'n'</span><span class="op">)</span>,
+    numMultiStarts <span class="op">=</span> <span class="fl">10</span>
+<span class="op">)</span></code></pre></div>
+<p>Since mixed logit models also have non-convex log-likelihood functions, it is recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima.</p>
+<p>See the <a href="mxl_models.html">“Estimating Mixed Logit Models”</a> vignette for more details.</p>
 </div>
 <div class="section level2">
 <h2 id="viewing-results">Viewing results<a class="anchor" aria-label="anchor" href="#viewing-results"></a>
 </h2>
 <p>Use the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> function to print a summary of the results from an estimated model, e.g.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span>
 <span class="co">#&gt; =================================================</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Model estimated on: Tue Jun 14 17:35:02 2022 </span>
+<span class="co">#&gt; Model estimated on: Thu Jun 16 13:11:04 2022 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Using logitr version: 0.6.1 </span>
 <span class="co">#&gt; </span>
@@ -260,21 +278,21 @@
 <p>Use <code><a href="../reference/statusCodes.html">statusCodes()</a></code> to print a description of each status code from the <code>nloptr</code> optimization routine.</p>
 <p>You can also extract other values of interest at the solution, such as:</p>
 <p><strong>The estimated coefficients</strong></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span>
 <span class="co">#&gt;        price         feat  brandhiland  brandweight brandyoplait </span>
 <span class="co">#&gt;   -0.3665546    0.4914392   -3.7154773   -0.6411384    0.7345195</span></code></pre></div>
 <p><strong>The coefficient standard errors</strong></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/se.html">se</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span>
 <span class="co">#&gt;        price         feat  brandhiland  brandweight brandyoplait </span>
 <span class="co">#&gt;   0.02436526   0.12006175   0.14541671   0.05449794   0.08064229</span></code></pre></div>
 <p><strong>The log-likelihood</strong></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/logLik.html" class="external-link">logLik</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span>
 <span class="co">#&gt; 'log Lik.' -2656.888 (df=5)</span></code></pre></div>
 <p><strong>The variance-covariance matrix</strong></p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span>
 <span class="co">#&gt;                      price          feat  brandhiland  brandweight</span>
 <span class="co">#&gt; price         0.0005936657  5.729619e-04  0.001851795 1.249988e-04</span>
@@ -293,43 +311,26 @@
 <h2 id="computing-and-comparing-wtp">Computing and comparing WTP<a class="anchor" aria-label="anchor" href="#computing-and-comparing-wtp"></a>
 </h2>
 <p>For models in the preference space, a summary table of the computed WTP based on the estimated preference space parameters can be obtained with the <code><a href="../reference/wtp.html">wtp()</a></code> function. For example, the computed WTP from the previously estimated fixed parameter model can be obtained with the following command:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, price <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, scalePar <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
 <span class="co">#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
-<span class="co">#&gt; lambda         0.366555   0.024393  15.0269 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; feat           1.340699   0.358143   3.7435 0.0001815 ***</span>
-<span class="co">#&gt; brandhiland  -10.136219   0.587498 -17.2532 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandweight   -1.749094   0.182035  -9.6086 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandyoplait   2.003848   0.143652  13.9494 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; scalePar       0.366555   0.024349  15.0543 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; feat           1.340699   0.360066   3.7235 0.0001965 ***</span>
+<span class="co">#&gt; brandhiland  -10.136219   0.582853 -17.3907 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandweight   -1.749094   0.181999  -9.6105 &lt; 2.2e-16 ***</span>
+<span class="co">#&gt; brandyoplait   2.003848   0.143473  13.9668 &lt; 2.2e-16 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre></div>
-<p>The <code><a href="../reference/wtp.html">wtp()</a></code> function divides the non-price parameters by the negative of the price parameter. Standard errors are estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. Similarly, the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function can be used to compare the WTP from a WTP space model with that computed from an equivalent preference space model:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, price <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
-<span class="co">#&gt;                       pref           wtp  difference</span>
-<span class="co">#&gt; lambda           0.3665546     0.3665832  0.00002867</span>
-<span class="co">#&gt; feat             1.3406987     1.3405926 -0.00010605</span>
-<span class="co">#&gt; brandhiland    -10.1362190   -10.1357635  0.00045548</span>
-<span class="co">#&gt; brandweight     -1.7490940    -1.7490826  0.00001133</span>
-<span class="co">#&gt; brandyoplait     2.0038476     2.0038208 -0.00002686</span>
-<span class="co">#&gt; logLik       -2656.8878790 -2656.8878779  0.00000106</span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="mixed-logit-models">Mixed logit models<a class="anchor" aria-label="anchor" href="#mixed-logit-models"></a>
-</h2>
-<p>To estimate a mixed logit model, use the <code>randPars</code> argument in the <code><a href="../reference/logitr.html">logitr()</a></code> function to denote which parameters will be modeled with a distribution. The current package version supports normal (<code>"n"</code>) and log-normal (<code>"ln"</code>) distributions.</p>
-<p>For example, assume the observed utility for yogurts was <span class="math inline">\(v_{j} = \alpha p_{j} + \beta_1 x_{j1} + \beta_2 x_{j2} + \beta_3 x_{j3} + \beta_4 x_{j4}\)</span>, where <span class="math inline">\(p_{j}\)</span> is <code>price</code>, <span class="math inline">\(x_{j1}\)</span> is <code>feat</code>, and <span class="math inline">\(x_{j2-4}\)</span> are dummy-coded variables for <code>brand</code>. To model <code>feat</code> as well as each of the brands as normally-distributed, set <code>randPars = c(feat = "n", brand = "n")</code>:</p>
+<p>The <code><a href="../reference/wtp.html">wtp()</a></code> function divides the non-price parameters by the negative of the <code>scalePar</code> parameter (usually “price”). Standard errors are estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. Similarly, the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function can be used to compare the WTP from a WTP space model with that computed from an equivalent preference space model:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-    data     <span class="op">=</span> <span class="va">yogurt</span>,
-    outcome  <span class="op">=</span> <span class="st">'choice'</span>,
-    obsID    <span class="op">=</span> <span class="st">'obsID'</span>,
-    pars     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>,
-    randPars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">'n'</span>, brand <span class="op">=</span> <span class="st">'n'</span><span class="op">)</span>,
-    numMultiStarts <span class="op">=</span> <span class="fl">10</span>
-<span class="op">)</span></code></pre></div>
-<p>Since mixed logit models also have non-convex log-likelihood functions, it is again recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima.</p>
-<p>See the <a href="mxl_models.html">“Estimating Mixed Logit Models”</a> vignette for more details.</p>
+<code class="sourceCode R"><span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, scalePar <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span>
+<span class="co">#&gt;                       pref           wtp  difference</span>
+<span class="co">#&gt; scalePar         0.3665546     0.3665846  0.00003002</span>
+<span class="co">#&gt; feat             1.3406987     1.3405846 -0.00011410</span>
+<span class="co">#&gt; brandhiland    -10.1362190   -10.1357319  0.00048708</span>
+<span class="co">#&gt; brandweight     -1.7490940    -1.7490751  0.00001886</span>
+<span class="co">#&gt; brandyoplait     2.0038476     2.0038217 -0.00002596</span>
+<span class="co">#&gt; logLik       -2656.8878790 -2656.8878779  0.00000107</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="predicting-probabilities-and-outcomes">Predicting probabilities and outcomes<a class="anchor" aria-label="anchor" href="#predicting-probabilities-and-outcomes"></a>
@@ -356,41 +357,41 @@
 <code class="sourceCode R"><span class="va">probs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span>
   <span class="va">mnl_pref</span>,
   newdata <span class="op">=</span> <span class="va">data</span>,
-  obsID <span class="op">=</span> <span class="st">"obsID"</span>, 
-  ci <span class="op">=</span> <span class="fl">0.95</span>
+  obsID   <span class="op">=</span> <span class="st">"obsID"</span>,
+  ci      <span class="op">=</span> <span class="fl">0.95</span>
 <span class="op">)</span>
 
 <span class="va">probs</span>
 <span class="co">#&gt;     obsID predicted_prob predicted_prob_lower predicted_prob_upper</span>
-<span class="co">#&gt; 49     13     0.43685145           0.41580239           0.45842326</span>
-<span class="co">#&gt; 50     13     0.03312986           0.02656715           0.04185852</span>
-<span class="co">#&gt; 51     13     0.19155548           0.17680618           0.20788906</span>
-<span class="co">#&gt; 52     13     0.33846321           0.32013337           0.35712117</span>
-<span class="co">#&gt; 165    42     0.60764778           0.57376517           0.64014673</span>
-<span class="co">#&gt; 166    42     0.02602007           0.01835690           0.03716744</span>
-<span class="co">#&gt; 167    42     0.17803313           0.16222486           0.19516739</span>
-<span class="co">#&gt; 168    42     0.18829902           0.16952996           0.20828179</span></code></pre></div>
+<span class="co">#&gt; 49     13     0.43685145           0.41518807           0.45943888</span>
+<span class="co">#&gt; 50     13     0.03312986           0.02629694           0.04135898</span>
+<span class="co">#&gt; 51     13     0.19155548           0.17518071           0.20708542</span>
+<span class="co">#&gt; 52     13     0.33846321           0.31819821           0.35865575</span>
+<span class="co">#&gt; 165    42     0.60764778           0.57350971           0.64202938</span>
+<span class="co">#&gt; 166    42     0.02602007           0.01812429           0.03632397</span>
+<span class="co">#&gt; 167    42     0.17803313           0.16172274           0.19450040</span>
+<span class="co">#&gt; 168    42     0.18829902           0.16752033           0.20792656</span></code></pre></div>
 <p>The resulting <code>probs</code> data frame contains the expected probabilities for each alternative. The lower and upper predictions reflect a 95% confidence interval (controlled by the <code>ci</code> argument), which are estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. The default is <code>ci = NULL</code>, in which case no CI predictions are made.</p>
-<p>WTP space models can also be used to predict probabilities, but the <code>price</code> argument must be specified for predictions being made on a new data set:</p>
+<p>WTP space models can also be used to predict probabilities:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">probs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span>
   <span class="va">mnl_wtp</span>,
   newdata <span class="op">=</span> <span class="va">data</span>,
-  obsID <span class="op">=</span> <span class="st">"obsID"</span>,
-  price <span class="op">=</span> <span class="st">"price"</span>
+  obsID   <span class="op">=</span> <span class="st">"obsID"</span>,
+  ci      <span class="op">=</span> <span class="fl">0.95</span>
 <span class="op">)</span>
 
 <span class="va">probs</span>
-<span class="co">#&gt;     obsID predicted_prob</span>
-<span class="co">#&gt; 49     13     0.43686141</span>
-<span class="co">#&gt; 50     13     0.03312947</span>
-<span class="co">#&gt; 51     13     0.19154829</span>
-<span class="co">#&gt; 52     13     0.33846083</span>
-<span class="co">#&gt; 165    42     0.60767120</span>
-<span class="co">#&gt; 166    42     0.02601800</span>
-<span class="co">#&gt; 167    42     0.17802363</span>
-<span class="co">#&gt; 168    42     0.18828717</span></code></pre></div>
-<p>You can also use the <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> method to predict outcomes by setting <code>type = "outcome"</code> (the default value is <code>"prob"</code> for predicting probabilities). If no new data are provided for the <code>newdata</code> argument, then outcomes will be predicted for every alternative in the original data used to estimate the model. In the example below the <code>returnData</code> argument is also set to <code>TRUE</code> so that the predicted outcomes can be compared to the actual ones.</p>
+<span class="co">#&gt;     obsID predicted_prob predicted_prob_lower predicted_prob_upper</span>
+<span class="co">#&gt; 49     13     0.43686150           0.41638462           0.45765713</span>
+<span class="co">#&gt; 50     13     0.03312954           0.02682217           0.04155815</span>
+<span class="co">#&gt; 51     13     0.19154827           0.17616786           0.20920538</span>
+<span class="co">#&gt; 52     13     0.33846069           0.31853489           0.35819696</span>
+<span class="co">#&gt; 165    42     0.60767189           0.57130510           0.64029822</span>
+<span class="co">#&gt; 166    42     0.02601795           0.01834727           0.03643903</span>
+<span class="co">#&gt; 167    42     0.17802352           0.16237450           0.19677233</span>
+<span class="co">#&gt; 168    42     0.18828663           0.16789394           0.20939283</span></code></pre></div>
+<p>You can also use the <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> method to predict outcomes by setting <code>type = "outcome"</code> (the default value is <code>"prob"</code> for predicting probabilities). If no new data are provided for <code>newdata</code>, then outcomes will be predicted for every alternative in the original data used to estimate the model. In the example below the <code>returnData</code> argument is also set to <code>TRUE</code> so that the predicted outcomes can be compared to the actual ones.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">outcomes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span>
   <span class="va">mnl_pref</span>,
@@ -402,8 +403,8 @@
 <span class="co">#&gt;   obsID choice predicted_outcome</span>
 <span class="co">#&gt; 1     1      0                 0</span>
 <span class="co">#&gt; 2     1      0                 0</span>
-<span class="co">#&gt; 3     1      1                 0</span>
-<span class="co">#&gt; 4     1      0                 1</span>
+<span class="co">#&gt; 3     1      1                 1</span>
+<span class="co">#&gt; 4     1      0                 0</span>
 <span class="co">#&gt; 5     2      1                 0</span>
 <span class="co">#&gt; 6     2      0                 0</span></code></pre></div>
 <p>You can quickly compute the accuracy by dividing the number of correctly predicted choices by the total number of choices:</p>
@@ -411,7 +412,7 @@
 <code class="sourceCode R"><span class="va">chosen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">outcomes</span>, <span class="va">choice</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>
 <span class="va">chosen</span><span class="op">$</span><span class="va">correct</span> <span class="op">&lt;-</span> <span class="va">chosen</span><span class="op">$</span><span class="va">choice</span> <span class="op">==</span> <span class="va">chosen</span><span class="op">$</span><span class="va">predicted_outcome</span>
 <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">chosen</span><span class="op">$</span><span class="va">correct</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">chosen</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.3872305</span></code></pre></div>
+<span class="co">#&gt; [1] 0.3470149</span></code></pre></div>
 <p>See the <a href="predict.html">“Predicting Probabilities and Choices from Estimated Models”</a> vignette for more details about making predictions.</p>
 </div>
   </div>

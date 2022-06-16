@@ -13,6 +13,9 @@
     <loc>https://jhelvy.github.io/logitr/articles/basic_usage.html</loc>
   </url>
   <url>
+    <loc>https://jhelvy.github.io/logitr/articles/benchmark.html</loc>
+  </url>
+  <url>
     <loc>https://jhelvy.github.io/logitr/articles/data_formatting.html</loc>
   </url>
   <url>
@@ -89,6 +92,9 @@
   </url>
   <url>
     <loc>https://jhelvy.github.io/logitr/reference/residuals.logitr.html</loc>
+  </url>
+  <url>
+    <loc>https://jhelvy.github.io/logitr/reference/runtimes.html</loc>
   </url>
   <url>
     <loc>https://jhelvy.github.io/logitr/reference/se.html</loc>

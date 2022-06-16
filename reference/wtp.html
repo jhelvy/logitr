@@ -61,6 +61,9 @@
     <li>
       <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
+    <li>
+      <a href="../articles/benchmark.html">Benchmarking estimation speed against other packages</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -90,7 +93,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">wtp</span><span class="op">(</span><span class="va">object</span>, <span class="va">price</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">wtp</span><span class="op">(</span><span class="va">object</span>, <span class="va">scalePar</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -100,8 +103,10 @@
 the 'logitr()` function).</p></dd>
 
 
-<dt>price</dt>
-<dd><p>The name of the parameter that identifies price.</p></dd>
+<dt>scalePar</dt>
+<dd><p>The name of the column that identifies the scale variable,
+which is typically "price" for WTP space models, but could be any
+continuous variable, such as "time".</p></dd>
 
 </dl></div>
     <div id="value">
@@ -113,8 +118,9 @@ the 'logitr()` function).</p></dd>
     <div id="details">
     <h2>Details</h2>
     <p>Willingness to pay is computed by dividing the estimated parameters of a
-utility model in the "preference" space by the price parameter.
-Uncertainty is handled via simulation.</p>
+utility model in the "preference" space by the scale parameter, which is
+should be price to obtain WTP estimates. Uncertainty is handled via
+simulation.</p>
     </div>
 
     <div id="ref-examples">
@@ -132,13 +138,13 @@ Uncertainty is handled via simulation.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Done!</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Compute the WTP implied from the preference space model</span></span>
-<span class="r-in"><span class="fu">wtp</span><span class="op">(</span><span class="va">mnl_pref</span>, price <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu">wtp</span><span class="op">(</span><span class="va">mnl_pref</span>, scalePar <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lambda         0.366555   0.024314  15.0761 &lt; 2.2e-16 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> feat           1.340699   0.358741   3.7372 0.0001861 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> brandhiland  -10.136219   0.582512 -17.4009 &lt; 2.2e-16 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> brandweight   -1.749094   0.181974  -9.6118 &lt; 2.2e-16 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> brandyoplait   2.003848   0.143502  13.9639 &lt; 2.2e-16 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> scalePar       0.366555   0.024342  15.0585 &lt; 2.2e-16 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> feat           1.340699   0.361251   3.7113 0.0002062 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> brandhiland  -10.136219   0.583956 -17.3578 &lt; 2.2e-16 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> brandweight   -1.749094   0.182296  -9.5948 &lt; 2.2e-16 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> brandyoplait   2.003848   0.143699  13.9447 &lt; 2.2e-16 ***</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span>
 </code></pre></div>

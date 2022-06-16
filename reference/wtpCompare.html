@@ -62,6 +62,9 @@ model."><meta property="og:image" content="https://jhelvy.github.io/logitr/refer
     <li>
       <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
+    <li>
+      <a href="../articles/benchmark.html">Benchmarking estimation speed against other packages</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -92,7 +95,7 @@ model.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">wtpCompare</span><span class="op">(</span><span class="va">model_pref</span>, <span class="va">model_wtp</span>, <span class="va">price</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">wtpCompare</span><span class="op">(</span><span class="va">model_pref</span>, <span class="va">model_wtp</span>, <span class="va">scalePar</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -107,8 +110,10 @@ the <code><a href="logitr.html">logitr()</a></code> function.</p></dd>
 using the <code><a href="logitr.html">logitr()</a></code> function.</p></dd>
 
 
-<dt>price</dt>
-<dd><p>The name of the parameter that identifies price.</p></dd>
+<dt>scalePar</dt>
+<dd><p>The name of the column that identifies the scale variable,
+which is typically "price" for WTP space models, but could be any
+continuous variable, such as "time".</p></dd>
 
 </dl></div>
     <div id="value">
@@ -121,9 +126,10 @@ WTP space models.</p>
     <div id="details">
     <h2>Details</h2>
     <p>Willingness to pay (WTP) is first computed from the preference space model
-by dividing the estimated parameters by the price parameter. Then those
-estimates are compared against the WTP values directly estimated from the
-"WTP" space model. Uncertainty is handled via simulation.</p>
+by dividing the estimated parameters by the scale parameter (typically
+"price" to obtain WTP estimates). Then those estimates are compared against
+the WTP values directly estimated from the "WTP" space model. Uncertainty is
+handled via simulation.</p>
     </div>
 
     <div id="ref-examples">
@@ -141,26 +147,25 @@ estimates are compared against the WTP values directly estimated from the
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Done!</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Compute the WTP implied from the preference space model</span></span>
-<span class="r-in"><span class="va">wtp_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, price <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">wtp_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, scalePar <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Estimate a MNL model in the WTP Space, using the computed WTP values</span></span>
 <span class="r-in"><span class="co"># from the preference space model as starting points</span></span>
 <span class="r-in"><span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="logitr.html">logitr</a></span><span class="op">(</span></span>
-<span class="r-in">  data       <span class="op">=</span> <span class="va">yogurt</span>,</span>
-<span class="r-in">  outcome    <span class="op">=</span> <span class="st">"choice"</span>,</span>
-<span class="r-in">  obsID      <span class="op">=</span> <span class="st">"obsID"</span>,</span>
-<span class="r-in">  pars       <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span>,</span>
-<span class="r-in">  price      <span class="op">=</span> <span class="st">"price"</span>,</span>
-<span class="r-in">  modelSpace <span class="op">=</span> <span class="st">"wtp"</span>,</span>
-<span class="r-in">  startVals  <span class="op">=</span> <span class="va">wtp_mnl_pref</span><span class="op">$</span><span class="va">Estimate</span></span>
+<span class="r-in">  data      <span class="op">=</span> <span class="va">yogurt</span>,</span>
+<span class="r-in">  outcome   <span class="op">=</span> <span class="st">"choice"</span>,</span>
+<span class="r-in">  obsID     <span class="op">=</span> <span class="st">"obsID"</span>,</span>
+<span class="r-in">  pars      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span>,</span>
+<span class="r-in">  scalePar  <span class="op">=</span> <span class="st">"price"</span>,</span>
+<span class="r-in">  startVals <span class="op">=</span> <span class="va">wtp_mnl_pref</span><span class="op">$</span><span class="va">Estimate</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running model...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Done!</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Compare the WTP between the two spaces</span></span>
-<span class="r-in"><span class="fu">wtpCompare</span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, price <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu">wtpCompare</span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, scalePar <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       pref          wtp  difference</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lambda           0.3665546     0.366589  0.00003448</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> scalePar         0.3665546     0.366589  0.00003448</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> feat             1.3406987     1.340815  0.00011655</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> brandhiland    -10.1362190   -10.135947  0.00027163</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> brandweight     -1.7490940    -1.749231 -0.00013707</span>

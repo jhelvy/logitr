@@ -68,6 +68,9 @@ randPars."><meta property="og:image" content="https://jhelvy.github.io/logitr/re
     <li>
       <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
+    <li>
+      <a href="../articles/benchmark.html">Benchmarking estimation speed against other packages</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -114,7 +117,8 @@ variables and interaction variables added to <code>X</code>, <code>pars</code>, 
 <dt>pars</dt>
 <dd><p>The names of the parameters to be estimated in the model.
 Must be the same as the column names in the <code>data</code> argument. For WTP space
-models, do not include price in <code>pars</code>.</p></dd>
+models, do not include price in <code>pars</code> - it should instead be defined by
+the <code>scalePar</code> argument.</p></dd>
 
 
 <dt>randPars</dt>

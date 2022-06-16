@@ -90,6 +90,9 @@
     <li>
       <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
+    <li>
+      <a href="../articles/benchmark.html">Benchmarking estimation speed against other packages</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -211,24 +214,22 @@
 <div class="section level3">
 <h3 id="wtp-space-models">WTP space models<a class="anchor" aria-label="anchor" href="#wtp-space-models"></a>
 </h3>
-<p>WTP space models can also be used to predict probabilities, but the <code>price</code> argument must be specified for predictions being made on a new data set. In the example below, a WTP space model is estimated and used to predict probabilities for the same <code>data</code> data frame as in the previous examples:</p>
+<p>WTP space models can also be used to predict probabilities. In the example below, a WTP space model is estimated and used to predict probabilities for the same <code>data</code> data frame as in the previous examples:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data    <span class="op">=</span> <span class="va">yogurt</span>,
-  outcome <span class="op">=</span> <span class="st">'choice'</span>,
-  obsID   <span class="op">=</span> <span class="st">'obsID'</span>,
-  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>,
-  price   <span class="op">=</span> <span class="st">'price'</span>,
-  modelSpace <span class="op">=</span> <span class="st">'wtp'</span>,
+  data     <span class="op">=</span> <span class="va">yogurt</span>,
+  outcome  <span class="op">=</span> <span class="st">'choice'</span>,
+  obsID    <span class="op">=</span> <span class="st">'obsID'</span>,
+  pars     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>,
+  scalePar <span class="op">=</span> <span class="st">'price'</span>,
   numMultiStarts <span class="op">=</span> <span class="fl">10</span>
 <span class="op">)</span>
 
 <span class="va">probs_mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span>
   <span class="va">mnl_wtp</span>,
   newdata <span class="op">=</span> <span class="va">data</span>,
-  obsID <span class="op">=</span> <span class="st">"obsID"</span>,
-  price <span class="op">=</span> <span class="st">"price"</span>,
-  ci <span class="op">=</span> <span class="fl">0.95</span>
+  obsID   <span class="op">=</span> <span class="st">"obsID"</span>,
+  ci      <span class="op">=</span> <span class="fl">0.95</span>
 <span class="op">)</span>
 
 <span class="va">probs_mnl_wtp</span>
@@ -284,13 +285,13 @@
 
 <span class="va">outcomes_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_wtp</span>, type <span class="op">=</span> <span class="st">"outcome"</span>, returnData <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">outcomes_wtp</span><span class="op">)</span>
-<span class="co">#&gt;   obsID predicted_outcome feat brandhiland brandweight brandyoplait price</span>
-<span class="co">#&gt; 1     1                 1    0           0           0            0   8.1</span>
-<span class="co">#&gt; 2     1                 0    0           1           0            0   6.1</span>
-<span class="co">#&gt; 3     1                 0    0           0           1            0   7.9</span>
-<span class="co">#&gt; 4     1                 0    0           0           0            1  10.8</span>
-<span class="co">#&gt; 5     2                 1    0           0           0            0   9.8</span>
-<span class="co">#&gt; 6     2                 0    0           1           0            0   6.4</span>
+<span class="co">#&gt;   obsID predicted_outcome feat brandhiland brandweight brandyoplait scalePar</span>
+<span class="co">#&gt; 1     1                 1    0           0           0            0      8.1</span>
+<span class="co">#&gt; 2     1                 0    0           1           0            0      6.1</span>
+<span class="co">#&gt; 3     1                 0    0           0           1            0      7.9</span>
+<span class="co">#&gt; 4     1                 0    0           0           0            1     10.8</span>
+<span class="co">#&gt; 5     2                 1    0           0           0            0      9.8</span>
+<span class="co">#&gt; 6     2                 0    0           1           0            0      6.4</span>
 <span class="co">#&gt;   choice</span>
 <span class="co">#&gt; 1      0</span>
 <span class="co">#&gt; 2      0</span>

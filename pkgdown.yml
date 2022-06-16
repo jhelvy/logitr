@@ -3,6 +3,7 @@ pkgdown: 2.0.4
 pkgdown_sha: ~
 articles:
   basic_usage: basic_usage.html
+  benchmark: benchmark.html
   data_formatting: data_formatting.html
   interactions: interactions.html
   mnl_models: mnl_models.html
@@ -10,7 +11,7 @@ articles:
   mxl_models: mxl_models.html
   predict: predict.html
   utility_models: utility_models.html
-last_built: 2022-06-14T17:34Z
+last_built: 2022-06-16T13:10Z
 urls:
   reference: https://jhelvy.github.io/logitr/reference
   article: https://jhelvy.github.io/logitr/articles
