@@ -46,7 +46,6 @@ getModelInputs <- function(
   } else {
       modelSpace <- "wtp"
   }
-  inputs$modelSpace <- modelSpace
 
   # Get the design matrix, recoding parameters that are categorical
   # or have interactions
@@ -54,7 +53,7 @@ getModelInputs <- function(
   X <- recoded$X
   pars <- recoded$pars
   randPars <- recoded$randPars
-  scalePar <- defineScalePar(data, inputs)
+  scalePar <- defineScalePar(data, inputs, modelSpace)
   outcome <- as.matrix(data[outcome])
 
   # Setup obsID
@@ -159,6 +158,7 @@ getModelInputs <- function(
     version       = as.character(utils::packageVersion("logitr")),
     inputs        = inputs,
     modelType     = modelType,
+    modelSpace    = modelSpace,
     freq          = getFrequencyCounts(obsID, outcome),
     scalePar      = scalePar,
     data          = data,
@@ -245,11 +245,11 @@ setNumCores <- function(numCores) {
   return(numCores)
 }
 
-defineScalePar <- function(data, inputs) {
-  if (inputs$modelSpace == "pref") {
+defineScalePar <- function(data, inputs, modelSpace) {
+  if (modelSpace == "pref") {
     return(NULL)
   }
-  if (inputs$modelSpace == "wtp") {
+  if (modelSpace == "wtp") {
     scalePar <- data[, which(names(data) == inputs$scalePar)]
     if (! typeof(scalePar) %in% c("integer", "double")) {
       stop(
@@ -521,7 +521,7 @@ makeMxlDraws <- function(modelInputs) {
 makePartials <- function(mi, data) {
   n <- mi$n
   X <- data$X
-  if (mi$inputs$modelSpace == "wtp") {
+  if (mi$modelSpace == "wtp") {
     X <- cbind(1, X)
   }
   X2 <- repmat(X, 1, 2)

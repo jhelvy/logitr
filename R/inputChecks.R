@@ -113,7 +113,7 @@ predictInputsCheck <- function(object, newdata, obsID, scalePar, type, ci) {
     if (is.null(obsID)) {
       stop('"obsID" must be specified if newdata is not NULL')
     }
-    if (object$inputs$modelSpace == "wtp") {
+    if (object$modelSpace == "wtp") {
       if (is.null(scalePar)) {
         stop(
           '"scalePar" must be specified if "object" is a WTP space model and ',
@@ -164,7 +164,7 @@ predictInputsCheck <- function(object, newdata, obsID, scalePar, type, ci) {
 
 predictParCheck <- function(model, X) {
   modelPars <- names(model$parSetup)
-  if (model$inputs$modelSpace == "wtp") {
+  if (model$modelSpace == "wtp") {
     # Drop scale parameter (lambda)
     modelPars <- modelPars[2:length(modelPars)]
   }
@@ -193,7 +193,7 @@ wtpInputsCheck <- function(model, scalePar) {
   if (! scalePar %in% names(stats::coef(model))) {
     stop('"scalePar" must be the name of a coefficient in "model".')
   }
-  if (model$inputs$modelSpace != "pref") {
+  if (model$modelSpace != "pref") {
     stop('model must be a preference space model.')
   }
 }

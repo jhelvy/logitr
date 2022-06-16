@@ -239,7 +239,7 @@ getModelType <- function(x) {
 
 getModelSpace <- function(x) {
   return(ifelse(
-    x$inputs$modelSpace == "pref", "Preference", "Willingness-to-Pay"))
+    x$modelSpace == "pref", "Preference", "Willingness-to-Pay"))
 }
 
 getModelRun <- function(x) {
@@ -306,7 +306,7 @@ getCovarianceRobust <- function(object) {
   inputs <- object$inputs
   parSetup <- object$parSetup
   modelInputs <- list(
-    logitFuncs = setLogitFunctions(inputs$modelSpace),
+    logitFuncs = setLogitFunctions(object$modelSpace),
     evalFuncs  = setEvalFunctions(object$modelType, inputs$useAnalyticGrad),
     inputs     = inputs,
     modelType  = object$modelType,

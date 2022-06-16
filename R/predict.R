@@ -95,7 +95,7 @@ predict.logitr <- function(
   }
   getV <- getMnlV_pref
   getVDraws <- getMxlV_pref
-  if (object$inputs$modelSpace == "wtp") {
+  if (object$modelSpace == "wtp") {
     getVDraws <- getMxlV_wtp
     getV <- getMnlV_wtp
   }
@@ -135,7 +135,7 @@ formatNewData <- function(object, newdata, obsID) {
   X <- recoded$X
   predictParCheck(object, X) # Check if model pars match those from newdata
   scalePar <- NA
-  if (inputs$modelSpace == "wtp") {
+  if (object$modelSpace == "wtp") {
     scalePar <- as.matrix(
       newdata[, which(colnames(newdata) == inputs$scalePar)])
   }
@@ -161,7 +161,7 @@ getMnlProbs <- function(object, data, obsID, ci, numDrawsCI, getV, getVDraws) {
     n <- object$n
     n$draws <- numDrawsCI
     betaUncDraws <- getUncertaintyDraws(object, numDrawsCI)
-    betaUncDraws <- selectDraws(betaUncDraws, object$inputs$modelSpace, data$X)
+    betaUncDraws <- selectDraws(betaUncDraws, object$modelSpace, data$X)
     VUncDraws <- getVDraws(betaUncDraws, data$X, data$scalePar, n)
     logitUncDraws <- predictLogit(VUncDraws, data$obsID)
     probs <- formatProbsUnc(
@@ -194,7 +194,7 @@ selectDraws <- function(betaDraws, modelSpace, X) {
   names <- colnames(betaDraws)
   gammaDraws <- betaDraws[,which(names %in% colnames(X))]
   if (modelSpace == "wtp") {
-    lambdaDraws <- betaDraws[,which(names == "lambda")]
+    lambdaDraws <- betaDraws[,which(names == "scalePar")]
     return(as.matrix(cbind(lambdaDraws, gammaDraws)))
   }
   return(as.matrix(gammaDraws))
@@ -208,13 +208,12 @@ predictLogit <- function(V, obsID) {
 }
 
 predictLogitDraws <- function(coefs, object, data, getVDraws) {
-  modelSpace <- object$inputs$modelSpace
   correlation <- object$inputs$correlation
   betaDraws <- makeBetaDraws(
       coefs, object$parIDs, object$n, object$standardDraws, correlation
   )
   colnames(betaDraws) <- names(object$parSetup)
-  betaDraws <- selectDraws(betaDraws, modelSpace, data$X)
+  betaDraws <- selectDraws(betaDraws, object$modelSpace, data$X)
   VDraws <- getVDraws(betaDraws, data$X, data$scalePar, object$n)
   logitDraws <- predictLogit(VDraws, data$obsID)
   return(rowMeans(logitDraws, na.rm = TRUE))
@@ -304,7 +303,7 @@ addData <- function(object, result, data, newdata) {
       df <- newdata[which(! names(newdata) %in% names(result))]
   } else {
     df <- as.data.frame(data$X)
-    if (object$inputs$modelSpace == "wtp") {
+    if (object$modelSpace == "wtp") {
       df <- cbind(df, scalePar = data$scalePar)
     }
     if (!is.null(data$outcome)) {

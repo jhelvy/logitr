@@ -99,7 +99,7 @@ firstIterStartPars <- function(startPars, mi) {
   if (length(cnIDs) > 0) {
     startPars[cnIDs] <- 0.1
   }
-  if (mi$inputs$modelSpace == "wtp") {
+  if (mi$modelSpace == "wtp") {
     # Force starting with scalePar = 1 for WTP space models for stability
     startPars[1] <- 1
   }
@@ -125,7 +125,7 @@ checkStartPars <- function(startPars, mi) {
   if (length(cnIDs) > 0) {
     startPars[cnIDs] <- stats::runif(length(cnIDs), 0.1, 0.2)
   }
-  if (mi$inputs$modelSpace == "wtp") {
+  if (mi$modelSpace == "wtp") {
     # Force starting with scalePar = 1 for WTP space models for stability
     startPars[1] <- 1
   }
@@ -159,6 +159,7 @@ makeModelTemplate <- function(mi) {
     n                 = mi$n,
     freq              = mi$freq,
     modelType         = mi$modelType,
+    modelSpace        = mi$modelSpace,
     weightsUsed       = mi$weightsUsed,
     parSetup          = mi$parSetup,
     parIDs            = mi$parIDs,
