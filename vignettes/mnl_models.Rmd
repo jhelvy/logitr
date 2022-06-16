@@ -67,7 +67,7 @@ coef(mnl_pref)
 Compute the WTP implied from the preference space model:
 
 ```{r}
-wtp_mnl_pref <- wtp(mnl_pref, price =  "price")
+wtp_mnl_pref <- wtp(mnl_pref, scalePar =  "price")
 wtp_mnl_pref
 ```
 
@@ -88,8 +88,7 @@ mnl_wtp <- logitr(
   outcome = 'choice',
   obsID   = 'obsID',
   pars    = c('feat', 'brand'),
-  price   = 'price',
-  modelSpace = 'wtp',
+  scalePar = 'price',
   # Since WTP space models are non-convex, run a multistart
   numMultiStarts = 10,
   # Use the computed WTP from the preference space model as the starting
@@ -117,7 +116,7 @@ Since WTP space models are non-convex, you cannot be certain that the model reac
 To compare the WTP and log-likelihood values between the preference space and WTP space models, use the `wtpCompare()` function:
 
 ```{r}
-wtpCompare(mnl_pref, mnl_wtp, price = 'price')
+wtpCompare(mnl_pref, mnl_wtp, scalePar = 'price')
 ```
 
 # References

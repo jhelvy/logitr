@@ -9,6 +9,7 @@ library(mlogit)
 yogurt_raw <- read_csv(here::here("data-raw", "yogurt_raw.csv"))
 cars_china <- read_csv(here::here('data-raw', 'cars_china.csv'))
 cars_us    <- read_csv(here::here('data-raw', 'cars_us.csv'))
+runtimes   <- read_csv(here::here('data-raw', 'runtimes.csv'))
 
 # Yogurt data ----
 
@@ -126,3 +127,7 @@ electricity <- data.frame(mlogit.data(
 
 # Save the dataset
 usethis::use_data(electricity, overwrite = TRUE)
+
+# runtimes ----
+
+usethis::use_data(runtimes, overwrite = TRUE)

@@ -5,10 +5,10 @@
 
 # Creates a list of the data and other information needed for running the model
 getModelInputs <- function(
-    data, outcome, obsID, pars , randPars, price, randPrice, modelSpace,
+    data, outcome, obsID, pars , randPars, scalePar, randScale,
     weights, panelID, clusterID, robust, startParBounds, startVals,
-    numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, numDraws,
-    numCores, vcov, predict, correlation, call, options
+    numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
+    numDraws, numCores, vcov, predict, correlation, call, options
 ) {
 
   # Keep original input arguments
@@ -17,9 +17,8 @@ getModelInputs <- function(
     obsID           = obsID,
     pars            = pars,
     randPars        = randPars,
-    price           = price,
-    randPrice       = randPrice,
-    modelSpace      = modelSpace,
+    scalePar        = scalePar,
+    randScale       = randScale,
     weights         = weights,
     panelID         = panelID,
     clusterID       = clusterID,
@@ -29,6 +28,7 @@ getModelInputs <- function(
     numMultiStarts  = numMultiStarts,
     useAnalyticGrad = useAnalyticGrad,
     scaleInputs     = scaleInputs,
+    drawType        = drawType,
     numDraws        = numDraws,
     numCores        = numCores,
     vcov            = vcov,
@@ -40,13 +40,20 @@ getModelInputs <- function(
   runInputChecks(data, inputs)
   options <- checkOptions(options)
 
+  # Set the modelSpace based on whether the scalePar is NULL
+  if (is.null(scalePar)) {
+      modelSpace <- "pref"
+  } else {
+      modelSpace <- "wtp"
+  }
+
   # Get the design matrix, recoding parameters that are categorical
   # or have interactions
   recoded <- recodeData(data, pars, randPars)
   X <- recoded$X
   pars <- recoded$pars
   randPars <- recoded$randPars
-  price <- definePrice(data, inputs)
+  scalePar <- defineScalePar(data, inputs, modelSpace)
   outcome <- as.matrix(data[outcome])
 
   # Setup obsID
@@ -61,10 +68,16 @@ getModelInputs <- function(
   }
 
   # Set up other objects defining aspects of model
-  parSetup <- getParSetup(pars, price, randPars, randPrice)
+  parSetup <- getParSetup(pars, scalePar, randPars, randScale)
+
+  # Define model type
   modelType <- "mnl"
-  if (isMxlModel(parSetup)) { modelType <- "mxl" }
-  n <- list( # stores counts variables
+  if (isMxlModel(parSetup)) {
+    modelType <- "mxl"
+  }
+
+  # Create n object, which stores counts of various variables
+  n <- list(
     vars        = length(parSetup),
     parsFixed   = length(which(parSetup == "f")),
     parsRandom  = length(which(parSetup != "f")),
@@ -75,7 +88,7 @@ getModelInputs <- function(
   )
   parNames <- getParNames(parSetup, n, correlation)
   n$pars <- length(parNames$all)
-  parIDs <- getParIDs(parSetup, n, modelSpace, modelType, randPrice, correlation)
+  parIDs <- getParIDs(parSetup, n, modelSpace, modelType, randScale,correlation)
 
   # Add names to startVals (if provided)
   if (!is.null(startVals)) {
@@ -105,7 +118,7 @@ getModelInputs <- function(
 
   # Make data object
   data <- list(
-    price     = price,
+    scalePar  = scalePar,
     X         = X,
     outcome   = outcome,
     obsID     = obsID,
@@ -145,8 +158,9 @@ getModelInputs <- function(
     version       = as.character(utils::packageVersion("logitr")),
     inputs        = inputs,
     modelType     = modelType,
+    modelSpace    = modelSpace,
     freq          = getFrequencyCounts(obsID, outcome),
-    price         = price,
+    scalePar      = scalePar,
     data          = data,
     data_diff     = data_diff,
     data_diff_unscaled = data_diff_unscaled,
@@ -157,6 +171,7 @@ getModelInputs <- function(
     parNames      = parNames,
     n             = n,
     standardDraws = standardDraws,
+    drawType      = drawType,
     panel         = panel,
     options       = options
   )
@@ -230,24 +245,24 @@ setNumCores <- function(numCores) {
   return(numCores)
 }
 
-definePrice <- function(data, inputs) {
-  if (inputs$modelSpace == "pref") {
+defineScalePar <- function(data, inputs, modelSpace) {
+  if (modelSpace == "pref") {
     return(NULL)
   }
-  if (inputs$modelSpace == "wtp") {
-    price <- data[, which(names(data) == inputs$price)]
-    if (! typeof(price) %in% c("integer", "double")) {
+  if (modelSpace == "wtp") {
+    scalePar <- data[, which(names(data) == inputs$scalePar)]
+    if (! typeof(scalePar) %in% c("integer", "double")) {
       stop(
-        'Please make sure the price column in your data defined by the ',
-        '"price" argument is encoded as a numeric data type. Price must ',
-        'be numeric for WTP space models.'
+        'Please make sure the "scalePar" column in your data ',
+        'is encoded as a numeric data type. Scale must ',
+        'be numeric and continuous.'
       )
     }
   }
-  return(as.matrix(price))
+  return(as.matrix(scalePar))
 }
 
-getParSetup <- function(pars, price, randPars, randPrice) {
+getParSetup <- function(pars, scalePar, randPars, randScale) {
   parSetup <- rep("f", length(pars))
   for (i in seq_len(length(pars))) {
     name <- pars[i]
@@ -256,12 +271,12 @@ getParSetup <- function(pars, price, randPars, randPrice) {
     }
   }
   names(parSetup) <- pars
-  if (is.null(price) == F) {
-    if (is.null(randPrice)) {
-      randPrice <- "f"
+  if (is.null(scalePar) == F) {
+    if (is.null(randScale)) {
+      randScale <- "f"
     }
-    parSetup <- c(randPrice, parSetup)
-    names(parSetup)[1] <- "lambda"
+    parSetup <- c(randScale, parSetup)
+    names(parSetup)[1] <- "scalePar"
   }
   return(parSetup)
 }
@@ -290,7 +305,7 @@ getParNames <- function(parSetup, n, correlation) {
 }
 
 getParIDs <- function(
-  parSetup, n, modelSpace, modelType, randPrice, correlation
+  parSetup, n, modelSpace, modelType, randScale, correlation
 ) {
   parIDs <- list(
     f  = which(parSetup == "f"),
@@ -324,7 +339,7 @@ getParIDs <- function(
   if (modelSpace == "wtp") {
     lambdaIDs <- 1
     omegaIDs <- seq(n$pars)
-    if (!is.null(randPrice)) {
+    if (!is.null(randScale)) {
       lambdaIDs <- c(lambdaIDs, length(parSetup) + 1)
       if (correlation) {
         lowerMat <- matrix(0, n$parsRandom, n$parsRandom)
@@ -392,18 +407,18 @@ setupClusters <- function(inputs, panel, robust, weightsUsed) {
 getScaleFactors <- function(
   data, modelSpace, modelType, parIDs, parNames, n, correlation
 ) {
-  price <- data$price
+  scalePar <- data$scalePar
   X <- data$X
   minX <- apply(X, 2, min)
   maxX <- apply(X, 2, max)
   scaleFactors <- abs(maxX - minX)
   scaleFactorNames <- names(scaleFactors)
-  # Scale price if WTP space model
+  # Scale scalePar if WTP space model
   if (modelSpace == "wtp") {
-    vals <- unique(price)
-    scaleFactorPrice <- abs(max(vals) - min(vals))
-    scaleFactors <- c(scaleFactorPrice, scaleFactors)
-    names(scaleFactors) <- c("lambda", scaleFactorNames)
+    vals <- unique(scalePar)
+    scaleFactorScalePar <- abs(max(vals) - min(vals))
+    scaleFactors <- c(scaleFactorScalePar, scaleFactors)
+    names(scaleFactors) <- c("scalePar", scaleFactorNames)
   }
   # If MXL model, need to replicate scale factors for sd pars
   if (modelType == "mxl") {
@@ -429,17 +444,17 @@ getScaleFactors <- function(
 
 # Function that scales all the variables in X to be between 0 and 1:
 scaleData <- function(data, scaleFactors, modelSpace) {
-  scaledPrice <- data$price
+  scaledScalePar <- data$scalePar
   scaledX <- data$X
   if (modelSpace == "wtp") {
-    scaledPrice <- scaledPrice / scaleFactors[1] # Scale price
+    scaledScalePar <- scaledScalePar / scaleFactors[1] # Scale scalePar
     scaleFactors <- scaleFactors[2:length(scaleFactors)]
   }
   for (col in seq_len(ncol(scaledX))) {
     scaledX[, col] <- scaledX[, col] / scaleFactors[col]
   }
   return(list(
-    price     = scaledPrice,
+    scalePar  = scaledScalePar,
     X         = scaledX,
     outcome   = data$outcome,
     obsID     = data$obsID,
@@ -456,10 +471,10 @@ makeDiffData <- function(data, modelType) {
   if (!is.matrix(X_chosen)) { X_chosen <- as.matrix(X_chosen) }
   X_diff <- (data$X - X_chosen[data$obsID,])[data$outcome != 1,]
   X_diff <- checkMatrix(X_diff)
-  price_diff <- NULL
-  if (!is.null(data$price)) {
-    price_chosen <- data$price[data$outcome == 1]
-    price_diff <- (data$price - price_chosen[data$obsID])[data$outcome != 1]
+  scalePar_diff <- NULL
+  if (!is.null(data$scalePar)) {
+    scalePar_chosen <- data$scalePar[data$outcome == 1]
+    scalePar_diff <- (data$scalePar - scalePar_chosen[data$obsID])[data$outcome != 1]
   }
   panelID <- data$panelID
   weights <- data$weights[data$outcome == 1]
@@ -468,7 +483,7 @@ makeDiffData <- function(data, modelType) {
     weights <- unique(data.frame(panelID = panelID, weights = weights))$weights
   }
   return(list(
-    price     = price_diff,
+    scalePar  = scalePar_diff,
     X         = X_diff,
     obsID     = data$obsID[data$outcome != 1],
     panelID   = panelID,
@@ -478,9 +493,21 @@ makeDiffData <- function(data, modelType) {
 }
 
 makeMxlDraws <- function(modelInputs) {
+  # Message about using Sobol draws with large number of random parameters
+  if (length(modelInputs$parIDs$r) > 5) {
+    if (modelInputs$drawType == 'halton') {
+      message(
+        "Since your model has 5 or more random parameters, it is ",
+        "recommended that you use Sobol instead of Halton draws. ",
+        "You can implement this by setting drawType = 'sobol'. \n\n",
+        "It is also recommended that you use at least 200 draws, which ",
+        "can be implemented by setting numDraws = 200")
+    }
+  }
   draws <- modelInputs$standardDraws
   if (is.null(draws)) {
-    draws <- getStandardDraws(modelInputs$parIDs, modelInputs$n$draws)
+    draws <- getStandardDraws(
+        modelInputs$parIDs, modelInputs$n$draws, modelInputs$drawType)
   } else if (ncol(draws) != modelInputs$n$vars) {
     # If user provides draws, make sure there are enough columns
     stop(
@@ -494,7 +521,7 @@ makeMxlDraws <- function(modelInputs) {
 makePartials <- function(mi, data) {
   n <- mi$n
   X <- data$X
-  if (mi$inputs$modelSpace == "wtp") {
+  if (mi$modelSpace == "wtp") {
     X <- cbind(1, X)
   }
   X2 <- repmat(X, 1, 2)

@@ -7,4 +7,4 @@
 0 errors | 0 warnings | 0 notes
 
 ## Notes
-* This release corrects one of the notes in a failed CRAN test from v0.6.0.
+* This is a new release

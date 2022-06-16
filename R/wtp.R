@@ -9,12 +9,15 @@
 #'
 #' @param object is an object of class `logitr` (a model estimated using
 #' the 'logitr()` function).
-#' @param price The name of the parameter that identifies price.
+#' @param scalePar The name of the column that identifies the scale variable,
+#' which is typically "price" for WTP space models, but could be any
+#' continuous variable, such as "time".
 #'
 #' @details
 #' Willingness to pay is computed by dividing the estimated parameters of a
-#' utility model in the "preference" space by the price parameter.
-#' Uncertainty is handled via simulation.
+#' utility model in the "preference" space by the scale parameter, which is
+#' should be price to obtain WTP estimates. Uncertainty is handled via
+#' simulation.
 #'
 #' @return A data frame of the WTP estimates.
 #' @export
@@ -30,24 +33,27 @@
 #' )
 #'
 #' # Compute the WTP implied from the preference space model
-#' wtp(mnl_pref, price = "price")
-wtp <- function(object, price) {
+#' wtp(mnl_pref, scalePar = "price")
+wtp <- function(object, scalePar) {
   UseMethod("wtp")
 }
 
-#' Get WTP from a preference space model
+#' Get WTP estimates a preference space model
 #'
 #' Returns the computed WTP from a preference space model.
 #' @keywords logitr wtp
 #'
 #' @param object is an object of class `logitr` (a model estimated using
 #' the 'logitr()` function).
-#' @param price The name of the parameter that identifies price.
+#' @param scalePar The name of the column that identifies the scale variable,
+#' which is typically "price" for WTP space models, but could be any
+#' continuous variable, such as "time".
 #'
 #' @details
 #' Willingness to pay is computed by dividing the estimated parameters of a
-#' utility model in the "preference" space by the price parameter.
-#' Uncertainty is handled via simulation.
+#' utility model in the "preference" space by the scale parameter, which is
+#' should be price to obtain WTP estimates. Uncertainty is handled via
+#' simulation.
 #'
 #' @return A data frame of the WTP estimates.
 #' @export
@@ -63,20 +69,19 @@ wtp <- function(object, price) {
 #' )
 #'
 #' # Compute the WTP implied from the preference space model
-#' wtp(mnl_pref, price = "price")
-wtp.logitr <- function(object, price) {
-  wtpInputsCheck(object, price)
+#' wtp(mnl_pref, scalePar = "price")
+wtp.logitr <- function(object, scalePar) {
+  wtpInputsCheck(object, scalePar)
   coefs <- stats::coef(object)
-  priceID <- which(names(coefs) == price)
-  pricePar <- -1 * coefs[priceID]
-  wtp_mean <- coefs / pricePar
-  wtp_mean[priceID] <- -1 * coefs[priceID]
-  names(wtp_mean)[priceID] <- "lambda"
+  scaleParID <- which(names(coefs) == scalePar)
+  wtp_mean <- coefs / (-1 * coefs[scaleParID])
+  wtp_mean[scaleParID] <- -1 * coefs[scaleParID]
+  names(wtp_mean)[scaleParID] <- "scalePar"
   # Compute standErrs using simulation (draws from the varcov matrix)
   draws <- getUncertaintyDraws(object, 10^5)
-  priceDraws <- repmatCol(-1 * draws[price], ncol(draws))
-  wtpDraws <- draws / priceDraws
-  wtpDraws[, priceID] <- draws[, priceID]
+  scaleParDraws <- repmatCol(-1 * draws[scalePar], ncol(draws))
+  wtpDraws <- draws / scaleParDraws
+  wtpDraws[, scaleParID] <- draws[, scaleParID]
   wtp_se <- apply(wtpDraws, 2, stats::sd)
   result <- getCoefTable(wtp_mean, wtp_se)
   class(result) <- c("logitr_wtp", "data.frame")
@@ -93,13 +98,16 @@ wtp.logitr <- function(object, price) {
 #' the `logitr()` function.
 #' @param model_wtp The output of a "willingness to pay space" model estimated
 #' using the `logitr()` function.
-#' @param price The name of the parameter that identifies price.
+#' @param scalePar The name of the column that identifies the scale variable,
+#' which is typically "price" for WTP space models, but could be any
+#' continuous variable, such as "time".
 #'
 #' @details
 #' Willingness to pay (WTP) is first computed from the preference space model
-#' by dividing the estimated parameters by the price parameter. Then those
-#' estimates are compared against the WTP values directly estimated from the
-#' "WTP" space model. Uncertainty is handled via simulation.
+#' by dividing the estimated parameters by the scale parameter (typically
+#' "price" to obtain WTP estimates). Then those estimates are compared against
+#' the WTP values directly estimated from the "WTP" space model. Uncertainty is
+#' handled via simulation.
 #'
 #' @return A data frame comparing the WTP estimates from preference space and
 #' WTP space models.
@@ -116,25 +124,24 @@ wtp.logitr <- function(object, price) {
 #' )
 #'
 #' # Compute the WTP implied from the preference space model
-#' wtp_mnl_pref <- wtp(mnl_pref, price = "price")
+#' wtp_mnl_pref <- wtp(mnl_pref, scalePar = "price")
 #'
 #' # Estimate a MNL model in the WTP Space, using the computed WTP values
 #' # from the preference space model as starting points
 #' mnl_wtp <- logitr(
-#'   data       = yogurt,
-#'   outcome    = "choice",
-#'   obsID      = "obsID",
-#'   pars       = c("feat", "brand"),
-#'   price      = "price",
-#'   modelSpace = "wtp",
-#'   startVals  = wtp_mnl_pref$Estimate
+#'   data      = yogurt,
+#'   outcome   = "choice",
+#'   obsID     = "obsID",
+#'   pars      = c("feat", "brand"),
+#'   scalePar  = "price",
+#'   startVals = wtp_mnl_pref$Estimate
 #' )
 #'
 #' # Compare the WTP between the two spaces
-#' wtpCompare(mnl_pref, mnl_wtp, price = "price")
-wtpCompare <- function(model_pref, model_wtp, price) {
-  wtpCompareInputsCheck(model_pref, model_wtp, price)
-  pref <- wtp(model_pref, price)$Estimate
+#' wtpCompare(mnl_pref, mnl_wtp, scalePar = "price")
+wtpCompare <- function(model_pref, model_wtp, scalePar) {
+  wtpCompareInputsCheck(model_pref, model_wtp, scalePar)
+  pref <- wtp(model_pref, scalePar)$Estimate
   pref <- c(pref, model_pref$logLik)
   wtp <- stats::coef(model_wtp)
   wtp <- c(wtp, stats::logLik(model_wtp))

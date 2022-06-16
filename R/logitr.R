@@ -19,16 +19,20 @@
 #' @param obsID The name of the column that identifies each observation.
 #' @param pars The names of the parameters to be estimated in the model.
 #' Must be the same as the column names in the `data` argument. For WTP space
-#' models, do not include price in `pars`.
-#' @param price The name of the column that identifies the price variable.
-#' Required for WTP space models. Defaults to `NULL`.
+#' models, do not include the `scalePar` variable in `pars`.
+#' @param scalePar The name of the column that identifies the scale variable,
+#' which is typically "price" for WTP space models, but could be any
+#' continuous variable, such as "time". Defaults to `NULL`.
 #' @param randPars A named vector whose names are the random parameters and
-#' values the distribution: `'n'` for normal or `'ln'` for log-normal.
-#' Defaults to `NULL`.
-#' @param randPrice The random distribution for the price parameter: `'n'` for
-#' normal or `'ln'` for log-normal. Only used for WTP space MXL models.
-#' Defaults to `NULL`.
-#' @param modelSpace Set to `'wtp'` for WTP space models. Defaults to `"pref"`.
+#' values the distribution: `'n'` for normal, `'ln'` for log-normal, or
+#' `'cn'` for zero-censored normal. Defaults to `NULL`.
+#' @param randScale The random distribution for the scale parameter: `'n'` for
+#' normal, `'ln'` for log-normal, or `'cn'` for zero-censored normal. Only used
+#' for WTP space MXL models. Defaults to `NULL`.
+#' @param modelSpace This argument is no longer needed as of v0.7.0. The model
+#' space is now determined based on the `scalePar` argument:
+#' if `NULL` (the default), the model will be in the preference space,
+#' otherwise it will be in the WTP space. Defaults to `NULL`.
 #' @param weights The name of the column that identifies the weights to be
 #' used in model estimation. Defaults to `NULL`.
 #' @param panelID The name of the column that identifies the individual (for
@@ -66,6 +70,9 @@
 #' generated during each call to `logitr` (the same draws are used during each
 #' multistart iteration). The user can override those draws by providing a
 #' matrix of standard normal draws if desired. Defaults to `NULL`.
+#' @param drawType Specify the draw type as a character: `"halton"`
+#' (the default) or `"sobol"` (recommended for models with more than 5
+#' random parameters).
 #' @param numDraws The number of Halton draws to use for MXL models for the
 #' maximum simulated likelihood. Defaults to `50`.
 #' @param numCores The number of cores to use for parallel processing of the
@@ -79,6 +86,10 @@
 #' residuals are not included in the returned object. Defaults to `TRUE`.
 #' @param options A list of options for controlling the `nloptr()` optimization.
 #' Run `nloptr::nloptr.print.options()` for details.
+#' @param price No longer used as of v0.7.0 - if provided, this is passed
+#' to the `scalePar` argument and a warning is displayed.
+#' @param randPrice No longer used as of v0.7.0 - if provided, this is passed
+#' to the `randScale` argument and a warning is displayed.
 #' @param choice No longer used as of v0.4.0 - if provided, this is passed
 #' to the `outcome` argument and a warning is displayed.
 #' @param choiceName No longer used as of v0.2.3 - if provided, this is passed
@@ -88,7 +99,7 @@
 #' @param parNames No longer used as of v0.2.3 - if provided, this is passed
 #' to the `pars` argument and a warning is displayed.
 #' @param priceName No longer used as of v0.2.3 - if provided, this is passed
-#' to the `price` argument and a warning is displayed.
+#' to the `scalePar` argument and a warning is displayed.
 #' @param weightsName No longer used as of v0.2.3 - if provided, this is passed
 #' to the `weights` argument and a warning is displayed.
 #' @param clusterName No longer used as of v0.2.3 - if provided, this is passed
@@ -167,8 +178,7 @@
 #'   outcome        = "choice",
 #'   obsID          = "obsID",
 #'   pars           = c("feat", "brand"),
-#'   price          = "price",
-#'   modelSpace     = "wtp",
+#'   scalePar       = "price",
 #'   numMultiStarts = 5
 #' )
 #'
@@ -188,10 +198,10 @@ logitr <- function(
   outcome,
   obsID,
   pars,
-  price           = NULL,
+  scalePar        = NULL,
   randPars        = NULL,
-  randPrice       = NULL,
-  modelSpace      = "pref",
+  randScale       = NULL,
+  modelSpace      = NULL,
   weights         = NULL,
   panelID         = NULL,
   clusterID       = NULL,
@@ -203,6 +213,7 @@ logitr <- function(
   useAnalyticGrad = TRUE,
   scaleInputs     = TRUE,
   standardDraws   = NULL,
+  drawType        = 'halton',
   numDraws        = 50,
   numCores        = NULL,
   vcov            = FALSE,
@@ -216,6 +227,8 @@ logitr <- function(
     maxeval     = 1000,
     algorithm   = "NLOPT_LD_LBFGS"
   ),
+  price, # Outdated argument names as of v0.7.0
+  randPrice, # Outdated argument names as of v0.7.0
   choice, # Outdated argument names as of v0.4.0
   parNames, # Outdated argument names as of v0.2.3
   choiceName,
@@ -233,61 +246,81 @@ logitr <- function(
   if (any("parNames" %in% calls)) {
     pars <- parNames
     warning(
-      "The 'parNames' argument is outdate as of v0.2.3. Use 'pars' instead"
+      "The 'parNames' argument is outdated as of v0.2.3. Use 'pars' instead"
     )
   }
   if (any("choiceName" %in% calls)) {
     outcome <- choiceName
     warning(
-      "The 'choiceName' argument is outdate as of v0.2.3. Use 'outcome' instead"
+      "The 'choiceName' argument is outdated as of v0.2.3. Use 'outcome' instead"
     )
   }
   if (any("choice" %in% calls)) {
     outcome <- choice
     warning(
-      "The 'choice' argument is outdate as of v0.4.0. Use 'outcome' instead"
+      "The 'choice' argument is outdated as of v0.4.0. Use 'outcome' instead"
     )
   }
   if (any("obsIDName" %in% calls)) {
     obsID <- obsIDName
     warning(
-      "The 'obsIDName' argument is outdate as of v0.2.3. Use 'obsID' instead"
+      "The 'obsIDName' argument is outdated as of v0.2.3. Use 'obsID' instead"
     )
   }
   if (any("priceName" %in% calls)) {
     price <- priceName
     warning(
-      "The 'priceName' argument is outdate as of v0.2.3. Use 'price' instead"
+      "The 'priceName' argument is outdated as of v0.2.3. Use 'price' instead"
     )
   }
   if (any("weightsName" %in% calls)) {
     weights <- weightsName
     warning(
-      "The 'weightsName' argument is outdate as of v0.2.3. Use 'weights' ",
+      "The 'weightsName' argument is outdated as of v0.2.3. Use 'weights' ",
       "instead"
     )
   }
   if (any("clusterName" %in% calls)) {
     clusterID <- clusterName
     warning(
-      "The 'clusterName' argument is outdate as of v0.2.3. Use 'clusterID' ",
+      "The 'clusterName' argument is outdated as of v0.2.3. Use 'clusterID' ",
       "instead"
     )
   }
   if (any("cluster" %in% calls)) {
     clusterID <- cluster
     warning(
-      "The 'cluster' argument is outdate as of v0.2.3. Use 'clusterID' instead"
+      "The 'cluster' argument is outdated as of v0.2.3. Use 'clusterID' instead"
+    )
+  }
+  if (any("price" %in% calls)) {
+    scalePar <- price
+    warning(
+      "The 'price' argument is outdated as of v0.7.0. Use 'scalePar' instead"
+    )
+  }
+  if (any("randPrice" %in% calls)) {
+    randScale <- randPrice
+    warning(
+      "The 'randPrice' argument is outdated as of v0.7.0. Use 'randScale' instead"
+    )
+  }
+  if (any("modelSpace" %in% calls)) {
+    warning(
+      "The 'modelSpace' argument is no longer needed as of v0.7.0. and will ",
+      "be ignored. The model space is now determined based on the scalePar ",
+      "argument: if NULL (the default), the model will be in the preference ",
+      "space, otherwise it will be in the WTP space."
     )
   }
 
   data <- as.data.frame(data) # tibbles break things
 
   modelInputs <- getModelInputs(
-    data, outcome, obsID, pars, randPars, price, randPrice, modelSpace,
+    data, outcome, obsID, pars, randPars, scalePar, randScale,
     weights, panelID, clusterID, robust, startParBounds, startVals,
-    numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, numDraws,
-    numCores, vcov, predict, correlation, call, options
+    numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
+    numDraws, numCores, vcov, predict, correlation, call, options
   )
 
   allModels <- runMultistart(modelInputs)

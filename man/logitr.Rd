@@ -9,10 +9,10 @@ logitr(
   outcome,
   obsID,
   pars,
-  price = NULL,
+  scalePar = NULL,
   randPars = NULL,
-  randPrice = NULL,
-  modelSpace = "pref",
+  randScale = NULL,
+  modelSpace = NULL,
   weights = NULL,
   panelID = NULL,
   clusterID = NULL,
@@ -24,12 +24,15 @@ logitr(
   useAnalyticGrad = TRUE,
   scaleInputs = TRUE,
   standardDraws = NULL,
+  drawType = "halton",
   numDraws = 50,
   numCores = NULL,
   vcov = FALSE,
   predict = TRUE,
   options = list(print_level = 0, xtol_rel = 1e-06, xtol_abs = 1e-06, ftol_rel = 1e-06,
     ftol_abs = 1e-06, maxeval = 1000, algorithm = "NLOPT_LD_LBFGS"),
+  price,
+  randPrice,
   choice,
   parNames,
   choiceName,
@@ -50,20 +53,24 @@ which should be coded with a \code{1} for \code{TRUE} and \code{0} for \code{FAL
 
 \item{pars}{The names of the parameters to be estimated in the model.
 Must be the same as the column names in the \code{data} argument. For WTP space
-models, do not include price in \code{pars}.}
+models, do not include the \code{scalePar} variable in \code{pars}.}
 
-\item{price}{The name of the column that identifies the price variable.
-Required for WTP space models. Defaults to \code{NULL}.}
+\item{scalePar}{The name of the column that identifies the scale variable,
+which is typically "price" for WTP space models, but could be any
+continuous variable, such as "time". Defaults to \code{NULL}.}
 
 \item{randPars}{A named vector whose names are the random parameters and
-values the distribution: \code{'n'} for normal or \code{'ln'} for log-normal.
-Defaults to \code{NULL}.}
+values the distribution: \code{'n'} for normal, \code{'ln'} for log-normal, or
+\code{'cn'} for zero-censored normal. Defaults to \code{NULL}.}
 
-\item{randPrice}{The random distribution for the price parameter: \code{'n'} for
-normal or \code{'ln'} for log-normal. Only used for WTP space MXL models.
-Defaults to \code{NULL}.}
+\item{randScale}{The random distribution for the scale parameter: \code{'n'} for
+normal, \code{'ln'} for log-normal, or \code{'cn'} for zero-censored normal. Only used
+for WTP space MXL models. Defaults to \code{NULL}.}
 
-\item{modelSpace}{Set to \code{'wtp'} for WTP space models. Defaults to \code{"pref"}.}
+\item{modelSpace}{This argument is no longer needed as of v0.7.0. The model
+space is now determined based on the \code{scalePar} argument:
+if \code{NULL} (the default), the model will be in the preference space,
+otherwise it will be in the WTP space. Defaults to \code{NULL}.}
 
 \item{weights}{The name of the column that identifies the weights to be
 used in model estimation. Defaults to \code{NULL}.}
@@ -113,6 +120,10 @@ generated during each call to \code{logitr} (the same draws are used during each
 multistart iteration). The user can override those draws by providing a
 matrix of standard normal draws if desired. Defaults to \code{NULL}.}
 
+\item{drawType}{Specify the draw type as a character: \code{"halton"}
+(the default) or \code{"sobol"} (recommended for models with more than 5
+random parameters).}
+
 \item{numDraws}{The number of Halton draws to use for MXL models for the
 maximum simulated likelihood. Defaults to \code{50}.}
 
@@ -131,6 +142,12 @@ residuals are not included in the returned object. Defaults to \code{TRUE}.}
 \item{options}{A list of options for controlling the \code{nloptr()} optimization.
 Run \code{nloptr::nloptr.print.options()} for details.}
 
+\item{price}{No longer used as of v0.7.0 - if provided, this is passed
+to the \code{scalePar} argument and a warning is displayed.}
+
+\item{randPrice}{No longer used as of v0.7.0 - if provided, this is passed
+to the \code{randScale} argument and a warning is displayed.}
+
 \item{choice}{No longer used as of v0.4.0 - if provided, this is passed
 to the \code{outcome} argument and a warning is displayed.}
 
@@ -144,7 +161,7 @@ to the \code{outcome} argument and a warning is displayed.}
 to the \code{obsID} argument and a warning is displayed.}
 
 \item{priceName}{No longer used as of v0.2.3 - if provided, this is passed
-to the \code{price} argument and a warning is displayed.}
+to the \code{scalePar} argument and a warning is displayed.}
 
 \item{weightsName}{No longer used as of v0.2.3 - if provided, this is passed
 to the \code{weights} argument and a warning is displayed.}
@@ -233,8 +250,7 @@ mnl_wtp <- logitr(
   outcome        = "choice",
   obsID          = "obsID",
   pars           = c("feat", "brand"),
-  price          = "price",
-  modelSpace     = "wtp",
+  scalePar       = "price",
   numMultiStarts = 5
 )
 

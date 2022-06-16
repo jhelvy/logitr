@@ -85,25 +85,23 @@ probs_mnl_pref
 
 ## WTP space models
 
-WTP space models can also be used to predict probabilities, but the `price` argument must be specified for predictions being made on a new data set. In the example below, a WTP space model is estimated and used to predict probabilities for the same `data` data frame as in the previous examples:
+WTP space models can also be used to predict probabilities. In the example below, a WTP space model is estimated and used to predict probabilities for the same `data` data frame as in the previous examples:
 
 ```{r}
 mnl_wtp <- logitr(
-  data    = yogurt,
-  outcome = 'choice',
-  obsID   = 'obsID',
-  pars    = c('feat', 'brand'),
-  price   = 'price',
-  modelSpace = 'wtp',
+  data     = yogurt,
+  outcome  = 'choice',
+  obsID    = 'obsID',
+  pars     = c('feat', 'brand'),
+  scalePar = 'price',
   numMultiStarts = 10
 )
 
 probs_mnl_wtp <- predict(
   mnl_wtp,
   newdata = data,
-  obsID = "obsID",
-  price = "price",
-  ci = 0.95
+  obsID   = "obsID",
+  ci      = 0.95
 )
 
 probs_mnl_wtp

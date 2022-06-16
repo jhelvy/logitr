@@ -13,7 +13,8 @@ recodeData(data, pars, randPars)
 
 \item{pars}{The names of the parameters to be estimated in the model.
 Must be the same as the column names in the \code{data} argument. For WTP space
-models, do not include price in \code{pars}.}
+models, do not include price in \code{pars} - it should instead be defined by
+the \code{scalePar} argument.}
 
 \item{randPars}{A named vector whose names are the random parameters and
 values the distribution: \code{'n'} for normal or \code{'ln'} for log-normal.

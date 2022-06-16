@@ -200,7 +200,7 @@ getRandParSummary <- function(object) {
   parIDs <- object$parIDs
   n <- object$n
   n$draws <- 10^4
-  standardDraws <- getStandardDraws(parIDs, n$draws)
+  standardDraws <- getStandardDraws(parIDs, n$draws, 'halton')
   betaDraws <- makeBetaDraws(
       stats::coef(object), parIDs, n, standardDraws, object$inputs$correlation)
   randParSummary <- apply(betaDraws, 2, summary)
@@ -239,7 +239,7 @@ getModelType <- function(x) {
 
 getModelSpace <- function(x) {
   return(ifelse(
-    x$inputs$modelSpace == "pref", "Preference", "Willingness-to-Pay"))
+    x$modelSpace == "pref", "Preference", "Willingness-to-Pay"))
 }
 
 getModelRun <- function(x) {
@@ -306,7 +306,7 @@ getCovarianceRobust <- function(object) {
   inputs <- object$inputs
   parSetup <- object$parSetup
   modelInputs <- list(
-    logitFuncs = setLogitFunctions(inputs$modelSpace),
+    logitFuncs = setLogitFunctions(object$modelSpace),
     evalFuncs  = setEvalFunctions(object$modelType, inputs$useAnalyticGrad),
     inputs     = inputs,
     modelType  = object$modelType,
@@ -340,7 +340,7 @@ getClusterModelInputs <- function (indices, mi, i) {
   # Cast to matrix in cases where there is 1 independent variable
   X <- checkMatrix(X)
   mi$data_diff$X <- X
-  mi$data_diff$price <- mi$data_diff$price[indices]
+  mi$data_diff$scalePar <- mi$data_diff$scalePar[indices]
   obsID <- mi$data_diff$obsID[indices]
   unique_obsID <- unique(obsID)
   mi$data_diff$obsID <- obsID

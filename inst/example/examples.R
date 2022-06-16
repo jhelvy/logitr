@@ -27,9 +27,8 @@ mxl_wtp <- logitr(
   obsID      = 'obsID',
   panelID    = 'id',
   pars       = c('feat', 'brand'),
-  price      = 'price',
+  scalePar   = 'price',
   randPars   = c(feat = 'n', brand = 'n'),
-  modelSpace = 'wtp',
   numMultiStarts = 10,
   startVals = wtp_mxl_pref$Estimate
 )

@@ -3,35 +3,14 @@
 # ============================================================================
 
 runInputChecks <- function(data, inputs) {
-  if (! is.null(inputs$price)) {
-    if (inputs$price %in% inputs$pars) {
+  if (! is.null(inputs$scalePar)) {
+    if (inputs$scalePar %in% inputs$pars) {
       stop(
-        'The value provided for the "price" argument is also included ',
+        'The value provided for the "scalePar" argument is also included ',
         'in the "pars" argument. If you are estimating a WTP space model',
-        ', you should remove the price name from the "pars" argument and ',
-        'provide it separately with the "price" argument.'
+        ', you should remove the "scalePar" name from the "pars" argument.'
       )
     }
-    if (inputs$modelSpace != "wtp") {
-      stop(
-        'The "price" argument should only be used for WTP space models. ',
-        'Please either set the "modelSpace" argument to "wtp" or remove the ',
-        '"price" argument.'
-      )
-    }
-  }
-  if (! inputs$modelSpace %in% c('pref', 'wtp')) {
-    stop(
-      'The "modelSpace" argument must be set to either "pref" or "wtp", all ',
-      'lower case (defaults to "pref").'
-    )
-  }
-  if ((inputs$modelSpace == 'wtp') & is.null(inputs$price)) {
-    stop(
-      'You are estimating a WTP space model but have not provided a ',
-      '"price" argument. Please set "price" equal to the name of the ',
-      'column in your data frame that represents "price".'
-    )
   }
 
   # Check that randPars names match those in pars
@@ -58,6 +37,11 @@ runInputChecks <- function(data, inputs) {
   }
   missingInData(c(parsInt, parsNoInt), "pars", dataColumnNames)
 
+  # Make sure the drawType is either 'halton' or 'sobol'
+  if (! inputs$drawType %in% c('halton', 'sobol')) {
+    stop("drawType must be either 'halton' or 'sobol'")
+  }
+
   # Make sure the number of multistarts and numDraws are positive
   if (inputs$numMultiStarts < 1) {
     stop('"numMultiStarts" must be a positive integer')
@@ -75,7 +59,6 @@ runInputChecks <- function(data, inputs) {
       )
     }
   }
-
 }
 
 missingInData <- function(vals, var, dataColumnNames) {
@@ -118,7 +101,7 @@ checkOptions <- function(options) {
   return(options)
 }
 
-predictInputsCheck <- function(object, newdata, obsID, price, type, ci) {
+predictInputsCheck <- function(object, newdata, obsID, type, ci) {
   if (!is_logitr(object)) {
     stop(
       'The "object" argument must be a object estimated using the logitr() ',
@@ -130,26 +113,10 @@ predictInputsCheck <- function(object, newdata, obsID, price, type, ci) {
     if (is.null(obsID)) {
       stop('"obsID" must be specified if newdata is not NULL')
     }
-    if (object$inputs$modelSpace == "wtp") {
-      if (is.null(price)) {
-        stop(
-          '"price" must be specified if "object" is a WTP space model and ',
-          'newdata is not NULL'
-        )
-      }
-    }
     if (!is.null(obsID)) {
       if (! obsID %in% names(newdata)) {
         stop(
           'The "obsID" argument refers to a column that does not exist in ',
-          'the "newdata" data frame'
-        )
-      }
-    }
-    if (!is.null(price)) {
-      if (! price %in% names(newdata)) {
-        stop(
-          'The "price" argument refers to a column that does not exist in ',
           'the "newdata" data frame'
         )
       }
@@ -181,8 +148,8 @@ predictInputsCheck <- function(object, newdata, obsID, price, type, ci) {
 
 predictParCheck <- function(model, X) {
   modelPars <- names(model$parSetup)
-  if (model$inputs$modelSpace == "wtp") {
-    # Drop lambda parameter
+  if (model$modelSpace == "wtp") {
+    # Drop scale parameter (lambda)
     modelPars <- modelPars[2:length(modelPars)]
   }
   dataNames <- colnames(X)
@@ -201,31 +168,31 @@ predictParCheck <- function(model, X) {
   }
 }
 
-wtpInputsCheck <- function(model, price) {
+wtpInputsCheck <- function(model, scalePar) {
   if (missing(model)) stop('"model" needs to be specified')
-  if (missing(price)) stop('"price" needs to be specified')
+  if (missing(scalePar)) stop('"scalePar" needs to be specified')
   if (!is_logitr(model)) {
-    stop('model must be a model estimated using the logitr() function.')
+    stop('"model" must be an object of class "logitr".')
   }
-  if (! price %in% names(stats::coef(model))) {
-    stop('"price" must be the name of a coefficient in "model".')
-  }
-  if (model$inputs$modelSpace != "pref") {
+  if (model$modelSpace != "pref") {
     stop('model must be a preference space model.')
   }
 }
 
-wtpCompareInputsCheck <- function(model_pref, model_wtp, price) {
+wtpCompareInputsCheck <- function(model_pref, model_wtp, scalePar) {
   if (missing(model_pref)) stop('"model_pref" needs to be specified')
   if (missing(model_wtp)) stop('"model_wtp" needs to be specified')
-  if (missing(price)) stop('"price" needs to be specified')
+  if (missing(scalePar)) stop('"scalePar" needs to be specified')
   if (!is_logitr(model_pref)) {
-    stop('"model_pref" must be a model estimated using the logitr() function.')
+    stop('"model_pref" must be an object of class "logitr".')
   }
   if (!is_logitr(model_wtp)) {
-    stop('"model_wtp" must be a model estimated using the logitr() function.')
+    stop('"model_wtp" must be an object of class "logitr".')
   }
-  if (! price %in% names(stats::coef(model_pref))) {
-    stop('"price" must be the name of a coefficient in "model_pref"')
+  if (model_pref$modelSpace != "pref") {
+    stop('"model_pref" must be a preference space model.')
+  }
+  if (model_wtp$modelSpace != "wtp") {
+    stop('"model_wtp" must be a preference space model.')
   }
 }

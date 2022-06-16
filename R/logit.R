@@ -25,7 +25,7 @@ getLogit <- function(expV, obsID) {
 
 mnlNegLLAndGradLL <- function(pars, mi) {
   d <- mi$data_diff
-  V <- mi$logitFuncs$getMnlV(pars, d$X, d$price)
+  V <- mi$logitFuncs$getMnlV(pars, d$X, d$scalePar)
   expV <- exp(V)
   logit <- getLogit(expV, d$obsID)
   return(list(
@@ -37,7 +37,7 @@ mnlNegLLAndGradLL <- function(pars, mi) {
 
 getMnlNegLL <- function(pars, mi) {
   d <- mi$data_diff
-  V <- mi$logitFuncs$getMnlV(pars, d$X, d$price)
+  V <- mi$logitFuncs$getMnlV(pars, d$X, d$scalePar)
   expV <- exp(V)
   logit <- getLogit(expV, d$obsID)
   return(negLL(logit, d$weights))
@@ -45,7 +45,7 @@ getMnlNegLL <- function(pars, mi) {
 
 getMnlNegGradLL <- function(pars, mi) {
   d <- mi$data_diff
-  V <- mi$logitFuncs$getMnlV(pars, d$X, d$price)
+  V <- mi$logitFuncs$getMnlV(pars, d$X, d$scalePar)
   expV <- exp(V)
   logit <- getLogit(expV, d$obsID)
   return(mi$logitFuncs$mnlNegGradLL(
@@ -63,7 +63,7 @@ getMnlHessLL <- function(pars, mi) {
 # Preference Space Logit Functions - MNL models
 # ============================================================================
 
-getMnlV_pref <- function(pars, X, price) {
+getMnlV_pref <- function(pars, X, scalePar) {
   return(X %*% pars)
 }
 
@@ -115,7 +115,7 @@ mxlNegLLAndGradLL <- function(pars, mi) {
   betaDraws <- makeBetaDraws(
     pars, mi$parIDs, mi$n, mi$standardDraws, mi$inputs$correlation
   )
-  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price, mi$n)
+  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$scalePar, mi$n)
   expVDraws <- exp(VDraws)
   logitDraws <- getLogit(expVDraws, d$obsID)
   logitDrawsPanel <- logitDraws
@@ -130,7 +130,7 @@ mxlNegLLAndGradLL <- function(pars, mi) {
     gradient = mi$logitFuncs$mxlNegGradLL(
       betaDraws, VDraws, expVDraws, logitDraws, logitDrawsPanel, pHat,
       mi$partials, d$obsID, d$panelID, mi$parIDs, d$weights, mi$n,
-      mi$inputs$randPrice, mi$panel)
+      mi$inputs$randScale, mi$panel)
   ))
 }
 
@@ -140,7 +140,7 @@ getMxlNegLL <- function(pars, mi) {
   betaDraws <- makeBetaDraws(
     pars, mi$parIDs, mi$n, mi$standardDraws, mi$inputs$correlation
   )
-  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price, mi$n)
+  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$scalePar, mi$n)
   expVDraws <- exp(VDraws)
   logitDraws <- getLogit(expVDraws, d$obsID)
   logitDrawsPanel <- logitDraws
@@ -158,7 +158,7 @@ getMxlNegGradLL <- function(pars, mi) {
   betaDraws <- makeBetaDraws(
     pars, mi$parIDs, mi$n, mi$standardDraws, mi$inputs$correlation
   )
-  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$price, mi$n)
+  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$scalePar, mi$n)
   expVDraws <- exp(VDraws)
   logitDraws <- getLogit(expVDraws, d$obsID)
   logitDrawsPanel <- logitDraws
@@ -171,7 +171,7 @@ getMxlNegGradLL <- function(pars, mi) {
   return(mi$logitFuncs$mxlNegGradLL(
       betaDraws, VDraws, expVDraws, logitDraws, logitDrawsPanel, pHat,
       mi$partials, d$obsID, d$panelID, mi$parIDs, d$weights, mi$n,
-      mi$inputs$randPrice, mi$panel)
+      mi$inputs$randScale, mi$panel)
   )
 }
 
@@ -243,7 +243,7 @@ getMxlV_pref <- function(betaDraws, X, p, n) {
 
 mxlNegGradLL_pref <- function(
   betaDraws, VDraws, expVDraws, logitDraws, logitDrawsPanel, pHat, partials,
-  obsID, panelID, parIDs, weights, n, randPrice, panel
+  obsID, panelID, parIDs, weights, n, randScale, panel
 ) {
   # First, adjust partials for any log-normal parameters
   partials <- updatePartials(partials, parIDs, betaDraws, n)
@@ -276,7 +276,7 @@ getMxlV_wtp <- function(betaDraws, X, p, n) {
 
 mxlNegGradLL_wtp <- function(
   betaDraws, VDraws, expVDraws, logitDraws, logitDrawsPanel, pHat, partials,
-  obsID, panelID, parIDs, weights, n, randPrice, panel
+  obsID, panelID, parIDs, weights, n, randScale, panel
 ) {
   # First, adjust partials for any log-normal parameters
   partials <- updatePartials(partials, parIDs, betaDraws, n)
@@ -284,7 +284,7 @@ mxlNegGradLL_wtp <- function(
   lambdaDraws <- repmat(matrix(betaDraws[,1], nrow = 1), n$rowX, 1)
   partial_lambda_mean <- VDraws / lambdaDraws
   partials[[1]] <- partial_lambda_mean
-  if (!is.null(randPrice)) {
+  if (!is.null(randScale)) {
     lambda_sdID <- parIDs$lambdaIDs[2]
     partials[[lambda_sdID]] <- partials[[lambda_sdID]]*partial_lambda_mean
     # Account for if lambda is log-normally distributed
@@ -298,7 +298,7 @@ mxlNegGradLL_wtp <- function(
     partials[[id]] <- partials[[id]]*lambdaDraws
   }
   # Account for lambda in correlated pars
-  if (!is.null(randPrice)) {
+  if (!is.null(randScale)) {
     for (id in parIDs$lambdaOffDiag) {
       partials[[id]] <- partials[[id]] / lambdaDraws * partial_lambda_mean
     }
