@@ -41,12 +41,13 @@ getModelInputs <- function(
   runInputChecks(data, inputs)
   options <- checkOptions(options)
 
-  # Set the modelSpace
+  # Set the modelSpace based on whether the scalePar is NULL
   if (is.null(scalePar)) {
-      inputs$modelSpace <- "pref"
+      modelSpace <- "pref"
   } else {
-      inputs$modelSpace <- "wtp"
+      modelSpace <- "wtp"
   }
+  inputs$modelSpace <- modelSpace
 
   # Get the design matrix, recoding parameters that are categorical
   # or have interactions

@@ -29,12 +29,10 @@
 #' @param randScale The random distribution for the scale parameter: `'n'` for
 #' normal, `'ln'` for log-normal, or `'cn'` for zero-censored normal. Only used
 #' for WTP space MXL models. Defaults to `NULL`.
-#' @param modelSpace Optional argument to set model space as `'wtp'` for WTP
-#' space models or `"pref"` for preference space models. No longer used as of
-#' package verion 0.7.0. Instead, this variable is determined based on whether
-#' the `scalePar` argument is specified. If `scalePar = NULL` (the default),
-#' the model will be estimated in the preference space, otherwise it will be
-#' estimated as a WTP space model. Defaults to `"pref"`.
+#' @param modelSpace This argument is no longer needed as of v0.7.0. The model
+#' space is now determined based on the `scalePar` argument:
+#' if `NULL` (the default), the model will be in the preference space,
+#' otherwise it will be in the WTP space. Defaults to `NULL`.
 #' @param weights The name of the column that identifies the weights to be
 #' used in model estimation. Defaults to `NULL`.
 #' @param panelID The name of the column that identifies the individual (for
@@ -203,7 +201,7 @@ logitr <- function(
   scalePar        = NULL,
   randPars        = NULL,
   randScale       = NULL,
-  modelSpace      = "pref",
+  modelSpace      = NULL,
   weights         = NULL,
   panelID         = NULL,
   clusterID       = NULL,
@@ -305,6 +303,14 @@ logitr <- function(
     randScale <- randPrice
     warning(
       "The 'randPrice' argument is outdated as of v0.7.0. Use 'randScale' instead"
+    )
+  }
+  if (any("modelSpace" %in% calls)) {
+    warning(
+      "The 'modelSpace' argument is no longer needed as of v0.7.0. and will ",
+      "be ignored. The model space is now determined based on the scalePar ",
+      "argument: if NULL (the default), the model will be in the preference ",
+      "space, otherwise it will be in the WTP space."
     )
   }
 
