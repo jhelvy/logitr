@@ -18,9 +18,6 @@
 #' @param obsID The name of the column that identifies each set of
 #' alternatives in the data. Required if newdata != NULL. Defaults to `NULL`,
 #' in which case the value for `obsID` from the data in `object` is used.
-#' @param scalePar The name of the column that identifies the scale variable,
-#' which is typically "price" for WTP space models, but could be any
-#' continuous variable, such as "time". Defaults to `NULL`.
 #' @param type A character vector defining what to predict: `prob` for
 #' probabilities, `outcomes` for outcomes. If you want both outputs, use
 #' `c("prob", "outcome")`. Outcomes are predicted randomly according to the
@@ -73,14 +70,13 @@ predict.logitr <- function(
   object,
   newdata    = NULL,
   obsID      = NULL,
-  scalePar   = NULL,
   type       = "prob",
   returnData = FALSE,
   ci         = NULL,
   numDrawsCI = 10^3,
   ...
 ) {
-  predictInputsCheck(object, newdata, obsID, scalePar, type, ci)
+  predictInputsCheck(object, newdata, obsID, type, ci)
   d <- object$data
   # If no newdata is provided, use the data from the estimated object
   if (is.null(newdata)) {
@@ -137,7 +133,7 @@ formatNewData <- function(object, newdata, obsID) {
   scalePar <- NA
   if (object$modelSpace == "wtp") {
     scalePar <- as.matrix(
-      newdata[, which(colnames(newdata) == inputs$scalePar)])
+      newdata[, which(colnames(newdata) == object$inputs$scalePar)])
   }
   if (is.null(obsID)) {
     obsIDName <- inputs$obsID # Use obsID from estimated object

@@ -101,7 +101,7 @@ checkOptions <- function(options) {
   return(options)
 }
 
-predictInputsCheck <- function(object, newdata, obsID, scalePar, type, ci) {
+predictInputsCheck <- function(object, newdata, obsID, type, ci) {
   if (!is_logitr(object)) {
     stop(
       'The "object" argument must be a object estimated using the logitr() ',
@@ -113,26 +113,10 @@ predictInputsCheck <- function(object, newdata, obsID, scalePar, type, ci) {
     if (is.null(obsID)) {
       stop('"obsID" must be specified if newdata is not NULL')
     }
-    if (object$modelSpace == "wtp") {
-      if (is.null(scalePar)) {
-        stop(
-          '"scalePar" must be specified if "object" is a WTP space model and ',
-          'newdata is not NULL'
-        )
-      }
-    }
     if (!is.null(obsID)) {
       if (! obsID %in% names(newdata)) {
         stop(
           'The "obsID" argument refers to a column that does not exist in ',
-          'the "newdata" data frame'
-        )
-      }
-    }
-    if (!is.null(scalePar)) {
-      if (! scalePar %in% names(newdata)) {
-        stop(
-          'The "scalePar" argument refers to a column that does not exist in ',
           'the "newdata" data frame'
         )
       }
@@ -188,10 +172,7 @@ wtpInputsCheck <- function(model, scalePar) {
   if (missing(model)) stop('"model" needs to be specified')
   if (missing(scalePar)) stop('"scalePar" needs to be specified')
   if (!is_logitr(model)) {
-    stop('model must be a model estimated using the logitr() function.')
-  }
-  if (! scalePar %in% names(stats::coef(model))) {
-    stop('"scalePar" must be the name of a coefficient in "model".')
+    stop('"model" must be an object of class "logitr".')
   }
   if (model$modelSpace != "pref") {
     stop('model must be a preference space model.')
@@ -203,12 +184,15 @@ wtpCompareInputsCheck <- function(model_pref, model_wtp, scalePar) {
   if (missing(model_wtp)) stop('"model_wtp" needs to be specified')
   if (missing(scalePar)) stop('"scalePar" needs to be specified')
   if (!is_logitr(model_pref)) {
-    stop('"model_pref" must be a model estimated using the logitr() function.')
+    stop('"model_pref" must be an object of class "logitr".')
   }
   if (!is_logitr(model_wtp)) {
-    stop('"model_wtp" must be a model estimated using the logitr() function.')
+    stop('"model_wtp" must be an object of class "logitr".')
   }
-  if (! scalePar %in% names(stats::coef(model_pref))) {
-    stop('"scalePar" must be the name of a coefficient in "model_pref"')
+  if (model_pref$modelSpace != "pref") {
+    stop('"model_pref" must be a preference space model.')
+  }
+  if (model_wtp$modelSpace != "wtp") {
+    stop('"model_wtp" must be a preference space model.')
   }
 }
