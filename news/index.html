@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.0</span>
       </span>
     </div>
 
@@ -87,6 +87,17 @@
       <small>Source: <a href="https://github.com/jhelvy/logitr/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.7.0" id="logitr-070">logitr 0.7.0<a class="anchor" aria-label="anchor" href="#logitr-070"></a></h2>
+<ul><li>A new vignette on benchmarking was added which tests the package speed against other similar packages.</li>
+<li>A new data set, <code>runtimes</code>, was included, which is exported from the colab notebook used for benchmarking here: <a href="https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing" class="external-link uri">https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing</a>
+</li>
+<li>Sobol draws are supported via a new <code>drawType</code> argument.</li>
+<li>A warning is displayed against using Halton draws after 5 random variables have been specified in a mixed logit model. Users are encouraged to switch to using Sobol draws and increasing the number of draws to at least 200.</li>
+<li>Changed the argument name <code>price</code> to <code>scalePar</code> to be more general.</li>
+<li>Changed the argument name <code>randPrice</code> to <code>randScale</code> to be more general.</li>
+<li>The <code>modelSpace</code> argument is no longer required for specifying a WTP space model as it is redundant. Including a <code>scalePar</code> argument is enough to determine that it is a WTP space model.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6.1" id="logitr-061">logitr 0.6.1<small>2022-06-12</small><a class="anchor" aria-label="anchor" href="#logitr-061"></a></h2>
 <ul><li>Fixes error on some of the gradient tests from 0.6.0 release. The gradient tests were sensitive to the random starting parameters, so I modified how the starting parameters were set for the first iteration of a multistart loop such that they would be more consistent.</li></ul></div>
