@@ -1,3 +1,13 @@
+# logitr 0.7.0
+
+- A new vignette on benchmarking was added which tests the package speed against other similar packages.
+- A new data set, `runtimes`, was included, which is exported from the colab notebook used for benchmarking here: https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing
+- Sobol draws are supported via a new `drawType` argument.
+- A warning is displayed against using Halton draws after 5 random variables have been specified in a mixed logit model. Users are encouraged to switch to using Sobol draws and increasing the number of draws to at least 200.
+- Changed the argument name `price` to `scalePar` to be more general.
+- Changed the argument name `randPrice` to `randScale` to be more general.
+- The `modelSpace` argument is no longer required for specifying a WTP space model as it is redundant. Including a `scalePar` argument is enough to determine that it is a WTP space model.
+
 # logitr 0.6.1
 
 - Fixes error on some of the gradient tests from 0.6.0 release. The gradient tests were sensitive to the random starting parameters, so I modified how the starting parameters were set for the first iteration of a multistart loop such that they would be more consistent.
