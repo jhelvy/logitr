@@ -7,4 +7,5 @@
 0 errors | 0 warnings | 0 notes
 
 ## Notes
-* This is a new release
+* This is a new release.
+* Apologies for another release so soon (it's been a productive week) - this will be the last for at least a month or longer.
