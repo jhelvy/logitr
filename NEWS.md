@@ -1,3 +1,5 @@
+# logitr (development version)
+
 # logitr 0.7.0
 
 - A new vignette on benchmarking was added which tests the package speed against other similar packages.
