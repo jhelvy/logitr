@@ -5,7 +5,7 @@ citEntry(
   title    = "logitr: Fast Estimation of Multinomial and Mixed Logit Models with Preference Space and Willingness to Pay Space Utility Parameterizations",
   author   = "John Paul Helveston",
   year     = "2022",
-  note     = "R package version 0.6.1",
+  note     = "R package",
   url      = "https://jhelvy.github.io/logitr/",
-  textVersion = "John Paul Helveston (2022). logitr: Fast Estimation of Multinomial and Mixed Logit Models with Preference Space and Willingness to Pay Space Utility Parameterizations. R package version 0.6.1"
+  textVersion = "John Paul Helveston (2022). logitr: Fast Estimation of Multinomial and Mixed Logit Models with Preference Space and Willingness to Pay Space Utility Parameterizations."
 )

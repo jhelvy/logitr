@@ -66,14 +66,6 @@ View the [basic
 usage](https://jhelvy.github.io/logitr/articles/basic_usage.html) page
 for details on how to use **logitr** to estimate models.
 
-## Related software
-
-If you are a Python user, [`xlogit`](https://github.com/arteagac/xlogit)
-is a similar package built in Python. It has a similar user interface
-for defining models, and it is even faster than logitr as it uses
-GPU-accelerated estimation for mixed logit models. It is a good resource
-for comparing results with those from logitr.
-
 ## Author, Version, and License Information
 
 -   Author: *John Paul Helveston* <https://www.jhelvy.com/>
@@ -94,7 +86,7 @@ citation("logitr")
 #> 
 #>   John Paul Helveston (2022). logitr: Fast Estimation of Multinomial
 #>   and Mixed Logit Models with Preference Space and Willingness to Pay
-#>   Space Utility Parameterizations. R package version 0.6.1
+#>   Space Utility Parameterizations.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -102,7 +94,7 @@ citation("logitr")
 #>     title = {logitr: Fast Estimation of Multinomial and Mixed Logit Models with Preference Space and Willingness to Pay Space Utility Parameterizations},
 #>     author = {John Paul Helveston},
 #>     year = {2022},
-#>     note = {R package version 0.6.1},
+#>     note = {R package},
 #>     url = {https://jhelvy.github.io/logitr/},
 #>   }
 ```
