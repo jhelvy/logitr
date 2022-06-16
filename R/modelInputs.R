@@ -5,7 +5,7 @@
 
 # Creates a list of the data and other information needed for running the model
 getModelInputs <- function(
-    data, outcome, obsID, pars , randPars, scalePar, randScale, modelSpace,
+    data, outcome, obsID, pars , randPars, scalePar, randScale,
     weights, panelID, clusterID, robust, startParBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
     numDraws, numCores, vcov, predict, correlation, call, options
@@ -19,7 +19,6 @@ getModelInputs <- function(
     randPars        = randPars,
     scalePar        = scalePar,
     randScale       = randScale,
-    modelSpace      = modelSpace,
     weights         = weights,
     panelID         = panelID,
     clusterID       = clusterID,

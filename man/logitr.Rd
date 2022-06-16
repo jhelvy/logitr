@@ -12,7 +12,7 @@ logitr(
   scalePar = NULL,
   randPars = NULL,
   randScale = NULL,
-  modelSpace = "pref",
+  modelSpace = NULL,
   weights = NULL,
   panelID = NULL,
   clusterID = NULL,
@@ -67,12 +67,10 @@ values the distribution: \code{'n'} for normal, \code{'ln'} for log-normal, or
 normal, \code{'ln'} for log-normal, or \code{'cn'} for zero-censored normal. Only used
 for WTP space MXL models. Defaults to \code{NULL}.}
 
-\item{modelSpace}{Optional argument to set model space as \code{'wtp'} for WTP
-space models or \code{"pref"} for preference space models. No longer used as of
-package verion 0.7.0. Instead, this variable is determined based on whether
-the \code{scalePar} argument is specified. If \code{scalePar = NULL} (the default),
-the model will be estimated in the preference space, otherwise it will be
-estimated as a WTP space model. Defaults to \code{"pref"}.}
+\item{modelSpace}{This argument is no longer needed as of v0.7.0. The model
+space is now determined based on the \code{scalePar} argument:
+if \code{NULL} (the default), the model will be in the preference space,
+otherwise it will be in the WTP space. Defaults to \code{NULL}.}
 
 \item{weights}{The name of the column that identifies the weights to be
 used in model estimation. Defaults to \code{NULL}.}

@@ -9,7 +9,6 @@ data            = subset(data, data$id < 30)
 outcome         = 'choice'
 obsID           = 'obsID'
 scalePar        = NULL
-modelSpace      = "pref"
 randScale       = NULL
 clusterID       = NULL
 weights         = NULL
@@ -45,7 +44,7 @@ grad_check <- function(
 ) {
   # Creates random starting points
   mi <- getModelInputs(
-    data, outcome, obsID, pars, randPars, scalePar, randScale, modelSpace,
+    data, outcome, obsID, pars, randPars, scalePar, randScale,
     weights, panelID, clusterID, robust, startParBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
     numDraws, numCores, vcov, predict, correlation, call, options
