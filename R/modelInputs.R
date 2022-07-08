@@ -214,6 +214,9 @@ makeObsID <- function(data, obsID, outcome) {
       "the variables provided for 'obsID' and 'outcome'."
     )
   }
+  # Passed all checks, so now create a sequentially increasing numeric
+  # sequence for the obsID
+  obsID <- rep(seq_along(reps), reps)
   return(obsID)
 }
 
