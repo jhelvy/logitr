@@ -23,7 +23,7 @@ function to minimize the negative log-likelihood function.'><meta property="og:i
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.0.9001</span>
       </span>
     </div>
 
@@ -105,44 +105,44 @@ function to minimize the negative log-likelihood function.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">logitr</span><span class="op">(</span>
-  <span class="va">data</span>,
-  <span class="va">outcome</span>,
-  <span class="va">obsID</span>,
-  <span class="va">pars</span>,
-  scalePar <span class="op">=</span> <span class="cn">NULL</span>,
-  randPars <span class="op">=</span> <span class="cn">NULL</span>,
-  randScale <span class="op">=</span> <span class="cn">NULL</span>,
-  modelSpace <span class="op">=</span> <span class="cn">NULL</span>,
-  weights <span class="op">=</span> <span class="cn">NULL</span>,
-  panelID <span class="op">=</span> <span class="cn">NULL</span>,
-  clusterID <span class="op">=</span> <span class="cn">NULL</span>,
-  robust <span class="op">=</span> <span class="cn">FALSE</span>,
-  correlation <span class="op">=</span> <span class="cn">FALSE</span>,
-  startParBounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,
-  startVals <span class="op">=</span> <span class="cn">NULL</span>,
-  numMultiStarts <span class="op">=</span> <span class="fl">1</span>,
-  useAnalyticGrad <span class="op">=</span> <span class="cn">TRUE</span>,
-  scaleInputs <span class="op">=</span> <span class="cn">TRUE</span>,
-  standardDraws <span class="op">=</span> <span class="cn">NULL</span>,
-  drawType <span class="op">=</span> <span class="st">"halton"</span>,
-  numDraws <span class="op">=</span> <span class="fl">50</span>,
-  numCores <span class="op">=</span> <span class="cn">NULL</span>,
-  vcov <span class="op">=</span> <span class="cn">FALSE</span>,
-  predict <span class="op">=</span> <span class="cn">TRUE</span>,
-  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>print_level <span class="op">=</span> <span class="fl">0</span>, xtol_rel <span class="op">=</span> <span class="fl">1e-06</span>, xtol_abs <span class="op">=</span> <span class="fl">1e-06</span>, ftol_rel <span class="op">=</span> <span class="fl">1e-06</span>,
-    ftol_abs <span class="op">=</span> <span class="fl">1e-06</span>, maxeval <span class="op">=</span> <span class="fl">1000</span>, algorithm <span class="op">=</span> <span class="st">"NLOPT_LD_LBFGS"</span><span class="op">)</span>,
-  <span class="va">price</span>,
-  <span class="va">randPrice</span>,
-  <span class="va">choice</span>,
-  <span class="va">parNames</span>,
-  <span class="va">choiceName</span>,
-  <span class="va">obsIDName</span>,
-  <span class="va">priceName</span>,
-  <span class="va">weightsName</span>,
-  <span class="va">clusterName</span>,
-  <span class="va">cluster</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">logitr</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">outcome</span>,</span>
+<span>  <span class="va">obsID</span>,</span>
+<span>  <span class="va">pars</span>,</span>
+<span>  scalePar <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  randPars <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  randScale <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  modelSpace <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  panelID <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  clusterID <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  robust <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  correlation <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  startParBounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  startVals <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  numMultiStarts <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  useAnalyticGrad <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  scaleInputs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  standardDraws <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  drawType <span class="op">=</span> <span class="st">"halton"</span>,</span>
+<span>  numDraws <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  numCores <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  vcov <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  predict <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>print_level <span class="op">=</span> <span class="fl">0</span>, xtol_rel <span class="op">=</span> <span class="fl">1e-06</span>, xtol_abs <span class="op">=</span> <span class="fl">1e-06</span>, ftol_rel <span class="op">=</span> <span class="fl">1e-06</span>,</span>
+<span>    ftol_abs <span class="op">=</span> <span class="fl">1e-06</span>, maxeval <span class="op">=</span> <span class="fl">1000</span>, algorithm <span class="op">=</span> <span class="st">"NLOPT_LD_LBFGS"</span><span class="op">)</span>,</span>
+<span>  <span class="va">price</span>,</span>
+<span>  <span class="va">randPrice</span>,</span>
+<span>  <span class="va">choice</span>,</span>
+<span>  <span class="va">parNames</span>,</span>
+<span>  <span class="va">choiceName</span>,</span>
+<span>  <span class="va">obsIDName</span>,</span>
+<span>  <span class="va">priceName</span>,</span>
+<span>  <span class="va">weightsName</span>,</span>
+<span>  <span class="va">clusterName</span>,</span>
+<span>  <span class="va">cluster</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -359,46 +359,46 @@ Run <code><a href="https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html" cla
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># For more detailed examples, visit</span></span>
-<span class="r-in"><span class="co"># https://jhelvy.github.io/logitr/articles/</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr" class="external-link">logitr</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Estimate a MNL model in the Preference space</span></span>
-<span class="r-in"><span class="va">mnl_pref</span> <span class="op">&lt;-</span> <span class="fu">logitr</span><span class="op">(</span></span>
-<span class="r-in">  data    <span class="op">=</span> <span class="va">yogurt</span>,</span>
-<span class="r-in">  outcome <span class="op">=</span> <span class="st">"choice"</span>,</span>
-<span class="r-in">  obsID   <span class="op">=</span> <span class="st">"obsID"</span>,</span>
-<span class="r-in">  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># For more detailed examples, visit</span></span></span>
+<span class="r-in"><span><span class="co"># https://jhelvy.github.io/logitr/articles/</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr" class="external-link">logitr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Estimate a MNL model in the Preference space</span></span></span>
+<span class="r-in"><span><span class="va">mnl_pref</span> <span class="op">&lt;-</span> <span class="fu">logitr</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data    <span class="op">=</span> <span class="va">yogurt</span>,</span></span>
+<span class="r-in"><span>  outcome <span class="op">=</span> <span class="st">"choice"</span>,</span></span>
+<span class="r-in"><span>  obsID   <span class="op">=</span> <span class="st">"obsID"</span>,</span></span>
+<span class="r-in"><span>  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running model...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Done!</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Estimate a MNL model in the WTP space, using a 5-run multistart</span></span>
-<span class="r-in"><span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu">logitr</span><span class="op">(</span></span>
-<span class="r-in">  data           <span class="op">=</span> <span class="va">yogurt</span>,</span>
-<span class="r-in">  outcome        <span class="op">=</span> <span class="st">"choice"</span>,</span>
-<span class="r-in">  obsID          <span class="op">=</span> <span class="st">"obsID"</span>,</span>
-<span class="r-in">  pars           <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span>,</span>
-<span class="r-in">  scalePar       <span class="op">=</span> <span class="st">"price"</span>,</span>
-<span class="r-in">  numMultiStarts <span class="op">=</span> <span class="fl">5</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Estimate a MNL model in the WTP space, using a 5-run multistart</span></span></span>
+<span class="r-in"><span><span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu">logitr</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data           <span class="op">=</span> <span class="va">yogurt</span>,</span></span>
+<span class="r-in"><span>  outcome        <span class="op">=</span> <span class="st">"choice"</span>,</span></span>
+<span class="r-in"><span>  obsID          <span class="op">=</span> <span class="st">"obsID"</span>,</span></span>
+<span class="r-in"><span>  pars           <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  scalePar       <span class="op">=</span> <span class="st">"price"</span>,</span></span>
+<span class="r-in"><span>  numMultiStarts <span class="op">=</span> <span class="fl">5</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running multistart...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   Iterations: 5</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   Cores: 2</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Done!</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Estimate a MXL model in the Preference space with "feat"</span></span>
-<span class="r-in"><span class="co"># following a normal distribution</span></span>
-<span class="r-in"><span class="co"># Panel structure is accounted for in this example using "panelID"</span></span>
-<span class="r-in"><span class="va">mxl_pref</span> <span class="op">&lt;-</span> <span class="fu">logitr</span><span class="op">(</span></span>
-<span class="r-in">  data     <span class="op">=</span> <span class="va">yogurt</span>,</span>
-<span class="r-in">  outcome  <span class="op">=</span> <span class="st">"choice"</span>,</span>
-<span class="r-in">  obsID    <span class="op">=</span> <span class="st">"obsID"</span>,</span>
-<span class="r-in">  panelID  <span class="op">=</span> <span class="st">"id"</span>,</span>
-<span class="r-in">  pars     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span>,</span>
-<span class="r-in">  randPars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Estimate a MXL model in the Preference space with "feat"</span></span></span>
+<span class="r-in"><span><span class="co"># following a normal distribution</span></span></span>
+<span class="r-in"><span><span class="co"># Panel structure is accounted for in this example using "panelID"</span></span></span>
+<span class="r-in"><span><span class="va">mxl_pref</span> <span class="op">&lt;-</span> <span class="fu">logitr</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data     <span class="op">=</span> <span class="va">yogurt</span>,</span></span>
+<span class="r-in"><span>  outcome  <span class="op">=</span> <span class="st">"choice"</span>,</span></span>
+<span class="r-in"><span>  obsID    <span class="op">=</span> <span class="st">"obsID"</span>,</span></span>
+<span class="r-in"><span>  panelID  <span class="op">=</span> <span class="st">"id"</span>,</span></span>
+<span class="r-in"><span>  pars     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  randPars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running model...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Done!</span>
 </code></pre></div>
@@ -415,7 +415,7 @@ Run <code><a href="https://rdrr.io/pkg/nloptr/man/nloptr.print.options.html" cla
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

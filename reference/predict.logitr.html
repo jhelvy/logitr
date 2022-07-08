@@ -19,7 +19,7 @@ of a single or multiple sets of alternatives."><meta property="og:image" content
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.0.9001</span>
       </span>
     </div>
 
@@ -97,17 +97,17 @@ of a single or multiple sets of alternatives.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for logitr</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span>
-  <span class="va">object</span>,
-  newdata <span class="op">=</span> <span class="cn">NULL</span>,
-  obsID <span class="op">=</span> <span class="cn">NULL</span>,
-  type <span class="op">=</span> <span class="st">"prob"</span>,
-  returnData <span class="op">=</span> <span class="cn">FALSE</span>,
-  ci <span class="op">=</span> <span class="cn">NULL</span>,
-  numDrawsCI <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="fl">3</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for logitr</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  newdata <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  obsID <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"prob"</span>,</span>
+<span>  returnData <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ci <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  numDrawsCI <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="fl">3</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -168,23 +168,23 @@ for the computed CI. Defaults to 10^3.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr" class="external-link">logitr</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Estimate a preference space model</span></span>
-<span class="r-in"><span class="va">mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="logitr.html">logitr</a></span><span class="op">(</span></span>
-<span class="r-in">  data    <span class="op">=</span> <span class="va">yogurt</span>,</span>
-<span class="r-in">  outcome <span class="op">=</span> <span class="st">"choice"</span>,</span>
-<span class="r-in">  obsID   <span class="op">=</span> <span class="st">"obsID"</span>,</span>
-<span class="r-in">  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr" class="external-link">logitr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Estimate a preference space model</span></span></span>
+<span class="r-in"><span><span class="va">mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="logitr.html">logitr</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data    <span class="op">=</span> <span class="va">yogurt</span>,</span></span>
+<span class="r-in"><span>  outcome <span class="op">=</span> <span class="st">"choice"</span>,</span></span>
+<span class="r-in"><span>  obsID   <span class="op">=</span> <span class="st">"obsID"</span>,</span></span>
+<span class="r-in"><span>  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running model...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Done!</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Predict probabilities and / or outcomes</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Predict probabilities for each alternative in the model data</span></span>
-<span class="r-in"><span class="va">probs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">probs</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Predict probabilities and / or outcomes</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Predict probabilities for each alternative in the model data</span></span></span>
+<span class="r-in"><span><span class="va">probs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">probs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   obsID predicted_prob</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     1     0.41802407</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     1     0.02118240</span>
@@ -192,13 +192,13 @@ for the computed CI. Defaults to 10^3.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     1     0.32387615</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5     2     0.26643822</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6     2     0.02255486</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Create a set of alternatives for which to make predictions.</span></span>
-<span class="r-in"><span class="co"># Each row is an alternative and each column an attribute.</span></span>
-<span class="r-in"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span></span>
-<span class="r-in">    <span class="va">yogurt</span>, <span class="va">obsID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">13</span><span class="op">)</span>,</span>
-<span class="r-in">    select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'obsID'</span>, <span class="st">'alt'</span>, <span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">data</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Create a set of alternatives for which to make predictions.</span></span></span>
+<span class="r-in"><span><span class="co"># Each row is an alternative and each column an attribute.</span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">yogurt</span>, <span class="va">obsID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">13</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'obsID'</span>, <span class="st">'alt'</span>, <span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">data</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   obsID   alt price  feat brand  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
@@ -210,9 +210,9 @@ for the computed CI. Defaults to 10^3.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>    42     2  6.10     1 hiland </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>    42     3  7.90     0 weight </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span>    42     4 11.5      0 yoplait</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Predict probabilities using the estimated model</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, newdata <span class="op">=</span> <span class="va">data</span>, obsID <span class="op">=</span> <span class="st">"obsID"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Predict probabilities using the estimated model</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, newdata <span class="op">=</span> <span class="va">data</span>, obsID <span class="op">=</span> <span class="st">"obsID"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   obsID predicted_prob</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    13     0.43685145</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    13     0.03312986</span>
@@ -222,30 +222,30 @@ for the computed CI. Defaults to 10^3.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    42     0.02602007</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7    42     0.17803313</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8    42     0.18829902</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Predict outcomes</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, newdata <span class="op">=</span> <span class="va">data</span>, obsID <span class="op">=</span> <span class="st">"obsID"</span>, type <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Predict outcomes</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, newdata <span class="op">=</span> <span class="va">data</span>, obsID <span class="op">=</span> <span class="st">"obsID"</span>, type <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   obsID predicted_outcome</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    13                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    13                 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    13                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    13                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    13                 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42                 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    13                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    42                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7    42                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8    42                 0</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Predict outcomes and probabilities</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, newdata <span class="op">=</span> <span class="va">data</span>, obsID <span class="op">=</span> <span class="st">"obsID"</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"prob"</span>, <span class="st">"outcome"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    42                 1</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Predict outcomes and probabilities</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, newdata <span class="op">=</span> <span class="va">data</span>, obsID <span class="op">=</span> <span class="st">"obsID"</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"prob"</span>, <span class="st">"outcome"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   obsID predicted_prob predicted_outcome</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    13     0.43685145                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    13     0.43685145                 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    13     0.03312986                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    13     0.19155548                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    13     0.33846321                 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42     0.60764778                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    13     0.33846321                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42     0.60764778                 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    42     0.02602007                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7    42     0.17803313                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8    42     0.18829902                 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    42     0.18829902                 0</span>
 </code></pre></div>
     </div>
   </div>
@@ -260,7 +260,7 @@ for the computed CI. Defaults to 10^3.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

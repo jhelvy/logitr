@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.0.9001</span>
       </span>
     </div>
 
@@ -134,68 +134,68 @@
 </h2>
 <p>To add interactions between covariates in your model, you can add additional arguments in the <code>pars</code> vector in the <code><a href="../reference/logitr.html">logitr()</a></code> function separated by the <code>*</code> symbol. For example, let’s say we want to interact <code>price</code> with <code>feat</code> in the following model:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/jhelvy/logitr" class="external-link">"logitr"</a></span><span class="op">)</span>
-
-<span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data    <span class="op">=</span> <span class="va">yogurt</span>,
-  outcome <span class="op">=</span> <span class="st">'choice'</span>,
-  obsID   <span class="op">=</span> <span class="st">'obsID'</span>,
-  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/jhelvy/logitr" class="external-link">"logitr"</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span></span>
+<span>  data    <span class="op">=</span> <span class="va">yogurt</span>,</span>
+<span>  outcome <span class="op">=</span> <span class="st">'choice'</span>,</span>
+<span>  obsID   <span class="op">=</span> <span class="st">'obsID'</span>,</span>
+<span>  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>To do so, I could add <code>"price*feat"</code> to the <code>pars</code> vector:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">model_price_feat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data    <span class="op">=</span> <span class="va">yogurt</span>,
-  outcome <span class="op">=</span> <span class="st">'choice'</span>,
-  obsID   <span class="op">=</span> <span class="st">'obsID'</span>,
-  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price*feat'</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">model_price_feat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span></span>
+<span>  data    <span class="op">=</span> <span class="va">yogurt</span>,</span>
+<span>  outcome <span class="op">=</span> <span class="st">'choice'</span>,</span>
+<span>  obsID   <span class="op">=</span> <span class="st">'obsID'</span>,</span>
+<span>  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price*feat'</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>The model now has an estimated coefficient for the <code>price*feat</code> effect:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_price_feat</span><span class="op">)</span>
-<span class="co">#&gt; =================================================</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model estimated on: Thu Jun 16 23:27:41 2022 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Using logitr version: 0.7.0 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Call:</span>
-<span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span>
-<span class="co">#&gt;     "feat", "brand", "price*feat"))</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Frequencies of alternatives:</span>
-<span class="co">#&gt;        1        2        3        4 </span>
-<span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Exit Status: 3, Optimization stopped because ftol_rel or ftol_abs was reached.</span>
-<span class="co">#&gt;                                 </span>
-<span class="co">#&gt; Model Type:    Multinomial Logit</span>
-<span class="co">#&gt; Model Space:          Preference</span>
-<span class="co">#&gt; Model Run:                1 of 1</span>
-<span class="co">#&gt; Iterations:                   19</span>
-<span class="co">#&gt; Elapsed Time:        0h:0m:0.03s</span>
-<span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span>
-<span class="co">#&gt; Weights Used?:             FALSE</span>
-<span class="co">#&gt; Robust?                    FALSE</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model Coefficients: </span>
-<span class="co">#&gt;               Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
-<span class="co">#&gt; price        -0.356909   0.024696 -14.4522 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; feat          1.155206   0.378237   3.0542  0.002257 ** </span>
-<span class="co">#&gt; brandhiland  -3.724702   0.146520 -25.4212 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandweight  -0.640221   0.054543 -11.7380 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandyoplait  0.724315   0.080317   9.0182 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; price:feat   -0.086381   0.047275  -1.8272  0.067672 .  </span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
-<span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log-Likelihood:         -2655.5403770</span>
-<span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span>
-<span class="co">#&gt; AIC:                     5323.0807540</span>
-<span class="co">#&gt; BIC:                     5357.8100000</span>
-<span class="co">#&gt; McFadden R2:                0.2058178</span>
-<span class="co">#&gt; Adj McFadden R2:            0.2040234</span>
-<span class="co">#&gt; Number of Observations:  2412.0000000</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_price_feat</span><span class="op">)</span></span>
+<span><span class="co">#&gt; =================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Model estimated on: Fri Jul 08 00:56:40 2022 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Using logitr version: 0.7.0.9001 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span></span>
+<span><span class="co">#&gt;     "feat", "brand", "price*feat"))</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Frequencies of alternatives:</span></span>
+<span><span class="co">#&gt;        1        2        3        4 </span></span>
+<span><span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Exit Status: 3, Optimization stopped because ftol_rel or ftol_abs was reached.</span></span>
+<span><span class="co">#&gt;                                 </span></span>
+<span><span class="co">#&gt; Model Type:    Multinomial Logit</span></span>
+<span><span class="co">#&gt; Model Space:          Preference</span></span>
+<span><span class="co">#&gt; Model Run:                1 of 1</span></span>
+<span><span class="co">#&gt; Iterations:                   19</span></span>
+<span><span class="co">#&gt; Elapsed Time:        0h:0m:0.03s</span></span>
+<span><span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span></span>
+<span><span class="co">#&gt; Weights Used?:             FALSE</span></span>
+<span><span class="co">#&gt; Robust?                    FALSE</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Model Coefficients: </span></span>
+<span><span class="co">#&gt;               Estimate Std. Error  z-value  Pr(&gt;|z|)    </span></span>
+<span><span class="co">#&gt; price        -0.356909   0.024696 -14.4522 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; feat          1.155206   0.378237   3.0542  0.002257 ** </span></span>
+<span><span class="co">#&gt; brandhiland  -3.724702   0.146520 -25.4212 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandweight  -0.640221   0.054543 -11.7380 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandyoplait  0.724315   0.080317   9.0182 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; price:feat   -0.086381   0.047275  -1.8272  0.067672 .  </span></span>
+<span><span class="co">#&gt; ---</span></span>
+<span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">#&gt;                                      </span></span>
+<span><span class="co">#&gt; Log-Likelihood:         -2655.5403770</span></span>
+<span><span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span></span>
+<span><span class="co">#&gt; AIC:                     5323.0807540</span></span>
+<span><span class="co">#&gt; BIC:                     5357.8100000</span></span>
+<span><span class="co">#&gt; McFadden R2:                0.2058178</span></span>
+<span><span class="co">#&gt; Adj McFadden R2:            0.2040234</span></span>
+<span><span class="co">#&gt; Number of Observations:  2412.0000000</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="interactions-with-discrete-variables">Interactions with discrete variables<a class="anchor" aria-label="anchor" href="#interactions-with-discrete-variables"></a>
@@ -203,60 +203,60 @@
 <p>In the above example, both <code>price</code> and <code>feat</code> were continuous variables, so only a single interaction coefficient was needed.</p>
 <p>In the case of interacting <em>discrete</em> variables, multiple interactions coefficients will be estimated according to the number of levels in the discrete attribute. For example, the interaction of <code>price</code> with <code>brand</code> will require three new interactions - one for each level of the <code>brand</code> variable except the first reference level:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">model_price_brand</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data    <span class="op">=</span> <span class="va">yogurt</span>,
-  outcome <span class="op">=</span> <span class="st">'choice'</span>,
-  obsID   <span class="op">=</span> <span class="st">'obsID'</span>,
-  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price*brand'</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">model_price_brand</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span></span>
+<span>  data    <span class="op">=</span> <span class="va">yogurt</span>,</span>
+<span>  outcome <span class="op">=</span> <span class="st">'choice'</span>,</span>
+<span>  obsID   <span class="op">=</span> <span class="st">'obsID'</span>,</span>
+<span>  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price*brand'</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>The model now has three estimated coefficients for the <code>price*brand</code> effect:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_price_brand</span><span class="op">)</span>
-<span class="co">#&gt; =================================================</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model estimated on: Thu Jun 16 23:27:42 2022 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Using logitr version: 0.7.0 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Call:</span>
-<span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span>
-<span class="co">#&gt;     "feat", "brand", "price*brand"))</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Frequencies of alternatives:</span>
-<span class="co">#&gt;        1        2        3        4 </span>
-<span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Exit Status: 3, Optimization stopped because ftol_rel or ftol_abs was reached.</span>
-<span class="co">#&gt;                                 </span>
-<span class="co">#&gt; Model Type:    Multinomial Logit</span>
-<span class="co">#&gt; Model Space:          Preference</span>
-<span class="co">#&gt; Model Run:                1 of 1</span>
-<span class="co">#&gt; Iterations:                   37</span>
-<span class="co">#&gt; Elapsed Time:        0h:0m:0.06s</span>
-<span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span>
-<span class="co">#&gt; Weights Used?:             FALSE</span>
-<span class="co">#&gt; Robust?                    FALSE</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model Coefficients: </span>
-<span class="co">#&gt;                     Estimate Std. Error z-value  Pr(&gt;|z|)    </span>
-<span class="co">#&gt; price              -0.389503   0.045247 -8.6085 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; feat                0.421899   0.122578  3.4419 0.0005777 ***</span>
-<span class="co">#&gt; brandhiland        -1.691789   0.623149 -2.7149 0.0066295 ** </span>
-<span class="co">#&gt; brandweight        -2.228475   0.561641 -3.9678 7.254e-05 ***</span>
-<span class="co">#&gt; brandyoplait        0.438702   0.450424  0.9740 0.3300689    </span>
-<span class="co">#&gt; price:brandhiland  -0.434271   0.115531 -3.7589 0.0001707 ***</span>
-<span class="co">#&gt; price:brandweight   0.199919   0.069830  2.8629 0.0041973 ** </span>
-<span class="co">#&gt; price:brandyoplait  0.033233   0.050372  0.6598 0.5094089    </span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
-<span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log-Likelihood:         -2643.2046775</span>
-<span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span>
-<span class="co">#&gt; AIC:                     5302.4093549</span>
-<span class="co">#&gt; BIC:                     5348.7150000</span>
-<span class="co">#&gt; McFadden R2:                0.2095070</span>
-<span class="co">#&gt; Adj McFadden R2:            0.2071145</span>
-<span class="co">#&gt; Number of Observations:  2412.0000000</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_price_brand</span><span class="op">)</span></span>
+<span><span class="co">#&gt; =================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Model estimated on: Fri Jul 08 00:56:41 2022 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Using logitr version: 0.7.0.9001 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span></span>
+<span><span class="co">#&gt;     "feat", "brand", "price*brand"))</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Frequencies of alternatives:</span></span>
+<span><span class="co">#&gt;        1        2        3        4 </span></span>
+<span><span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Exit Status: 3, Optimization stopped because ftol_rel or ftol_abs was reached.</span></span>
+<span><span class="co">#&gt;                                 </span></span>
+<span><span class="co">#&gt; Model Type:    Multinomial Logit</span></span>
+<span><span class="co">#&gt; Model Space:          Preference</span></span>
+<span><span class="co">#&gt; Model Run:                1 of 1</span></span>
+<span><span class="co">#&gt; Iterations:                   37</span></span>
+<span><span class="co">#&gt; Elapsed Time:        0h:0m:0.06s</span></span>
+<span><span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span></span>
+<span><span class="co">#&gt; Weights Used?:             FALSE</span></span>
+<span><span class="co">#&gt; Robust?                    FALSE</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Model Coefficients: </span></span>
+<span><span class="co">#&gt;                     Estimate Std. Error z-value  Pr(&gt;|z|)    </span></span>
+<span><span class="co">#&gt; price              -0.389503   0.045247 -8.6085 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; feat                0.421899   0.122578  3.4419 0.0005777 ***</span></span>
+<span><span class="co">#&gt; brandhiland        -1.691789   0.623149 -2.7149 0.0066295 ** </span></span>
+<span><span class="co">#&gt; brandweight        -2.228475   0.561641 -3.9678 7.254e-05 ***</span></span>
+<span><span class="co">#&gt; brandyoplait        0.438702   0.450424  0.9740 0.3300689    </span></span>
+<span><span class="co">#&gt; price:brandhiland  -0.434271   0.115531 -3.7589 0.0001707 ***</span></span>
+<span><span class="co">#&gt; price:brandweight   0.199919   0.069830  2.8629 0.0041973 ** </span></span>
+<span><span class="co">#&gt; price:brandyoplait  0.033233   0.050372  0.6598 0.5094089    </span></span>
+<span><span class="co">#&gt; ---</span></span>
+<span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">#&gt;                                      </span></span>
+<span><span class="co">#&gt; Log-Likelihood:         -2643.2046775</span></span>
+<span><span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span></span>
+<span><span class="co">#&gt; AIC:                     5302.4093549</span></span>
+<span><span class="co">#&gt; BIC:                     5348.7150000</span></span>
+<span><span class="co">#&gt; McFadden R2:                0.2095070</span></span>
+<span><span class="co">#&gt; Adj McFadden R2:            0.2071145</span></span>
+<span><span class="co">#&gt; Number of Observations:  2412.0000000</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="interactions-with-individual-specific-variables">Interactions with individual-specific variables<a class="anchor" aria-label="anchor" href="#interactions-with-individual-specific-variables"></a>
@@ -265,129 +265,129 @@
 <p>For example, if you had a <code>group</code> variable that determined whether individuals belongs to group <code>A</code> or group <code>B</code>, including <code>price*group</code> in <code>pars</code> would create coefficients for <code>price</code>, <code>groupA</code>, and <code>price:groupA</code>, but the <code>groupA</code> coefficient would be unidentified. In this case, you should only include <code>price</code> and <code>price:groupA</code> in the model. For now, the only way to handle this situation is to manually create dummy-coded interaction variables to include in the model.</p>
 <p>To illustrate how one might do this, consider if the <code>yogurt</code> data frame had two groups of individuals: <code>A</code> and <code>B</code>. For simple illustration, I’ll define these groups arbitrarily based on whether or not the <code>obsID</code> is even or odd:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create group A dummies</span>
-<span class="va">yogurt</span><span class="op">$</span><span class="va">groupA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">yogurt</span><span class="op">$</span><span class="va">obsID</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%%</a></span> <span class="fl">2</span> <span class="op">==</span> <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Create group A dummies</span></span>
+<span><span class="va">yogurt</span><span class="op">$</span><span class="va">groupA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">yogurt</span><span class="op">$</span><span class="va">obsID</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%%</a></span> <span class="fl">2</span> <span class="op">==</span> <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p>An interaction between the <code>group</code> variable and <code>price</code> can be included in the model by first manually creating a <code>price_groupA</code> interaction variable and then including it in <code>pars</code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create dummy coefficients for group interaction with price</span>
-<span class="va">yogurt</span><span class="op">$</span><span class="va">price_groupA</span> <span class="op">&lt;-</span> <span class="va">yogurt</span><span class="op">$</span><span class="va">price</span><span class="op">*</span><span class="va">yogurt</span><span class="op">$</span><span class="va">groupA</span>
-
-<span class="va">model_price_group</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data    <span class="op">=</span> <span class="va">yogurt</span>,
-  outcome <span class="op">=</span> <span class="st">'choice'</span>,
-  obsID   <span class="op">=</span> <span class="st">'obsID'</span>,
-  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price_groupA'</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Create dummy coefficients for group interaction with price</span></span>
+<span><span class="va">yogurt</span><span class="op">$</span><span class="va">price_groupA</span> <span class="op">&lt;-</span> <span class="va">yogurt</span><span class="op">$</span><span class="va">price</span><span class="op">*</span><span class="va">yogurt</span><span class="op">$</span><span class="va">groupA</span></span>
+<span></span>
+<span><span class="va">model_price_group</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span></span>
+<span>  data    <span class="op">=</span> <span class="va">yogurt</span>,</span>
+<span>  outcome <span class="op">=</span> <span class="st">'choice'</span>,</span>
+<span>  obsID   <span class="op">=</span> <span class="st">'obsID'</span>,</span>
+<span>  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price_groupA'</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>The model now has attribute coefficients for <code>price</code>, <code>feat</code>, and <code>brand</code> as well as an interaction between the <code>group</code> and <code>price</code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_price_group</span><span class="op">)</span>
-<span class="co">#&gt; =================================================</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model estimated on: Thu Jun 16 23:27:42 2022 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Using logitr version: 0.7.0 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Call:</span>
-<span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span>
-<span class="co">#&gt;     "feat", "brand", "price_groupA"))</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Frequencies of alternatives:</span>
-<span class="co">#&gt;        1        2        3        4 </span>
-<span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Exit Status: 3, Optimization stopped because ftol_rel or ftol_abs was reached.</span>
-<span class="co">#&gt;                                 </span>
-<span class="co">#&gt; Model Type:    Multinomial Logit</span>
-<span class="co">#&gt; Model Space:          Preference</span>
-<span class="co">#&gt; Model Run:                1 of 1</span>
-<span class="co">#&gt; Iterations:                   26</span>
-<span class="co">#&gt; Elapsed Time:        0h:0m:0.04s</span>
-<span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span>
-<span class="co">#&gt; Weights Used?:             FALSE</span>
-<span class="co">#&gt; Robust?                    FALSE</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model Coefficients: </span>
-<span class="co">#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
-<span class="co">#&gt; price        -0.3680634  0.0273911 -13.4373 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; feat          0.4915271  0.1200725   4.0936 4.248e-05 ***</span>
-<span class="co">#&gt; brandhiland  -3.7155231  0.1454216 -25.5500 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandweight  -0.6411384  0.0544999 -11.7640 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandyoplait  0.7345568  0.0806444   9.1086 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; price_groupA  0.0030007  0.0254484   0.1179    0.9061    </span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
-<span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log-Likelihood:         -2656.8808982</span>
-<span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span>
-<span class="co">#&gt; AIC:                     5325.7617965</span>
-<span class="co">#&gt; BIC:                     5360.4911000</span>
-<span class="co">#&gt; McFadden R2:                0.2054169</span>
-<span class="co">#&gt; Adj McFadden R2:            0.2036225</span>
-<span class="co">#&gt; Number of Observations:  2412.0000000</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_price_group</span><span class="op">)</span></span>
+<span><span class="co">#&gt; =================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Model estimated on: Fri Jul 08 00:56:41 2022 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Using logitr version: 0.7.0.9001 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span></span>
+<span><span class="co">#&gt;     "feat", "brand", "price_groupA"))</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Frequencies of alternatives:</span></span>
+<span><span class="co">#&gt;        1        2        3        4 </span></span>
+<span><span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Exit Status: 3, Optimization stopped because ftol_rel or ftol_abs was reached.</span></span>
+<span><span class="co">#&gt;                                 </span></span>
+<span><span class="co">#&gt; Model Type:    Multinomial Logit</span></span>
+<span><span class="co">#&gt; Model Space:          Preference</span></span>
+<span><span class="co">#&gt; Model Run:                1 of 1</span></span>
+<span><span class="co">#&gt; Iterations:                   26</span></span>
+<span><span class="co">#&gt; Elapsed Time:        0h:0m:0.04s</span></span>
+<span><span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span></span>
+<span><span class="co">#&gt; Weights Used?:             FALSE</span></span>
+<span><span class="co">#&gt; Robust?                    FALSE</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Model Coefficients: </span></span>
+<span><span class="co">#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span></span>
+<span><span class="co">#&gt; price        -0.3680634  0.0273911 -13.4373 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; feat          0.4915271  0.1200725   4.0936 4.248e-05 ***</span></span>
+<span><span class="co">#&gt; brandhiland  -3.7155231  0.1454216 -25.5500 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandweight  -0.6411384  0.0544999 -11.7640 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandyoplait  0.7345568  0.0806444   9.1086 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; price_groupA  0.0030007  0.0254484   0.1179    0.9061    </span></span>
+<span><span class="co">#&gt; ---</span></span>
+<span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">#&gt;                                      </span></span>
+<span><span class="co">#&gt; Log-Likelihood:         -2656.8808982</span></span>
+<span><span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span></span>
+<span><span class="co">#&gt; AIC:                     5325.7617965</span></span>
+<span><span class="co">#&gt; BIC:                     5360.4911000</span></span>
+<span><span class="co">#&gt; McFadden R2:                0.2054169</span></span>
+<span><span class="co">#&gt; Adj McFadden R2:            0.2036225</span></span>
+<span><span class="co">#&gt; Number of Observations:  2412.0000000</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="interactions-in-mixed-logit-models">Interactions in mixed logit models<a class="anchor" aria-label="anchor" href="#interactions-in-mixed-logit-models"></a>
 </h2>
 <p>Suppose I want to include an interaction between two variables and I also want one of those variables to be modeled as normally distributed across the population. The example below illustrates this cases, where a <code>price*feat</code> interaction is specified and the <code>feat</code> parameter is modeled as normally distributed by setting <code>randPars = c(feat = "n")</code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">model_price_feat_mxl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span>
-  data    <span class="op">=</span> <span class="va">yogurt</span>,
-  outcome <span class="op">=</span> <span class="st">'choice'</span>,
-  obsID   <span class="op">=</span> <span class="st">'obsID'</span>,
-  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price*feat'</span><span class="op">)</span>,
-  randPars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">model_price_feat_mxl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span></span>
+<span>  data    <span class="op">=</span> <span class="va">yogurt</span>,</span>
+<span>  outcome <span class="op">=</span> <span class="st">'choice'</span>,</span>
+<span>  obsID   <span class="op">=</span> <span class="st">'obsID'</span>,</span>
+<span>  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'price'</span>, <span class="st">'feat'</span>, <span class="st">'brand'</span>, <span class="st">'price*feat'</span><span class="op">)</span>,</span>
+<span>  randPars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>feat <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>In this case, the <code>price*feat</code> interaction parameter is interpreted as a difference in the <code>feat_mu</code> parameter and price; that is, it an interaction in the <em>mean</em> <code>feat</code> parameter and <code>price</code>:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_price_feat_mxl</span><span class="op">)</span>
-<span class="co">#&gt; =================================================</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model estimated on: Thu Jun 16 23:27:43 2022 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Using logitr version: 0.7.0 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Call:</span>
-<span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span>
-<span class="co">#&gt;     "feat", "brand", "price*feat"), randPars = c(feat = "n"))</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Frequencies of alternatives:</span>
-<span class="co">#&gt;        1        2        3        4 </span>
-<span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Exit Status: 3, Optimization stopped because ftol_rel or ftol_abs was reached.</span>
-<span class="co">#&gt;                              </span>
-<span class="co">#&gt; Model Type:       Mixed Logit</span>
-<span class="co">#&gt; Model Space:       Preference</span>
-<span class="co">#&gt; Model Run:             1 of 1</span>
-<span class="co">#&gt; Iterations:                32</span>
-<span class="co">#&gt; Elapsed Time:        0h:0m:1s</span>
-<span class="co">#&gt; Algorithm:     NLOPT_LD_LBFGS</span>
-<span class="co">#&gt; Weights Used?:          FALSE</span>
-<span class="co">#&gt; Robust?                 FALSE</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model Coefficients: </span>
-<span class="co">#&gt;               Estimate Std. Error  z-value  Pr(&gt;|z|)    </span>
-<span class="co">#&gt; price        -0.388138   0.027026 -14.3615 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; feat          0.829059   0.552235   1.5013    0.1333    </span>
-<span class="co">#&gt; brandhiland  -3.991584   0.165893 -24.0612 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandweight  -0.662161   0.055780 -11.8709 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; brandyoplait  0.787758   0.086233   9.1352 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; price:feat   -0.076752   0.071063  -1.0800    0.2801    </span>
-<span class="co">#&gt; sd_feat      -2.341209   0.493326  -4.7458 2.077e-06 ***</span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
-<span class="co">#&gt;                                      </span>
-<span class="co">#&gt; Log-Likelihood:         -2645.2196926</span>
-<span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span>
-<span class="co">#&gt; AIC:                     5304.4393851</span>
-<span class="co">#&gt; BIC:                     5344.9569000</span>
-<span class="co">#&gt; McFadden R2:                0.2089044</span>
-<span class="co">#&gt; Adj McFadden R2:            0.2068109</span>
-<span class="co">#&gt; Number of Observations:  2412.0000000</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Summary of 10k Draws for Random Coefficients: </span>
-<span class="co">#&gt;      Min.    1st Qu.    Median     Mean  3rd Qu. Max.</span>
-<span class="co">#&gt; feat -Inf -0.7475368 0.8308482 0.832337 2.409772  Inf</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_price_feat_mxl</span><span class="op">)</span></span>
+<span><span class="co">#&gt; =================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Model estimated on: Fri Jul 08 00:56:42 2022 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Using logitr version: 0.7.0.9001 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span></span>
+<span><span class="co">#&gt;     "feat", "brand", "price*feat"), randPars = c(feat = "n"))</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Frequencies of alternatives:</span></span>
+<span><span class="co">#&gt;        1        2        3        4 </span></span>
+<span><span class="co">#&gt; 0.402156 0.029436 0.229270 0.339138 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Exit Status: 3, Optimization stopped because ftol_rel or ftol_abs was reached.</span></span>
+<span><span class="co">#&gt;                              </span></span>
+<span><span class="co">#&gt; Model Type:       Mixed Logit</span></span>
+<span><span class="co">#&gt; Model Space:       Preference</span></span>
+<span><span class="co">#&gt; Model Run:             1 of 1</span></span>
+<span><span class="co">#&gt; Iterations:                32</span></span>
+<span><span class="co">#&gt; Elapsed Time:        0h:0m:1s</span></span>
+<span><span class="co">#&gt; Algorithm:     NLOPT_LD_LBFGS</span></span>
+<span><span class="co">#&gt; Weights Used?:          FALSE</span></span>
+<span><span class="co">#&gt; Robust?                 FALSE</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Model Coefficients: </span></span>
+<span><span class="co">#&gt;               Estimate Std. Error  z-value  Pr(&gt;|z|)    </span></span>
+<span><span class="co">#&gt; price        -0.388138   0.027026 -14.3615 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; feat          0.829059   0.552235   1.5013    0.1333    </span></span>
+<span><span class="co">#&gt; brandhiland  -3.991584   0.165893 -24.0612 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandweight  -0.662161   0.055780 -11.8709 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandyoplait  0.787758   0.086233   9.1352 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; price:feat   -0.076752   0.071063  -1.0800    0.2801    </span></span>
+<span><span class="co">#&gt; sd_feat      -2.341209   0.493326  -4.7458 2.077e-06 ***</span></span>
+<span><span class="co">#&gt; ---</span></span>
+<span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">#&gt;                                      </span></span>
+<span><span class="co">#&gt; Log-Likelihood:         -2645.2196926</span></span>
+<span><span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span></span>
+<span><span class="co">#&gt; AIC:                     5304.4393851</span></span>
+<span><span class="co">#&gt; BIC:                     5344.9569000</span></span>
+<span><span class="co">#&gt; McFadden R2:                0.2089044</span></span>
+<span><span class="co">#&gt; Adj McFadden R2:            0.2068109</span></span>
+<span><span class="co">#&gt; Number of Observations:  2412.0000000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Summary of 10k Draws for Random Coefficients: </span></span>
+<span><span class="co">#&gt;      Min.    1st Qu.    Median     Mean  3rd Qu. Max.</span></span>
+<span><span class="co">#&gt; feat -Inf -0.7475368 0.8308482 0.832337 2.409772  Inf</span></span></code></pre></div>
 </div>
   </div>
 
@@ -408,7 +408,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer>

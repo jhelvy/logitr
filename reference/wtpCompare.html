@@ -18,7 +18,7 @@ model."><meta property="og:image" content="https://jhelvy.github.io/logitr/refer
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.0.9001</span>
       </span>
     </div>
 
@@ -95,7 +95,7 @@ model.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">wtpCompare</span><span class="op">(</span><span class="va">model_pref</span>, <span class="va">model_wtp</span>, <span class="va">scalePar</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">wtpCompare</span><span class="op">(</span><span class="va">model_pref</span>, <span class="va">model_wtp</span>, <span class="va">scalePar</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -134,36 +134,36 @@ handled via simulation.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr" class="external-link">logitr</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Estimate a MNL model in the Preference space</span></span>
-<span class="r-in"><span class="va">mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="logitr.html">logitr</a></span><span class="op">(</span></span>
-<span class="r-in">  data    <span class="op">=</span> <span class="va">yogurt</span>,</span>
-<span class="r-in">  outcome <span class="op">=</span> <span class="st">"choice"</span>,</span>
-<span class="r-in">  obsID   <span class="op">=</span> <span class="st">"obsID"</span>,</span>
-<span class="r-in">  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr" class="external-link">logitr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Estimate a MNL model in the Preference space</span></span></span>
+<span class="r-in"><span><span class="va">mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="logitr.html">logitr</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data    <span class="op">=</span> <span class="va">yogurt</span>,</span></span>
+<span class="r-in"><span>  outcome <span class="op">=</span> <span class="st">"choice"</span>,</span></span>
+<span class="r-in"><span>  obsID   <span class="op">=</span> <span class="st">"obsID"</span>,</span></span>
+<span class="r-in"><span>  pars    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running model...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Done!</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Compute the WTP implied from the preference space model</span></span>
-<span class="r-in"><span class="va">wtp_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, scalePar <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Estimate a MNL model in the WTP Space, using the computed WTP values</span></span>
-<span class="r-in"><span class="co"># from the preference space model as starting points</span></span>
-<span class="r-in"><span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="logitr.html">logitr</a></span><span class="op">(</span></span>
-<span class="r-in">  data      <span class="op">=</span> <span class="va">yogurt</span>,</span>
-<span class="r-in">  outcome   <span class="op">=</span> <span class="st">"choice"</span>,</span>
-<span class="r-in">  obsID     <span class="op">=</span> <span class="st">"obsID"</span>,</span>
-<span class="r-in">  pars      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span>,</span>
-<span class="r-in">  scalePar  <span class="op">=</span> <span class="st">"price"</span>,</span>
-<span class="r-in">  startVals <span class="op">=</span> <span class="va">wtp_mnl_pref</span><span class="op">$</span><span class="va">Estimate</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Compute the WTP implied from the preference space model</span></span></span>
+<span class="r-in"><span><span class="va">wtp_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, scalePar <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Estimate a MNL model in the WTP Space, using the computed WTP values</span></span></span>
+<span class="r-in"><span><span class="co"># from the preference space model as starting points</span></span></span>
+<span class="r-in"><span><span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="logitr.html">logitr</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data      <span class="op">=</span> <span class="va">yogurt</span>,</span></span>
+<span class="r-in"><span>  outcome   <span class="op">=</span> <span class="st">"choice"</span>,</span></span>
+<span class="r-in"><span>  obsID     <span class="op">=</span> <span class="st">"obsID"</span>,</span></span>
+<span class="r-in"><span>  pars      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"feat"</span>, <span class="st">"brand"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  scalePar  <span class="op">=</span> <span class="st">"price"</span>,</span></span>
+<span class="r-in"><span>  startVals <span class="op">=</span> <span class="va">wtp_mnl_pref</span><span class="op">$</span><span class="va">Estimate</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running model...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Done!</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Compare the WTP between the two spaces</span></span>
-<span class="r-in"><span class="fu">wtpCompare</span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, scalePar <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Compare the WTP between the two spaces</span></span></span>
+<span class="r-in"><span><span class="fu">wtpCompare</span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, scalePar <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       pref          wtp  difference</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> scalePar         0.3665546     0.366589  0.00003448</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> feat             1.3406987     1.340815  0.00011655</span>
@@ -185,7 +185,7 @@ handled via simulation.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>
