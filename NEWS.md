@@ -1,4 +1,7 @@
-# logitr (development version)
+# logitr 0.7.1
+
+- A patch was added to make the `obsID` variable a sequentially increasing numeric vector (this was previously done but was accidentally removed in prior updates).
+- A patch was added to pass the `modelSpace` variable along inside the `vcov()` method.
 
 # logitr 0.7.0
 

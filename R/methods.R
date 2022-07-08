@@ -310,6 +310,7 @@ getCovarianceRobust <- function(object) {
     evalFuncs  = setEvalFunctions(object$modelType, inputs$useAnalyticGrad),
     inputs     = inputs,
     modelType  = object$modelType,
+    modelSpace = object$modelSpace,
     n          = object$n,
     parSetup   = parSetup,
     parIDs     = object$parIDs,
