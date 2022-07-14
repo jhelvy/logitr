@@ -32,10 +32,12 @@ Suggests:
     testthat,
     tidyr
 Imports:
+    MASS,
     nloptr,
     parallel,
-    stats,
     randtoolbox,
-    MASS
-URL: https://github.com/jhelvy/logitr
+    stats,
+    texreg
+URL: https://github.com/jhelvy/logitr,
+     https://jhelvy.github.io/logitr
 BugReports: https://github.com/jhelvy/logitr/issues
