@@ -1,3 +1,8 @@
+# logitr 0.7.2
+
+- Checks were added to make the `panelID` and `clusterUD` variables a sequentially increasing numeric vector and to stop the program if there are any repeated IDs in these variables.
+- A patch was added to address a bug in the computation of clustered errors where the data in clusters of size 1 needed to be forced into a matrix with correct dimensions.
+
 # logitr 0.7.1
 
 - A patch was added to make the `obsID` variable a sequentially increasing numeric vector (this was previously done but was accidentally removed in prior updates).

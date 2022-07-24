@@ -319,9 +319,9 @@ getCovarianceRobust <- function(object) {
     data_diff = makeDiffData(object$data, object$modelType)
   )
   clusterID <- modelInputs$data_diff$clusterID
+  clusters <- unique(clusterID)
   pars <- stats::coef(object)
   gradMat <- matrix(NA, nrow = numClusters, ncol = length(pars))
-  clusters <- sort(unique(clusterID))
   for (i in seq_len(length(clusters))) {
     indices <- which(clusterID == i)
     tempMI <- getClusterModelInputs(indices, modelInputs, i)
@@ -339,7 +339,9 @@ getCovarianceRobust <- function(object) {
 getClusterModelInputs <- function (indices, mi, i) {
   X <- mi$data_diff$X[indices,]
   # Cast to matrix in cases where there is 1 independent variable
-  X <- checkMatrix(X)
+  if (length(indices) == 1) {
+      X <- matrix(X, nrow = 1)
+  }
   mi$data_diff$X <- X
   mi$data_diff$scalePar <- mi$data_diff$scalePar[indices]
   obsID <- mi$data_diff$obsID[indices]
