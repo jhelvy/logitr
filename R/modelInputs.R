@@ -56,15 +56,25 @@ getModelInputs <- function(
   scalePar <- defineScalePar(data, inputs, modelSpace)
   outcome <- as.matrix(data[outcome])
 
-  # Setup obsID
-  obsID <- makeObsID(data, obsID, outcome)
+  # Setup weights
+  weights <- matrix(1, nrow(data))
+  weightsUsed <- FALSE
+  if (!is.null(inputs$weights)) {
+      weights <- as.matrix(data[inputs$weights])
+      weightsUsed <- TRUE
+  }
 
-  # Setup panelID
+  # Setup IDs
   panel <- !is.null(inputs$panelID)
-  if (panel) {
-      panelID <- as.matrix(data[panelID])
-      reps <- as.numeric(table(panelID))
-      panelID <- rep(seq_along(reps), reps) # Make sure it's a sequential number
+  if (panel) { panelID <- makePanelID(data, inputs) }
+  obsID <- makeObsID(data, inputs, outcome)
+  inputs <- setupClusterID(inputs, panel, robust, weightsUsed)
+  if (!is.null(inputs$clusterID)) {
+      if (robust == FALSE) {
+          message("Setting robust to TRUE since clusters are being used")
+          inputs$robust <- TRUE
+      }
+      clusterID <- makeClusterID(data, inputs, obsID, panelID)
   }
 
   # Set up other objects defining aspects of model
@@ -84,8 +94,10 @@ getModelInputs <- function(
     draws       = numDraws,
     multiStarts = numMultiStarts,
     obs         = sum(outcome),
-    cores       = setNumCores(numCores) # cores for parallel processing
+    cores       = setNumCores(numCores), # cores for parallel processing
+    clusters    = 0
   )
+  if (!is.null(inputs$clusterID)) { n$clusters <- length(unique(clusterID)) }
   parNames <- getParNames(parSetup, n, correlation)
   n$pars <- length(parNames$all)
   parIDs <- getParIDs(parSetup, n, modelSpace, modelType, randScale,correlation)
@@ -94,26 +106,6 @@ getModelInputs <- function(
   if (!is.null(startVals)) {
     names(startVals) <- parNames$all
     inputs$startVals <- startVals
-  }
-
-  # Setup weights
-  weights <- matrix(1, nrow(data))
-  weightsUsed <- FALSE
-  if (!is.null(inputs$weights)) {
-    weights <- as.matrix(data[inputs$weights])
-    weightsUsed <- TRUE
-  }
-
-  # Setup clusters
-  n$clusters <- 0
-  inputs <- setupClusters(inputs, panel, robust, weightsUsed)
-  if (!is.null(inputs$clusterID)) {
-    if (robust == FALSE) {
-      message("Setting robust to TRUE since clusters are being used")
-      inputs$robust <- TRUE
-    }
-    clusterID <- as.matrix(data[inputs$clusterID])
-    n$clusters <- length(unique(clusterID))
   }
 
   # Make data object
@@ -192,19 +184,29 @@ getModelInputs <- function(
   return(modelInputs)
 }
 
-makeObsID <- function(data, obsID, outcome) {
-  obsID <- as.vector(as.matrix(data[obsID]))
+checkRepeatedIDs <- function(var, id, reps) {
+    idCheck <- as.numeric(rep(names(reps), as.numeric(reps)))
+    if (!all(id == idCheck)) {
+        stop("The '", var,"' variable provided has repeated ID values.")
+    }
+}
+
+makePanelID <- function(data, inputs) {
+    panelID <- as.vector(as.matrix(data[inputs$panelID]))
+    # Make sure panelID is in sequential order with no repeated IDs
+    reps <- table(panelID)
+    checkRepeatedIDs('panelID', panelID, reps)
+    # Passed all checks, so now create a sequentially increasing numeric
+    # sequence for the panelID
+    panelID <- rep(seq_along(reps), reps)
+    return(panelID)
+}
+
+makeObsID <- function(data, inputs, outcome) {
+  obsID <- as.vector(as.matrix(data[inputs$obsID]))
   # Make sure obsID is in sequential order with no repeated IDs
   reps <- table(obsID)
-  obsIDCheck <- as.numeric(rep(names(reps), as.numeric(reps)))
-  if (!all(obsID == obsIDCheck)) {
-    stop(
-      "The 'obsID' variable provided has repeated ID values. It must be a ",
-      "sequentially increasing numeric value identifying the rows of each ",
-      "observation, such as 1,1,1,2,2,2...double check the variable provided ",
-      "for 'obsID'."
-    )
-  }
+  checkRepeatedIDs('obsID', obsID, reps)
   # Make sure that each observation ID has only one outcome
   outcomeCheck <- tapply(outcome, obsID, function(x) sum(x))
   if (! all(outcomeCheck == 1)) {
@@ -218,6 +220,55 @@ makeObsID <- function(data, obsID, outcome) {
   # sequence for the obsID
   obsID <- rep(seq_along(reps), reps)
   return(obsID)
+}
+
+setupClusterID <- function(inputs, panel, robust, weightsUsed) {
+    if (panel & robust) {
+        if (!identical(inputs$clusterID, inputs$panelID)) {
+            message(
+                "Setting clusterID to '", inputs$panelID, "' since robust == TRUE ",
+                "and a panelID is provided")
+            inputs$clusterID <- inputs$panelID
+        }
+    }
+
+    if (robust & is.null(inputs$clusterID)) {
+        message(
+            "Setting clusterID to '", inputs$obsID, "' since robust == TRUE ")
+        inputs$clusterID <- inputs$obsID
+    }
+
+    if (weightsUsed & is.null(inputs$clusterID)) {
+        if (panel) {
+            message(
+                "Setting clusterID to '", inputs$panelID, "' since weights are being ",
+                "used and no clusterID was provided")
+            inputs$clusterID <- inputs$panelID
+        } else {
+            message(
+                "Setting clusterID to '", inputs$obsID, "' since weights are being ",
+                "used and no clusterID was provided")
+            inputs$clusterID <- inputs$obsID
+        }
+    }
+    return(inputs)
+}
+
+makeClusterID <- function(datadata, inputs, obsID, panelID) {
+    if (inputs$clusterID == inputs$obsID) {
+        return(obsID)
+    }
+    if (inputs$clusterID == inputs$panelID) {
+        return(panelID)
+    }
+    clusterID <- as.vector(as.matrix(data[inputs$clusterID]))
+    # Make sure clusterID is in sequential order with no repeated IDs
+    reps <- table(clusterID)
+    checkRepeatedIDs('clusterID', clusterID, reps)
+    # Passed all checks, so now create a sequentially increasing numeric
+    # sequence for the clusterID
+    clusterID <- rep(seq_along(reps), reps)
+    return(clusterID)
 }
 
 setNumCores <- function(numCores) {
@@ -373,38 +424,6 @@ getPartialIDs <- function(parIDs, IDs, n, correlation) {
     partial_IDs[[i]] <- c(parID, sdID)
   }
   return(partial_IDs)
-}
-
-setupClusters <- function(inputs, panel, robust, weightsUsed) {
-  if (panel & robust) {
-    if (!identical(inputs$clusterID, inputs$panelID)) {
-      message(
-        "Setting clusterID to '", inputs$panelID, "' since robust == TRUE ",
-        "and a panelID is provided")
-      inputs$clusterID <- inputs$panelID
-    }
-  }
-
-  if (robust & is.null(inputs$clusterID)) {
-    message(
-      "Setting clusterID to '", inputs$obsID, "' since robust == TRUE ")
-    inputs$clusterID <- inputs$obsID
-  }
-
-  if (weightsUsed & is.null(inputs$clusterID)) {
-    if (panel) {
-      message(
-        "Setting clusterID to '", inputs$panelID, "' since weights are being ",
-        "used and no clusterID was provided")
-      inputs$clusterID <- inputs$panelID
-    } else {
-      message(
-        "Setting clusterID to '", inputs$obsID, "' since weights are being ",
-        "used and no clusterID was provided")
-      inputs$clusterID <- inputs$obsID
-    }
-  }
-  return(inputs)
 }
 
 getScaleFactors <- function(
