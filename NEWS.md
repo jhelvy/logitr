@@ -1,3 +1,7 @@
+# logitr 0.8.0
+
+- Added new vignette comparing convergence issues in WTP space models with other similar packages.
+
 # logitr 0.7.2
 
 - Checks were added to make the `panelID` and `clusterUD` variables a sequentially increasing numeric vector and to stop the program if there are any repeated IDs in these variables.
