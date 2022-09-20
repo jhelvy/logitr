@@ -16,10 +16,12 @@ knitr::opts_chunk$set(
   fig.retina = 3,
   comment = "#>"
 )
+
 library(logitr)
-# Read in results from already estimated models  so that the
-# examples aren't actually run when building this page, otherwise it'll
-# take much longer to build
+
+# Read in results from already estimated models so that the
+# examples aren't actually run when building this page,
+# otherwise it'll take much longer to build
 mxl_pref <- readRDS(here::here('inst', 'extdata', 'mxl_pref.Rds'))
 mxl_wtp  <- readRDS(here::here('inst', 'extdata', 'mxl_wtp.Rds'))
 mxl_pref_cor <- readRDS(here::here('inst', 'extdata', 'mxl_pref_cor.Rds'))
