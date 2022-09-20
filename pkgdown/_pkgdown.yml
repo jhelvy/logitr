@@ -42,6 +42,8 @@ navbar:
           href: articles/predict.html
         - text: "Benchmarking estimation speed against other packages"
           href: articles/benchmark.html
+        - text: "WTP space convergence issues in other packages"
+          href: articles/convergence.html
     - text: "Changelog"
       href: news/index.html
 
