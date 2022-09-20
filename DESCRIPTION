@@ -21,13 +21,17 @@ VignetteBuilder: knitr
 Depends:
     R (>= 3.5.0)
 Suggests:
+    apollo,
     dplyr,
     fastDummies,
     ggplot2,
     ggrepel,
+    gmnl,
     here,
     kableExtra,
     knitr,
+    mixl,
+    mlogit,
     rmarkdown,
     testthat,
     tidyr
