@@ -254,7 +254,7 @@ setupClusterID <- function(inputs, panel, robust, weightsUsed) {
     return(inputs)
 }
 
-makeClusterID <- function(datadata, inputs, obsID, panelID) {
+makeClusterID <- function(data, inputs, obsID, panelID) {
     if (inputs$clusterID == inputs$obsID) {
         return(obsID)
     }
