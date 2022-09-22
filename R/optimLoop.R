@@ -6,10 +6,12 @@ runMultistart <- function(mi) {
   numMultiStarts <- mi$n$multiStarts
   miList <- makeModelInputsList(mi, numMultiStarts)
   numCores <- mi$n$cores
-  if ((numMultiStarts == 1) | (numCores == 1)) {
+  # If there's no multi-start, just print that the model is running
+  if (numMultiStarts == 1) {
     message("Running model...")
     return(lapply(miList, runModel))
   }
+  # If there is a multi-start, print the number of iterations and cores
   printMultistartHeader(mi$inputs$startVals, numMultiStarts, numCores)
   if (Sys.info()[['sysname']] == 'Windows') {
     cl <- parallel::makeCluster(numCores, "PSOCK")
@@ -28,8 +30,8 @@ runMultistart <- function(mi) {
 printMultistartHeader <- function(startVals, numMultiStarts, numCores) {
   message(
     "Running multistart...\n",
-    "  Iterations: ", numMultiStarts, "\n",
-    "  Cores: ", numCores
+    "  Random starting point iterations: ", numMultiStarts, "\n",
+    "  Number of cores: ", numCores
   )
   if (!is.null(startVals)) {
     message("  NOTE: Using user-provided starting values for first iteration")
