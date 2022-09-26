@@ -481,7 +481,7 @@ residuals.logitr <- function(object, fitted = NULL, ...) {
 confint.logitr <- function(object, parm, level = 0.95, ...) {
     draws <- getUncertaintyDraws(object, numDraws = 10^4)
     lower <- (1 - level)/2
-    upper <- 1 - alpha
+    upper <- 1 - lower
     df <- data.frame(
         lower = apply(draws, 2, function(x) fquantile(x, lower, na.rm = TRUE)),
         upper = apply(draws, 2, function(x) fquantile(x, upper, na.rm = TRUE))

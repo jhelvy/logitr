@@ -9,6 +9,7 @@
 \alias{summary.logitr}
 \alias{print.logitr}
 \alias{print.summary.logitr}
+\alias{confint.logitr}
 \alias{print.logitr_wtp}
 \title{Methods for logitr objects}
 \usage{
