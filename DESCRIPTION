@@ -36,10 +36,11 @@ Suggests:
     testthat,
     tidyr
 Imports:
+    generics,
+    MASS,
     nloptr,
     parallel,
-    stats,
     randtoolbox,
-    MASS
+    stats
 URL: https://github.com/jhelvy/logitr
 BugReports: https://github.com/jhelvy/logitr/issues
