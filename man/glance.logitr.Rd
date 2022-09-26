@@ -2,7 +2,7 @@
 % Please edit documentation in R/broom.R
 \name{glance.logitr}
 \alias{glance.logitr}
-\title{\code{glance()} broom method for \code{logitr} class objects.}
+\title{Glance a \code{logitr} class object}
 \usage{
 \method{glance}{logitr}(x, ...)
 }
@@ -15,7 +15,7 @@
 A tibble of the model summary statistics.
 }
 \description{
-\code{glance()} broom method for \code{logitr} class objects.
+Glance a \code{logitr} class object
 }
 \examples{
 library(logitr)

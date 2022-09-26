@@ -8,6 +8,9 @@ generics::tidy
 #' @export
 generics::glance
 
+#' @importFrom generics glance
+#' @export
+generics::augment
 
 #' Tidy a `logitr` class object
 #'
@@ -40,7 +43,12 @@ generics::glance
 #' tidy(mnl_pref, conf.int = TRUE)
 #'
 #' @export
-tidy.logitr <- function(x, conf.int = FALSE, conf.level = 0.95, ...) {
+tidy.logitr <- function(
+    x,
+    conf.int = FALSE,
+    conf.level = 0.95,
+    ...
+) {
 
     result <- stats::coef(summary(x)) %>%
         tibble::as_tibble(rownames = "term") %>%
@@ -86,5 +94,59 @@ glance.logitr <- function(x, ...) {
         'logLik', 'null.logLik', 'AIC', 'BIC', 'r.squared', 'adj.r.squared',
         'nobs'
     )
+    return(result)
+}
+
+#' Glance a `logitr` class object
+#'
+#' @param x is an object of class `logitr`.
+#' @param newdata a `data.frame`. Each row is an alternative and each column an
+#' attribute corresponding to parameter names in the estimated model. Defaults
+#' to `NULL`, in which case predictions are made on the original data used to
+#' estimate the model.
+#' @param obsID The name of the column that identifies each set of
+#' alternatives in the data. Required if newdata != NULL. Defaults to `NULL`,
+#' in which case the value for `obsID` from the data in `object` is used.
+#' @param type A character vector defining what to predict: `prob` for
+#' probabilities, `outcomes` for outcomes. If you want both outputs, use
+#' `c("prob", "outcome")`. Outcomes are predicted randomly according to the
+#' predicted probabilities. Defaults to `"prob"`.
+#' @param ... further arguments.
+#'
+#' @return A tibble of ...
+#' @export
+#' @examples
+#' library(logitr)
+#'
+#' # Estimate a preference space model
+#' mnl_pref <- logitr(
+#'   data    = yogurt,
+#'   outcome = "choice",
+#'   obsID   = "obsID",
+#'   pars    = c("price", "feat", "brand")
+#' )
+#'
+#' # Extract a tibble of the model summary statistics
+#' augment(mnl_pref)
+#'
+#' @export
+augment.logitr <- function(
+    x,
+    newdata = NULL,
+    obsID   = NULL,
+    type    = "prob",
+    ...
+) {
+  if (is.null(obsID)) {
+      obsIDName <- x$inputs$obsID
+  }
+  if (is.null(newdata)) {
+      result <- predict(x, newdata = newdata, obsID = obsID, type = type) %>%
+          dplyr::left_join(x$fitted.values, by = obsIDName) %>%
+          rename(.fitted = fitted_value) %>%
+          cbind(.resid = x$residuals$residual)
+  } else {
+      result <- predict(x, newdata = newdata, obsID = obsID, type = type)
+  }
     return(result)
 }

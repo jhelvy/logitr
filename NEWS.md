@@ -1,6 +1,7 @@
 # logitr 0.8.0
 
 - Added new vignette comparing convergence issues in WTP space models with other similar packages.
+- Added `tidy()`, `glance()`, and `augment()` methods for use with the {broom} package.
 
 # logitr 0.7.2
 
