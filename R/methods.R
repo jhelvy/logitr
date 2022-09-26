@@ -4,7 +4,7 @@
 #'
 #' @name miscmethods.logitr
 #' @aliases logLik.logitr terms.logitr coef.logitr coef.summary.logitr
-#' summary.logitr print.logitr print.summary.logitr
+#' summary.logitr print.logitr print.summary.logitr confint.logitr
 #' @param x is an object of class `logitr`.
 #' @param object is an object of class `logitr` (a model estimated using
 #' the 'logitr()` function).
@@ -448,3 +448,47 @@ residuals.logitr <- function(object, fitted = NULL, ...) {
   residuals$residual <- as.vector(resids)
   return(residuals)
 }
+
+#' Extract Model Confidence Interval
+#'
+#' Returns confidence intervals from an object of class `logitr`.
+#' @keywords logitr confint
+#'
+#' @param object is an object of class `logitr` (a model estimated using
+#' the 'logitr()` function).
+#' @param parm A specification of which parameters are to be given confidence
+#' intervals, either a vector of numbers or a vector of names.
+#' If missing, all parameters are considered.
+#' @param level The confidence level required.
+#' @param ... further arguments.
+#'
+#' @return A data frame of the confidence intervals of model coefficients.
+#' @export
+#' @examples
+#' library(logitr)
+#'
+#' # Estimate a preference space model
+#' mnl_pref <- logitr(
+#'   data    = yogurt,
+#'   outcome = "choice",
+#'   obsID   = "obsID",
+#'   pars    = c("price", "feat", "brand")
+#' )
+#'
+#' # Compute a confidence interval
+#' confint(mnl_pref)
+#' @export
+confint.logitr <- function(object, parm, level = 0.95, ...) {
+    draws <- getUncertaintyDraws(object, numDraws = 10^4)
+    lower <- (1 - level)/2
+    upper <- 1 - alpha
+    df <- data.frame(
+        lower = apply(draws, 2, function(x) fquantile(x, lower, na.rm = TRUE)),
+        upper = apply(draws, 2, function(x) fquantile(x, upper, na.rm = TRUE))
+    )
+    names(df) <- c(paste(lower*100, "%"), paste(upper*100, "%"))
+    return(df)
+}
+
+
+
