@@ -4,7 +4,7 @@
 #' @export
 generics::tidy
 
-tidy.lm <- function(x, conf.int = FALSE, conf.level = 0.95, ...) {
+tidy.logitr <- function(x, conf.int = FALSE, conf.level = 0.95, ...) {
 
     result <- stats::coef(summary(x)) %>%
         tibble::as_tibble(rownames = "term") %>%
@@ -14,7 +14,8 @@ tidy.lm <- function(x, conf.int = FALSE, conf.level = 0.95, ...) {
                       p.value = `Pr(>|z|)`)
 
     if (conf.int) {
-        ci <- confint(x, level = conf.level)
+        ci <- stats::confint(x, level = conf.level) %>%
+            tibble::as_tibble(rownames = "term")
         result <- dplyr::left_join(result, ci, by = "term")
     }
 
