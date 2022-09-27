@@ -490,5 +490,68 @@ confint.logitr <- function(object, parm, level = 0.95, ...) {
     return(df)
 }
 
+#' Construct Design Matrices
+#'
+#' Creates a design (or model) matrix, e.g., by expanding factors to a set of
+#' dummy variables (depending on the contrasts) and expanding interactions
+#' similarly.
+#' @keywords logitr model.matrix
+#'
+#' @param object an object of an appropriate class. For the default method,
+#' a model `formula` or a `terms` object.
+#' @param ... further arguments.
+#'
+#' @return A design matrix
+#' @export
+#' @examples
+#' library(logitr)
+#'
+#' # Estimate a preference space model
+#' mnl_pref <- logitr(
+#'   data    = yogurt,
+#'   outcome = "choice",
+#'   obsID   = "obsID",
+#'   pars    = c("price", "feat", "brand")
+#' )
+#'
+#' # Get the model.matrix design matrix
+#' model.matrix(mnl_pref)
+#' @export
+model.matrix.logitr <- function(object, ...) {
+    if (object$modelSpace == 'pref') {
+        return(object$data$X)
+    }
+    result <- cbind(object$data$scalePar, object$data$X)
+    colnames(result)[1] <- 'scalePar'
+    return(result)
+}
 
-
+#' Extracting the Model Frame from a Formula or Fit
+#'
+#' Returns a data.frame with the variables needed to use formula and
+#' any `...` arguments.
+#' @keywords logitr model.frame
+#'
+#' @param formula a model `formula` or `terms` object or an R object.
+#' @param ... further arguments.
+#'
+#' @return A data.frame with the variables needed to use formula and
+#' any `...` arguments.
+#' @export
+#' @examples
+#' library(logitr)
+#'
+#' # Estimate a preference space model
+#' mnl_pref <- logitr(
+#'   data    = yogurt,
+#'   outcome = "choice",
+#'   obsID   = "obsID",
+#'   pars    = c("price", "feat", "brand")
+#' )
+#'
+#' # Get the model.frame data frame
+#' model.frame(mnl_pref)
+#' @export
+model.frame.logitr <- function(formula, ...) {
+    return(as.data.frame(model.matrix(formula)))
+}

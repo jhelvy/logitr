@@ -8,7 +8,7 @@ generics::tidy
 #' @export
 generics::glance
 
-#' @importFrom generics glance
+#' @importFrom generics augment
 #' @export
 generics::augment
 
