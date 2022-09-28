@@ -78,6 +78,15 @@ reference:
   desc: "Functions for predicting probabilities and outcomes."
   contents:
   - predict.logitr
+- title: "Tidy / Broom Methods"
+  desc: "Methods for tidying up results from estimate models."
+  contents:
+  - augment.logitr
+  - confint.logitr
+  - glance.logitr
+  - model.frame.logitr
+  - model.matrix.logitr
+  - tidy.logitr
 - title: "Example Data Sets"
   desc: "Descriptions of data included with this package"
   contents:
