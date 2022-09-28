@@ -25,15 +25,10 @@ dummyCode <- function(df, vars) {
 #' variables and interaction variables added to `X`, `pars`, and
 #' `randPars`.
 #' @param data The data, formatted as a `data.frame` object.
-#' @param outcome The name of the column that identifies the outcome variable,
-#' which should be coded with a `1` for `TRUE` and `0` for `FALSE`.
 #' @param pars The names of the parameters to be estimated in the model.
 #' Must be the same as the column names in the `data` argument. For WTP space
 #' models, do not include price in `pars` - it should instead be defined by
 #' the `scalePar` argument.
-#' @param scalePar The name of the column that identifies the scale variable,
-#' which is typically "price" for WTP space models, but could be any
-#' continuous variable, such as "time". Defaults to `NULL`.
 #' @param randPars A named vector whose names are the random parameters and
 #' values the distribution: `'n'` for normal or `'ln'` for log-normal.
 #' Defaults to `NULL`.
@@ -58,23 +53,14 @@ dummyCode <- function(df, vars) {
 #' result$randPars
 #' result$formula
 #' head(result$X)
-recodeData <- function(data, outcome, pars, scalePar = NULL, randPars = NULL) {
+recodeData <- function(data, pars, randPars) {
   data <- as.data.frame(data) # tibbles break things
   data <- orderedFactorsToChars(data) # ordered factors cause weird names
-  formula <- parsToFormula(outcome, pars, scalePar)
-  if (!is.null(scalePar)) {
-      names(data)[which(names(data) == scalePar)] <- 'scalePar'
-      X <- getDesignMatrix(data, formula)
-      X <- X[,which(colnames(X) != 'scalePar')]
-  } else {
-      X <- getDesignMatrix(data, formula)
-  }
+  X <- getDesignMatrix(data, pars)
   return(list(
     X = X,
     pars = colnames(X),
-    randPars = recodeRandPars(data, pars, randPars),
-    formula = formula
-  ))
+    randPars = recodeRandPars(data, pars, randPars)))
 }
 
 # Ordered factors have strange returned column names when encoding with
@@ -94,17 +80,11 @@ getColumnTypes <- function(data) {
   return(unlist(lapply(types, test)))
 }
 
-getDesignMatrix <- function(data, formula) {
+getDesignMatrix <- function(data, pars) {
+  formula <- stats::as.formula(paste0("~ ", paste(pars, collapse = " + ")))
   X <- stats::model.matrix(formula, data)
   X <- X[,-1,drop=FALSE] # Drop intercept
   return(X)
-}
-
-parsToFormula <- function(outcome, pars, scalePar) {
-  if (!is.null(scalePar)) {
-    pars <- c('scalePar', pars)
-  }
-  return(stats::as.formula(paste0(outcome, " ~ ", paste(pars, collapse = " + "))))
 }
 
 recodeRandPars <- function(data, pars, randPars) {

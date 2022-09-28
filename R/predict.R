@@ -127,8 +127,7 @@ predict.logitr <- function(
 formatNewData <- function(object, newdata, obsID) {
   inputs <- object$inputs
   newdata <- as.data.frame(newdata) # tibbles break things
-  recoded <- recodeData(
-      newdata, inputs$outcome, inputs$pars, inputs$scalePar, inputs$randPars)
+  recoded <- recodeData(newdata, inputs$pars, inputs$randPars)
   X <- recoded$X
   predictParCheck(object, X) # Check if model pars match those from newdata
   scalePar <- NA

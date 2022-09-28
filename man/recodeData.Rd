@@ -6,22 +6,15 @@
 \code{randPars} to include any dummy-coded categorical or interaction
 variables.}
 \usage{
-recodeData(data, outcome, pars, scalePar = NULL, randPars = NULL)
+recodeData(data, pars, randPars)
 }
 \arguments{
 \item{data}{The data, formatted as a \code{data.frame} object.}
-
-\item{outcome}{The name of the column that identifies the outcome variable,
-which should be coded with a \code{1} for \code{TRUE} and \code{0} for \code{FALSE}.}
 
 \item{pars}{The names of the parameters to be estimated in the model.
 Must be the same as the column names in the \code{data} argument. For WTP space
 models, do not include price in \code{pars} - it should instead be defined by
 the \code{scalePar} argument.}
-
-\item{scalePar}{The name of the column that identifies the scale variable,
-which is typically "price" for WTP space models, but could be any
-continuous variable, such as "time". Defaults to \code{NULL}.}
 
 \item{randPars}{A named vector whose names are the random parameters and
 values the distribution: \code{'n'} for normal or \code{'ln'} for log-normal.

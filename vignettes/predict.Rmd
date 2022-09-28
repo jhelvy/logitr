@@ -64,7 +64,7 @@ data <- subset(
 probs_mnl_pref <- predict(
   mnl_pref,
   newdata = data,
-  obsID = "obsID",
+  obsID = "obsID"
 )
 
 probs_mnl_pref

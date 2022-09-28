@@ -4,7 +4,7 @@
 \alias{tidy.logitr}
 \title{Tidy a \code{logitr} class object}
 \usage{
-tidy.logitr(x, conf.int = FALSE, conf.level = 0.95, ...)
+\method{tidy}{logitr}(x, conf.int = FALSE, conf.level = 0.95, ...)
 }
 \arguments{
 \item{x}{is an object of class \code{logitr}.}
