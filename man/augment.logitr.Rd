@@ -4,7 +4,7 @@
 \alias{augment.logitr}
 \title{Glance a \code{logitr} class object}
 \usage{
-\method{augment}{logitr}(x, newdata = NULL, obsID = NULL, type = "prob", ...)
+augment.logitr(x, newdata = NULL, obsID = NULL, type = "prob", ...)
 }
 \arguments{
 \item{x}{is an object of class \code{logitr}.}

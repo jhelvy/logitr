@@ -4,7 +4,7 @@
 \alias{glance.logitr}
 \title{Glance a \code{logitr} class object}
 \usage{
-\method{glance}{logitr}(x, ...)
+glance.logitr(x, ...)
 }
 \arguments{
 \item{x}{is an object of class \code{logitr}.}
