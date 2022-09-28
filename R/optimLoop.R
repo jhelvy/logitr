@@ -44,68 +44,68 @@ makeModelInputsList <- function(mi, numMultiStarts) {
   miList <- rep(list(mi), numMultiStarts)
   # Add starting parameters and multistartNumber for each modelInputs
   for (i in 1:numMultiStarts) {
-    miList[[i]]$model$startPars <- getStartPars(mi, i)
+    miList[[i]]$model$startVals <- getStartVals(mi, i)
     miList[[i]]$model$multistartNumber <- i
   }
   return(miList)
 }
 
-getStartPars <- function(mi, i) {
-  startPars <- getRandomStartPars(mi)
+getStartVals <- function(mi, i) {
+  startVals <- getRandomStartVals(mi)
   if (i == 1) {
-    return(firstIterStartPars(startPars, mi))
+    return(firstIterStartVals(startVals, mi))
   }
-  startPars <- checkStartPars(startPars, mi)
-  return(startPars)
+  startVals <- checkStartVals(startVals, mi)
+  return(startVals)
 }
 
 # Returns randomly drawn starting parameters from a uniform distribution
-# between modelInputs$inputs$startParBounds
-getRandomStartPars <- function(mi) {
+# between modelInputs$inputs$startValBounds
+getRandomStartVals <- function(mi) {
   parNames <- mi$parNames
-  bounds <- mi$inputs$startParBounds
+  bounds <- mi$inputs$startValBounds
   lower <- bounds[1]
   upper <- bounds[2]
   # For mxl models, need both mean and sd parameters
-  pars_mean <- stats::runif(length(parNames$mean), lower, upper)
-  pars_sd <- stats::runif(length(parNames$sd), lower, upper)
-  startPars <- c(pars_mean, pars_sd)
-  names(startPars) <- parNames$all
-  return(startPars)
+  vals_mean <- stats::runif(length(parNames$mean), lower, upper)
+  vals_sd <- stats::runif(length(parNames$sd), lower, upper)
+  startVals <- c(vals_mean, vals_sd)
+  names(startVals) <- parNames$all
+  return(startVals)
 }
 
-firstIterStartPars <- function(startPars, mi) {
+firstIterStartVals <- function(startVals, mi) {
   if (!is.null(mi$inputs$startVals)) {
-    userStartPars <- mi$inputs$startVals
-    if (length(userStartPars) != length(startPars)) {
+    userStartVals <- mi$inputs$startVals
+    if (length(userStartVals) != length(startVals)) {
       stop(
         "Number of user-provided starting values do not match number ",
         "of model parameters."
       )
     } else {
-      startPars[1:length(startPars)] <- userStartPars
-      return(startPars)
+      startVals[1:length(startVals)] <- userStartVals
+      return(startVals)
     }
   }
-  startPars <- 0 * startPars
-  # For correlated parameters in mxl models, set sd pars to 0.1
+  startVals <- 0 * startVals
+  # For correlated parameters in mxl models, set sd vals to 0.1
   if (mi$inputs$correlation) {
-    startPars[mi$parNames$sd] <- 0.1
+    startVals[mi$parNames$sd] <- 0.1
   }
-  # For log-normal or censored-normal parameters, set pars
+  # For log-normal or censored-normal parameters, set vals
   lnIDs <- mi$parIDs$ln
   if (length(lnIDs) > 0) {
-    startPars[lnIDs] <- 0.1
+    startVals[lnIDs] <- 0.1
   }
   cnIDs <- mi$parIDs$cn
   if (length(cnIDs) > 0) {
-    startPars[cnIDs] <- 0.1
+    startVals[cnIDs] <- 0.1
   }
   if (mi$modelSpace == "wtp") {
     # Force starting with scalePar = 1 for WTP space models for stability
-    startPars[1] <- 1
+    startVals[1] <- 1
   }
-  return(startPars)
+  return(startVals)
 }
 
 # Sets tighter bounds on starting parameters for stability in these cases:
@@ -113,25 +113,25 @@ firstIterStartPars <- function(startPars, mi) {
 # - Log-normal parameters in MXL models (must be positive)
 # - Censored-normal parameters in MXL models (must be positive)
 # - scalePar term in WTP space models (always start at 1)
-checkStartPars <- function(startPars, mi) {
-  # For correlated parameters in mxl models, set sd pars to between [0.1, 0.2]
+checkStartVals <- function(startVals, mi) {
+  # For correlated parameters in mxl models, set sd vals to between [0.1, 0.2]
   if (mi$inputs$correlation) {
-    startPars[mi$parNames$sd] <- stats::runif(length(mi$parNames$sd), 0.1, 0.2)
+    startVals[mi$parNames$sd] <- stats::runif(length(mi$parNames$sd), 0.1, 0.2)
   }
   # For log-normal or censored-normal parameters, force positivity
   lnIDs <- mi$parIDs$ln
   if (length(lnIDs) > 0) {
-    startPars[lnIDs] <- stats::runif(length(lnIDs), 0.1, 0.2)
+    startVals[lnIDs] <- stats::runif(length(lnIDs), 0.1, 0.2)
   }
   cnIDs <- mi$parIDs$cn
   if (length(cnIDs) > 0) {
-    startPars[cnIDs] <- stats::runif(length(cnIDs), 0.1, 0.2)
+    startVals[cnIDs] <- stats::runif(length(cnIDs), 0.1, 0.2)
   }
   if (mi$modelSpace == "wtp") {
     # Force starting with scalePar = 1 for WTP space models for stability
-    startPars[1] <- 1
+    startVals[1] <- 1
   }
-  return(startPars)
+  return(startVals)
 }
 
 makeModelTemplate <- function(mi) {
@@ -147,7 +147,7 @@ makeModelTemplate <- function(mi) {
     probabilities     = NULL,
     fitted.values     = NULL,
     residuals         = NULL,
-    startPars         = NA,
+    startVals         = NA,
     multistartNumber  = NA,
     multistartSummary = NULL,
     time              = NA,
@@ -183,7 +183,7 @@ runModel <- function(mi) {
     tryCatch(
       {
         result <- nloptr::nloptr(
-          x0     = mi$model$startPars,
+          x0     = mi$model$startVals,
           eval_f = mi$evalFuncs$objective,
           mi     = mi,
           opts   = mi$options
