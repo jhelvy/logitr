@@ -51,14 +51,17 @@ dummyCode <- function(df, vars) {
 #' result$pars
 #' result$randPars
 #' head(result$X)
-recodeData <- function(data, pars, randPars) {
+recodeData <- function(data, outcome, pars, randPars) {
   data <- as.data.frame(data) # tibbles break things
   data <- orderedFactorsToChars(data) # ordered factors cause weird names
-  X <- getDesignMatrix(data, pars)
+  formula <- parsToFormula(outcome, pars)
+  X <- getDesignMatrix(data, formula)
   return(list(
     X = X,
     pars = colnames(X),
-    randPars = recodeRandPars(data, pars, randPars)))
+    randPars = recodeRandPars(data, pars, randPars),
+    formula = formula
+  ))
 }
 
 # Ordered factors have strange returned column names when encoding with
@@ -78,15 +81,14 @@ getColumnTypes <- function(data) {
   return(unlist(lapply(types, test)))
 }
 
-getDesignMatrix <- function(data, pars) {
-  formula <- parsToFormula(pars)
+getDesignMatrix <- function(data, formula) {
   X <- stats::model.matrix(formula, data)
   X <- X[,-1,drop=FALSE] # Drop intercept
   return(X)
 }
 
-parsToFormula <- function(vars) {
-  return(stats::as.formula(paste0("~ ", paste(vars, collapse = " + "))))
+parsToFormula <- function(outcome, vars) {
+  return(stats::as.formula(paste0(outcome, " ~ ", paste(vars, collapse = " + "))))
 }
 
 recodeRandPars <- function(data, pars, randPars) {

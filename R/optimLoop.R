@@ -155,6 +155,7 @@ makeModelTemplate <- function(mi) {
     message           = "Generic failure code.",
     status            = -1,
     call              = mi$call,
+    formula           = mi$formula,
     date              = mi$date,
     version           = mi$version,
     inputs            = mi$inputs,

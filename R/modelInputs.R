@@ -49,10 +49,11 @@ getModelInputs <- function(
 
   # Get the design matrix, recoding parameters that are categorical
   # or have interactions
-  recoded <- recodeData(data, pars, randPars)
+  recoded <- recodeData(data, outcome, pars, randPars)
   X <- recoded$X
   pars <- recoded$pars
   randPars <- recoded$randPars
+  formula <- recoded$formula
   scalePar <- defineScalePar(data, inputs, modelSpace)
   outcome <- as.matrix(data[outcome])
 
@@ -146,6 +147,7 @@ getModelInputs <- function(
   # Make modelInputs list
   modelInputs <- list(
     call          = call,
+    formula       = formula,
     date          = format(Sys.time(), "%a %b %d %X %Y"),
     version       = as.character(utils::packageVersion("logitr")),
     inputs        = inputs,

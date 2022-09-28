@@ -26,7 +26,7 @@ logLik.logitr <- function(object, ...) {
 #' @rdname miscmethods.logitr
 #' @export
 terms.logitr <- function(x, ...) {
-  return(x$inputs$pars)
+  return(terms(x$formula))
 }
 
 #' @rdname miscmethods.logitr
@@ -553,5 +553,5 @@ model.matrix.logitr <- function(object, ...) {
 #' model.frame(mnl_pref)
 #' @export
 model.frame.logitr <- function(formula, ...) {
-    return(as.data.frame(model.matrix(formula)))
+    return(as.data.frame(cbind(formula$data$outcome, model.matrix(formula))))
 }
