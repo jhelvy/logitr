@@ -62,9 +62,12 @@ recodeData <- function(data, outcome, pars, scalePar = NULL, randPars = NULL) {
   data <- as.data.frame(data) # tibbles break things
   data <- orderedFactorsToChars(data) # ordered factors cause weird names
   formula <- parsToFormula(outcome, pars, scalePar)
-  X <- getDesignMatrix(data, formula)
   if (!is.null(scalePar)) {
+      names(data)[which(names(data) == scalePar)] <- 'scalePar'
+      X <- getDesignMatrix(data, formula)
       X <- X[,which(colnames(X) != 'scalePar')]
+  } else {
+      X <- getDesignMatrix(data, formula)
   }
   return(list(
     X = X,

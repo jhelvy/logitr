@@ -45,7 +45,6 @@ getModelInputs <- function(
       modelSpace <- "pref"
   } else {
       modelSpace <- "wtp"
-      names(data)[which(names(data) == scalePar)] <- 'scalePar'
   }
 
   # Get the design matrix, recoding parameters that are categorical
@@ -307,7 +306,7 @@ defineScalePar <- function(data, inputs, modelSpace) {
     return(NULL)
   }
   if (modelSpace == "wtp") {
-    scalePar <- data[, 'scalePar']
+    scalePar <- data[, which(names(data) == inputs$scalePar)]
     if (! typeof(scalePar) %in% c("integer", "double")) {
       stop(
         'Please make sure the "scalePar" column in your data ',
