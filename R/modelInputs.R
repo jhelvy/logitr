@@ -45,11 +45,12 @@ getModelInputs <- function(
       modelSpace <- "pref"
   } else {
       modelSpace <- "wtp"
+      names(data)[which(names(data) == scalePar)] <- 'scalePar'
   }
 
   # Get the design matrix, recoding parameters that are categorical
   # or have interactions
-  recoded <- recodeData(data, outcome, pars, randPars)
+  recoded <- recodeData(data, outcome, pars, scalePar, randPars)
   X <- recoded$X
   pars <- recoded$pars
   randPars <- recoded$randPars
@@ -306,11 +307,11 @@ defineScalePar <- function(data, inputs, modelSpace) {
     return(NULL)
   }
   if (modelSpace == "wtp") {
-    scalePar <- data[, which(names(data) == inputs$scalePar)]
+    scalePar <- data[, 'scalePar']
     if (! typeof(scalePar) %in% c("integer", "double")) {
       stop(
         'Please make sure the "scalePar" column in your data ',
-        'is encoded as a numeric data type. Scale must ',
+        'is encoded as a numeric data type. The scalePar must ',
         'be numeric and continuous.'
       )
     }

@@ -25,10 +25,15 @@ dummyCode <- function(df, vars) {
 #' variables and interaction variables added to `X`, `pars`, and
 #' `randPars`.
 #' @param data The data, formatted as a `data.frame` object.
+#' @param outcome The name of the column that identifies the outcome variable,
+#' which should be coded with a `1` for `TRUE` and `0` for `FALSE`.
 #' @param pars The names of the parameters to be estimated in the model.
 #' Must be the same as the column names in the `data` argument. For WTP space
 #' models, do not include price in `pars` - it should instead be defined by
 #' the `scalePar` argument.
+#' @param scalePar The name of the column that identifies the scale variable,
+#' which is typically "price" for WTP space models, but could be any
+#' continuous variable, such as "time". Defaults to `NULL`.
 #' @param randPars A named vector whose names are the random parameters and
 #' values the distribution: `'n'` for normal or `'ln'` for log-normal.
 #' Defaults to `NULL`.
@@ -44,18 +49,23 @@ dummyCode <- function(df, vars) {
 #' # Recode the yogurt data
 #' result <- recodeData(
 #'     data = yogurt,
+#'     outcome = "choice",
 #'     pars = c("price", "feat", "brand", "price*brand"),
 #'     randPars = c(feat = "n", brand = "n")
 #' )
 #'
 #' result$pars
 #' result$randPars
+#' result$formula
 #' head(result$X)
-recodeData <- function(data, outcome, pars, randPars) {
+recodeData <- function(data, outcome, pars, scalePar = NULL, randPars = NULL) {
   data <- as.data.frame(data) # tibbles break things
   data <- orderedFactorsToChars(data) # ordered factors cause weird names
-  formula <- parsToFormula(outcome, pars)
+  formula <- parsToFormula(outcome, pars, scalePar)
   X <- getDesignMatrix(data, formula)
+  if (!is.null(scalePar)) {
+      X <- X[,which(colnames(X) != 'scalePar')]
+  }
   return(list(
     X = X,
     pars = colnames(X),
@@ -87,8 +97,11 @@ getDesignMatrix <- function(data, formula) {
   return(X)
 }
 
-parsToFormula <- function(outcome, vars) {
-  return(stats::as.formula(paste0(outcome, " ~ ", paste(vars, collapse = " + "))))
+parsToFormula <- function(outcome, pars, scalePar) {
+  if (!is.null(scalePar)) {
+    pars <- c('scalePar', pars)
+  }
+  return(stats::as.formula(paste0(outcome, " ~ ", paste(pars, collapse = " + "))))
 }
 
 recodeRandPars <- function(data, pars, randPars) {
