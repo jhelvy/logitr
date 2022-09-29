@@ -81,10 +81,8 @@ getColumnTypes <- function(data) {
 }
 
 getDesignMatrix <- function(data, pars) {
-  formula <- stats::as.formula(paste0("~ ", paste(pars, collapse = " + ")))
-  X <- stats::model.matrix(formula, data)
-  X <- X[,-1,drop=FALSE] # Drop intercept
-  return(X)
+  formula <- stats::as.formula(paste0("~ ", paste(pars, collapse = " + "), "-1"))
+  return(stats::model.matrix(formula, data))
 }
 
 recodeRandPars <- function(data, pars, randPars) {
