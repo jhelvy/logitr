@@ -69,15 +69,15 @@ orderedFactorsToChars <- function(data) {
   types <- getColumnTypes(data)
   names <- names(types[types == "ordered"])
   if (length(names) > 0) {
-    data[,names] <- lapply(data[,names], as.character)
+    for (i in 1:length(names)) {
+      data[,names[i]] <- factor(data[,names[i]], ordered = FALSE)
+    }
   }
   return(data)
 }
 
 getColumnTypes <- function(data) {
-  types <- lapply(data, class)
-  test <- function(x) {x[1]}
-  return(unlist(lapply(types, test)))
+  return(unlist(lapply(lapply(data, class), function(x) x[1])))
 }
 
 getDesignMatrix <- function(data, pars) {
