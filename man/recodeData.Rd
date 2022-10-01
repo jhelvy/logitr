@@ -39,13 +39,12 @@ data(yogurt)
 # Recode the yogurt data
 result <- recodeData(
     data = yogurt,
-    outcome = "choice",
     pars = c("price", "feat", "brand", "price*brand"),
     randPars = c(feat = "n", brand = "n")
 )
 
+result$formula
 result$pars
 result$randPars
-result$formula
 head(result$X)
 }

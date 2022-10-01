@@ -26,7 +26,7 @@ logLik.logitr <- function(object, ...) {
 #' @rdname miscmethods.logitr
 #' @export
 terms.logitr <- function(x, ...) {
-  return(terms(x$formula))
+  return(stats::terms(x$formula))
 }
 
 #' @rdname miscmethods.logitr
@@ -477,7 +477,6 @@ residuals.logitr <- function(object, fitted = NULL, ...) {
 #'
 #' # Compute a confidence interval
 #' confint(mnl_pref)
-#' @export
 confint.logitr <- function(object, parm, level = 0.95, ...) {
     draws <- getUncertaintyDraws(object, numDraws = 10^4)
     lower <- (1 - level)/2
@@ -516,7 +515,6 @@ confint.logitr <- function(object, parm, level = 0.95, ...) {
 #'
 #' # Get the model.matrix design matrix
 #' model.matrix(mnl_pref)
-#' @export
 model.matrix.logitr <- function(object, ...) {
     if (object$modelSpace == 'pref') {
         return(object$data$X)
@@ -551,7 +549,8 @@ model.matrix.logitr <- function(object, ...) {
 #'
 #' # Get the model.frame data frame
 #' model.frame(mnl_pref)
-#' @export
 model.frame.logitr <- function(formula, ...) {
-    return(as.data.frame(cbind(formula$data$outcome, model.matrix(formula))))
+    return(as.data.frame(cbind(
+        formula$data$outcome, stats::model.matrix(formula)
+    )))
 }
