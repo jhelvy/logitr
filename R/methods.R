@@ -516,12 +516,7 @@ confint.logitr <- function(object, parm, level = 0.95, ...) {
 #' # Get the model.matrix design matrix
 #' model.matrix(mnl_pref)
 model.matrix.logitr <- function(object, ...) {
-    if (object$modelSpace == 'pref') {
-        return(object$data$X)
-    }
-    result <- cbind(object$data$scalePar, object$data$X)
-    colnames(result)[1] <- 'scalePar'
-    return(result)
+    return(object$data$X)
 }
 
 #' Extracting the Model Frame from a Formula or Fit
