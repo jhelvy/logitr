@@ -56,8 +56,16 @@ dummyCode <- function(df, vars) {
 recodeData <- function(data, pars, randPars) {
   data <- as.data.frame(data) # tibbles break things
   data <- orderedFactorsToChars(data) # ordered factors cause weird names
-  X <- getDesignMatrix(data, pars)
+
+  # formula <- stats::as.formula(paste0("~ ", paste(pars, collapse = " + "), "-1"))
+  # X <- stats::model.matrix(formula, data)
+
+  formula <- stats::as.formula(paste0("~ ", paste(pars, collapse = " + ")))
+  X <- stats::model.matrix(formula, data)
+  X <- X[,-1,drop=FALSE] # Drop intercept
+
   return(list(
+    formula = formula,
     X = X,
     pars = colnames(X),
     randPars = recodeRandPars(data, pars, randPars)))
@@ -78,11 +86,6 @@ orderedFactorsToChars <- function(data) {
 
 getColumnTypes <- function(data) {
   return(unlist(lapply(lapply(data, class), function(x) x[1])))
-}
-
-getDesignMatrix <- function(data, pars) {
-  formula <- stats::as.formula(paste0("~ ", paste(pars, collapse = " + "), "-1"))
-  return(stats::model.matrix(formula, data))
 }
 
 recodeRandPars <- function(data, pars, randPars) {

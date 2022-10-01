@@ -49,8 +49,8 @@ getModelInputs <- function(
 
   # Get the design matrix, recoding parameters that are categorical
   # or have interactions
-  formula <- getModelFormula(outcome, pars, scalePar)
   recoded <- recodeData(data, pars, randPars)
+  formula <- recoded$formula
   X <- recoded$X
   pars <- recoded$pars
   randPars <- recoded$randPars
@@ -184,13 +184,6 @@ getModelInputs <- function(
   modelInputs$evalFuncs <- setEvalFunctions(modelType, useAnalyticGrad)
 
   return(modelInputs)
-}
-
-getModelFormula <- function(outcome, pars, scalePar) {
-  if (!is.null(scalePar)) {
-    pars <- c('scalePar', pars)
-  }
-  return(stats::as.formula(paste0(outcome, " ~ ", paste(pars, collapse = " + "))))
 }
 
 checkRepeatedIDs <- function(var, id, reps) {
