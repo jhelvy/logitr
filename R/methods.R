@@ -4,7 +4,7 @@
 #'
 #' @name miscmethods.logitr
 #' @aliases logLik.logitr terms.logitr coef.logitr coef.summary.logitr
-#' summary.logitr print.logitr print.summary.logitr confint.logitr
+#' summary.logitr print.logitr print.summary.logitr
 #' @param x is an object of class `logitr`.
 #' @param object is an object of class `logitr` (a model estimated using
 #' the 'logitr()` function).
@@ -544,9 +544,9 @@ model.matrix.logitr <- function(object, ...) {
 #'
 #' # Get the model.frame data frame
 #' model.frame(mnl_pref)
-model.frame.logitr <- function(object, ...) {
+model.frame.logitr <- function(formula, ...) {
     stats::model.frame.default(
-        object$formula,
-        data = eval(object$call$data, envir = parent.frame())
+        formula$formula,
+        data = eval(formula$call$data, envir = parent.frame())
     )
 }
