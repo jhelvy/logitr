@@ -67,6 +67,8 @@ Finally, as with WTP space models, it is recommended to use a multistart search 
 ```{r eval=FALSE}
 library("logitr")
 
+set.seed(456)
+
 mxl_pref <- logitr(
   data     = yogurt,
   outcome  = 'choice',
@@ -76,12 +78,6 @@ mxl_pref <- logitr(
   randPars = c(feat = 'n', brand = 'n'),
   numMultiStarts = 10
 )
-```
-```
-#> Running multistart...
-#>   Iterations: 10
-#>   Cores: 3
-#> Done!
 ```
 
 Print a summary of the results:
@@ -111,6 +107,8 @@ where the parameters $\omega_1$, $\omega_2$, $\omega_3$, and $\omega_4$ have uni
 In the example below, we also use a 10-iteration multistart. We also set the starting values for the first iteration to the computed WTP from the preference space model:
 
 ```{r eval=FALSE}
+set.seed(6789)
+
 mxl_wtp <- logitr(
   data       = yogurt,
   outcome    = 'choice',
@@ -122,13 +120,6 @@ mxl_wtp <- logitr(
   numMultiStarts = 10,
   startVals = wtp_mxl_pref$Estimate
 )
-```
-```
-#> Running multistart...
-#>   Iterations: 10
-#>   Cores: 3
-#>   NOTE: Using user-provided starting values for first iteration
-#> Done!
 ```
 
 Print a summary of the results:
@@ -152,6 +143,8 @@ By default, `logitr` assumes that mixed logit models have uncorrelated heterogen
 ```{r eval=FALSE}
 library("logitr")
 
+set.seed(456)
+
 mxl_pref_cor <- logitr(
   data     = yogurt,
   outcome  = 'choice',
@@ -162,12 +155,6 @@ mxl_pref_cor <- logitr(
   numMultiStarts = 10,
   correlation = TRUE
 )
-```
-```
-#> Running multistart...
-#>   Iterations: 10
-#>   Cores: 3
-#> Done!
 ```
 
 Print a summary of the results:

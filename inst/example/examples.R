@@ -13,14 +13,14 @@ library(mixl)
 library(dplyr)
 library(tidyr)
 
-set.seed(1234)
-
 # Set number of cores to use
 numCores <- 2
 
 # Mixed logit vignette
 
 # Multistart MXL model in the Preference Space
+set.seed(456)
+
 mxl_pref <- logitr(
   data     = yogurt,
   outcome  = 'choice',
@@ -36,6 +36,8 @@ mxl_pref <- logitr(
 wtp_mxl_pref <- wtp(mxl_pref, "price")
 
 # Multistart MXL model in the WTP Space
+set.seed(6789)
+
 mxl_wtp <- logitr(
   data       = yogurt,
   outcome    = 'choice',
@@ -53,6 +55,8 @@ mxl_wtp <- logitr(
 wtpCompare(mxl_pref, mxl_wtp, "price")
 
 # Multistart MXL model in the Preference Space with correlated heterogeneity
+set.seed(456)
+
 mxl_pref_cor <- logitr(
   data     = yogurt,
   outcome  = 'choice',
@@ -64,7 +68,6 @@ mxl_pref_cor <- logitr(
   correlation = TRUE,
   numCores = numCores
 )
-
 
 # Convergence vignette
 
