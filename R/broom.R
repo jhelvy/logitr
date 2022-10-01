@@ -50,17 +50,14 @@ tidy.logitr <- function(
     ...
 ) {
 
-    result <- stats::coef(summary(x)) %>%
-        tibble::as_tibble(rownames = "term") %>%
-        dplyr::rename(estimate = Estimate,
-                      std.error = `Std. Error`,
-                      statistic = `z-value`,
-                      p.value = `Pr(>|z|)`)
+    result <- stats::coef(summary(x))
+    result <- tibble::as_tibble(result, rownames = "term")
+    names(result) <- c('term', 'estimate', 'std.error', 'statistic', 'p.value')
 
     if (conf.int) {
-        ci <- stats::confint(x, level = conf.level) %>%
-            tibble::as_tibble(rownames = "term")
-        result <- dplyr::left_join(result, ci, by = "term")
+        ci <- stats::confint(x, level = conf.level)
+        ci <- tibble::as_tibble(ci, rownames = "term")
+        result <- tibble::as_tibble(merge(result, ci, by = "term"))
     }
 
     return(result)
@@ -89,10 +86,10 @@ tidy.logitr <- function(
 #'
 #' @export
 glance.logitr <- function(x, ...) {
-    result <- as_tibble(t(summary(x)$statTable))
+    result <- tibble::as_tibble(t(summary(x)$statTable))
     names(result) <- c(
-        'logLik', 'null.logLik', 'AIC', 'BIC', 'r.squared', 'adj.r.squared',
-        'nobs'
+        'logLik', 'null.logLik', 'AIC', 'BIC',
+        'r.squared', 'adj.r.squared', 'nobs'
     )
     return(result)
 }
@@ -141,12 +138,12 @@ augment.logitr <- function(
       obsIDName <- x$inputs$obsID
   }
   if (is.null(newdata)) {
-      result <- predict(x, newdata = newdata, obsID = obsID, type = type) %>%
-          dplyr::left_join(x$fitted.values, by = obsIDName) %>%
-          rename(.fitted = fitted_value) %>%
-          cbind(.resid = x$residuals$residual)
+      result <- stats::predict(x, newdata = newdata, obsID = obsID, type = type)
+      result <- merge(result, x$fitted.values, by = obsIDName)
+      names(result)[which(names(result) == 'fitted_value')] <- '.fitted'
+      result <- cbind(result, .resid = x$residuals$residual)
   } else {
-      result <- predict(x, newdata = newdata, obsID = obsID, type = type)
+      result <- stats::predict(x, newdata = newdata, obsID = obsID, type = type)
   }
     return(result)
 }

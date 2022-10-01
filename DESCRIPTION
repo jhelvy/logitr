@@ -41,6 +41,7 @@ Imports:
     nloptr,
     parallel,
     randtoolbox,
-    stats
+    stats,
+    tibble
 URL: https://github.com/jhelvy/logitr
 BugReports: https://github.com/jhelvy/logitr/issues
