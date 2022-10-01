@@ -544,8 +544,9 @@ model.matrix.logitr <- function(object, ...) {
 #'
 #' # Get the model.frame data frame
 #' model.frame(mnl_pref)
-model.frame.logitr <- function(formula, ...) {
-    return(as.data.frame(cbind(
-        formula$data$outcome, stats::model.matrix(formula)
-    )))
+model.frame.logitr <- function(object, ...) {
+    stats::model.frame.default(
+        object$formula,
+        data = eval(object$call$data, envir = parent.frame())
+    )
 }
