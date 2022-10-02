@@ -46,7 +46,7 @@ coefs <- coef(summary(model))
 coefs
 ```
 
-Another approach is to use the `tidy()` function from the [{broom}](link) package:
+Another approach is to use the `tidy()` function from the [{broom}](https://broom.tidymodels.org/index.html) package:
 
 ```{r}
 library(broom)
@@ -90,7 +90,7 @@ logLik(mnl_pref)
 vcov(mnl_pref)
 ```
 
-You can also view a summary of statistics about the model using the `glance()` function from the [{broom}](link) package:
+You can also view a summary of statistics about the model using the `glance()` function from the [{broom}](https://broom.tidymodels.org/index.html) package:
 
 ```{r}
 glance(model)
@@ -100,7 +100,7 @@ glance(model)
 
 ## gtsummary
 
-Often times you will need to create summary tables that are formatted for publication. The [{gtsummary}(link)] package offers a convenient solution that works well with `logitr`models. For example, a formatted summary table can be obtained using the `tbl_regression()` function: 
+Often times you will need to create summary tables that are formatted for publication. The [{gtsummary}(https://www.danieldsjoberg.com/gtsummary/)] package offers a convenient solution that works well with `logitr`models. For example, a formatted summary table can be obtained using the `tbl_regression()` function:
 
 ```{r}
 library(gtsummary)
@@ -110,7 +110,7 @@ model |>
   as_kable()
 ```
 
-The `tbl_regression()` function has many [options](link) for customizing the output table. For example, you can change the coefficient names with the `label` argument: 
+The `tbl_regression()` function has many [options](https://www.danieldsjoberg.com/gtsummary/articles/tbl_regression.html) for customizing the output table. For example, you can change the coefficient names with the `label` argument:
 
 ```{r}
 model |> 
@@ -125,5 +125,5 @@ model |>
 
 ## texreg
 
-Another option for obtaining a formatted table is to use the [{texreg}](link) package. This is particularly useful for obtaining tables formatted for use in [LaTeX](link).
+Another option for obtaining a formatted table is to use the [{texreg}](https://github.com/leifeld/texreg) package. This is particularly useful for obtaining tables formatted for use in [LaTeX](https://www.latex-project.org/).
 
