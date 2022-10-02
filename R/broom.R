@@ -51,11 +51,15 @@ tidy.logitr <- function(
 ) {
 
     result <- stats::coef(summary(x))
-    result <- tibble::as_tibble(result, rownames = "term")
+    result <- tibble::as_tibble(result, rownames = 'term')
     names(result) <- c('term', 'estimate', 'std.error', 'statistic', 'p.value')
+    if (x$modelType == 'mxl') {
+        result$effect <- ifelse(grepl('sd_', result$term), 'ran_pars', 'fixed')
+    }
 
     if (conf.int) {
         ci <- stats::confint(x, level = conf.level)
+        names(ci) <- c('conf.low', 'conf.high')
         ci <- tibble::as_tibble(ci, rownames = "term")
         result <- tibble::as_tibble(merge(result, ci, by = "term"))
     }
