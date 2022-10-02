@@ -1,0 +1,129 @@
+---
+title: "Summarizing Results"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Basic Usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.retina = 3,
+  comment = "#>"
+)
+```
+
+```{r, child='../man/rmdchunks/header.Rmd'}
+```
+
+# Extracting summary tables 
+
+The most common function used to view an overall summary of a model is the `summary()` function:
+
+```{r}
+library(logitr)
+
+model <- logitr(
+  data    = yogurt,
+  outcome = "choice",
+  obsID   = "obsID",
+  pars    = c("price", "feat", "brand")
+)
+
+summary(model)
+```
+
+The summary prints out a table of the model coefficients as well as other information about the model, such as the log-likelihood, the number of observations, etc.
+
+You can extract the coefficient from the summary table as a `data.frame` using `coef(summary(model))`:
+
+```{r}
+coefs <- coef(summary(model))
+coefs
+```
+
+Another approach is to use the `tidy()` function from the [{broom}](link) package:
+
+```{r}
+library(broom)
+
+coefs <- tidy(mnl_pref)
+coefs
+```
+
+The `tidy()` function returns a `tibble` and provides a more standardized output and interfaces well with other packages. You can also append a confidence interval to the data frame:
+
+```{r}
+coefs <- tidy(mnl_pref, conf.int = TRUE)
+coefs
+```
+
+# Extracting other values 
+
+You can also extract other values of interest at the solution, such as:
+
+**The estimated coefficients**
+
+```{r}
+coef(mnl_pref)
+```
+
+**The estimated standard errors**
+
+```{r}
+se(mnl_pref)
+```
+
+**The log-likelihood**
+
+```{r}
+logLik(mnl_pref)
+```
+
+**The variance-covariance matrix**
+
+```{r}
+vcov(mnl_pref)
+```
+
+You can also view a summary of statistics about the model using the `glance()` function from the [{broom}](link) package:
+
+```{r}
+glance(model)
+```
+
+# Formatted summary tables
+
+## gtsummary
+
+Often times you will need to create summary tables that are formatted for publication. The [{gtsummary}(link)] package offers a convenient solution that works well with `logitr`models. For example, a formatted summary table can be obtained using the `tbl_regression()` function: 
+
+```{r}
+library(gtsummary)
+
+model |> 
+  tbl_regression() |> 
+  as_kable()
+```
+
+The `tbl_regression()` function has many [options](link) for customizing the output table. For example, you can change the coefficient names with the `label` argument: 
+
+```{r}
+model |> 
+  tbl_regression(
+    label = list(
+        feat = "Newspaper ad shown?",
+        brand = "Yogurt's brand"
+    )
+  ) |> 
+  as_kable()
+```
+
+## texreg
+
+Another option for obtaining a formatted table is to use the [{texreg}](link) package. This is particularly useful for obtaining tables formatted for use in [LaTeX](link).
+

@@ -94,6 +94,8 @@ The multi-start is parallelized by default for faster estimation, and the number
 
 ## Mixed logit models
 
+> See the ["Estimating Mixed Logit Models"](mxl_models.html) vignette for more details.
+
 To estimate a mixed logit model, use the `randPars` argument in the `logitr()` function to denote which parameters will be modeled with a distribution. The current package version supports normal (`"n"`), log-normal (`"ln"`), and zero-censored normal (`"cn"`) distributions.
 
 For example, assume the observed utility for yogurts was $v_{j} = \alpha p_{j} + \beta_1 x_{j1} + \beta_2 x_{j2} + \beta_3 x_{j3} + \beta_4 x_{j4}$, where $p_{j}$ is `price`, $x_{j1}$ is `feat`, and $x_{j2-4}$ are dummy-coded variables for `brand`. To model `feat` as well as each of the brands as normally-distributed, set `randPars = c(feat = "n", brand = "n")`:
@@ -111,9 +113,9 @@ mxl_pref <- logitr(
 
 Since mixed logit models also have non-convex log-likelihood functions, it is recommended to use a multi-start search to run the optimization loop multiple times to search for different local minima.
 
-See the ["Estimating Mixed Logit Models"](mxl_models.html) vignette for more details.
-
 ## Viewing results
+
+> See the ["Summarizing Results"](summarizing_results.html) vignette for more details.
 
 Use the `summary()` function to print a summary of the results from an estimated model, e.g.
 

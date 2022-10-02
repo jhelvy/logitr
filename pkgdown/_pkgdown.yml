@@ -40,6 +40,8 @@ navbar:
           href: articles/mnl_models_weighted.html
         - text: "Predicting Probabilities and Outcomes with Estimated Models"
           href: articles/predict.html
+        - text: "Summarizing Results"
+          href: articles/summarizing_results.html
         - text: "Benchmarking estimation speed against other packages"
           href: articles/benchmark.html
         - text: "WTP space convergence issues in other packages"
