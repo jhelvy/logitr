@@ -58,10 +58,23 @@ tidy.logitr <- function(
     }
 
     if (conf.int) {
-        ci <- stats::confint(x, level = conf.level)
-        names(ci) <- c('conf.low', 'conf.high')
-        ci <- tibble::as_tibble(ci, rownames = "term")
-        result <- tibble::as_tibble(merge(result, ci, by = "term"))
+        ci <- NULL
+        tryCatch(
+            {
+                ci <- stats::confint(x, level = conf.level)
+            },
+            error = function(e) {
+                warning(
+                    "Confidence interval could not be computed due to an error: ",
+                    e
+                )
+            }
+        )
+        if (!is.null(ci)) {
+            names(ci) <- c('conf.low', 'conf.high')
+            ci <- tibble::as_tibble(ci, rownames = "term")
+            result <- tibble::as_tibble(merge(result, ci, by = "term"))
+        }
     }
 
     return(result)
