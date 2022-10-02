@@ -31,15 +31,13 @@ This vignette demonstrates an example of how to use the `logitr()` function to e
 
 # Supported distributions
 
-In mixed logit models, parameters are assumed to follow a particular distribution. This is implemented in `logitr` with the `randPars` argument, which should be a named vector defining which distribution to use for each random parameter. In the example below, we set `randPars = c(feat = 'n', brand = 'n')` so that `feat` and `brand` are normally distributed. Mixed logit models will estimate a mean and standard deviation of the underlying normal distribution for each random coefficient.
-
-The current version of the package includes the following distributions:
+The mixed logit model is a popular approach for modeling unobserved heterogeneity across individuals, which is implemented by assuming that parameters vary randomly across individuals according to a chosen distribution [@McFadden2000]. A mixed logit model is specified by setting the `randPars` argument in the `logitr()` function equal to a named vector defining parameter distributions. In the example below, we set `randPars = c(feat = 'n', brand = 'n')` so that `feat` and `brand` are normally distributed. The current package version supports the following distributions:
 
 - Normal: `"n"`
 - Log-normal: `"ln"`
 - Zero-censored normal: `"cn"`
 
-Note that log-normal or zero-censored normal parameters force positivity, so when using these you may need to use the negative of a value. For example, the "price" coefficient is typically negative, so if modeling "price" with a log-normal or zero-censored normal distribution you should convert "price" to the negative of price in the data prior to estimating the model.
+Mixed logit models will estimate a mean and standard deviation of the underlying normal distribution for each random coefficient. Note that log-normal or zero-censored normal parameters force positivity, so when using these it is often necessary to use the negative of a value (e.g. for "price", which typically has a negative coefficient). Mixed logit models in `logitr` assume uncorrelated heterogeneity covariances by default, though full covariances can be estimated using the `correlation = TRUE` argument. For WTP space models, the `scalePar` parameter can also be modeled as following a random distribution by setting the `randScale` argument equal to `"n"`, `"ln"`, or `"cn"`.
 
 # The data
 
