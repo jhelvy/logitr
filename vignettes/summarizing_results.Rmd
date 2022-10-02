@@ -51,14 +51,14 @@ Another approach is to use the `tidy()` function from the [{broom}](https://broo
 ```{r}
 library(broom)
 
-coefs <- tidy(mnl_pref)
+coefs <- tidy(model)
 coefs
 ```
 
 The `tidy()` function returns a `tibble` and provides a more standardized output and interfaces well with other packages. You can also append a confidence interval to the data frame:
 
 ```{r}
-coefs <- tidy(mnl_pref, conf.int = TRUE)
+coefs <- tidy(model, conf.int = TRUE)
 coefs
 ```
 
@@ -69,25 +69,25 @@ You can also extract other values of interest at the solution, such as:
 **The estimated coefficients**
 
 ```{r}
-coef(mnl_pref)
+coef(model)
 ```
 
 **The estimated standard errors**
 
 ```{r}
-se(mnl_pref)
+se(model)
 ```
 
 **The log-likelihood**
 
 ```{r}
-logLik(mnl_pref)
+logLik(model)
 ```
 
 **The variance-covariance matrix**
 
 ```{r}
-vcov(mnl_pref)
+vcov(model)
 ```
 
 You can also view a summary of statistics about the model using the `glance()` function from the [{broom}](https://broom.tidymodels.org/index.html) package:
