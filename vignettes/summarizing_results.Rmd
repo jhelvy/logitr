@@ -100,7 +100,7 @@ glance(model)
 
 ## gtsummary
 
-Often times you will need to create summary tables that are formatted for publication. The [{gtsummary}(https://www.danieldsjoberg.com/gtsummary/)] package offers a convenient solution that works well with `logitr`models. For example, a formatted summary table can be obtained using the `tbl_regression()` function:
+Often times you will need to create summary tables that are formatted for publication. The [{gtsummary}](https://www.danieldsjoberg.com/gtsummary/) package offers a convenient solution that works well with `logitr`models. For example, a formatted summary table can be obtained using the `tbl_regression()` function:
 
 ```{r}
 library(gtsummary)
