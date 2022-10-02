@@ -1,8 +1,9 @@
 # logitr 0.8.0
 
-- Added new vignette comparing convergence issues in WTP space models with other similar packages.
 - Added `tidy()`, `glance()`, and `augment()` methods for use with the {broom} package.
 - Added `model.matrix.logitr()`, `terms.logitr()`, and `model.frame.logitr()` methods for use with {broom.helpers}.
+- Added new vignette comparing convergence issues in WTP space models with other similar packages.
+- Added new vignette on summarizing results from estimated models.
 
 # logitr 0.7.2
 
