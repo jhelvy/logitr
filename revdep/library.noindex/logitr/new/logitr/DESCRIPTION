@@ -1,0 +1,36 @@
+Package: logitr
+Title: Logit Models w/Preference & WTP Space Utility Parameterizations
+Version: 0.8.0
+Authors@R: c(
+    person(given   = "John",
+           family  = "Helveston",
+           role    = c("aut", "cre", "cph"),
+           email   = "john.helveston@gmail.com",
+           comment = c(ORCID = "0000-0002-2657-9191")),
+    person(given   = "Connor",
+           family  = "Forsythe",
+           role    = "ctb",
+           email   = "cforsyth@andrew.cmu.edu"))
+Description: Fast estimation of multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using "Preference" space or "Willingness-to-pay" (WTP) space utility parameterizations. Weighted models can also be estimated. An option is available to run a parallelized multistart optimization loop with random starting points in each iteration, which is useful for non-convex problems like MXL models or models with WTP space utility parameterizations. The main optimization loop uses the 'nloptr' package to minimize the negative log-likelihood function. Additional functions are available for computing and comparing WTP from both preference space and WTP space models and for predicting expected choices and choice probabilities for sets of alternatives based on an estimated model. Mixed logit models can include uncorrelated or correlated heterogeneity covariances and are estimated using maximum simulated likelihood based on the algorithms in Train (2009) "Discrete Choice Methods with Simulation, 2nd Edition" <doi:10.1017/CBO9780511805271>.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
+VignetteBuilder: knitr
+Depends: R (>= 3.5.0)
+Suggests: apollo, broom, dplyr, fastDummies, ggplot2, ggrepel, gmnl,
+        gtsummary, here, kableExtra, knitr, mixl, mlogit, rmarkdown,
+        testthat, texreg, tidyr
+Imports: generics, MASS, nloptr, parallel, randtoolbox, stats, tibble
+URL: https://github.com/jhelvy/logitr
+BugReports: https://github.com/jhelvy/logitr/issues
+RemoteType: local
+RemoteUrl: /Users/jhelvy/gh/pkg/logitr
+NeedsCompilation: no
+Packaged: 2022-10-03 17:48:42 UTC; jhelvy
+Author: John Helveston [aut, cre, cph]
+    (<https://orcid.org/0000-0002-2657-9191>),
+  Connor Forsythe [ctb]
+Maintainer: John Helveston <john.helveston@gmail.com>
+Built: R 4.2.1; ; 2022-10-03 17:48:43 UTC; unix

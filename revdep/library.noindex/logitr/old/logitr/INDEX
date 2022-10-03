@@ -1,0 +1,28 @@
+apolloModeChoiceData    Simulated SP dataset of mode choice (from the
+                        apollo package).
+cars_china              Stated car choice observations by Chinese car
+                        buyers
+cars_us                 Stated car choice observations by US car buyers
+electricity             Stated preference data for the choice of
+                        electricity suppliers (from mlogit package)
+fitted.logitr           Extract Model Fitted Values
+fquantile               Predict probabilities and / or outcomes
+logitr                  The main function for estimating logit models
+miscmethods.logitr      Methods for logitr objects
+predict.logitr          Predict probabilities and / or outcomes
+recodeData              Returns a list of the design matrix 'X' and
+                        updated 'pars' and 'randPars' to include any
+                        dummy-coded categorical or interaction
+                        variables.
+residuals.logitr        Extract Model Residuals
+runtimes                Data frame of run times for logitr benchmark
+se                      Extract standard errors
+se.logitr               Extract standard errors
+statusCodes             View a description the nloptr status codes
+vcov.logitr             Calculate the variance-covariance matrix
+wtp                     Get WTP estimates a preference space model
+wtp.logitr              Get WTP estimates a preference space model
+wtpCompare              Compare WTP from preference and WTP space
+                        models
+yogurt                  Choice observations of yogurt purchases by 100
+                        households
