@@ -2,7 +2,7 @@
 title: "Summarizing Results"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Basic Usage}
+  %\VignetteIndexEntry{Summarizing Results}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -46,7 +46,9 @@ coefs <- coef(summary(model))
 coefs
 ```
 
-Another approach is to use the `tidy()` function from the [{broom}](https://broom.tidymodels.org/index.html) package:
+## The {broom} package
+
+Another approach for extracting the model coefficients as a data frame is to use the `tidy()` function from the [{broom}](https://broom.tidymodels.org/index.html) package:
 
 ```{r}
 library(broom)
@@ -58,7 +60,7 @@ coefs
 The `tidy()` function returns a `tibble` and provides a more standardized output and interfaces well with other packages. You can also append a confidence interval to the data frame:
 
 ```{r}
-coefs <- tidy(model, conf.int = TRUE)
+coefs <- tidy(model, conf.int = TRUE, conf.level = 0.95)
 coefs
 ```
 
@@ -98,7 +100,7 @@ glance(model)
 
 # Formatted summary tables
 
-## gtsummary
+## The {gtsummary} package
 
 Often times you will need to create summary tables that are formatted for publication. The [{gtsummary}](https://www.danieldsjoberg.com/gtsummary/) package offers a convenient solution that works well with `logitr`models. For example, a formatted summary table can be obtained using the `tbl_regression()` function:
 
@@ -106,8 +108,7 @@ Often times you will need to create summary tables that are formatted for public
 library(gtsummary)
 
 model |> 
-  tbl_regression() |> 
-  as_kable()
+  tbl_regression()
 ```
 
 The `tbl_regression()` function has many [options](https://www.danieldsjoberg.com/gtsummary/articles/tbl_regression.html) for customizing the output table. For example, you can change the coefficient names with the `label` argument:
@@ -119,11 +120,84 @@ model |>
         feat = "Newspaper ad shown?",
         brand = "Yogurt's brand"
     )
-  ) |> 
-  as_kable()
+  )
 ```
 
-## texreg
+The {gtsummary} package supports a wide variety of output types, including support for [LaTeX](https://www.latex-project.org/). One you create the table with `tbl_regression()`, you can print it a variety of ways. For example, once you've created a table `x`,
+
+```{r, eval=FALSE}
+x <- model |>
+  tbl_regression()
+```
+
+you can print it to LaTeX with any of the following ways:
+
+- `as_gt(x) |> gt::as_latex()`
+- `as_kable_extra(x, format = "latex")`
+- `as_hux_table(x) |> to_latex()`
+- `as_kable(x, format = "latex")`
+
+Multiple models can also be printed in the same table:
+
+```{r}
+model1 <- model
+
+model2 <- logitr(
+  data    = yogurt,
+  outcome = "choice",
+  obsID   = "obsID",
+  pars    = c("price*feat", "brand")
+)
+
+# Make individual tables
+t1 <- tbl_regression(model1)
+t2 <- tbl_regression(model2)
+
+# Merge tables
+tbl_merge(
+  tbls = list(t1, t2),
+  tab_spanner = c("**Baseline**", "**Interaction**")
+)
+```
+
+## The {texreg} package
 
 Another option for obtaining a formatted table is to use the [{texreg}](https://github.com/leifeld/texreg) package. This is particularly useful for obtaining tables formatted for use in [LaTeX](https://www.latex-project.org/).
 
+For example, you can print a summary to the screen using `screenreg()`:
+
+```{r}
+library(texreg)
+
+screenreg(model, stars = c(0.01, 0.05, 0.1))
+```
+
+Likewise, you can print the LaTeX code for a summary table using `texreg()`
+
+```{r}
+library(texreg)
+
+texreg(model, stars = c(0.01, 0.05, 0.1))
+```
+
+Similar to {gtsummary}, multiple models can be printed using `screenreg()` or `texreg()`:
+
+```{r}
+model1 <- model
+
+model2 <- logitr(
+  data    = yogurt,
+  outcome = "choice",
+  obsID   = "obsID",
+  pars    = c("price*feat", "brand")
+)
+
+screenreg(
+  list(
+    model1,
+    model2
+  ),
+  stars = c(0.01, 0.05, 0.1),
+  custom.model.names = c("Baseline", "Interaction")
+)
+```

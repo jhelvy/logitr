@@ -22,11 +22,13 @@ Depends:
     R (>= 3.5.0)
 Suggests:
     apollo,
+    broom,
     dplyr,
     fastDummies,
     ggplot2,
     ggrepel,
     gmnl,
+    gtsummary,
     here,
     kableExtra,
     knitr,
@@ -34,6 +36,7 @@ Suggests:
     mlogit,
     rmarkdown,
     testthat,
+    texreg,
     tidyr
 Imports:
     generics,
