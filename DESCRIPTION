@@ -1,6 +1,6 @@
 Package: logitr
 Title: Logit Models w/Preference & WTP Space Utility Parameterizations
-Version: 0.7.2
+Version: 0.8.0
 Authors@R: c(
     person(given   = "John",
            family  = "Helveston",
@@ -16,26 +16,35 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 VignetteBuilder: knitr
 Depends:
     R (>= 3.5.0)
 Suggests:
+    apollo,
+    broom,
     dplyr,
     fastDummies,
     ggplot2,
     ggrepel,
+    gmnl,
+    gtsummary,
     here,
     kableExtra,
     knitr,
+    mixl,
+    mlogit,
     rmarkdown,
     testthat,
+    texreg,
     tidyr
 Imports:
+    generics,
+    MASS,
     nloptr,
     parallel,
-    stats,
     randtoolbox,
-    MASS
+    stats,
+    tibble
 URL: https://github.com/jhelvy/logitr
 BugReports: https://github.com/jhelvy/logitr/issues

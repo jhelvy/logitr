@@ -1,10 +1,59 @@
-# This file estimates models that can take longer to estimate
-# and then saves those objects so that the vignettes build faster
+---
+title: "WTP space convergence issues in other packages"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{WTP space convergence issues in other packages}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+bibliography: "`r here::here('vignettes', 'library.bib')`"
+---
 
-# # Install logitr package from github
-# devtools::install_github('jhelvy/logitr')
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  eval = FALSE,
+  fig.width = 7.252,
+  fig.height = 4,
+  comment = "#>",
+  fig.retina = 3
+)
 
-# Load logitr package
+# library(logitr)
+
+# Read in results from already estimated models so that the
+# examples aren't actually run when building this page,
+# otherwise it'll take much longer to build
+model_logitr <- readRDS(here::here('inst', 'extdata', 'model_logitr.Rds'))
+model_logitr10 <- readRDS(here::here('inst', 'extdata', 'model_logitr10.Rds'))
+model_mixl1 <- readRDS(here::here('inst', 'extdata', 'model_mixl1.Rds'))
+model_mixl2 <- readRDS(here::here('inst', 'extdata', 'model_mixl2.Rds'))
+model_gmnl1 <- readRDS(here::here('inst', 'extdata', 'model_gmnl1.Rds'))
+model_apollo1 <- readRDS(here::here('inst', 'extdata', 'model_apollo1.Rds'))
+model_apollo2 <- readRDS(here::here('inst', 'extdata', 'model_apollo2.Rds'))
+```
+
+Given the non-linear utility specification of WTP space models, these models often diverge during estimation and can be highly sensitive to starting parameters. While many other packages support the estimation of WTP space models, in practice these packages often fail to find solutions.
+
+Compared to most other packages, {logitr} tends to perform better and converge more often. It also has a built-in, parallelized multi-start optimization loop for searching for different local minima from different random starting points when minimizing the negative log-likelihood, which improves the odds of converging to a solution for at least some of the multi-start iterations.
+
+This vignette illustrates the convergence issues, comparing the performance of {logitr} to the following R packages that support WTP space models:
+
+- {logitr}
+- {mixl}
+- {mlogit}
+- {gmnl}
+- {apollo}
+
+For the same mixed logit WTP space model, only {logitr} is able to consistently converge to a solution.
+
+# Setup
+
+## Basic settings
+
+First load the required packages:
+
+```{r, message=FALSE, eval=TRUE}
 library(logitr)
 library(mlogit)
 library(gmnl)
@@ -13,66 +62,12 @@ library(mixl)
 library(dplyr)
 library(tidyr)
 
-# Set number of cores to use
-numCores <- 2
+set.seed(1234)
+```
 
-# Mixed logit vignette
+Now set the starting parameters for each package as well as the number of draws to use for the simulated log-likelihood:
 
-# Multistart MXL model in the Preference Space
-set.seed(456)
-
-mxl_pref <- logitr(
-  data     = yogurt,
-  outcome  = 'choice',
-  obsID    = 'obsID',
-  panelID  = 'id',
-  pars     = c('price', 'feat', 'brand'),
-  randPars = c(feat = 'n', brand = 'n'),
-  numMultiStarts = 10,
-  numCores = numCores
-)
-
-# Extract the wtp estimates
-wtp_mxl_pref <- wtp(mxl_pref, "price")
-
-# Multistart MXL model in the WTP Space
-set.seed(6789)
-
-mxl_wtp <- logitr(
-  data       = yogurt,
-  outcome    = 'choice',
-  obsID      = 'obsID',
-  panelID    = 'id',
-  pars       = c('feat', 'brand'),
-  scalePar   = 'price',
-  randPars   = c(feat = 'n', brand = 'n'),
-  numMultiStarts = 10,
-  startVals = wtp_mxl_pref$Estimate,
-  numCores = numCores
-)
-
-# Compare results
-wtpCompare(mxl_pref, mxl_wtp, "price")
-
-# Multistart MXL model in the Preference Space with correlated heterogeneity
-set.seed(456)
-
-mxl_pref_cor <- logitr(
-  data     = yogurt,
-  outcome  = 'choice',
-  obsID    = 'obsID',
-  panelID  = 'id',
-  pars     = c('price', 'feat', 'brand'),
-  randPars = c(feat = 'n', brand = 'n'),
-  numMultiStarts = 10,
-  correlation = TRUE,
-  numCores = numCores
-)
-
-# Convergence vignette
-
-# Set the starting parameters for each package as well as the
-# number of draws to use for the simulated log-likelihood
+```{r}
 numDraws_wtp <- 50
 start_wtp <- c(
     scalePar        = 1,
@@ -85,19 +80,23 @@ start_wtp <- c(
     sd_brandweight  = 0.1,
     sd_brandyoplait = 0.1
 )
+```
 
+Take only half of the yogurt data to speed things up:
 
-# Take only half of the yogurt data to speed things up:
+```{r}
 yogurt <- subset(logitr::yogurt, logitr::yogurt$id <= 50)
+```
 
-# Model preparation
+## Package-specific settings
 
-# Several of the pacakges require hand-specifying many settings and
-# reformatting the data. These settings are provided here.
+Both {apollo} and {mixl} require that the user hand-specify the model to be estimated as well as several other settings. These settings are provided here.
 
-## Prep for {gmnl}
+### Prep for {gmnl}
 
-# Convert the yogurt data for mlogit and gmnl using dfidx function
+Convert the yogurt data for into the format required for {gmnl}
+
+```{r}
 data_gmnl <- mlogit.data(
     data     = yogurt,
     shape    = "long",
@@ -106,10 +105,13 @@ data_gmnl <- mlogit.data(
     alt.var  = 'alt',
     chid.var = 'obsID'
 )
+```
 
-# {apollo} settings
+### Prep for {apollo}
 
-# Format the `yogurt` data to a "wide" format for {apollo}
+Format the `yogurt` data to a "wide" format for {apollo}
+
+```{r}
 yogurt_price <- yogurt %>%
     select(id, obsID, price, brand) %>%
     mutate(price = -1*price) %>%
@@ -139,15 +141,18 @@ data_apollo <- yogurt_price %>%
     left_join(yogurt_choice, by = c('id', 'obsID')) %>%
     arrange(id, obsID) %>%
     mutate(
-        av_dannon  = 1,
-        av_hiland  = 1,
-        av_weight  = 1,
-        av_yoplait = 1
+      av_dannon  = 1,
+      av_hiland  = 1,
+      av_weight  = 1,
+      av_yoplait = 1
     )
+```
 
-# Define the {apollo} probabilities function
+Define the {apollo} probabilities function
+
+```{r}
 apollo_probabilities_wtp <- function(
-        apollo_beta, apollo_inputs, functionality = "estimate"
+  apollo_beta, apollo_inputs, functionality = "estimate"
 ) {
 
     ### Attach inputs and detach after function exit
@@ -169,10 +174,10 @@ apollo_probabilities_wtp <- function(
     mnl_settings <- list(
         alternatives = c(dannon = 1, hiland = 2, weight = 3, yoplait = 4),
         avail = list(
-            dannon = av_dannon,
-            hiland = av_hiland,
-            weight = av_weight,
-            yoplait = av_yoplait),
+          dannon = av_dannon,
+          hiland = av_hiland,
+          weight = av_weight,
+          yoplait = av_yoplait),
         choiceVar = choice,
         utilities = V
     )
@@ -188,8 +193,11 @@ apollo_probabilities_wtp <- function(
 
     return(P)
 }
+```
 
-# Define random parameters function
+Define random parameters function
+
+```{r}
 apollo_randCoeff <- function(apollo_beta, apollo_inputs) {
     randcoeff <- list()
     randcoeff[['b_feat']] <- feat + d_feat * sd_feat
@@ -198,8 +206,11 @@ apollo_randCoeff <- function(apollo_beta, apollo_inputs) {
     randcoeff[['b_brandyoplait']] <- brandyoplait + d_brandyoplait * sd_brandyoplait
     return(randcoeff)
 }
+```
 
-# Main control settings
+Main control settings for {apollo}
+
+```{r}
 apollo_control_wtp <- list(
     modelName       = "MXL_WTP_space",
     modelDescr      = "MXL model on yogurt choice SP data, in WTP space",
@@ -232,15 +243,21 @@ apollo_inputs_wtp <- apollo_validateInputs(
     apollo_randCoeff = apollo_randCoeff,
     apollo_control   = apollo_control_wtp
 )
+```
 
-## {mixl} settings
+### Prep for {mixl}
 
-# Format the `yogurt` data to a "wide" format for {mixl}
+Format the `yogurt` data to a "wide" format for {mixl}
+
+```{r}
 data_mixl <- data_apollo # Uses the same "wide" format as {apollo}
 data_mixl$ID <- data_mixl$id
 data_mixl$CHOICE <- data_mixl$choice
+```
 
-# Define the {mixl} utility function
+Define the {mixl} utility function
+
+```{r}
 mixl_wtp <- "
     feat_RND = @feat + draw_1 * @sd_feat;
     brandhiland_RND = @brandhiland + draw_2 * @sd_brandhiland;
@@ -253,13 +270,37 @@ mixl_wtp <- "
 "
 mixl_spec_wtp <- specify_model(mixl_wtp, data_mixl)
 availabilities <- generate_default_availabilities(data_mixl, 4)
+```
 
-# Estimate WTP space models ----
+# Estimate WTP space models
 
-# The same model is now estimated using all five packages.
+The same model is now estimated using all five packages.
 
 ## {logitr}
 
+```{r}
+model_logitr <- logitr(
+    data      = yogurt,
+    outcome   = 'choice',
+    obsID     = 'obsID',
+    panelID   = 'id',
+    pars      = c('feat', 'brand'),
+    scalePar  = 'price',
+    randPars  = c(feat = "n", brand = "n"),
+    startVals = start_wtp,
+    numDraws  = numDraws_wtp
+)
+```
+
+{logitr} converges, even without running a multi-start:
+
+```{r, eval=TRUE}
+summary(model_logitr)
+```
+
+Including a multi-start helps build confidence in the solution reached:
+
+```{r}
 model_logitr <- logitr(
     data      = yogurt,
     outcome   = 'choice',
@@ -270,58 +311,64 @@ model_logitr <- logitr(
     randPars  = c(feat = "n", brand = "n"),
     startVals = start_wtp,
     numDraws  = numDraws_wtp,
-    numCores = numCores
+    numMultiStarts = 10
 )
+```
 
-# {logitr} converges, even without running a multi-start
+```{r, eval=TRUE}
 summary(model_logitr)
-
-# Including a multi-start helps build confidence in the solution reached:
-model_logitr10 <- logitr(
-    data      = yogurt,
-    outcome   = 'choice',
-    obsID     = 'obsID',
-    panelID   = 'id',
-    pars      = c('feat', 'brand'),
-    scalePar  = 'price',
-    randPars  = c(feat = "n", brand = "n"),
-    startVals = start_wtp,
-    numDraws  = numDraws_wtp,
-    numMultiStarts = 10,
-    numCores = numCores
-)
-summary(model_logitr10)
+```
 
 ## {mixl}
 
-# First attempt using same starting points as {logitr}
-model_mixl1 <- estimate(
+First attempt using same starting points as {logitr}
+
+```{r}
+model_mixl <- estimate(
     mixl_spec_wtp, start_wtp,
     data_mixl, availabilities,
     nDraws = numDraws_wtp
 )
+```
 
-# {mixl} converges to a local minimum:
-c(logLik(model_logitr), logLik(model_mixl1))
-cbind(coef(model_logitr), coef(model_mixl1))
+{mixl} converges to a local minimum:
 
-# Second attempt using {logitr} solution as starting points
-model_mixl2 <- estimate(
+```{r, eval=TRUE, echo=FALSE}
+model_mixl <- model_mixl1
+```
+
+```{r, eval=TRUE}
+c(logLik(model_logitr), logLik(model_mixl))
+cbind(coef(model_logitr), coef(model_mixl))
+```
+
+Second attempt using {logitr} solution as starting points
+
+```{r}
+model_mixl <- estimate(
     mixl_spec_wtp, coef(model_logitr),
     data_mixl, availabilities,
     nDraws = numDraws_wtp
 )
+```
 
-# Again, {mixl} converges to a local minimum:
-c(logLik(model_logitr), logLik(model_mixl2))
-cbind(coef(model_logitr), coef(model_mixl2))
+Again, {mixl} converges to a local minimum:
+
+```{r, include=FALSE}
+model_mixl <- model_mixl2
+```
+
+```{r, eval=TRUE}
+c(logLik(model_logitr), logLik(model_mixl))
+cbind(coef(model_logitr), coef(model_mixl))
+```
 
 ## {gmnl}
 
-# First attempt using same starting points as {logitr}.
-# Note that additional starting parameters must be added as the {gmnl}
-# approach to estimating WTP is a slightly different model.
-model_gmnl1 <- gmnl(
+First attempt using same starting points as {logitr}. Note that additional starting parameters must be added as the {gmnl} approach to estimating WTP is a slightly different model.
+
+```{r}
+model_gmnl <- gmnl(
     data = data_gmnl,
     formula = choice ~ price + feat + brand | 0 | 0 | 0 | 1,
     ranp = c(
@@ -335,13 +382,23 @@ model_gmnl1 <- gmnl(
     start = c(start_wtp, 0.1, 0.1, 0),
     R = numDraws_wtp
 )
+```
 
-# {gmnl} converges to a local minimum:
-c(logLik(model_logitr), logLik(model_gmnl1))
-cbind(coef(model_logitr), coef(model_gmnl1))
+{gmnl} converges to a local minimum:
 
-# Second attempt using {logitr} solution as starting points:
-model_gmnl2 <- gmnl(
+```{r, eval=TRUE, echo=FALSE}
+model_gmnl <- model_gmnl1
+```
+
+```{r, eval=TRUE}
+c(logLik(model_logitr), logLik(model_gmnl))
+cbind(coef(model_logitr), coef(model_gmnl))
+```
+
+Second attempt using {logitr} solution as starting points:
+
+```{r}
+model_gmnl <- gmnl(
     data = data_gmnl,
     formula = choice ~ price + feat + brand | 0 | 0 | 0 | 1,
     ranp = c(
@@ -352,50 +409,62 @@ model_gmnl2 <- gmnl(
     method = "bfgs",
     haltons = NA,
     panel = TRUE,
-    start = c(round(coef(model_logitr), 2), 0.1, 0.1, 0),
+    start = c(coef(model_logitr), 0.1, 0.1, 0),
     R = numDraws_wtp
 )
+```
 
-# This approach errors
+```
+#> Error in optim(par = c(feat = 1.74, brandhiland = -13.54, brandweight = -4.51,  :
+#> initial value in 'vmmin' is not finite
+```
+
+In this case, {gmnl} fails due to an error with the starting values provided.
 
 ## {apollo}
 
-# First attempt using same starting points as {logitr}:
-model_apollo1 <- apollo_estimate(
+First attempt using same starting points as {logitr}:
+
+```{r}
+model_apollo <- apollo_estimate(
     apollo_beta          = start_wtp,
     apollo_fixed         = NULL,
     apollo_probabilities = apollo_probabilities_wtp,
     apollo_inputs        = apollo_inputs_wtp,
     estimate_settings    = list(printLevel = 0)
 )
+```
 
-# {apollo} converges to a local minimum:
-c(logLik(model_logitr), logLik(model_apollo1))
-cbind(coef(model_logitr), coef(model_apollo1))
+{apollo} converges to a local minimum:
 
-# Second attempt using {logitr} solution as starting points:
-model_apollo2 <- apollo_estimate(
+```{r, eval=TRUE, echo=FALSE}
+model_apollo <- model_apollo1
+```
+
+```{r, eval=TRUE}
+c(logLik(model_logitr), logLik(model_apollo))
+cbind(coef(model_logitr), coef(model_apollo))
+```
+
+Second attempt using {logitr} solution as starting points:
+
+```{r}
+model_apollo <- apollo_estimate(
     apollo_beta          = coef(model_logitr),
     apollo_fixed         = NULL,
     apollo_probabilities = apollo_probabilities_wtp,
     apollo_inputs        = apollo_inputs_wtp,
     estimate_settings    = list(printLevel = 0)
 )
+```
 
-# Again, {apollo} converges to a local minimum:
-c(logLik(model_logitr), logLik(model_apollo2))
-cbind(coef(model_logitr), coef(model_apollo2))
+Again, {apollo} converges to a local minimum:
 
+```{r, eval=TRUE, echo=FALSE}
+model_apollo <- model_apollo2
+```
 
-
-# Save results from all estimated models ----
-saveRDS(mxl_pref, here::here('inst', 'extdata', 'mxl_pref.Rds'))
-saveRDS(mxl_wtp,  here::here('inst', 'extdata', 'mxl_wtp.Rds'))
-saveRDS(mxl_pref_cor, here::here('inst', 'extdata', 'mxl_pref_cor.Rds'))
-saveRDS(model_logitr, here::here('inst', 'extdata', 'model_logitr.Rds'))
-saveRDS(model_logitr10, here::here('inst', 'extdata', 'model_logitr10.Rds'))
-saveRDS(model_mixl1, here::here('inst', 'extdata', 'model_mixl1.Rds'))
-saveRDS(model_mixl2, here::here('inst', 'extdata', 'model_mixl2.Rds'))
-saveRDS(model_gmnl1, here::here('inst', 'extdata', 'model_gmnl1.Rds'))
-saveRDS(model_apollo1, here::here('inst', 'extdata', 'model_apollo1.Rds'))
-saveRDS(model_apollo2, here::here('inst', 'extdata', 'model_apollo2.Rds'))
+```{r, eval=TRUE}
+c(logLik(model_logitr), logLik(model_apollo))
+cbind(coef(model_logitr), coef(model_apollo))
+```

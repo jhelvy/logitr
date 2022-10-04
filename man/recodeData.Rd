@@ -43,6 +43,7 @@ result <- recodeData(
     randPars = c(feat = "n", brand = "n")
 )
 
+result$formula
 result$pars
 result$randPars
 head(result$X)

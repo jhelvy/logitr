@@ -1,5 +1,5 @@
 ## Test environments
-* local R installation, R 4.1.0
+* local R installation, R 4.2.1
 * ubuntu 16.04 (on travis-ci), R 4.0.2
 * win-builder (devel and release)
 
@@ -8,4 +8,3 @@
 
 ## Notes
 * This is a new release.
-* Apologies for another release so soon (it's been a productive week) - this will be the last for at least a month or longer.

@@ -48,14 +48,17 @@ dummyCode <- function(df, vars) {
 #'     randPars = c(feat = "n", brand = "n")
 #' )
 #'
+#' result$formula
 #' result$pars
 #' result$randPars
 #' head(result$X)
 recodeData <- function(data, pars, randPars) {
   data <- as.data.frame(data) # tibbles break things
   data <- orderedFactorsToChars(data) # ordered factors cause weird names
-  X <- getDesignMatrix(data, pars)
+  formula <- stats::as.formula(paste0("~ ", paste(pars, collapse = " + ")))
+  X <- getDesignMatrix(formula, data)
   return(list(
+    formula = formula,
     X = X,
     pars = colnames(X),
     randPars = recodeRandPars(data, pars, randPars)))
@@ -67,26 +70,23 @@ orderedFactorsToChars <- function(data) {
   types <- getColumnTypes(data)
   names <- names(types[types == "ordered"])
   if (length(names) > 0) {
-    data[,names] <- lapply(data[,names], as.character)
+    for (i in 1:length(names)) {
+      data[,names[i]] <- factor(data[,names[i]], ordered = FALSE)
+    }
   }
   return(data)
 }
 
 getColumnTypes <- function(data) {
-  types <- lapply(data, class)
-  test <- function(x) {x[1]}
-  return(unlist(lapply(types, test)))
+  return(unlist(lapply(lapply(data, class), function(x) x[1])))
 }
 
-getDesignMatrix <- function(data, pars) {
-  formula <- parsToFormula(pars)
-  X <- stats::model.matrix(formula, data)
-  X <- X[,-1,drop=FALSE] # Drop intercept
-  return(X)
-}
-
-parsToFormula <- function(vars) {
-  return(stats::as.formula(paste0("~ ", paste(vars, collapse = " + "))))
+getDesignMatrix <- function(formula, data) {
+    tmp <- stats::model.matrix(formula, data)
+    X <- tmp[,-1,drop=FALSE] # Drop intercept
+    attr(X, "contrasts") <- attr(tmp, "contrasts")
+    attr(X, "assign") <- attr(tmp, "assign")[-1]
+    return(X)
 }
 
 recodeRandPars <- function(data, pars, randPars) {

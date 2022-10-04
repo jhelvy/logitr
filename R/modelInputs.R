@@ -6,7 +6,7 @@
 # Creates a list of the data and other information needed for running the model
 getModelInputs <- function(
     data, outcome, obsID, pars , randPars, scalePar, randScale,
-    weights, panelID, clusterID, robust, startParBounds, startVals,
+    weights, panelID, clusterID, robust, startValBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
     numDraws, numCores, vcov, predict, correlation, call, options
 ) {
@@ -23,7 +23,7 @@ getModelInputs <- function(
     panelID         = panelID,
     clusterID       = clusterID,
     robust          = robust,
-    startParBounds  = startParBounds,
+    startValBounds  = startValBounds,
     startVals       = startVals,
     numMultiStarts  = numMultiStarts,
     useAnalyticGrad = useAnalyticGrad,
@@ -50,6 +50,7 @@ getModelInputs <- function(
   # Get the design matrix, recoding parameters that are categorical
   # or have interactions
   recoded <- recodeData(data, pars, randPars)
+  formula <- recoded$formula
   X <- recoded$X
   pars <- recoded$pars
   randPars <- recoded$randPars
@@ -146,6 +147,7 @@ getModelInputs <- function(
   # Make modelInputs list
   modelInputs <- list(
     call          = call,
+    formula       = formula,
     date          = format(Sys.time(), "%a %b %d %X %Y"),
     version       = as.character(utils::packageVersion("logitr")),
     inputs        = inputs,
@@ -254,7 +256,7 @@ setupClusterID <- function(inputs, panel, robust, weightsUsed) {
     return(inputs)
 }
 
-makeClusterID <- function(datadata, inputs, obsID, panelID) {
+makeClusterID <- function(data, inputs, obsID, panelID) {
     if (inputs$clusterID == inputs$obsID) {
         return(obsID)
     }
@@ -308,7 +310,7 @@ defineScalePar <- function(data, inputs, modelSpace) {
     if (! typeof(scalePar) %in% c("integer", "double")) {
       stop(
         'Please make sure the "scalePar" column in your data ',
-        'is encoded as a numeric data type. Scale must ',
+        'is encoded as a numeric data type. The scalePar must ',
         'be numeric and continuous.'
       )
     }

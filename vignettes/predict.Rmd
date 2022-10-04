@@ -64,7 +64,7 @@ data <- subset(
 probs_mnl_pref <- predict(
   mnl_pref,
   newdata = data,
-  obsID = "obsID",
+  obsID = "obsID"
 )
 
 probs_mnl_pref
@@ -135,10 +135,20 @@ knitr::include_graphics('probs.png')
 The `predict()` method can also be used to predict outcomes by setting `type = "outcome"` (the default is `"prob"` for predicting probabilities). In the examples below, outcomes are predicted using the same preference space and WTP space models as in the previous examples. The `returnData` argument is also set to `TRUE` so that the predicted outcomes can be compared to the actual choices made:
 
 ```{r}
-outcomes_pref <- predict(mnl_pref, type = "outcome", returnData = TRUE)
+outcomes_pref <- predict(
+    mnl_pref, 
+    type = "outcome", 
+    returnData = TRUE
+)
+
 head(outcomes_pref)
 
-outcomes_wtp <- predict(mnl_wtp, type = "outcome", returnData = TRUE)
+outcomes_wtp <- predict(
+    mnl_wtp, 
+    type = "outcome", 
+    returnData = TRUE
+)
+
 head(outcomes_wtp)
 ```
 

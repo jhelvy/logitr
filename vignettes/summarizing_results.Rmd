@@ -1,0 +1,203 @@
+---
+title: "Summarizing Results"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Summarizing Results}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.retina = 3,
+  comment = "#>"
+)
+```
+
+```{r, child='../man/rmdchunks/header.Rmd'}
+```
+
+# Extracting summary tables 
+
+The most common function used to view an overall summary of a model is the `summary()` function:
+
+```{r}
+library(logitr)
+
+model <- logitr(
+  data    = yogurt,
+  outcome = "choice",
+  obsID   = "obsID",
+  pars    = c("price", "feat", "brand")
+)
+
+summary(model)
+```
+
+The summary prints out a table of the model coefficients as well as other information about the model, such as the log-likelihood, the number of observations, etc.
+
+You can extract the coefficient from the summary table as a `data.frame` using `coef(summary(model))`:
+
+```{r}
+coefs <- coef(summary(model))
+coefs
+```
+
+## The {broom} package
+
+Another approach for extracting the model coefficients as a data frame is to use the `tidy()` function from the [{broom}](https://broom.tidymodels.org/index.html) package:
+
+```{r}
+library(broom)
+
+coefs <- tidy(model)
+coefs
+```
+
+The `tidy()` function returns a `tibble` and provides a more standardized output and interfaces well with other packages. You can also append a confidence interval to the data frame:
+
+```{r}
+coefs <- tidy(model, conf.int = TRUE, conf.level = 0.95)
+coefs
+```
+
+# Extracting other values 
+
+You can also extract other values of interest at the solution, such as:
+
+**The estimated coefficients**
+
+```{r}
+coef(model)
+```
+
+**The estimated standard errors**
+
+```{r}
+se(model)
+```
+
+**The log-likelihood**
+
+```{r}
+logLik(model)
+```
+
+**The variance-covariance matrix**
+
+```{r}
+vcov(model)
+```
+
+You can also view a summary of statistics about the model using the `glance()` function from the [{broom}](https://broom.tidymodels.org/index.html) package:
+
+```{r}
+glance(model)
+```
+
+# Formatted summary tables
+
+## The {gtsummary} package
+
+Often times you will need to create summary tables that are formatted for publication. The [{gtsummary}](https://www.danieldsjoberg.com/gtsummary/) package offers a convenient solution that works well with `logitr`models. For example, a formatted summary table can be obtained using the `tbl_regression()` function:
+
+```{r}
+library(gtsummary)
+
+model |> 
+  tbl_regression()
+```
+
+The `tbl_regression()` function has many [options](https://www.danieldsjoberg.com/gtsummary/articles/tbl_regression.html) for customizing the output table. For example, you can change the coefficient names with the `label` argument:
+
+```{r}
+model |> 
+  tbl_regression(
+    label = list(
+        feat = "Newspaper ad shown?",
+        brand = "Yogurt's brand"
+    )
+  )
+```
+
+The {gtsummary} package supports a wide variety of output types, including support for [LaTeX](https://www.latex-project.org/). One you create the table with `tbl_regression()`, you can print it a variety of ways. For example, once you've created a table `x`,
+
+```{r, eval=FALSE}
+x <- model |>
+  tbl_regression()
+```
+
+you can print it to LaTeX with any of the following ways:
+
+- `as_gt(x) |> gt::as_latex()`
+- `as_kable_extra(x, format = "latex")`
+- `as_hux_table(x) |> to_latex()`
+- `as_kable(x, format = "latex")`
+
+Multiple models can also be printed in the same table:
+
+```{r}
+model1 <- model
+
+model2 <- logitr(
+  data    = yogurt,
+  outcome = "choice",
+  obsID   = "obsID",
+  pars    = c("price*feat", "brand")
+)
+
+# Make individual tables
+t1 <- tbl_regression(model1)
+t2 <- tbl_regression(model2)
+
+# Merge tables
+tbl_merge(
+  tbls = list(t1, t2),
+  tab_spanner = c("**Baseline**", "**Interaction**")
+)
+```
+
+## The {texreg} package
+
+Another option for obtaining a formatted table is to use the [{texreg}](https://github.com/leifeld/texreg) package. This is particularly useful for obtaining tables formatted for use in [LaTeX](https://www.latex-project.org/).
+
+For example, you can print a summary to the screen using `screenreg()`:
+
+```{r}
+library(texreg)
+
+screenreg(model, stars = c(0.01, 0.05, 0.1))
+```
+
+Likewise, you can print the LaTeX code for a summary table using `texreg()`
+
+```{r}
+library(texreg)
+
+texreg(model, stars = c(0.01, 0.05, 0.1))
+```
+
+Similar to {gtsummary}, multiple models can be printed using `screenreg()` or `texreg()`:
+
+```{r}
+model1 <- model
+
+model2 <- logitr(
+  data    = yogurt,
+  outcome = "choice",
+  obsID   = "obsID",
+  pars    = c("price*feat", "brand")
+)
+
+screenreg(
+  list(
+    model1,
+    model2
+  ),
+  stars = c(0.01, 0.05, 0.1),
+  custom.model.names = c("Baseline", "Interaction")
+)
+```
