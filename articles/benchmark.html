@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.0</span>
       </span>
     </div>
 
@@ -91,7 +91,13 @@
       <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
     <li>
+      <a href="../articles/summarizing_results.html">Summarizing Results</a>
+    </li>
+    <li>
       <a href="../articles/benchmark.html">Benchmarking estimation speed against other packages</a>
+    </li>
+    <li>
+      <a href="../articles/convergence.html">WTP space convergence issues in other packages</a>
     </li>
   </ul>
 </li>
@@ -194,22 +200,22 @@ package
 logitr
 </td>
 <td style="text-align:right;">
-1.956981
+2.752860
 </td>
 <td style="text-align:right;">
-8.568663
+8.930408
 </td>
 <td style="text-align:right;">
-15.57897
+13.72697
 </td>
 <td style="text-align:right;">
-21.29589
+24.13735
 </td>
 <td style="text-align:right;">
-35.88949
+33.47056
 </td>
 <td style="text-align:right;">
-46.21824
+39.22012
 </td>
 </tr>
 <tr>
@@ -217,22 +223,22 @@ logitr
 mixl (1 core)
 </td>
 <td style="text-align:right;">
-10.985394
+10.640267
 </td>
 <td style="text-align:right;">
-51.813358
+49.667703
 </td>
 <td style="text-align:right;">
-83.84448
+80.22922
 </td>
 <td style="text-align:right;">
-157.64578
+158.23673
 </td>
 <td style="text-align:right;">
-228.54502
+229.17401
 </td>
 <td style="text-align:right;">
-281.66884
+271.35824
 </td>
 </tr>
 <tr>
@@ -240,22 +246,22 @@ mixl (1 core)
 mixl (2 cores)
 </td>
 <td style="text-align:right;">
-9.070937
+8.928487
 </td>
 <td style="text-align:right;">
-42.128199
+41.577738
 </td>
 <td style="text-align:right;">
-66.84492
+66.05436
 </td>
 <td style="text-align:right;">
-128.33416
+129.84954
 </td>
 <td style="text-align:right;">
-181.64115
+184.54557
 </td>
 <td style="text-align:right;">
-236.14920
+230.91617
 </td>
 </tr>
 <tr>
@@ -263,22 +269,22 @@ mixl (2 cores)
 mlogit
 </td>
 <td style="text-align:right;">
-12.053144
+11.926502
 </td>
 <td style="text-align:right;">
-21.399773
+19.901097
 </td>
 <td style="text-align:right;">
-93.10552
+87.58429
 </td>
 <td style="text-align:right;">
-65.54310
+60.38106
 </td>
 <td style="text-align:right;">
-104.17485
+100.63138
 </td>
 <td style="text-align:right;">
-112.31945
+98.41650
 </td>
 </tr>
 <tr>
@@ -286,22 +292,22 @@ mlogit
 gmnl
 </td>
 <td style="text-align:right;">
-9.920456
+10.553787
 </td>
 <td style="text-align:right;">
-33.763408
+31.379011
 </td>
 <td style="text-align:right;">
-60.29489
+69.74575
 </td>
 <td style="text-align:right;">
-123.52575
+121.93843
 </td>
 <td style="text-align:right;">
-124.33332
+99.23701
 </td>
 <td style="text-align:right;">
-141.02002
+141.36727
 </td>
 </tr>
 <tr>
@@ -309,22 +315,22 @@ gmnl
 apollo (1 core)
 </td>
 <td style="text-align:right;">
-15.116417
+17.287605
 </td>
 <td style="text-align:right;">
-62.525899
+44.118732
 </td>
 <td style="text-align:right;">
-108.46728
+84.29395
 </td>
 <td style="text-align:right;">
-138.54715
+129.33302
 </td>
 <td style="text-align:right;">
-187.48298
+164.37400
 </td>
 <td style="text-align:right;">
-234.89636
+198.21812
 </td>
 </tr>
 <tr>
@@ -332,22 +338,22 @@ apollo (1 core)
 apollo (2 cores)
 </td>
 <td style="text-align:right;">
-25.722478
+21.911355
 </td>
 <td style="text-align:right;">
-66.584539
+53.223971
 </td>
 <td style="text-align:right;">
-94.27059
+82.69647
 </td>
 <td style="text-align:right;">
-132.11713
+120.27101
 </td>
 <td style="text-align:right;">
-194.35550
+163.80518
 </td>
 <td style="text-align:right;">
-221.39257
+196.84896
 </td>
 </tr>
 </tbody>
@@ -411,22 +417,22 @@ logitr
 mixl (1 core)
 </td>
 <td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
 5.6
 </td>
 <td style="text-align:right;">
-6.0
+5.8
 </td>
 <td style="text-align:right;">
-5.4
+6.6
 </td>
 <td style="text-align:right;">
-7.4
+6.8
 </td>
 <td style="text-align:right;">
-6.4
-</td>
-<td style="text-align:right;">
-6.1
+6.9
 </td>
 </tr>
 <tr>
@@ -434,22 +440,22 @@ mixl (1 core)
 mixl (2 cores)
 </td>
 <td style="text-align:right;">
-4.6
+3.2
 </td>
 <td style="text-align:right;">
-4.9
+4.7
 </td>
 <td style="text-align:right;">
-4.3
+4.8
 </td>
 <td style="text-align:right;">
-6.0
+5.4
 </td>
 <td style="text-align:right;">
-5.1
+5.5
 </td>
 <td style="text-align:right;">
-5.1
+5.9
 </td>
 </tr>
 <tr>
@@ -457,22 +463,22 @@ mixl (2 cores)
 mlogit
 </td>
 <td style="text-align:right;">
-6.2
+4.3
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:right;">
+6.4
 </td>
 <td style="text-align:right;">
 2.5
 </td>
 <td style="text-align:right;">
-6.0
+3.0
 </td>
 <td style="text-align:right;">
-3.1
-</td>
-<td style="text-align:right;">
-2.9
-</td>
-<td style="text-align:right;">
-2.4
+2.5
 </td>
 </tr>
 <tr>
@@ -480,22 +486,22 @@ mlogit
 gmnl
 </td>
 <td style="text-align:right;">
-5.1
-</td>
-<td style="text-align:right;">
-3.9
-</td>
-<td style="text-align:right;">
-3.9
-</td>
-<td style="text-align:right;">
-5.8
+3.8
 </td>
 <td style="text-align:right;">
 3.5
 </td>
 <td style="text-align:right;">
-3.1
+5.1
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+3.6
 </td>
 </tr>
 <tr>
@@ -503,19 +509,19 @@ gmnl
 apollo (1 core)
 </td>
 <td style="text-align:right;">
-7.7
+6.3
 </td>
 <td style="text-align:right;">
-7.3
+4.9
 </td>
 <td style="text-align:right;">
-7.0
+6.1
 </td>
 <td style="text-align:right;">
-6.5
+5.4
 </td>
 <td style="text-align:right;">
-5.2
+4.9
 </td>
 <td style="text-align:right;">
 5.1
@@ -526,22 +532,22 @@ apollo (1 core)
 apollo (2 cores)
 </td>
 <td style="text-align:right;">
-13.1
+8.0
 </td>
 <td style="text-align:right;">
-7.8
+6.0
 </td>
 <td style="text-align:right;">
-6.1
+6.0
 </td>
 <td style="text-align:right;">
-6.2
+5.0
 </td>
 <td style="text-align:right;">
-5.4
+4.9
 </td>
 <td style="text-align:right;">
-4.8
+5.0
 </td>
 </tr>
 </tbody>

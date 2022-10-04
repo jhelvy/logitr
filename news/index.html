@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.0</span>
       </span>
     </div>
 
@@ -62,7 +62,13 @@
       <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
     <li>
+      <a href="../articles/summarizing_results.html">Summarizing Results</a>
+    </li>
+    <li>
       <a href="../articles/benchmark.html">Benchmarking estimation speed against other packages</a>
+    </li>
+    <li>
+      <a href="../articles/convergence.html">WTP space convergence issues in other packages</a>
     </li>
   </ul></li>
 <li>
@@ -87,6 +93,13 @@
       <small>Source: <a href="https://github.com/jhelvy/logitr/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.8.0" id="logitr-080">logitr 0.8.0<small>2022-10-03</small><a class="anchor" aria-label="anchor" href="#logitr-080"></a></h2>
+<ul><li>Added <code><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy()</a></code>, <code><a href="https://generics.r-lib.org/reference/glance.html" class="external-link">glance()</a></code>, and <code><a href="https://generics.r-lib.org/reference/augment.html" class="external-link">augment()</a></code> methods for use with the {broom} package.</li>
+<li>Added <code><a href="../reference/model.matrix.logitr.html">model.matrix.logitr()</a></code>, <code><a href="../reference/miscmethods.logitr.html">terms.logitr()</a></code>, and <code><a href="../reference/model.frame.logitr.html">model.frame.logitr()</a></code> methods for use with {broom.helpers}.</li>
+<li>Added new vignette comparing convergence issues in WTP space models with other similar packages.</li>
+<li>Added new vignette on summarizing results from estimated models.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.7.2" id="logitr-072">logitr 0.7.2<a class="anchor" aria-label="anchor" href="#logitr-072"></a></h2>
 <ul><li>Checks were added to make the <code>panelID</code> and <code>clusterUD</code> variables a sequentially increasing numeric vector and to stop the program if there are any repeated IDs in these variables.</li>

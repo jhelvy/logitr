@@ -4,14 +4,16 @@ pkgdown_sha: ~
 articles:
   basic_usage: basic_usage.html
   benchmark: benchmark.html
+  convergence: convergence.html
   data_formatting: data_formatting.html
   interactions: interactions.html
   mnl_models: mnl_models.html
   mnl_models_weighted: mnl_models_weighted.html
   mxl_models: mxl_models.html
   predict: predict.html
+  summarizing_results: summarizing_results.html
   utility_models: utility_models.html
-last_built: 2022-07-24T14:06Z
+last_built: 2022-10-04T17:38Z
 urls:
   reference: https://jhelvy.github.io/logitr/reference
   article: https://jhelvy.github.io/logitr/articles

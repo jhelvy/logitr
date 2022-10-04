@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.0</span>
       </span>
     </div>
 
@@ -91,7 +91,13 @@
       <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
     </li>
     <li>
+      <a href="../articles/summarizing_results.html">Summarizing Results</a>
+    </li>
+    <li>
       <a href="../articles/benchmark.html">Benchmarking estimation speed against other packages</a>
+    </li>
+    <li>
+      <a href="../articles/convergence.html">WTP space convergence issues in other packages</a>
     </li>
   </ul>
 </li>
@@ -178,7 +184,7 @@
 <span><span class="va">probs_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span></span>
 <span>  <span class="va">mnl_pref</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="va">data</span>,</span>
-<span>  obsID <span class="op">=</span> <span class="st">"obsID"</span>,</span>
+<span>  obsID <span class="op">=</span> <span class="st">"obsID"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">probs_mnl_pref</span></span>
@@ -266,7 +272,12 @@
 </h2>
 <p>The <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> method can also be used to predict outcomes by setting <code>type = "outcome"</code> (the default is <code>"prob"</code> for predicting probabilities). In the examples below, outcomes are predicted using the same preference space and WTP space models as in the previous examples. The <code>returnData</code> argument is also set to <code>TRUE</code> so that the predicted outcomes can be compared to the actual choices made:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">outcomes_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, type <span class="op">=</span> <span class="st">"outcome"</span>, returnData <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">outcomes_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span></span>
+<span>    <span class="va">mnl_pref</span>, </span>
+<span>    type <span class="op">=</span> <span class="st">"outcome"</span>, </span>
+<span>    returnData <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">outcomes_pref</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   obsID predicted_outcome price feat brandhiland brandweight brandyoplait</span></span>
 <span><span class="co">#&gt; 1     1                 1   8.1    0           0           0            0</span></span>
@@ -283,7 +294,12 @@
 <span><span class="co">#&gt; 5      1</span></span>
 <span><span class="co">#&gt; 6      0</span></span>
 <span></span>
-<span><span class="va">outcomes_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_wtp</span>, type <span class="op">=</span> <span class="st">"outcome"</span>, returnData <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">outcomes_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span></span>
+<span>    <span class="va">mnl_wtp</span>, </span>
+<span>    type <span class="op">=</span> <span class="st">"outcome"</span>, </span>
+<span>    returnData <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">outcomes_wtp</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   obsID predicted_outcome feat brandhiland brandweight brandyoplait scalePar</span></span>
 <span><span class="co">#&gt; 1     1                 1    0           0           0            0      8.1</span></span>
