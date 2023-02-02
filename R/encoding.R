@@ -85,7 +85,9 @@ getFactorLevels <- function(data, pars) {
   # Separate out interactions
   ints <- grepl("\\*", pars)
   if (any(ints)) {
-    pars <- pars[ints == FALSE]
+    pars_int <- pars[ints == TRUE]
+    pars_int <- unlist(lapply(pars_int, function(x) strsplit(x, "\\*")))
+    pars <- unique(c(pars[ints == FALSE], pars_int))
   }
   factorLevels <- NULL
   parTypes <- getParTypes(data, pars)
