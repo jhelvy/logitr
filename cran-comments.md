@@ -8,3 +8,4 @@
 
 ## Notes
 * This is a new release.
+* The DOI <doi:10.18637/jss.v105.i10> in the CITATION and DESCRIPTION is for a new JSS publication that will be registered after publication on CRAN.

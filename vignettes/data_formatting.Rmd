@@ -70,7 +70,8 @@ mnl_pref_dummies <- logitr(
   outcome = 'choice',
   obsID   = 'obsID',
   pars    = c(
-    'price', 'feat', 'brand_yoplait', 'brand_dannon', 'brand_weight')
+    'price', 'feat', 'brand_yoplait', 'brand_dannon', 'brand_weight'
+  )
 )
 
 summary(mnl_pref_dummies)

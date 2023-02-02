@@ -53,7 +53,6 @@ dummyCode <- function(df, vars) {
 #' result$randPars
 #' head(result$X)
 recodeData <- function(data, pars, randPars) {
-  data <- as.data.frame(data) # tibbles break things
   data <- orderedFactorsToChars(data) # ordered factors cause weird names
   formula <- stats::as.formula(paste0("~ ", paste(pars, collapse = " + ")))
   X <- getDesignMatrix(formula, data)
@@ -83,6 +82,12 @@ getColumnTypes <- function(data) {
 }
 
 getFactorLevels <- function(data, pars) {
+  # Separate out interactions
+  ints <- grepl("\\*", pars)
+  if (any(ints)) {
+    pars <- pars[ints == FALSE]
+  }
+  factorLevels <- NULL
   parTypes <- getParTypes(data, pars)
   discrete <- parTypes$discrete
   if (!is.null(discrete)) {
