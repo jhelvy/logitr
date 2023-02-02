@@ -50,12 +50,12 @@ getModelInputs <- function(
   # Get the design matrix, recoding parameters that are categorical
   # or have interactions
   data <- as.data.frame(data) # tibbles break things
-  factorLevels <- getFactorLevels(data, pars) # need to store for predicting
   recoded <- recodeData(data, pars, randPars)
   formula <- recoded$formula
   X <- recoded$X
   pars <- recoded$pars
   randPars <- recoded$randPars
+  factorLevels <- recoded$factorLevels
   scalePar <- defineScalePar(data, inputs, modelSpace)
   outcome <- as.matrix(data[outcome])
 

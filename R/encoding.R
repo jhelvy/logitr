@@ -53,6 +53,8 @@ dummyCode <- function(df, vars) {
 #' result$randPars
 #' head(result$X)
 recodeData <- function(data, pars, randPars) {
+  data <- as.data.frame(data) # tibbles break things
+  factorLevels <- getFactorLevels(data, pars) # need to store for predicting
   data <- orderedFactorsToChars(data) # ordered factors cause weird names
   formula <- stats::as.formula(paste0("~ ", paste(pars, collapse = " + ")))
   X <- getDesignMatrix(formula, data)
@@ -60,6 +62,7 @@ recodeData <- function(data, pars, randPars) {
     formula = formula,
     X = X,
     pars = colnames(X),
+    factorLevels = factorLevels,
     randPars = recodeRandPars(data, pars, randPars)
   ))
 }
