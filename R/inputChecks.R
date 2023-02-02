@@ -111,7 +111,7 @@ predictInputsCheck <- function(object, newdata, obsID, type, ci) {
   if (missing(newdata)) stop('"newdata" needs to be specified')
   if (!is.null(newdata)) {
     if (is.null(obsID)) {
-      stop('"obsID" must be specified if newdata is not NULL')
+      stop('"obsID" must be specified if newdata is used')
     }
     if (!is.null(obsID)) {
       if (! obsID %in% names(newdata)) {

@@ -49,6 +49,7 @@ getModelInputs <- function(
 
   # Get the design matrix, recoding parameters that are categorical
   # or have interactions
+  factorLevels <- getFactorLevels(data, pars) # need to store for predicting
   recoded <- recodeData(data, pars, randPars)
   formula <- recoded$formula
   X <- recoded$X
@@ -117,7 +118,8 @@ getModelInputs <- function(
     obsID     = obsID,
     panelID   = panelID,
     clusterID = clusterID,
-    weights   = weights
+    weights   = weights,
+    factorLevels = factorLevels
   )
 
   # Scale data

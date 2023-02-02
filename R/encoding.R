@@ -61,7 +61,8 @@ recodeData <- function(data, pars, randPars) {
     formula = formula,
     X = X,
     pars = colnames(X),
-    randPars = recodeRandPars(data, pars, randPars)))
+    randPars = recodeRandPars(data, pars, randPars)
+  ))
 }
 
 # Ordered factors have strange returned column names when encoding with
@@ -79,6 +80,16 @@ orderedFactorsToChars <- function(data) {
 
 getColumnTypes <- function(data) {
   return(unlist(lapply(lapply(data, class), function(x) x[1])))
+}
+
+getFactorLevels <- function(data, pars) {
+  parTypes <- getParTypes(data, pars)
+  discrete <- parTypes$discrete
+  if (!is.null(discrete)) {
+    factorLevels <- lapply(discrete, function(x) levels(as.factor(data[,x])))
+    names(factorLevels) <- discrete
+  }
+  return(factorLevels)
 }
 
 getDesignMatrix <- function(formula, data) {
