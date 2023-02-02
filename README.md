@@ -16,9 +16,6 @@ logitr: Fast Estimation of Multinomial (MNL) and Mixed Logit (MXL)
 Models with Preference Space and Willingness to Pay Space [Utility
 Parameterizations](https://jhelvy.github.io/logitr/articles/utility_models.html)
 
-Associated paper in the *Journal of Statistical Software* at
-[https://doi.org/10.18637/jss.v105.i10](https://doi.org/10.18637/jss.v105.i10)
-
 The latest version includes support for:
 
 - Multinomial logit (MNL) models
@@ -40,6 +37,11 @@ Mixed logit models are estimated using maximum simulated likelihood
 based on the algorithms in Kenneth Train’s book [*Discrete Choice
 Methods with Simulation, 2nd Edition (New York: Cambridge University
 Press, 2009)*](https://eml.berkeley.edu/books/choice2.html).
+
+## JSS Article
+
+An associated paper in the *Journal of Statistical Software* about this
+package is available at <https://doi.org/10.18637/jss.v105.i10>
 
 ## Installation
 
