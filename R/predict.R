@@ -127,6 +127,7 @@ predict.logitr <- function(
 formatNewData <- function(object, newdata, obsID) {
   inputs <- object$inputs
   newdata <- as.data.frame(newdata) # tibbles break things
+  newdata <- adjustFactorLevels(object, newdata) # if missing factor levels
   recoded <- recodeData(newdata, inputs$pars, inputs$randPars)
   X <- recoded$X
   predictParCheck(object, X) # Check if model pars match those from newdata
@@ -142,6 +143,22 @@ formatNewData <- function(object, newdata, obsID) {
   }
   obsID <- newdata[, obsIDName]
   return(list(X = X, scalePar = scalePar, obsID = obsID))
+}
+
+adjustFactorLevels <- function(object, newdata) {
+  levels_orig <- object$data$factorLevels
+  factorLevels <- getFactorLevels(newdata, object$inputs$pars)
+  if (length(factorLevels) > 0) {
+    for (i in 1:length(factorLevels)) {
+      par <- names(factorLevels)[[i]]
+      levels_new <- factorLevels[[i]]
+      levels_orig <- levels_orig[[par]]
+      if (! identical(levels_new, levels_orig)) {
+        newdata[[par]] <- factor(newdata[[par]], levels = levels_orig)
+      }
+    }
+  }
+  return(newdata)
 }
 
 getMnlProbs <- function(object, data, obsID, ci, numDrawsCI, getV, getVDraws) {

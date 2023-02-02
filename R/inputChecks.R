@@ -160,10 +160,7 @@ predictParCheck <- function(model, X) {
       'The coefficient names for the provided model do not correspond to ',
       'variables in "newdata".\n\n',
       'Expect columns:\n\t', modelPars, '\n\n',
-      'Encoded column names from provided `newdata` object:\n\t', dataPars,
-      '\n\n',
-      'If you have a factor variable in "newdata", check that the factor ',
-      'levels match those of the data used to estimate the model.'
+      'Encoded column names from provided `newdata` object:\n\t', dataPars
     ))
   }
 }
