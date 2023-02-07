@@ -1,3 +1,5 @@
+# logitr (development version)
+
 # logitr 1.0.0
 
 - Added JSS article DOI throughout package documentation.
