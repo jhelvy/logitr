@@ -49,11 +49,13 @@ getModelInputs <- function(
 
   # Get the design matrix, recoding parameters that are categorical
   # or have interactions
+  data <- as.data.frame(data) # tibbles break things
   recoded <- recodeData(data, pars, randPars)
   formula <- recoded$formula
   X <- recoded$X
   pars <- recoded$pars
   randPars <- recoded$randPars
+  factorLevels <- recoded$factorLevels
   scalePar <- defineScalePar(data, inputs, modelSpace)
   outcome <- as.matrix(data[outcome])
 
@@ -117,7 +119,8 @@ getModelInputs <- function(
     obsID     = obsID,
     panelID   = panelID,
     clusterID = clusterID,
-    weights   = weights
+    weights   = weights,
+    factorLevels = factorLevels
   )
 
   # Scale data

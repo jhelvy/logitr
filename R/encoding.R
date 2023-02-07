@@ -54,6 +54,7 @@ dummyCode <- function(df, vars) {
 #' head(result$X)
 recodeData <- function(data, pars, randPars) {
   data <- as.data.frame(data) # tibbles break things
+  factorLevels <- getFactorLevels(data, pars) # need to store for predicting
   data <- orderedFactorsToChars(data) # ordered factors cause weird names
   formula <- stats::as.formula(paste0("~ ", paste(pars, collapse = " + ")))
   X <- getDesignMatrix(formula, data)
@@ -61,7 +62,9 @@ recodeData <- function(data, pars, randPars) {
     formula = formula,
     X = X,
     pars = colnames(X),
-    randPars = recodeRandPars(data, pars, randPars)))
+    factorLevels = factorLevels,
+    randPars = recodeRandPars(data, pars, randPars)
+  ))
 }
 
 # Ordered factors have strange returned column names when encoding with
@@ -79,6 +82,24 @@ orderedFactorsToChars <- function(data) {
 
 getColumnTypes <- function(data) {
   return(unlist(lapply(lapply(data, class), function(x) x[1])))
+}
+
+getFactorLevels <- function(data, pars) {
+  # Separate out interactions
+  ints <- grepl("\\*", pars)
+  if (any(ints)) {
+    pars_int <- pars[ints == TRUE]
+    pars_int <- unlist(lapply(pars_int, function(x) strsplit(x, "\\*")))
+    pars <- unique(c(pars[ints == FALSE], pars_int))
+  }
+  factorLevels <- NULL
+  parTypes <- getParTypes(data, pars)
+  discrete <- parTypes$discrete
+  if (!is.null(discrete)) {
+    factorLevels <- lapply(discrete, function(x) levels(as.factor(data[,x])))
+    names(factorLevels) <- discrete
+  }
+  return(factorLevels)
 }
 
 getDesignMatrix <- function(formula, data) {

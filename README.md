@@ -18,25 +18,30 @@ Parameterizations](https://jhelvy.github.io/logitr/articles/utility_models.html)
 
 The latest version includes support for:
 
--   Multinomial logit (MNL) models
--   Mixed logit (MXL) models with normal and log-normal parameter
-    distributions.
--   Preference space and WTP space utility parameterizations.
--   Weighted models to differentially weight individual observations.
--   Uncorrelated or correlated heterogeneity covariances for mixed logit
-    models.
--   Functions for computing WTP from preference space models.
--   Functions for predicting expected probabilities and outcomes for
-    sets of alternatives based on an estimated model.
--   A parallelized multistart optimization loop that uses different
-    random starting points in each iteration to search for different
-    local minima (useful for non-convex problems like MXL models or
-    models with WTP space parameterizations).
+- Multinomial logit (MNL) models
+- Mixed logit (MXL) models with normal and log-normal parameter
+  distributions.
+- Preference space and WTP space utility parameterizations.
+- Weighted models to differentially weight individual observations.
+- Uncorrelated or correlated heterogeneity covariances for mixed logit
+  models.
+- Functions for computing WTP from preference space models.
+- Functions for predicting expected probabilities and outcomes for sets
+  of alternatives based on an estimated model.
+- A parallelized multistart optimization loop that uses different random
+  starting points in each iteration to search for different local minima
+  (useful for non-convex problems like MXL models or models with WTP
+  space parameterizations).
 
 Mixed logit models are estimated using maximum simulated likelihood
 based on the algorithms in Kenneth Train’s book [*Discrete Choice
 Methods with Simulation, 2nd Edition (New York: Cambridge University
 Press, 2009)*](https://eml.berkeley.edu/books/choice2.html).
+
+## JSS Article
+
+An associated paper in the *Journal of Statistical Software* about this
+package is available at <https://doi.org/10.18637/jss.v105.i10>
 
 ## Installation
 
@@ -68,15 +73,15 @@ for details on how to use **logitr** to estimate models.
 
 ## Author, Version, and License Information
 
--   Author: *John Paul Helveston* <https://www.jhelvy.com/>
--   Date First Written: *Sunday, September 28, 2014*
--   License:
-    [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
+- Author: *John Paul Helveston* <https://www.jhelvy.com/>
+- Date First Written: *Sunday, September 28, 2014*
+- License:
+  [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
 
 ## Citation Information
 
-If you use this package for in a publication, I would greatly appreciate
-it if you cited it - you can get the citation by typing
+If you use this package for in a publication, please cite the JSS
+article associated with it! You can get the citation by typing
 `citation("logitr")` into R:
 
 ``` r
@@ -84,17 +89,22 @@ citation("logitr")
 #> 
 #> To cite logitr in publications use:
 #> 
-#>   John Paul Helveston (2022). logitr: Fast Estimation of Multinomial
-#>   and Mixed Logit Models with Preference Space and Willingness to Pay
-#>   Space Utility Parameterizations.
+#> Helveston JP (2023). "logitr: Fast Estimation of Multinomial and Mixed
+#> Logit Models with Preference Space and Willingness-to-Pay Space Utility
+#> Parameterizations." _Journal of Statistical Software_, *105*(10), 1-37.
+#> doi: 10.18637/jss.v105.i10 (URL:
+#> https://doi.org/10.18637/jss.v105.i10).
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
-#>   @Manual{,
-#>     title = {logitr: Fast Estimation of Multinomial and Mixed Logit Models with Preference Space and Willingness to Pay Space Utility Parameterizations},
+#>   @Article{,
+#>     title = {{logitr}: Fast Estimation of Multinomial and Mixed Logit Models with Preference Space and Willingness-to-Pay Space Utility Parameterizations},
 #>     author = {John Paul Helveston},
-#>     year = {2022},
-#>     note = {R package},
-#>     url = {https://jhelvy.github.io/logitr/},
+#>     journal = {Journal of Statistical Software},
+#>     year = {2023},
+#>     volume = {105},
+#>     number = {10},
+#>     pages = {1--37},
+#>     doi = {10.18637/jss.v105.i10},
 #>   }
 ```

@@ -39,6 +39,11 @@ The latest version includes support for:
 
 Mixed logit models are estimated using maximum simulated likelihood based on the algorithms in Kenneth Train's book [*Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)*](https://eml.berkeley.edu/books/choice2.html).
 
+## JSS Article 
+
+An associated paper in the *Journal of Statistical Software* about this package is available at
+[https://doi.org/10.18637/jss.v105.i10](https://doi.org/10.18637/jss.v105.i10)
+
 ## Installation
 
 ```{r child="man/rmdchunks/installation.Rmd"}
@@ -56,7 +61,7 @@ View the [basic usage](https://jhelvy.github.io/logitr/articles/basic_usage.html
 
 ## Citation Information
 
-If you use this package for in a publication, I would greatly appreciate it if you cited it - you can get the citation by typing `citation("logitr")` into R:
+If you use this package for in a publication, please cite the JSS article associated with it! You can get the citation by typing `citation("logitr")` into R:
 
 ```{r}
 citation("logitr")

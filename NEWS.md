@@ -1,3 +1,8 @@
+# logitr 1.0.0
+
+- Added JSS article DOI throughout package documentation.
+- Fixed bug #41 where the `predict()` method would error if factor levels were missing in `newdata`.
+
 # logitr 0.8.0
 
 - Added `tidy()`, `glance()`, and `augment()` methods for use with the {broom} package.

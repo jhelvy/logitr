@@ -111,7 +111,7 @@ predictInputsCheck <- function(object, newdata, obsID, type, ci) {
   if (missing(newdata)) stop('"newdata" needs to be specified')
   if (!is.null(newdata)) {
     if (is.null(obsID)) {
-      stop('"obsID" must be specified if newdata is not NULL')
+      stop('"obsID" must be specified if newdata is used')
     }
     if (!is.null(obsID)) {
       if (! obsID %in% names(newdata)) {
@@ -160,10 +160,7 @@ predictParCheck <- function(model, X) {
       'The coefficient names for the provided model do not correspond to ',
       'variables in "newdata".\n\n',
       'Expect columns:\n\t', modelPars, '\n\n',
-      'Encoded column names from provided `newdata` object:\n\t', dataPars,
-      '\n\n',
-      'If you have a factor variable in "newdata", check that the factor ',
-      'levels match those of the data used to estimate the model.'
+      'Encoded column names from provided `newdata` object:\n\t', dataPars
     ))
   }
 }
