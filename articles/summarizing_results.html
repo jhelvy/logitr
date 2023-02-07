@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -153,9 +153,9 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="co">#&gt; =================================================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model estimated on: Tue Oct 04 17:40:38 2022 </span></span>
+<span><span class="co">#&gt; Model estimated on: Tue Feb 07 14:01:03 2023 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Using logitr version: 0.8.0 </span></span>
+<span><span class="co">#&gt; Using logitr version: 1.0.0 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span></span>
@@ -228,11 +228,11 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 7</span></span></span>
 <span><span class="co">#&gt;   term         estimate std.error statistic   p.value conf.low conf.high</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> brandhiland    -<span style="color: #BB0000;">3.72</span>     0.145     -<span style="color: #BB0000;">25.6</span>  0           -<span style="color: #BB0000;">4.00</span>     -<span style="color: #BB0000;">3.44</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> brandweight    -<span style="color: #BB0000;">0.641</span>    0.054<span style="text-decoration: underline;">5</span>    -<span style="color: #BB0000;">11.8</span>  0           -<span style="color: #BB0000;">0.749</span>    -<span style="color: #BB0000;">0.535</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> brandyoplait    0.735    0.080<span style="text-decoration: underline;">6</span>      9.11 0            0.575     0.893</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> feat            0.491    0.120       4.09 0.000<span style="text-decoration: underline;">042</span>5    0.251     0.728</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> price          -<span style="color: #BB0000;">0.367</span>    0.024<span style="text-decoration: underline;">4</span>    -<span style="color: #BB0000;">15.0</span>  0           -<span style="color: #BB0000;">0.414</span>    -<span style="color: #BB0000;">0.320</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> brandhiland    -<span style="color: #BB0000;">3.72</span>     0.145     -<span style="color: #BB0000;">25.6</span>  0           -<span style="color: #BB0000;">4.00</span>     -<span style="color: #BB0000;">3.43</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> brandweight    -<span style="color: #BB0000;">0.641</span>    0.054<span style="text-decoration: underline;">5</span>    -<span style="color: #BB0000;">11.8</span>  0           -<span style="color: #BB0000;">0.745</span>    -<span style="color: #BB0000;">0.534</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> brandyoplait    0.735    0.080<span style="text-decoration: underline;">6</span>      9.11 0            0.577     0.891</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> feat            0.491    0.120       4.09 0.000<span style="text-decoration: underline;">042</span>5    0.258     0.729</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> price          -<span style="color: #BB0000;">0.367</span>    0.024<span style="text-decoration: underline;">4</span>    -<span style="color: #BB0000;">15.0</span>  0           -<span style="color: #BB0000;">0.414</span>    -<span style="color: #BB0000;">0.319</span></span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -288,12 +288,12 @@
 <span></span>
 <span><span class="va">model</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/tbl_regression.html" class="external-link">tbl_regression</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div id="ewxwsaxwxo" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="cdeyfufeld" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#ewxwsaxwxo .gt_table {
+#cdeyfufeld .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -318,7 +318,7 @@
   border-left-color: #D3D3D3;
 }
 
-#ewxwsaxwxo .gt_heading {
+#cdeyfufeld .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -330,7 +330,12 @@
   border-right-color: #D3D3D3;
 }
 
-#ewxwsaxwxo .gt_title {
+#cdeyfufeld .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#cdeyfufeld .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -342,7 +347,7 @@
   border-bottom-width: 0;
 }
 
-#ewxwsaxwxo .gt_subtitle {
+#cdeyfufeld .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -354,13 +359,13 @@
   border-top-width: 0;
 }
 
-#ewxwsaxwxo .gt_bottom_border {
+#cdeyfufeld .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ewxwsaxwxo .gt_col_headings {
+#cdeyfufeld .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -375,7 +380,7 @@
   border-right-color: #D3D3D3;
 }
 
-#ewxwsaxwxo .gt_col_heading {
+#cdeyfufeld .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -395,7 +400,7 @@
   overflow-x: hidden;
 }
 
-#ewxwsaxwxo .gt_column_spanner_outer {
+#cdeyfufeld .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -407,15 +412,15 @@
   padding-right: 4px;
 }
 
-#ewxwsaxwxo .gt_column_spanner_outer:first-child {
+#cdeyfufeld .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ewxwsaxwxo .gt_column_spanner_outer:last-child {
+#cdeyfufeld .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ewxwsaxwxo .gt_column_spanner {
+#cdeyfufeld .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -427,7 +432,7 @@
   width: 100%;
 }
 
-#ewxwsaxwxo .gt_group_heading {
+#cdeyfufeld .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -450,9 +455,10 @@
   border-right-width: 1px;
   border-right-color: #D3D3D3;
   vertical-align: middle;
+  text-align: left;
 }
 
-#ewxwsaxwxo .gt_empty_group_heading {
+#cdeyfufeld .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -467,15 +473,15 @@
   vertical-align: middle;
 }
 
-#ewxwsaxwxo .gt_from_md > :first-child {
+#cdeyfufeld .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ewxwsaxwxo .gt_from_md > :last-child {
+#cdeyfufeld .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ewxwsaxwxo .gt_row {
+#cdeyfufeld .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -494,7 +500,7 @@
   overflow-x: hidden;
 }
 
-#ewxwsaxwxo .gt_stub {
+#cdeyfufeld .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -507,7 +513,7 @@
   padding-right: 5px;
 }
 
-#ewxwsaxwxo .gt_stub_row_group {
+#cdeyfufeld .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -521,11 +527,11 @@
   vertical-align: top;
 }
 
-#ewxwsaxwxo .gt_row_group_first td {
+#cdeyfufeld .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ewxwsaxwxo .gt_summary_row {
+#cdeyfufeld .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -535,16 +541,16 @@
   padding-right: 5px;
 }
 
-#ewxwsaxwxo .gt_first_summary_row {
+#cdeyfufeld .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ewxwsaxwxo .gt_first_summary_row.thick {
+#cdeyfufeld .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ewxwsaxwxo .gt_last_summary_row {
+#cdeyfufeld .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -554,7 +560,7 @@
   border-bottom-color: #D3D3D3;
 }
 
-#ewxwsaxwxo .gt_grand_summary_row {
+#cdeyfufeld .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -564,7 +570,7 @@
   padding-right: 5px;
 }
 
-#ewxwsaxwxo .gt_first_grand_summary_row {
+#cdeyfufeld .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -574,11 +580,11 @@
   border-top-color: #D3D3D3;
 }
 
-#ewxwsaxwxo .gt_striped {
+#cdeyfufeld .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ewxwsaxwxo .gt_table_body {
+#cdeyfufeld .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -587,7 +593,7 @@
   border-bottom-color: #D3D3D3;
 }
 
-#ewxwsaxwxo .gt_footnotes {
+#cdeyfufeld .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -601,7 +607,7 @@
   border-right-color: #D3D3D3;
 }
 
-#ewxwsaxwxo .gt_footnote {
+#cdeyfufeld .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -610,7 +616,7 @@
   padding-right: 5px;
 }
 
-#ewxwsaxwxo .gt_sourcenotes {
+#cdeyfufeld .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -624,7 +630,7 @@
   border-right-color: #D3D3D3;
 }
 
-#ewxwsaxwxo .gt_sourcenote {
+#cdeyfufeld .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -632,118 +638,118 @@
   padding-right: 5px;
 }
 
-#ewxwsaxwxo .gt_left {
+#cdeyfufeld .gt_left {
   text-align: left;
 }
 
-#ewxwsaxwxo .gt_center {
+#cdeyfufeld .gt_center {
   text-align: center;
 }
 
-#ewxwsaxwxo .gt_right {
+#cdeyfufeld .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ewxwsaxwxo .gt_font_normal {
+#cdeyfufeld .gt_font_normal {
   font-weight: normal;
 }
 
-#ewxwsaxwxo .gt_font_bold {
+#cdeyfufeld .gt_font_bold {
   font-weight: bold;
 }
 
-#ewxwsaxwxo .gt_font_italic {
+#cdeyfufeld .gt_font_italic {
   font-style: italic;
 }
 
-#ewxwsaxwxo .gt_super {
+#cdeyfufeld .gt_super {
   font-size: 65%;
 }
 
-#ewxwsaxwxo .gt_footnote_marks {
+#cdeyfufeld .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-#ewxwsaxwxo .gt_asterisk {
+#cdeyfufeld .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ewxwsaxwxo .gt_indent_1 {
+#cdeyfufeld .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ewxwsaxwxo .gt_indent_2 {
+#cdeyfufeld .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ewxwsaxwxo .gt_indent_3 {
+#cdeyfufeld .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ewxwsaxwxo .gt_indent_4 {
+#cdeyfufeld .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ewxwsaxwxo .gt_indent_5 {
+#cdeyfufeld .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
 <table class="table gt_table">
 <thead class="gt_col_headings"><tr>
-<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>Beta</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Characteristic&lt;/strong&gt;"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Beta&lt;/strong&gt;"><strong>Beta</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id='&lt;strong&gt;95% CI&lt;/strong&gt;&lt;sup class="gt_footnote_marks"&gt;1&lt;/sup&gt;'>
 <strong>95% CI</strong><sup class="gt_footnote_marks">1</sup>
 </th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>p-value</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;p-value&lt;/strong&gt;"><strong>p-value</strong></th>
     </tr></thead>
 <tbody class="gt_table_body">
 <tr>
-<td class="gt_row gt_left">brand</td>
-<td class="gt_row gt_center"></td>
-<td class="gt_row gt_center"></td>
-<td class="gt_row gt_center"></td>
+<td headers="label" class="gt_row gt_left">brand</td>
+<td headers="estimate" class="gt_row gt_center"></td>
+<td headers="ci" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center"></td>
 </tr>
 <tr>
-<td class="gt_row gt_left">    dannon</td>
-<td class="gt_row gt_center">—</td>
-<td class="gt_row gt_center">—</td>
-<td class="gt_row gt_center"></td>
+<td headers="label" class="gt_row gt_left">    dannon</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"></td>
 </tr>
 <tr>
-<td class="gt_row gt_left">    hiland</td>
-<td class="gt_row gt_center">-3.7</td>
-<td class="gt_row gt_center">-4.0, -3.4</td>
-<td class="gt_row gt_center">&lt;0.001</td>
+<td headers="label" class="gt_row gt_left">    hiland</td>
+<td headers="estimate" class="gt_row gt_center">-3.7</td>
+<td headers="ci" class="gt_row gt_center">-4.0, -3.4</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td class="gt_row gt_left">    weight</td>
-<td class="gt_row gt_center">-0.64</td>
-<td class="gt_row gt_center">-0.75, -0.53</td>
-<td class="gt_row gt_center">&lt;0.001</td>
+<td headers="label" class="gt_row gt_left">    weight</td>
+<td headers="estimate" class="gt_row gt_center">-0.64</td>
+<td headers="ci" class="gt_row gt_center">-0.75, -0.53</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td class="gt_row gt_left">    yoplait</td>
-<td class="gt_row gt_center">0.73</td>
-<td class="gt_row gt_center">0.58, 0.89</td>
-<td class="gt_row gt_center">&lt;0.001</td>
+<td headers="label" class="gt_row gt_left">    yoplait</td>
+<td headers="estimate" class="gt_row gt_center">0.73</td>
+<td headers="ci" class="gt_row gt_center">0.57, 0.89</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td class="gt_row gt_left">feat</td>
-<td class="gt_row gt_center">0.49</td>
-<td class="gt_row gt_center">0.25, 0.73</td>
-<td class="gt_row gt_center">&lt;0.001</td>
+<td headers="label" class="gt_row gt_left">feat</td>
+<td headers="estimate" class="gt_row gt_center">0.49</td>
+<td headers="ci" class="gt_row gt_center">0.26, 0.73</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td class="gt_row gt_left">price</td>
-<td class="gt_row gt_center">-0.37</td>
-<td class="gt_row gt_center">-0.41, -0.32</td>
-<td class="gt_row gt_center">&lt;0.001</td>
+<td headers="label" class="gt_row gt_left">price</td>
+<td headers="estimate" class="gt_row gt_center">-0.37</td>
+<td headers="ci" class="gt_row gt_center">-0.41, -0.32</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 </tbody>
 <tfoot class="gt_footnotes"><tr>
@@ -761,12 +767,12 @@
 <span>        brand <span class="op">=</span> <span class="st">"Yogurt's brand"</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<div id="tlqnoqlffv" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="hdlsajmfbw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#tlqnoqlffv .gt_table {
+#hdlsajmfbw .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -791,7 +797,7 @@
   border-left-color: #D3D3D3;
 }
 
-#tlqnoqlffv .gt_heading {
+#hdlsajmfbw .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -803,7 +809,12 @@
   border-right-color: #D3D3D3;
 }
 
-#tlqnoqlffv .gt_title {
+#hdlsajmfbw .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#hdlsajmfbw .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -815,7 +826,7 @@
   border-bottom-width: 0;
 }
 
-#tlqnoqlffv .gt_subtitle {
+#hdlsajmfbw .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -827,13 +838,13 @@
   border-top-width: 0;
 }
 
-#tlqnoqlffv .gt_bottom_border {
+#hdlsajmfbw .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#tlqnoqlffv .gt_col_headings {
+#hdlsajmfbw .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -848,7 +859,7 @@
   border-right-color: #D3D3D3;
 }
 
-#tlqnoqlffv .gt_col_heading {
+#hdlsajmfbw .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -868,7 +879,7 @@
   overflow-x: hidden;
 }
 
-#tlqnoqlffv .gt_column_spanner_outer {
+#hdlsajmfbw .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -880,15 +891,15 @@
   padding-right: 4px;
 }
 
-#tlqnoqlffv .gt_column_spanner_outer:first-child {
+#hdlsajmfbw .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#tlqnoqlffv .gt_column_spanner_outer:last-child {
+#hdlsajmfbw .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#tlqnoqlffv .gt_column_spanner {
+#hdlsajmfbw .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -900,7 +911,7 @@
   width: 100%;
 }
 
-#tlqnoqlffv .gt_group_heading {
+#hdlsajmfbw .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -923,9 +934,10 @@
   border-right-width: 1px;
   border-right-color: #D3D3D3;
   vertical-align: middle;
+  text-align: left;
 }
 
-#tlqnoqlffv .gt_empty_group_heading {
+#hdlsajmfbw .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -940,15 +952,15 @@
   vertical-align: middle;
 }
 
-#tlqnoqlffv .gt_from_md > :first-child {
+#hdlsajmfbw .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#tlqnoqlffv .gt_from_md > :last-child {
+#hdlsajmfbw .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#tlqnoqlffv .gt_row {
+#hdlsajmfbw .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -967,7 +979,7 @@
   overflow-x: hidden;
 }
 
-#tlqnoqlffv .gt_stub {
+#hdlsajmfbw .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -980,7 +992,7 @@
   padding-right: 5px;
 }
 
-#tlqnoqlffv .gt_stub_row_group {
+#hdlsajmfbw .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -994,11 +1006,11 @@
   vertical-align: top;
 }
 
-#tlqnoqlffv .gt_row_group_first td {
+#hdlsajmfbw .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#tlqnoqlffv .gt_summary_row {
+#hdlsajmfbw .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1008,16 +1020,16 @@
   padding-right: 5px;
 }
 
-#tlqnoqlffv .gt_first_summary_row {
+#hdlsajmfbw .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#tlqnoqlffv .gt_first_summary_row.thick {
+#hdlsajmfbw .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#tlqnoqlffv .gt_last_summary_row {
+#hdlsajmfbw .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1027,7 +1039,7 @@
   border-bottom-color: #D3D3D3;
 }
 
-#tlqnoqlffv .gt_grand_summary_row {
+#hdlsajmfbw .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1037,7 +1049,7 @@
   padding-right: 5px;
 }
 
-#tlqnoqlffv .gt_first_grand_summary_row {
+#hdlsajmfbw .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1047,11 +1059,11 @@
   border-top-color: #D3D3D3;
 }
 
-#tlqnoqlffv .gt_striped {
+#hdlsajmfbw .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#tlqnoqlffv .gt_table_body {
+#hdlsajmfbw .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1060,7 +1072,7 @@
   border-bottom-color: #D3D3D3;
 }
 
-#tlqnoqlffv .gt_footnotes {
+#hdlsajmfbw .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1074,7 +1086,7 @@
   border-right-color: #D3D3D3;
 }
 
-#tlqnoqlffv .gt_footnote {
+#hdlsajmfbw .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -1083,7 +1095,7 @@
   padding-right: 5px;
 }
 
-#tlqnoqlffv .gt_sourcenotes {
+#hdlsajmfbw .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1097,7 +1109,7 @@
   border-right-color: #D3D3D3;
 }
 
-#tlqnoqlffv .gt_sourcenote {
+#hdlsajmfbw .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1105,118 +1117,118 @@
   padding-right: 5px;
 }
 
-#tlqnoqlffv .gt_left {
+#hdlsajmfbw .gt_left {
   text-align: left;
 }
 
-#tlqnoqlffv .gt_center {
+#hdlsajmfbw .gt_center {
   text-align: center;
 }
 
-#tlqnoqlffv .gt_right {
+#hdlsajmfbw .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#tlqnoqlffv .gt_font_normal {
+#hdlsajmfbw .gt_font_normal {
   font-weight: normal;
 }
 
-#tlqnoqlffv .gt_font_bold {
+#hdlsajmfbw .gt_font_bold {
   font-weight: bold;
 }
 
-#tlqnoqlffv .gt_font_italic {
+#hdlsajmfbw .gt_font_italic {
   font-style: italic;
 }
 
-#tlqnoqlffv .gt_super {
+#hdlsajmfbw .gt_super {
   font-size: 65%;
 }
 
-#tlqnoqlffv .gt_footnote_marks {
+#hdlsajmfbw .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-#tlqnoqlffv .gt_asterisk {
+#hdlsajmfbw .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#tlqnoqlffv .gt_indent_1 {
+#hdlsajmfbw .gt_indent_1 {
   text-indent: 5px;
 }
 
-#tlqnoqlffv .gt_indent_2 {
+#hdlsajmfbw .gt_indent_2 {
   text-indent: 10px;
 }
 
-#tlqnoqlffv .gt_indent_3 {
+#hdlsajmfbw .gt_indent_3 {
   text-indent: 15px;
 }
 
-#tlqnoqlffv .gt_indent_4 {
+#hdlsajmfbw .gt_indent_4 {
   text-indent: 20px;
 }
 
-#tlqnoqlffv .gt_indent_5 {
+#hdlsajmfbw .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
 <table class="table gt_table">
 <thead class="gt_col_headings"><tr>
-<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>Beta</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Characteristic&lt;/strong&gt;"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Beta&lt;/strong&gt;"><strong>Beta</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id='&lt;strong&gt;95% CI&lt;/strong&gt;&lt;sup class="gt_footnote_marks"&gt;1&lt;/sup&gt;'>
 <strong>95% CI</strong><sup class="gt_footnote_marks">1</sup>
 </th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>p-value</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;p-value&lt;/strong&gt;"><strong>p-value</strong></th>
     </tr></thead>
 <tbody class="gt_table_body">
 <tr>
-<td class="gt_row gt_left">Yogurt's brand</td>
-<td class="gt_row gt_center"></td>
-<td class="gt_row gt_center"></td>
-<td class="gt_row gt_center"></td>
+<td headers="label" class="gt_row gt_left">Yogurt's brand</td>
+<td headers="estimate" class="gt_row gt_center"></td>
+<td headers="ci" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center"></td>
 </tr>
 <tr>
-<td class="gt_row gt_left">    dannon</td>
-<td class="gt_row gt_center">—</td>
-<td class="gt_row gt_center">—</td>
-<td class="gt_row gt_center"></td>
+<td headers="label" class="gt_row gt_left">    dannon</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"></td>
 </tr>
 <tr>
-<td class="gt_row gt_left">    hiland</td>
-<td class="gt_row gt_center">-3.7</td>
-<td class="gt_row gt_center">-4.0, -3.4</td>
-<td class="gt_row gt_center">&lt;0.001</td>
+<td headers="label" class="gt_row gt_left">    hiland</td>
+<td headers="estimate" class="gt_row gt_center">-3.7</td>
+<td headers="ci" class="gt_row gt_center">-4.0, -3.4</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td class="gt_row gt_left">    weight</td>
-<td class="gt_row gt_center">-0.64</td>
-<td class="gt_row gt_center">-0.75, -0.53</td>
-<td class="gt_row gt_center">&lt;0.001</td>
+<td headers="label" class="gt_row gt_left">    weight</td>
+<td headers="estimate" class="gt_row gt_center">-0.64</td>
+<td headers="ci" class="gt_row gt_center">-0.75, -0.53</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td class="gt_row gt_left">    yoplait</td>
-<td class="gt_row gt_center">0.73</td>
-<td class="gt_row gt_center">0.58, 0.90</td>
-<td class="gt_row gt_center">&lt;0.001</td>
+<td headers="label" class="gt_row gt_left">    yoplait</td>
+<td headers="estimate" class="gt_row gt_center">0.73</td>
+<td headers="ci" class="gt_row gt_center">0.58, 0.89</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td class="gt_row gt_left">Newspaper ad shown?</td>
-<td class="gt_row gt_center">0.49</td>
-<td class="gt_row gt_center">0.26, 0.72</td>
-<td class="gt_row gt_center">&lt;0.001</td>
+<td headers="label" class="gt_row gt_left">Newspaper ad shown?</td>
+<td headers="estimate" class="gt_row gt_center">0.49</td>
+<td headers="ci" class="gt_row gt_center">0.25, 0.72</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td class="gt_row gt_left">price</td>
-<td class="gt_row gt_center">-0.37</td>
-<td class="gt_row gt_center">-0.41, -0.32</td>
-<td class="gt_row gt_center">&lt;0.001</td>
+<td headers="label" class="gt_row gt_left">price</td>
+<td headers="estimate" class="gt_row gt_center">-0.37</td>
+<td headers="ci" class="gt_row gt_center">-0.41, -0.32</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 </tbody>
 <tfoot class="gt_footnotes"><tr>
@@ -1256,12 +1268,12 @@
 <span>  tbls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">t1</span>, <span class="va">t2</span><span class="op">)</span>,</span>
 <span>  tab_spanner <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"**Baseline**"</span>, <span class="st">"**Interaction**"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div id="ujjxyhwrqb" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="qgoqfgtpyt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#ujjxyhwrqb .gt_table {
+#qgoqfgtpyt .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1286,7 +1298,7 @@
   border-left-color: #D3D3D3;
 }
 
-#ujjxyhwrqb .gt_heading {
+#qgoqfgtpyt .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1298,7 +1310,12 @@
   border-right-color: #D3D3D3;
 }
 
-#ujjxyhwrqb .gt_title {
+#qgoqfgtpyt .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#qgoqfgtpyt .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1310,7 +1327,7 @@
   border-bottom-width: 0;
 }
 
-#ujjxyhwrqb .gt_subtitle {
+#qgoqfgtpyt .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1322,13 +1339,13 @@
   border-top-width: 0;
 }
 
-#ujjxyhwrqb .gt_bottom_border {
+#qgoqfgtpyt .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ujjxyhwrqb .gt_col_headings {
+#qgoqfgtpyt .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1343,7 +1360,7 @@
   border-right-color: #D3D3D3;
 }
 
-#ujjxyhwrqb .gt_col_heading {
+#qgoqfgtpyt .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1363,7 +1380,7 @@
   overflow-x: hidden;
 }
 
-#ujjxyhwrqb .gt_column_spanner_outer {
+#qgoqfgtpyt .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1375,15 +1392,15 @@
   padding-right: 4px;
 }
 
-#ujjxyhwrqb .gt_column_spanner_outer:first-child {
+#qgoqfgtpyt .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ujjxyhwrqb .gt_column_spanner_outer:last-child {
+#qgoqfgtpyt .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ujjxyhwrqb .gt_column_spanner {
+#qgoqfgtpyt .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1395,7 +1412,7 @@
   width: 100%;
 }
 
-#ujjxyhwrqb .gt_group_heading {
+#qgoqfgtpyt .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1418,9 +1435,10 @@
   border-right-width: 1px;
   border-right-color: #D3D3D3;
   vertical-align: middle;
+  text-align: left;
 }
 
-#ujjxyhwrqb .gt_empty_group_heading {
+#qgoqfgtpyt .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1435,15 +1453,15 @@
   vertical-align: middle;
 }
 
-#ujjxyhwrqb .gt_from_md > :first-child {
+#qgoqfgtpyt .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ujjxyhwrqb .gt_from_md > :last-child {
+#qgoqfgtpyt .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ujjxyhwrqb .gt_row {
+#qgoqfgtpyt .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1462,7 +1480,7 @@
   overflow-x: hidden;
 }
 
-#ujjxyhwrqb .gt_stub {
+#qgoqfgtpyt .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1475,7 +1493,7 @@
   padding-right: 5px;
 }
 
-#ujjxyhwrqb .gt_stub_row_group {
+#qgoqfgtpyt .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1489,11 +1507,11 @@
   vertical-align: top;
 }
 
-#ujjxyhwrqb .gt_row_group_first td {
+#qgoqfgtpyt .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ujjxyhwrqb .gt_summary_row {
+#qgoqfgtpyt .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1503,16 +1521,16 @@
   padding-right: 5px;
 }
 
-#ujjxyhwrqb .gt_first_summary_row {
+#qgoqfgtpyt .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ujjxyhwrqb .gt_first_summary_row.thick {
+#qgoqfgtpyt .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ujjxyhwrqb .gt_last_summary_row {
+#qgoqfgtpyt .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1522,7 +1540,7 @@
   border-bottom-color: #D3D3D3;
 }
 
-#ujjxyhwrqb .gt_grand_summary_row {
+#qgoqfgtpyt .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1532,7 +1550,7 @@
   padding-right: 5px;
 }
 
-#ujjxyhwrqb .gt_first_grand_summary_row {
+#qgoqfgtpyt .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1542,11 +1560,11 @@
   border-top-color: #D3D3D3;
 }
 
-#ujjxyhwrqb .gt_striped {
+#qgoqfgtpyt .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ujjxyhwrqb .gt_table_body {
+#qgoqfgtpyt .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1555,7 +1573,7 @@
   border-bottom-color: #D3D3D3;
 }
 
-#ujjxyhwrqb .gt_footnotes {
+#qgoqfgtpyt .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1569,7 +1587,7 @@
   border-right-color: #D3D3D3;
 }
 
-#ujjxyhwrqb .gt_footnote {
+#qgoqfgtpyt .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -1578,7 +1596,7 @@
   padding-right: 5px;
 }
 
-#ujjxyhwrqb .gt_sourcenotes {
+#qgoqfgtpyt .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1592,7 +1610,7 @@
   border-right-color: #D3D3D3;
 }
 
-#ujjxyhwrqb .gt_sourcenote {
+#qgoqfgtpyt .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1600,163 +1618,163 @@
   padding-right: 5px;
 }
 
-#ujjxyhwrqb .gt_left {
+#qgoqfgtpyt .gt_left {
   text-align: left;
 }
 
-#ujjxyhwrqb .gt_center {
+#qgoqfgtpyt .gt_center {
   text-align: center;
 }
 
-#ujjxyhwrqb .gt_right {
+#qgoqfgtpyt .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ujjxyhwrqb .gt_font_normal {
+#qgoqfgtpyt .gt_font_normal {
   font-weight: normal;
 }
 
-#ujjxyhwrqb .gt_font_bold {
+#qgoqfgtpyt .gt_font_bold {
   font-weight: bold;
 }
 
-#ujjxyhwrqb .gt_font_italic {
+#qgoqfgtpyt .gt_font_italic {
   font-style: italic;
 }
 
-#ujjxyhwrqb .gt_super {
+#qgoqfgtpyt .gt_super {
   font-size: 65%;
 }
 
-#ujjxyhwrqb .gt_footnote_marks {
+#qgoqfgtpyt .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-#ujjxyhwrqb .gt_asterisk {
+#qgoqfgtpyt .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ujjxyhwrqb .gt_indent_1 {
+#qgoqfgtpyt .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ujjxyhwrqb .gt_indent_2 {
+#qgoqfgtpyt .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ujjxyhwrqb .gt_indent_3 {
+#qgoqfgtpyt .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ujjxyhwrqb .gt_indent_4 {
+#qgoqfgtpyt .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ujjxyhwrqb .gt_indent_5 {
+#qgoqfgtpyt .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
 <table class="table gt_table">
 <thead class="gt_col_headings">
 <tr>
-<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" scope="col"><strong>Characteristic</strong></th>
-      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" scope="col" id="&lt;strong&gt;Characteristic&lt;/strong&gt;"><strong>Characteristic</strong></th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="&lt;strong&gt;Baseline&lt;/strong&gt;">
         <span class="gt_column_spanner"><strong>Baseline</strong></span>
       </th>
-      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup">
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="&lt;strong&gt;Interaction&lt;/strong&gt;">
         <span class="gt_column_spanner"><strong>Interaction</strong></span>
       </th>
     </tr>
 <tr>
-<th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>Beta</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col">
+<th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Beta&lt;/strong&gt;"><strong>Beta</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id='&lt;strong&gt;95% CI&lt;/strong&gt;&lt;sup class="gt_footnote_marks"&gt;1&lt;/sup&gt;'>
 <strong>95% CI</strong><sup class="gt_footnote_marks">1</sup>
 </th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>p-value</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>Beta</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col">
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;p-value&lt;/strong&gt;"><strong>p-value</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Beta&lt;/strong&gt;"><strong>Beta</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id='&lt;strong&gt;95% CI&lt;/strong&gt;&lt;sup class="gt_footnote_marks"&gt;1&lt;/sup&gt;'>
 <strong>95% CI</strong><sup class="gt_footnote_marks">1</sup>
 </th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>p-value</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;p-value&lt;/strong&gt;"><strong>p-value</strong></th>
     </tr>
 </thead>
 <tbody class="gt_table_body">
 <tr>
-<td class="gt_row gt_left">brand</td>
-<td class="gt_row gt_center"></td>
-<td class="gt_row gt_center"></td>
-<td class="gt_row gt_center"></td>
-<td class="gt_row gt_center"></td>
-<td class="gt_row gt_center"></td>
-<td class="gt_row gt_center"></td>
+<td headers="label" class="gt_row gt_left">brand</td>
+<td headers="estimate_1" class="gt_row gt_center"></td>
+<td headers="ci_1" class="gt_row gt_center"></td>
+<td headers="p.value_1" class="gt_row gt_center"></td>
+<td headers="estimate_2" class="gt_row gt_center"></td>
+<td headers="ci_2" class="gt_row gt_center"></td>
+<td headers="p.value_2" class="gt_row gt_center"></td>
 </tr>
 <tr>
-<td class="gt_row gt_left">    dannon</td>
-<td class="gt_row gt_center">—</td>
-<td class="gt_row gt_center">—</td>
-<td class="gt_row gt_center"></td>
-<td class="gt_row gt_center">—</td>
-<td class="gt_row gt_center">—</td>
-<td class="gt_row gt_center"></td>
+<td headers="label" class="gt_row gt_left">    dannon</td>
+<td headers="estimate_1" class="gt_row gt_center">—</td>
+<td headers="ci_1" class="gt_row gt_center">—</td>
+<td headers="p.value_1" class="gt_row gt_center"></td>
+<td headers="estimate_2" class="gt_row gt_center">—</td>
+<td headers="ci_2" class="gt_row gt_center">—</td>
+<td headers="p.value_2" class="gt_row gt_center"></td>
 </tr>
 <tr>
-<td class="gt_row gt_left">    hiland</td>
-<td class="gt_row gt_center">-3.7</td>
-<td class="gt_row gt_center">-4.0, -3.4</td>
-<td class="gt_row gt_center">&lt;0.001</td>
-<td class="gt_row gt_center">-3.7</td>
-<td class="gt_row gt_center">-4.0, -3.4</td>
-<td class="gt_row gt_center">&lt;0.001</td>
+<td headers="label" class="gt_row gt_left">    hiland</td>
+<td headers="estimate_1" class="gt_row gt_center">-3.7</td>
+<td headers="ci_1" class="gt_row gt_center">-4.0, -3.4</td>
+<td headers="p.value_1" class="gt_row gt_center">&lt;0.001</td>
+<td headers="estimate_2" class="gt_row gt_center">-3.7</td>
+<td headers="ci_2" class="gt_row gt_center">-4.0, -3.4</td>
+<td headers="p.value_2" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td class="gt_row gt_left">    weight</td>
-<td class="gt_row gt_center">-0.64</td>
-<td class="gt_row gt_center">-0.75, -0.53</td>
-<td class="gt_row gt_center">&lt;0.001</td>
-<td class="gt_row gt_center">-0.64</td>
-<td class="gt_row gt_center">-0.75, -0.53</td>
-<td class="gt_row gt_center">&lt;0.001</td>
+<td headers="label" class="gt_row gt_left">    weight</td>
+<td headers="estimate_1" class="gt_row gt_center">-0.64</td>
+<td headers="ci_1" class="gt_row gt_center">-0.75, -0.53</td>
+<td headers="p.value_1" class="gt_row gt_center">&lt;0.001</td>
+<td headers="estimate_2" class="gt_row gt_center">-0.64</td>
+<td headers="ci_2" class="gt_row gt_center">-0.75, -0.53</td>
+<td headers="p.value_2" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td class="gt_row gt_left">    yoplait</td>
-<td class="gt_row gt_center">0.73</td>
-<td class="gt_row gt_center">0.58, 0.89</td>
-<td class="gt_row gt_center">&lt;0.001</td>
-<td class="gt_row gt_center">0.72</td>
-<td class="gt_row gt_center">0.57, 0.89</td>
-<td class="gt_row gt_center">&lt;0.001</td>
+<td headers="label" class="gt_row gt_left">    yoplait</td>
+<td headers="estimate_1" class="gt_row gt_center">0.73</td>
+<td headers="ci_1" class="gt_row gt_center">0.57, 0.89</td>
+<td headers="p.value_1" class="gt_row gt_center">&lt;0.001</td>
+<td headers="estimate_2" class="gt_row gt_center">0.72</td>
+<td headers="ci_2" class="gt_row gt_center">0.57, 0.88</td>
+<td headers="p.value_2" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td class="gt_row gt_left">feat</td>
-<td class="gt_row gt_center">0.49</td>
-<td class="gt_row gt_center">0.25, 0.73</td>
-<td class="gt_row gt_center">&lt;0.001</td>
-<td class="gt_row gt_center">1.2</td>
-<td class="gt_row gt_center">0.41, 1.9</td>
-<td class="gt_row gt_center">0.002</td>
+<td headers="label" class="gt_row gt_left">feat</td>
+<td headers="estimate_1" class="gt_row gt_center">0.49</td>
+<td headers="ci_1" class="gt_row gt_center">0.25, 0.73</td>
+<td headers="p.value_1" class="gt_row gt_center">&lt;0.001</td>
+<td headers="estimate_2" class="gt_row gt_center">1.2</td>
+<td headers="ci_2" class="gt_row gt_center">0.41, 1.9</td>
+<td headers="p.value_2" class="gt_row gt_center">0.002</td>
 </tr>
 <tr>
-<td class="gt_row gt_left">price</td>
-<td class="gt_row gt_center">-0.37</td>
-<td class="gt_row gt_center">-0.41, -0.32</td>
-<td class="gt_row gt_center">&lt;0.001</td>
-<td class="gt_row gt_center">-0.36</td>
-<td class="gt_row gt_center">-0.41, -0.31</td>
-<td class="gt_row gt_center">&lt;0.001</td>
+<td headers="label" class="gt_row gt_left">price</td>
+<td headers="estimate_1" class="gt_row gt_center">-0.37</td>
+<td headers="ci_1" class="gt_row gt_center">-0.41, -0.32</td>
+<td headers="p.value_1" class="gt_row gt_center">&lt;0.001</td>
+<td headers="estimate_2" class="gt_row gt_center">-0.36</td>
+<td headers="ci_2" class="gt_row gt_center">-0.41, -0.31</td>
+<td headers="p.value_2" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td class="gt_row gt_left">price * feat</td>
-<td class="gt_row gt_center"></td>
-<td class="gt_row gt_center"></td>
-<td class="gt_row gt_center"></td>
-<td class="gt_row gt_center">-0.09</td>
-<td class="gt_row gt_center">-0.18, 0.01</td>
-<td class="gt_row gt_center">0.068</td>
+<td headers="label" class="gt_row gt_left">price * feat</td>
+<td headers="estimate_1" class="gt_row gt_center"></td>
+<td headers="ci_1" class="gt_row gt_center"></td>
+<td headers="p.value_1" class="gt_row gt_center"></td>
+<td headers="estimate_2" class="gt_row gt_center">-0.09</td>
+<td headers="ci_2" class="gt_row gt_center">-0.18, 0.01</td>
+<td headers="p.value_2" class="gt_row gt_center">0.068</td>
 </tr>
 </tbody>
 <tfoot class="gt_footnotes"><tr>
@@ -1902,7 +1920,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
