@@ -110,3 +110,17 @@ checkMatrix <- function(x) {
   if (!is.matrix(x)) { return(as.matrix(x)) }
   return(x)
 }
+
+#' Display version number and date when the package is loaded.
+#' @importFrom utils packageDescription
+#' @noRd
+.onAttach <- function(libname, pkgname) {
+  desc  <- utils::packageDescription(pkgname, libname)
+  packageStartupMessage(
+    "Version:  ", desc$Version, "\n",
+    "Author:   ", "John Paul Helveston (George Washington University)", "\n\n",
+    "Consider submitting praise at\n",
+    "https://github.com/jhelvy/logitr/issues/8.\n\n",
+    "Please cite the JSS article in your publications, see:\ncitation(\"logitr\")"
+  )
+}

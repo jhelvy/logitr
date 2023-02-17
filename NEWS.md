@@ -1,5 +1,7 @@
 # logitr (development version)
 
+- Added a startup message when the package is loaded
+
 # logitr 1.0.0
 
 - Added JSS article DOI throughout package documentation.
