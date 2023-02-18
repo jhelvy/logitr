@@ -152,9 +152,9 @@ adjustFactorLevels <- function(object, newdata) {
     for (i in 1:length(factorLevels)) {
       par <- names(factorLevels)[[i]]
       levels_new <- factorLevels[[i]]
-      levels_orig <- levels_orig[[par]]
-      if (! identical(levels_new, levels_orig)) {
-        newdata[[par]] <- factor(newdata[[par]], levels = levels_orig)
+      levels_old <- levels_orig[[par]]
+      if (! identical(levels_new, levels_old)) {
+        newdata[[par]] <- factor(newdata[[par]], levels = levels_old)
       }
     }
   }
