@@ -246,7 +246,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span></span>
 <span><span class="co">#&gt; =================================================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model estimated on: Sat Feb 18 23:23:14 2023 </span></span>
+<span><span class="co">#&gt; Model estimated on: Sun Feb 19 11:41:52 2023 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Using logitr version: 1.0.0.9000 </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -264,7 +264,7 @@
 <span><span class="co">#&gt; Model Space:          Preference</span></span>
 <span><span class="co">#&gt; Model Run:                1 of 1</span></span>
 <span><span class="co">#&gt; Iterations:                   21</span></span>
-<span><span class="co">#&gt; Elapsed Time:        0h:0m:0.09s</span></span>
+<span><span class="co">#&gt; Elapsed Time:        0h:0m:0.04s</span></span>
 <span><span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span></span>
 <span><span class="co">#&gt; Weights Used?:             FALSE</span></span>
 <span><span class="co">#&gt; Robust?                    FALSE</span></span>
@@ -325,11 +325,11 @@
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, scalePar <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span></span>
-<span><span class="co">#&gt; scalePar       0.366555   0.024455  14.9889 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; feat           1.340699   0.359520   3.7291 0.0001921 ***</span></span>
-<span><span class="co">#&gt; brandhiland  -10.136219   0.586855 -17.2721 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandweight   -1.749094   0.182354  -9.5918 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandyoplait   2.003848   0.143672  13.9474 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; scalePar       0.366555   0.024319  15.0729 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; feat           1.340699   0.359979   3.7244 0.0001958 ***</span></span>
+<span><span class="co">#&gt; brandhiland  -10.136219   0.584655 -17.3371 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandweight   -1.749094   0.181095  -9.6584 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandyoplait   2.003848   0.142676  14.0447 &lt; 2.2e-16 ***</span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre></div>
 <p>The <code><a href="../reference/wtp.html">wtp()</a></code> function divides the non-price parameters by the negative of the <code>scalePar</code> parameter (usually “price”). Standard errors are estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. Similarly, the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function can be used to compare the WTP from a WTP space model with that computed from an equivalent preference space model:</p>
@@ -374,14 +374,14 @@
 <span></span>
 <span><span class="va">probs</span></span>
 <span><span class="co">#&gt;     obsID predicted_prob predicted_prob_lower predicted_prob_upper</span></span>
-<span><span class="co">#&gt; 49     13     0.43685145           0.41410902           0.45754177</span></span>
-<span><span class="co">#&gt; 50     13     0.03312986           0.02647330           0.04169756</span></span>
-<span><span class="co">#&gt; 51     13     0.19155548           0.17697204           0.20867239</span></span>
-<span><span class="co">#&gt; 52     13     0.33846321           0.31930115           0.35807787</span></span>
-<span><span class="co">#&gt; 165    42     0.60764778           0.57102066           0.64176879</span></span>
-<span><span class="co">#&gt; 166    42     0.02602007           0.01848697           0.03681179</span></span>
-<span><span class="co">#&gt; 167    42     0.17803313           0.16143262           0.19632684</span></span>
-<span><span class="co">#&gt; 168    42     0.18829902           0.16972782           0.21046615</span></span></code></pre></div>
+<span><span class="co">#&gt; 49     13     0.43685145           0.41573306           0.45676082</span></span>
+<span><span class="co">#&gt; 50     13     0.03312986           0.02627184           0.04149028</span></span>
+<span><span class="co">#&gt; 51     13     0.19155548           0.17560482           0.20781586</span></span>
+<span><span class="co">#&gt; 52     13     0.33846321           0.31838244           0.36000400</span></span>
+<span><span class="co">#&gt; 165    42     0.60764778           0.57267358           0.63998968</span></span>
+<span><span class="co">#&gt; 166    42     0.02602007           0.01890756           0.03653628</span></span>
+<span><span class="co">#&gt; 167    42     0.17803313           0.16157960           0.19419631</span></span>
+<span><span class="co">#&gt; 168    42     0.18829902           0.16920920           0.20955170</span></span></code></pre></div>
 <p>The resulting <code>probs</code> data frame contains the expected probabilities for each alternative. The lower and upper predictions reflect a 95% confidence interval (controlled by the <code>ci</code> argument), which are estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">[@Krinsky1986]</span>. The default is <code>ci = NULL</code>, in which case no CI predictions are made.</p>
 <p>WTP space models can also be used to predict probabilities:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -394,14 +394,14 @@
 <span></span>
 <span><span class="va">probs</span></span>
 <span><span class="co">#&gt;     obsID predicted_prob predicted_prob_lower predicted_prob_upper</span></span>
-<span><span class="co">#&gt; 49     13     0.43686141           0.41499149           0.45733889</span></span>
-<span><span class="co">#&gt; 50     13     0.03312947           0.02717764           0.04182800</span></span>
-<span><span class="co">#&gt; 51     13     0.19154829           0.17631223           0.20844482</span></span>
-<span><span class="co">#&gt; 52     13     0.33846083           0.31829328           0.36020383</span></span>
-<span><span class="co">#&gt; 165    42     0.60767120           0.57256718           0.64028559</span></span>
-<span><span class="co">#&gt; 166    42     0.02601800           0.01814290           0.03657235</span></span>
-<span><span class="co">#&gt; 167    42     0.17802363           0.16189276           0.19452131</span></span>
-<span><span class="co">#&gt; 168    42     0.18828717           0.16762189           0.20959931</span></span></code></pre></div>
+<span><span class="co">#&gt; 49     13     0.43686141           0.41448655           0.45913165</span></span>
+<span><span class="co">#&gt; 50     13     0.03312947           0.02665776           0.04248886</span></span>
+<span><span class="co">#&gt; 51     13     0.19154829           0.17580303           0.20775816</span></span>
+<span><span class="co">#&gt; 52     13     0.33846083           0.31758751           0.35859543</span></span>
+<span><span class="co">#&gt; 165    42     0.60767120           0.57275464           0.64028989</span></span>
+<span><span class="co">#&gt; 166    42     0.02601800           0.01857301           0.03783767</span></span>
+<span><span class="co">#&gt; 167    42     0.17802363           0.16179161           0.19514819</span></span>
+<span><span class="co">#&gt; 168    42     0.18828717           0.16768656           0.20890321</span></span></code></pre></div>
 <p>You can also use the <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> method to predict outcomes by setting <code>type = "outcome"</code> (the default value is <code>"prob"</code> for predicting probabilities). If no new data are provided for <code>newdata</code>, then outcomes will be predicted for every alternative in the original data used to estimate the model. In the example below the <code>returnData</code> argument is also set to <code>TRUE</code> so that the predicted outcomes can be compared to the actual ones.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outcomes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span></span>
@@ -414,8 +414,8 @@
 <span><span class="co">#&gt;   obsID choice predicted_outcome</span></span>
 <span><span class="co">#&gt; 1     1      0                 0</span></span>
 <span><span class="co">#&gt; 2     1      0                 0</span></span>
-<span><span class="co">#&gt; 3     1      1                 0</span></span>
-<span><span class="co">#&gt; 4     1      0                 1</span></span>
+<span><span class="co">#&gt; 3     1      1                 1</span></span>
+<span><span class="co">#&gt; 4     1      0                 0</span></span>
 <span><span class="co">#&gt; 5     2      1                 0</span></span>
 <span><span class="co">#&gt; 6     2      0                 0</span></span></code></pre></div>
 <p>You can quickly compute the accuracy by dividing the number of correctly predicted choices by the total number of choices:</p>
@@ -423,7 +423,7 @@
 <code class="sourceCode R"><span><span class="va">chosen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">outcomes</span>, <span class="va">choice</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">chosen</span><span class="op">$</span><span class="va">correct</span> <span class="op">&lt;-</span> <span class="va">chosen</span><span class="op">$</span><span class="va">choice</span> <span class="op">==</span> <span class="va">chosen</span><span class="op">$</span><span class="va">predicted_outcome</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">chosen</span><span class="op">$</span><span class="va">correct</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">chosen</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.3830846</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.3884743</span></span></code></pre></div>
 <p>See the <a href="predict.html">“Predicting Probabilities and Choices from Estimated Models”</a> vignette for more details about making predictions.</p>
 </div>
   </div>
