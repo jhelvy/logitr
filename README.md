@@ -38,6 +38,12 @@ based on the algorithms in Kenneth Train’s book [*Discrete Choice
 Methods with Simulation, 2nd Edition (New York: Cambridge University
 Press, 2009)*](https://eml.berkeley.edu/books/choice2.html).
 
+## Basic Usage
+
+View the [basic
+usage](https://jhelvy.github.io/logitr/articles/basic_usage.html) page
+for details on how to use **logitr** to estimate models.
+
 ## JSS Article
 
 An associated paper in the *Journal of Statistical Software* about this
@@ -65,12 +71,6 @@ Load the library with:
 library(logitr)
 ```
 
-## Basic Usage
-
-View the [basic
-usage](https://jhelvy.github.io/logitr/articles/basic_usage.html) page
-for details on how to use **logitr** to estimate models.
-
 ## Author, Version, and License Information
 
 - Author: *John Paul Helveston* <https://www.jhelvy.com/>
@@ -89,11 +89,11 @@ citation("logitr")
 #> 
 #> To cite logitr in publications use:
 #> 
-#> Helveston JP (2023). "logitr: Fast Estimation of Multinomial and Mixed
-#> Logit Models with Preference Space and Willingness-to-Pay Space Utility
-#> Parameterizations." _Journal of Statistical Software_, *105*(10), 1-37.
-#> doi: 10.18637/jss.v105.i10 (URL:
-#> https://doi.org/10.18637/jss.v105.i10).
+#>   Helveston JP (2023). "logitr: Fast Estimation of Multinomial and
+#>   Mixed Logit Models with Preference Space and Willingness-to-Pay Space
+#>   Utility Parameterizations." _Journal of Statistical Software_,
+#>   *105*(10), 1-37. doi:10.18637/jss.v105.i10
+#>   <https://doi.org/10.18637/jss.v105.i10>.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
