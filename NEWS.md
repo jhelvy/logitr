@@ -1,7 +1,10 @@
 # logitr (development version)
 
-- Added a startup message when the package is loaded
-- Fixed bug in adjustFactorLevels where the levels_orig object was being accidentally overwritten
+# logitr 1.0.1
+
+- Fixed bug in `adjustFactorLevels()` where the `levels_orig` object was being accidentally overwritten.
+- Changed the name of `adjustFactorLevels()` to `checkFactorLevels()`.
+- Added a startup message when the package is loaded.
 
 # logitr 1.0.0
 
