@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.0</span>
       </span>
     </div>
 
@@ -216,29 +216,32 @@ dataset:</p>
 <span><span class="co">#&gt; 166    42     0.02602007</span></span>
 <span><span class="co">#&gt; 167    42     0.17803313</span></span>
 <span><span class="co">#&gt; 168    42     0.18829902</span></span></code></pre></div>
-<p>The <code>ci</code> argument can be used to obtain upper and lower
-bounds of a confidence interval for predicted probabilities, which are
-estimated using the Krinsky and Robb parametric bootstrapping method
-<span class="citation">(Krinsky and Robb 1986)</span>. For example, a
-95% CI is obtained with <code>ci = 0.95</code>:</p>
+<p>Upper and lower bounds of a confidence interval for predicted
+probabilities can be obtained by setting
+<code>interval = "confidence"</code>, and the tolerance level (0 to 1)
+is set with the <code>level</code> argument (defaults to 0.95).
+Intervals are estimated using the Krinsky and Robb parametric
+bootstrapping method <span class="citation">(Krinsky and Robb
+1986)</span>. For example, a 95% CI is obtained with the following:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">probs_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span></span>
 <span>  <span class="va">mnl_pref</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="va">data</span>,</span>
 <span>  obsID <span class="op">=</span> <span class="st">"obsID"</span>,</span>
-<span>  ci <span class="op">=</span> <span class="fl">0.95</span></span>
+<span>  interval <span class="op">=</span> <span class="st">"confidence"</span>,</span>
+<span>  level <span class="op">=</span> <span class="fl">0.95</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">probs_mnl_pref</span></span>
 <span><span class="co">#&gt;     obsID predicted_prob predicted_prob_lower predicted_prob_upper</span></span>
-<span><span class="co">#&gt; 49     13     0.43685145           0.41490293           0.45807457</span></span>
-<span><span class="co">#&gt; 50     13     0.03312986           0.02605820           0.04220765</span></span>
-<span><span class="co">#&gt; 51     13     0.19155548           0.17660037           0.20716517</span></span>
-<span><span class="co">#&gt; 52     13     0.33846321           0.31736913           0.35773877</span></span>
-<span><span class="co">#&gt; 165    42     0.60764778           0.57204770           0.64057358</span></span>
-<span><span class="co">#&gt; 166    42     0.02602007           0.01872655           0.03732723</span></span>
-<span><span class="co">#&gt; 167    42     0.17803313           0.16220968           0.19451696</span></span>
-<span><span class="co">#&gt; 168    42     0.18829902           0.16778560           0.20931234</span></span></code></pre></div>
+<span><span class="co">#&gt; 49     13     0.43685145           0.41531882           0.45781528</span></span>
+<span><span class="co">#&gt; 50     13     0.03312986           0.02641062           0.04145166</span></span>
+<span><span class="co">#&gt; 51     13     0.19155548           0.17631579           0.20767134</span></span>
+<span><span class="co">#&gt; 52     13     0.33846321           0.31843584           0.35880858</span></span>
+<span><span class="co">#&gt; 165    42     0.60764778           0.57215830           0.64005061</span></span>
+<span><span class="co">#&gt; 166    42     0.02602007           0.01839510           0.03687359</span></span>
+<span><span class="co">#&gt; 167    42     0.17803313           0.16214868           0.19488167</span></span>
+<span><span class="co">#&gt; 168    42     0.18829902           0.16837249           0.20967085</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="wtp-space-models">WTP space models<a class="anchor" aria-label="anchor" href="#wtp-space-models"></a>
@@ -259,21 +262,21 @@ previous examples:</p>
 <span></span>
 <span><span class="va">probs_mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span></span>
 <span>  <span class="va">mnl_wtp</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="va">data</span>,</span>
-<span>  obsID   <span class="op">=</span> <span class="st">"obsID"</span>,</span>
-<span>  ci      <span class="op">=</span> <span class="fl">0.95</span></span>
+<span>  newdata  <span class="op">=</span> <span class="va">data</span>,</span>
+<span>  obsID    <span class="op">=</span> <span class="st">"obsID"</span>,</span>
+<span>  interval <span class="op">=</span> <span class="st">"confidence"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">probs_mnl_wtp</span></span>
 <span><span class="co">#&gt;     obsID predicted_prob predicted_prob_lower predicted_prob_upper</span></span>
-<span><span class="co">#&gt; 49     13     0.43686141           0.41626125           0.45759058</span></span>
-<span><span class="co">#&gt; 50     13     0.03312947           0.02631329           0.04204450</span></span>
-<span><span class="co">#&gt; 51     13     0.19154829           0.17587351           0.20824388</span></span>
-<span><span class="co">#&gt; 52     13     0.33846083           0.31824968           0.35810533</span></span>
-<span><span class="co">#&gt; 165    42     0.60767120           0.57426109           0.63738465</span></span>
-<span><span class="co">#&gt; 166    42     0.02601800           0.01817677           0.03564045</span></span>
-<span><span class="co">#&gt; 167    42     0.17802363           0.16251472           0.19536331</span></span>
-<span><span class="co">#&gt; 168    42     0.18828717           0.16746411           0.20889147</span></span></code></pre></div>
+<span><span class="co">#&gt; 49     13     0.43686141           0.41551327           0.45747039</span></span>
+<span><span class="co">#&gt; 50     13     0.03312947           0.02641714           0.04231684</span></span>
+<span><span class="co">#&gt; 51     13     0.19154829           0.17587927           0.20730602</span></span>
+<span><span class="co">#&gt; 52     13     0.33846083           0.31857077           0.35854611</span></span>
+<span><span class="co">#&gt; 165    42     0.60767120           0.57326014           0.63983775</span></span>
+<span><span class="co">#&gt; 166    42     0.02601800           0.01853595           0.03664343</span></span>
+<span><span class="co">#&gt; 167    42     0.17802363           0.16178241           0.19419803</span></span>
+<span><span class="co">#&gt; 168    42     0.18828717           0.16779265           0.20839887</span></span></code></pre></div>
 <p>Here is a bar chart comparing the predicted probabilities from the
 preference space and WTP space models. Since both models are equivalent
 except in different spaces, the predicted probabilities are
@@ -315,11 +318,11 @@ can be compared to the actual choices made:</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">outcomes_pref</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   obsID predicted_outcome price feat brandhiland brandweight brandyoplait</span></span>
-<span><span class="co">#&gt; 1     1                 1   8.1    0           0           0            0</span></span>
+<span><span class="co">#&gt; 1     1                 0   8.1    0           0           0            0</span></span>
 <span><span class="co">#&gt; 2     1                 0   6.1    0           1           0            0</span></span>
-<span><span class="co">#&gt; 3     1                 0   7.9    0           0           1            0</span></span>
+<span><span class="co">#&gt; 3     1                 1   7.9    0           0           1            0</span></span>
 <span><span class="co">#&gt; 4     1                 0  10.8    0           0           0            1</span></span>
-<span><span class="co">#&gt; 5     2                 0   9.8    0           0           0            0</span></span>
+<span><span class="co">#&gt; 5     2                 1   9.8    0           0           0            0</span></span>
 <span><span class="co">#&gt; 6     2                 0   6.4    0           1           0            0</span></span>
 <span><span class="co">#&gt;   choice</span></span>
 <span><span class="co">#&gt; 1      0</span></span>
@@ -357,13 +360,13 @@ correctly predicted choices by the total number of choices:</p>
 <span><span class="va">chosen_pref</span><span class="op">$</span><span class="va">correct</span> <span class="op">&lt;-</span> <span class="va">chosen_pref</span><span class="op">$</span><span class="va">choice</span> <span class="op">==</span> <span class="va">chosen_pref</span><span class="op">$</span><span class="va">predicted_outcome</span></span>
 <span><span class="va">accuracy_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">chosen_pref</span><span class="op">$</span><span class="va">correct</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">chosen_pref</span><span class="op">)</span></span>
 <span><span class="va">accuracy_pref</span></span>
-<span><span class="co">#&gt; [1] 0.3888889</span></span>
+<span><span class="co">#&gt; [1] 0.3909619</span></span>
 <span></span>
 <span><span class="va">chosen_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">outcomes_wtp</span>, <span class="va">choice</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">chosen_wtp</span><span class="op">$</span><span class="va">correct</span> <span class="op">&lt;-</span> <span class="va">chosen_wtp</span><span class="op">$</span><span class="va">choice</span> <span class="op">==</span> <span class="va">chosen_wtp</span><span class="op">$</span><span class="va">predicted_outcome</span></span>
 <span><span class="va">accuracy_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">chosen_wtp</span><span class="op">$</span><span class="va">correct</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">chosen_wtp</span><span class="op">)</span></span>
 <span><span class="va">accuracy_wtp</span></span>
-<span><span class="co">#&gt; [1] 0.3909619</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.356136</span></span></code></pre></div>
 <p>These results show that both models correctly predicted choice for
 approximately 39% of the observations in the <code>yogurt</code> data
 frame, which is significantly better than random (25%).</p>

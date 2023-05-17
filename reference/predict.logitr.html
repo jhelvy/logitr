@@ -19,7 +19,7 @@ of a single or multiple sets of alternatives."><meta property="og:image" content
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.0</span>
       </span>
     </div>
 
@@ -110,8 +110,14 @@ of a single or multiple sets of alternatives.</p>
 <span>  obsID <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"prob"</span>,</span>
 <span>  returnData <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  ci <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  numDrawsCI <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="fl">3</span>,</span>
+<span>  interval <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  level <span class="op">=</span> <span class="fl">0.95</span>,</span>
+<span>  numDrawsCI <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="fl">4</span>,</span>
+<span>  pars <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  scalePar <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  randPars <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  randScale <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">ci</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -149,16 +155,48 @@ predicted values ("prob" and / or  "outcome") are returned.
 Defaults to <code>FALSE</code>.</p></dd>
 
 
-<dt>ci</dt>
-<dd><p>If a confidence interval (CI) for the predicted probabilities is
-desired, set <code>ci</code> to a number between 0 and 1 to define the CI sensitivity.
-For example, <code>ci = 0.95</code> will return a 95% CI. Defaults to <code>NULL</code>, in which
-case no CI is computed.</p></dd>
+<dt>interval</dt>
+<dd><p>Type of interval calculation: "none" (default) or
+"confidence". Future versions will include "prediction" intervals as well.</p></dd>
+
+
+<dt>level</dt>
+<dd><p>Tolerance / confidence interval. Defaults to 0.95.</p></dd>
 
 
 <dt>numDrawsCI</dt>
 <dd><p>The number of draws to use in simulating uncertainty
-for the computed CI. Defaults to 10^3.</p></dd>
+for the computed CI. Defaults to 10^4.</p></dd>
+
+
+<dt>pars</dt>
+<dd><p>The names of the parameters to be estimated in the model.
+Must be the same as the column names in the <code>data</code> argument. For WTP space
+models, do not include the <code>scalePar</code> variable in <code>pars</code>.</p></dd>
+
+
+<dt>scalePar</dt>
+<dd><p>The name of the column that identifies the scale variable,
+which is typically "price" for WTP space models, but could be any
+continuous variable, such as "time". Defaults to <code>NULL</code>.</p></dd>
+
+
+<dt>randPars</dt>
+<dd><p>A named vector whose names are the random parameters and
+values the distribution: <code>'n'</code> for normal, <code>'ln'</code> for log-normal, or
+<code>'cn'</code> for zero-censored normal. Defaults to <code>NULL</code>.</p></dd>
+
+
+<dt>randScale</dt>
+<dd><p>The random distribution for the scale parameter: <code>'n'</code> for
+normal, <code>'ln'</code> for log-normal, or <code>'cn'</code> for zero-censored normal. Only used
+for WTP space MXL models. Defaults to <code>NULL</code>.</p></dd>
+
+
+<dt>ci</dt>
+<dd><p>No longer used as of v1.1.0 - if provided, this is passed
+to the <code>level</code> argument, <code>interval</code> is set to <code>"confidence"</code>,
+and a warning is displayed.</p></dd>
 
 
 <dt>...</dt>
@@ -229,16 +267,34 @@ for the computed CI. Defaults to 10^3.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7    42     0.17803313</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8    42     0.18829902</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Predict probabilities and include a 95% confidence interval</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">mnl_pref</span>,</span></span>
+<span class="r-in"><span>  newdata <span class="op">=</span> <span class="va">data</span>,</span></span>
+<span class="r-in"><span>  obsID <span class="op">=</span> <span class="st">"obsID"</span>,</span></span>
+<span class="r-in"><span>  interval <span class="op">=</span> <span class="st">"confidence"</span>,</span></span>
+<span class="r-in"><span>  level <span class="op">=</span> <span class="fl">0.95</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   obsID predicted_prob predicted_prob_lower predicted_prob_upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    13     0.43685145           0.41598072           0.45816232</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    13     0.03312986           0.02630597           0.04156102</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    13     0.19155548           0.17613333           0.20762724</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    13     0.33846321           0.31859962           0.35847547</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42     0.60764778           0.57384742           0.63996450</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    42     0.02602007           0.01826759           0.03654384</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42     0.17803313           0.16196085           0.19463527</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    42     0.18829902           0.16826980           0.20930494</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Predict outcomes</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, newdata <span class="op">=</span> <span class="va">data</span>, obsID <span class="op">=</span> <span class="st">"obsID"</span>, type <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   obsID predicted_outcome</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    13                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    13                 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    13                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    13                 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    13                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    13                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42                 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    42                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42                 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8    42                 0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Predict outcomes and probabilities</span></span></span>
@@ -248,9 +304,9 @@ for the computed CI. Defaults to 10^3.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    13     0.03312986                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    13     0.19155548                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    13     0.33846321                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42     0.60764778                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42     0.60764778                 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    42     0.02602007                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42     0.17803313                 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42     0.17803313                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8    42     0.18829902                 0</span>
 </code></pre></div>
     </div>
