@@ -122,7 +122,7 @@
 
       
 
-      </header><script src="mxl_models_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Estimating Mixed Logit Models</h1>
@@ -135,11 +135,22 @@
 
     
     
-<p>This vignette demonstrates an example of how to use the <code><a href="../reference/logitr.html">logitr()</a></code> function to estimate mixed logit (MXL) models with preference space and WTP space utility parameterizations.</p>
+<p>This vignette demonstrates an example of how to use the
+<code><a href="../reference/logitr.html">logitr()</a></code> function to estimate mixed logit (MXL) models with
+preference space and WTP space utility parameterizations.</p>
 <div class="section level2">
 <h2 id="supported-distributions">Supported distributions<a class="anchor" aria-label="anchor" href="#supported-distributions"></a>
 </h2>
-<p>The mixed logit model is a popular approach for modeling unobserved heterogeneity across individuals, which is implemented by assuming that parameters vary randomly across individuals according to a chosen distribution <span class="citation">(McFadden and Train 2000)</span>. A mixed logit model is specified by setting the <code>randPars</code> argument in the <code><a href="../reference/logitr.html">logitr()</a></code> function equal to a named vector defining parameter distributions. In the example below, we set <code>randPars = c(feat = 'n', brand = 'n')</code> so that <code>feat</code> and <code>brand</code> are normally distributed. The current package version supports the following distributions:</p>
+<p>The mixed logit model is a popular approach for modeling unobserved
+heterogeneity across individuals, which is implemented by assuming that
+parameters vary randomly across individuals according to a chosen
+distribution <span class="citation">(McFadden and Train 2000)</span>. A
+mixed logit model is specified by setting the <code>randPars</code>
+argument in the <code><a href="../reference/logitr.html">logitr()</a></code> function equal to a named vector
+defining parameter distributions. In the example below, we set
+<code>randPars = c(feat = 'n', brand = 'n')</code> so that
+<code>feat</code> and <code>brand</code> are normally distributed. The
+current package version supports the following distributions:</p>
 <ul>
 <li>Normal: <code>"n"</code>
 </li>
@@ -148,13 +159,32 @@
 <li>Zero-censored normal: <code>"cn"</code>
 </li>
 </ul>
-<p>Mixed logit models will estimate a mean and standard deviation of the underlying normal distribution for each random coefficient. Note that log-normal or zero-censored normal parameters force positivity, so when using these it is often necessary to use the negative of a value (e.g. for “price”, which typically has a negative coefficient). Mixed logit models in <code>logitr</code> assume uncorrelated heterogeneity covariances by default, though full covariances can be estimated using the <code>correlation = TRUE</code> argument. For WTP space models, the <code>scalePar</code> parameter can also be modeled as following a random distribution by setting the <code>randScale</code> argument equal to <code>"n"</code>, <code>"ln"</code>, or <code>"cn"</code>.</p>
+<p>Mixed logit models will estimate a mean and standard deviation of the
+underlying normal distribution for each random coefficient. Note that
+log-normal or zero-censored normal parameters force positivity, so when
+using these it is often necessary to use the negative of a value
+(e.g. for “price”, which typically has a negative coefficient). Mixed
+logit models in <code>logitr</code> assume uncorrelated heterogeneity
+covariances by default, though full covariances can be estimated using
+the <code>correlation = TRUE</code> argument. For WTP space models, the
+<code>scalePar</code> parameter can also be modeled as following a
+random distribution by setting the <code>randScale</code> argument equal
+to <code>"n"</code>, <code>"ln"</code>, or <code>"cn"</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="the-data">The data<a class="anchor" aria-label="anchor" href="#the-data"></a>
 </h2>
-<p>This example uses the <a href="https://jhelvy.github.io/logitr/reference/yogurt.html">yogurt</a> data set from Jain et al. <span class="citation">(1994)</span>. The data set contains 2,412 choice observations from a series of yogurt purchases by a panel of 100 households in Springfield, Missouri, over a roughly two-year period. The data were collected by optical scanners and contain information about the price, brand, and a “feature” variable, which identifies whether a newspaper advertisement was shown to the customer. There are four brands of yogurt: Yoplait, Dannon, Weight Watchers, and Hiland, with market shares of 34%, 40%, 23% and 3%, respectively.</p>
-<p>In the utility models described below, the data variables are represented as follows:</p>
+<p>This example uses the <a href="https://jhelvy.github.io/logitr/reference/yogurt.html">yogurt</a>
+data set from Jain et al. <span class="citation">(1994)</span>. The data
+set contains 2,412 choice observations from a series of yogurt purchases
+by a panel of 100 households in Springfield, Missouri, over a roughly
+two-year period. The data were collected by optical scanners and contain
+information about the price, brand, and a “feature” variable, which
+identifies whether a newspaper advertisement was shown to the customer.
+There are four brands of yogurt: Yoplait, Dannon, Weight Watchers, and
+Hiland, with market shares of 34%, 40%, 23% and 3%, respectively.</p>
+<p>In the utility models described below, the data variables are
+represented as follows:</p>
 <div style="width:550px">
 <table class="table">
 <colgroup>
@@ -172,7 +202,8 @@
 </tr>
 <tr class="even">
 <td><span class="math inline">\(x_{j}^{\mathrm{Feat}}\)</span></td>
-<td>Dummy variable for whether the newspaper advertisement was shown to the customer.</td>
+<td>Dummy variable for whether the newspaper advertisement was shown to
+the customer.</td>
 </tr>
 <tr class="odd">
 <td><span class="math inline">\(x_{j}^{\mathrm{Hiland}}\)</span></td>
@@ -193,7 +224,8 @@
 <div class="section level2">
 <h2 id="preference-space-model">Preference space model<a class="anchor" aria-label="anchor" href="#preference-space-model"></a>
 </h2>
-<p>This example will estimate the following mixed logit model in the preference space:</p>
+<p>This example will estimate the following mixed logit model in the
+preference space:</p>
 <p><span class="math display">\[\begin{equation}
     u_{j} =
         \alpha p_{j} +
@@ -204,9 +236,22 @@
         \varepsilon_{j}
 \label{eq:mnlPrefExample}
 \end{equation}\]</span></p>
-<p>where the parameters <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span>, and <span class="math inline">\(\beta_4\)</span> have units of utility. In the example below, we will model <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span>, and <span class="math inline">\(\beta_4\)</span> as <strong>normally distributed</strong> across the population. As a result, the model will estimate a mean and standard deviation for each of these coefficients.</p>
-<p>Note that since the <code>yogurt</code> data has a panel structure (i.e. multiple choice observations for each respondent), it is necessary to set the <code>panelID</code> argument to the <code>id</code> variable, which identifies the individual. This will use the panel version of the log-likelihood (see <a href="https://eml.berkeley.edu/books/choice2nd/Ch06_p134-150.pdf" class="external-link">Train 2009 chapter 6</a>, section 6.7 for details).</p>
-<p>Finally, as with WTP space models, it is recommended to use a multistart search for mixed logit models as they are non-convex. This is implemented in the example below by setting <code>numMultiStarts = 10</code>:</p>
+<p>where the parameters <span class="math inline">\(\alpha\)</span>,
+<span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span>, and <span class="math inline">\(\beta_4\)</span> have units of utility. In the
+example below, we will model <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span>, and <span class="math inline">\(\beta_4\)</span> as <strong>normally
+distributed</strong> across the population. As a result, the model will
+estimate a mean and standard deviation for each of these
+coefficients.</p>
+<p>Note that since the <code>yogurt</code> data has a panel structure
+(i.e. multiple choice observations for each respondent), it is necessary
+to set the <code>panelID</code> argument to the <code>id</code>
+variable, which identifies the individual. This will use the panel
+version of the log-likelihood (see <a href="https://eml.berkeley.edu/books/choice2nd/Ch06_p134-150.pdf" class="external-link">Train
+2009 chapter 6</a>, section 6.7 for details).</p>
+<p>Finally, as with WTP space models, it is recommended to use a
+multistart search for mixed logit models as they are non-convex. This is
+implemented in the example below by setting
+<code>numMultiStarts = 10</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/jhelvy/logitr" class="external-link">"logitr"</a></span><span class="op">)</span></span>
 <span></span>
@@ -294,28 +339,36 @@
 <span><span class="co">#&gt; brandhiland  -Inf -8.5118797 -6.3663393 -6.3644102 -4.2201174  Inf</span></span>
 <span><span class="co">#&gt; brandweight  -Inf -6.4342648 -3.6720435 -3.6750045 -0.9090452  Inf</span></span>
 <span><span class="co">#&gt; brandyoplait -Inf -1.0817673  1.1169084  1.1141118  3.3162383  Inf</span></span></code></pre></div>
-<p>The above summary table prints summaries of the estimated coefficients as well as a summary table of the distribution of 10,000 population draws for each normally-distributed model coefficient. The results show that the <code>feat</code> attribute has a significant standard deviation coefficient, suggesting that there is considerable heterogeneity across the population for this attribute. In contrast, the <code>brand</code> coefficients have small and insignificant standard deviation coefficients.</p>
+<p>The above summary table prints summaries of the estimated
+coefficients as well as a summary table of the distribution of 10,000
+population draws for each normally-distributed model coefficient. The
+results show that the <code>feat</code> attribute has a significant
+standard deviation coefficient, suggesting that there is considerable
+heterogeneity across the population for this attribute. In contrast, the
+<code>brand</code> coefficients have small and insignificant standard
+deviation coefficients.</p>
 <p>Compute the WTP implied from the preference space model:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wtp_mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mxl_pref</span>, scalePar <span class="op">=</span>  <span class="st">"price"</span><span class="op">)</span></span>
 <span><span class="va">wtp_mxl_pref</span></span>
 <span><span class="co">#&gt;                   Estimate Std. Error  z-value  Pr(&gt;|z|)    </span></span>
-<span><span class="co">#&gt; scalePar          0.448338   0.040047  11.1952 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; feat              1.733046   0.500972   3.4594 0.0005414 ***</span></span>
-<span><span class="co">#&gt; brandhiland     -14.202148   1.391507 -10.2063 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandweight      -8.182853   0.979548  -8.3537 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandyoplait      2.503674   0.412261   6.0730 1.255e-09 ***</span></span>
-<span><span class="co">#&gt; sd_feat           1.265776   0.502807   2.5174 0.0118219 *  </span></span>
-<span><span class="co">#&gt; sd_brandhiland   -7.096979   0.958943  -7.4008 1.352e-13 ***</span></span>
-<span><span class="co">#&gt; sd_brandweight    9.138487   0.950678   9.6126 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; sd_brandyoplait   7.274160   0.772873   9.4118 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; scalePar          0.448338   0.039931  11.2279 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; feat              1.733046   0.502007   3.4522  0.000556 ***</span></span>
+<span><span class="co">#&gt; brandhiland     -14.202148   1.390331 -10.2149 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandweight      -8.182853   0.976305  -8.3815 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandyoplait      2.503674   0.413370   6.0567 1.389e-09 ***</span></span>
+<span><span class="co">#&gt; sd_feat           1.265776   0.502482   2.5190  0.011767 *  </span></span>
+<span><span class="co">#&gt; sd_brandhiland   -7.096979   0.959675  -7.3952 1.412e-13 ***</span></span>
+<span><span class="co">#&gt; sd_brandweight    9.138487   0.947367   9.6462 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; sd_brandyoplait   7.274160   0.772684   9.4142 &lt; 2.2e-16 ***</span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="wtp-space-model">WTP space model<a class="anchor" aria-label="anchor" href="#wtp-space-model"></a>
 </h2>
-<p>This example will estimate the following mixed logit model in the WTP space:</p>
+<p>This example will estimate the following mixed logit model in the WTP
+space:</p>
 <p><span class="math display">\[\begin{equation}
     u_{j} =
         \lambda (
@@ -327,8 +380,17 @@
         \varepsilon_{j}
 \label{eq:mnlWtpExample}
 \end{equation}\]</span></p>
-<p>where the parameters <span class="math inline">\(\omega_1\)</span>, <span class="math inline">\(\omega_2\)</span>, <span class="math inline">\(\omega_3\)</span>, and <span class="math inline">\(\omega_4\)</span> have units of dollars and <span class="math inline">\(\lambda\)</span> is the scale parameter. In the example below, we will model <span class="math inline">\(\omega_1\)</span>, <span class="math inline">\(\omega_2\)</span>, <span class="math inline">\(\omega_3\)</span>, and <span class="math inline">\(\omega_4\)</span> as normally distributed across the population. Note that this is a slightly different assumption than in the preference space model. In the WTP space, we are assuming that the WTP for these features is normally-distributed (as opposed to the preference space model where the utility coefficients are assumed to follow a normal distribution).</p>
-<p>In the example below, we also use a 10-iteration multistart. We also set the starting values for the first iteration to the computed WTP from the preference space model:</p>
+<p>where the parameters <span class="math inline">\(\omega_1\)</span>,
+<span class="math inline">\(\omega_2\)</span>, <span class="math inline">\(\omega_3\)</span>, and <span class="math inline">\(\omega_4\)</span> have units of dollars and <span class="math inline">\(\lambda\)</span> is the scale parameter. In the
+example below, we will model <span class="math inline">\(\omega_1\)</span>, <span class="math inline">\(\omega_2\)</span>, <span class="math inline">\(\omega_3\)</span>, and <span class="math inline">\(\omega_4\)</span> as normally distributed across
+the population. Note that this is a slightly different assumption than
+in the preference space model. In the WTP space, we are assuming that
+the WTP for these features is normally-distributed (as opposed to the
+preference space model where the utility coefficients are assumed to
+follow a normal distribution).</p>
+<p>In the example below, we also use a 10-iteration multistart. We also
+set the starting values for the first iteration to the computed WTP from
+the preference space model:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">6789</span><span class="op">)</span></span>
 <span></span>
@@ -417,7 +479,8 @@
 <span><span class="co">#&gt; brandhiland  -Inf -19.0181753 -14.220848 -14.216535 -9.421997  Inf</span></span>
 <span><span class="co">#&gt; brandweight  -Inf -14.3311392  -8.177179  -8.183776 -2.021488  Inf</span></span>
 <span><span class="co">#&gt; brandyoplait -Inf  -2.4102919   2.490829   2.484594  7.393407  Inf</span></span></code></pre></div>
-<p>If you want to compare the WTP from the two different model spaces, use the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function:</p>
+<p>If you want to compare the WTP from the two different model spaces,
+use the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mxl_pref</span>, <span class="va">mxl_wtp</span>, scalePar <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                          pref           wtp  difference</span></span>
@@ -431,12 +494,20 @@
 <span><span class="co">#&gt; sd_brandweight      9.1384873     9.1280061 -0.01048123</span></span>
 <span><span class="co">#&gt; sd_brandyoplait     7.2741604     7.2697998 -0.00436060</span></span>
 <span><span class="co">#&gt; logLik          -1239.2944250 -1239.2939695  0.00045547</span></span></code></pre></div>
-<p>Note that the WTP will not necessarily be the same between preference space and WTP space MXL models. This is because the distributional assumptions in MXL models imply different distributions on WTP depending on the model space. See Train and Weeks <span class="citation">(2005)</span> and Sonnier, Ainslie, and Otter <span class="citation">(2007)</span> for details on this topic.</p>
+<p>Note that the WTP will not necessarily be the same between preference
+space and WTP space MXL models. This is because the distributional
+assumptions in MXL models imply different distributions on WTP depending
+on the model space. See Train and Weeks <span class="citation">(2005)</span> and Sonnier, Ainslie, and Otter <span class="citation">(2007)</span> for details on this topic.</p>
 </div>
 <div class="section level2">
 <h2 id="correlated-heterogeneity">Correlated heterogeneity<a class="anchor" aria-label="anchor" href="#correlated-heterogeneity"></a>
 </h2>
-<p>By default, <code>logitr</code> assumes that mixed logit models have uncorrelated heterogeneity. However, correlated heterogeneity can be implemented by setting <code>correlation = TRUE</code> for models in either space (preference or WTP). The example below shows the results for the same mixed logit model in the preference space as above but now with correlated heterogeneity:</p>
+<p>By default, <code>logitr</code> assumes that mixed logit models have
+uncorrelated heterogeneity. However, correlated heterogeneity can be
+implemented by setting <code>correlation = TRUE</code> for models in
+either space (preference or WTP). The example below shows the results
+for the same mixed logit model in the preference space as above but now
+with correlated heterogeneity:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/jhelvy/logitr" class="external-link">"logitr"</a></span><span class="op">)</span></span>
 <span></span>
@@ -534,20 +605,28 @@
 <span><span class="co">#&gt; brandyoplait -Inf -0.8804576  2.1037419  2.0999461  5.088829  Inf</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references">
-<div id="ref-Jain1994">
-<p>Jain, Dipak C, Naufel J Vilcassim, and Pradeep K Chintagunta. 1994. “A Random-Coefficients Logit Brand-Choice Model Applied to Panel Data.” <em>Journal of Business &amp; Economic Statistics</em> 12 (3): 317–28.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Jain1994" class="csl-entry">
+Jain, Dipak C, Naufel J Vilcassim, and Pradeep K Chintagunta. 1994.
+<span>“A Random-Coefficients Logit Brand-Choice Model Applied to Panel
+Data.”</span> <em>Journal of Business &amp; Economic Statistics</em> 12
+(3): 317–28.
 </div>
-<div id="ref-McFadden2000">
-<p>McFadden, Daniel, and Kenneth E. Train. 2000. “Mixed MNL models for discrete response.” <em>J. Appl. Econom.</em> 15 (5): 447–70. <a href="https://doi.org/10.1002/1099-1255(200009/10)15:5%3C447::AID-JAE570%3E3.0.CO;2-1" class="external-link">https://doi.org/10.1002/1099-1255(200009/10)15:5&lt;447::AID-JAE570&gt;3.0.CO;2-1</a>.</p>
+<div id="ref-McFadden2000" class="csl-entry">
+McFadden, Daniel, and Kenneth E. Train. 2000. <span>“<span class="nocase">Mixed MNL models for discrete response</span>.”</span>
+<em>J. Appl. Econom.</em> 15 (5): 447–70. <a href="https://doi.org/10.1002/1099-1255(200009/10)15:5&lt;447::AID-JAE570&gt;3.0.CO;2-1" class="external-link">https://doi.org/10.1002/1099-1255(200009/10)15:5&lt;447::AID-JAE570&gt;3.0.CO;2-1</a>.
 </div>
-<div id="ref-Sonnier2007">
-<p>Sonnier, Garrett, Andrew Ainslie, and Thomas Otter. 2007. “Heterogeneity distributions of willingness-to-pay in choice models.” <em>Quant. Mark. Econ.</em> 5 (3): 313–31. <a href="https://doi.org/10.1007/s11129-007-9024-6" class="external-link">https://doi.org/10.1007/s11129-007-9024-6</a>.</p>
+<div id="ref-Sonnier2007" class="csl-entry">
+Sonnier, Garrett, Andrew Ainslie, and Thomas Otter. 2007. <span>“<span class="nocase">Heterogeneity distributions of willingness-to-pay in
+choice models</span>.”</span> <em>Quant. Mark. Econ.</em> 5 (3): 313–31.
+<a href="https://doi.org/10.1007/s11129-007-9024-6" class="external-link">https://doi.org/10.1007/s11129-007-9024-6</a>.
 </div>
-<div id="ref-Train2005">
-<p>Train, Kenneth E., and Melvyn Weeks. 2005. “Discrete Choice Models in Preference and Willingness-to-Pay Space.” In <em>Appl. Simul. Methods Environ. Resour. Econ.</em>, 1–16.</p>
+<div id="ref-Train2005" class="csl-entry">
+Train, Kenneth E., and Melvyn Weeks. 2005. <span>“<span class="nocase">Discrete Choice Models in Preference and
+Willingness-to-Pay Space</span>.”</span> In <em>Appl. Simul. Methods
+Environ. Resour. Econ.</em>, 1–16.
 </div>
 </div>
 </div>

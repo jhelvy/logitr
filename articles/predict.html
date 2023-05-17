@@ -122,10 +122,11 @@
 
       
 
-      </header><script src="predict_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Predicting Probabilities and Outcomes with Estimated Models</h1>
+      <h1 data-toc-skip>Predicting Probabilities and Outcomes with
+Estimated Models</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/jhelvy/logitr/blob/HEAD/vignettes/predict.Rmd" class="external-link"><code>vignettes/predict.Rmd</code></a></small>
@@ -135,16 +136,28 @@
 
     
     
-<p>Once a model has been estimated, it can be used to predict probabilities and / or outcomes for a set of alternatives. This vignette demonstrates examples of how to so using the <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> method along with an estimated model.</p>
-<p>You can make predictions for any set of alternatives, so long as the columns in the alternatives correspond to estimated coefficients in your model. By default, if no new data are provided via the <code>newdata</code> argument, then predictions will be made for the original data used to estimate the model.</p>
-<p>Predictions can be made using both preference space and WTP space models, as well as multinomial logit and mixed logit models. For mixed logit models, heterogeneity is modeled by simulating draws from the population estimates of the estimated model.</p>
+<p>Once a model has been estimated, it can be used to predict
+probabilities and / or outcomes for a set of alternatives. This vignette
+demonstrates examples of how to so using the <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code>
+method along with an estimated model.</p>
+<p>You can make predictions for any set of alternatives, so long as the
+columns in the alternatives correspond to estimated coefficients in your
+model. By default, if no new data are provided via the
+<code>newdata</code> argument, then predictions will be made for the
+original data used to estimate the model.</p>
+<p>Predictions can be made using both preference space and WTP space
+models, as well as multinomial logit and mixed logit models. For mixed
+logit models, heterogeneity is modeled by simulating draws from the
+population estimates of the estimated model.</p>
 <div class="section level2">
 <h2 id="predicting-probabilities">Predicting probabilities<a class="anchor" aria-label="anchor" href="#predicting-probabilities"></a>
 </h2>
 <div class="section level3">
 <h3 id="preference-space-models">Preference space models<a class="anchor" aria-label="anchor" href="#preference-space-models"></a>
 </h3>
-<p>In the example below, a preference space MNL model is estimated (<code>mnl_pref</code>) and then used to predict probabilities for the data used to estimate the model:</p>
+<p>In the example below, a preference space MNL model is estimated
+(<code>mnl_pref</code>) and then used to predict probabilities for the
+data used to estimate the model:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/jhelvy/logitr" class="external-link">"logitr"</a></span><span class="op">)</span></span>
 <span></span>
@@ -164,7 +177,10 @@
 <span><span class="co">#&gt; 4     1     0.32387615</span></span>
 <span><span class="co">#&gt; 5     2     0.26643822</span></span>
 <span><span class="co">#&gt; 6     2     0.02255486</span></span></code></pre></div>
-<p>The <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> method returns a data frame containing the observation ID as well as the predicted probabilities. The original data can also be returned in the data frame by setting <code>returnData = TRUE</code>:</p>
+<p>The <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> method returns a data frame containing the
+observation ID as well as the predicted probabilities. The original data
+can also be returned in the data frame by setting
+<code>returnData = TRUE</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">probs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, returnData <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">probs</span><span class="op">)</span></span>
@@ -175,7 +191,10 @@
 <span><span class="co">#&gt; 4     1     0.32387615  10.8    0           0           0            1      0</span></span>
 <span><span class="co">#&gt; 5     2     0.26643822   9.8    0           0           0            0      1</span></span>
 <span><span class="co">#&gt; 6     2     0.02255486   6.4    0           1           0            0      0</span></span></code></pre></div>
-<p>To make predictions for a new set of alternatives, use the <code>newdata</code> argument. The example below makes predictions for just two of the choice observations from the <code>yogurt</code> dataset:</p>
+<p>To make predictions for a new set of alternatives, use the
+<code>newdata</code> argument. The example below makes predictions for
+just two of the choice observations from the <code>yogurt</code>
+dataset:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span></span>
 <span>  <span class="va">yogurt</span>, <span class="va">obsID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">13</span><span class="op">)</span>,</span>
@@ -197,7 +216,11 @@
 <span><span class="co">#&gt; 166    42     0.02602007</span></span>
 <span><span class="co">#&gt; 167    42     0.17803313</span></span>
 <span><span class="co">#&gt; 168    42     0.18829902</span></span></code></pre></div>
-<p>The <code>ci</code> argument can be used to obtain upper and lower bounds of a confidence interval for predicted probabilities, which are estimated using the Krinsky and Robb parametric bootstrapping method <span class="citation">(Krinsky and Robb 1986)</span>. For example, a 95% CI is obtained with <code>ci = 0.95</code>:</p>
+<p>The <code>ci</code> argument can be used to obtain upper and lower
+bounds of a confidence interval for predicted probabilities, which are
+estimated using the Krinsky and Robb parametric bootstrapping method
+<span class="citation">(Krinsky and Robb 1986)</span>. For example, a
+95% CI is obtained with <code>ci = 0.95</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">probs_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span></span>
 <span>  <span class="va">mnl_pref</span>,</span>
@@ -220,7 +243,10 @@
 <div class="section level3">
 <h3 id="wtp-space-models">WTP space models<a class="anchor" aria-label="anchor" href="#wtp-space-models"></a>
 </h3>
-<p>WTP space models can also be used to predict probabilities. In the example below, a WTP space model is estimated and used to predict probabilities for the same <code>data</code> data frame as in the previous examples:</p>
+<p>WTP space models can also be used to predict probabilities. In the
+example below, a WTP space model is estimated and used to predict
+probabilities for the same <code>data</code> data frame as in the
+previous examples:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span></span>
 <span>  data     <span class="op">=</span> <span class="va">yogurt</span>,</span>
@@ -248,7 +274,10 @@
 <span><span class="co">#&gt; 166    42     0.02601800           0.01817677           0.03564045</span></span>
 <span><span class="co">#&gt; 167    42     0.17802363           0.16251472           0.19536331</span></span>
 <span><span class="co">#&gt; 168    42     0.18828717           0.16746411           0.20889147</span></span></code></pre></div>
-<p>Here is a bar chart comparing the predicted probabilities from the preference space and WTP space models. Since both models are equivalent except in different spaces, the predicted probabilities are identical:</p>
+<p>Here is a bar chart comparing the predicted probabilities from the
+preference space and WTP space models. Since both models are equivalent
+except in different spaces, the predicted probabilities are
+identical:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org" class="external-link">"ggplot2"</a></span><span class="op">)</span></span>
 <span></span>
@@ -270,7 +299,13 @@
 <div class="section level2">
 <h2 id="predicting-outcomes">Predicting outcomes<a class="anchor" aria-label="anchor" href="#predicting-outcomes"></a>
 </h2>
-<p>The <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> method can also be used to predict outcomes by setting <code>type = "outcome"</code> (the default is <code>"prob"</code> for predicting probabilities). In the examples below, outcomes are predicted using the same preference space and WTP space models as in the previous examples. The <code>returnData</code> argument is also set to <code>TRUE</code> so that the predicted outcomes can be compared to the actual choices made:</p>
+<p>The <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> method can also be used to predict
+outcomes by setting <code>type = "outcome"</code> (the default is
+<code>"prob"</code> for predicting probabilities). In the examples
+below, outcomes are predicted using the same preference space and WTP
+space models as in the previous examples. The <code>returnData</code>
+argument is also set to <code>TRUE</code> so that the predicted outcomes
+can be compared to the actual choices made:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outcomes_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span></span>
 <span>    <span class="va">mnl_pref</span>, </span>
@@ -315,7 +350,8 @@
 <span><span class="co">#&gt; 4      0</span></span>
 <span><span class="co">#&gt; 5      1</span></span>
 <span><span class="co">#&gt; 6      0</span></span></code></pre></div>
-<p>The accuracy of each model can be computed by dividing the number of correctly predicted choices by the total number of choices:</p>
+<p>The accuracy of each model can be computed by dividing the number of
+correctly predicted choices by the total number of choices:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chosen_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">outcomes_pref</span>, <span class="va">choice</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">chosen_pref</span><span class="op">$</span><span class="va">correct</span> <span class="op">&lt;-</span> <span class="va">chosen_pref</span><span class="op">$</span><span class="va">choice</span> <span class="op">==</span> <span class="va">chosen_pref</span><span class="op">$</span><span class="va">predicted_outcome</span></span>
@@ -328,14 +364,18 @@
 <span><span class="va">accuracy_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">chosen_wtp</span><span class="op">$</span><span class="va">correct</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">chosen_wtp</span><span class="op">)</span></span>
 <span><span class="va">accuracy_wtp</span></span>
 <span><span class="co">#&gt; [1] 0.3909619</span></span></code></pre></div>
-<p>These results show that both models correctly predicted choice for approximately 39% of the observations in the <code>yogurt</code> data frame, which is significantly better than random (25%).</p>
+<p>These results show that both models correctly predicted choice for
+approximately 39% of the observations in the <code>yogurt</code> data
+frame, which is significantly better than random (25%).</p>
 </div>
 <div class="section level2">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references">
-<div id="ref-Krinsky1986">
-<p>Krinsky, Itzhak, and A Leslie Robb. 1986. “On Approximating the Statistical Properties of Elasticities.” <em>The Review of Economics and Statistics</em>, 715–19.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Krinsky1986" class="csl-entry">
+Krinsky, Itzhak, and A Leslie Robb. 1986. <span>“On Approximating the
+Statistical Properties of Elasticities.”</span> <em>The Review of
+Economics and Statistics</em>, 715–19.
 </div>
 </div>
 </div>

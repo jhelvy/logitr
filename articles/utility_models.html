@@ -122,10 +122,11 @@
 
       
 
-      </header><script src="utility_models_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Utility Models in the Preference &amp; WTP Space</h1>
+      <h1 data-toc-skip>Utility Models in the Preference &amp; WTP
+Space</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/jhelvy/logitr/blob/HEAD/vignettes/utility_models.Rmd" class="external-link"><code>vignettes/utility_models.Rmd</code></a></small>
@@ -135,59 +136,119 @@
 
     
     
-
-<p>In many applications of discrete choice models, modelers are interested in estimating consumer’s marginal “willingness-to-pay” (WTP) for different attributes. WTP can be estimated in two ways:</p>
+<p>In many applications of discrete choice models, modelers are
+interested in estimating consumer’s marginal “willingness-to-pay” (WTP)
+for different attributes. WTP can be estimated in two ways:</p>
 <ol style="list-style-type: decimal">
-<li>Estimate a discrete choice model in the “preference space” where parameters have units of utility and then compute the WTP by dividing the parameters by the price parameter.</li>
-<li>Estimate a discrete choice model in the “WTP space” where parameters have units of WTP.</li>
+<li>Estimate a discrete choice model in the “preference space” where
+parameters have units of utility and then compute the WTP by dividing
+the parameters by the price parameter.</li>
+<li>Estimate a discrete choice model in the “WTP space” where parameters
+have units of WTP.</li>
 </ol>
-<p>While the two procedures generally produce the same estimates of WTP for homogenous models, the same is not true for heterogeneous models where model parameters are assumed to follow a specific distribution, such as normal or log-normal <span class="citation">(Train and Weeks 2005)</span>. For example, in a preference space specification, a normally distributed attribute parameter divided by a log-normally distributed price parameter produces a strange WTP distribution with large tails. In contrast, a WTP space specification allows the modeler to directly assume WTP is normally distributed. The  package was developed to enable modelers to choose between these two utility spaces when estimating multinomial logit models.</p>
+<p>While the two procedures generally produce the same estimates of WTP
+for homogenous models, the same is not true for heterogeneous models
+where model parameters are assumed to follow a specific distribution,
+such as normal or log-normal <span class="citation">(Train and Weeks
+2005)</span>. For example, in a preference space specification, a
+normally distributed attribute parameter divided by a log-normally
+distributed price parameter produces a strange WTP distribution with
+large tails. In contrast, a WTP space specification allows the modeler
+to directly assume WTP is normally distributed. The package was
+developed to enable modelers to choose between these two utility spaces
+when estimating multinomial logit models.</p>
 <div class="section level2">
 <h2 id="the-random-utility-model-in-two-spaces">The random utility model in two spaces<a class="anchor" aria-label="anchor" href="#the-random-utility-model-in-two-spaces"></a>
 </h2>
-<p>The random utility model is a well-established framework in many fields for estimating consumer preferences from observed consumer choices <span class="citation">(Louviere, Hensher, and Swait 2000; Train 2009)</span>. Random utility models assume that consumers choose the alternative <span class="math inline">\(j\)</span> a set of alternatives that has the greatest utility <span class="math inline">\(u_{j}\)</span>. Utility is a random variable that is modeled as <span class="math inline">\(u_{j} = v_{j} + \varepsilon_{j}\)</span>, where <span class="math inline">\(v_{j}\)</span> is the “observed utility” (a function of the observed attributes such that <span class="math inline">\(v_{j} = f(\mathrm{\mathbf{x}}_{j})\)</span>) and <span class="math inline">\(\varepsilon_{j}\)</span> is a random variable representing the portion of utility unobservable to the modeler.</p>
-<p>Adopting the same notation as in Helveston et al. <span class="citation">(2018)</span>, consider the following utility model:</p>
+<p>The random utility model is a well-established framework in many
+fields for estimating consumer preferences from observed consumer
+choices <span class="citation">(Louviere, Hensher, and Swait 2000; Train
+2009)</span>. Random utility models assume that consumers choose the
+alternative <span class="math inline">\(j\)</span> a set of alternatives
+that has the greatest utility <span class="math inline">\(u_{j}\)</span>. Utility is a random variable that
+is modeled as <span class="math inline">\(u_{j} = v_{j} +
+\varepsilon_{j}\)</span>, where <span class="math inline">\(v_{j}\)</span> is the “observed utility” (a
+function of the observed attributes such that <span class="math inline">\(v_{j} = f(\mathrm{\mathbf{x}}_{j})\)</span>) and
+<span class="math inline">\(\varepsilon_{j}\)</span> is a random
+variable representing the portion of utility unobservable to the
+modeler.</p>
+<p>Adopting the same notation as in Helveston et al. <span class="citation">(2018)</span>, consider the following utility
+model:</p>
 <p><span class="math display">\[\begin{equation}
     u^*_{j} =
         \mathbf{β}^{*'} \mathrm{\mathbf{x}}_{j} +
         \alpha^{*} p_{j} +
         \varepsilon^{*}_{j},
         \quad\quad
-        \varepsilon^{*}_{j} \sim \textrm{Gumbel}\left(0, \sigma^2\frac{\pi^2}{6}\right)
+        \varepsilon^{*}_{j} \sim \textrm{Gumbel}\left(0,
+\sigma^2\frac{\pi^2}{6}\right)
 \label{eq:utility}
 \end{equation}\]</span></p>
-<p>where <span class="math inline">\(\mathbf{β}^{*}\)</span> is the vector of coefficients for non-price attributes <span class="math inline">\(\mathrm{\mathbf{x}}_{j}\)</span>, <span class="math inline">\(\alpha^{*}\)</span> is the coefficient for price <span class="math inline">\(p_{j}\)</span>, and the error term, <span class="math inline">\(\varepsilon^{*}_{j}\)</span>, is an IID random variable with a Gumbel extreme value distribution of mean zero and variance <span class="math inline">\(\sigma^2(\pi^2/6)\)</span>. This model is not identified since there exists an infinite set of combinations of values for <span class="math inline">\(\mathbf{β}^{*}\)</span>, <span class="math inline">\(\alpha^{*}\)</span>, and <span class="math inline">\(\sigma\)</span> that produce the same choice probabilities. In order to specify an identifiable model, the modeler must normalize equation (). One approach is to normalize the scale of the error term by dividing equation () by <span class="math inline">\(\sigma\)</span>, producing the “preference space” utility specification:</p>
+<p>where <span class="math inline">\(\mathbf{β}^{*}\)</span> is the
+vector of coefficients for non-price attributes <span class="math inline">\(\mathrm{\mathbf{x}}_{j}\)</span>, <span class="math inline">\(\alpha^{*}\)</span> is the coefficient for price
+<span class="math inline">\(p_{j}\)</span>, and the error term, <span class="math inline">\(\varepsilon^{*}_{j}\)</span>, is an IID random
+variable with a Gumbel extreme value distribution of mean zero and
+variance <span class="math inline">\(\sigma^2(\pi^2/6)\)</span>. This
+model is not identified since there exists an infinite set of
+combinations of values for <span class="math inline">\(\mathbf{β}^{*}\)</span>, <span class="math inline">\(\alpha^{*}\)</span>, and <span class="math inline">\(\sigma\)</span> that produce the same choice
+probabilities. In order to specify an identifiable model, the modeler
+must normalize equation (<span class="math inline">\(\ref{eq:utility}\)</span>). One approach is to
+normalize the scale of the error term by dividing equation (<span class="math inline">\(\ref{eq:utility}\)</span>) by <span class="math inline">\(\sigma\)</span>, producing the “preference space”
+utility specification:</p>
 <p><span class="math display">\[\begin{equation}
     \left(\frac{u^*_{j}}{\sigma}\right) =
-        \left( \frac{\mathbf{β}^{*}}{\sigma} \right)' \mathrm{\mathbf{x}}_{j} +
+        \left( \frac{\mathbf{β}^{*}}{\sigma} \right)'
+\mathrm{\mathbf{x}}_{j} +
         \left( \frac{\alpha^{*}}{\sigma} \right) p_{j} +
         \left( \frac{\varepsilon^{*}_{j}}{\sigma} \right),
         \quad\quad
-        \left( \frac{\varepsilon^{*}_{j}}{\sigma} \right) \sim \textrm{Gumbel}\left(0, \frac{\pi^2}{6}\right)
+        \left( \frac{\varepsilon^{*}_{j}}{\sigma} \right) \sim
+\textrm{Gumbel}\left(0, \frac{\pi^2}{6}\right)
 \label{eq:utilityPreferenceScaled}
 \end{equation}\]</span></p>
-<p>The typical preference space parameterization of the multinomial logit (MNL) model can then be written by rewriting equation () with <span class="math inline">\(u_j = (u^*_j / \sigma)\)</span>, <span class="math inline">\(\mathbf{β}= (\mathbf{β}^{*} / \sigma)\)</span>, <span class="math inline">\(\alpha = (\alpha^{*} / \sigma)\)</span>, and <span class="math inline">\(\varepsilon_{j} = (\varepsilon^{*}_{j} / \sigma)\)</span>:</p>
+<p>The typical preference space parameterization of the multinomial
+logit (MNL) model can then be written by rewriting equation (<span class="math inline">\(\ref{eq:utilityPreferenceScaled}\)</span>) with
+<span class="math inline">\(u_j = (u^*_j / \sigma)\)</span>, <span class="math inline">\(\mathbf{β}= (\mathbf{β}^{*} / \sigma)\)</span>,
+<span class="math inline">\(\alpha = (\alpha^{*} / \sigma)\)</span>, and
+<span class="math inline">\(\varepsilon_{j} = (\varepsilon^{*}_{j} /
+\sigma)\)</span>:</p>
 <p><span class="math display">\[\begin{equation}
     u_{j} =
         \mathbf{β}' \mathrm{\mathbf{x}}_{j} +
         \alpha p_{j} +
         \varepsilon_{j}
         \hspace{0.5in}
-        \varepsilon_{j} \sim \textrm{Gumbel}\left(0,\frac{\pi^2}{6}\right)
+        \varepsilon_{j} \sim
+\textrm{Gumbel}\left(0,\frac{\pi^2}{6}\right)
 \label{eq:utilityPreference}
 \end{equation}\]</span></p>
-<p>The vector <span class="math inline">\(\mathbf{β}\)</span> represents the marginal utility for changes in each non-price attribute, and <span class="math inline">\(\alpha\)</span> represents the marginal utility obtained from price reductions. In addition, the coefficients <span class="math inline">\(\mathbf{β}\)</span> and <span class="math inline">\(\alpha\)</span> are measured in units of <em>utility</em>, which only has relative rather than absolute meaning.</p>
-<p>The alternative normalization approach is to normalize equation () by <span class="math inline">\(- \alpha^*\)</span> instead of <span class="math inline">\(\sigma\)</span>, producing the “willingness-to-pay (WTP) space” utility specification:</p>
+<p>The vector <span class="math inline">\(\mathbf{β}\)</span> represents
+the marginal utility for changes in each non-price attribute, and <span class="math inline">\(\alpha\)</span> represents the marginal utility
+obtained from price reductions. In addition, the coefficients <span class="math inline">\(\mathbf{β}\)</span> and <span class="math inline">\(\alpha\)</span> are measured in units of
+<em>utility</em>, which only has relative rather than absolute
+meaning.</p>
+<p>The alternative normalization approach is to normalize equation
+(<span class="math inline">\(\ref{eq:utility}\)</span>) by <span class="math inline">\(- \alpha^*\)</span> instead of <span class="math inline">\(\sigma\)</span>, producing the “willingness-to-pay
+(WTP) space” utility specification:</p>
 <p><span class="math display">\[\begin{equation}
     \left(\frac{u^*_{j}}{- \alpha^*}\right) =
-        \left(\frac{\mathbf{β}^{*}}{- \alpha^{*}}\right)' \mathrm{\mathbf{x}}_{j} +
+        \left(\frac{\mathbf{β}^{*}}{- \alpha^{*}}\right)'
+\mathrm{\mathbf{x}}_{j} +
         \left(\frac{\alpha^{*}}{- \alpha^{*}}\right) p_{j} +
         \left(\frac{\varepsilon^{*}_{j}}{- \alpha^{*}}\right),
         \quad\quad
-        \left(\frac{\varepsilon^{*}_{j}}{- \alpha^{*}}\right) \sim \textrm{Gumbel} \left(0, \frac{\sigma^2}{(- \alpha^{*})^2}\frac{\pi^2}{6} \right)
+        \left(\frac{\varepsilon^{*}_{j}}{- \alpha^{*}}\right) \sim
+\textrm{Gumbel} \left(0, \frac{\sigma^2}{(-
+\alpha^{*})^2}\frac{\pi^2}{6} \right)
 \label{eq:utilityWtpScaled}
 \end{equation}\]</span></p>
-<p>Since the error term in equation is scaled by <span class="math inline">\(\lambda^2 = \sigma^2/(- \alpha^{*})^2\)</span>, we can rewrite equation () by multiplying both sides by <span class="math inline">\(\lambda= (- \alpha^{*} / \sigma\)</span>) and renaming <span class="math inline">\(u_j = (\lambda u^*_j /- \alpha^*)\)</span>, <span class="math inline">\(\mathbf{ω}= (\mathbf{β}^{*} /- \alpha^{*}\)</span>), and <span class="math inline">\(\varepsilon_j = (\lambda \varepsilon^*_j / - \alpha^*)\)</span>:</p>
+<p>Since the error term in equation is scaled by <span class="math inline">\(\lambda^2 = \sigma^2/(- \alpha^{*})^2\)</span>, we
+can rewrite equation (<span class="math inline">\(\ref{eq:utilityWtpScaled}\)</span>) by multiplying
+both sides by <span class="math inline">\(\lambda= (- \alpha^{*} /
+\sigma\)</span>) and renaming <span class="math inline">\(u_j = (\lambda
+u^*_j /- \alpha^*)\)</span>, <span class="math inline">\(\mathbf{ω}=
+(\mathbf{β}^{*} /- \alpha^{*}\)</span>), and <span class="math inline">\(\varepsilon_j = (\lambda \varepsilon^*_j / -
+\alpha^*)\)</span>:</p>
 <p><span class="math display">\[\begin{equation}
     u_{j} =
         \lambda \left(
@@ -195,27 +256,43 @@
             \right) +
         \varepsilon_{j}
         \hspace{0.5in}
-        \varepsilon_{j} \sim \textrm{Gumbel}\left(0, \frac{\pi^2}{6}\right)
+        \varepsilon_{j} \sim \textrm{Gumbel}\left(0,
+\frac{\pi^2}{6}\right)
 \label{eq:utilityWtp}
 \end{equation}\]</span></p>
-<p>Here <span class="math inline">\(\mathbf{ω}\)</span> represents the marginal WTP for changes in each non-price attribute, and <span class="math inline">\(\lambda\)</span> represents the scale of the deterministic portion of utility relative to the standardized scale of the random error term.</p>
-<p>The utility models in equations  and  represent the preference space and WTP space utility specifications, respectively. In equation , WTP is estimated as <span class="math inline">\(\hat{\mathbf{β}} / \hat{- \alpha}\)</span>; in equation , WTP is simply <span class="math inline">\(\hat{\mathbf{ω}}\)</span>.</p>
+<p>Here <span class="math inline">\(\mathbf{ω}\)</span> represents the
+marginal WTP for changes in each non-price attribute, and <span class="math inline">\(\lambda\)</span> represents the scale of the
+deterministic portion of utility relative to the standardized scale of
+the random error term.</p>
+<p>The utility models in equations <span class="math inline">\(\ref{eq:utilityPreference}\)</span> and <span class="math inline">\(\ref{eq:utilityWtp}\)</span> represent the
+preference space and WTP space utility specifications, respectively. In
+equation <span class="math inline">\(\ref{eq:utilityPreference}\)</span>, WTP is
+estimated as <span class="math inline">\(\hat{\mathbf{β}} / \hat{-
+\alpha}\)</span>; in equation <span class="math inline">\(\ref{eq:utilityWtp}\)</span>, WTP is simply <span class="math inline">\(\hat{\mathbf{ω}}\)</span>.</p>
 </div>
 <div class="section level2">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references">
-<div id="ref-Helveston2018">
-<p>Helveston, John Paul, Elea McDonnell Feit, and Jeremy J. Michalek. 2018. “Pooling stated and revealed preference data in the presence of RP endogeneity.” <em>Transportation Research Part B: Methodological</em> 109: 70–89.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Helveston2018" class="csl-entry">
+Helveston, John Paul, Elea McDonnell Feit, and Jeremy J. Michalek. 2018.
+<span>“<span class="nocase">Pooling stated and revealed preference data
+in the presence of RP endogeneity</span>.”</span> <em>Transportation
+Research Part B: Methodological</em> 109: 70–89.
 </div>
-<div id="ref-Louviere2000">
-<p>Louviere, Jordan J., David A. Hensher, and Joffre Swait. 2000. <em>Stated Choice Methods: Analysis and Applications</em>. Edited by J. J. et al. Louviere. Cambridge, Massachusetts: Cambridge University Press.</p>
+<div id="ref-Louviere2000" class="csl-entry">
+Louviere, Jordan J., David A. Hensher, and Joffre Swait. 2000. <em><span class="nocase">Stated Choice Methods: Analysis and
+Applications</span></em>. Edited by J. J. et al. Louviere. Cambridge,
+Massachusetts: Cambridge University Press.
 </div>
-<div id="ref-Train2009">
-<p>Train, Kenneth E. 2009. <em>Discrete Choice Methods with Simulation</em>. 2nd ed. Cambridge University Press.</p>
+<div id="ref-Train2009" class="csl-entry">
+Train, Kenneth E. 2009. <em><span class="nocase">Discrete Choice Methods
+with Simulation</span></em>. 2nd ed. Cambridge University Press.
 </div>
-<div id="ref-Train2005">
-<p>Train, Kenneth E., and Melvyn Weeks. 2005. “Discrete Choice Models in Preference and Willingness-to-Pay Space.” In <em>Appl. Simul. Methods Environ. Resour. Econ.</em>, 1–16.</p>
+<div id="ref-Train2005" class="csl-entry">
+Train, Kenneth E., and Melvyn Weeks. 2005. <span>“<span class="nocase">Discrete Choice Models in Preference and
+Willingness-to-Pay Space</span>.”</span> In <em>Appl. Simul. Methods
+Environ. Resour. Econ.</em>, 1–16.
 </div>
 </div>
 </div>

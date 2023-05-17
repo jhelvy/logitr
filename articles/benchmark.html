@@ -122,11 +122,12 @@
 
       
 
-      </header><script src="benchmark_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="benchmark_files/kePrint-0.0.1/kePrint.js"></script><link href="benchmark_files/lightable-0.0.1/lightable.css" rel="stylesheet">
+      </header><script src="benchmark_files/kePrint-0.0.1/kePrint.js"></script><link href="benchmark_files/lightable-0.0.1/lightable.css" rel="stylesheet">
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Benchmarking estimation speed against other packages</h1>
+      <h1 data-toc-skip>Benchmarking estimation speed against other
+packages</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/jhelvy/logitr/blob/HEAD/vignettes/benchmark.Rmd" class="external-link"><code>vignettes/benchmark.Rmd</code></a></small>
@@ -136,7 +137,10 @@
 
     
     
-<p>{logitr} is faster than most other packages with similar functionality. To demonstrate this, a benchmark was conducted by estimating the same preference space mixed logit model using the following R packages:</p>
+<p>{logitr} is faster than most other packages with similar
+functionality. To demonstrate this, a benchmark was conducted by
+estimating the same preference space mixed logit model using the
+following R packages:</p>
 <ul>
 <li>{logitr}</li>
 <li>{mixl}</li>
@@ -146,11 +150,20 @@
 </ul>
 <p>The benchmark can be viewed at this Google Colab notebook:</p>
 <p><a href="https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing" class="external-link uri">https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing</a></p>
-<p>Benchmarks will always vary for every run of a benchmarking code, even when run on the same machine due to variations in background processes. Thus, if you run this code yourself on a different machine, your results may vary, though the overall order and trends in terms of each package’s relative speed should be similar to those from the Colab notebook.</p>
+<p>Benchmarks will always vary for every run of a benchmarking code,
+even when run on the same machine due to variations in background
+processes. Thus, if you run this code yourself on a different machine,
+your results may vary, though the overall order and trends in terms of
+each package’s relative speed should be similar to those from the Colab
+notebook.</p>
 <div class="section level2">
 <h2 id="comparing-run-times">Comparing run times<a class="anchor" aria-label="anchor" href="#comparing-run-times"></a>
 </h2>
-<p>The {logitr} package includes a <code>runtimes</code> data frame that is exported from the <a href="https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing" class="external-link">Google Colab</a> notebook used to conduct the benchmark. The tables below summarize the run times for each package and how many times slower they are relative to {logitr}.</p>
+<p>The {logitr} package includes a <code>runtimes</code> data frame that
+is exported from the <a href="https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing" class="external-link">Google
+Colab</a> notebook used to conduct the benchmark. The tables below
+summarize the run times for each package and how many times slower they
+are relative to {logitr}.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr" class="external-link">logitr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
@@ -552,7 +565,8 @@ apollo (2 cores)
 </tr>
 </tbody>
 </table>
-<p>The code below plots the relative run times from the Colab notebook.</p>
+<p>The code below plots the relative run times from the Colab
+notebook.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/slowkow/ggrepel" class="external-link">ggrepel</a></span><span class="op">)</span></span>

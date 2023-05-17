@@ -122,10 +122,11 @@
 
       
 
-      </header><script src="convergence_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>WTP space convergence issues in other packages</h1>
+      <h1 data-toc-skip>WTP space convergence issues in other
+packages</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/jhelvy/logitr/blob/HEAD/vignettes/convergence.Rmd" class="external-link"><code>vignettes/convergence.Rmd</code></a></small>
@@ -135,9 +136,20 @@
 
     
     
-<p>Given the non-linear utility specification of WTP space models, these models often diverge during estimation and can be highly sensitive to starting parameters. While many other packages support the estimation of WTP space models, in practice these packages often fail to find solutions.</p>
-<p>Compared to most other packages, {logitr} tends to perform better and converge more often. It also has a built-in, parallelized multi-start optimization loop for searching for different local minima from different random starting points when minimizing the negative log-likelihood, which improves the odds of converging to a solution for at least some of the multi-start iterations.</p>
-<p>This vignette illustrates the convergence issues, comparing the performance of {logitr} to the following R packages that support WTP space models:</p>
+<p>Given the non-linear utility specification of WTP space models, these
+models often diverge during estimation and can be highly sensitive to
+starting parameters. While many other packages support the estimation of
+WTP space models, in practice these packages often fail to find
+solutions.</p>
+<p>Compared to most other packages, {logitr} tends to perform better and
+converge more often. It also has a built-in, parallelized multi-start
+optimization loop for searching for different local minima from
+different random starting points when minimizing the negative
+log-likelihood, which improves the odds of converging to a solution for
+at least some of the multi-start iterations.</p>
+<p>This vignette illustrates the convergence issues, comparing the
+performance of {logitr} to the following R packages that support WTP
+space models:</p>
 <ul>
 <li>{logitr}</li>
 <li>{mixl}</li>
@@ -145,7 +157,8 @@
 <li>{gmnl}</li>
 <li>{apollo}</li>
 </ul>
-<p>For the same mixed logit WTP space model, only {logitr} is able to consistently converge to a solution.</p>
+<p>For the same mixed logit WTP space model, only {logitr} is able to
+consistently converge to a solution.</p>
 <div class="section level2">
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
@@ -163,7 +176,8 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span></code></pre></div>
-<p>Now set the starting parameters for each package as well as the number of draws to use for the simulated log-likelihood:</p>
+<p>Now set the starting parameters for each package as well as the
+number of draws to use for the simulated log-likelihood:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">numDraws_wtp</span> <span class="op">&lt;-</span> <span class="fl">50</span></span>
 <span><span class="va">start_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -184,7 +198,9 @@
 <div class="section level3">
 <h3 id="package-specific-settings">Package-specific settings<a class="anchor" aria-label="anchor" href="#package-specific-settings"></a>
 </h3>
-<p>Both {apollo} and {mixl} require that the user hand-specify the model to be estimated as well as several other settings. These settings are provided here.</p>
+<p>Both {apollo} and {mixl} require that the user hand-specify the model
+to be estimated as well as several other settings. These settings are
+provided here.</p>
 <div class="section level4">
 <h4 id="prep-for-gmnl">Prep for {gmnl}<a class="anchor" aria-label="anchor" href="#prep-for-gmnl"></a>
 </h4>
@@ -202,7 +218,8 @@
 <div class="section level4">
 <h4 id="prep-for-apollo">Prep for {apollo}<a class="anchor" aria-label="anchor" href="#prep-for-apollo"></a>
 </h4>
-<p>Format the <code>yogurt</code> data to a “wide” format for {apollo}</p>
+<p>Format the <code>yogurt</code> data to a “wide” format for
+{apollo}</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">yogurt_price</span> <span class="op">&lt;-</span> <span class="va">yogurt</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">obsID</span>, <span class="va">price</span>, <span class="va">brand</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -430,7 +447,8 @@
 <span><span class="co">#&gt; brandhiland  -Inf -17.4039453 -13.538553 -13.542027 -9.674388  Inf</span></span>
 <span><span class="co">#&gt; brandweight  -Inf -12.2189602  -4.519436  -4.527690  3.182253  Inf</span></span>
 <span><span class="co">#&gt; brandyoplait -Inf   0.6670773   6.648678   6.641070 12.632059  Inf</span></span></code></pre>
-<p>Including a multi-start helps build confidence in the solution reached:</p>
+<p>Including a multi-start helps build confidence in the solution
+reached:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model_logitr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span></span>
 <span>    data      <span class="op">=</span> <span class="va">yogurt</span>,</span>
@@ -556,7 +574,9 @@
 <div class="section level3">
 <h3 id="gmnl">{gmnl}<a class="anchor" aria-label="anchor" href="#gmnl"></a>
 </h3>
-<p>First attempt using same starting points as {logitr}. Note that additional starting parameters must be added as the {gmnl} approach to estimating WTP is a slightly different model.</p>
+<p>First attempt using same starting points as {logitr}. Note that
+additional starting parameters must be added as the {gmnl} approach to
+estimating WTP is a slightly different model.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model_gmnl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gmnl/man/gmnl.html" class="external-link">gmnl</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">data_gmnl</span>,</span>
@@ -607,7 +627,8 @@
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; Error in optim(par = c(feat = 1.74, brandhiland = -13.54, brandweight = -4.51,  :</span></span>
 <span><span class="co">#&gt; initial value in 'vmmin' is not finite</span></span></code></pre>
-<p>In this case, {gmnl} fails due to an error with the starting values provided.</p>
+<p>In this case, {gmnl} fails due to an error with the starting values
+provided.</p>
 </div>
 <div class="section level3">
 <h3 id="apollo">{apollo}<a class="anchor" aria-label="anchor" href="#apollo"></a>

@@ -122,7 +122,7 @@
 
       
 
-      </header><script src="mnl_models_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Estimating Multinomial Logit Models</h1>
@@ -135,12 +135,24 @@
 
     
     
-<p>This vignette demonstrates an example of how to use the <code><a href="../reference/logitr.html">logitr()</a></code> function to estimate multinomial logit (MNL) models with preference space and WTP space utility parameterizations.</p>
+<p>This vignette demonstrates an example of how to use the
+<code><a href="../reference/logitr.html">logitr()</a></code> function to estimate multinomial logit (MNL)
+models with preference space and WTP space utility
+parameterizations.</p>
 <div class="section level2">
 <h2 id="the-data">The data<a class="anchor" aria-label="anchor" href="#the-data"></a>
 </h2>
-<p>This example uses the <a href="https://jhelvy.github.io/logitr/reference/yogurt.html">yogurt</a> data set from Jain et al. <span class="citation">(1994)</span>. The data set contains 2,412 choice observations from a series of yogurt purchases by a panel of 100 households in Springfield, Missouri, over a roughly two-year period. The data were collected by optical scanners and contain information about the price, brand, and a “feature” variable, which identifies whether a newspaper advertisement was shown to the customer. There are four brands of yogurt: Yoplait, Dannon, Weight Watchers, and Hiland, with market shares of 34%, 40%, 23% and 3%, respectively.</p>
-<p>In the utility models described below, the data variables are represented as follows:</p>
+<p>This example uses the <a href="https://jhelvy.github.io/logitr/reference/yogurt.html">yogurt</a>
+data set from Jain et al. <span class="citation">(1994)</span>. The data
+set contains 2,412 choice observations from a series of yogurt purchases
+by a panel of 100 households in Springfield, Missouri, over a roughly
+two-year period. The data were collected by optical scanners and contain
+information about the price, brand, and a “feature” variable, which
+identifies whether a newspaper advertisement was shown to the customer.
+There are four brands of yogurt: Yoplait, Dannon, Weight Watchers, and
+Hiland, with market shares of 34%, 40%, 23% and 3%, respectively.</p>
+<p>In the utility models described below, the data variables are
+represented as follows:</p>
 <div style="width:550px">
 <table class="table">
 <colgroup>
@@ -158,7 +170,8 @@
 </tr>
 <tr class="even">
 <td><span class="math inline">\(x_{j}^{\mathrm{Feat}}\)</span></td>
-<td>Dummy variable for whether the newspaper advertisement was shown to the customer.</td>
+<td>Dummy variable for whether the newspaper advertisement was shown to
+the customer.</td>
 </tr>
 <tr class="odd">
 <td><span class="math inline">\(x_{j}^{\mathrm{Hiland}}\)</span></td>
@@ -179,7 +192,8 @@
 <div class="section level2">
 <h2 id="preference-space-model">Preference space model<a class="anchor" aria-label="anchor" href="#preference-space-model"></a>
 </h2>
-<p>This example will estimate the following homogeneous multinomial logit model in the preference space:</p>
+<p>This example will estimate the following homogeneous multinomial
+logit model in the preference space:</p>
 <p><span class="math display">\[\begin{equation}
     u_{j} =
         \alpha p_{j} +
@@ -190,7 +204,8 @@
         \varepsilon_{j}
 \label{eq:mnlPrefExample}
 \end{equation}\]</span></p>
-<p>where the parameters <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span>, and <span class="math inline">\(\beta_4\)</span> have units of utility.</p>
+<p>where the parameters <span class="math inline">\(\alpha\)</span>,
+<span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span>, and <span class="math inline">\(\beta_4\)</span> have units of utility.</p>
 <p>Estimate the model using the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/jhelvy/logitr" class="external-link">"logitr"</a></span><span class="op">)</span></span>
@@ -206,7 +221,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mnl_pref</span><span class="op">)</span></span>
 <span><span class="co">#&gt; =================================================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model estimated on: Sun Feb 19 15:00:47 2023 </span></span>
+<span><span class="co">#&gt; Model estimated on: Wed May 17 12:43:14 2023 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Using logitr version: 1.0.1.9000 </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -224,7 +239,7 @@
 <span><span class="co">#&gt; Model Space:          Preference</span></span>
 <span><span class="co">#&gt; Model Run:                1 of 1</span></span>
 <span><span class="co">#&gt; Iterations:                   21</span></span>
-<span><span class="co">#&gt; Elapsed Time:        0h:0m:0.05s</span></span>
+<span><span class="co">#&gt; Elapsed Time:        0h:0m:0.04s</span></span>
 <span><span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span></span>
 <span><span class="co">#&gt; Weights Used?:             FALSE</span></span>
 <span><span class="co">#&gt; Robust?                    FALSE</span></span>
@@ -256,18 +271,19 @@
 <code class="sourceCode R"><span><span class="va">wtp_mnl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mnl_pref</span>, scalePar <span class="op">=</span>  <span class="st">"price"</span><span class="op">)</span></span>
 <span><span class="va">wtp_mnl_pref</span></span>
 <span><span class="co">#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span></span>
-<span><span class="co">#&gt; scalePar       0.366555   0.024308  15.0798 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; feat           1.340699   0.358239   3.7425 0.0001822 ***</span></span>
-<span><span class="co">#&gt; brandhiland  -10.136219   0.584187 -17.3510 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandweight   -1.749094   0.182107  -9.6048 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandyoplait   2.003848   0.143431  13.9708 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; scalePar       0.366555   0.024383  15.0335 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; feat           1.340699   0.358225   3.7426 0.0001821 ***</span></span>
+<span><span class="co">#&gt; brandhiland  -10.136219   0.584287 -17.3480 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandweight   -1.749094   0.182145  -9.6027 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandyoplait   2.003848   0.143320  13.9817 &lt; 2.2e-16 ***</span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="wtp-space-model">WTP space model<a class="anchor" aria-label="anchor" href="#wtp-space-model"></a>
 </h2>
-<p>This example will estimate the following homogeneous multinomial logit model in the WTP space:</p>
+<p>This example will estimate the following homogeneous multinomial
+logit model in the WTP space:</p>
 <p><span class="math display">\[\begin{equation}
     u_{j} =
         \lambda (
@@ -279,7 +295,8 @@
         \varepsilon_{j}
 \label{eq:mnlWtpExample}
 \end{equation}\]</span></p>
-<p>where the parameters <span class="math inline">\(\omega_1\)</span>, <span class="math inline">\(\omega_2\)</span>, <span class="math inline">\(\omega_3\)</span>, and <span class="math inline">\(\omega_4\)</span> have units of dollars and <span class="math inline">\(\lambda\)</span> is the scale parameter.</p>
+<p>where the parameters <span class="math inline">\(\omega_1\)</span>,
+<span class="math inline">\(\omega_2\)</span>, <span class="math inline">\(\omega_3\)</span>, and <span class="math inline">\(\omega_4\)</span> have units of dollars and <span class="math inline">\(\lambda\)</span> is the scale parameter.</p>
 <p>Estimate the model using the <code><a href="../reference/logitr.html">logitr()</a></code> function:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mnl_wtp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logitr.html">logitr</a></span><span class="op">(</span></span>
@@ -299,7 +316,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mnl_wtp</span><span class="op">)</span></span>
 <span><span class="co">#&gt; =================================================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model estimated on: Sun Feb 19 15:00:48 2023 </span></span>
+<span><span class="co">#&gt; Model estimated on: Wed May 17 12:43:15 2023 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Using logitr version: 1.0.1.9000 </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -315,15 +332,15 @@
 <span><span class="co">#&gt; Summary Of Multistart Runs:</span></span>
 <span><span class="co">#&gt;    Log Likelihood Iterations Exit Status</span></span>
 <span><span class="co">#&gt; 1       -2656.888         84           3</span></span>
-<span><span class="co">#&gt; 2       -2804.839         84           4</span></span>
-<span><span class="co">#&gt; 3       -2656.888         39           3</span></span>
-<span><span class="co">#&gt; 4       -2656.888         44           3</span></span>
-<span><span class="co">#&gt; 5       -2656.888         50           3</span></span>
-<span><span class="co">#&gt; 6       -2656.888         36           3</span></span>
-<span><span class="co">#&gt; 7       -2656.888         44           3</span></span>
-<span><span class="co">#&gt; 8       -2656.888         42           3</span></span>
-<span><span class="co">#&gt; 9       -2656.888         54           3</span></span>
-<span><span class="co">#&gt; 10      -2804.445         82           4</span></span>
+<span><span class="co">#&gt; 2       -2656.888         47           3</span></span>
+<span><span class="co">#&gt; 3       -2656.888         70           3</span></span>
+<span><span class="co">#&gt; 4       -2656.888         46           3</span></span>
+<span><span class="co">#&gt; 5       -2656.888         49           3</span></span>
+<span><span class="co">#&gt; 6       -2656.888         45           3</span></span>
+<span><span class="co">#&gt; 7       -2656.888         46           3</span></span>
+<span><span class="co">#&gt; 8       -2656.888         36           3</span></span>
+<span><span class="co">#&gt; 9       -2804.542         82           4</span></span>
+<span><span class="co">#&gt; 10      -2656.888         56           3</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Use statusCodes() to view the meaning of each status code</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -331,20 +348,20 @@
 <span><span class="co">#&gt;                                  </span></span>
 <span><span class="co">#&gt; Model Type:     Multinomial Logit</span></span>
 <span><span class="co">#&gt; Model Space:   Willingness-to-Pay</span></span>
-<span><span class="co">#&gt; Model Run:                9 of 10</span></span>
-<span><span class="co">#&gt; Iterations:                    54</span></span>
-<span><span class="co">#&gt; Elapsed Time:         0h:0m:0.12s</span></span>
+<span><span class="co">#&gt; Model Run:                5 of 10</span></span>
+<span><span class="co">#&gt; Iterations:                    49</span></span>
+<span><span class="co">#&gt; Elapsed Time:         0h:0m:0.09s</span></span>
 <span><span class="co">#&gt; Algorithm:         NLOPT_LD_LBFGS</span></span>
 <span><span class="co">#&gt; Weights Used?:              FALSE</span></span>
 <span><span class="co">#&gt; Robust?                     FALSE</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Coefficients: </span></span>
 <span><span class="co">#&gt;                Estimate Std. Error  z-value  Pr(&gt;|z|)    </span></span>
-<span><span class="co">#&gt; scalePar       0.366584   0.024366  15.0448 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; feat           1.340578   0.355866   3.7671 0.0001652 ***</span></span>
-<span><span class="co">#&gt; brandhiland  -10.135752   0.576087 -17.5941 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandweight   -1.749085   0.179898  -9.7227 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandyoplait   2.003816   0.142377  14.0740 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; scalePar       0.366586   0.024366  15.0449 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; feat           1.340588   0.355865   3.7671 0.0001651 ***</span></span>
+<span><span class="co">#&gt; brandhiland  -10.135716   0.576083 -17.5942 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandweight   -1.749062   0.179896  -9.7227 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandyoplait   2.003833   0.142376  14.0742 &lt; 2.2e-16 ***</span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
 <span><span class="co">#&gt;                                      </span></span>
@@ -359,29 +376,41 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mnl_wtp</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     scalePar         feat  brandhiland  brandweight brandyoplait </span></span>
-<span><span class="co">#&gt;    0.3665837    1.3405779  -10.1357518   -1.7490846    2.0038157</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.3665855    1.3405880  -10.1357163   -1.7490624    2.0038332</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="compare-wtp-from-both-models">Compare WTP from both models<a class="anchor" aria-label="anchor" href="#compare-wtp-from-both-models"></a>
 </h2>
-<p>Since WTP space models are non-convex, you cannot be certain that the model reached a global solution, even when using a multi-start. However, homogeneous models in the <em>preference</em> space are convex, so you are guaranteed to find the global solution in that space. Therefore, it can be useful to compute the WTP from the preference space model and compare it against the WTP from the WTP space model. If the WTP values and log-likelihood values from the two model spaces are equal, then the WTP space model is likely at a global solution.</p>
-<p>To compare the WTP and log-likelihood values between the preference space and WTP space models, use the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function:</p>
+<p>Since WTP space models are non-convex, you cannot be certain that the
+model reached a global solution, even when using a multi-start. However,
+homogeneous models in the <em>preference</em> space are convex, so you
+are guaranteed to find the global solution in that space. Therefore, it
+can be useful to compute the WTP from the preference space model and
+compare it against the WTP from the WTP space model. If the WTP values
+and log-likelihood values from the two model spaces are equal, then the
+WTP space model is likely at a global solution.</p>
+<p>To compare the WTP and log-likelihood values between the preference
+space and WTP space models, use the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code>
+function:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mnl_pref</span>, <span class="va">mnl_wtp</span>, scalePar <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                       pref           wtp  difference</span></span>
-<span><span class="co">#&gt; scalePar         0.3665546     0.3665837  0.00002914</span></span>
-<span><span class="co">#&gt; feat             1.3406987     1.3405779 -0.00012075</span></span>
-<span><span class="co">#&gt; brandhiland    -10.1362190   -10.1357518  0.00046718</span></span>
-<span><span class="co">#&gt; brandweight     -1.7490940    -1.7490846  0.00000931</span></span>
-<span><span class="co">#&gt; brandyoplait     2.0038476     2.0038157 -0.00003191</span></span>
+<span><span class="co">#&gt; scalePar         0.3665546     0.3665855  0.00003099</span></span>
+<span><span class="co">#&gt; feat             1.3406987     1.3405880 -0.00011072</span></span>
+<span><span class="co">#&gt; brandhiland    -10.1362190   -10.1357163  0.00050275</span></span>
+<span><span class="co">#&gt; brandweight     -1.7490940    -1.7490624  0.00003152</span></span>
+<span><span class="co">#&gt; brandyoplait     2.0038476     2.0038332 -0.00001439</span></span>
 <span><span class="co">#&gt; logLik       -2656.8878790 -2656.8878779  0.00000106</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references">
-<div id="ref-Jain1994">
-<p>Jain, Dipak C, Naufel J Vilcassim, and Pradeep K Chintagunta. 1994. “A Random-Coefficients Logit Brand-Choice Model Applied to Panel Data.” <em>Journal of Business &amp; Economic Statistics</em> 12 (3): 317–28.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Jain1994" class="csl-entry">
+Jain, Dipak C, Naufel J Vilcassim, and Pradeep K Chintagunta. 1994.
+<span>“A Random-Coefficients Logit Brand-Choice Model Applied to Panel
+Data.”</span> <em>Journal of Business &amp; Economic Statistics</em> 12
+(3): 317–28.
 </div>
 </div>
 </div>

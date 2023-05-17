@@ -93,7 +93,9 @@
       <small>Source: <a href="https://github.com/jhelvy/logitr/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
-    <div class="section level2"><h2 class="page-header" data-toc-text="development version" id="logitr-development-version">logitr (development version)<a class="anchor" aria-label="anchor" href="#logitr-development-version"></a></h2></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="development version" id="logitr-development-version">logitr (development version)<a class="anchor" aria-label="anchor" href="#logitr-development-version"></a></h2>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.1" id="logitr-101">logitr 1.0.1<small>2023-02-19</small><a class="anchor" aria-label="anchor" href="#logitr-101"></a></h2>
 <ul><li>Fixed bug in <code>adjustFactorLevels()</code> where the <code>levels_orig</code> object was being accidentally overwritten.</li>
@@ -135,7 +137,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6.1" id="logitr-061">logitr 0.6.1<small>2022-06-12</small><a class="anchor" aria-label="anchor" href="#logitr-061"></a></h2>
-<ul><li>Fixes error on some of the gradient tests from 0.6.0 release. The gradient tests were sensitive to the random starting parameters, so I modified how the starting parameters were set for the first iteration of a multistart loop such that they would be more consistent.</li></ul></div>
+<ul><li>Fixes error on some of the gradient tests from 0.6.0 release. The gradient tests were sensitive to the random starting parameters, so I modified how the starting parameters were set for the first iteration of a multistart loop such that they would be more consistent.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6.0" id="logitr-060">logitr 0.6.0<small>2022-06-11</small><a class="anchor" aria-label="anchor" href="#logitr-060"></a></h2>
 <ul><li>Added the <code>correlation</code> argument to include correlated heterogeneity.</li>
@@ -148,7 +151,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.5.1" id="logitr-051">logitr 0.5.1<a class="anchor" aria-label="anchor" href="#logitr-051"></a></h2>
-<ul><li>Patched a bug in how standard errors were being computed when clustering. The source of the error was in re-scaling results post-estimation.</li></ul></div>
+<ul><li>Patched a bug in how standard errors were being computed when clustering. The source of the error was in re-scaling results post-estimation.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.5.0" id="logitr-050">logitr 0.5.0<small>2022-01-04</small><a class="anchor" aria-label="anchor" href="#logitr-050"></a></h2>
 <ul><li>The multistart optimization loop is now parallelized.</li>
@@ -167,7 +171,8 @@
 </ul></div>
 <div class="section level3">
 <h3 id="bugs-0-4-0">Bugs:<a class="anchor" aria-label="anchor" href="#bugs-0-4-0"></a></h3>
-<ul><li>Fixed bug where the returned object contained the scaled data rather than the original, unscaled data</li></ul></div>
+<ul><li>Fixed bug where the returned object contained the scaled data rather than the original, unscaled data</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.3.1" id="logitr-031">logitr 0.3.1<a class="anchor" aria-label="anchor" href="#logitr-031"></a></h2>
@@ -298,7 +303,8 @@
 <h2 class="page-header" data-toc-text="0.1.0" id="logitr-010">logitr 0.1.0<small>2021-01-19</small><a class="anchor" aria-label="anchor" href="#logitr-010"></a></h2>
 <div class="section level3">
 <h3 id="summary-of-larger-updates-0-1-0">Summary of larger updates:<a class="anchor" aria-label="anchor" href="#summary-of-larger-updates-0-1-0"></a></h3>
-<ul><li>v0.1.0 Submitted to CRAN!</li></ul></div>
+<ul><li>v0.1.0 Submitted to CRAN!</li>
+</ul></div>
 <div class="section level3">
 <h3 id="summary-of-smaller-updates-0-1-0">Summary of smaller updates:<a class="anchor" aria-label="anchor" href="#summary-of-smaller-updates-0-1-0"></a></h3>
 <ul><li>Reduced the length of the title in DESCRIPTION to less than 65 characters.</li>
@@ -326,7 +332,8 @@
 </ul></div>
 <div class="section level3">
 <h3 id="summary-of-smaller-updates-0-0-5">Summary of smaller updates:<a class="anchor" aria-label="anchor" href="#summary-of-smaller-updates-0-0-5"></a></h3>
-<ul><li>Added new documentation for prepping data:<ul><li>overall structure</li>
+<ul><li>Added new documentation for prepping data:
+<ul><li>overall structure</li>
 <li>dummyCode() function</li>
 <li>handling interactions</li>
 </ul></li>
@@ -364,7 +371,8 @@
 </ul></div>
 <div class="section level3">
 <h3 id="summary-of-smaller-updates-0-0-3">Summary of smaller updates:<a class="anchor" aria-label="anchor" href="#summary-of-smaller-updates-0-0-3"></a></h3>
-<ul><li>Updated the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and main <code><a href="../reference/logitr.html">logitr()</a></code> functions to keep the basic information (run #, log-likelihood value, number of iterations, and output status) whenever <code>numMultistarts</code> &gt; 1. Previously this information was only kept if <code>keepAllRuns</code> was set to <code>TRUE</code>.</li></ul></div>
+<ul><li>Updated the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and main <code><a href="../reference/logitr.html">logitr()</a></code> functions to keep the basic information (run #, log-likelihood value, number of iterations, and output status) whenever <code>numMultistarts</code> &gt; 1. Previously this information was only kept if <code>keepAllRuns</code> was set to <code>TRUE</code>.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.2" id="logitr-002">logitr 0.0.2<a class="anchor" aria-label="anchor" href="#logitr-002"></a></h2>
