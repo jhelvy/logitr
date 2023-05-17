@@ -103,3 +103,4 @@ reference:
   contents:
   - fquantile
   - ci
+  - logit_probs
