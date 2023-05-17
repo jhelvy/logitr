@@ -70,14 +70,15 @@ probs_mnl_pref <- predict(
 probs_mnl_pref
 ```
 
-The `ci` argument can be used to obtain upper and lower bounds of a confidence interval for predicted probabilities, which are estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. For example, a 95% CI is obtained with `ci = 0.95`:
+Upper and lower bounds of a confidence interval for predicted probabilities can be obtained by setting `interval = "confidence"`, and the tolerance level (0 to 1) is set with the `level` argument (defaults to 0.95). Intervals are estimated using the Krinsky and Robb parametric bootstrapping method [@Krinsky1986]. For example, a 95% CI is obtained with the following:
 
 ```{r}
 probs_mnl_pref <- predict(
   mnl_pref,
   newdata = data,
   obsID = "obsID",
-  ci = 0.95
+  interval = "confidence",
+  level = 0.95
 )
 
 probs_mnl_pref
@@ -99,9 +100,9 @@ mnl_wtp <- logitr(
 
 probs_mnl_wtp <- predict(
   mnl_wtp,
-  newdata = data,
-  obsID   = "obsID",
-  ci      = 0.95
+  newdata  = data,
+  obsID    = "obsID",
+  interval = "confidence"
 )
 
 probs_mnl_wtp

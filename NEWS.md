@@ -1,5 +1,11 @@
 # logitr (development version)
 
+# logitr 1.1.0
+
+- Modified `predict()` method to use the `interval` and `level` arguments of more standard `predict()` methods.
+- Added `ci()` function.
+- Added `logit_probs()` function.
+
 # logitr 1.0.1
 
 - Fixed bug in `adjustFactorLevels()` where the `levels_orig` object was being accidentally overwritten.

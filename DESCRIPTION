@@ -1,6 +1,6 @@
 Package: logitr
 Title: Logit Models w/Preference & WTP Space Utility Parameterizations
-Version: 1.0.1.9000
+Version: 1.1.0
 Authors@R: c(
     person(given   = "John",
            family  = "Helveston",
@@ -16,7 +16,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 Depends:
     R (>= 3.5.0)

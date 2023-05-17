@@ -101,7 +101,7 @@ checkOptions <- function(options) {
   return(options)
 }
 
-predictInputsCheck <- function(object, newdata, obsID, type, ci) {
+predictInputsCheck <- function(object, newdata, obsID, type, level, interval) {
   if (!is_logitr(object)) {
     stop(
       'The "object" argument must be a object estimated using the logitr() ',
@@ -138,10 +138,15 @@ predictInputsCheck <- function(object, newdata, obsID, type, ci) {
       'predicted probabilities) and / or "outcome" (for returning predicted ',
       'outcomes)')
   }
-  if (!is.null(ci)) {
-    ci_test <- (ci < 1) & (ci > 0)
-    if (!ci_test) {
-      stop("ci must be a number between 0 and 1")
+  if (!is.null(level)) {
+    level_test <- (level < 1) & (level > 0)
+    if (!level_test) {
+      stop("level must be a number between 0 and 1")
+    }
+  }
+  if (!is.null(interval)) {
+    if (!interval %in% c("none", "confidence", "prediction")) {
+      stop("'interval' must be 'none', 'confidence', or 'prediction'")
     }
   }
 }

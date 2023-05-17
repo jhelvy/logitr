@@ -10,8 +10,14 @@
   obsID = NULL,
   type = "prob",
   returnData = FALSE,
-  ci = NULL,
-  numDrawsCI = 10^3,
+  interval = "none",
+  level = 0.95,
+  numDrawsCI = 10^4,
+  pars = NULL,
+  scalePar = NULL,
+  randPars = NULL,
+  randScale = NULL,
+  ci,
   ...
 )
 }
@@ -37,13 +43,33 @@ predicted probabilities. Defaults to \code{"prob"}.}
 predicted values ("prob" and / or  "outcome") are returned.
 Defaults to \code{FALSE}.}
 
-\item{ci}{If a confidence interval (CI) for the predicted probabilities is
-desired, set \code{ci} to a number between 0 and 1 to define the CI sensitivity.
-For example, \code{ci = 0.95} will return a 95\% CI. Defaults to \code{NULL}, in which
-case no CI is computed.}
+\item{interval}{Type of interval calculation: "none" (default) or
+"confidence". Future versions will include "prediction" intervals as well.}
+
+\item{level}{Tolerance / confidence interval. Defaults to 0.95.}
 
 \item{numDrawsCI}{The number of draws to use in simulating uncertainty
-for the computed CI. Defaults to 10^3.}
+for the computed CI. Defaults to 10^4.}
+
+\item{pars}{The names of the parameters to be estimated in the model.
+Must be the same as the column names in the \code{data} argument. For WTP space
+models, do not include the \code{scalePar} variable in \code{pars}.}
+
+\item{scalePar}{The name of the column that identifies the scale variable,
+which is typically "price" for WTP space models, but could be any
+continuous variable, such as "time". Defaults to \code{NULL}.}
+
+\item{randPars}{A named vector whose names are the random parameters and
+values the distribution: \code{'n'} for normal, \code{'ln'} for log-normal, or
+\code{'cn'} for zero-censored normal. Defaults to \code{NULL}.}
+
+\item{randScale}{The random distribution for the scale parameter: \code{'n'} for
+normal, \code{'ln'} for log-normal, or \code{'cn'} for zero-censored normal. Only used
+for WTP space MXL models. Defaults to \code{NULL}.}
+
+\item{ci}{No longer used as of v1.1.0 - if provided, this is passed
+to the \code{level} argument, \code{interval} is set to \code{"confidence"},
+and a warning is displayed.}
 
 \item{...}{further arguments.}
 }
@@ -81,6 +107,15 @@ data
 
 # Predict probabilities using the estimated model
 predict(mnl_pref, newdata = data, obsID = "obsID")
+
+# Predict probabilities and include a 95\% confidence interval
+predict(
+  mnl_pref,
+  newdata = data,
+  obsID = "obsID",
+  interval = "confidence",
+  level = 0.95
+)
 
 # Predict outcomes
 predict(mnl_pref, newdata = data, obsID = "obsID", type = "outcome")

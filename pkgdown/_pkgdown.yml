@@ -102,3 +102,4 @@ reference:
   desc: "Other helper functions."
   contents:
   - fquantile
+  - ci

@@ -25,12 +25,26 @@
 #' @param returnData If `TRUE` the data is also returned, otherwise only the
 #' predicted values ("prob" and / or  "outcome") are returned.
 #' Defaults to `FALSE`.
-#' @param ci If a confidence interval (CI) for the predicted probabilities is
-#' desired, set `ci` to a number between 0 and 1 to define the CI sensitivity.
-#' For example, `ci = 0.95` will return a 95% CI. Defaults to `NULL`, in which
-#' case no CI is computed.
+#' @param interval Type of interval calculation: "none" (default) or
+#' "confidence". Future versions will include "prediction" intervals as well.
+#' @param level Tolerance / confidence interval. Defaults to 0.95.
+#' @param ci No longer used as of v1.1.0 - if provided, this is passed
+#' to the `level` argument, `interval` is set to `"confidence"`,
+#' and a warning is displayed.
 #' @param numDrawsCI The number of draws to use in simulating uncertainty
-#' for the computed CI. Defaults to 10^3.
+#' for the computed CI. Defaults to 10^4.
+#' @param pars The names of the parameters to be estimated in the model.
+#' Must be the same as the column names in the `data` argument. For WTP space
+#' models, do not include the `scalePar` variable in `pars`.
+#' @param scalePar The name of the column that identifies the scale variable,
+#' which is typically "price" for WTP space models, but could be any
+#' continuous variable, such as "time". Defaults to `NULL`.
+#' @param randPars A named vector whose names are the random parameters and
+#' values the distribution: `'n'` for normal, `'ln'` for log-normal, or
+#' `'cn'` for zero-censored normal. Defaults to `NULL`.
+#' @param randScale The random distribution for the scale parameter: `'n'` for
+#' normal, `'ln'` for log-normal, or `'cn'` for zero-censored normal. Only used
+#' for WTP space MXL models. Defaults to `NULL`.
 #' @param ... further arguments.
 #' @return A data frame of predicted probabilities and / or outcomes.
 #' @export
@@ -61,6 +75,15 @@
 #' # Predict probabilities using the estimated model
 #' predict(mnl_pref, newdata = data, obsID = "obsID")
 #'
+#' # Predict probabilities and include a 95% confidence interval
+#' predict(
+#'   mnl_pref,
+#'   newdata = data,
+#'   obsID = "obsID",
+#'   interval = "confidence",
+#'   level = 0.95
+#' )
+#'
 #' # Predict outcomes
 #' predict(mnl_pref, newdata = data, obsID = "obsID", type = "outcome")
 #'
@@ -72,11 +95,34 @@ predict.logitr <- function(
   obsID      = NULL,
   type       = "prob",
   returnData = FALSE,
-  ci         = NULL,
-  numDrawsCI = 10^3,
+  interval   = "none",
+  level      = 0.95,
+  numDrawsCI = 10^4,
+  pars       = NULL,
+  scalePar   = NULL,
+  randPars   = NULL,
+  randScale  = NULL,
+  ci,
   ...
 ) {
-  predictInputsCheck(object, newdata, obsID, type, ci)
+  # Argument names were changed in v1.1.0
+  call <- match.call()
+  calls <- names(sapply(call, deparse))[-1]
+  if (any("ci" %in% calls)) {
+    level <- ci
+    interval <- "confidence"
+    warning(
+      "The 'ci' argument is outdated as of v1.1.0. Use 'level' instead and ",
+      "set interval = 'confidence'"
+    )
+  }
+  predictInputsCheck(object, newdata, obsID, type, level, interval)
+  # If user provides parameters, use them instead of the original pars
+  # used to estimate the model
+  # if (!is.null(pars)) { object$inputs$pars <- pars }
+  # if (!is.null(randPars)) { object$inputs$randPars <- inputs$randPars}
+  # if (!is.null(scalePar)) { object$inputs$scalePar <- inputs$scalePar }
+  # if (!is.null(randScale)) { randScale <- inputs$randScale }
   d <- object$data
   # If no newdata is provided, use the data from the estimated object
   if (is.null(newdata)) {
@@ -104,13 +150,16 @@ predict.logitr <- function(
   }
   if (! ("prob" %in% type)) {
     predict_prob <- FALSE
-    ci <- NULL
+    level <- NULL
+    interval <- "none"
   }
 
   if (object$modelType == "mxl") {
-    result <- getMxlProbs(object, data, obsID, ci, numDrawsCI, getV, getVDraws)
+    result <- getMxlProbs(
+      object, data, obsID, interval, level, numDrawsCI, getV, getVDraws)
   } else {
-    result <- getMnlProbs(object, data, obsID, ci, numDrawsCI, getV, getVDraws)
+    result <- getMnlProbs(
+      object, data, obsID, interval, level, numDrawsCI, getV, getVDraws)
   }
   if (predict_outcome) {
     result <- addOutcomes(result, obsID)
@@ -165,42 +214,57 @@ checkFactorLevels <- function(object, newdata) {
   return(newdata)
 }
 
-getMnlProbs <- function(object, data, obsID, ci, numDrawsCI, getV, getVDraws) {
+getMnlProbs <- function(
+    object, data, obsID, interval, level, numDrawsCI, getV, getVDraws
+) {
   obsIDName <- obsID
   # Compute mean probs
   coefs <- stats::coef(object)
   V <- getV(coefs, data$X, data$scalePar)
   probs_mean <- predictLogit(V, data$obsID)
-  if (is.null(ci)) {
-    probs <- formatProbsMean(probs_mean, data$obsID, obsIDName)
-  } else {
-    # Compute uncertainty with simulation
-    n <- object$n
-    n$draws <- numDrawsCI
-    betaUncDraws <- getUncertaintyDraws(object, numDrawsCI)
-    betaUncDraws <- selectDraws(betaUncDraws, object$modelSpace, data$X)
-    VUncDraws <- getVDraws(betaUncDraws, data$X, data$scalePar, n)
-    logitUncDraws <- predictLogit(VUncDraws, data$obsID)
-    probs <- formatProbsUnc(
-      probs_mean, logitUncDraws, data$obsID, obsIDName, ci)
+  if (interval != "confidence") {
+    return(probsNoIntervals(probs_mean, data, interval, obsIDName))
   }
+  # Compute confidence interval with simulation
+  n <- object$n
+  n$draws <- numDrawsCI
+  betaUncDraws <- getUncertaintyDraws(object, numDrawsCI)
+  betaUncDraws <- selectDraws(betaUncDraws, object$modelSpace, data$X)
+  VUncDraws <- getVDraws(betaUncDraws, data$X, data$scalePar, n)
+  logitUncDraws <- predictLogit(VUncDraws, data$obsID)
+  probs <- formatProbsUnc(
+    probs_mean, logitUncDraws, data$obsID, obsIDName, level)
   return(probs)
 }
 
-getMxlProbs <- function(object, data, obsID, ci, numDrawsCI, getV, getVDraws) {
+getMxlProbs <- function(
+    object, data, obsID, interval, level, numDrawsCI, getV, getVDraws
+) {
   obsIDName <- obsID
   # Compute mean probs
   coefs <- stats::coef(object)
   probs_mean <- predictLogitDraws(coefs, object, data, getVDraws)
-  if (is.null(ci)) {
-    probs <- formatProbsMean(probs_mean, data$obsID, obsIDName)
-  } else {
-    # Compute uncertainty with simulation
-    betaUncDraws <- getUncertaintyDraws(object, numDrawsCI)
-    logitUncDraws <- apply(
-      betaUncDraws, 1, predictLogitDraws,
-      object, data, getVDraws)
-    probs <- formatProbsUnc(probs_mean, logitUncDraws, data$obsID, obsIDName, ci)
+  if (interval != "confidence") {
+    return(probsNoIntervals(probs_mean, data, interval, obsIDName))
+  }
+  # Compute uncertainty with simulation
+  betaUncDraws <- getUncertaintyDraws(object, numDrawsCI)
+  logitUncDraws <- apply(
+    betaUncDraws, 1, predictLogitDraws,
+    object, data, getVDraws)
+  probs <- formatProbsUnc(
+    probs_mean, logitUncDraws, data$obsID, obsIDName, level)
+  return(probs)
+}
+
+probsNoIntervals <- function(probs_mean, data, interval, obsIDName) {
+  probs <- formatProbsMean(probs_mean, data$obsID, obsIDName)
+  if (interval == "prediction") {
+    warning(
+      "The version of {logitr} you are using does not yet support ",
+      "prediction intervals, so none have been provided. You can obtain ",
+      "confidence intervals by setting interval = 'confidence'."
+    )
   }
   return(probs)
 }
@@ -245,58 +309,13 @@ formatProbsMean <- function(probs_mean, obsID, obsIDName) {
   return(probs[c(obsIDName, "predicted_prob")])
 }
 
-formatProbsUnc <- function(probs_mean, logitUncDraws, obsID, obsIDName, ci) {
-  probs_bounds <- getCI(logitUncDraws, ci)
+formatProbsUnc <- function(probs_mean, logitUncDraws, obsID, obsIDName, level) {
+  probs_bounds <- ci(t(logitUncDraws), level)[c("lower", "upper")]
   colnames(probs_bounds) <- paste0("predicted_prob_", colnames(probs_bounds))
   probs <- cbind(predicted_prob = probs_mean, probs_bounds)
   names <- c(obsIDName, colnames(probs))
   probs[obsIDName] <- obsID
   return(probs[names])
-}
-
-getCI <- function(draws, ci = 0.95) {
-  alpha <- (1 - ci)/2
-  probs <- c(alpha, 1 - alpha)
-  result <- apply(draws, 1, fquantile, probs = probs)
-  result <- as.data.frame(t(result))
-  names(result) <- c("lower", "upper")
-  return(result)
-}
-
-#' Predict probabilities and / or outcomes
-#'
-#' This function is a faster implementation of the "type 7" `quantile()`
-#' algorithm and is modified from this gist:
-#' https://gist.github.com/sikli/f1775feb9736073cefee97ec81f6b193
-#' It returns sample quantiles corresponding to the given probabilities.
-#' The smallest observation corresponds to a probability of 0 and the largest
-#' to a probability of 1. For speed, output quantile names are removed as are
-#' error handling such as checking if x are factors, or if probs lie outside
-#' the `[0,1]` range.
-#' @param x numeric vector whose sample quantiles are wanted. `NA` and `NaN`
-#' values are not allowed in numeric vectors unless `na.rm` is `TRUE`.
-#' @param probs numeric vector of probabilities with values in `[0,1]`.
-#' (Values up to `2e-14` outside that range are accepted and moved to the
-#' nearby endpoint.)
-#' @param na.rm logical; if `TRUE`, any `NA` and `NaN`'s are removed from `x`
-#' before the quantiles are computed.
-#' @return A vector of length `length(probs)` is returned;
-#' @export
-#' @examples
-#' library(logitr)
-#'
-fquantile <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE) {
-  if (na.rm) x <- x[!is.na(x)]
-  n <- length(x)
-  index <- 1 + (n - 1) * probs
-  lo <- floor(index)
-  hi <- ceiling(index)
-  x  <- sort(x, partial = unique(c(lo, hi)))
-  qs <- x[lo]
-  i  <- 1:length(probs)
-  h  <- index - lo
-  qs <- (1 - h) * qs + h * x[hi]
-  return(qs)
 }
 
 addOutcomes <- function(probs, obsID) {
