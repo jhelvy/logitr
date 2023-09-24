@@ -1,5 +1,9 @@
 # logitr (development version)
 
+# logitr 1.1.1
+
+- Updated the `convergence.Rmd` vignette to not run any actual code using other packages to fix issue on CRAN where not all packages are available on all platforms. Now the results are hard-coded in place.
+
 # logitr 1.1.0
 
 - Modified `predict()` method to use the `interval` and `level` arguments of more standard `predict()` methods.

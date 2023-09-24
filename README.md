@@ -10,7 +10,8 @@ status](https://www.r-pkg.org/badges/version/logitr)](https://CRAN.R-project.org
 [![Travis build
 status](https://app.travis-ci.com/jhelvy/logitr.svg?branch=master)](https://app.travis-ci.com/github/jhelvy/logitr)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/logitr?color=blue)](https://cran.r-project.org/package=logitr)
-[![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/logitr)](https://cran.r-project.org/package=logitr)
+[![CRAN RStudio mirror
+downloads](http://cranlogs.r-pkg.org/badges/logitr)](https://cran.r-project.org/package=logitr)
 <!-- badges: end -->
 
 logitr: Fast Estimation of Multinomial (MNL) and Mixed Logit (MXL)
@@ -87,7 +88,6 @@ article associated with it! You can get the citation by typing
 
 ``` r
 citation("logitr")
-#> 
 #> To cite logitr in publications use:
 #> 
 #>   Helveston JP (2023). "logitr: Fast Estimation of Multinomial and

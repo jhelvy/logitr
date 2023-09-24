@@ -8,3 +8,4 @@
 
 ## Notes
 * This is a new release.
+* Addresses the "Packages in Suggests should be used conditionally" issue.

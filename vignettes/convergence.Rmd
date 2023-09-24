@@ -8,6 +8,14 @@ vignette: >
 bibliography: "`r here::here('vignettes', 'library.bib')`"
 ---
 
+```{r, include=FALSE}
+# Unfortunately, because not all these packages are available on CRAN 
+# for all platforms, this vignette causes errors that will lead to {logitr}
+# being taken off CRAN. So instead of actually running all of this code, 
+# I just hard-code the results that print out here. You can run it yourself
+# to verify that the results are accurate.
+```
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   warning = FALSE,
@@ -19,18 +27,16 @@ knitr::opts_chunk$set(
   fig.retina = 3
 )
 
-# library(logitr)
-
 # Read in results from already estimated models so that the
 # examples aren't actually run when building this page,
 # otherwise it'll take much longer to build
-model_logitr <- readRDS(here::here('inst', 'extdata', 'model_logitr.Rds'))
-model_logitr10 <- readRDS(here::here('inst', 'extdata', 'model_logitr10.Rds'))
-model_mixl1 <- readRDS(here::here('inst', 'extdata', 'model_mixl1.Rds'))
-model_mixl2 <- readRDS(here::here('inst', 'extdata', 'model_mixl2.Rds'))
-model_gmnl1 <- readRDS(here::here('inst', 'extdata', 'model_gmnl1.Rds'))
-model_apollo1 <- readRDS(here::here('inst', 'extdata', 'model_apollo1.Rds'))
-model_apollo2 <- readRDS(here::here('inst', 'extdata', 'model_apollo2.Rds'))
+# model_logitr <- readRDS(here::here('inst', 'extdata', 'model_logitr.Rds'))
+# model_logitr10 <- readRDS(here::here('inst', 'extdata', 'model_logitr10.Rds'))
+# model_mixl1 <- readRDS(here::here('inst', 'extdata', 'model_mixl1.Rds'))
+# model_mixl2 <- readRDS(here::here('inst', 'extdata', 'model_mixl2.Rds'))
+# model_gmnl1 <- readRDS(here::here('inst', 'extdata', 'model_gmnl1.Rds'))
+# model_apollo1 <- readRDS(here::here('inst', 'extdata', 'model_apollo1.Rds'))
+# model_apollo2 <- readRDS(here::here('inst', 'extdata', 'model_apollo2.Rds'))
 ```
 
 Given the non-linear utility specification of WTP space models, these models often diverge during estimation and can be highly sensitive to starting parameters. While many other packages support the estimation of WTP space models, in practice these packages often fail to find solutions.
@@ -53,7 +59,7 @@ For the same mixed logit WTP space model, only {logitr} is able to consistently 
 
 First load the required packages:
 
-```{r, message=FALSE, eval=TRUE}
+```{r}
 library(logitr)
 library(mlogit)
 library(gmnl)
@@ -274,9 +280,11 @@ availabilities <- generate_default_availabilities(data_mixl, 4)
 
 # Estimate WTP space models
 
-The same model is now estimated using all five packages.
+The same model is now estimated using all five packages. We will see that only {logitr} is able to converge to a solution, while all other package either fail to converge or converge to only a local minimum.
 
 ## {logitr}
+
+{logitr} converges, even without running a multi-start:
 
 ```{r}
 model_logitr <- logitr(
@@ -290,15 +298,70 @@ model_logitr <- logitr(
     startVals = start_wtp,
     numDraws  = numDraws_wtp
 )
-```
 
-{logitr} converges, even without running a multi-start:
-
-```{r, eval=TRUE}
 summary(model_logitr)
 ```
 
-Including a multi-start helps build confidence in the solution reached:
+```
+#> =================================================
+#> 
+#> Model estimated on: Sat Oct 01 16:46:57 2022 
+#> 
+#> Using logitr version: 0.8.0 
+#> 
+#> Call:
+#> logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("feat", 
+#>     "brand"), scalePar = "price", randPars = c(feat = "n", brand = "n"), 
+#>     panelID = "id", startVals = start_wtp, numDraws = numDraws_wtp, 
+#>     numCores = numCores)
+#> 
+#> Frequencies of alternatives:
+#>        1        2        3        4 
+#> 0.415721 0.029984 0.170989 0.383306 
+#> 
+#> Exit Status: 3, Optimization stopped because ftol_rel or ftol_abs was reached.
+#>                                  
+#> Model Type:           Mixed Logit
+#> Model Space:   Willingness-to-Pay
+#> Model Run:                 1 of 1
+#> Iterations:                    85
+#> Elapsed Time:            0h:0m:4s
+#> Algorithm:         NLOPT_LD_LBFGS
+#> Weights Used?:              FALSE
+#> Panel ID:                      id
+#> Robust?                     FALSE
+#> 
+#> Model Coefficients: 
+#>                   Estimate Std. Error z-value  Pr(>|z|)    
+#> scalePar          0.388098   0.050706  7.6538 1.954e-14 ***
+#> feat              1.738832   0.725107  2.3980   0.01648 *  
+#> brandhiland     -13.536714   1.810701 -7.4760 7.661e-14 ***
+#> brandweight      -4.510068   1.015856 -4.4397 9.010e-06 ***
+#> brandyoplait      6.663869   0.929658  7.1681 7.605e-13 ***
+#> sd_feat           0.491225   1.072013  0.4582   0.64679    
+#> sd_brandhiland    5.730571   1.125803  5.0902 3.577e-07 ***
+#> sd_brandweight   11.420500   1.727799  6.6099 3.847e-11 ***
+#> sd_brandyoplait   8.872470   1.366376  6.4934 8.390e-11 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#>                                      
+#> Log-Likelihood:          -732.2132421
+#> Null Log-Likelihood:    -1710.6872416
+#> AIC:                     1482.4264842
+#> BIC:                     1528.4886000
+#> McFadden R2:                0.5719771
+#> Adj McFadden R2:            0.5667161
+#> Number of Observations:  1234.0000000
+#> 
+#> Summary of 10k Draws for Random Coefficients: 
+#>              Min.     1st Qu.     Median       Mean   3rd Qu. Max.
+#> feat         -Inf   1.4071720   1.738457   1.738145  2.069629  Inf
+#> brandhiland  -Inf -17.4039453 -13.538553 -13.542027 -9.674388  Inf
+#> brandweight  -Inf -12.2189602  -4.519436  -4.527690  3.182253  Inf
+#> brandyoplait -Inf   0.6670773   6.648678   6.641070 12.632059  Inf
+```
+
+Including a 10-run multi-start helps build confidence in the solution reached:
 
 ```{r}
 model_logitr <- logitr(
@@ -313,10 +376,82 @@ model_logitr <- logitr(
     numDraws  = numDraws_wtp,
     numMultiStarts = 10
 )
+
+summary(model_logitr)
 ```
 
-```{r, eval=TRUE}
-summary(model_logitr)
+```
+#> =================================================
+#> 
+#> Model estimated on: Sun Sep 24 14:02:07 2023 
+#> 
+#> Using logitr version: 1.1.0 
+#> 
+#> Call:
+#> logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("feat", 
+#>     "brand"), scalePar = "price", randPars = c(feat = "n", brand = "n"), 
+#>     panelID = "id", startVals = start_wtp, numMultiStarts = 10, 
+#>     numDraws = numDraws_wtp)
+#> 
+#> Frequencies of alternatives:
+#>        1        2        3        4 
+#> 0.415721 0.029984 0.170989 0.383306 
+#> 
+#> Summary Of Multistart Runs:
+#>    Log Likelihood Iterations Exit Status
+#> 1       -732.2132         86           3
+#> 2       -728.0567         50           3
+#> 3       -734.7358         67           3
+#> 4       -725.4327         68           3
+#> 5       -731.0111         71           3
+#> 6       -731.3684         58           3
+#> 7       -749.7861         72           3
+#> 8       -718.0862         95           3
+#> 9       -745.6384         50           3
+#> 10      -722.1385         68           3
+#> 
+#> Use statusCodes() to view the meaning of each status code
+#> 
+#> Exit Status: 3, Optimization stopped because ftol_rel or ftol_abs was reached.
+#>                                  
+#> Model Type:           Mixed Logit
+#> Model Space:   Willingness-to-Pay
+#> Model Run:                8 of 10
+#> Iterations:                    95
+#> Elapsed Time:            0h:0m:2s
+#> Algorithm:         NLOPT_LD_LBFGS
+#> Weights Used?:              FALSE
+#> Panel ID:                      id
+#> Robust?                     FALSE
+#> 
+#> Model Coefficients: 
+#>                   Estimate Std. Error z-value  Pr(>|z|)    
+#> scalePar          0.378986   0.048908  7.7490 9.326e-15 ***
+#> feat              1.746832   0.725116  2.4090   0.01599 *  
+#> brandhiland     -13.708716   1.788570 -7.6646 1.799e-14 ***
+#> brandweight      -9.382873   1.543072 -6.0806 1.197e-09 ***
+#> brandyoplait      4.251573   0.628295  6.7668 1.316e-11 ***
+#> sd_feat          -0.930817   0.828995 -1.1228   0.26151    
+#> sd_brandhiland   -4.841849   0.901030 -5.3737 7.715e-08 ***
+#> sd_brandweight   10.849573   1.583590  6.8513 7.321e-12 ***
+#> sd_brandyoplait   7.813052   1.129764  6.9157 4.657e-12 ***
+#> ---
+#> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+#>                                      
+#> Log-Likelihood:          -718.0862026
+#> Null Log-Likelihood:    -1710.6872416
+#> AIC:                     1454.1724052
+#> BIC:                     1500.2346000
+#> McFadden R2:                0.5802352
+#> Adj McFadden R2:            0.5749742
+#> Number of Observations:  1234.0000000
+#> 
+#> Summary of 10k Draws for Random Coefficients: 
+#>              Min.    1st Qu.     Median       Mean    3rd Qu. Max.
+#> feat         -Inf   1.120009   1.747543   1.748135   2.375291  Inf
+#> brandhiland  -Inf -16.972056 -13.707162 -13.704227 -10.441231  Inf
+#> brandweight  -Inf -16.706387  -9.391773  -9.399614  -2.075102  Inf
+#> brandyoplait -Inf  -1.029171   4.238197   4.231497   9.507132  Inf
 ```
 
 ## {mixl}
@@ -333,13 +468,29 @@ model_mixl <- estimate(
 
 {mixl} converges to a local minimum:
 
-```{r, eval=TRUE, echo=FALSE}
-model_mixl <- model_mixl1
+```{r}
+c(logLik(model_logitr), logLik(model_mixl))
 ```
 
-```{r, eval=TRUE}
-c(logLik(model_logitr), logLik(model_mixl))
+```
+#> [1]  -718.0862 -1544.8531
+```
+
+```{r}
 cbind(coef(model_logitr), coef(model_mixl))
+```
+
+```
+#>                        [,1]        [,2]
+#> scalePar          0.3789865 -2270.55731
+#> feat              1.7468317    42.24281
+#> brandhiland     -13.7087157    24.36731
+#> brandweight      -9.3828735   110.99687
+#> brandyoplait      4.2515734  -492.36959
+#> sd_feat          -0.9308170    10.81470
+#> sd_brandhiland   -4.8418491    10.23414
+#> sd_brandweight   10.8495725   334.92761
+#> sd_brandyoplait   7.8130522   915.14924
 ```
 
 Second attempt using {logitr} solution as starting points
@@ -352,15 +503,31 @@ model_mixl <- estimate(
 )
 ```
 
-Again, {mixl} converges to a local minimum:
+Again, {mixl} converges to a local minimum (though it's closer than the previous solution):
 
-```{r, include=FALSE}
-model_mixl <- model_mixl2
+```{r}
+c(logLik(model_logitr), logLik(model_mixl))
 ```
 
-```{r, eval=TRUE}
-c(logLik(model_logitr), logLik(model_mixl))
+```
+#> [1] -718.0862 -761.5228
+```
+
+```{r}
 cbind(coef(model_logitr), coef(model_mixl))
+```
+
+```
+#>                        [,1]          [,2]
+#> scalePar          0.3789865    0.01959803
+#> feat              1.7468317   66.46247619
+#> brandhiland     -13.7087157 -172.32720627
+#> brandweight      -9.3828735 -114.92946558
+#> brandyoplait      4.2515734    6.24519288
+#> sd_feat          -0.9308170  -36.14686337
+#> sd_brandhiland   -4.8418491 -227.05348964
+#> sd_brandweight   10.8495725  198.52035799
+#> sd_brandyoplait   7.8130522  173.44727278
 ```
 
 ## {gmnl}
@@ -386,13 +553,30 @@ model_gmnl <- gmnl(
 
 {gmnl} converges to a local minimum:
 
-```{r, eval=TRUE, echo=FALSE}
-model_gmnl <- model_gmnl1
+```{r}
+c(logLik(model_logitr), logLik(model_gmnl))
 ```
 
-```{r, eval=TRUE}
-c(logLik(model_logitr), logLik(model_gmnl))
+```
+#> [1]  -718.0862 -1710.6872
+```
+
+```{r}
 cbind(coef(model_logitr), coef(model_gmnl))
+```
+
+```
+#>                        [,1]         [,2]
+#> feat              0.3789865    8.1540692
+#> brandhiland       1.7468317    4.4266391
+#> brandweight     -13.7087157   20.9581382
+#> brandyoplait     -9.3828735  -93.0969112
+#> het.(Intercept)   4.2515734 -440.5183170
+#> sd.feat          -0.9308170    2.4208585
+#> sd.brandhiland   -4.8418491    0.1085233
+#> sd.brandweight   10.8495725   53.2376327
+#> sd.brandyoplait   7.8130522   95.0008933
+#> tau               0.3789865  653.9956379
 ```
 
 Second attempt using {logitr} solution as starting points:
@@ -414,12 +598,33 @@ model_gmnl <- gmnl(
 )
 ```
 
-```
-#> Error in optim(par = c(feat = 1.74, brandhiland = -13.54, brandweight = -4.51,  :
-#> initial value in 'vmmin' is not finite
+Again, {gmnl} converges to a local minimum:
+
+```{r}
+c(logLik(model_logitr), logLik(model_gmnl))
 ```
 
-In this case, {gmnl} fails due to an error with the starting values provided.
+```
+#> [1] -718.0862 -944.3339
+```
+
+```{r}
+cbind(coef(model_logitr), coef(model_gmnl))
+```
+
+```
+#>                        [,1]       [,2]
+#> feat              0.3789865   2.321317
+#> brandhiland       1.7468317 -18.785933
+#> brandweight     -13.7087157  -5.977394
+#> brandyoplait     -9.3828735   1.761744
+#> het.(Intercept)   4.2515734   6.168432
+#> sd.feat          -0.9308170   2.830422
+#> sd.brandhiland   -4.8418491   6.358857
+#> sd.brandweight   10.8495725  10.600978
+#> sd.brandyoplait   7.8130522   5.455189
+#> tau               0.3789865   8.230516
+```
 
 ## {apollo}
 
@@ -435,15 +640,32 @@ model_apollo <- apollo_estimate(
 )
 ```
 
-{apollo} converges to a local minimum:
+{apollo} fails to converge and just returns the starting coefficients:
 
-```{r, eval=TRUE, echo=FALSE}
-model_apollo <- model_apollo1
+```{r}
+c(logLik(model_logitr), model_apollo$LLout)
 ```
 
-```{r, eval=TRUE}
-c(logLik(model_logitr), logLik(model_apollo))
+```
+#>                 model 
+#>  -718.0862 -2928.4048 
+```
+
+```{r}
 cbind(coef(model_logitr), coef(model_apollo))
+```
+
+```
+#>                        [,1]
+#> scalePar          0.3789865
+#> feat              1.7468317
+#> brandhiland     -13.7087157
+#> brandweight      -9.3828735
+#> brandyoplait      4.2515734
+#> sd_feat          -0.9308170
+#> sd_brandhiland   -4.8418491
+#> sd_brandweight   10.8495725
+#> sd_brandyoplait   7.8130522
 ```
 
 Second attempt using {logitr} solution as starting points:
@@ -458,13 +680,30 @@ model_apollo <- apollo_estimate(
 )
 ```
 
-Again, {apollo} converges to a local minimum:
+This time {apollo} converges to a local minimum:
 
-```{r, eval=TRUE, echo=FALSE}
-model_apollo <- model_apollo2
+```{r}
+c(logLik(model_logitr), model_apollo$LLout)
 ```
 
-```{r, eval=TRUE}
-c(logLik(model_logitr), logLik(model_apollo))
-cbind(coef(model_logitr), coef(model_apollo))
+```
+#>               model 
+#> -718.0862 -769.7493 
+```
+
+```{r}
+cbind(coef(model_logitr), model_apollo$betaStop)
+```
+
+```
+#>                        [,1]          [,2]
+#> scalePar          0.3789865  2.376434e-04
+#> feat              1.7468317  5.213661e+03
+#> brandhiland     -13.7087157 -1.622643e+04
+#> brandweight      -9.3828735 -1.529634e+04
+#> brandyoplait      4.2515734  4.573893e+03
+#> sd_feat          -0.9308170  6.131294e+02
+#> sd_brandhiland   -4.8418491 -9.461200e+03
+#> sd_brandweight   10.8495725  1.260092e+04
+#> sd_brandyoplait   7.8130522  1.347027e+04
 ```
