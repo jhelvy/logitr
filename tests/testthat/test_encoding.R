@@ -1,8 +1,8 @@
 context("Data encoding")
 library(logitr)
 
-diamonds_test <- subset(ggplot2::diamonds,
-    cut %in% c("Ideal", "Good", "Fair") & color %in% c("D", "E", "F"))
+iris$cat <- rep(c('catA', 'catB', 'catC'), nrow(iris))[1:nrow(iris)]
+iris$species <- iris$Species
 
 test_that("recodeData correctly encodes single, continuous variables", {
   x <- recodeData(yogurt, "price", NULL)
@@ -182,65 +182,83 @@ test_that("recodeData correctly encodes interactions between one continuous vari
 })
 
 test_that("recodeData correctly encodes interactions between two categorical variables", {
-  names_color_first <- c(
-    "colorE", "colorF", "cutGood", "cutIdeal", "colorE:cutGood",
-    "colorF:cutGood", "colorE:cutIdeal", "colorF:cutIdeal")
-  names_cut_first <- c(
-    "cutGood", "cutIdeal", "colorE", "colorF", "cutGood:colorE",
-    "cutIdeal:colorE", "cutGood:colorF", "cutIdeal:colorF")
-  cut_color <- c(cutGood = "n", cutIdeal = "n", colorE = "n", colorF = "n")
-  color_cut <- c(colorE = "n", colorF = "n", cutGood = "n", cutIdeal = "n")
+  names_species_first <- c(
+    "speciesversicolor", "speciesvirginica", "catcatB", "catcatC",
+    "speciesversicolor:catcatB", "speciesvirginica:catcatB",
+    "speciesversicolor:catcatC", "speciesvirginica:catcatC"
+  )
+  names_cat_first <- c(
+    "catcatB", "catcatC", "speciesversicolor", "speciesvirginica",
+    "catcatB:speciesversicolor", "catcatC:speciesversicolor",
+    "catcatB:speciesvirginica", "catcatC:speciesvirginica"
+  )
+  species_cat <- c(
+    speciesversicolor = "n", speciesvirginica = "n",
+    catcatB = "n", catcatC = "n"
+  )
+  cat_species <- c(
+    catcatB = "n", catcatC = "n",
+    speciesversicolor = "n", speciesvirginica = "n"
+  )
 
-  x <- recodeData(diamonds_test, c("cut", "color", "cut*color"), NULL)
-  expect_equal(colnames(x$X), names_cut_first)
+  x <- recodeData(iris, c("species", "cat", "species*cat"), NULL)
+  expect_equal(colnames(x$X), names_species_first)
   expect_equal(x$randPars, NULL)
 
-  x <- recodeData(diamonds_test, c("cut", "color", "color*cut"), NULL)
-  expect_equal(colnames(x$X), names_cut_first)
+  x <- recodeData(iris, c("cat", "species", "cat*species"), NULL)
+  expect_equal(colnames(x$X), names_cat_first)
   expect_equal(x$randPars, NULL)
 
-  x <- recodeData(diamonds_test, c("cut", "cut*color"), NULL)
-  expect_equal(colnames(x$X), names_cut_first)
+  x <- recodeData(iris, c("cat", "cat*species"), NULL)
+  expect_equal(colnames(x$X), names_cat_first)
   expect_equal(x$randPars, NULL)
 
-  x <- recodeData(diamonds_test, c("cut*color"), NULL)
-  expect_equal(colnames(x$X), names_cut_first)
+  x <- recodeData(iris, c("cat*species"), NULL)
+  expect_equal(colnames(x$X), names_cat_first)
   expect_equal(x$randPars, NULL)
 
-  x <- recodeData(diamonds_test, c("color", "cut", "cut*color"), NULL)
-  expect_equal(colnames(x$X), names_color_first)
+  x <- recodeData(iris, c("species", "cat", "cat*species"), NULL)
+  expect_equal(colnames(x$X), names_species_first)
   expect_equal(x$randPars, NULL)
 
-  x <- recodeData(diamonds_test, c("color", "cut", "color*cut"), NULL)
-  expect_equal(colnames(x$X), names_color_first)
+  x <- recodeData(iris, c("species", "cat", "species*cat"), NULL)
+  expect_equal(colnames(x$X), names_species_first)
   expect_equal(x$randPars, NULL)
 
-  x <- recodeData(diamonds_test, c("color", "cut*color"), NULL)
-  expect_equal(colnames(x$X), names_color_first)
+  x <- recodeData(iris, c("species", "cat*species"), NULL)
+  expect_equal(colnames(x$X), names_species_first)
   expect_equal(x$randPars, NULL)
 
-  x <- recodeData(diamonds_test, c("color*cut"), NULL)
-  expect_equal(colnames(x$X), names_color_first)
+  x <- recodeData(iris, c("species*cat"), NULL)
+  expect_equal(colnames(x$X), names_species_first)
   expect_equal(x$randPars, NULL)
 
-  x <- recodeData(
-    diamonds_test, c("cut", "color", "cut*color"), c(cut = "n", color = "n"))
-  expect_equal(colnames(x$X), names_cut_first)
-  expect_equal(x$randPars, cut_color)
+  x <- recodeData(iris,
+    c("cat", "species", "cat*species"),
+    c(cat = "n", species = "n")
+  )
+  expect_equal(colnames(x$X), names_cat_first)
+  expect_equal(x$randPars, cat_species)
 
-  x <- recodeData(
-    diamonds_test, c("cut", "color", "cut*color"), c(color = "n", cut = "n"))
-  expect_equal(colnames(x$X), names_cut_first)
-  expect_equal(x$randPars, cut_color)
+  x <- recodeData(iris,
+    c("cat", "species", "cat*species"),
+    c(species = "n", cat = "n")
+  )
+  expect_equal(colnames(x$X), names_cat_first)
+  expect_equal(x$randPars, cat_species)
 
-  x <- recodeData(
-    diamonds_test, c("color", "cut", "cut*color"), c(cut = "n", color = "n"))
-  expect_equal(colnames(x$X), names_color_first)
-  expect_equal(x$randPars, color_cut)
+  x <- recodeData(iris,
+    c("species", "cat", "cat*species"),
+    c(cat = "n", species = "n")
+  )
+  expect_equal(colnames(x$X), names_species_first)
+  expect_equal(x$randPars, species_cat)
 
-  x <- recodeData(
-    diamonds_test, c("color", "cut", "cut*color"), c(color = "n", cut = "n"))
-  expect_equal(colnames(x$X), names_color_first)
-  expect_equal(x$randPars, color_cut)
+  x <- recodeData(iris,
+    c("species", "cat", "cat*species"),
+    c(species = "n", cat = "n")
+  )
+  expect_equal(colnames(x$X), names_species_first)
+  expect_equal(x$randPars, species_cat)
 
 })
