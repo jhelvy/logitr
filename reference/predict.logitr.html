@@ -276,14 +276,14 @@ and a warning is displayed.</p></dd>
 <span class="r-in"><span>  level <span class="op">=</span> <span class="fl">0.95</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   obsID predicted_prob predicted_prob_lower predicted_prob_upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    13     0.43685145           0.41560162           0.45809208</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    13     0.03312986           0.02628065           0.04158882</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    13     0.19155548           0.17564510           0.20787699</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    13     0.33846321           0.31865558           0.35879746</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42     0.60764778           0.57419256           0.64058962</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    42     0.02602007           0.01836509           0.03668693</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42     0.17803313           0.16184008           0.19493240</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8    42     0.18829902           0.16820839           0.20948539</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    13     0.43685145           0.41541670           0.45781405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    13     0.03312986           0.02627949           0.04162745</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    13     0.19155548           0.17617362           0.20759161</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    13     0.33846321           0.31831811           0.35856404</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42     0.60764778           0.57395336           0.64111392</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    42     0.02602007           0.01834621           0.03655238</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42     0.17803313           0.16186553           0.19457998</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    42     0.18829902           0.16758917           0.20929721</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Predict outcomes</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, newdata <span class="op">=</span> <span class="va">data</span>, obsID <span class="op">=</span> <span class="st">"obsID"</span>, type <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span></span></span>
@@ -292,22 +292,22 @@ and a warning is displayed.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    13                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    13                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    13                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42                 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    42                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    42                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42                 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8    42                 0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Predict outcomes and probabilities</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mnl_pref</span>, newdata <span class="op">=</span> <span class="va">data</span>, obsID <span class="op">=</span> <span class="st">"obsID"</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"prob"</span>, <span class="st">"outcome"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   obsID predicted_prob predicted_outcome</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    13     0.43685145                 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    13     0.43685145                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    13     0.03312986                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    13     0.19155548                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    13     0.33846321                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    13     0.33846321                 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    42     0.60764778                 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    42     0.02602007                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42     0.17803313                 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8    42     0.18829902                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    42     0.17803313                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    42     0.18829902                 1</span>
 </code></pre></div>
     </div>
   </div>

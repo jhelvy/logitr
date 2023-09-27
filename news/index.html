@@ -99,6 +99,7 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.1" id="logitr-111">logitr 1.1.1<a class="anchor" aria-label="anchor" href="#logitr-111"></a></h2>
 <ul><li>Updated the <code>convergence.Rmd</code> vignette to not run any actual code using other packages to fix issue on CRAN where not all packages are available on all platforms. Now the results are hard-coded in place.</li>
+<li>Fixed bug in <code>makeObsID()</code> where <code><a href="https://rdrr.io/r/base/table.html" class="external-link">table()</a></code> was sorting the results stored in <code>reps</code>, which has to be manually undone. Fixes <a href="https://github.com/jhelvy/logitr/issues/50" class="external-link">#50</a>.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.0" id="logitr-110">logitr 1.1.0<small>2023-05-17</small><a class="anchor" aria-label="anchor" href="#logitr-110"></a></h2>
