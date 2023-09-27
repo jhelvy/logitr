@@ -211,6 +211,17 @@ makeObsID <- function(data, inputs, outcome) {
   obsID <- as.vector(as.matrix(data[inputs$obsID]))
   # Make sure obsID is in sequential order with no repeated IDs
   reps <- table(obsID)
+  # table sorts outcome with no way of not sorting, so have to reorder it 🤦
+  # see this SO post:
+  # https://stackoverflow.com/questions/24842157/is-there-a-way-stop-table-from-sorting-in-r
+  idOrder <- as.character(unique(obsID))
+  repsOrder <- names(reps)
+  finalOrder <- rep(NA, length(idOrder))
+  for (i in 1:length(finalOrder)) {
+      finalOrder[i] <- which(repsOrder == idOrder[i])
+  }
+  reps <- reps[finalOrder]
+  # Now check if there are repeat errors
   checkRepeatedIDs('obsID', obsID, reps)
   # Make sure that each observation ID has only one outcome
   outcomeCheck <- tapply(outcome, obsID, function(x) sum(x))

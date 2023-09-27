@@ -3,6 +3,7 @@
 # logitr 1.1.1
 
 - Updated the `convergence.Rmd` vignette to not run any actual code using other packages to fix issue on CRAN where not all packages are available on all platforms. Now the results are hard-coded in place.
+- Fixed bug in `makeObsID()` where `table()` was sorting the results stored in `reps`, which has to be manually undone. Fixes #50.
 
 # logitr 1.1.0
 
@@ -309,8 +310,6 @@ summary table.
 bestModel for the WTP calculations, but not the logLik value. Now it's
 getting the right logLik value too.
 - Fixed a bug with the scaling option where it was blowing up to use scaling numbers.
-
-
 
 # logitr 0.0.1
 
