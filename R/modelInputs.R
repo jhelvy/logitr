@@ -98,8 +98,12 @@ getModelInputs <- function(
     multiStarts = numMultiStarts,
     obs         = sum(outcome),
     cores       = setNumCores(numCores), # cores for parallel processing
-    clusters    = 0
+    clusters    = 0,
+    panelIDs    = 1
   )
+  if (panel) {
+    n$panelIDs <- length(unique(panelID))
+  }
   if (!is.null(inputs$clusterID)) { n$clusters <- length(unique(clusterID)) }
   parNames <- getParNames(parSetup, n, correlation)
   n$pars <- length(parNames$all)
@@ -145,42 +149,107 @@ getModelInputs <- function(
   } else {
       data_diff_unscaled <- data_diff
   }
-  n$rowX <- nrow(data_diff$X)
+
+  # If panel data, split data into lists by panelID
+  data_diff_p <- NULL
+  data_diff_unscaled_p <- NULL
+  if (panel) {
+    data_diff_p <- splitPanelData(data_diff)
+    data_diff_unscaled_p <- splitPanelData(data_diff_unscaled)
+  }
+
+  # Add mixed logit inputs:
+  # 1. Standard draws
+  # 2. Partial constants, both scaled and unscaled
+  #    (Need unscaled version of partials for computing hessian)
+
+  if (modelType == "mxl") {
+
+    standardDraws <- makeMxlDraws(parIDs, drawType, standardDraws, n)
+
+    if (panel) {
+
+      # For panel structure, make a list of partials for each panelID
+
+      # First split up the standardDraws into a standardDrawsList by panelID
+      standardDrawsList <- splitMatrix(
+        standardDraws, rep(seq(n$panelIDs), each = n$draws)
+      )
+
+      # Now compute the partials for each panelID
+      partials <- list()
+      partials_unscaled <- list()
+      for (i in seq_len(length(data_diff_p$X))) {
+        partials[[i]] <- makePartials(
+          n, data_diff_p$X[[i]], standardDrawsList[[i]],
+          parIDs, inputs, modelSpace
+        )
+        partials_unscaled[[i]] <- makePartials(
+          n, data_diff_unscaled_p$X[[i]], standardDrawsList[[i]],
+          parIDs, inputs, modelSpace
+        )
+      }
+
+      # Now merge partials back together into structure indexed by par
+      # instead of by panelID
+      partials_new <- list()
+      partials_unscaled_new <- list()
+      for (j in seq_len(n$pars)) {
+        temp <- list()
+        temp_unscaled <- list()
+        for (i in seq_len(n$panelIDs)) {
+          temp[[i]] <- partials[[i]][[j]]
+          temp_unscaled[[i]] <- partials_unscaled[[i]][[j]]
+        }
+        partials_new[[j]] <- do.call(rbind, temp)
+        partials_unscaled_new[[j]] <- do.call(rbind, temp_unscaled)
+      }
+      partials <- partials_new
+      partials_unscaled <- partials_unscaled_new
+
+    } else {
+
+      standardDrawsList <- NULL
+      partials <- makePartials(
+        n, data_diff$X, standardDraws, parIDs, inputs, modelSpace
+      )
+      partials_unscaled <- makePartials(
+        n, data_diff_unscaled$X, standardDraws, parIDs, inputs, modelSpace
+      )
+
+    }
+  }
 
   # Make modelInputs list
   modelInputs <- list(
-    call          = call,
-    formula       = formula,
-    date          = format(Sys.time(), "%a %b %d %X %Y"),
-    version       = as.character(utils::packageVersion("logitr")),
-    inputs        = inputs,
-    modelType     = modelType,
-    modelSpace    = modelSpace,
-    freq          = getFrequencyCounts(obsID, outcome),
-    scalePar      = scalePar,
-    data          = data,
-    data_diff     = data_diff,
-    data_diff_unscaled = data_diff_unscaled,
-    scaleFactors  = scaleFactors,
-    weightsUsed   = weightsUsed,
-    parSetup      = parSetup,
-    parIDs        = parIDs,
-    parNames      = parNames,
-    n             = n,
-    standardDraws = standardDraws,
-    drawType      = drawType,
-    panel         = panel,
-    options       = options
+    call                 = call,
+    formula              = formula,
+    date                 = format(Sys.time(), "%a %b %d %X %Y"),
+    version              = as.character(utils::packageVersion("logitr")),
+    inputs               = inputs,
+    modelType            = modelType,
+    modelSpace           = modelSpace,
+    freq                 = getFrequencyCounts(obsID, outcome),
+    scalePar             = scalePar,
+    data                 = data,
+    data_diff            = data_diff,
+    data_diff_unscaled   = data_diff_unscaled,
+    data_diff_p          = data_diff_p,
+    data_diff_unscaled_p = data_diff_unscaled_p,
+    scaleFactors         = scaleFactors,
+    weightsUsed          = weightsUsed,
+    parSetup             = parSetup,
+    parIDs               = parIDs,
+    parNames             = parNames,
+    n                    = n,
+    partials             = partials,
+    partials_unscaled    = partials_unscaled,
+    standardDraws        = standardDraws,
+    standardDrawsList    = standardDrawsList,
+    drawType             = drawType,
+    panel                = panel,
+    options              = options
   )
-
-  # Add mixed logit inputs
-  if (modelType == "mxl") {
-    modelInputs$standardDraws <- makeMxlDraws(modelInputs)
-    modelInputs$partials <- makePartials(modelInputs, data_diff)
-    # Need unscaled version of partials for computing hessian
-    modelInputs$partials_unscaled <- makePartials(
-      modelInputs, data_diff_unscaled)
-  }
 
   # Set logit and eval functions
   modelInputs$logitFuncs <- setLogitFunctions(modelSpace)
@@ -199,7 +268,8 @@ checkRepeatedIDs <- function(var, id, reps) {
 makePanelID <- function(data, inputs) {
     panelID <- as.vector(as.matrix(data[inputs$panelID]))
     # Make sure panelID is in sequential order with no repeated IDs
-    reps <- table(panelID)
+    reps <- table_nosort(panelID)
+    # Now check if there are repeat errors
     checkRepeatedIDs('panelID', panelID, reps)
     # Passed all checks, so now create a sequentially increasing numeric
     # sequence for the panelID
@@ -210,17 +280,7 @@ makePanelID <- function(data, inputs) {
 makeObsID <- function(data, inputs, outcome) {
   obsID <- as.vector(as.matrix(data[inputs$obsID]))
   # Make sure obsID is in sequential order with no repeated IDs
-  reps <- table(obsID)
-  # table sorts outcome with no way of not sorting, so have to reorder it 🤦
-  # see this SO post:
-  # https://stackoverflow.com/questions/24842157/is-there-a-way-stop-table-from-sorting-in-r
-  idOrder <- as.character(unique(obsID))
-  repsOrder <- names(reps)
-  finalOrder <- rep(NA, length(idOrder))
-  for (i in 1:length(finalOrder)) {
-      finalOrder[i] <- which(repsOrder == idOrder[i])
-  }
-  reps <- reps[finalOrder]
+  reps <- table_nosort(obsID)
   # Now check if there are repeat errors
   checkRepeatedIDs('obsID', obsID, reps)
   # Make sure that each observation ID has only one outcome
@@ -279,7 +339,8 @@ makeClusterID <- function(data, inputs, obsID, panelID) {
     }
     clusterID <- as.vector(as.matrix(data[inputs$clusterID]))
     # Make sure clusterID is in sequential order with no repeated IDs
-    reps <- table(clusterID)
+    reps <- table_nosort(clusterID)
+    # Now check if there are repeat errors
     checkRepeatedIDs('clusterID', clusterID, reps)
     # Passed all checks, so now create a sequentially increasing numeric
     # sequence for the clusterID
@@ -518,6 +579,7 @@ makeDiffData <- function(data, modelType) {
   weights <- data$weights[data$outcome == 1]
   if (!is.null(panelID) & (modelType == "mxl")) {
     panelID <- data$panelID[data$outcome == 1]
+    panelID_reject <- data$panelID[data$outcome != 1]
     weights <- unique(data.frame(panelID = panelID, weights = weights))$weights
   }
   return(list(
@@ -525,15 +587,16 @@ makeDiffData <- function(data, modelType) {
     X         = X_diff,
     obsID     = data$obsID[data$outcome != 1],
     panelID   = panelID,
+    panelID_reject = panelID_reject,
     clusterID = data$clusterID[data$outcome != 1],
     weights   = weights
   ))
 }
 
-makeMxlDraws <- function(modelInputs) {
+makeMxlDraws <- function(parIDs, drawType, standardDraws, n) {
   # Message about using Sobol draws with large number of random parameters
-  if (length(modelInputs$parIDs$r) > 5) {
-    if (modelInputs$drawType == 'halton') {
+  if (length(parIDs$r) > 5) {
+    if (drawType == 'halton') {
       message(
         "Since your model has 5 or more random parameters, it is ",
         "recommended that you use Sobol instead of Halton draws. ",
@@ -542,40 +605,37 @@ makeMxlDraws <- function(modelInputs) {
         "can be implemented by setting numDraws = 200")
     }
   }
-  draws <- modelInputs$standardDraws
+  draws <- standardDraws
   if (is.null(draws)) {
-    draws <- getStandardDraws(
-        modelInputs$parIDs, modelInputs$n$draws, modelInputs$drawType)
-  } else if (ncol(draws) != modelInputs$n$vars) {
+    draws <- getStandardDraws(parIDs, n$draws, drawType, n$panelIDs)
+  } else if (ncol(draws) != n$vars) {
     # If user provides draws, make sure there are enough columns
     stop(
       "The number of columns in the user-provided draws do not match the ",
-      "required number. Please use draws with ", modelInputs$n$vars, " columns"
+      "required number. Please use draws with ", n$vars, " columns"
     )
   }
   return(draws)
 }
 
-makePartials <- function(mi, data) {
-  n <- mi$n
-  X <- data$X
-  if (mi$modelSpace == "wtp") {
+makePartials <- function(n, X, standardDraws, parIDs, inputs, modelSpace) {
+  if (modelSpace == "wtp") {
     X <- cbind(1, X)
   }
   X2 <- repmat(X, 1, 2)
   partials <- list()
   draws <- cbind(
-    matrix(1, ncol = n$vars, nrow = n$draws), mi$standardDraws)
+    matrix(1, ncol = n$vars, nrow = n$draws), standardDraws)
   for (i in seq_len(2*n$vars)) {
     X_temp <- X2[,rep(i, n$draws)]
     draws_temp <- repmat(matrix(draws[, i], nrow = 1), nrow(X_temp), 1)
     partials[[i]] <- X_temp*draws_temp
   }
-  sdIDs <- n$vars + mi$parIDs$r
-  if (! mi$inputs$correlation) {
+  sdIDs <- n$vars + parIDs$r
+  if (! inputs$correlation) {
     return(partials[c(1:n$vars, sdIDs)])
   }
-  draws <- mi$standardDraws[,mi$parIDs$r]
+  draws <- standardDraws[, parIDs$r]
   X <- X2[,sdIDs]
   IDs <- as.data.frame(utils::combn(seq(length(sdIDs)), 2))
   partialOffDiags <- list()
@@ -587,8 +647,8 @@ makePartials <- function(mi, data) {
   }
   result <- lapply(seq(n$pars), function(x) x)
   result[1:n$vars] <- partials[1:n$vars]
-  result[mi$parIDs$sdDiag] <- partials[sdIDs]
-  result[mi$parIDs$sdOffDiag] <- partialOffDiags
+  result[parIDs$sdDiag] <- partials[sdIDs]
+  result[parIDs$sdOffDiag] <- partialOffDiags
   return(result)
 }
 
@@ -644,4 +704,40 @@ getFrequencyCounts <- function(obsID, outcome) {
   freq <- table(alt, outcome)
   freq <- freq[, which(colnames(freq) == "1")]
   return(freq)
+}
+
+splitPanelData <- function(d) {
+  x <- list()
+  x$X <- splitMatrix(d$X, d$panelID_reject)
+  x$obsID <- splitMatrix(d$obsID, d$panelID_reject)
+  x$panelID <- splitMatrix(d$panelID, d$panelID)
+  x$clusterID <- d$clusterID
+  if (!is.null(x$clusterID)) {
+    x$clusterID <- splitMatrix(d$clusterID, d$panelID_reject)
+  }
+  x$scalePar <- d$scalePar
+  if (!is.null(x$scalePar)) {
+    x$scalePar <- splitMatrix(d$scalePar, d$panelID_reject)
+  }
+  x$weights <- d$weights
+  return(x)
+}
+
+splitMatrix <- function(data, ID) {
+  data <- split(as.data.frame(data), ID)
+  return(lapply(data, \(x) as.matrix(x)))
+}
+
+table_nosort <- function(x) {
+  reps <- table(x)
+  # table sorts outcome with no way of not sorting, so have to reorder it 🤦
+  # see this SO post:
+  # https://stackoverflow.com/questions/24842157/is-there-a-way-stop-table-from-sorting-in-r
+  idOrder <- as.character(unique(x))
+  repsOrder <- names(reps)
+  finalOrder <- rep(NA, length(idOrder))
+  for (i in 1:length(finalOrder)) {
+    finalOrder[i] <- which(repsOrder == idOrder[i])
+  }
+  return(reps[finalOrder])
 }

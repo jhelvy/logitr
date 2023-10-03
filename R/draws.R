@@ -29,18 +29,24 @@ makeBetaDraws <- function(pars, parIDs, n, standardDraws, correlation) {
   return(betaDraws)
 }
 
-getStandardDraws <- function(parIDs, numDraws, drawType) {
+getStandardDraws <- function(parIDs, numDraws, drawType, numPanelIDs) {
+
   numBetasRand <- length(parIDs$r)
+
+  # For panel structure, need N sets of numDraws draws (one for each person)
+  numDraws <- numDraws*numPanelIDs
+
   draws <- matrix(0, nrow = numDraws, ncol = length(parIDs$f) + numBetasRand)
   if (drawType == 'sobol') {
-    draws[, parIDs$r] <- as.matrix(
+    draws_norm <- as.matrix(
       randtoolbox::sobol(numDraws, numBetasRand, normal = TRUE)
     )
   } else {
-    draws[, parIDs$r] <- as.matrix(
-      randtoolbox::halton(numDraws, numBetasRand, normal = TRUE)
+    draws_norm <- as.matrix(
+      randtoolbox::halton(numDraws, numBetasRand, normal = TRUE, usetime = TRUE)
     )
   }
+  draws[, parIDs$r] <- draws_norm
   return(draws)
 }
 

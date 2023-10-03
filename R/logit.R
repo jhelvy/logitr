@@ -112,17 +112,32 @@ mnlHessLL_wtp <- function(pars, mi) {
 # Returns the negative log-likelihood of an mxl (heterogeneous) model
 mxlNegLLAndGradLL <- function(pars, mi) {
   d <- mi$data_diff
-  betaDraws <- makeBetaDraws(
-    pars, mi$parIDs, mi$n, mi$standardDraws, mi$inputs$correlation
-  )
-  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$scalePar, mi$n)
-  expVDraws <- exp(VDraws)
-  logitDraws <- getLogit(expVDraws, d$obsID)
-  logitDrawsPanel <- logitDraws
   if (mi$panel) {
+    X <- mi$data_diff_p$X
+    betaDraws <- list()
+    VDraws <- list()
+    for (i in seq_len(mi$n$panelIDs)) {
+      betaDraws[[i]] <- makeBetaDraws(
+        pars, mi$parIDs, mi$n, mi$standardDrawsList[[i]], mi$inputs$correlation
+      )
+      VDraws[[i]] <- mi$logitFuncs$getMxlV(
+        betaDraws[[i]], X[[i]], d$scalePar[[i]], mi$n
+      )
+    }
+    VDraws <- do.call(rbind, VDraws)
+    expVDraws <- exp(VDraws)
+    logitDraws <- getLogit(expVDraws, d$obsID)
+    # Fancy way of doing a product of small numbers:
     logitDrawsPanel <- exp(rowsum(log(logitDraws), d$panelID))
-    pHat <- rowMeans(logitDrawsPanel, na.rm = T)
+    pHat <- rowMeans(logitDrawsPanel, na.rm = TRUE)
   } else {
+    betaDraws <- makeBetaDraws(
+      pars, mi$parIDs, mi$n, mi$standardDraws, mi$inputs$correlation
+    )
+    VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$scalePar, mi$n)
+    expVDraws <- exp(VDraws)
+    logitDraws <- getLogit(expVDraws, d$obsID)
+    logitDrawsPanel <- logitDraws
     pHat <- rowMeans(logitDraws, na.rm = T)
   }
   return(list(
@@ -137,17 +152,32 @@ mxlNegLLAndGradLL <- function(pars, mi) {
 # Returns the negative log-likelihood of an mxl (heterogeneous) model
 getMxlNegLL <- function(pars, mi) {
   d <- mi$data_diff
-  betaDraws <- makeBetaDraws(
-    pars, mi$parIDs, mi$n, mi$standardDraws, mi$inputs$correlation
-  )
-  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$scalePar, mi$n)
-  expVDraws <- exp(VDraws)
-  logitDraws <- getLogit(expVDraws, d$obsID)
-  logitDrawsPanel <- logitDraws
   if (mi$panel) {
+    X <- mi$data_diff_p$X
+    betaDraws <- list()
+    VDraws <- list()
+    for (i in seq_len(mi$n$panelIDs)) {
+      betaDraws[[i]] <- makeBetaDraws(
+        pars, mi$parIDs, mi$n, mi$standardDrawsList[[i]], mi$inputs$correlation
+      )
+      VDraws[[i]] <- mi$logitFuncs$getMxlV(
+        betaDraws[[i]], X[[i]], d$scalePar[[i]], mi$n
+      )
+    }
+    VDraws <- do.call(rbind, VDraws)
+    expVDraws <- exp(VDraws)
+    logitDraws <- getLogit(expVDraws, d$obsID)
+    # Fancy way of doing a product of small numbers:
     logitDrawsPanel <- exp(rowsum(log(logitDraws), d$panelID))
-    pHat <- rowMeans(logitDrawsPanel, na.rm = T)
+    pHat <- rowMeans(logitDrawsPanel, na.rm = TRUE)
   } else {
+    betaDraws <- makeBetaDraws(
+      pars, mi$parIDs, mi$n, mi$standardDraws, mi$inputs$correlation
+    )
+    VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$scalePar, mi$n)
+    expVDraws <- exp(VDraws)
+    logitDraws <- getLogit(expVDraws, d$obsID)
+    logitDrawsPanel <- logitDraws
     pHat <- rowMeans(logitDraws, na.rm = T)
   }
   return(negLL(pHat, d$weights))
@@ -155,17 +185,32 @@ getMxlNegLL <- function(pars, mi) {
 
 getMxlNegGradLL <- function(pars, mi) {
   d <- mi$data_diff
-  betaDraws <- makeBetaDraws(
-    pars, mi$parIDs, mi$n, mi$standardDraws, mi$inputs$correlation
-  )
-  VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$scalePar, mi$n)
-  expVDraws <- exp(VDraws)
-  logitDraws <- getLogit(expVDraws, d$obsID)
-  logitDrawsPanel <- logitDraws
   if (mi$panel) {
+    X <- mi$data_diff_p$X
+    betaDraws <- list()
+    VDraws <- list()
+    for (i in seq_len(mi$n$panelIDs)) {
+      betaDraws[[i]] <- makeBetaDraws(
+        pars, mi$parIDs, mi$n, mi$standardDrawsList[[i]], mi$inputs$correlation
+      )
+      VDraws[[i]] <- mi$logitFuncs$getMxlV(
+        betaDraws[[i]], X[[i]], d$scalePar[[i]], mi$n
+      )
+    }
+    VDraws <- do.call(rbind, VDraws)
+    expVDraws <- exp(VDraws)
+    logitDraws <- getLogit(expVDraws, d$obsID)
+    # Fancy way of doing a product of small numbers:
     logitDrawsPanel <- exp(rowsum(log(logitDraws), d$panelID))
-    pHat <- rowMeans(logitDrawsPanel, na.rm = T)
+    pHat <- rowMeans(logitDrawsPanel, na.rm = TRUE)
   } else {
+    betaDraws <- makeBetaDraws(
+      pars, mi$parIDs, mi$n, mi$standardDraws, mi$inputs$correlation
+    )
+    VDraws <- mi$logitFuncs$getMxlV(betaDraws, d$X, d$scalePar, mi$n)
+    expVDraws <- exp(VDraws)
+    logitDraws <- getLogit(expVDraws, d$obsID)
+    logitDrawsPanel <- logitDraws
     pHat <- rowMeans(logitDraws, na.rm = T)
   }
   return(mi$logitFuncs$mxlNegGradLL(
