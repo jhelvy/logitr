@@ -30,13 +30,17 @@ makeBetaDraws <- function(pars, parIDs, n, standardDraws, correlation) {
 }
 
 getStandardDraws <- function(parIDs, numDraws, drawType) {
-  numBetas <- length(parIDs$f) + length(parIDs$r)
+  numBetasRand <- length(parIDs$r)
+  draws <- matrix(0, nrow = numDraws, ncol = length(parIDs$f) + numBetasRand)
   if (drawType == 'sobol') {
-    draws <- as.matrix(randtoolbox::sobol(numDraws, numBetas, normal = TRUE))
+    draws[, parIDs$r] <- as.matrix(
+      randtoolbox::sobol(numDraws, numBetasRand, normal = TRUE)
+    )
   } else {
-    draws <- as.matrix(randtoolbox::halton(numDraws, numBetas, normal = TRUE))
+    draws[, parIDs$r] <- as.matrix(
+      randtoolbox::halton(numDraws, numBetasRand, normal = TRUE)
+    )
   }
-  draws[, parIDs$f] <- 0 * draws[, parIDs$f]
   return(draws)
 }
 
