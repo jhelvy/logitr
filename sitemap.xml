@@ -1,159 +1,55 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://jhelvy.github.io/logitr/404.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/articles/basic_usage.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/articles/benchmark.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/articles/convergence.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/articles/data_formatting.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/articles/interactions.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/articles/mnl_models.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/articles/mnl_models_weighted.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/articles/mxl_models.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/articles/predict.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/articles/summarizing_results.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/articles/utility_models.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/index.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/apolloModeChoiceData.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/augment.logitr.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/cars_china.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/cars_us.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/ci.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/confint.logitr.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/dummyCode.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/electricity.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/fitted.logitr.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/fquantile.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/glance.logitr.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/logit_probs.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/logitr.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/miscmethods.logitr.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/model.frame.logitr.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/model.matrix.logitr.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/predict.logitr.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/predictChoices.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/predictProbs.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/recodeData.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/reexports.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/residuals.logitr.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/runtimes.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/se.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/se.logitr.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/simulateShares.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/statusCodes.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/tidy.logitr.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/vcov.logitr.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/wtp.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/wtp.logitr.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/wtpCompare.html</loc>
-  </url>
-  <url>
-    <loc>https://jhelvy.github.io/logitr/reference/yogurt.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://jhelvy.github.io/logitr/404.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/LICENSE-text.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/LICENSE.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/articles/basic_usage.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/articles/benchmark.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/articles/convergence.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/articles/data_formatting.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/articles/index.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/articles/interactions.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/articles/mnl_models.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/articles/mnl_models_weighted.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/articles/mxl_models.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/articles/predict.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/articles/summarizing_results.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/articles/utility_models.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/authors.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/index.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/news/index.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/apolloModeChoiceData.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/augment.logitr.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/cars_china.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/cars_us.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/ci.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/confint.logitr.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/dummyCode.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/electricity.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/fitted.logitr.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/fquantile.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/glance.logitr.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/index.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/logit_probs.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/logitr.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/miscmethods.logitr.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/model.frame.logitr.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/model.matrix.logitr.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/predict.logitr.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/predictChoices.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/predictProbs.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/recodeData.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/reexports.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/residuals.logitr.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/runtimes.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/se.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/se.logitr.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/simulateShares.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/statusCodes.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/tidy.logitr.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/vcov.logitr.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/wtp.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/wtp.logitr.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/wtpCompare.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/yogurt.html</loc></url>
 </urlset>
+
