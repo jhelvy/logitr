@@ -3,7 +3,7 @@
 \docType{data}
 \name{electricity}
 \alias{electricity}
-\title{Stated preference data for the choice of electricity suppliers (from {mlogit} package)}
+\title{Stated preference data for the choice of electricity suppliers (from mlogit package)}
 \format{
 \tabular{ll}{
    Variable \tab Description \cr

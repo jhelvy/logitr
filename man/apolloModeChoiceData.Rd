@@ -3,7 +3,7 @@
 \docType{data}
 \name{apolloModeChoiceData}
 \alias{apolloModeChoiceData}
-\title{Simulated SP dataset of mode choice (from the {apollo} package).}
+\title{Simulated SP dataset of mode choice (from the apollo package).}
 \format{
 \tabular{ll}{
    Variable \tab Description \cr

@@ -154,7 +154,7 @@
 
 
 
-#' Simulated SP dataset of mode choice (from the {apollo} package).
+#' Simulated SP dataset of mode choice (from the apollo package).
 #'
 #' A simulated dataset containing 7,000 mode choices among four alternatives.
 #' Data comes from 500 individuals, each with 14 stated stated preference
@@ -209,7 +209,7 @@
 
 
 
-#' Stated preference data for the choice of electricity suppliers (from {mlogit} package)
+#' Stated preference data for the choice of electricity suppliers (from mlogit package)
 #'
 #' A sample of 2308 households in the United States.
 #'
@@ -250,8 +250,8 @@
 #'
 #' This data frame contains the run times for a benchmark comparing the
 #' relative computation time to estimate a preference space mixed logit model
-#' using the following R packages: {logitr}, {mixl}, {mlogit}, {gmnl}, and
-#' {apollo}. The run times are exported from the Google colab notebook here:
+#' using the following R packages: logitr, mixl, mlogit, gmnl, and
+#' apollo. The run times are exported from the Google colab notebook here:
 #' https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing
 #'
 #' @format

@@ -21,8 +21,8 @@ data(runtimes)
 \description{
 This data frame contains the run times for a benchmark comparing the
 relative computation time to estimate a preference space mixed logit model
-using the following R packages: {logitr}, {mixl}, {mlogit}, {gmnl}, and
-{apollo}. The run times are exported from the Google colab notebook here:
+using the following R packages: logitr, mixl, mlogit, gmnl, and
+apollo. The run times are exported from the Google colab notebook here:
 https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing
 }
 \examples{

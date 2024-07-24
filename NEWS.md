@@ -1,5 +1,9 @@
 # logitr (development version)
 
+# logitr 1.1.2
+
+- Added `broom.helpers (>= 1.15.0)` and `gtsummary (>= 2.0.0)` in DESCRIPTION to accord with an update in {gtsummary}.
+
 # logitr 1.1.1
 
 - Updated the `convergence.Rmd` vignette to not run any actual code using other packages to fix issue on CRAN where not all packages are available on all platforms. Now the results are hard-coded in place.

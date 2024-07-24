@@ -88,6 +88,7 @@ article associated with it! You can get the citation by typing
 
 ``` r
 citation("logitr")
+#> 
 #> To cite logitr in publications use:
 #> 
 #>   Helveston JP (2023). "logitr: Fast Estimation of Multinomial and
