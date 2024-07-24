@@ -8,4 +8,4 @@
 
 ## Notes
 * This is a new release.
-* Addresses the "Packages in Suggests should be used conditionally" issue.
+* Addresses an error with a dependency on gtsummary, which caused an error when building the vignettes
