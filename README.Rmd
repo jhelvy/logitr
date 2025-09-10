@@ -61,7 +61,7 @@ An associated paper in the *Journal of Statistical Software* about this package 
 
 ## Citation Information
 
-If you use this package for in a publication, please cite the JSS article associated with it! You can get the citation by typing `citation("logitr")` into R:
+If you use this package in a publication, please cite the JSS article associated with it! You can get the citation by typing `citation("logitr")` into R:
 
 ```{r}
 citation("logitr")
