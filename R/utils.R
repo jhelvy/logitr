@@ -25,15 +25,17 @@
 #' library(logitr)
 #'
 fquantile <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE) {
-  if (na.rm) x <- x[!is.na(x)]
+  if (na.rm) {
+    x <- x[!is.na(x)]
+  }
   n <- length(x)
   index <- 1 + (n - 1) * probs
   lo <- floor(index)
   hi <- ceiling(index)
-  x  <- sort(x, partial = unique(c(lo, hi)))
+  x <- sort(x, partial = unique(c(lo, hi)))
   qs <- x[lo]
-  i  <- 1:length(probs)
-  h  <- index - lo
+  i <- 1:length(probs)
+  h <- index - lo
   qs <- (1 - h) * qs + h * x[hi]
   return(qs)
 }
@@ -96,7 +98,13 @@ fquantile <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE) {
 #'   level = 0.95
 #' )
 #'
-logit_probs <- function(object, coef_draws, newdata, obsID = NULL, level = 0.95) {
+logit_probs <- function(
+  object,
+  coef_draws,
+  newdata,
+  obsID = NULL,
+  level = 0.95
+) {
   if (is.null(obsID)) {
     obsID <- "obsID"
     newdata$obsID <- rep(1, nrow(newdata))
@@ -106,7 +114,7 @@ logit_probs <- function(object, coef_draws, newdata, obsID = NULL, level = 0.95)
   expV <- exp(recoded$X %*% t(coef_draws))
   sumExpV <- rowsum(expV, group = obsID, reorder = FALSE)
   reps <- table(obsID)
-  probs <- expV / sumExpV[rep(seq_along(reps), reps),]
+  probs <- expV / sumExpV[rep(seq_along(reps), reps), ]
   return(ci(t(probs), level))
 }
 
@@ -139,10 +147,10 @@ logit_probs <- function(object, coef_draws, newdata, obsID = NULL, level = 0.95)
 #' ci(coef_draws, level = 0.95)
 #'
 ci <- function(df, level = 0.95) {
-  lower <- (1 - level)/2
+  lower <- (1 - level) / 2
   upper <- 1 - lower
   df <- data.frame(
-    mean  = apply(df, 2, mean, na.rm = TRUE),
+    mean = apply(df, 2, mean, na.rm = TRUE),
     lower = apply(df, 2, function(x) fquantile(x, lower, na.rm = TRUE)),
     upper = apply(df, 2, function(x) fquantile(x, upper, na.rm = TRUE))
   )
@@ -162,7 +170,7 @@ statusCodes <- function() {
   codes <- getStatusCodes()
   cat("Status codes:", "\n", sep = "")
   for (i in seq_len(nrow(codes))) {
-    row <- codes[i,]
+    row <- codes[i, ]
     cat(row$code, ": ", row$message, "\n", sep = "")
   }
 }
@@ -254,7 +262,9 @@ isMxlModel <- function(parSetup) {
 }
 
 checkMatrix <- function(x) {
-  if (!is.matrix(x)) { return(as.matrix(x)) }
+  if (!is.matrix(x)) {
+    return(as.matrix(x))
+  }
   return(x)
 }
 
@@ -262,12 +272,19 @@ checkMatrix <- function(x) {
 #' @importFrom utils packageDescription
 #' @noRd
 .onAttach <- function(libname, pkgname) {
-  desc  <- utils::packageDescription(pkgname, libname)
+  desc <- utils::packageDescription(pkgname, libname)
   packageStartupMessage(
-    "Version:  ", desc$Version, "\n",
-    "Author:   ", "John Paul Helveston (George Washington University)", "\n\n",
+    "Version:  ",
+    desc$Version,
+    "\n",
+    "Author:   ",
+    "John Paul Helveston (George Washington University)",
+    "\n\n",
     "Consider submitting praise at\n",
     "https://github.com/jhelvy/logitr/issues/8.\n\n",
     "Please cite the JSS article in your publications, see:\ncitation(\"logitr\")"
   )
 }
+
+# Helper function for null coalescing
+`%||%` <- function(x, y) if (is.null(x)) y else x
