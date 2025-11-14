@@ -18,3 +18,5 @@ data-raw
 ^\.travis\.yml$
 ^CRAN-RELEASE$
 ^CRAN-SUBMISSION$
+^CLAUDE.md$
+^.claude$
