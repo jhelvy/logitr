@@ -10,6 +10,7 @@
 \alias{print.logitr}
 \alias{print.summary.logitr}
 \alias{print.logitr_wtp}
+\alias{print.logitr_validation}
 \title{Methods for logitr objects}
 \usage{
 \method{logLik}{logitr}(object, ...)
@@ -42,6 +43,8 @@
   width = getOption("width"),
   ...
 )
+
+\method{print}{logitr_validation}(x, ...)
 }
 \arguments{
 \item{object}{is an object of class \code{logitr} (a model estimated using

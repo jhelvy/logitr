@@ -81,13 +81,12 @@ library(logitr)
 
 ## Citation Information
 
-If you use this package for in a publication, please cite the JSS
-article associated with it! You can get the citation by typing
+If you use this package in a publication, please cite the JSS article
+associated with it! You can get the citation by typing
 `citation("logitr")` into R:
 
 ``` r
 citation("logitr")
-#> 
 #> To cite logitr in publications use:
 #> 
 #>   Helveston JP (2023). "logitr: Fast Estimation of Multinomial and

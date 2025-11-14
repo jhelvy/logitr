@@ -76,3 +76,80 @@ mnl_pref_dummies <- logitr(
 
 summary(mnl_pref_dummies)
 ```
+
+# Validating data before estimation
+
+Before estimating a model, it is often helpful to validate that your data is properly formatted. The `validate_data()` function checks for common formatting errors and provides detailed diagnostic information. This can save time by catching errors before you attempt to estimate a model.
+
+## Basic validation
+
+At a minimum, you should validate the `outcome` and `obsID` columns:
+
+```{r}
+validation <- validate_data(
+  data = yogurt,
+  outcome = "choice",
+  obsID = "obsID"
+)
+
+validation
+```
+
+The function returns a validation object that indicates whether the data is valid and provides summary information about the data structure.
+
+## Validation with parameters
+
+You can also validate specific parameters to check for missing values or other issues:
+
+```{r}
+validation <- validate_data(
+  data = yogurt,
+  outcome = "choice",
+  obsID = "obsID",
+  pars = c("price", "feat", "brand")
+)
+
+validation
+```
+
+## Panel data validation
+
+For panel data, you can validate the panel structure:
+
+```{r}
+validation <- validate_data(
+  data = yogurt,
+  outcome = "choice",
+  obsID = "obsID",
+  pars = c("price", "feat", "brand"),
+  panelID = "id"
+)
+
+validation
+```
+
+## Common errors detected
+
+The `validate_data()` function checks for several common formatting errors:
+
+1. **Multiple choices per observation**: Each `obsID` should have exactly one choice (outcome = 1)
+2. **No choice in observation**: Each `obsID` must have at least one choice
+3. **Non-contiguous observation blocks**: All rows with the same `obsID` must be grouped together
+4. **Invalid outcome values**: The outcome variable must only contain 0 and 1 (or TRUE and FALSE)
+5. **Missing values**: Checks for missing values in required columns
+
+Here's an example of detecting an error:
+
+```{r}
+# Create problematic data with multiple choices in one observation
+bad_data <- yogurt
+bad_data$choice[1:2] <- 1
+
+validation <- validate_data(
+  data = bad_data,
+  outcome = "choice",
+  obsID = "obsID"
+)
+
+validation
+```

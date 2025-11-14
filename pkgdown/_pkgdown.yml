@@ -3,17 +3,19 @@ url: https://jhelvy.github.io/logitr/
 home:
   title: Random utility logit models with preference and willingness to pay space parameterizations
   description: logitr estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using "Preference" space or "Willingness-to-pay" (WTP) space utility parameterizations.
-
 template:
-  params:
+  bootstrap: 5
+  light-switch: false
+  bslib:
     bootswatch: cosmo
+    border-radius: 0.5rem
   opengraph:
     image:
       src: https://jhelvy.github.io/logitr/reference/figures/logo.png
       alt: "Logo for the logitr package"
-    twitter:
-      creator: "@JohnHelveston"
-      card: summary
+  twitter:
+    creator: "@jphelveston"
+    card: summary
 
 navbar:
   title: "logitr"
@@ -54,6 +56,7 @@ reference:
   desc: "Functions for encoding data prior to model estimation."
   contents:
   - recodeData
+  - validate_data
 - title: "Estimating Models"
   desc: "Functions for estimating multinomial logit models with preference space and WTP space utility parameterizations."
   contents:
