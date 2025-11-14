@@ -1,0 +1,251 @@
+# logitr
+
+logitr: Fast Estimation of Multinomial (MNL) and Mixed Logit (MXL)
+Models with Preference Space and Willingness to Pay Space [Utility
+Parameterizations](https://jhelvy.github.io/logitr/articles/utility_models.html)
+
+The latest version includes support for:
+
+- Multinomial logit (MNL) models
+- Mixed logit (MXL) models with normal and log-normal parameter
+  distributions.
+- Preference space and WTP space utility parameterizations.
+- Weighted models to differentially weight individual observations.
+- Uncorrelated or correlated heterogeneity covariances for mixed logit
+  models.
+- Functions for computing WTP from preference space models.
+- Functions for predicting expected probabilities and outcomes for sets
+  of alternatives based on an estimated model.
+- A parallelized multistart optimization loop that uses different random
+  starting points in each iteration to search for different local minima
+  (useful for non-convex problems like MXL models or models with WTP
+  space parameterizations).
+
+Mixed logit models are estimated using maximum simulated likelihood
+based on the algorithms in Kenneth Train’s book [*Discrete Choice
+Methods with Simulation, 2nd Edition (New York: Cambridge University
+Press, 2009)*](https://eml.berkeley.edu/books/choice2.html).
+
+## Basic Usage
+
+View the [basic
+usage](https://jhelvy.github.io/logitr/articles/basic_usage.html) page
+for details on how to use **logitr** to estimate models.
+
+## JSS Article
+
+An associated paper in the *Journal of Statistical Software* about this
+package is available at <https://doi.org/10.18637/jss.v105.i10>
+
+## Installation
+
+You can install {logitr} from CRAN:
+
+``` r
+install.packages("logitr")
+```
+
+or you can install the development version of {logitr} from
+[GitHub](https://github.com/jhelvy/logitr):
+
+``` r
+# install.packages("remotes")
+remotes::install_github("jhelvy/logitr")
+```
+
+Load the library with:
+
+``` r
+library(logitr)
+```
+
+## Author, Version, and License Information
+
+- Author: *John Paul Helveston* <https://www.jhelvy.com/>
+- Date First Written: *Sunday, September 28, 2014*
+- License:
+  [MIT](https://github.com/jhelvy/logitr/blob/master/LICENSE.md)
+
+## Citation Information
+
+If you use this package in a publication, please cite the JSS article
+associated with it! You can get the citation by typing
+`citation("logitr")` into R:
+
+``` r
+citation("logitr")
+#> To cite logitr in publications use:
+#> 
+#>   Helveston JP (2023). "logitr: Fast Estimation of Multinomial and
+#>   Mixed Logit Models with Preference Space and Willingness-to-Pay Space
+#>   Utility Parameterizations." _Journal of Statistical Software_,
+#>   *105*(10), 1-37. doi:10.18637/jss.v105.i10
+#>   <https://doi.org/10.18637/jss.v105.i10>.
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Article{,
+#>     title = {{logitr}: Fast Estimation of Multinomial and Mixed Logit Models with Preference Space and Willingness-to-Pay Space Utility Parameterizations},
+#>     author = {John Paul Helveston},
+#>     journal = {Journal of Statistical Software},
+#>     year = {2023},
+#>     volume = {105},
+#>     number = {10},
+#>     pages = {1--37},
+#>     doi = {10.18637/jss.v105.i10},
+#>   }
+```
+
+# Package index
+
+## Encoding Data
+
+Functions for encoding data prior to model estimation.
+
+- [`recodeData()`](https://jhelvy.github.io/logitr/reference/recodeData.md)
+  :
+
+  Returns a list of the design matrix `X` and updated `pars` and
+  `randPars` to include any dummy-coded categorical or interaction
+  variables.
+
+- [`validate_data()`](https://jhelvy.github.io/logitr/reference/validate_data.md)
+  : Validate data formatting for logitr models
+
+## Estimating Models
+
+Functions for estimating multinomial logit models with preference space
+and WTP space utility parameterizations.
+
+- [`logitr()`](https://jhelvy.github.io/logitr/reference/logitr.md) :
+  The main function for estimating logit models
+
+## Viewing Results
+
+Functions for viewing the results of estimated models.
+
+- [`logLik(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/miscmethods.logitr.md)
+  [`terms(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/miscmethods.logitr.md)
+  [`coef(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/miscmethods.logitr.md)
+  [`coef(`*`<summary.logitr>`*`)`](https://jhelvy.github.io/logitr/reference/miscmethods.logitr.md)
+  [`summary(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/miscmethods.logitr.md)
+  [`print(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/miscmethods.logitr.md)
+  [`print(`*`<summary.logitr>`*`)`](https://jhelvy.github.io/logitr/reference/miscmethods.logitr.md)
+  [`print(`*`<logitr_wtp>`*`)`](https://jhelvy.github.io/logitr/reference/miscmethods.logitr.md)
+  [`print(`*`<logitr_validation>`*`)`](https://jhelvy.github.io/logitr/reference/miscmethods.logitr.md)
+  : Methods for logitr objects
+- [`se(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/se.logitr.md)
+  : Extract standard errors
+- [`se()`](https://jhelvy.github.io/logitr/reference/se.md) : Extract
+  standard errors
+- [`vcov(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/vcov.logitr.md)
+  : Calculate the variance-covariance matrix
+- [`fitted(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/fitted.logitr.md)
+  : Extract Model Fitted Values
+- [`residuals(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/residuals.logitr.md)
+  : Extract Model Residuals
+- [`statusCodes()`](https://jhelvy.github.io/logitr/reference/statusCodes.md)
+  : View a description the nloptr status codes
+
+## Computing and Comparing WTP
+
+Functions for computing and comparing WTP from estimated models.
+
+- [`wtp()`](https://jhelvy.github.io/logitr/reference/wtp.md) : Get WTP
+  estimates a preference space model
+- [`wtp(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/wtp.logitr.md)
+  : Get WTP estimates a preference space model
+- [`wtpCompare()`](https://jhelvy.github.io/logitr/reference/wtpCompare.md)
+  : Compare WTP from preference and WTP space models
+
+## Predicting Probabilities & Outcomes
+
+Functions for predicting probabilities and outcomes.
+
+- [`predict(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/predict.logitr.md)
+  : Predict probabilities and / or outcomes
+
+## Tidy / Broom Methods
+
+Methods for tidying up results from estimate models.
+
+- [`augment(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/augment.logitr.md)
+  :
+
+  Glance a `logitr` class object
+
+- [`confint(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/confint.logitr.md)
+  : Extract Model Confidence Interval
+
+- [`glance(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/glance.logitr.md)
+  :
+
+  Glance a `logitr` class object
+
+- [`model.frame(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/model.frame.logitr.md)
+  : Extracting the Model Frame from a Formula or Fit
+
+- [`model.matrix(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/model.matrix.logitr.md)
+  : Construct Design Matrices
+
+- [`tidy(`*`<logitr>`*`)`](https://jhelvy.github.io/logitr/reference/tidy.logitr.md)
+  :
+
+  Tidy a `logitr` class object
+
+## Example Data Sets
+
+Descriptions of data included with this package
+
+- [`yogurt`](https://jhelvy.github.io/logitr/reference/yogurt.md) :
+  Choice observations of yogurt purchases by 100 households
+- [`cars_us`](https://jhelvy.github.io/logitr/reference/cars_us.md) :
+  Stated car choice observations by US car buyers
+- [`cars_china`](https://jhelvy.github.io/logitr/reference/cars_china.md)
+  : Stated car choice observations by Chinese car buyers
+- [`apolloModeChoiceData`](https://jhelvy.github.io/logitr/reference/apolloModeChoiceData.md)
+  : Simulated SP dataset of mode choice (from the apollo package).
+- [`electricity`](https://jhelvy.github.io/logitr/reference/electricity.md)
+  : Stated preference data for the choice of electricity suppliers (from
+  mlogit package)
+- [`runtimes`](https://jhelvy.github.io/logitr/reference/runtimes.md) :
+  Data frame of run times for logitr benchmark
+
+## Other Helpers
+
+Other helper functions.
+
+- [`fquantile()`](https://jhelvy.github.io/logitr/reference/fquantile.md)
+  : Predict probabilities and / or outcomes
+- [`ci()`](https://jhelvy.github.io/logitr/reference/ci.md) : Obtain a
+  confidence interval from coefficient draws
+- [`logit_probs()`](https://jhelvy.github.io/logitr/reference/logit_probs.md)
+  : Compute logit fraction for sets of alternatives given coefficient
+  draws
+
+# Articles
+
+### All vignettes
+
+- [Basic
+  Usage](https://jhelvy.github.io/logitr/articles/basic_usage.md):
+- [Benchmarking estimation speed against other
+  packages](https://jhelvy.github.io/logitr/articles/benchmark.md):
+- [WTP space convergence issues in other
+  packages](https://jhelvy.github.io/logitr/articles/convergence.md):
+- [Data Formatting and
+  Encoding](https://jhelvy.github.io/logitr/articles/data_formatting.md):
+- [Estimating Models with
+  Interactions](https://jhelvy.github.io/logitr/articles/interactions.md):
+- [Estimating Weighted Logit
+  Models](https://jhelvy.github.io/logitr/articles/mnl_models_weighted.md):
+- [Estimating Multinomial Logit
+  Models](https://jhelvy.github.io/logitr/articles/mnl_models.md):
+- [Estimating Mixed Logit
+  Models](https://jhelvy.github.io/logitr/articles/mxl_models.md):
+- [Predicting Probabilities and Outcomes with Estimated
+  Models](https://jhelvy.github.io/logitr/articles/predict.md):
+- [Summarizing
+  Results](https://jhelvy.github.io/logitr/articles/summarizing_results.md):
+- [Utility Models in the Preference & WTP
+  Space](https://jhelvy.github.io/logitr/articles/utility_models.md):

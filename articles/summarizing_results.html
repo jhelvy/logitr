@@ -4,127 +4,78 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Summarizing Results • logitr</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Summarizing Results">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Summarizing Results">
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">logitr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2</span>
-      </span>
-    </div>
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <a class="navbar-brand me-2" href="../index.html">logitr</a>
 
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
-<li>
-  <a href="../articles/basic_usage.html">Basic Usage</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.3</small>
 
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/utility_models.html">Utility Models in the Preference &amp; WTP Space</a>
-    </li>
-    <li>
-      <a href="../articles/data_formatting.html">Data Formatting and Encoding</a>
-    </li>
-    <li>
-      <a href="../articles/mnl_models.html">Estimating Multinomial Logit Models</a>
-    </li>
-    <li>
-      <a href="../articles/mxl_models.html">Estimating Mixed Logit Models</a>
-    </li>
-    <li>
-      <a href="../articles/interactions.html">Estimating Models with Interactions</a>
-    </li>
-    <li>
-      <a href="../articles/mnl_models_weighted.html">Estimating Weighted Logit Models</a>
-    </li>
-    <li>
-      <a href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a>
-    </li>
-    <li>
-      <a href="../articles/summarizing_results.html">Summarizing Results</a>
-    </li>
-    <li>
-      <a href="../articles/benchmark.html">Benchmarking estimation speed against other packages</a>
-    </li>
-    <li>
-      <a href="../articles/convergence.html">WTP space convergence issues in other packages</a>
-    </li>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../index.html"><span class="fa fa-home fa-lg"></span></a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/basic_usage.html">Basic Usage</a></li>
+<li class="active nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/utility_models.html">Utility Models in the Preference &amp; WTP Space</a></li>
+    <li><a class="dropdown-item" href="../articles/data_formatting.html">Data Formatting and Encoding</a></li>
+    <li><a class="dropdown-item" href="../articles/mnl_models.html">Estimating Multinomial Logit Models</a></li>
+    <li><a class="dropdown-item" href="../articles/mxl_models.html">Estimating Mixed Logit Models</a></li>
+    <li><a class="dropdown-item" href="../articles/interactions.html">Estimating Models with Interactions</a></li>
+    <li><a class="dropdown-item" href="../articles/mnl_models_weighted.html">Estimating Weighted Logit Models</a></li>
+    <li><a class="dropdown-item" href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a></li>
+    <li><a class="dropdown-item" href="../articles/summarizing_results.html">Summarizing Results</a></li>
+    <li><a class="dropdown-item" href="../articles/benchmark.html">Benchmarking estimation speed against other packages</a></li>
+    <li><a class="dropdown-item" href="../articles/convergence.html">WTP space convergence issues in other packages</a></li>
   </ul>
 </li>
-<li>
-  <a href="../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/jhelvy/logitr/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/jhelvy/logitr/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
+</nav><div class="container template-article">
 
 
 
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Summarizing Results</h1>
+
+<div class="row">
+  <main id="main" class="col-md-9"><div class="page-header">
+      <img src="../logo.png" class="logo" alt=""><h1>Summarizing Results</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/jhelvy/logitr/blob/master/vignettes/summarizing_results.Rmd" class="external-link"><code>vignettes/summarizing_results.Rmd</code></a></small>
-      <div class="hidden name"><code>summarizing_results.Rmd</code></div>
-
+      <div class="d-none name"><code>summarizing_results.Rmd</code></div>
     </div>
 
     
@@ -147,9 +98,9 @@ is the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link"
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="co">#&gt; =================================================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model estimated on: Fri Nov 01 19:42:01 2024 </span></span>
+<span><span class="co">#&gt; Model estimated on: Fri Nov 14 17:02:39 2025 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Using logitr version: 1.1.2 </span></span>
+<span><span class="co">#&gt; Using logitr version: 1.1.3 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span></span>
@@ -165,7 +116,7 @@ is the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link"
 <span><span class="co">#&gt; Model Space:          Preference</span></span>
 <span><span class="co">#&gt; Model Run:                1 of 1</span></span>
 <span><span class="co">#&gt; Iterations:                   21</span></span>
-<span><span class="co">#&gt; Elapsed Time:        0h:0m:0.02s</span></span>
+<span><span class="co">#&gt; Elapsed Time:        0h:0m:0.03s</span></span>
 <span><span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span></span>
 <span><span class="co">#&gt; Weights Used?:             FALSE</span></span>
 <span><span class="co">#&gt; Robust?                    FALSE</span></span>
@@ -262,8 +213,8 @@ as:</p>
 <span><span class="co">#&gt; price         0.0005936657  5.729619e-04  0.001851795 1.249988e-04</span></span>
 <span><span class="co">#&gt; feat          0.0005729619  1.441482e-02  0.000855011 5.092011e-06</span></span>
 <span><span class="co">#&gt; brandhiland   0.0018517954  8.550110e-04  0.021146019 1.490080e-03</span></span>
-<span><span class="co">#&gt; brandweight   0.0001249988  5.092012e-06  0.001490080 2.970026e-03</span></span>
-<span><span class="co">#&gt; brandyoplait -0.0015377721 -1.821331e-03 -0.003681036 7.779428e-04</span></span>
+<span><span class="co">#&gt; brandweight   0.0001249988  5.092011e-06  0.001490080 2.970026e-03</span></span>
+<span><span class="co">#&gt; brandyoplait -0.0015377721 -1.821331e-03 -0.003681036 7.779427e-04</span></span>
 <span><span class="co">#&gt;               brandyoplait</span></span>
 <span><span class="co">#&gt; price        -0.0015377721</span></span>
 <span><span class="co">#&gt; feat         -0.0018213311</span></span>
@@ -748,9 +699,7 @@ obtained using the <code><a href="https://www.danieldsjoberg.com/gtsummary/refer
 <thead><tr class="gt_col_headings">
 <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="label"><span class="gt_from_md"><strong>Characteristic</strong></span></th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="estimate"><span class="gt_from_md"><strong>Beta</strong></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="conf.low">
-<span class="gt_from_md"><strong>95% CI</strong></span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
-</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="conf.low"><span class="gt_from_md"><strong>95% CI</strong></span></th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="p.value"><span class="gt_from_md"><strong>p-value</strong></span></th>
     </tr></thead>
 <tbody class="gt_table_body">
@@ -770,37 +719,35 @@ obtained using the <code><a href="https://www.danieldsjoberg.com/gtsummary/refer
 <td headers="label" class="gt_row gt_left">    hiland</td>
 <td headers="estimate" class="gt_row gt_center">-3.7</td>
 <td headers="conf.low" class="gt_row gt_center">-4.0, -3.4</td>
-<td headers="p.value" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    weight</td>
 <td headers="estimate" class="gt_row gt_center">-0.64</td>
 <td headers="conf.low" class="gt_row gt_center">-0.75, -0.54</td>
-<td headers="p.value" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    yoplait</td>
 <td headers="estimate" class="gt_row gt_center">0.73</td>
 <td headers="conf.low" class="gt_row gt_center">0.58, 0.89</td>
-<td headers="p.value" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">feat</td>
 <td headers="estimate" class="gt_row gt_center">0.49</td>
 <td headers="conf.low" class="gt_row gt_center">0.26, 0.73</td>
-<td headers="p.value" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">price</td>
 <td headers="estimate" class="gt_row gt_center">-0.37</td>
 <td headers="conf.low" class="gt_row gt_center">-0.41, -0.32</td>
-<td headers="p.value" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 </tbody>
-<tfoot class="gt_footnotes"><tr>
-<td class="gt_footnote" colspan="4">
-<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span> <span class="gt_from_md">CI = Confidence Interval</span>
-</td>
+<tfoot><tr class="gt_sourcenotes">
+<td class="gt_sourcenote" colspan="4"><span class="gt_from_md">Abbreviation: CI = Confidence Interval</span></td>
     </tr></tfoot>
 </table>
 </div>
@@ -815,23 +762,23 @@ coefficient names with the <code>label</code> argument:</p>
 <span>        brand <span class="op">=</span> <span class="st">"Yogurt's brand"</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<div id="gzuhjqijvk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#gzuhjqijvk table {
+<div id="jbdpimvrbc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#jbdpimvrbc table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#gzuhjqijvk thead, #gzuhjqijvk tbody, #gzuhjqijvk tfoot, #gzuhjqijvk tr, #gzuhjqijvk td, #gzuhjqijvk th {
+#jbdpimvrbc thead, #jbdpimvrbc tbody, #jbdpimvrbc tfoot, #jbdpimvrbc tr, #jbdpimvrbc td, #jbdpimvrbc th {
   border-style: none;
 }
 
-#gzuhjqijvk p {
+#jbdpimvrbc p {
   margin: 0;
   padding: 0;
 }
 
-#gzuhjqijvk .gt_table {
+#jbdpimvrbc .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -857,12 +804,12 @@ coefficient names with the <code>label</code> argument:</p>
   border-left-color: #D3D3D3;
 }
 
-#gzuhjqijvk .gt_caption {
+#jbdpimvrbc .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#gzuhjqijvk .gt_title {
+#jbdpimvrbc .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -874,7 +821,7 @@ coefficient names with the <code>label</code> argument:</p>
   border-bottom-width: 0;
 }
 
-#gzuhjqijvk .gt_subtitle {
+#jbdpimvrbc .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -886,7 +833,7 @@ coefficient names with the <code>label</code> argument:</p>
   border-top-width: 0;
 }
 
-#gzuhjqijvk .gt_heading {
+#jbdpimvrbc .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -898,13 +845,13 @@ coefficient names with the <code>label</code> argument:</p>
   border-right-color: #D3D3D3;
 }
 
-#gzuhjqijvk .gt_bottom_border {
+#jbdpimvrbc .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#gzuhjqijvk .gt_col_headings {
+#jbdpimvrbc .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -919,7 +866,7 @@ coefficient names with the <code>label</code> argument:</p>
   border-right-color: #D3D3D3;
 }
 
-#gzuhjqijvk .gt_col_heading {
+#jbdpimvrbc .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -939,7 +886,7 @@ coefficient names with the <code>label</code> argument:</p>
   overflow-x: hidden;
 }
 
-#gzuhjqijvk .gt_column_spanner_outer {
+#jbdpimvrbc .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -951,15 +898,15 @@ coefficient names with the <code>label</code> argument:</p>
   padding-right: 4px;
 }
 
-#gzuhjqijvk .gt_column_spanner_outer:first-child {
+#jbdpimvrbc .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#gzuhjqijvk .gt_column_spanner_outer:last-child {
+#jbdpimvrbc .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#gzuhjqijvk .gt_column_spanner {
+#jbdpimvrbc .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -971,11 +918,11 @@ coefficient names with the <code>label</code> argument:</p>
   width: 100%;
 }
 
-#gzuhjqijvk .gt_spanner_row {
+#jbdpimvrbc .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#gzuhjqijvk .gt_group_heading {
+#jbdpimvrbc .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1001,7 +948,7 @@ coefficient names with the <code>label</code> argument:</p>
   text-align: left;
 }
 
-#gzuhjqijvk .gt_empty_group_heading {
+#jbdpimvrbc .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1016,15 +963,15 @@ coefficient names with the <code>label</code> argument:</p>
   vertical-align: middle;
 }
 
-#gzuhjqijvk .gt_from_md > :first-child {
+#jbdpimvrbc .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#gzuhjqijvk .gt_from_md > :last-child {
+#jbdpimvrbc .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#gzuhjqijvk .gt_row {
+#jbdpimvrbc .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1043,7 +990,7 @@ coefficient names with the <code>label</code> argument:</p>
   overflow-x: hidden;
 }
 
-#gzuhjqijvk .gt_stub {
+#jbdpimvrbc .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1056,7 +1003,7 @@ coefficient names with the <code>label</code> argument:</p>
   padding-right: 5px;
 }
 
-#gzuhjqijvk .gt_stub_row_group {
+#jbdpimvrbc .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1070,15 +1017,15 @@ coefficient names with the <code>label</code> argument:</p>
   vertical-align: top;
 }
 
-#gzuhjqijvk .gt_row_group_first td {
+#jbdpimvrbc .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#gzuhjqijvk .gt_row_group_first th {
+#jbdpimvrbc .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#gzuhjqijvk .gt_summary_row {
+#jbdpimvrbc .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1088,16 +1035,16 @@ coefficient names with the <code>label</code> argument:</p>
   padding-right: 5px;
 }
 
-#gzuhjqijvk .gt_first_summary_row {
+#jbdpimvrbc .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#gzuhjqijvk .gt_first_summary_row.thick {
+#jbdpimvrbc .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#gzuhjqijvk .gt_last_summary_row {
+#jbdpimvrbc .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1107,7 +1054,7 @@ coefficient names with the <code>label</code> argument:</p>
   border-bottom-color: #D3D3D3;
 }
 
-#gzuhjqijvk .gt_grand_summary_row {
+#jbdpimvrbc .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1117,7 +1064,7 @@ coefficient names with the <code>label</code> argument:</p>
   padding-right: 5px;
 }
 
-#gzuhjqijvk .gt_first_grand_summary_row {
+#jbdpimvrbc .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1127,7 +1074,7 @@ coefficient names with the <code>label</code> argument:</p>
   border-top-color: #D3D3D3;
 }
 
-#gzuhjqijvk .gt_last_grand_summary_row_top {
+#jbdpimvrbc .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1137,11 +1084,11 @@ coefficient names with the <code>label</code> argument:</p>
   border-bottom-color: #D3D3D3;
 }
 
-#gzuhjqijvk .gt_striped {
+#jbdpimvrbc .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#gzuhjqijvk .gt_table_body {
+#jbdpimvrbc .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1150,7 +1097,7 @@ coefficient names with the <code>label</code> argument:</p>
   border-bottom-color: #D3D3D3;
 }
 
-#gzuhjqijvk .gt_footnotes {
+#jbdpimvrbc .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1164,7 +1111,7 @@ coefficient names with the <code>label</code> argument:</p>
   border-right-color: #D3D3D3;
 }
 
-#gzuhjqijvk .gt_footnote {
+#jbdpimvrbc .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1173,7 +1120,7 @@ coefficient names with the <code>label</code> argument:</p>
   padding-right: 5px;
 }
 
-#gzuhjqijvk .gt_sourcenotes {
+#jbdpimvrbc .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1187,7 +1134,7 @@ coefficient names with the <code>label</code> argument:</p>
   border-right-color: #D3D3D3;
 }
 
-#gzuhjqijvk .gt_sourcenote {
+#jbdpimvrbc .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1195,72 +1142,72 @@ coefficient names with the <code>label</code> argument:</p>
   padding-right: 5px;
 }
 
-#gzuhjqijvk .gt_left {
+#jbdpimvrbc .gt_left {
   text-align: left;
 }
 
-#gzuhjqijvk .gt_center {
+#jbdpimvrbc .gt_center {
   text-align: center;
 }
 
-#gzuhjqijvk .gt_right {
+#jbdpimvrbc .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#gzuhjqijvk .gt_font_normal {
+#jbdpimvrbc .gt_font_normal {
   font-weight: normal;
 }
 
-#gzuhjqijvk .gt_font_bold {
+#jbdpimvrbc .gt_font_bold {
   font-weight: bold;
 }
 
-#gzuhjqijvk .gt_font_italic {
+#jbdpimvrbc .gt_font_italic {
   font-style: italic;
 }
 
-#gzuhjqijvk .gt_super {
+#jbdpimvrbc .gt_super {
   font-size: 65%;
 }
 
-#gzuhjqijvk .gt_footnote_marks {
+#jbdpimvrbc .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#gzuhjqijvk .gt_asterisk {
+#jbdpimvrbc .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#gzuhjqijvk .gt_indent_1 {
+#jbdpimvrbc .gt_indent_1 {
   text-indent: 5px;
 }
 
-#gzuhjqijvk .gt_indent_2 {
+#jbdpimvrbc .gt_indent_2 {
   text-indent: 10px;
 }
 
-#gzuhjqijvk .gt_indent_3 {
+#jbdpimvrbc .gt_indent_3 {
   text-indent: 15px;
 }
 
-#gzuhjqijvk .gt_indent_4 {
+#jbdpimvrbc .gt_indent_4 {
   text-indent: 20px;
 }
 
-#gzuhjqijvk .gt_indent_5 {
+#jbdpimvrbc .gt_indent_5 {
   text-indent: 25px;
 }
 
-#gzuhjqijvk .katex-display {
+#jbdpimvrbc .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#gzuhjqijvk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#jbdpimvrbc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1268,9 +1215,7 @@ coefficient names with the <code>label</code> argument:</p>
 <thead><tr class="gt_col_headings">
 <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="label"><span class="gt_from_md"><strong>Characteristic</strong></span></th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="estimate"><span class="gt_from_md"><strong>Beta</strong></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="conf.low">
-<span class="gt_from_md"><strong>95% CI</strong></span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
-</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="conf.low"><span class="gt_from_md"><strong>95% CI</strong></span></th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="p.value"><span class="gt_from_md"><strong>p-value</strong></span></th>
     </tr></thead>
 <tbody class="gt_table_body">
@@ -1290,37 +1235,35 @@ coefficient names with the <code>label</code> argument:</p>
 <td headers="label" class="gt_row gt_left">    hiland</td>
 <td headers="estimate" class="gt_row gt_center">-3.7</td>
 <td headers="conf.low" class="gt_row gt_center">-4.0, -3.4</td>
-<td headers="p.value" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    weight</td>
 <td headers="estimate" class="gt_row gt_center">-0.64</td>
 <td headers="conf.low" class="gt_row gt_center">-0.75, -0.53</td>
-<td headers="p.value" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    yoplait</td>
 <td headers="estimate" class="gt_row gt_center">0.73</td>
-<td headers="conf.low" class="gt_row gt_center">0.58, 0.89</td>
-<td headers="p.value" class="gt_row gt_center"></td>
+<td headers="conf.low" class="gt_row gt_center">0.57, 0.89</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">Newspaper ad shown?</td>
 <td headers="estimate" class="gt_row gt_center">0.49</td>
-<td headers="conf.low" class="gt_row gt_center">0.26, 0.72</td>
-<td headers="p.value" class="gt_row gt_center"></td>
+<td headers="conf.low" class="gt_row gt_center">0.26, 0.73</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">price</td>
 <td headers="estimate" class="gt_row gt_center">-0.37</td>
 <td headers="conf.low" class="gt_row gt_center">-0.41, -0.32</td>
-<td headers="p.value" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 </tbody>
-<tfoot class="gt_footnotes"><tr>
-<td class="gt_footnote" colspan="4">
-<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span> <span class="gt_from_md">CI = Confidence Interval</span>
-</td>
+<tfoot><tr class="gt_sourcenotes">
+<td class="gt_sourcenote" colspan="4"><span class="gt_from_md">Abbreviation: CI = Confidence Interval</span></td>
     </tr></tfoot>
 </table>
 </div>
@@ -1358,23 +1301,23 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
 <span>  tbls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">t1</span>, <span class="va">t2</span><span class="op">)</span>,</span>
 <span>  tab_spanner <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"**Baseline**"</span>, <span class="st">"**Interaction**"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div id="vgdsmwskkk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#vgdsmwskkk table {
+<div id="ajmavotqps" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ajmavotqps table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#vgdsmwskkk thead, #vgdsmwskkk tbody, #vgdsmwskkk tfoot, #vgdsmwskkk tr, #vgdsmwskkk td, #vgdsmwskkk th {
+#ajmavotqps thead, #ajmavotqps tbody, #ajmavotqps tfoot, #ajmavotqps tr, #ajmavotqps td, #ajmavotqps th {
   border-style: none;
 }
 
-#vgdsmwskkk p {
+#ajmavotqps p {
   margin: 0;
   padding: 0;
 }
 
-#vgdsmwskkk .gt_table {
+#ajmavotqps .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1400,12 +1343,12 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   border-left-color: #D3D3D3;
 }
 
-#vgdsmwskkk .gt_caption {
+#ajmavotqps .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#vgdsmwskkk .gt_title {
+#ajmavotqps .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1417,7 +1360,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   border-bottom-width: 0;
 }
 
-#vgdsmwskkk .gt_subtitle {
+#ajmavotqps .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1429,7 +1372,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   border-top-width: 0;
 }
 
-#vgdsmwskkk .gt_heading {
+#ajmavotqps .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1441,13 +1384,13 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   border-right-color: #D3D3D3;
 }
 
-#vgdsmwskkk .gt_bottom_border {
+#ajmavotqps .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#vgdsmwskkk .gt_col_headings {
+#ajmavotqps .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1462,7 +1405,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   border-right-color: #D3D3D3;
 }
 
-#vgdsmwskkk .gt_col_heading {
+#ajmavotqps .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1482,7 +1425,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   overflow-x: hidden;
 }
 
-#vgdsmwskkk .gt_column_spanner_outer {
+#ajmavotqps .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1494,15 +1437,15 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   padding-right: 4px;
 }
 
-#vgdsmwskkk .gt_column_spanner_outer:first-child {
+#ajmavotqps .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#vgdsmwskkk .gt_column_spanner_outer:last-child {
+#ajmavotqps .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#vgdsmwskkk .gt_column_spanner {
+#ajmavotqps .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1514,11 +1457,11 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   width: 100%;
 }
 
-#vgdsmwskkk .gt_spanner_row {
+#ajmavotqps .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#vgdsmwskkk .gt_group_heading {
+#ajmavotqps .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1544,7 +1487,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   text-align: left;
 }
 
-#vgdsmwskkk .gt_empty_group_heading {
+#ajmavotqps .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1559,15 +1502,15 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   vertical-align: middle;
 }
 
-#vgdsmwskkk .gt_from_md > :first-child {
+#ajmavotqps .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#vgdsmwskkk .gt_from_md > :last-child {
+#ajmavotqps .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#vgdsmwskkk .gt_row {
+#ajmavotqps .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1586,7 +1529,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   overflow-x: hidden;
 }
 
-#vgdsmwskkk .gt_stub {
+#ajmavotqps .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1599,7 +1542,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   padding-right: 5px;
 }
 
-#vgdsmwskkk .gt_stub_row_group {
+#ajmavotqps .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1613,15 +1556,15 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   vertical-align: top;
 }
 
-#vgdsmwskkk .gt_row_group_first td {
+#ajmavotqps .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#vgdsmwskkk .gt_row_group_first th {
+#ajmavotqps .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#vgdsmwskkk .gt_summary_row {
+#ajmavotqps .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1631,16 +1574,16 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   padding-right: 5px;
 }
 
-#vgdsmwskkk .gt_first_summary_row {
+#ajmavotqps .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#vgdsmwskkk .gt_first_summary_row.thick {
+#ajmavotqps .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#vgdsmwskkk .gt_last_summary_row {
+#ajmavotqps .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1650,7 +1593,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   border-bottom-color: #D3D3D3;
 }
 
-#vgdsmwskkk .gt_grand_summary_row {
+#ajmavotqps .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1660,7 +1603,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   padding-right: 5px;
 }
 
-#vgdsmwskkk .gt_first_grand_summary_row {
+#ajmavotqps .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1670,7 +1613,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   border-top-color: #D3D3D3;
 }
 
-#vgdsmwskkk .gt_last_grand_summary_row_top {
+#ajmavotqps .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1680,11 +1623,11 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   border-bottom-color: #D3D3D3;
 }
 
-#vgdsmwskkk .gt_striped {
+#ajmavotqps .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#vgdsmwskkk .gt_table_body {
+#ajmavotqps .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1693,7 +1636,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   border-bottom-color: #D3D3D3;
 }
 
-#vgdsmwskkk .gt_footnotes {
+#ajmavotqps .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1707,7 +1650,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   border-right-color: #D3D3D3;
 }
 
-#vgdsmwskkk .gt_footnote {
+#ajmavotqps .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1716,7 +1659,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   padding-right: 5px;
 }
 
-#vgdsmwskkk .gt_sourcenotes {
+#ajmavotqps .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1730,7 +1673,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   border-right-color: #D3D3D3;
 }
 
-#vgdsmwskkk .gt_sourcenote {
+#ajmavotqps .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1738,72 +1681,72 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
   padding-right: 5px;
 }
 
-#vgdsmwskkk .gt_left {
+#ajmavotqps .gt_left {
   text-align: left;
 }
 
-#vgdsmwskkk .gt_center {
+#ajmavotqps .gt_center {
   text-align: center;
 }
 
-#vgdsmwskkk .gt_right {
+#ajmavotqps .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#vgdsmwskkk .gt_font_normal {
+#ajmavotqps .gt_font_normal {
   font-weight: normal;
 }
 
-#vgdsmwskkk .gt_font_bold {
+#ajmavotqps .gt_font_bold {
   font-weight: bold;
 }
 
-#vgdsmwskkk .gt_font_italic {
+#ajmavotqps .gt_font_italic {
   font-style: italic;
 }
 
-#vgdsmwskkk .gt_super {
+#ajmavotqps .gt_super {
   font-size: 65%;
 }
 
-#vgdsmwskkk .gt_footnote_marks {
+#ajmavotqps .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#vgdsmwskkk .gt_asterisk {
+#ajmavotqps .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#vgdsmwskkk .gt_indent_1 {
+#ajmavotqps .gt_indent_1 {
   text-indent: 5px;
 }
 
-#vgdsmwskkk .gt_indent_2 {
+#ajmavotqps .gt_indent_2 {
   text-indent: 10px;
 }
 
-#vgdsmwskkk .gt_indent_3 {
+#ajmavotqps .gt_indent_3 {
   text-indent: 15px;
 }
 
-#vgdsmwskkk .gt_indent_4 {
+#ajmavotqps .gt_indent_4 {
   text-indent: 20px;
 }
 
-#vgdsmwskkk .gt_indent_5 {
+#ajmavotqps .gt_indent_5 {
   text-indent: 25px;
 }
 
-#vgdsmwskkk .katex-display {
+#ajmavotqps .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#vgdsmwskkk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#ajmavotqps div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1811,23 +1754,19 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
 <thead>
 <tr class="gt_col_headings gt_spanner_row">
 <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" scope="col" id="label"><span class="gt_from_md"><strong>Characteristic</strong></span></th>
-      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="**Baseline**">
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="level 1; estimate_1">
         <div class="gt_column_spanner"><span class="gt_from_md"><strong>Baseline</strong></span></div>
       </th>
-      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="**Interaction**">
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="level 1; estimate_2">
         <div class="gt_column_spanner"><span class="gt_from_md"><strong>Interaction</strong></span></div>
       </th>
     </tr>
 <tr class="gt_col_headings">
 <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="estimate_1"><span class="gt_from_md"><strong>Beta</strong></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="conf.low_1">
-<span class="gt_from_md"><strong>95% CI</strong></span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
-</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="conf.low_1"><span class="gt_from_md"><strong>95% CI</strong></span></th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="p.value_1"><span class="gt_from_md"><strong>p-value</strong></span></th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="estimate_2"><span class="gt_from_md"><strong>Beta</strong></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="conf.low_2">
-<span class="gt_from_md"><strong>95% CI</strong></span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
-</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="conf.low_2"><span class="gt_from_md"><strong>95% CI</strong></span></th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="p.value_2"><span class="gt_from_md"><strong>p-value</strong></span></th>
     </tr>
 </thead>
@@ -1854,38 +1793,34 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
 <td headers="label" class="gt_row gt_left">    hiland</td>
 <td headers="estimate_1" class="gt_row gt_center">-3.7</td>
 <td headers="conf.low_1" class="gt_row gt_center">-4.0, -3.4</td>
-<td headers="p.value_1" class="gt_row gt_center">
-</td>
+<td headers="p.value_1" class="gt_row gt_center">&lt;0.001</td>
 <td headers="estimate_2" class="gt_row gt_center">-3.7</td>
 <td headers="conf.low_2" class="gt_row gt_center">-4.0, -3.4</td>
-<td headers="p.value_2" class="gt_row gt_center"></td>
+<td headers="p.value_2" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    weight</td>
 <td headers="estimate_1" class="gt_row gt_center">-0.64</td>
 <td headers="conf.low_1" class="gt_row gt_center">-0.75, -0.53</td>
-<td headers="p.value_1" class="gt_row gt_center">
-</td>
+<td headers="p.value_1" class="gt_row gt_center">&lt;0.001</td>
 <td headers="estimate_2" class="gt_row gt_center">-0.64</td>
 <td headers="conf.low_2" class="gt_row gt_center">-0.75, -0.54</td>
-<td headers="p.value_2" class="gt_row gt_center"></td>
+<td headers="p.value_2" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    yoplait</td>
 <td headers="estimate_1" class="gt_row gt_center">0.73</td>
 <td headers="conf.low_1" class="gt_row gt_center">0.57, 0.89</td>
-<td headers="p.value_1" class="gt_row gt_center">
-</td>
+<td headers="p.value_1" class="gt_row gt_center">&lt;0.001</td>
 <td headers="estimate_2" class="gt_row gt_center">0.72</td>
 <td headers="conf.low_2" class="gt_row gt_center">0.57, 0.88</td>
-<td headers="p.value_2" class="gt_row gt_center"></td>
+<td headers="p.value_2" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">feat</td>
 <td headers="estimate_1" class="gt_row gt_center">0.49</td>
 <td headers="conf.low_1" class="gt_row gt_center">0.25, 0.73</td>
-<td headers="p.value_1" class="gt_row gt_center">
-</td>
+<td headers="p.value_1" class="gt_row gt_center">&lt;0.001</td>
 <td headers="estimate_2" class="gt_row gt_center">1.2</td>
 <td headers="conf.low_2" class="gt_row gt_center">0.42, 1.9</td>
 <td headers="p.value_2" class="gt_row gt_center">0.002</td>
@@ -1894,11 +1829,10 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
 <td headers="label" class="gt_row gt_left">price</td>
 <td headers="estimate_1" class="gt_row gt_center">-0.37</td>
 <td headers="conf.low_1" class="gt_row gt_center">-0.41, -0.32</td>
-<td headers="p.value_1" class="gt_row gt_center">
-</td>
+<td headers="p.value_1" class="gt_row gt_center">&lt;0.001</td>
 <td headers="estimate_2" class="gt_row gt_center">-0.36</td>
-<td headers="conf.low_2" class="gt_row gt_center">-0.41, -0.31</td>
-<td headers="p.value_2" class="gt_row gt_center"></td>
+<td headers="conf.low_2" class="gt_row gt_center">-0.40, -0.31</td>
+<td headers="p.value_2" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">price * feat</td>
@@ -1910,10 +1844,8 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
 <td headers="p.value_2" class="gt_row gt_center">0.068</td>
 </tr>
 </tbody>
-<tfoot class="gt_footnotes"><tr>
-<td class="gt_footnote" colspan="7">
-<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span> <span class="gt_from_md">CI = Confidence Interval</span>
-</td>
+<tfoot><tr class="gt_sourcenotes">
+<td class="gt_sourcenote" colspan="7"><span class="gt_from_md">Abbreviation: CI = Confidence Interval</span></td>
     </tr></tfoot>
 </table>
 </div>
@@ -2030,29 +1962,22 @@ particularly useful for obtaining tables formatted for use in <a href="https://w
 <span><span class="co">#&gt; *** p &lt; 0.01; ** p &lt; 0.05; * p &lt; 0.1</span></span></code></pre></div>
 </div>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-      </div>
-
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
-  <p></p>
-<p>Developed by John Helveston.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p>Developed by John Helveston.</p>
 </div>
 
-<div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<div class="pkgdown-footer-right">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
-
 
 
 
