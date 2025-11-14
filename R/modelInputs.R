@@ -216,10 +216,7 @@ makeObsID <- function(data, inputs, outcome) {
   # https://stackoverflow.com/questions/24842157/is-there-a-way-stop-table-from-sorting-in-r
   idOrder <- as.character(unique(obsID))
   repsOrder <- names(reps)
-  finalOrder <- rep(NA, length(idOrder))
-  for (i in 1:length(finalOrder)) {
-      finalOrder[i] <- which(repsOrder == idOrder[i])
-  }
+  finalOrder <- match(idOrder, repsOrder)
   reps <- reps[finalOrder]
   # Now check if there are repeat errors
   checkRepeatedIDs('obsID', obsID, reps)
