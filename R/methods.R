@@ -594,10 +594,7 @@ model.frame.logitr <- function(formula, ...) {
   )
 }
 
-#' Print method for logitr_validation objects
-#'
-#' @param x An object of class 'logitr_validation'
-#' @param ... Additional arguments (ignored)
+#' @rdname miscmethods.logitr
 #' @export
 print.logitr_validation <- function(x, ...) {
   cat("=== LOGITR DATA VALIDATION ===\n\n")
