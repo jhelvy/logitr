@@ -115,7 +115,7 @@ mnl_pref_dummies <- logitr(
 summary(mnl_pref_dummies)
 #> =================================================
 #> 
-#> Model estimated on: Fri Nov 14 17:02:10 2025 
+#> Model estimated on: Fri Dec 19 21:44:05 2025 
 #> 
 #> Using logitr version: 1.1.3 
 #> 

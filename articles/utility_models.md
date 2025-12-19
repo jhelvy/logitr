@@ -48,9 +48,9 @@ variance $\sigma^{2}\left( \pi^{2}/6 \right)$. This model is not
 identified since there exists an infinite set of combinations of values
 for ${\mathbf{β}}^{*}$, $\alpha^{*}$, and $\sigma$ that produce the same
 choice probabilities. In order to specify an identifiable model, the
-modeler must normalize equation (). One approach is to normalize the
-scale of the error term by dividing equation () by $\sigma$, producing
-the “preference space” utility specification:
+modeler must normalize equation . One approach is to normalize the scale
+of the error term by dividing equation by $\sigma$, producing the
+“preference space” utility specification:
 
 $$\left( \frac{u_{j}^{*}}{\sigma} \right) = \left( \frac{{\mathbf{β}}^{*}}{\sigma} \right)\prime\mathbf{x}_{j} + \left( \frac{\alpha^{*}}{\sigma} \right)p_{j} + \left( \frac{\varepsilon_{j}^{*}}{\sigma} \right),\quad\quad\left( \frac{\varepsilon_{j}^{*}}{\sigma} \right) \sim \text{Gumbel}\left( 0,\frac{\pi^{2}}{6} \right)$$
 
@@ -61,10 +61,7 @@ ${\mathbf{β}} = \left( {\mathbf{β}}^{*}/\sigma \right)$,
 $\alpha = \left( \alpha^{*}/\sigma \right)$, and
 $\varepsilon_{j} = \left( \varepsilon_{j}^{*}/\sigma \right)$:
 
-\$\$\begin{equation} u\_{j} = \mathbf{β}' \mathrm{\mathbf{x}}\_{j} +
-\alpha p\_{j} + \varepsilon\_{j} \hspace{0.5in} \varepsilon\_{j} \sim
-\textrm{Gumbel}\left(0,\frac{\pi^2}{6}\right)
-\label{eq:utilityPreference} \end{equation}\$\$
+$$u_{j} = {\mathbf{β}}\prime\mathbf{x}_{j} + \alpha p_{j} + \varepsilon_{j},\quad\quad\varepsilon_{j} \sim \text{Gumbel}\left( 0,\frac{\pi^{2}}{6} \right)$$
 
 The vector $\mathbf{β}$ represents the marginal utility for changes in
 each non-price attribute, and $\alpha$ represents the marginal utility
@@ -86,10 +83,7 @@ $u_{j} = \left( \lambda u_{j}^{*}/ - \alpha^{*} \right)$,
 ${\mathbf{ω}} = ({\mathbf{β}}^{*}/ - \alpha^{*}$), and
 $\varepsilon_{j} = \left( \lambda\varepsilon_{j}^{*}/ - \alpha^{*} \right)$:
 
-\$\$\begin{equation} u\_{j} = \lambda \left( \mathbf{ω}'
-\mathrm{\mathbf{x}}\_{j} - p\_{j} \right) + \varepsilon\_{j}
-\hspace{0.5in} \varepsilon\_{j} \sim \textrm{Gumbel}\left(0,
-\frac{\pi^2}{6}\right) \label{eq:utilityWtp} \end{equation}\$\$
+$$u_{j} = \lambda\left( {\mathbf{ω}}\prime\mathbf{x}_{j} - p_{j} \right) + \varepsilon_{j},\quad\quad\varepsilon_{j} \sim \text{Gumbel}\left( 0,\frac{\pi^{2}}{6} \right)$$
 
 Here $\mathbf{ω}$ represents the marginal WTP for changes in each
 non-price attribute, and $\lambda$ represents the scale of the

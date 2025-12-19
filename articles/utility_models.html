@@ -118,7 +118,7 @@ where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>v</mi><mi>j</mi></msub><annotation encoding="application/x-tex">v_{j}</annotation></semantics></math>
 is the “observed utility” (a function of the observed attributes such
 that
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>j</mi></msub><mo>=</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>𝐱</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">v_{j} = f(\mathrm{\mathbf{x}}_{j})</annotation></semantics></math>)
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>j</mi></msub><mo>=</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>𝐱</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">v_{j} = f(\mathbf{x}_{j})</annotation></semantics></math>)
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ε</mi><mi>j</mi></msub><annotation encoding="application/x-tex">\varepsilon_{j}</annotation></semantics></math>
 is a random variable representing the portion of utility unobservable to
@@ -127,7 +127,7 @@ the modeler.</p>
 model:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>u</mi><mi>j</mi><mo>*</mo></msubsup><mo>=</mo><msup><mi>𝛃</mi><mrow><mo>*</mo><mi>′</mi></mrow></msup><msub><mi>𝐱</mi><mi>j</mi></msub><mo>+</mo><msup><mi>α</mi><mo>*</mo></msup><msub><mi>p</mi><mi>j</mi></msub><mo>+</mo><msubsup><mi>ε</mi><mi>j</mi><mo>*</mo></msubsup><mo>,</mo><mspace width="1.0em"></mspace><mspace width="1.0em"></mspace><msubsup><mi>ε</mi><mi>j</mi><mo>*</mo></msubsup><mo>∼</mo><mtext mathvariant="normal">Gumbel</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mfrac><msup><mi>π</mi><mn>2</mn></msup><mn>6</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{equation}
     u^*_{j} =
-        \mathbf{β}^{*'} \mathrm{\mathbf{x}}_{j} +
+        \boldsymbol{\beta}^{*'} \mathbf{x}_{j} +
         \alpha^{*} p_{j} +
         \varepsilon^{*}_{j},
         \quad\quad
@@ -135,9 +135,9 @@ model:</p>
 \label{eq:utility}
 \end{equation}</annotation></semantics></math></p>
 <p>where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝛃</mi><mo>*</mo></msup><annotation encoding="application/x-tex">\mathbf{β}^{*}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝛃</mi><mo>*</mo></msup><annotation encoding="application/x-tex">\boldsymbol{\beta}^{*}</annotation></semantics></math>
 is the vector of coefficients for non-price attributes
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐱</mi><mi>j</mi></msub><annotation encoding="application/x-tex">\mathrm{\mathbf{x}}_{j}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐱</mi><mi>j</mi></msub><annotation encoding="application/x-tex">\mathbf{x}_{j}</annotation></semantics></math>,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>α</mi><mo>*</mo></msup><annotation encoding="application/x-tex">\alpha^{*}</annotation></semantics></math>
 is the coefficient for price
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>p</mi><mi>j</mi></msub><annotation encoding="application/x-tex">p_{j}</annotation></semantics></math>,
@@ -148,18 +148,18 @@ mean zero and variance
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>σ</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>π</mi><mn>2</mn></msup><mi>/</mi><mn>6</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\sigma^2(\pi^2/6)</annotation></semantics></math>.
 This model is not identified since there exists an infinite set of
 combinations of values for
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝛃</mi><mo>*</mo></msup><annotation encoding="application/x-tex">\mathbf{β}^{*}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝛃</mi><mo>*</mo></msup><annotation encoding="application/x-tex">\boldsymbol{\beta}^{*}</annotation></semantics></math>,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>α</mi><mo>*</mo></msup><annotation encoding="application/x-tex">\alpha^{*}</annotation></semantics></math>,
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
 that produce the same choice probabilities. In order to specify an
-identifiable model, the modeler must normalize equation (). One approach
-is to normalize the scale of the error term by dividing equation () by
+identifiable model, the modeler must normalize equation . One approach
+is to normalize the scale of the error term by dividing equation by
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>,
 producing the “preference space” utility specification:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msubsup><mi>u</mi><mi>j</mi><mo>*</mo></msubsup><mi>σ</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msup><mi>𝛃</mi><mo>*</mo></msup><mi>σ</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mi>′</mi><msub><mi>𝐱</mi><mi>j</mi></msub><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msup><mi>α</mi><mo>*</mo></msup><mi>σ</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>p</mi><mi>j</mi></msub><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msubsup><mi>ε</mi><mi>j</mi><mo>*</mo></msubsup><mi>σ</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="1.0em"></mspace><mspace width="1.0em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msubsup><mi>ε</mi><mi>j</mi><mo>*</mo></msubsup><mi>σ</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>∼</mo><mtext mathvariant="normal">Gumbel</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mfrac><msup><mi>π</mi><mn>2</mn></msup><mn>6</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{equation}
     \left(\frac{u^*_{j}}{\sigma}\right) =
-        \left( \frac{\mathbf{β}^{*}}{\sigma} \right)' \mathrm{\mathbf{x}}_{j} +
+        \left( \frac{\boldsymbol{\beta}^{*}}{\sigma} \right)' \mathbf{x}_{j} +
         \left( \frac{\alpha^{*}}{\sigma} \right) p_{j} +
         \left( \frac{\varepsilon^{*}_{j}}{\sigma} \right),
         \quad\quad
@@ -169,28 +169,27 @@ producing the “preference space” utility specification:</p>
 <p>The typical preference space parameterization of the multinomial
 logit (MNL) model can then be written by rewriting equation () with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mi>j</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>u</mi><mi>j</mi><mo>*</mo></msubsup><mi>/</mi><mi>σ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">u_j = (u^*_j / \sigma)</annotation></semantics></math>,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝛃</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>𝛃</mi><mo>*</mo></msup><mi>/</mi><mi>σ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbf{β}= (\mathbf{β}^{*} / \sigma)</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝛃</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>𝛃</mi><mo>*</mo></msup><mi>/</mi><mi>σ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\boldsymbol{\beta}= (\boldsymbol{\beta}^{*} / \sigma)</annotation></semantics></math>,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>α</mi><mo>*</mo></msup><mi>/</mi><mi>σ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\alpha = (\alpha^{*} / \sigma)</annotation></semantics></math>,
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ε</mi><mi>j</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>ε</mi><mi>j</mi><mo>*</mo></msubsup><mi>/</mi><mi>σ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\varepsilon_{j} = (\varepsilon^{*}_{j} / \sigma)</annotation></semantics></math>:</p>
-<p><span class="math display">$$\begin{equation}
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mi>j</mi></msub><mo>=</mo><mi>𝛃</mi><mi>′</mi><msub><mi>𝐱</mi><mi>j</mi></msub><mo>+</mo><mi>α</mi><msub><mi>p</mi><mi>j</mi></msub><mo>+</mo><msub><mi>ε</mi><mi>j</mi></msub><mo>,</mo><mspace width="1.0em"></mspace><mspace width="1.0em"></mspace><msub><mi>ε</mi><mi>j</mi></msub><mo>∼</mo><mtext mathvariant="normal">Gumbel</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mfrac><msup><mi>π</mi><mn>2</mn></msup><mn>6</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{equation}
     u_{j} =
-        \mathbf{β}' \mathrm{\mathbf{x}}_{j} +
+        \boldsymbol{\beta}' \mathbf{x}_{j} +
         \alpha p_{j} +
-        \varepsilon_{j}
-        \hspace{0.5in}
-        \varepsilon_{j} \sim
-\textrm{Gumbel}\left(0,\frac{\pi^2}{6}\right)
+        \varepsilon_{j},
+        \quad\quad
+        \varepsilon_{j} \sim \textrm{Gumbel}\left(0,\frac{\pi^2}{6}\right)
 \label{eq:utilityPreference}
-\end{equation}$$</span></p>
+\end{equation}</annotation></semantics></math></p>
 <p>The vector
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝛃</mi><annotation encoding="application/x-tex">\mathbf{β}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝛃</mi><annotation encoding="application/x-tex">\boldsymbol{\beta}</annotation></semantics></math>
 represents the marginal utility for changes in each non-price attribute,
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
 represents the marginal utility obtained from price reductions. In
 addition, the coefficients
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝛃</mi><annotation encoding="application/x-tex">\mathbf{β}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝛃</mi><annotation encoding="application/x-tex">\boldsymbol{\beta}</annotation></semantics></math>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
 are measured in units of <em>utility</em>, which only has relative
@@ -203,7 +202,7 @@ producing the “willingness-to-pay (WTP) space” utility
 specification:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msubsup><mi>u</mi><mi>j</mi><mo>*</mo></msubsup><mrow><mo>−</mo><msup><mi>α</mi><mo>*</mo></msup></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msup><mi>𝛃</mi><mo>*</mo></msup><mrow><mo>−</mo><msup><mi>α</mi><mo>*</mo></msup></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mi>′</mi><msub><mi>𝐱</mi><mi>j</mi></msub><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msup><mi>α</mi><mo>*</mo></msup><mrow><mo>−</mo><msup><mi>α</mi><mo>*</mo></msup></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>p</mi><mi>j</mi></msub><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msubsup><mi>ε</mi><mi>j</mi><mo>*</mo></msubsup><mrow><mo>−</mo><msup><mi>α</mi><mo>*</mo></msup></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="1.0em"></mspace><mspace width="1.0em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msubsup><mi>ε</mi><mi>j</mi><mo>*</mo></msubsup><mrow><mo>−</mo><msup><mi>α</mi><mo>*</mo></msup></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>∼</mo><mtext mathvariant="normal">Gumbel</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mfrac><msup><mi>σ</mi><mn>2</mn></msup><msup><mrow><mo stretchy="true" form="prefix">(</mo><mo>−</mo><msup><mi>α</mi><mo>*</mo></msup><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mfrac><mfrac><msup><mi>π</mi><mn>2</mn></msup><mn>6</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{equation}
     \left(\frac{u^*_{j}}{- \alpha^*}\right) =
-        \left(\frac{\mathbf{β}^{*}}{- \alpha^{*}}\right)' \mathrm{\mathbf{x}}_{j} +
+        \left(\frac{\boldsymbol{\beta}^{*}}{- \alpha^{*}}\right)' \mathbf{x}_{j} +
         \left(\frac{\alpha^{*}}{- \alpha^{*}}\right) p_{j} +
         \left(\frac{\varepsilon^{*}_{j}}{- \alpha^{*}}\right),
         \quad\quad
@@ -216,22 +215,21 @@ we can rewrite equation () by multiplying both sides by
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>λ</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mo>−</mo><msup><mi>α</mi><mo>*</mo></msup><mi>/</mi><mi>σ</mi></mrow><annotation encoding="application/x-tex">\lambda= (- \alpha^{*} / \sigma</annotation></semantics></math>)
 and renaming
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mi>j</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>λ</mi><msubsup><mi>u</mi><mi>j</mi><mo>*</mo></msubsup><mi>/</mi><mo>−</mo><msup><mi>α</mi><mo>*</mo></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">u_j = (\lambda u^*_j /- \alpha^*)</annotation></semantics></math>,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝛚</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><msup><mi>𝛃</mi><mo>*</mo></msup><mi>/</mi><mo>−</mo><msup><mi>α</mi><mo>*</mo></msup></mrow><annotation encoding="application/x-tex">\mathbf{ω}= (\mathbf{β}^{*} /- \alpha^{*}</annotation></semantics></math>),
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝛚</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><msup><mi>𝛃</mi><mo>*</mo></msup><mi>/</mi><mo>−</mo><msup><mi>α</mi><mo>*</mo></msup></mrow><annotation encoding="application/x-tex">\boldsymbol{\omega}= (\boldsymbol{\beta}^{*} /- \alpha^{*}</annotation></semantics></math>),
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ε</mi><mi>j</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>λ</mi><msubsup><mi>ε</mi><mi>j</mi><mo>*</mo></msubsup><mi>/</mi><mo>−</mo><msup><mi>α</mi><mo>*</mo></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\varepsilon_j = (\lambda \varepsilon^*_j / - \alpha^*)</annotation></semantics></math>:</p>
-<p><span class="math display">$$\begin{equation}
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mi>j</mi></msub><mo>=</mo><mi>λ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝛚</mi><mi>′</mi><msub><mi>𝐱</mi><mi>j</mi></msub><mo>−</mo><msub><mi>p</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>ε</mi><mi>j</mi></msub><mo>,</mo><mspace width="1.0em"></mspace><mspace width="1.0em"></mspace><msub><mi>ε</mi><mi>j</mi></msub><mo>∼</mo><mtext mathvariant="normal">Gumbel</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mfrac><msup><mi>π</mi><mn>2</mn></msup><mn>6</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{equation}
     u_{j} =
         \lambda \left(
-            \mathbf{ω}' \mathrm{\mathbf{x}}_{j} - p_{j}
+            \boldsymbol{\omega}' \mathbf{x}_{j} - p_{j}
             \right) +
-        \varepsilon_{j}
-        \hspace{0.5in}
-        \varepsilon_{j} \sim \textrm{Gumbel}\left(0,
-\frac{\pi^2}{6}\right)
+        \varepsilon_{j},
+        \quad\quad
+        \varepsilon_{j} \sim \textrm{Gumbel}\left(0, \frac{\pi^2}{6}\right)
 \label{eq:utilityWtp}
-\end{equation}$$</span></p>
+\end{equation}</annotation></semantics></math></p>
 <p>Here
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝛚</mi><annotation encoding="application/x-tex">\mathbf{ω}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝛚</mi><annotation encoding="application/x-tex">\boldsymbol{\omega}</annotation></semantics></math>
 represents the marginal WTP for changes in each non-price attribute, and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math>
 represents the scale of the deterministic portion of utility relative to
@@ -239,9 +237,9 @@ the standardized scale of the random error term.</p>
 <p>The utility models in equations and represent the preference space
 and WTP space utility specifications, respectively. In equation , WTP is
 estimated as
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>𝛃</mi><mo accent="true">̂</mo></mover><mi>/</mi><mover><mrow><mo>−</mo><mi>α</mi></mrow><mo accent="true">̂</mo></mover></mrow><annotation encoding="application/x-tex">\hat{\mathbf{β}} / \hat{- \alpha}</annotation></semantics></math>;
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>𝛃</mi><mo accent="true">̂</mo></mover><mi>/</mi><mover><mrow><mo>−</mo><mi>α</mi></mrow><mo accent="true">̂</mo></mover></mrow><annotation encoding="application/x-tex">\hat{\boldsymbol{\beta}} / \hat{- \alpha}</annotation></semantics></math>;
 in equation , WTP is simply
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>𝛚</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{\mathbf{ω}}</annotation></semantics></math>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>𝛚</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{\boldsymbol{\omega}}</annotation></semantics></math>.</p>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

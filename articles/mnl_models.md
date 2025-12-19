@@ -60,7 +60,7 @@ Print a summary of the results:
 summary(mnl_pref)
 #> =================================================
 #> 
-#> Model estimated on: Fri Nov 14 17:02:26 2025 
+#> Model estimated on: Fri Dec 19 21:44:22 2025 
 #> 
 #> Using logitr version: 1.1.3 
 #> 
@@ -160,7 +160,7 @@ Print a summary of the results:
 summary(mnl_wtp)
 #> =================================================
 #> 
-#> Model estimated on: Fri Nov 14 17:02:27 2025 
+#> Model estimated on: Fri Dec 19 21:44:23 2025 
 #> 
 #> Using logitr version: 1.1.3 
 #> 
