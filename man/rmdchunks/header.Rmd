@@ -1,8 +1,8 @@
-\newcommand{\betaVec}{\mathbf{β}}
-\newcommand{\omegaVec}{\mathbf{ω}}
-\newcommand{\zetaVec}{\mathbf{ζ}}
-\newcommand{\deltaVec}{\mathbf{δ}}
-\newcommand{\gammaVec}{\mathbf{γ}}
-\newcommand{\epsilonVec}{\mathbf{ε}}
-\newcommand{\xVec}{\mathrm{\mathbf{x}}}
-\newcommand{\XVec}{\mathrm{\mathbf{X}}}
+\newcommand{\betaVec}{\boldsymbol{\beta}}
+\newcommand{\omegaVec}{\boldsymbol{\omega}}
+\newcommand{\zetaVec}{\boldsymbol{\zeta}}
+\newcommand{\deltaVec}{\boldsymbol{\delta}}
+\newcommand{\gammaVec}{\boldsymbol{\gamma}}
+\newcommand{\epsilonVec}{\boldsymbol{\varepsilon}}
+\newcommand{\xVec}{\mathbf{x}}
+\newcommand{\XVec}{\mathbf{X}}

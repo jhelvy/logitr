@@ -27,7 +27,7 @@ Adopting the same notation as in Helveston et al. [-@Helveston2018], consider th
 ```{r, child='../man/rmdchunks/utility.Rmd'}
 ```
 
-where $\betaVec^{*}$ is the vector of coefficients for non-price attributes $\xVec_{j}$, $\alpha^{*}$ is the coefficient for price $p_{j}$, and the error term, $\varepsilon^{*}_{j}$, is an IID random variable with a Gumbel extreme value distribution of mean zero and variance $\sigma^2(\pi^2/6)$. This model is not identified since there exists an infinite set of combinations of values for $\betaVec^{*}$, $\alpha^{*}$, and $\sigma$ that produce the same choice probabilities. In order to specify an identifiable model, the modeler must normalize equation (\ref{eq:utility}). One approach is to normalize the scale of the error term by dividing equation (\ref{eq:utility}) by $\sigma$, producing the "preference space" utility specification:
+where $\betaVec^{*}$ is the vector of coefficients for non-price attributes $\xVec_{j}$, $\alpha^{*}$ is the coefficient for price $p_{j}$, and the error term, $\varepsilon^{*}_{j}$, is an IID random variable with a Gumbel extreme value distribution of mean zero and variance $\sigma^2(\pi^2/6)$. This model is not identified since there exists an infinite set of combinations of values for $\betaVec^{*}$, $\alpha^{*}$, and $\sigma$ that produce the same choice probabilities. In order to specify an identifiable model, the modeler must normalize equation \ref{eq:utility}. One approach is to normalize the scale of the error term by dividing equation \ref{eq:utility} by $\sigma$, producing the "preference space" utility specification:
 
 ```{r, child='../man/rmdchunks/utilityPreferenceScaled.Rmd'}
 ```
