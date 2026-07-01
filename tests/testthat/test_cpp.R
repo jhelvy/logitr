@@ -59,13 +59,27 @@ test_that("cpp matches cpu: weighted model", {
   )
 })
 
-test_that("cpp backend errors on unsupported model features", {
-  expect_error(
-    logitr(yogurt, "choice", "obsID",
-           pars = c("feat", "brand"), scalePar = "price",
-           randPars = c(feat = "n"), backend = "cpp"),
-    "WTP"
+test_that("cpp matches cpu: WTP space", {
+  # Fixed scale, panel and non-panel
+  expect_cpp_matches(
+    data = yogurt, outcome = "choice", obsID = "obsID", panelID = "id",
+    pars = c("feat", "brand"), scalePar = "price", randPars = c(feat = "n"),
+    numDraws = 40, numCores = 1
   )
+  expect_cpp_matches(
+    data = yogurt, outcome = "choice", obsID = "obsID",
+    pars = c("feat", "brand"), scalePar = "price", randPars = c(feat = "n"),
+    numDraws = 40, numCores = 1
+  )
+  # Log-normal WTP coefficient
+  expect_cpp_matches(
+    data = yogurt, outcome = "choice", obsID = "obsID", panelID = "id",
+    pars = c("feat", "brand"), scalePar = "price", randPars = c(feat = "ln"),
+    numDraws = 40, numCores = 1
+  )
+})
+
+test_that("cpp backend errors on unsupported model features (correlation)", {
   expect_error(
     logitr(yogurt, "choice", "obsID", panelID = "id",
            pars = c("price", "feat", "brand"),

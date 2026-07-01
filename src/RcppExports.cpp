@@ -32,9 +32,33 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// mxl_negll_grad_wtp_cpp
+List mxl_negll_grad_wtp_cpp(const NumericMatrix& X, const NumericVector& price, const NumericMatrix& draws, const NumericVector& mean, const NumericVector& sdFull, const IntegerVector& dist, const IntegerVector& sdPos, const IntegerVector& obsID, const IntegerVector& panelID, const NumericVector& weights, const int nObs, const int nPanel, const int nPars);
+RcppExport SEXP _logitr_mxl_negll_grad_wtp_cpp(SEXP XSEXP, SEXP priceSEXP, SEXP drawsSEXP, SEXP meanSEXP, SEXP sdFullSEXP, SEXP distSEXP, SEXP sdPosSEXP, SEXP obsIDSEXP, SEXP panelIDSEXP, SEXP weightsSEXP, SEXP nObsSEXP, SEXP nPanelSEXP, SEXP nParsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type price(priceSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type draws(drawsSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type sdFull(sdFullSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type dist(distSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type sdPos(sdPosSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type obsID(obsIDSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type panelID(panelIDSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type weights(weightsSEXP);
+    Rcpp::traits::input_parameter< const int >::type nObs(nObsSEXP);
+    Rcpp::traits::input_parameter< const int >::type nPanel(nPanelSEXP);
+    Rcpp::traits::input_parameter< const int >::type nPars(nParsSEXP);
+    rcpp_result_gen = Rcpp::wrap(mxl_negll_grad_wtp_cpp(X, price, draws, mean, sdFull, dist, sdPos, obsID, panelID, weights, nObs, nPanel, nPars));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_logitr_mxl_negll_grad_pref_cpp", (DL_FUNC) &_logitr_mxl_negll_grad_pref_cpp, 12},
+    {"_logitr_mxl_negll_grad_wtp_cpp", (DL_FUNC) &_logitr_mxl_negll_grad_wtp_cpp, 13},
     {NULL, NULL, 0}
 };
 

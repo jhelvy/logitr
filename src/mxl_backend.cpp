@@ -130,3 +130,128 @@ List mxl_negll_grad_pref_cpp(
 
   return List::create(_["objective"] = negLL, _["gradient"] = grad);
 }
+
+// ============================================================================
+// WTP-space MXL negLL + gradient. Utility is V = lambda * (X %*% gamma - price),
+// where parameter 0 is the scale (lambda) and parameters 1..nVars-1 are the WTP
+// coefficients (gamma / omega). Mirrors getMxlV_wtp / mxlNegGradLL_wtp: the
+// lambda-mean partial is (X %*% gamma - price) = V/lambda, the omega partials
+// are scaled by lambda, and the lambda-sd partial is scaled by the lambda-mean
+// partial. Uncorrelated heterogeneity only (correlation handled separately).
+// ============================================================================
+
+// [[Rcpp::export]]
+List mxl_negll_grad_wtp_cpp(
+    const NumericMatrix& X,        // rowX x nAttr (nAttr = nVars - 1)
+    const NumericVector& price,    // rowX (differenced scalePar)
+    const NumericMatrix& draws,    // R x nVars (col 0 = lambda draws)
+    const NumericVector& mean,     // nVars parameter means (0 = lambda)
+    const NumericVector& sdFull,   // nVars sd values (0 for fixed vars)
+    const IntegerVector& dist,     // nVars distribution codes
+    const IntegerVector& sdPos,    // nVars gradient index of sd slot (-1 fixed)
+    const IntegerVector& obsID,
+    const IntegerVector& panelID,
+    const NumericVector& weights,
+    const int nObs,
+    const int nPanel,
+    const int nPars
+) {
+  const int rowX = X.nrow();
+  const int nAttr = X.ncol();
+  const int nVars = nAttr + 1;
+  const int R = draws.nrow();
+  const bool panel = nPanel > 0;
+  const int nUnit = panel ? nPanel : nObs;
+  const bool lambdaRandom = sdPos[0] >= 0;
+  const bool lambdaLn = dist[0] == 1;
+
+  std::vector<double> pHat(nUnit, 0.0);
+  std::vector<double> G(static_cast<size_t>(nUnit) * nPars, 0.0);
+
+  std::vector<double> beta(nVars), fac(nVars);
+  std::vector<double> ev(rowX), q(rowX);
+  std::vector<double> sumExp(nObs), logit(nObs);
+  std::vector<double> seg(static_cast<size_t>(nObs) * nAttr), segQ(nObs);
+  std::vector<double> logitPanel(panel ? nPanel : 0);
+
+  for (int r = 0; r < R; ++r) {
+    for (int k = 0; k < nVars; ++k) {
+      double raw = mean[k] + sdFull[k] * draws(r, k);
+      if (dist[k] == 1) { beta[k] = std::exp(raw); fac[k] = beta[k]; }
+      else if (dist[k] == 2) { beta[k] = raw > 0.0 ? raw : 0.0; fac[k] = raw > 0.0 ? 1.0 : 0.0; }
+      else { beta[k] = raw; fac[k] = 1.0; }
+    }
+    double lambda = beta[0];
+
+    std::fill(sumExp.begin(), sumExp.end(), 0.0);
+    for (int i = 0; i < rowX; ++i) {
+      double xg = 0.0;
+      for (int k = 0; k < nAttr; ++k) xg += X(i, k) * beta[k + 1];
+      double qq = xg - price[i];
+      q[i] = qq;
+      double e = std::exp(lambda * qq);
+      ev[i] = e;
+      sumExp[obsID[i] - 1] += e;
+    }
+    for (int o = 0; o < nObs; ++o) logit[o] = 1.0 / (1.0 + sumExp[o]);
+
+    // seg[o,k] = sum over rows in o of X[row,k]*ev; segQ[o] = sum of q*ev
+    std::fill(seg.begin(), seg.end(), 0.0);
+    std::fill(segQ.begin(), segQ.end(), 0.0);
+    for (int i = 0; i < rowX; ++i) {
+      int o = obsID[i] - 1;
+      double e = ev[i];
+      double* s = &seg[static_cast<size_t>(o) * nAttr];
+      for (int k = 0; k < nAttr; ++k) s[k] += X(i, k) * e;
+      segQ[o] += q[i] * e;
+    }
+    double lamMeanFac = (lambdaRandom && lambdaLn) ? lambda : 1.0;
+
+    if (!panel) {
+      for (int o = 0; o < nObs; ++o) {
+        pHat[o] += logit[o];
+        double lg2 = logit[o] * logit[o];
+        const double* s = &seg[static_cast<size_t>(o) * nAttr];
+        double* g = &G[static_cast<size_t>(o) * nPars];
+        g[0] += lg2 * lamMeanFac * segQ[o];                       // lambda mean
+        if (sdPos[0] >= 0) g[sdPos[0]] += lg2 * draws(r, 0) * fac[0] * segQ[o];
+        for (int k = 1; k < nVars; ++k) {                          // omega (gamma)
+          double base = lg2 * fac[k] * lambda * s[k - 1];
+          g[k] += base;
+          if (sdPos[k] >= 0) g[sdPos[k]] += base * draws(r, k);
+        }
+      }
+    } else {
+      std::fill(logitPanel.begin(), logitPanel.end(), 1.0);
+      for (int o = 0; o < nObs; ++o) logitPanel[panelID[o] - 1] *= logit[o];
+      for (int p = 0; p < nPanel; ++p) pHat[p] += logitPanel[p];
+      for (int o = 0; o < nObs; ++o) {
+        int p = panelID[o] - 1;
+        double w = logitPanel[p] * logit[o];
+        const double* s = &seg[static_cast<size_t>(o) * nAttr];
+        double* g = &G[static_cast<size_t>(p) * nPars];
+        g[0] += w * lamMeanFac * segQ[o];
+        if (sdPos[0] >= 0) g[sdPos[0]] += w * draws(r, 0) * fac[0] * segQ[o];
+        for (int k = 1; k < nVars; ++k) {
+          double base = w * fac[k] * lambda * s[k - 1];
+          g[k] += base;
+          if (sdPos[k] >= 0) g[sdPos[k]] += base * draws(r, k);
+        }
+      }
+    }
+  }
+
+  double negLL = 0.0;
+  for (int u = 0; u < nUnit; ++u) {
+    pHat[u] /= R;
+    negLL -= weights[u] * std::log(pHat[u]);
+  }
+  NumericVector grad(nPars);
+  for (int u = 0; u < nUnit; ++u) {
+    double f = weights[u] / (pHat[u] * R);
+    const double* g = &G[static_cast<size_t>(u) * nPars];
+    for (int i = 0; i < nPars; ++i) grad[i] += g[i] * f;
+  }
+
+  return List::create(_["objective"] = negLL, _["gradient"] = grad);
+}

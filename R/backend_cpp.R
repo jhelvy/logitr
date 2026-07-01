@@ -3,18 +3,15 @@
 # the fused Rcpp kernel in src/mxl_backend.cpp. Same math and results as the
 # native R path (validated to machine precision), but faster and memory-flat.
 #
-# Coverage so far: preference-space MXL, uncorrelated heterogeneity, normal /
-# log-normal / censored-normal distributions, fixed + random parameters, panel
-# and non-panel data, weights. Unsupported model features fall back with a
-# clear error via cppSupported() so results are never silently wrong.
+# Coverage so far: preference- and WTP-space MXL, uncorrelated heterogeneity,
+# normal / log-normal / censored-normal distributions, fixed + random
+# parameters, panel and non-panel data, weights. Unsupported model features
+# fall back with a clear error via cppSupported() so results are never
+# silently wrong.
 # ============================================================================
 
 # Which models the cpp backend can currently handle
 cppSupported <- function(modelSpace, correlation) {
-  if (modelSpace == "wtp") {
-    stop('The "cpp" backend does not yet support WTP-space models. ',
-         'Use backend = "cpu" for WTP-space models.')
-  }
   if (isTRUE(correlation)) {
     stop('The "cpp" backend does not yet support correlated heterogeneity ',
          '(correlation = TRUE). Use backend = "cpu" for correlated models.')
@@ -51,6 +48,7 @@ cppPrep <- function(pars, mi) {
 
   list(
     X = d$X, draws = mi$standardDraws,
+    price = if (mi$modelSpace == "wtp") as.numeric(d$scalePar) else numeric(0),
     mean = as.numeric(mean), sdFull = sdFull,
     dist = dist, sdPos = sdPos,
     obsID = as.integer(d$obsID), panelID = panelID,
@@ -61,9 +59,15 @@ cppPrep <- function(pars, mi) {
 
 mxlNegLLAndGradLL_cpp <- function(pars, mi) {
   a <- cppPrep(pars, mi)
-  mxl_negll_grad_pref_cpp(
-    a$X, a$draws, a$mean, a$sdFull, a$dist, a$sdPos,
-    a$obsID, a$panelID, a$weights, a$nObs, a$nPanel, a$nPars)
+  if (mi$modelSpace == "wtp") {
+    mxl_negll_grad_wtp_cpp(
+      a$X, a$price, a$draws, a$mean, a$sdFull, a$dist, a$sdPos,
+      a$obsID, a$panelID, a$weights, a$nObs, a$nPanel, a$nPars)
+  } else {
+    mxl_negll_grad_pref_cpp(
+      a$X, a$draws, a$mean, a$sdFull, a$dist, a$sdPos,
+      a$obsID, a$panelID, a$weights, a$nObs, a$nPanel, a$nPars)
+  }
 }
 
 getMxlNegLL_cpp <- function(pars, mi) mxlNegLLAndGradLL_cpp(pars, mi)$objective
