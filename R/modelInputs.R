@@ -8,7 +8,8 @@ getModelInputs <- function(
     data, outcome, obsID, pars , randPars, scalePar, randScale,
     weights, panelID, clusterID, robust, startValBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
-    numDraws, numCores, vcov, predict, correlation, call, options
+    numDraws, numCores, vcov, predict, correlation, call, options,
+    backend = "cpu"
 ) {
 
   # Keep original input arguments
@@ -33,7 +34,8 @@ getModelInputs <- function(
     numCores        = numCores,
     vcov            = vcov,
     predict         = predict,
-    correlation     = correlation
+    correlation     = correlation,
+    backend         = backend
   )
 
   # Check for valid inputs and options
@@ -170,6 +172,7 @@ getModelInputs <- function(
     standardDraws = standardDraws,
     drawType      = drawType,
     panel         = panel,
+    backend       = backend,
     options       = options
   )
 
@@ -184,7 +187,7 @@ getModelInputs <- function(
 
   # Set logit and eval functions
   modelInputs$logitFuncs <- setLogitFunctions(modelSpace)
-  modelInputs$evalFuncs <- setEvalFunctions(modelType, useAnalyticGrad)
+  modelInputs$evalFuncs <- setEvalFunctions(modelType, useAnalyticGrad, backend)
 
   return(modelInputs)
 }
@@ -609,7 +612,19 @@ setLogitFunctions <- function(modelSpace) {
   return(logitFuncs)
 }
 
-setEvalFunctions <- function(modelType, useAnalyticGrad) {
+# Dispatch point for computational backends. Each backend returns a list of
+# eval functions with the signature `fn(pars, mi)` used by the optimizer in
+# runModel(). The "cpu" backend is logitr's native R implementation; other
+# backends (e.g. a compiled/GPU kernel) can plug in here without changing the
+# rest of the estimation machinery.
+setEvalFunctions <- function(modelType, useAnalyticGrad, backend = "cpu") {
+  backend <- checkBackend(backend)
+  switch(backend,
+    cpu = setEvalFunctions_cpu(modelType, useAnalyticGrad)
+  )
+}
+
+setEvalFunctions_cpu <- function(modelType, useAnalyticGrad) {
   evalFuncs <- list(
     objective = mnlNegLLAndGradLL,
     negLL     = getMnlNegLL,

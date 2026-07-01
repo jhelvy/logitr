@@ -1,0 +1,104 @@
+Running 48 configurations...
+[1/48] nResp=300 nAlt=3 nRand=3 draws=100 corr=FALSE ... full-eval=0.0440s  grad share=70%  fit=1.79s
+[2/48] nResp=1000 nAlt=3 nRand=3 draws=100 corr=FALSE ... full-eval=0.1430s  grad share=75%  fit=5.94s
+[3/48] nResp=300 nAlt=5 nRand=3 draws=100 corr=FALSE ... full-eval=0.0700s  grad share=76%  fit=2.99s
+[4/48] nResp=1000 nAlt=5 nRand=3 draws=100 corr=FALSE ... full-eval=0.2340s  grad share=76%  fit=10.86s
+[5/48] nResp=300 nAlt=3 nRand=6 draws=100 corr=FALSE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=0.0650s  grad share=85%  fit=4.13s
+[6/48] nResp=1000 nAlt=3 nRand=6 draws=100 corr=FALSE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=0.2290s  grad share=85%  fit=12.56s
+[7/48] nResp=300 nAlt=5 nRand=6 draws=100 corr=FALSE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=0.1100s  grad share=84%  fit=6.38s
+[8/48] nResp=1000 nAlt=5 nRand=6 draws=100 corr=FALSE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=0.3790s  grad share=82%  fit=20.89s
+[9/48] nResp=300 nAlt=3 nRand=3 draws=500 corr=FALSE ... full-eval=0.1990s  grad share=77%  fit=8.04s
+[10/48] nResp=1000 nAlt=3 nRand=3 draws=500 corr=FALSE ... full-eval=0.6910s  grad share=77%  fit=27.70s
+[11/48] nResp=300 nAlt=5 nRand=3 draws=500 corr=FALSE ... full-eval=0.3380s  grad share=76%  fit=13.70s
+[12/48] nResp=1000 nAlt=5 nRand=3 draws=500 corr=FALSE ... full-eval=1.1490s  grad share=75%  fit=53.59s
+[13/48] nResp=300 nAlt=3 nRand=6 draws=500 corr=FALSE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=0.3210s  grad share=84%  fit=17.30s
+[14/48] nResp=1000 nAlt=3 nRand=6 draws=500 corr=FALSE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=1.0980s  grad share=84%  fit=58.95s
+[15/48] nResp=300 nAlt=5 nRand=6 draws=500 corr=FALSE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=0.5490s  grad share=84%  fit=30.75s
+[16/48] nResp=1000 nAlt=5 nRand=6 draws=500 corr=FALSE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=1.8450s  grad share=83%  fit=101.89s
+[17/48] nResp=300 nAlt=3 nRand=3 draws=2000 corr=FALSE ... full-eval=0.7840s  grad share=77%  fit=32.96s
+[18/48] nResp=1000 nAlt=3 nRand=3 draws=2000 corr=FALSE ... full-eval=2.7050s  grad share=77%  fit=125.52s
+[19/48] nResp=300 nAlt=5 nRand=3 draws=2000 corr=FALSE ... full-eval=1.3440s  grad share=76%  fit=54.17s
+[20/48] nResp=1000 nAlt=5 nRand=3 draws=2000 corr=FALSE ... full-eval=4.6770s  grad share=75%  fit=254.55s
+[21/48] nResp=300 nAlt=3 nRand=6 draws=2000 corr=FALSE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=1.2400s  grad share=85%  fit=70.30s
+[22/48] nResp=1000 nAlt=3 nRand=6 draws=2000 corr=FALSE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=4.3020s  grad share=84%  fit=270.95s
+[23/48] nResp=300 nAlt=5 nRand=6 draws=2000 corr=FALSE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=2.1430s  grad share=84%  fit=128.81s
+[24/48] nResp=1000 nAlt=5 nRand=6 draws=2000 corr=FALSE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+Timing stopped at: 7.078 3.963 13.54
+full-eval=7.6600s  grad share=83%  fit=NAs
+[25/48] nResp=300 nAlt=3 nRand=3 draws=100 corr=TRUE ... full-eval=0.0510s  grad share=82%  fit=2.56s
+[26/48] nResp=1000 nAlt=3 nRand=3 draws=100 corr=TRUE ... full-eval=0.1790s  grad share=83%  fit=8.31s
+[27/48] nResp=300 nAlt=5 nRand=3 draws=100 corr=TRUE ... full-eval=0.0890s  grad share=80%  fit=4.91s
+[28/48] nResp=1000 nAlt=5 nRand=3 draws=100 corr=TRUE ... full-eval=0.2990s  grad share=80%  fit=15.99s
+[29/48] nResp=300 nAlt=3 nRand=6 draws=100 corr=TRUE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=0.1190s  grad share=92%  fit=11.67s
+[30/48] nResp=1000 nAlt=3 nRand=6 draws=100 corr=TRUE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=0.4270s  grad share=92%  fit=44.84s
+[31/48] nResp=300 nAlt=5 nRand=6 draws=100 corr=TRUE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=0.2070s  grad share=91%  fit=20.37s
+[32/48] nResp=1000 nAlt=5 nRand=6 draws=100 corr=TRUE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=0.6990s  grad share=92%  fit=86.46s
+[33/48] nResp=300 nAlt=3 nRand=3 draws=500 corr=TRUE ... full-eval=0.2520s  grad share=82%  fit=12.27s
+[34/48] nResp=1000 nAlt=3 nRand=3 draws=500 corr=TRUE ... full-eval=0.8710s  grad share=82%  fit=40.27s
+[35/48] nResp=300 nAlt=5 nRand=3 draws=500 corr=TRUE ... full-eval=0.4280s  grad share=81%  fit=22.64s
+[36/48] nResp=1000 nAlt=5 nRand=3 draws=500 corr=TRUE ... full-eval=1.4490s  grad share=81%  fit=69.58s
+[37/48] nResp=300 nAlt=3 nRand=6 draws=500 corr=TRUE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=0.5910s  grad share=92%  fit=81.29s
+[38/48] nResp=1000 nAlt=3 nRand=6 draws=500 corr=TRUE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=2.0450s  grad share=92%  fit=206.56s
+[39/48] nResp=300 nAlt=5 nRand=6 draws=500 corr=TRUE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=1.0080s  grad share=91%  fit=107.99s
+[40/48] nResp=1000 nAlt=5 nRand=6 draws=500 corr=TRUE ... Since your model has 5 or more random parameters, it is recommended that you use Sobol instead of Halton draws. You can implement this by setting drawType = 'sobol'. 
+
+It is also recommended that you use at least 200 draws, which can be implemented by setting numDraws = 200
+full-eval=3.3970s  grad share=91%  fit=477.04s
+[41/48] nResp=300 nAlt=3 nRand=3 draws=2000 corr=TRUE ... full-eval=1.0060s  grad share=82%  fit=45.67s
+[42/48] nResp=1000 nAlt=3 nRand=3 draws=2000 corr=TRUE ... 

@@ -348,7 +348,9 @@ getCovarianceRobust <- function(object) {
   parSetup <- object$parSetup
   modelInputs <- list(
     logitFuncs = setLogitFunctions(object$modelSpace),
-    evalFuncs = setEvalFunctions(object$modelType, inputs$useAnalyticGrad),
+    evalFuncs = setEvalFunctions(
+      object$modelType, inputs$useAnalyticGrad,
+      if (is.null(inputs$backend)) "cpu" else inputs$backend),
     inputs = inputs,
     modelType = object$modelType,
     modelSpace = object$modelSpace,

@@ -29,6 +29,7 @@ logitr(
   numCores = NULL,
   vcov = FALSE,
   predict = TRUE,
+  backend = "cpu",
   options = list(print_level = 0, xtol_rel = 1e-06, xtol_abs = 1e-06, ftol_rel = 1e-06,
     ftol_abs = 1e-06, maxeval = 1000, algorithm = "NLOPT_LD_LBFGS"),
   price,
@@ -138,6 +139,11 @@ Defaults to \code{FALSE}.}
 
 \item{predict}{If \code{FALSE}, predicted probabilities, fitted values, and
 residuals are not included in the returned object. Defaults to \code{TRUE}.}
+
+\item{backend}{The computational backend used to evaluate the log-likelihood
+and gradient during estimation. Currently only \code{"cpu"} (the default) is
+supported, which uses logitr's native R implementation. This argument
+provides an extension point for faster backends in future releases.}
 
 \item{options}{A list of options for controlling the \code{nloptr()} optimization.
 Run \code{nloptr::nloptr.print.options()} for details.}

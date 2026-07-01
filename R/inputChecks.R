@@ -42,6 +42,9 @@ runInputChecks <- function(data, inputs) {
     stop("drawType must be either 'halton' or 'sobol'")
   }
 
+  # Make sure the backend is supported
+  checkBackend(inputs$backend)
+
   # Make sure the number of multistarts and numDraws are positive
   if (inputs$numMultiStarts < 1) {
     stop('"numMultiStarts" must be a positive integer')
@@ -72,6 +75,32 @@ missingInData <- function(vals, var, dataColumnNames) {
       )
     }
   }
+}
+
+# Backends that are recognized by name. `supported` are usable now; others are
+# reserved names that give an informative "not yet available" error so the API
+# is stable as new backends land.
+backendsSupported <- c("cpu")
+backendsReserved  <- c("rust", "torch", "xlogit")
+
+checkBackend <- function(backend) {
+  if (is.null(backend) || length(backend) != 1 || !is.character(backend)) {
+    stop('"backend" must be a single character string (currently "cpu")')
+  }
+  if (backend %in% backendsSupported) {
+    return(backend)
+  }
+  if (backend %in% backendsReserved) {
+    stop(
+      'The "', backend, '" backend is not yet available in this version of ',
+      'logitr. Currently supported backends: ',
+      paste(backendsSupported, collapse = ", "), "."
+    )
+  }
+  stop(
+    'Unknown backend "', backend, '". Currently supported backends: ',
+    paste(backendsSupported, collapse = ", "), "."
+  )
 }
 
 # Need to check if the user-provided list of options omits any of these

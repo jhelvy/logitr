@@ -86,6 +86,10 @@
 #' residuals are not included in the returned object. Defaults to `TRUE`.
 #' @param options A list of options for controlling the `nloptr()` optimization.
 #' Run `nloptr::nloptr.print.options()` for details.
+#' @param backend The computational backend used to evaluate the log-likelihood
+#' and gradient during estimation. Currently only `"cpu"` (the default) is
+#' supported, which uses logitr's native R implementation. This argument
+#' provides an extension point for faster backends in future releases.
 #' @param price No longer used as of v0.7.0 - if provided, this is passed
 #' to the `scalePar` argument and a warning is displayed.
 #' @param randPrice No longer used as of v0.7.0 - if provided, this is passed
@@ -218,6 +222,7 @@ logitr <- function(
   numCores        = NULL,
   vcov            = FALSE,
   predict         = TRUE,
+  backend         = "cpu",
   options         = list(
     print_level = 0,
     xtol_rel    = 1.0e-6,
@@ -320,7 +325,7 @@ logitr <- function(
     data, outcome, obsID, pars, randPars, scalePar, randScale,
     weights, panelID, clusterID, robust, startValBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
-    numDraws, numCores, vcov, predict, correlation, call, options
+    numDraws, numCores, vcov, predict, correlation, call, options, backend
   )
 
   allModels <- runMultistart(modelInputs)
