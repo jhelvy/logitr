@@ -45,7 +45,10 @@ Imports:
     nloptr,
     parallel,
     randtoolbox,
+    Rcpp,
     stats,
     tibble
+LinkingTo:
+    Rcpp
 URL: https://github.com/jhelvy/logitr
 BugReports: https://github.com/jhelvy/logitr/issues

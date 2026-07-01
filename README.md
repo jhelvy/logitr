@@ -66,6 +66,23 @@ or you can install the development version of {logitr} from
 remotes::install_github("jhelvy/logitr")
 ```
 
+Because {logitr} includes compiled C++ code, installing the development
+version from GitHub builds from source and therefore requires a C++
+compiler toolchain:
+
+- **Windows**: install
+  [Rtools](https://cran.r-project.org/bin/windows/Rtools/) (matched to
+  your R version).
+- **macOS**: install the Xcode Command Line Tools by running
+  `xcode-select --install` in a terminal.
+- **Linux**: a compiler is normally already present (e.g. `r-base-dev` /
+  `build-essential`).
+
+You can check whether your system is ready to build packages with
+`pkgbuild::check_build_tools()`. Installing the released version from
+CRAN (above) does **not** require a compiler, since CRAN provides
+pre-built binaries for Windows and macOS.
+
 Load the library with:
 
 ``` r

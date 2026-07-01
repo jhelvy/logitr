@@ -86,7 +86,7 @@ missingInData <- function(vals, var, dataColumnNames) {
 # Backends that are recognized by name. `supported` are usable now; others are
 # reserved names that give an informative "not yet available" error so the API
 # is stable as new backends land.
-backendsSupported <- c("cpu")
+backendsSupported <- c("cpu", "cpp")
 backendsReserved  <- c("rust", "torch", "xlogit")
 
 checkBackend <- function(backend) {

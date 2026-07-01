@@ -397,7 +397,7 @@ appendModelInfo <- function(model, mi) {
   # Make unscaled version of model inputs to compute gradient and hessian
   mi_unscaled <- mi
   mi_unscaled$data_diff <- mi$data_diff_unscaled
-  if (mi$modelType == 'mxl' && !mi$batchPlan$stream) {
+  if (mi$modelType == 'mxl' && !is.null(mi$partials_unscaled)) {
     mi_unscaled$partials <- mi$partials_unscaled
   }
   model$gradient <- getGradient(coefficients, mi_unscaled, fail)
