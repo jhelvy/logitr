@@ -9,3 +9,6 @@ doc
 Meta
 .idea
 CLAUDE.md
+
+# Benchmark harness outputs (regenerable; keep the scripts, drop the results)
+bench/results/
