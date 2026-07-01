@@ -5,7 +5,7 @@ mxl_negll_grad_pref_cpp <- function(X, draws, mean, chol, dist, xcol, dcol, obsI
     .Call(`_logitr_mxl_negll_grad_pref_cpp`, X, draws, mean, chol, dist, xcol, dcol, obsID, panelID, weights, nObs, nPanel, nPars)
 }
 
-mxl_negll_grad_wtp_cpp <- function(X, price, draws, mean, sdFull, dist, sdPos, obsID, panelID, weights, nObs, nPanel, nPars) {
-    .Call(`_logitr_mxl_negll_grad_wtp_cpp`, X, price, draws, mean, sdFull, dist, sdPos, obsID, panelID, weights, nObs, nPanel, nPars)
+mxl_negll_grad_wtp_cpp <- function(X, price, draws, mean, chol, dist, useQ, facIdx, mulLambda, xcolX, dcol, lambdaRandom, obsID, panelID, weights, nObs, nPanel, nPars) {
+    .Call(`_logitr_mxl_negll_grad_wtp_cpp`, X, price, draws, mean, chol, dist, useQ, facIdx, mulLambda, xcolX, dcol, lambdaRandom, obsID, panelID, weights, nObs, nPanel, nPars)
 }
 

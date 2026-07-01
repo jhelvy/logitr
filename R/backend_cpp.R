@@ -10,13 +10,30 @@
 # silently wrong.
 # ============================================================================
 
-# Which models the cpp backend can currently handle
+# Which models the cpp backend can currently handle. All MXL model types are
+# now supported (preference and WTP space, uncorrelated and correlated, normal
+# / log-normal / censored-normal); this remains as an extension point.
 cppSupported <- function(modelSpace, correlation) {
-  if (isTRUE(correlation) && modelSpace == "wtp") {
-    stop('The "cpp" backend does not yet support correlated WTP-space models. ',
-         'Use backend = "cpu" for correlated WTP-space models.')
-  }
   invisible(TRUE)
+}
+
+# Build the covariance factor used for betaDraws: a diagonal matrix of the sd
+# values when uncorrelated, or the lower-triangular Cholesky when correlated.
+cppCholFactor <- function(mi, pars_sd) {
+  nVars <- mi$n$vars
+  rIDs <- mi$parIDs$r
+  chol <- matrix(0, nVars, nVars)
+  if (isTRUE(mi$inputs$correlation)) {
+    nR <- length(rIDs)
+    L <- matrix(0, nR, nR)
+    L[lower.tri(L, diag = TRUE)] <- pars_sd
+    chol[rIDs, rIDs] <- L
+  } else {
+    sdFull <- numeric(nVars)
+    if (length(rIDs) > 0) sdFull[rIDs] <- pars_sd
+    diag(chol) <- sdFull
+  }
+  chol
 }
 
 # Build the C++ kernel arguments from the modelInputs + current parameters
@@ -44,39 +61,43 @@ cppPrep <- function(pars, mi) {
     nObs = as.integer(mi$n$obs), nPanel = nPanel, nPars = as.integer(mi$n$pars)
   )
 
+  chol <- cppCholFactor(mi, pars_sd)
+  spec <- buildPartialSpec(mi)   # xcol/dcol: 1-based var positions (dcol 0 = ones)
+  dcolDraw <- as.integer(ifelse(spec$dcol == 0L, -1L, spec$dcol - 1L))
+
   if (mi$modelSpace == "wtp") {
-    # sd per variable (0 for fixed) and the 0-based gradient index of each
-    # variable's sd slot (-1 if fixed), in random-parameter order.
-    sdFull <- numeric(nVars); if (length(rIDs) > 0) sdFull[rIDs] <- pars_sd
-    sdPos <- rep(-1L, nVars)
-    if (length(rIDs) > 0) sdPos[rIDs] <- nVars + seq_along(rIDs) - 1L
+    # Classify each gradient slot. xcol == 1 is the scale (lambda, the ones
+    # column of the augmented design): slot 1 is the lambda mean, any other is
+    # a lambda sd / off-diagonal. xcol >= 2 are the WTP (omega) coefficients.
+    nPars <- mi$n$pars
+    useQ <- integer(nPars); facIdx <- integer(nPars)
+    mulLambda <- integer(nPars); xcolX <- integer(nPars)
+    isLambda <- spec$xcol == 1L
+    useQ[isLambda] <- 1L
+    facIdx[isLambda] <- 0L        # fac of the scale parameter
+    facIdx[1] <- -1L              # slot 1 is the lambda mean -> lamMeanFac
+    omega <- !isLambda
+    facIdx[omega] <- spec$xcol[omega] - 1L   # 0-based beta index of the gamma
+    xcolX[omega] <- spec$xcol[omega] - 2L    # 0-based X column of the gamma
+    mulLambda[omega] <- 1L
+    lambdaRandom <- as.integer(1L %in% rIDs)
     return(c(common, list(
-      X = d$X, price = as.numeric(d$scalePar), sdFull = sdFull, sdPos = sdPos)))
+      X = d$X, price = as.numeric(d$scalePar), chol = chol,
+      useQ = useQ, facIdx = facIdx, mulLambda = mulLambda,
+      xcolX = xcolX, dcol = dcolDraw, lambdaRandom = lambdaRandom)))
   }
 
-  # Preference space: covariance factor (diagonal of sds, or lower-triangular
-  # Cholesky when correlated), plus the (xcol, dcol) partial spec.
-  chol <- matrix(0, nVars, nVars)
-  if (isTRUE(mi$inputs$correlation)) {
-    nR <- length(rIDs)
-    L <- matrix(0, nR, nR)
-    L[lower.tri(L, diag = TRUE)] <- pars_sd
-    chol[rIDs, rIDs] <- L
-  } else {
-    sdFull <- numeric(nVars); if (length(rIDs) > 0) sdFull[rIDs] <- pars_sd
-    diag(chol) <- sdFull
-  }
-  spec <- buildPartialSpec(mi)
+  # Preference space: (xcol, dcol) partial spec, 0-based
   xcol <- as.integer(spec$xcol - 1L)
-  dcol <- as.integer(ifelse(spec$dcol == 0L, -1L, spec$dcol - 1L))
-  c(common, list(X = d$X, chol = chol, xcol = xcol, dcol = dcol))
+  c(common, list(X = d$X, chol = chol, xcol = xcol, dcol = dcolDraw))
 }
 
 mxlNegLLAndGradLL_cpp <- function(pars, mi) {
   a <- cppPrep(pars, mi)
   if (mi$modelSpace == "wtp") {
     mxl_negll_grad_wtp_cpp(
-      a$X, a$price, a$draws, a$mean, a$sdFull, a$dist, a$sdPos,
+      a$X, a$price, a$draws, a$mean, a$chol, a$dist,
+      a$useQ, a$facIdx, a$mulLambda, a$xcolX, a$dcol, a$lambdaRandom,
       a$obsID, a$panelID, a$weights, a$nObs, a$nPanel, a$nPars)
   } else {
     mxl_negll_grad_pref_cpp(

@@ -138,11 +138,15 @@ List mxl_negll_grad_pref_cpp(
 
 // ============================================================================
 // WTP-space MXL negLL + gradient. Utility is V = lambda * (X %*% gamma - price),
-// where parameter 0 is the scale (lambda) and parameters 1..nVars-1 are the WTP
-// coefficients (gamma / omega). Mirrors getMxlV_wtp / mxlNegGradLL_wtp: the
-// lambda-mean partial is (X %*% gamma - price) = V/lambda, the omega partials
-// are scaled by lambda, and the lambda-sd partial is scaled by the lambda-mean
-// partial. Uncorrelated heterogeneity only (correlation handled separately).
+// where parameter 0 is the scale (lambda) and 1..nVars-1 are the WTP
+// coefficients (gamma / omega). Spec-driven so it handles uncorrelated and
+// correlated heterogeneity uniformly (chol = diagonal of sds or lower-triangular
+// Cholesky). Each gradient slot is classified by useQ/facIdx/mulLambda:
+//   * lambda mean       -> useQ, facIdx = -1 (uses lamMeanFac), no lambda
+//   * lambda sd / off-d -> useQ, facIdx = 0  (fac of lambda),   no lambda
+//   * omega (gamma)     -> seg,  facIdx = beta index,           * lambda
+// This mirrors getMxlV_wtp / mxlNegGradLL_wtp (lambda-mean partial = V/lambda
+// via segQ; omega partials * lambda; lambda partials scaled by the lambda mean).
 // ============================================================================
 
 // [[Rcpp::export]]
@@ -151,9 +155,14 @@ List mxl_negll_grad_wtp_cpp(
     const NumericVector& price,    // rowX (differenced scalePar)
     const NumericMatrix& draws,    // R x nVars (col 0 = lambda draws)
     const NumericVector& mean,     // nVars parameter means (0 = lambda)
-    const NumericVector& sdFull,   // nVars sd values (0 for fixed vars)
+    const NumericMatrix& chol,     // nVars x nVars covariance factor (diag or Cholesky)
     const IntegerVector& dist,     // nVars distribution codes
-    const IntegerVector& sdPos,    // nVars gradient index of sd slot (-1 fixed)
+    const IntegerVector& useQ,     // nPars: 1 = lambda slot (uses segQ), 0 = omega
+    const IntegerVector& facIdx,   // nPars: beta index for fac, or -1 = lamMeanFac
+    const IntegerVector& mulLambda,// nPars: 1 = multiply by lambda (omega slots)
+    const IntegerVector& xcolX,    // nPars: X column (0-based) for omega slots
+    const IntegerVector& dcol,     // nPars: draw column (0-based), -1 = ones slot
+    const int lambdaRandom,        // 1 if the scale parameter is random
     const IntegerVector& obsID,
     const IntegerVector& panelID,
     const NumericVector& weights,
@@ -167,7 +176,6 @@ List mxl_negll_grad_wtp_cpp(
   const int R = draws.nrow();
   const bool panel = nPanel > 0;
   const int nUnit = panel ? nPanel : nObs;
-  const bool lambdaRandom = sdPos[0] >= 0;
   const bool lambdaLn = dist[0] == 1;
 
   std::vector<double> pHat(nUnit, 0.0);
@@ -180,8 +188,10 @@ List mxl_negll_grad_wtp_cpp(
   std::vector<double> logitPanel(panel ? nPanel : 0);
 
   for (int r = 0; r < R; ++r) {
+    // beta = mean + draws %*% chol, then mixing distribution + ln/cn factor
     for (int k = 0; k < nVars; ++k) {
-      double raw = mean[k] + sdFull[k] * draws(r, k);
+      double raw = mean[k];
+      for (int m = 0; m < nVars; ++m) raw += draws(r, m) * chol(m, k);
       if (dist[k] == 1) { beta[k] = std::exp(raw); fac[k] = beta[k]; }
       else if (dist[k] == 2) { beta[k] = raw > 0.0 ? raw : 0.0; fac[k] = raw > 0.0 ? 1.0 : 0.0; }
       else { beta[k] = raw; fac[k] = 1.0; }
@@ -212,18 +222,19 @@ List mxl_negll_grad_wtp_cpp(
     }
     double lamMeanFac = (lambdaRandom && lambdaLn) ? lambda : 1.0;
 
+    // Reduce every obs/panel unit against every gradient slot
     if (!panel) {
       for (int o = 0; o < nObs; ++o) {
         pHat[o] += logit[o];
-        double lg2 = logit[o] * logit[o];
+        double wt = logit[o] * logit[o];
         const double* s = &seg[static_cast<size_t>(o) * nAttr];
         double* g = &G[static_cast<size_t>(o) * nPars];
-        g[0] += lg2 * lamMeanFac * segQ[o];                       // lambda mean
-        if (sdPos[0] >= 0) g[sdPos[0]] += lg2 * draws(r, 0) * fac[0] * segQ[o];
-        for (int k = 1; k < nVars; ++k) {                          // omega (gamma)
-          double base = lg2 * fac[k] * lambda * s[k - 1];
-          g[k] += base;
-          if (sdPos[k] >= 0) g[sdPos[k]] += base * draws(r, k);
+        for (int i = 0; i < nPars; ++i) {
+          double m = facIdx[i] < 0 ? lamMeanFac : fac[facIdx[i]];
+          if (mulLambda[i]) m *= lambda;
+          double dm = dcol[i] < 0 ? 1.0 : draws(r, dcol[i]);
+          double sv = useQ[i] ? segQ[o] : s[xcolX[i]];
+          g[i] += wt * m * dm * sv;
         }
       }
     } else {
@@ -232,15 +243,15 @@ List mxl_negll_grad_wtp_cpp(
       for (int p = 0; p < nPanel; ++p) pHat[p] += logitPanel[p];
       for (int o = 0; o < nObs; ++o) {
         int p = panelID[o] - 1;
-        double w = logitPanel[p] * logit[o];
+        double wt = logitPanel[p] * logit[o];
         const double* s = &seg[static_cast<size_t>(o) * nAttr];
         double* g = &G[static_cast<size_t>(p) * nPars];
-        g[0] += w * lamMeanFac * segQ[o];
-        if (sdPos[0] >= 0) g[sdPos[0]] += w * draws(r, 0) * fac[0] * segQ[o];
-        for (int k = 1; k < nVars; ++k) {
-          double base = w * fac[k] * lambda * s[k - 1];
-          g[k] += base;
-          if (sdPos[k] >= 0) g[sdPos[k]] += base * draws(r, k);
+        for (int i = 0; i < nPars; ++i) {
+          double m = facIdx[i] < 0 ? lamMeanFac : fac[facIdx[i]];
+          if (mulLambda[i]) m *= lambda;
+          double dm = dcol[i] < 0 ? 1.0 : draws(r, dcol[i]);
+          double sv = useQ[i] ? segQ[o] : s[xcolX[i]];
+          g[i] += wt * m * dm * sv;
         }
       }
     }

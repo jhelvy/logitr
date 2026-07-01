@@ -2,9 +2,8 @@ context("Compiled (cpp) backend")
 library(logitr)
 
 # The cpp backend routes the MXL log-likelihood + gradient through a compiled
-# Rcpp kernel. It must reproduce the native R (cpu) path to optimizer tolerance
-# across the model types it supports, and error clearly on the ones it does not
-# yet support (WTP space, correlated heterogeneity).
+# Rcpp kernel. It must reproduce the native R (cpu) path across all supported
+# MXL model types (preference and WTP space, uncorrelated and correlated).
 
 expect_cpp_matches <- function(..., tol = 1e-4) {
   args <- list(...)
@@ -12,6 +11,32 @@ expect_cpp_matches <- function(..., tol = 1e-4) {
   cpp <- suppressMessages(do.call(logitr, c(args, backend = "cpp")))
   expect_equal(as.numeric(logLik(cpu)), as.numeric(logLik(cpp)), tolerance = tol)
   expect_equal(unname(coef(cpu)), unname(coef(cpp)), tolerance = tol)
+}
+
+# Deterministic kernel check: compare the objective + analytic gradient at a
+# fixed parameter point. This is the right test for hard, non-convex models
+# (e.g. correlated random-scale WTP) where a single-start end-to-end fit can
+# land at different local optima even when the gradient is identical.
+expect_cpp_grad_matches <- function(..., par_val = 0.3) {
+  defaults <- list(
+    data = yogurt, outcome = "choice", obsID = "obsID",
+    randPars = NULL, scalePar = NULL, randScale = NULL, panelID = NULL,
+    correlation = FALSE, weights = NULL, clusterID = NULL, robust = FALSE,
+    startValBounds = c(-1, 1), startVals = NULL, numMultiStarts = 1,
+    useAnalyticGrad = TRUE, scaleInputs = TRUE, standardDraws = NULL,
+    drawType = "halton", numDraws = 50, numCores = 1, vcov = FALSE,
+    predict = FALSE, call = NULL,
+    options = list(print_level = 0, xtol_rel = 1e-6, xtol_abs = 1e-6,
+                   ftol_rel = 1e-6, ftol_abs = 1e-6, maxeval = 1000,
+                   algorithm = "NLOPT_LD_LBFGS"))
+  args <- utils::modifyList(defaults, list(...))
+  mi_cpu <- suppressMessages(do.call(getModelInputs, c(args, list(backend = "cpu"))))
+  mi_cpp <- suppressMessages(do.call(getModelInputs, c(args, list(backend = "cpp"))))
+  p <- stats::setNames(rep(par_val, length(mi_cpu$parNames$all)), mi_cpu$parNames$all)
+  r1 <- mi_cpu$evalFuncs$objective(p, mi_cpu)
+  r2 <- mi_cpp$evalFuncs$objective(p, mi_cpp)
+  expect_equal(as.numeric(r1$objective), as.numeric(r2$objective), tolerance = 1e-8)
+  expect_equal(as.numeric(r1$gradient), as.numeric(r2$gradient), tolerance = 1e-8)
 }
 
 test_that("cpp matches cpu: preference space, panel, normal", {
@@ -98,12 +123,21 @@ test_that("cpp matches cpu: correlated heterogeneity", {
   )
 })
 
-test_that("cpp backend still errors on correlated WTP-space models", {
-  expect_error(
-    logitr(yogurt, "choice", "obsID", panelID = "id",
-           pars = c("feat", "brand"), scalePar = "price",
-           randPars = c(feat = "n", brand = "n"), correlation = TRUE,
-           backend = "cpp"),
-    "correlated WTP"
+test_that("cpp matches cpu: correlated WTP space (gradient parity)", {
+  # These models are non-convex, so compare the objective + gradient at a fixed
+  # point rather than end-to-end fits (which can reach different local optima).
+  expect_cpp_grad_matches(
+    pars = c("feat", "brand"), scalePar = "price", panelID = "id",
+    randPars = c(feat = "n", brand = "n"), correlation = TRUE
+  )
+  # Random scale in the correlated block
+  expect_cpp_grad_matches(
+    pars = c("feat", "brand"), scalePar = "price", panelID = "id",
+    randScale = "n", randPars = c(feat = "n", brand = "n"), correlation = TRUE
+  )
+  # Random scale, non-panel
+  expect_cpp_grad_matches(
+    pars = c("feat", "brand"), scalePar = "price",
+    randScale = "n", randPars = c(feat = "n", brand = "n"), correlation = TRUE
   )
 })

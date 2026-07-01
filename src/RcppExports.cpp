@@ -34,8 +34,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // mxl_negll_grad_wtp_cpp
-List mxl_negll_grad_wtp_cpp(const NumericMatrix& X, const NumericVector& price, const NumericMatrix& draws, const NumericVector& mean, const NumericVector& sdFull, const IntegerVector& dist, const IntegerVector& sdPos, const IntegerVector& obsID, const IntegerVector& panelID, const NumericVector& weights, const int nObs, const int nPanel, const int nPars);
-RcppExport SEXP _logitr_mxl_negll_grad_wtp_cpp(SEXP XSEXP, SEXP priceSEXP, SEXP drawsSEXP, SEXP meanSEXP, SEXP sdFullSEXP, SEXP distSEXP, SEXP sdPosSEXP, SEXP obsIDSEXP, SEXP panelIDSEXP, SEXP weightsSEXP, SEXP nObsSEXP, SEXP nPanelSEXP, SEXP nParsSEXP) {
+List mxl_negll_grad_wtp_cpp(const NumericMatrix& X, const NumericVector& price, const NumericMatrix& draws, const NumericVector& mean, const NumericMatrix& chol, const IntegerVector& dist, const IntegerVector& useQ, const IntegerVector& facIdx, const IntegerVector& mulLambda, const IntegerVector& xcolX, const IntegerVector& dcol, const int lambdaRandom, const IntegerVector& obsID, const IntegerVector& panelID, const NumericVector& weights, const int nObs, const int nPanel, const int nPars);
+RcppExport SEXP _logitr_mxl_negll_grad_wtp_cpp(SEXP XSEXP, SEXP priceSEXP, SEXP drawsSEXP, SEXP meanSEXP, SEXP cholSEXP, SEXP distSEXP, SEXP useQSEXP, SEXP facIdxSEXP, SEXP mulLambdaSEXP, SEXP xcolXSEXP, SEXP dcolSEXP, SEXP lambdaRandomSEXP, SEXP obsIDSEXP, SEXP panelIDSEXP, SEXP weightsSEXP, SEXP nObsSEXP, SEXP nPanelSEXP, SEXP nParsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -43,23 +43,28 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type price(priceSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type draws(drawsSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type sdFull(sdFullSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type chol(cholSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type dist(distSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type sdPos(sdPosSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type useQ(useQSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type facIdx(facIdxSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type mulLambda(mulLambdaSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type xcolX(xcolXSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type dcol(dcolSEXP);
+    Rcpp::traits::input_parameter< const int >::type lambdaRandom(lambdaRandomSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type obsID(obsIDSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type panelID(panelIDSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type weights(weightsSEXP);
     Rcpp::traits::input_parameter< const int >::type nObs(nObsSEXP);
     Rcpp::traits::input_parameter< const int >::type nPanel(nPanelSEXP);
     Rcpp::traits::input_parameter< const int >::type nPars(nParsSEXP);
-    rcpp_result_gen = Rcpp::wrap(mxl_negll_grad_wtp_cpp(X, price, draws, mean, sdFull, dist, sdPos, obsID, panelID, weights, nObs, nPanel, nPars));
+    rcpp_result_gen = Rcpp::wrap(mxl_negll_grad_wtp_cpp(X, price, draws, mean, chol, dist, useQ, facIdx, mulLambda, xcolX, dcol, lambdaRandom, obsID, panelID, weights, nObs, nPanel, nPars));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_logitr_mxl_negll_grad_pref_cpp", (DL_FUNC) &_logitr_mxl_negll_grad_pref_cpp, 13},
-    {"_logitr_mxl_negll_grad_wtp_cpp", (DL_FUNC) &_logitr_mxl_negll_grad_wtp_cpp, 13},
+    {"_logitr_mxl_negll_grad_wtp_cpp", (DL_FUNC) &_logitr_mxl_negll_grad_wtp_cpp, 18},
     {NULL, NULL, 0}
 };
 
