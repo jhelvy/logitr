@@ -75,6 +75,14 @@
 #' random parameters).
 #' @param numDraws The number of Halton draws to use for MXL models for the
 #' maximum simulated likelihood. Defaults to `50`.
+#' @param numDrawsBatch The number of draws to process at a time when evaluating
+#' the simulated log-likelihood of MXL models. Batching (or "streaming") the
+#' draws keeps peak memory bounded by the batch size rather than by `numDraws`,
+#' which is what makes large draw counts feasible. Defaults to `NULL`, in which
+#' case logitr automatically streams only when the draws would otherwise exceed
+#' an internal memory budget (so typical models are unaffected). Set to an
+#' integer to force a specific batch size, or to a value `>= numDraws` to
+#' disable streaming. Only used for MXL models.
 #' @param numCores The number of cores to use for parallel processing of the
 #' multistart. Set to `1` to serially run the multistart. Defaults to `NULL`,
 #' in which case the number of cores is set to `parallel::detectCores() - 1`.
@@ -219,6 +227,7 @@ logitr <- function(
   standardDraws   = NULL,
   drawType        = 'halton',
   numDraws        = 50,
+  numDrawsBatch   = NULL,
   numCores        = NULL,
   vcov            = FALSE,
   predict         = TRUE,
@@ -325,7 +334,8 @@ logitr <- function(
     data, outcome, obsID, pars, randPars, scalePar, randScale,
     weights, panelID, clusterID, robust, startValBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
-    numDraws, numCores, vcov, predict, correlation, call, options, backend
+    numDraws, numCores, vcov, predict, correlation, call, options, backend,
+    numDrawsBatch
   )
 
   allModels <- runMultistart(modelInputs)
@@ -387,7 +397,7 @@ appendModelInfo <- function(model, mi) {
   # Make unscaled version of model inputs to compute gradient and hessian
   mi_unscaled <- mi
   mi_unscaled$data_diff <- mi$data_diff_unscaled
-  if (mi$modelType == 'mxl') {
+  if (mi$modelType == 'mxl' && !mi$batchPlan$stream) {
     mi_unscaled$partials <- mi$partials_unscaled
   }
   model$gradient <- getGradient(coefficients, mi_unscaled, fail)

@@ -9,7 +9,7 @@ getModelInputs <- function(
     weights, panelID, clusterID, robust, startValBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
     numDraws, numCores, vcov, predict, correlation, call, options,
-    backend = "cpu"
+    backend = "cpu", numDrawsBatch = NULL
 ) {
 
   # Keep original input arguments
@@ -35,7 +35,8 @@ getModelInputs <- function(
     vcov            = vcov,
     predict         = predict,
     correlation     = correlation,
-    backend         = backend
+    backend         = backend,
+    numDrawsBatch   = numDrawsBatch
   )
 
   # Check for valid inputs and options
@@ -179,15 +180,29 @@ getModelInputs <- function(
   # Add mixed logit inputs
   if (modelType == "mxl") {
     modelInputs$standardDraws <- makeMxlDraws(modelInputs)
-    modelInputs$partials <- makePartials(modelInputs, data_diff)
-    # Need unscaled version of partials for computing hessian
-    modelInputs$partials_unscaled <- makePartials(
-      modelInputs, data_diff_unscaled)
+    # Decide whether to stream draws in batches (bounded memory) or use the
+    # stored-partials fast path. Streaming keeps peak memory ~ batchSize rather
+    # than numDraws, which is what enables large draw counts.
+    modelInputs$batchPlan <- getBatchPlan(numDrawsBatch, n)
+    if (modelInputs$batchPlan$stream) {
+      # Streaming: form partial slices on the fly from a compact spec, so the
+      # full (potentially enormous) partials matrices are never materialized.
+      modelInputs$partialSpec <- buildPartialSpec(modelInputs)
+      notifyStreaming(modelInputs$batchPlan, n)
+    } else {
+      modelInputs$partials <- makePartials(modelInputs, data_diff)
+      # Need unscaled version of partials for computing hessian
+      modelInputs$partials_unscaled <- makePartials(
+        modelInputs, data_diff_unscaled)
+    }
   }
 
   # Set logit and eval functions
   modelInputs$logitFuncs <- setLogitFunctions(modelSpace)
   modelInputs$evalFuncs <- setEvalFunctions(modelType, useAnalyticGrad, backend)
+  if (modelType == "mxl" && modelInputs$batchPlan$stream) {
+    modelInputs$evalFuncs <- setEvalFunctions_batched(useAnalyticGrad)
+  }
 
   return(modelInputs)
 }

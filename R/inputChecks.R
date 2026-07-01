@@ -52,6 +52,12 @@ runInputChecks <- function(data, inputs) {
   if (inputs$numDraws < 1) {
     stop('"numDraws" must be a positive integer')
   }
+  if (!is.null(inputs$numDrawsBatch)) {
+    if (!is.numeric(inputs$numDrawsBatch) ||
+        length(inputs$numDrawsBatch) != 1 || inputs$numDrawsBatch < 1) {
+      stop('"numDrawsBatch" must be NULL or a single positive integer')
+    }
+  }
 
   # If using correlation, make sure that there are at least 2 random pars
   if (inputs$correlation) {

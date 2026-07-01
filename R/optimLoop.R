@@ -169,6 +169,7 @@ makeModelTemplate <- function(mi) {
     scaleFactors      = mi$scaleFactors,
     standardDraws     = mi$standardDraws,
     drawType          = mi$drawType,
+    batchPlan         = mi$batchPlan,
     options           = mi$options
   ),
   class = "logitr"

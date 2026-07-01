@@ -26,6 +26,7 @@ logitr(
   standardDraws = NULL,
   drawType = "halton",
   numDraws = 50,
+  numDrawsBatch = NULL,
   numCores = NULL,
   vcov = FALSE,
   predict = TRUE,
@@ -127,6 +128,15 @@ random parameters).}
 
 \item{numDraws}{The number of Halton draws to use for MXL models for the
 maximum simulated likelihood. Defaults to \code{50}.}
+
+\item{numDrawsBatch}{The number of draws to process at a time when evaluating
+the simulated log-likelihood of MXL models. Batching (or "streaming") the
+draws keeps peak memory bounded by the batch size rather than by \code{numDraws},
+which is what makes large draw counts feasible. Defaults to \code{NULL}, in which
+case logitr automatically streams only when the draws would otherwise exceed
+an internal memory budget (so typical models are unaffected). Set to an
+integer to force a specific batch size, or to a value \verb{>= numDraws} to
+disable streaming. Only used for MXL models.}
 
 \item{numCores}{The number of cores to use for parallel processing of the
 multistart. Set to \code{1} to serially run the multistart. Defaults to \code{NULL},
