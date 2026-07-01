@@ -123,6 +123,35 @@ test_that("cpp matches cpu: correlated heterogeneity", {
   )
 })
 
+test_that("cpp threaded results match serial (gradient parity)", {
+  grad_at <- function(numThreads, ...) {
+    defaults <- list(
+      data = yogurt, outcome = "choice", obsID = "obsID",
+      randPars = NULL, scalePar = NULL, randScale = NULL, panelID = NULL,
+      correlation = FALSE, weights = NULL, clusterID = NULL, robust = FALSE,
+      startValBounds = c(-1, 1), startVals = NULL, numMultiStarts = 1,
+      useAnalyticGrad = TRUE, scaleInputs = TRUE, standardDraws = NULL,
+      drawType = "halton", numDraws = 100, numCores = 1, vcov = FALSE,
+      predict = FALSE, call = NULL, backend = "cpp", numThreads = numThreads,
+      options = list(print_level = 0, xtol_rel = 1e-6, xtol_abs = 1e-6,
+                     ftol_rel = 1e-6, ftol_abs = 1e-6, maxeval = 1000,
+                     algorithm = "NLOPT_LD_LBFGS"))
+    mi <- suppressMessages(do.call(getModelInputs, utils::modifyList(defaults, list(...))))
+    p <- stats::setNames(rep(0.3, length(mi$parNames$all)), mi$parNames$all)
+    mi$evalFuncs$objective(p, mi)
+  }
+  check <- function(...) {
+    r1 <- grad_at(1, ...)
+    r2 <- grad_at(2, ...)
+    expect_equal(as.numeric(r1$objective), as.numeric(r2$objective), tolerance = 1e-8)
+    expect_equal(as.numeric(r1$gradient), as.numeric(r2$gradient), tolerance = 1e-8)
+  }
+  check(panelID = "id", pars = c("price", "feat", "brand"),
+        randPars = c(feat = "n", price = "n"), correlation = TRUE)
+  check(panelID = "id", pars = c("feat", "brand"), scalePar = "price",
+        randScale = "n", randPars = c(feat = "n", brand = "n"), correlation = TRUE)
+})
+
 test_that("cpp matches cpu: correlated WTP space (gradient parity)", {
   # These models are non-convex, so compare the objective + gradient at a fixed
   # point rather than end-to-end fits (which can reach different local optima).

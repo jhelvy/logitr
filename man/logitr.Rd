@@ -28,6 +28,7 @@ logitr(
   numDraws = 50,
   numDrawsBatch = NULL,
   numCores = NULL,
+  numThreads = NULL,
   vcov = FALSE,
   predict = TRUE,
   backend = "cpu",
@@ -142,6 +143,11 @@ disable streaming. Only used for MXL models.}
 multistart. Set to \code{1} to serially run the multistart. Defaults to \code{NULL},
 in which case the number of cores is set to \code{parallel::detectCores() - 1}.
 Max cores allowed is capped at \code{parallel::detectCores()}.}
+
+\item{numThreads}{The number of threads to use for parallel evaluation of
+the MXL simulated log-likelihood with \code{backend = "cpp"}. The draws are
+processed in parallel across threads. Defaults to \code{NULL}, in which case a
+single thread is used when running a parallel multistart (\code{numMultiStarts}1, to avoid oversubscribing cores), otherwise all available cores areused. Set to 1 to disable threading. Only used by the "cpp" backend.}
 
 \item{vcov}{Set to \code{TRUE} to evaluate and include the variance-covariance
 matrix and coefficient standard errors in the returned object.

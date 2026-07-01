@@ -46,9 +46,12 @@ Imports:
     parallel,
     randtoolbox,
     Rcpp,
+    RcppParallel,
     stats,
     tibble
 LinkingTo:
-    Rcpp
+    Rcpp,
+    RcppParallel
+SystemRequirements: GNU make
 URL: https://github.com/jhelvy/logitr
 BugReports: https://github.com/jhelvy/logitr/issues

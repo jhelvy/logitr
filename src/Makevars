@@ -1,0 +1,4 @@
+PKG_LIBS += $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript" -e "RcppParallel::RcppParallelLibs()")
+# RcppParallel's bundled TBB libraries use an @rpath install name, so embed a
+# runtime search path to its lib directory (needed on macOS; harmless on Linux).
+PKG_LIBS += -Wl,-rpath,$(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript" -e "cat(system.file('lib', package='RcppParallel'))")

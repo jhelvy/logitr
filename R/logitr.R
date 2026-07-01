@@ -75,6 +75,12 @@
 #' random parameters).
 #' @param numDraws The number of Halton draws to use for MXL models for the
 #' maximum simulated likelihood. Defaults to `50`.
+#' @param numThreads The number of threads to use for parallel evaluation of
+#' the MXL simulated log-likelihood with `backend = "cpp"`. The draws are
+#' processed in parallel across threads. Defaults to `NULL`, in which case a
+#' single thread is used when running a parallel multistart (`numMultiStarts`
+#' > 1, to avoid oversubscribing cores), otherwise all available cores are
+#' used. Set to `1` to disable threading. Only used by the `"cpp"` backend.
 #' @param numDrawsBatch The number of draws to process at a time when evaluating
 #' the simulated log-likelihood of MXL models. Batching (or "streaming") the
 #' draws keeps peak memory bounded by the batch size rather than by `numDraws`,
@@ -229,6 +235,7 @@ logitr <- function(
   numDraws        = 50,
   numDrawsBatch   = NULL,
   numCores        = NULL,
+  numThreads      = NULL,
   vcov            = FALSE,
   predict         = TRUE,
   backend         = "cpu",
@@ -335,7 +342,7 @@ logitr <- function(
     weights, panelID, clusterID, robust, startValBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
     numDraws, numCores, vcov, predict, correlation, call, options, backend,
-    numDrawsBatch
+    numDrawsBatch, numThreads
   )
 
   allModels <- runMultistart(modelInputs)

@@ -9,7 +9,7 @@ getModelInputs <- function(
     weights, panelID, clusterID, robust, startValBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
     numDraws, numCores, vcov, predict, correlation, call, options,
-    backend = "cpu", numDrawsBatch = NULL
+    backend = "cpu", numDrawsBatch = NULL, numThreads = NULL
 ) {
 
   # Keep original input arguments
@@ -36,7 +36,8 @@ getModelInputs <- function(
     predict         = predict,
     correlation     = correlation,
     backend         = backend,
-    numDrawsBatch   = numDrawsBatch
+    numDrawsBatch   = numDrawsBatch,
+    numThreads      = setNumThreads(numThreads, numMultiStarts)
   )
 
   # Check for valid inputs and options
@@ -182,8 +183,10 @@ getModelInputs <- function(
     modelInputs$standardDraws <- makeMxlDraws(modelInputs)
     if (backend == "cpp") {
       # The compiled kernel is self-contained and memory-flat: it needs neither
-      # the stored partials nor the R streaming setup.
+      # the stored partials nor the R streaming setup. Set the active thread
+      # count for the parallel draw loop.
       cppSupported(modelSpace, correlation)
+      RcppParallel::setThreadOptions(numThreads = inputs$numThreads)
     } else {
       # Decide whether to stream draws in batches (bounded memory) or use the
       # stored-partials fast path. Streaming keeps peak memory ~ batchSize
@@ -334,6 +337,25 @@ setNumCores <- function(numCores) {
     return(maxCores)
   }
   return(numCores)
+}
+
+# Number of threads for the cpp backend's parallel draw loop. When NULL, use a
+# single thread if a parallel multistart is running (to avoid oversubscribing
+# cores with nested parallelism), otherwise use all available cores.
+setNumThreads <- function(numThreads, numMultiStarts) {
+  chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
+  cranLimited <- nzchar(chk) && (chk != "false")
+  if (is.null(numThreads)) {
+    if (numMultiStarts > 1) return(1L)
+    if (cranLimited) return(2L)
+    return(as.integer(max(1, parallel::detectCores() - 1)))
+  }
+  if (!is.numeric(numThreads) || numThreads < 1) {
+    warning("Invalid value for numThreads...setting numThreads to 1")
+    return(1L)
+  }
+  if (cranLimited) return(min(2L, as.integer(numThreads)))
+  as.integer(numThreads)
 }
 
 defineScalePar <- function(data, inputs, modelSpace) {

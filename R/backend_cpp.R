@@ -54,11 +54,15 @@ cppPrep <- function(pars, mi) {
   panelID <- if (panel) as.integer(d$panelID) else integer(0)
   nPanel <- if (panel) length(unique(d$panelID)) else 0L
 
+  numThreads <- mi$inputs$numThreads
+  if (is.null(numThreads)) numThreads <- 1L
+
   common <- list(
     draws = mi$standardDraws, mean = as.numeric(mean), dist = dist,
     obsID = as.integer(d$obsID), panelID = panelID,
     weights = as.numeric(d$weights),
-    nObs = as.integer(mi$n$obs), nPanel = nPanel, nPars = as.integer(mi$n$pars)
+    nObs = as.integer(mi$n$obs), nPanel = nPanel, nPars = as.integer(mi$n$pars),
+    numThreads = as.integer(numThreads)
   )
 
   chol <- cppCholFactor(mi, pars_sd)
@@ -98,11 +102,11 @@ mxlNegLLAndGradLL_cpp <- function(pars, mi) {
     mxl_negll_grad_wtp_cpp(
       a$X, a$price, a$draws, a$mean, a$chol, a$dist,
       a$useQ, a$facIdx, a$mulLambda, a$xcolX, a$dcol, a$lambdaRandom,
-      a$obsID, a$panelID, a$weights, a$nObs, a$nPanel, a$nPars)
+      a$obsID, a$panelID, a$weights, a$nObs, a$nPanel, a$nPars, a$numThreads)
   } else {
     mxl_negll_grad_pref_cpp(
       a$X, a$draws, a$mean, a$chol, a$dist, a$xcol, a$dcol,
-      a$obsID, a$panelID, a$weights, a$nObs, a$nPanel, a$nPars)
+      a$obsID, a$panelID, a$weights, a$nObs, a$nPanel, a$nPars, a$numThreads)
   }
 }
 
