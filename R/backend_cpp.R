@@ -12,9 +12,9 @@
 
 # Which models the cpp backend can currently handle
 cppSupported <- function(modelSpace, correlation) {
-  if (isTRUE(correlation)) {
-    stop('The "cpp" backend does not yet support correlated heterogeneity ',
-         '(correlation = TRUE). Use backend = "cpu" for correlated models.')
+  if (isTRUE(correlation) && modelSpace == "wtp") {
+    stop('The "cpp" backend does not yet support correlated WTP-space models. ',
+         'Use backend = "cpu" for correlated WTP-space models.')
   }
   invisible(TRUE)
 }
@@ -24,37 +24,52 @@ cppPrep <- function(pars, mi) {
   nVars <- mi$n$vars
   parIDs <- mi$parIDs
   d <- mi$data_diff
-
-  mean <- pars[seq_len(nVars)]
-  # sdFull[k] = sd of variable k (0 for fixed vars); sds are stored after the
-  # means, in the order of the random parameters (parIDs$r)
-  sdFull <- numeric(nVars)
   rIDs <- parIDs$r
-  if (length(rIDs) > 0) sdFull[rIDs] <- pars[nVars + seq_along(rIDs)]
+  mean <- pars[seq_len(nVars)]
+  pars_sd <- if (length(rIDs) > 0) pars[(nVars + 1):mi$n$pars] else numeric(0)
 
   # Distribution codes: 0 normal/fixed, 1 log-normal, 2 censored-normal
   dist <- integer(nVars)
   if (length(parIDs$ln) > 0) dist[parIDs$ln] <- 1L
   if (length(parIDs$cn) > 0) dist[parIDs$cn] <- 2L
 
-  # 0-based gradient index of each variable's sd slot (-1 if fixed). sd slots
-  # follow the nVars mean slots, in random-parameter order.
-  sdPos <- rep(-1L, nVars)
-  if (length(rIDs) > 0) sdPos[rIDs] <- nVars + seq_along(rIDs) - 1L
-
   panel <- mi$panel
   panelID <- if (panel) as.integer(d$panelID) else integer(0)
   nPanel <- if (panel) length(unique(d$panelID)) else 0L
 
-  list(
-    X = d$X, draws = mi$standardDraws,
-    price = if (mi$modelSpace == "wtp") as.numeric(d$scalePar) else numeric(0),
-    mean = as.numeric(mean), sdFull = sdFull,
-    dist = dist, sdPos = sdPos,
+  common <- list(
+    draws = mi$standardDraws, mean = as.numeric(mean), dist = dist,
     obsID = as.integer(d$obsID), panelID = panelID,
     weights = as.numeric(d$weights),
     nObs = as.integer(mi$n$obs), nPanel = nPanel, nPars = as.integer(mi$n$pars)
   )
+
+  if (mi$modelSpace == "wtp") {
+    # sd per variable (0 for fixed) and the 0-based gradient index of each
+    # variable's sd slot (-1 if fixed), in random-parameter order.
+    sdFull <- numeric(nVars); if (length(rIDs) > 0) sdFull[rIDs] <- pars_sd
+    sdPos <- rep(-1L, nVars)
+    if (length(rIDs) > 0) sdPos[rIDs] <- nVars + seq_along(rIDs) - 1L
+    return(c(common, list(
+      X = d$X, price = as.numeric(d$scalePar), sdFull = sdFull, sdPos = sdPos)))
+  }
+
+  # Preference space: covariance factor (diagonal of sds, or lower-triangular
+  # Cholesky when correlated), plus the (xcol, dcol) partial spec.
+  chol <- matrix(0, nVars, nVars)
+  if (isTRUE(mi$inputs$correlation)) {
+    nR <- length(rIDs)
+    L <- matrix(0, nR, nR)
+    L[lower.tri(L, diag = TRUE)] <- pars_sd
+    chol[rIDs, rIDs] <- L
+  } else {
+    sdFull <- numeric(nVars); if (length(rIDs) > 0) sdFull[rIDs] <- pars_sd
+    diag(chol) <- sdFull
+  }
+  spec <- buildPartialSpec(mi)
+  xcol <- as.integer(spec$xcol - 1L)
+  dcol <- as.integer(ifelse(spec$dcol == 0L, -1L, spec$dcol - 1L))
+  c(common, list(X = d$X, chol = chol, xcol = xcol, dcol = dcol))
 }
 
 mxlNegLLAndGradLL_cpp <- function(pars, mi) {
@@ -65,7 +80,7 @@ mxlNegLLAndGradLL_cpp <- function(pars, mi) {
       a$obsID, a$panelID, a$weights, a$nObs, a$nPanel, a$nPars)
   } else {
     mxl_negll_grad_pref_cpp(
-      a$X, a$draws, a$mean, a$sdFull, a$dist, a$sdPos,
+      a$X, a$draws, a$mean, a$chol, a$dist, a$xcol, a$dcol,
       a$obsID, a$panelID, a$weights, a$nObs, a$nPanel, a$nPars)
   }
 }

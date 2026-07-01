@@ -22,9 +22,10 @@ List mxl_negll_grad_pref_cpp(
     const NumericMatrix& X,        // rowX x nVars (differenced design)
     const NumericMatrix& draws,    // R x nVars (standard draws; fixed cols = 0)
     const NumericVector& mean,     // nVars parameter means
-    const NumericVector& sdFull,   // nVars sd values (0 for fixed vars)
+    const NumericMatrix& chol,     // nVars x nVars covariance factor (diag or Cholesky)
     const IntegerVector& dist,     // nVars distribution codes
-    const IntegerVector& sdPos,    // nVars gradient index of sd slot (-1 fixed)
+    const IntegerVector& xcol,     // nPars: X column (0-based) per gradient slot
+    const IntegerVector& dcol,     // nPars: draw column (0-based), -1 = ones slot
     const IntegerVector& obsID,    // rowX, 1-based sequential
     const IntegerVector& panelID,  // nObs, 1-based sequential (length 0 if none)
     const NumericVector& weights,  // nUnit (nObs, or nPanel if panel)
@@ -48,9 +49,12 @@ List mxl_negll_grad_pref_cpp(
   std::vector<double> logitPanel(panel ? nPanel : 0);
 
   for (int r = 0; r < R; ++r) {
-    // Draw-specific betas and the ln/cn gradient adjustment factor
+    // Draw-specific betas: beta = mean + draws %*% chol (chol handles both the
+    // uncorrelated diagonal and correlated lower-triangular cases), then the
+    // mixing distribution and its ln/cn gradient adjustment factor.
     for (int k = 0; k < nVars; ++k) {
-      double raw = mean[k] + sdFull[k] * draws(r, k);
+      double raw = mean[k];
+      for (int m = 0; m < nVars; ++m) raw += draws(r, m) * chol(m, k);
       if (dist[k] == 1) {            // log-normal
         beta[k] = std::exp(raw);
         fac[k] = beta[k];
@@ -89,10 +93,12 @@ List mxl_negll_grad_pref_cpp(
         double lg2 = logit[o] * logit[o];
         const double* s = &seg[static_cast<size_t>(o) * nVars];
         double* g = &G[static_cast<size_t>(o) * nPars];
-        for (int k = 0; k < nVars; ++k) {
-          double base = lg2 * fac[k] * s[k];
-          g[k] += base;                                 // mean slot
-          if (sdPos[k] >= 0) g[sdPos[k]] += base * draws(r, k);
+        // Every partial i contributes fac[xcol] * drawmult * seg[xcol];
+        // drawmult is 1 for mean slots (dcol < 0) or the draw value for the
+        // sd diagonal and off-diagonal (correlation) slots.
+        for (int i = 0; i < nPars; ++i) {
+          double dm = dcol[i] < 0 ? 1.0 : draws(r, dcol[i]);
+          g[i] += lg2 * fac[xcol[i]] * dm * s[xcol[i]];
         }
       }
     } else {
@@ -107,10 +113,9 @@ List mxl_negll_grad_pref_cpp(
         double w = lp * logit[o];
         const double* s = &seg[static_cast<size_t>(o) * nVars];
         double* g = &G[static_cast<size_t>(p) * nPars];
-        for (int k = 0; k < nVars; ++k) {
-          double base = w * fac[k] * s[k];
-          g[k] += base;
-          if (sdPos[k] >= 0) g[sdPos[k]] += base * draws(r, k);
+        for (int i = 0; i < nPars; ++i) {
+          double dm = dcol[i] < 0 ? 1.0 : draws(r, dcol[i]);
+          g[i] += w * fac[xcol[i]] * dm * s[xcol[i]];
         }
       }
     }

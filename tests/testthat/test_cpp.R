@@ -79,12 +79,31 @@ test_that("cpp matches cpu: WTP space", {
   )
 })
 
-test_that("cpp backend errors on unsupported model features (correlation)", {
+test_that("cpp matches cpu: correlated heterogeneity", {
+  expect_cpp_matches(
+    data = yogurt, outcome = "choice", obsID = "obsID", panelID = "id",
+    pars = c("price", "feat", "brand"), randPars = c(feat = "n", price = "n"),
+    correlation = TRUE, numDraws = 40, numCores = 1
+  )
+  expect_cpp_matches(
+    data = yogurt, outcome = "choice", obsID = "obsID",
+    pars = c("price", "feat", "brand"), randPars = c(feat = "n", price = "n"),
+    correlation = TRUE, numDraws = 40, numCores = 1
+  )
+  # Correlated with a log-normal parameter
+  expect_cpp_matches(
+    data = yogurt, outcome = "choice", obsID = "obsID", panelID = "id",
+    pars = c("price", "feat", "brand"), randPars = c(feat = "ln", price = "n"),
+    correlation = TRUE, numDraws = 40, numCores = 1
+  )
+})
+
+test_that("cpp backend still errors on correlated WTP-space models", {
   expect_error(
     logitr(yogurt, "choice", "obsID", panelID = "id",
-           pars = c("price", "feat", "brand"),
-           randPars = c(feat = "n", price = "n"), correlation = TRUE,
+           pars = c("feat", "brand"), scalePar = "price",
+           randPars = c(feat = "n", brand = "n"), correlation = TRUE,
            backend = "cpp"),
-    "correlated"
+    "correlated WTP"
   )
 })

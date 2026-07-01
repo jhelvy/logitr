@@ -11,24 +11,25 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // mxl_negll_grad_pref_cpp
-List mxl_negll_grad_pref_cpp(const NumericMatrix& X, const NumericMatrix& draws, const NumericVector& mean, const NumericVector& sdFull, const IntegerVector& dist, const IntegerVector& sdPos, const IntegerVector& obsID, const IntegerVector& panelID, const NumericVector& weights, const int nObs, const int nPanel, const int nPars);
-RcppExport SEXP _logitr_mxl_negll_grad_pref_cpp(SEXP XSEXP, SEXP drawsSEXP, SEXP meanSEXP, SEXP sdFullSEXP, SEXP distSEXP, SEXP sdPosSEXP, SEXP obsIDSEXP, SEXP panelIDSEXP, SEXP weightsSEXP, SEXP nObsSEXP, SEXP nPanelSEXP, SEXP nParsSEXP) {
+List mxl_negll_grad_pref_cpp(const NumericMatrix& X, const NumericMatrix& draws, const NumericVector& mean, const NumericMatrix& chol, const IntegerVector& dist, const IntegerVector& xcol, const IntegerVector& dcol, const IntegerVector& obsID, const IntegerVector& panelID, const NumericVector& weights, const int nObs, const int nPanel, const int nPars);
+RcppExport SEXP _logitr_mxl_negll_grad_pref_cpp(SEXP XSEXP, SEXP drawsSEXP, SEXP meanSEXP, SEXP cholSEXP, SEXP distSEXP, SEXP xcolSEXP, SEXP dcolSEXP, SEXP obsIDSEXP, SEXP panelIDSEXP, SEXP weightsSEXP, SEXP nObsSEXP, SEXP nPanelSEXP, SEXP nParsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const NumericMatrix& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type draws(drawsSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type sdFull(sdFullSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type chol(cholSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type dist(distSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type sdPos(sdPosSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type xcol(xcolSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type dcol(dcolSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type obsID(obsIDSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type panelID(panelIDSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type weights(weightsSEXP);
     Rcpp::traits::input_parameter< const int >::type nObs(nObsSEXP);
     Rcpp::traits::input_parameter< const int >::type nPanel(nPanelSEXP);
     Rcpp::traits::input_parameter< const int >::type nPars(nParsSEXP);
-    rcpp_result_gen = Rcpp::wrap(mxl_negll_grad_pref_cpp(X, draws, mean, sdFull, dist, sdPos, obsID, panelID, weights, nObs, nPanel, nPars));
+    rcpp_result_gen = Rcpp::wrap(mxl_negll_grad_pref_cpp(X, draws, mean, chol, dist, xcol, dcol, obsID, panelID, weights, nObs, nPanel, nPars));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -57,7 +58,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_logitr_mxl_negll_grad_pref_cpp", (DL_FUNC) &_logitr_mxl_negll_grad_pref_cpp, 12},
+    {"_logitr_mxl_negll_grad_pref_cpp", (DL_FUNC) &_logitr_mxl_negll_grad_pref_cpp, 13},
     {"_logitr_mxl_negll_grad_wtp_cpp", (DL_FUNC) &_logitr_mxl_negll_grad_wtp_cpp, 13},
     {NULL, NULL, 0}
 };
