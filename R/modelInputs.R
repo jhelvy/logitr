@@ -9,7 +9,7 @@ getModelInputs <- function(
     weights, panelID, clusterID, robust, startValBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
     numDraws, numCores, vcov, predict, correlation, call, options,
-    backend = "cpu", numDrawsBatch = NULL, numThreads = NULL
+    backend = "cpp", numDrawsBatch = NULL, numThreads = NULL
 ) {
 
   # Keep original input arguments
@@ -574,13 +574,14 @@ makeDiffData <- function(data, modelType) {
 }
 
 makeMxlDraws <- function(modelInputs) {
-  # Message about using Sobol draws with large number of random parameters
+  # Message about draw type with a large number of random parameters
   if (length(modelInputs$parIDs$r) > 5) {
     if (modelInputs$drawType == 'halton') {
       message(
-        "Since your model has 5 or more random parameters, it is ",
-        "recommended that you use Sobol instead of Halton draws. ",
-        "You can implement this by setting drawType = 'sobol'. \n\n",
+        "Since your model has more than 5 random parameters, Halton draws ",
+        "can become correlated in higher dimensions. Consider using the ",
+        "default Sobol draws (drawType = 'sobol') or MLHS draws ",
+        "(drawType = 'mlhs') instead. \n\n",
         "It is also recommended that you use at least 200 draws, which ",
         "can be implemented by setting numDraws = 200")
     }

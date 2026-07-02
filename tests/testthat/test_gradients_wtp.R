@@ -47,7 +47,8 @@ grad_check <- function(
     data, outcome, obsID, pars, randPars, scalePar, randScale,
     weights, panelID, clusterID, robust, startValBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
-    numDraws, numCores, vcov, predict, correlation, call, options
+    numDraws, numCores, vcov, predict, correlation, call, options,
+    backend = "cpu"  # test the native R analytic gradient (cpp is tested in test_cpp)
   )
   mi <- makeModelInputsList(mi, numMultiStarts)[[1]]
   pars <- mi$model$startVals

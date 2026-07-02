@@ -70,10 +70,13 @@
 #' generated during each call to `logitr` (the same draws are used during each
 #' multistart iteration). The user can override those draws by providing a
 #' matrix of standard normal draws if desired. Defaults to `NULL`.
-#' @param drawType Specify the draw type as a character: `"halton"`
-#' (the default) or `"sobol"` (recommended for models with more than 5
-#' random parameters).
-#' @param numDraws The number of Halton draws to use for MXL models for the
+#' @param drawType Specify the draw type as a character: `"sobol"` (the
+#' default), `"halton"`, or `"mlhs"` (Modified Latin Hypercube Sampling). Sobol
+#' and Halton draws are deterministic; MLHS draws are randomized and so are
+#' controlled by `set.seed()`. For models with more than 5 random parameters,
+#' `"sobol"` or `"mlhs"` are recommended over `"halton"`, which becomes
+#' correlated in higher dimensions.
+#' @param numDraws The number of draws to use for MXL models for the
 #' maximum simulated likelihood. Defaults to `50`.
 #' @param numThreads The number of threads to use for parallel evaluation of
 #' the MXL simulated log-likelihood with `backend = "cpp"`. The draws are
@@ -81,6 +84,10 @@
 #' single thread is used when running a parallel multistart (`numMultiStarts`
 #' > 1, to avoid oversubscribing cores), otherwise all available cores are
 #' used. Set to `1` to disable threading. Only used by the `"cpp"` backend.
+#' Note that threading uses a parallel reduction, so results are not
+#' bit-identical across runs (they differ at the level of floating-point
+#' rounding, far below the optimization tolerance). Set `numThreads = 1` (or
+#' `backend = "cpu"`) if you need exactly reproducible results.
 #' @param numDrawsBatch The number of draws to process at a time when evaluating
 #' the simulated log-likelihood of MXL models. Batching (or "streaming") the
 #' draws keeps peak memory bounded by the batch size rather than by `numDraws`,
@@ -101,9 +108,15 @@
 #' @param options A list of options for controlling the `nloptr()` optimization.
 #' Run `nloptr::nloptr.print.options()` for details.
 #' @param backend The computational backend used to evaluate the log-likelihood
-#' and gradient during estimation. Currently only `"cpu"` (the default) is
-#' supported, which uses logitr's native R implementation. This argument
-#' provides an extension point for faster backends in future releases.
+#' and gradient during estimation. For mixed logit (MXL) models the default is
+#' `"cpp"`, a compiled C++ implementation that is typically 3-4 times faster
+#' (and faster still with multiple threads, see `numThreads`) while producing
+#' the same results as the native R backend to floating-point precision. Set
+#' `backend = "cpu"` to use logitr's native R implementation instead (for
+#' example if you want exactly bit-reproducible results, since the `"cpp"`
+#' backend's threaded reduction is not bit-identical across runs). Multinomial
+#' logit (MNL) models always use the R implementation regardless of this
+#' argument, as they are already fast.
 #' @param price No longer used as of v0.7.0 - if provided, this is passed
 #' to the `scalePar` argument and a warning is displayed.
 #' @param randPrice No longer used as of v0.7.0 - if provided, this is passed
@@ -231,14 +244,14 @@ logitr <- function(
   useAnalyticGrad = TRUE,
   scaleInputs     = TRUE,
   standardDraws   = NULL,
-  drawType        = 'halton',
+  drawType        = 'sobol',
   numDraws        = 50,
   numDrawsBatch   = NULL,
   numCores        = NULL,
   numThreads      = NULL,
   vcov            = FALSE,
   predict         = TRUE,
-  backend         = "cpu",
+  backend         = "cpp",
   options         = list(
     print_level = 0,
     xtol_rel    = 1.0e-6,
@@ -400,6 +413,11 @@ appendModelInfo <- function(model, mi) {
   model$data <- mi$data
   # Get coefficients (re-scale if needed)
   coefficients <- getCoefficients(model, mi, fail)
+  # For uncorrelated MXL models, report standard deviations as positive (their
+  # sign is not identified). Done before computing the gradient / hessian so
+  # that those (and hence the vcov and standard errors) stay consistent with
+  # the reported coefficients.
+  coefficients <- absSdCoefficients(coefficients, mi, fail)
   model$coefficients <- coefficients
   # Make unscaled version of model inputs to compute gradient and hessian
   mi_unscaled <- mi
@@ -411,6 +429,22 @@ appendModelInfo <- function(model, mi) {
   model$hessian  <- getHessian(coefficients, mi_unscaled, fail)
   model$nullLogLik <- getNullLogLik(coefficients, mi_unscaled, fail)
   return(model)
+}
+
+# The sign of a standard deviation parameter is not identified in an
+# uncorrelated mixed logit model: the mixing distributions are symmetric in the
+# random draws, so a distribution with sd = s and sd = -s are identical (same
+# likelihood, same predictions). Only the magnitude is meaningful, so report the
+# absolute value to avoid confusing negative standard deviations. This is not
+# applied to correlated models, where the parameters are elements of a Cholesky
+# factor whose signs jointly determine the covariance matrix.
+absSdCoefficients <- function(coefficients, mi, fail) {
+  if (fail || mi$modelType != "mxl" || isTRUE(mi$inputs$correlation)) {
+    return(coefficients)
+  }
+  sdIDs <- mi$parIDs$sdDiag
+  coefficients[sdIDs] <- abs(coefficients[sdIDs])
+  return(coefficients)
 }
 
 getCoefficients <- function(model, mi, fail) {

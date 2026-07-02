@@ -2,14 +2,15 @@ context("Draw-batched (streaming) MXL estimation")
 library(logitr)
 
 # The draw-batched path streams draws in chunks to keep memory bounded for
-# large draw counts. It must reproduce the default stored-partials path (to
-# floating-point reordering tolerance) across model types, while leaving the
-# default path untouched for typical models.
+# large draw counts. It is a feature of the native R ("cpu") backend, so these
+# tests pin backend = "cpu". It must reproduce the non-streaming stored-partials
+# path (to floating-point reordering tolerance), while leaving the non-streaming
+# path untouched for typical models.
 
 # Fit the same MXL model with the fast path and with forced streaming, and
 # compare coefficients / logLik / standard errors.
 expect_stream_matches <- function(..., numDrawsBatch = 8, tol = 1e-5) {
-  base_args <- list(...)
+  base_args <- c(list(...), list(backend = "cpu"))
   fast <- suppressMessages(do.call(logitr, base_args))
   strm <- suppressMessages(do.call(logitr, c(base_args, numDrawsBatch = numDrawsBatch)))
   expect_equal(as.numeric(logLik(fast)), as.numeric(logLik(strm)), tolerance = tol)
@@ -23,7 +24,7 @@ test_that("default (small model) does not stream", {
   m <- logitr(
     yogurt, "choice", "obsID", panelID = "id",
     pars = c("price", "feat", "brand"), randPars = c(feat = "n"),
-    numDraws = 30, numCores = 1
+    numDraws = 30, numCores = 1, backend = "cpu"
   )
   expect_false(m$batchPlan$stream)
 })
@@ -32,7 +33,7 @@ test_that("forced streaming is recorded on the model", {
   m <- suppressMessages(logitr(
     yogurt, "choice", "obsID", panelID = "id",
     pars = c("price", "feat", "brand"), randPars = c(feat = "n"),
-    numDraws = 30, numDrawsBatch = 8, numCores = 1
+    numDraws = 30, numDrawsBatch = 8, numCores = 1, backend = "cpu"
   ))
   expect_true(m$batchPlan$stream)
   expect_equal(m$batchPlan$batchSize, 8L)
@@ -95,7 +96,7 @@ test_that("a message is emitted when streaming engages", {
     logitr(
       yogurt, "choice", "obsID", panelID = "id",
       pars = c("price", "feat", "brand"), randPars = c(feat = "n"),
-      numDraws = 30, numDrawsBatch = 8, numCores = 1
+      numDraws = 30, numDrawsBatch = 8, numCores = 1, backend = "cpu"
     ),
     "draw-batched streaming"
   )

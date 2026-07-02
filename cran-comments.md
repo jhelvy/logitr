@@ -8,4 +8,4 @@
 
 ## Notes
 * This is a new release.
-* Addresses an error with a dependency on gtsummary, which caused an error when building the vignettes
+* "GNU make is a SystemRequirements" NOTE is expected due to the RcppParallel dependency.

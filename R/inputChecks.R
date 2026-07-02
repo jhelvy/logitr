@@ -37,9 +37,9 @@ runInputChecks <- function(data, inputs) {
   }
   missingInData(c(parsInt, parsNoInt), "pars", dataColumnNames)
 
-  # Make sure the drawType is either 'halton' or 'sobol'
-  if (! inputs$drawType %in% c('halton', 'sobol')) {
-    stop("drawType must be either 'halton' or 'sobol'")
+  # Make sure the drawType is one of the supported types
+  if (! inputs$drawType %in% c('sobol', 'halton', 'mlhs')) {
+    stop("drawType must be one of 'sobol', 'halton', or 'mlhs'")
   }
 
   # Make sure the backend is supported
