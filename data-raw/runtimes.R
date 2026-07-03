@@ -1,21 +1,21 @@
 # ============================================================================
-# Benchmark: estimation speed of a preference-space mixed logit model across
-# R packages, used to generate the exported `runtimes` data frame.
+# Benchmark: estimation speed of a preference-space mixed logit model across R
+# packages (logitr, mixl, mlogit, gmnl, apollo), used to generate the exported
+# `runtimes` data frame.
 #
-# This is the local counterpart to data-raw/logitr_benchmark.ipynb (the Google
-# Colab notebook). It follows the same structure but (1) runs locally so it can
-# use many cores, (2) benchmarks logitr at several thread counts to show how it
-# scales, and (3) records the installed version of every package and the machine
-# it was run on.
+# This is a single self-contained script. You can either paste the whole thing
+# into one cell of an R notebook (Kaggle / Colab) and run it, or run it locally
+# with `Rscript data-raw/runtimes.R`. It writes the results to a CSV that you
+# copy back into the package.
 #
-# IMPORTANT: install the current version of logitr first, as a real (-O2) build,
-# so the compiled "cpp" backend is used and timed:
-#     R CMD INSTALL .        # from the package root
-# then run this script from the package root:
-#     Rscript data-raw/runtimes.R
+# INSTALL FIRST (run once, in a separate cell or session):
+#     install.packages(c("mlogit", "gmnl", "apollo", "mixl", "fastDummies",
+#                        "dplyr", "tidyr", "tibble", "readr", "remotes"))
+#     # dev branch has the compiled backend; switch to plain "jhelvy/logitr"
+#     # once it is merged and released to CRAN:
+#     remotes::install_github("jhelvy/logitr@backend-improvements")
 #
-# All compared packages must be installed (mlogit, gmnl, apollo, mixl,
-# fastDummies). See the benchmark vignette for installation notes.
+# For a fast smoke test, set QUICK <- TRUE in the options block near the top.
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -23,29 +23,31 @@ suppressPackageStartupMessages({
   library(mlogit)
   library(gmnl)
   library(mixl)
+  library(apollo)
   library(dplyr)
   library(tidyr)
-  library(forcats)
 })
-# NOTE: apollo is NOT loaded here. It maintains fragile global state and breaks
-# when run after other packages' estimations, so it is benchmarked separately in
-# data-raw/runtimes_apollo.R (run in a fresh subprocess below).
 set.seed(1234)
 
-# ---- Configuration ---------------------------------------------------------
-# Set BENCH_QUICK=1 in the environment for a fast smoke run (a single draw
-# count) to check that everything works before the full benchmark.
-numDraws <- if (nzchar(Sys.getenv("BENCH_QUICK"))) {
-  c(50)
-} else {
-  c(50, 250, 500, 1000, 2000)
-}
+# ---- Options (edit these) --------------------------------------------------
+# QUICK = TRUE runs a fast smoke test: only the first draw count below, and
+# results are printed but not saved. Set to FALSE for the full benchmark.
+QUICK <- FALSE
+
+# Draw counts to benchmark.
+numDraws <- c(50, 250, 500, 1000, 2000)
+
+# Core counts to benchmark for the packages that can run in parallel (logitr,
+# mixl, apollo). Defaults to 1, half, and all available cores -- e.g. c(1, 2, 4)
+# on a 4-core machine. mlogit and gmnl are always single-threaded. Set this
+# directly (e.g. coreCounts <- c(1, 2, 4)) if you want specific counts.
 maxCores <- parallel::detectCores()
-# Core counts benchmarked for every package that can run in parallel (logitr,
-# mixl, apollo). Every package is run single-threaded (1 core) for a fair
-# head-to-head; the parallelizable ones also run at these higher counts.
-# mlogit and gmnl are single-threaded only.
-coreCounts <- sort(unique(c(1, maxCores %/% 2, maxCores))) # e.g. 1, 5, 10
+coreCounts <- sort(unique(c(1, maxCores %/% 2, maxCores)))
+# ---- (end of options) ------------------------------------------------------
+
+if (QUICK) {
+  numDraws <- numDraws[1]
+}
 
 # ---- Record versions + machine info ---------------------------------------
 benchPkgs <- c("logitr", "mixl", "mlogit", "gmnl", "apollo")
@@ -60,7 +62,7 @@ benchmark_info <- list(
 cat("Benchmark environment:\n")
 str(benchmark_info)
 
-# ---- Common settings + data prep (ported from the notebook) ----------------
+# ---- Common settings + data prep -------------------------------------------
 start_pars <- c(
   price = 0,
   feat = 0,
@@ -79,18 +81,30 @@ yogurt <- subset(logitr::yogurt, logitr::yogurt$id <= 50)
 yogurt <- fastDummies::dummy_cols(yogurt, "brand")
 data_logitr <- yogurt
 
-## mlogit / gmnl
-data_mlogit <- mlogit.data(
-  data = yogurt,
-  shape = "long",
-  choice = "choice",
-  id.var = "id",
-  alt.var = "alt",
-  chid.var = "obsID"
+## mlogit / gmnl. Wrapped in case mlogit.data() breaks on a given mlogit version
+## (its behavior changed across major versions); if it fails, mlogit and gmnl are
+## simply skipped rather than aborting the whole benchmark.
+data_mlogit <- tryCatch(
+  mlogit.data(
+    data = yogurt,
+    shape = "long",
+    choice = "choice",
+    id.var = "id",
+    alt.var = "alt",
+    chid.var = "obsID"
+  ),
+  error = function(e) {
+    message(
+      "mlogit.data() failed (",
+      conditionMessage(e),
+      "); skipping mlogit and gmnl."
+    )
+    NULL
+  }
 )
 data_gmnl <- data_mlogit
 
-## wide-format data (used by mixl below; apollo is benchmarked separately)
+## wide-format data (used by apollo and mixl)
 yogurt_price <- yogurt %>%
   select(id, obsID, price, brand) %>%
   mutate(price = -1 * price) %>%
@@ -118,6 +132,7 @@ data_apollo <- yogurt_price %>%
   left_join(yogurt_choice, by = c("id", "obsID")) %>%
   arrange(id, obsID) %>%
   mutate(av_dannon = 1, av_hiland = 1, av_weight = 1, av_yoplait = 1)
+
 ## mixl
 data_mixl <- data_apollo
 data_mixl$ID <- data_mixl$id
@@ -135,13 +150,79 @@ mixl_model <- "
 mixl_spec <- specify_model(mixl_model, data_mixl)
 availabilities <- generate_default_availabilities(data_mixl, 4)
 
-# ---- Timing helper + record collector -------------------------------------
-# Suppress the (verbose) model output. This is safe here because apollo -- whose
-# bgw optimizer conflicts with suppressMessages()/suppressWarnings() -- is run in
-# a separate subprocess below, not through this helper.
-timed_eval <- function(expr) {
+## apollo model definition (estimated inside the loop below)
+apollo_draws_n <- list(
+  interDrawsType = "halton",
+  interNDraws = 50,
+  interUnifDraws = c(),
+  interNormDraws = c(
+    "d_feat",
+    "d_brandhiland",
+    "d_brandweight",
+    "d_brandyoplait"
+  ),
+  intraDrawsType = "halton",
+  intraNDraws = 0,
+  intraUnifDraws = c(),
+  intraNormDraws = c()
+)
+apollo_randCoeff <- function(apollo_beta, apollo_inputs) {
+  randcoeff <- list()
+  randcoeff[["b_feat"]] <- feat + d_feat * sd_feat
+  randcoeff[["b_brandhiland"]] <- brandhiland + d_brandhiland * sd_brandhiland
+  randcoeff[["b_brandweight"]] <- brandweight + d_brandweight * sd_brandweight
+  randcoeff[["b_brandyoplait"]] <- brandyoplait +
+    d_brandyoplait * sd_brandyoplait
+  return(randcoeff)
+}
+apollo_fixed <- NULL
+apollo_beta <- start_pars
+apollo_probabilities <- function(
+  apollo_beta,
+  apollo_inputs,
+  functionality = "estimate"
+) {
+  apollo_attach(apollo_beta, apollo_inputs)
+  on.exit(apollo_detach(apollo_beta, apollo_inputs))
+  P <- list()
+  V <- list()
+  V[["dannon"]] <- price * price_dannon + b_feat * feat_dannon
+  V[["hiland"]] <- price * price_hiland + b_brandhiland + b_feat * feat_hiland
+  V[["weight"]] <- price * price_weight + b_brandweight + b_feat * feat_weight
+  V[["yoplait"]] <- price *
+    price_yoplait +
+    b_brandyoplait +
+    b_feat * feat_yoplait
+  mnl_settings <- list(
+    alternatives = c(dannon = 1, hiland = 2, weight = 3, yoplait = 4),
+    avail = list(
+      dannon = av_dannon,
+      hiland = av_hiland,
+      weight = av_weight,
+      yoplait = av_yoplait
+    ),
+    choiceVar = choice,
+    utilities = V
+  )
+  P[["model"]] <- apollo_mnl(mnl_settings, functionality)
+  P <- apollo_panelProd(P, apollo_inputs, functionality)
+  P <- apollo_avgInterDraws(P, apollo_inputs, functionality)
+  P <- apollo_prepareProb(P, apollo_inputs, functionality)
+  return(P)
+}
+
+# ---- Timing helpers + record collector -------------------------------------
+# timed_quiet() suppresses the (verbose) model output. NOTE apollo is timed with
+# timed_loud() instead, because its bgw optimizer conflicts with
+# suppressMessages()/suppressWarnings().
+timed_quiet <- function(expr) {
   start <- Sys.time()
   suppressWarnings(suppressMessages(force(expr)))
+  as.numeric(difftime(Sys.time(), start, units = "sec"))
+}
+timed_loud <- function(expr) {
+  start <- Sys.time()
+  force(expr)
   as.numeric(difftime(Sys.time(), start, units = "sec"))
 }
 records <- list()
@@ -156,121 +237,186 @@ record <- function(label, version, nd, time) {
     )
 }
 
+# Estimate one model and record its time. If the model errors (e.g. a package
+# is broken on a given machine, or a version mismatch), record NA and keep going
+# instead of aborting the whole benchmark. `loud = TRUE` skips output suppression
+# (needed for apollo, whose optimizer conflicts with suppressMessages()).
+run_model <- function(label, version, nd, expr, loud = FALSE) {
+  timer <- if (loud) timed_loud else timed_quiet
+  t <- tryCatch(
+    timer(expr),
+    error = function(e) {
+      message("  [", label, ", ", nd, " draws] skipped: ", conditionMessage(e))
+      NA_real_
+    }
+  )
+  record(label, version, nd, t)
+}
+
 # ---- Estimate every model at every draw count ------------------------------
 for (nd in numDraws) {
   cat("\n== Estimating models with", nd, "draws ==\n")
 
   # logitr (compiled backend) at each thread count
   for (nc in coreCounts) {
-    t <- timed_eval(logitr(
-      data = data_logitr,
-      outcome = "choice",
-      obsID = "obsID",
-      panelID = "id",
-      pars = c("price", "feat", "brand"),
-      randPars = c(feat = "n", brand = "n"),
-      startVals = start_pars,
-      numDraws = nd,
-      backend = "cpp",
-      numThreads = nc
-    ))
-    record(sprintf("logitr (%d cores)", nc), versions["logitr"], nd, t)
+    run_model(
+      sprintf("logitr (%d cores)", nc),
+      versions["logitr"],
+      nd,
+      logitr(
+        data = data_logitr,
+        outcome = "choice",
+        obsID = "obsID",
+        panelID = "id",
+        pars = c("price", "feat", "brand"),
+        randPars = c(feat = "n", brand = "n"),
+        startVals = start_pars,
+        numDraws = nd,
+        backend = "cpp",
+        numThreads = nc
+      )
+    )
   }
 
-  # mixl at each thread count. mixl parallelizes via OpenMP: on Linux (e.g. the
-  # Docker image or Colab) num_threads scales estimation across cores. Under the
-  # default macOS toolchain (Apple clang) OpenMP is unavailable, so num_threads
-  # has no effect and the multi-core rows will simply match the 1-core time --
-  # which is why the canonical multi-core benchmark should be run on Linux. See
-  # the benchmark vignette for details.
+  # mixl at each thread count. mixl parallelizes via OpenMP: on Linux (a
+  # notebook or Linux machine) num_threads scales across cores. Under the
+  # default macOS toolchain (Apple clang) OpenMP is unavailable, so the
+  # multi-core rows just match the 1-core time there.
   for (nc in coreCounts) {
-    t <- timed_eval(estimate(
-      mixl_spec,
-      start_pars,
-      data_mixl,
-      availabilities,
-      nDraws = nd,
-      num_threads = nc
-    ))
-    record(sprintf("mixl (%d cores)", nc), versions["mixl"], nd, t)
+    run_model(
+      sprintf("mixl (%d cores)", nc),
+      versions["mixl"],
+      nd,
+      estimate(
+        mixl_spec,
+        start_pars,
+        data_mixl,
+        availabilities,
+        nDraws = nd,
+        num_threads = nc
+      )
+    )
   }
 
   # mlogit (single-threaded)
-  t <- timed_eval(mlogit(
-    data = data_mlogit,
-    formula = choice ~ price + feat + brand | 0,
-    rpar = c(
-      feat = "n",
-      brandhiland = "n",
-      brandweight = "n",
-      brandyoplait = "n"
-    ),
-    haltons = NA,
-    panel = TRUE,
-    start = start_pars,
-    R = nd
-  ))
-  record("mlogit", versions["mlogit"], nd, t)
+  run_model(
+    "mlogit",
+    versions["mlogit"],
+    nd,
+    mlogit(
+      data = data_mlogit,
+      formula = choice ~ price + feat + brand | 0,
+      rpar = c(
+        feat = "n",
+        brandhiland = "n",
+        brandweight = "n",
+        brandyoplait = "n"
+      ),
+      haltons = NA,
+      panel = TRUE,
+      start = start_pars,
+      R = nd
+    )
+  )
 
   # gmnl (single-threaded)
-  t <- timed_eval(gmnl(
-    data = data_gmnl,
-    formula = choice ~ price + feat + brand | 0,
-    ranp = c(
-      feat = "n",
-      brandhiland = "n",
-      brandweight = "n",
-      brandyoplait = "n"
-    ),
-    model = "mixl",
-    haltons = NA,
-    panel = TRUE,
-    start = start_pars,
-    R = nd
-  ))
-  record("gmnl", versions["gmnl"], nd, t)
-}
+  run_model(
+    "gmnl",
+    versions["gmnl"],
+    nd,
+    gmnl(
+      data = data_gmnl,
+      formula = choice ~ price + feat + brand | 0,
+      ranp = c(
+        feat = "n",
+        brandhiland = "n",
+        brandweight = "n",
+        brandyoplait = "n"
+      ),
+      model = "mixl",
+      haltons = NA,
+      panel = TRUE,
+      start = start_pars,
+      R = nd
+    )
+  )
 
-# ---- apollo, run in a fresh subprocess (isolated from the above) ------------
-cat("\n== Running apollo in a separate process ==\n")
-apollo_script <- "data-raw/runtimes_apollo.R"
-apollo_log <- tempfile(fileext = ".log")
-apollo_status <- system2(
-  file.path(R.home("bin"), "Rscript"),
-  args = apollo_script,
-  env = if (nzchar(Sys.getenv("BENCH_QUICK"))) {
-    "BENCH_QUICK=1"
-  } else {
-    character(0)
-  },
-  stdout = apollo_log,
-  stderr = apollo_log
-) # keep apollo's output quiet
-if (apollo_status != 0 || !file.exists("data-raw/runtimes_apollo.csv")) {
-  cat(readLines(apollo_log), sep = "\n")
-  stop("apollo benchmark failed; see output above")
-}
-apollo_records <- readr::read_csv(
-  "data-raw/runtimes_apollo.csv",
-  show_col_types = FALSE
-)
-for (i in seq_len(nrow(apollo_records))) {
-  r <- apollo_records[i, ]
-  record(r$package, r$version, r$numDraws, r$time_sec)
+  # apollo at each core count (timed "loud"; do not wrap in suppressMessages).
+  # The whole setup + estimate is wrapped so an apollo failure on one machine
+  # does not abort the run.
+  apollo_draws_n$interNDraws <- nd
+  for (nc in coreCounts) {
+    label <- sprintf("apollo (%d cores)", nc)
+    t <- tryCatch(
+      {
+        apollo_initialise() # reset apollo's environment between models
+        apollo_control <- list(
+          modelName = "MXL_Pref_space",
+          modelDescr = "MXL yogurt, pref space",
+          indivID = "id",
+          mixing = TRUE,
+          analyticGrad = TRUE,
+          panelData = TRUE,
+          nCores = nc,
+          outputDirectory = tempdir(),
+          noDiagnostics = TRUE
+        )
+        inputs <- apollo_validateInputs(
+          apollo_beta = start_pars,
+          apollo_fixed = apollo_fixed,
+          database = data_apollo,
+          apollo_draws = apollo_draws_n,
+          apollo_randCoeff = apollo_randCoeff,
+          apollo_control = apollo_control
+        )
+        timed_loud(apollo_estimate(
+          apollo_beta = start_pars,
+          apollo_fixed = apollo_fixed,
+          apollo_probabilities = apollo_probabilities,
+          apollo_inputs = inputs,
+          estimate_settings = list(printLevel = 0, silent = TRUE)
+        ))
+      },
+      error = function(e) {
+        message(
+          "  [",
+          label,
+          ", ",
+          nd,
+          " draws] skipped: ",
+          conditionMessage(e)
+        )
+        NA_real_
+      }
+    )
+    record(sprintf("apollo (%d cores)", nc), versions["apollo"], nd, t)
+  }
 }
 
 # ---- Assemble, save, and export --------------------------------------------
 runtimes <- tibble::as_tibble(do.call(rbind, records))
 runtimes <- runtimes %>% mutate(package = as.factor(package))
 
-if (nzchar(Sys.getenv("BENCH_QUICK"))) {
-  cat("\nBENCH_QUICK: smoke run complete (not saving). Results:\n")
-  print(as.data.frame(runtimes))
-  quit(save = "no")
+cat("\nResults:\n")
+print(as.data.frame(runtimes))
+
+if (QUICK) {
+  cat("\nQUICK smoke run complete (results not saved).\n")
+} else {
+  # Write the CSV next to the other data-raw files if we are in the package,
+  # otherwise into the current working directory (e.g. a notebook).
+  out_dir <- if (dir.exists("data-raw")) "data-raw" else "."
+  readr::write_csv(runtimes, file.path(out_dir, "runtimes.csv"))
+  saveRDS(benchmark_info, file.path(out_dir, "benchmark_info.rds"))
+  cat("\nSaved", file.path(out_dir, "runtimes.csv"), "\n")
+
+  # Regenerate the shipped data/runtimes.rda only when run from inside the
+  # package (a DESCRIPTION file is present). On a notebook the CSV is the
+  # deliverable to copy back and turn into data/runtimes.rda locally.
+  if (file.exists("DESCRIPTION")) {
+    usethis::use_data(runtimes, overwrite = TRUE)
+    cat("Saved data/runtimes.rda\n")
+  }
 }
-
-readr::write_csv(runtimes, "data-raw/runtimes.csv")
-saveRDS(benchmark_info, "data-raw/benchmark_info.rds")
-
-cat("Machine / versions (put these in the benchmark vignette):\n")
+cat("\nMachine / versions (for the benchmark vignette):\n")
 str(benchmark_info)
