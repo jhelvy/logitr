@@ -42,6 +42,7 @@ Suggests:
 Imports:
     generics,
     MASS,
+    mirai,
     nloptr,
     parallel,
     randtoolbox,
