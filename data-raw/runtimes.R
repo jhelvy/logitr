@@ -272,17 +272,5 @@ if (nzchar(Sys.getenv("BENCH_QUICK"))) {
 readr::write_csv(runtimes, "data-raw/runtimes.csv")
 saveRDS(benchmark_info, "data-raw/benchmark_info.rds")
 
-# Regenerate the shipped data/runtimes.rda only when run from inside the package
-# (i.e. a local checkout or clone, where a DESCRIPTION file is present). On a
-# bare notebook working directory (e.g. Kaggle) use_data() has no package to
-# write to, so skip it -- the CSV is the deliverable to copy back and turn into
-# data/runtimes.rda locally with: usethis::use_data(runtimes, overwrite = TRUE).
-if (file.exists("DESCRIPTION")) {
-  usethis::use_data(runtimes, overwrite = TRUE)
-  cat("\nDone. Saved data-raw/runtimes.csv and data/runtimes.rda\n")
-} else {
-  cat("\nDone. Saved data-raw/runtimes.csv (no package here, so data/runtimes.rda",
-      "was skipped -- rebuild it locally from the CSV).\n")
-}
 cat("Machine / versions (put these in the benchmark vignette):\n")
 str(benchmark_info)
