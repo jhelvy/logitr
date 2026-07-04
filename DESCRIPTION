@@ -54,5 +54,5 @@ LinkingTo:
     Rcpp,
     RcppParallel
 SystemRequirements: GNU make
-URL: https://github.com/jhelvy/logitr
+URL: https://github.com/jhelvy/logitr, https://jhelvy.github.io/logitr/
 BugReports: https://github.com/jhelvy/logitr/issues

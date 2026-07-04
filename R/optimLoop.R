@@ -3,6 +3,10 @@
 # ============================================================================
 
 runMultistart <- function(mi) {
+  # Dummy assignment to silence the R CMD check "no visible binding" note.
+  # The real nThreads is bound on each mirai daemon via .args below; this
+  # NULL is never used.
+  nThreads <- NULL
   numMultiStarts <- mi$n$multiStarts
   miList <- makeModelInputsList(mi, numMultiStarts)
   numCores <- mi$n$cores

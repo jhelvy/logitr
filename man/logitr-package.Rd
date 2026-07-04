@@ -13,6 +13,7 @@ Fast estimation of multinomial (MNL) and mixed logit (MXL) models in R. Models c
 Useful links:
 \itemize{
   \item \url{https://github.com/jhelvy/logitr}
+  \item \url{https://jhelvy.github.io/logitr/}
   \item Report bugs at \url{https://github.com/jhelvy/logitr/issues}
 }
 

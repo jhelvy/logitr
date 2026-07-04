@@ -3,19 +3,33 @@
 # packages (logitr, mixl, mlogit, gmnl, apollo), used to generate the exported
 # `runtimes` data frame.
 #
-# This is a single self-contained script. You can either paste the whole thing
-# into one cell of an R notebook (Kaggle / Colab) and run it, or run it locally
-# with `Rscript data-raw/runtimes.R`. It writes the results to a CSV that you
-# copy back into the package.
+# This is a single self-contained script, run locally from the package root
+# with `Rscript data-raw/runtimes.R`. It writes data-raw/runtimes.csv and
+# regenerates data/runtimes.rda. The shipped results are specific to the
+# machine they were produced on (a 10-core Apple M-series Mac); rerunning on
+# different hardware will give different absolute times (and different core
+# counts in the multi-core rows), though the relative comparison holds.
 #
-# INSTALL FIRST (run once, in a separate cell or session):
+# INSTALL FIRST (run once):
 #     install.packages(c("mlogit", "gmnl", "apollo", "mixl", "fastDummies",
-#                        "dplyr", "tidyr", "tibble", "readr", "remotes"))
-#     # dev branch has the compiled backend; switch to plain "jhelvy/logitr"
-#     # once it is merged and released to CRAN:
-#     remotes::install_github("jhelvy/logitr@backend-improvements")
+#                        "dplyr", "tidyr", "tibble", "readr"))
+#     # and install this package itself (the local dev version, compiled with
+#     # full optimization -- do not benchmark under devtools::load_all()):
+#     #     R CMD INSTALL --preclean .
 #
 # For a fast smoke test, set QUICK <- TRUE in the options block near the top.
+#
+# OPENMP ON MACOS (needed for mixl's multi-core rows): Apple's clang ships
+# without OpenMP, so mixl silently runs single-threaded regardless of
+# num_threads. To enable it: (1) brew install libomp, (2) add to ~/.R/Makevars:
+#     CPPFLAGS += -I/opt/homebrew/opt/libomp/include -Xclang -fopenmp
+#     LDFLAGS += -L/opt/homebrew/opt/libomp/lib -lomp
+# (3) mixl <= 1.3.5 has a thread-safety bug in its code templates that
+# segfaults once OpenMP is actually on: v.data.nrows() (an R API call) is
+# evaluated inside the '#pragma omp for' loop bound in
+# <mixl>/include/mixl/{loglik,utilities,predict}.cpp. Hoist it above the
+# '#pragma omp parallel' line (const int data_nrows = v.data.nrows();) in the
+# installed package's include/mixl/ templates. Reinstalling mixl reverts this.
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -35,7 +49,7 @@ set.seed(1234)
 QUICK <- FALSE
 
 # Draw counts to benchmark.
-numDraws <- c(50, 250, 500, 1000, 2000)
+numDraws <- c(50, 400, 800, 1200, 1600, 2000)
 
 # Core counts to benchmark for the packages that can run in parallel (logitr,
 # mixl, apollo). Defaults to 1, half, and all available cores -- e.g. c(1, 2, 4)
@@ -278,10 +292,10 @@ for (nd in numDraws) {
     )
   }
 
-  # mixl at each thread count. mixl parallelizes via OpenMP: on Linux (a
-  # notebook or Linux machine) num_threads scales across cores. Under the
-  # default macOS toolchain (Apple clang) OpenMP is unavailable, so the
-  # multi-core rows just match the 1-core time there.
+  # mixl at each thread count. mixl parallelizes via OpenMP, which works out
+  # of the box on Linux. On macOS it needs a one-time setup (see the OPENMP
+  # ON MACOS note in the header); without it the multi-core rows just match
+  # the 1-core time.
   for (nc in coreCounts) {
     run_model(
       sprintf("mixl (%d cores)", nc),
@@ -404,15 +418,14 @@ if (QUICK) {
   cat("\nQUICK smoke run complete (results not saved).\n")
 } else {
   # Write the CSV next to the other data-raw files if we are in the package,
-  # otherwise into the current working directory (e.g. a notebook).
+  # otherwise into the current working directory.
   out_dir <- if (dir.exists("data-raw")) "data-raw" else "."
   readr::write_csv(runtimes, file.path(out_dir, "runtimes.csv"))
   saveRDS(benchmark_info, file.path(out_dir, "benchmark_info.rds"))
   cat("\nSaved", file.path(out_dir, "runtimes.csv"), "\n")
 
-  # Regenerate the shipped data/runtimes.rda only when run from inside the
-  # package (a DESCRIPTION file is present). On a notebook the CSV is the
-  # deliverable to copy back and turn into data/runtimes.rda locally.
+  # Regenerate the shipped data/runtimes.rda when run from inside the
+  # package (a DESCRIPTION file is present).
   if (file.exists("DESCRIPTION")) {
     usethis::use_data(runtimes, overwrite = TRUE)
     cat("Saved data/runtimes.rda\n")

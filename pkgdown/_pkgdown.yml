@@ -103,6 +103,7 @@ reference:
   - apolloModeChoiceData
   - electricity
   - runtimes
+  - runtimes_draws
 - title: "Other Helpers"
   desc: "Other helper functions."
   contents:
