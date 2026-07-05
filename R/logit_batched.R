@@ -67,6 +67,9 @@ adjustPartialsBatch <- function(mi, partials, betaDraws, VDraws, n_b) {
     randScale <- mi$inputs$randScale
     lambdaDraws <- repmat(matrix(betaDraws[, 1], nrow = 1), n_b$rowX, 1)
     partial_lambda_mean <- VDraws / lambdaDraws
+    # 0 / 0 = NaN where a censored-normal lambda is zero; the correct partial
+    # there is q * 1{raw > 0} = 0 (mirrors mxlNegGradLL_wtp)
+    partial_lambda_mean[!is.finite(partial_lambda_mean)] <- 0
     partials[[1]] <- partial_lambda_mean
     if (!is.null(randScale)) {
       lambda_sdID <- parIDs$lambdaIDs[2]
@@ -79,6 +82,7 @@ adjustPartialsBatch <- function(mi, partials, betaDraws, VDraws, n_b) {
     if (!is.null(randScale)) {
       for (id in parIDs$lambdaOffDiag) {
         partials[[id]] <- partials[[id]] / lambdaDraws * partial_lambda_mean
+        partials[[id]][!is.finite(partials[[id]])] <- 0
       }
     }
   }

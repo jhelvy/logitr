@@ -87,8 +87,8 @@ model <- logitr(
 )
 ```
 
-By default (`numThreads = NULL`), all available cores are used, *except* when
-running a parallel multistart (`numMultiStarts > 1`): in that case a single
+By default (`numThreads = NULL`), all but one of the available cores are used,
+*except* when running a parallel multistart (`numMultiStarts > 1`): in that case a single
 thread is used per model so that the cores go to the multistart instead of
 being oversubscribed by nested parallelism. Set `numThreads = 1` to disable
 threading entirely.
@@ -163,8 +163,8 @@ CUDA GPUs directly.
 ## Summary
 
 - **Most users need to do nothing.** Mixed logit models already use the compiled
-  `"cpp"` backend across all available cores by default, and it handles large
-  draw counts without running out of memory.
+  `"cpp"` backend across all but one of the available cores by default, and it
+  handles large draw counts without running out of memory.
 - Use very large draw counts (e.g. 10,000+) freely — the `"cpp"` backend is
   memory-flat in the number of draws, and the multithreaded speedup is largest
   in exactly this regime.

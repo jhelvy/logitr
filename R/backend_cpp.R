@@ -76,10 +76,15 @@ cppPrep <- function(pars, mi) {
     nPars <- mi$n$pars
     useQ <- integer(nPars); facIdx <- integer(nPars)
     mulLambda <- integer(nPars); xcolX <- integer(nPars)
+    # Every lambda slot (mean, sd, off-diagonals) uses fac of the scale
+    # parameter: d(lambda)/d(raw) per draw, which is 1 for a normal or fixed
+    # scale, lambda for log-normal, and the censoring indicator 1{raw > 0}
+    # for censored-normal. This is the chain-rule factor for the mean slot
+    # too (each sd/off-diagonal slot additionally picks up its draw column
+    # via dcol).
     isLambda <- spec$xcol == 1L
     useQ[isLambda] <- 1L
-    facIdx[isLambda] <- 0L        # fac of the scale parameter
-    facIdx[1] <- -1L              # slot 1 is the lambda mean -> lamMeanFac
+    facIdx[isLambda] <- 0L
     omega <- !isLambda
     facIdx[omega] <- spec$xcol[omega] - 1L   # 0-based beta index of the gamma
     xcolX[omega] <- spec$xcol[omega] - 2L    # 0-based X column of the gamma

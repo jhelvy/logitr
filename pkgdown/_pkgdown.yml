@@ -104,6 +104,7 @@ reference:
   - electricity
   - runtimes
   - runtimes_draws
+  - loglik_draws
 - title: "Other Helpers"
   desc: "Other helper functions."
   contents:

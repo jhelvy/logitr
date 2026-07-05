@@ -298,7 +298,8 @@ makeClusterID <- function(data, inputs, obsID, panelID) {
     if (inputs$clusterID == inputs$obsID) {
         return(obsID)
     }
-    if (inputs$clusterID == inputs$panelID) {
+    # panelID is NULL when clustering without panel data
+    if (!is.null(inputs$panelID) && inputs$clusterID == inputs$panelID) {
         return(panelID)
     }
     clusterID <- as.vector(as.matrix(data[inputs$clusterID]))

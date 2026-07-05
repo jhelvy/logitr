@@ -21,6 +21,7 @@ expect_stream_matches <- function(..., numDrawsBatch = 8, tol = 1e-5) {
 }
 
 test_that("default (small model) does not stream", {
+  skip_on_cran()
   m <- logitr(
     yogurt, "choice", "obsID", panelID = "id",
     pars = c("price", "feat", "brand"), randPars = c(feat = "n"),
@@ -30,6 +31,7 @@ test_that("default (small model) does not stream", {
 })
 
 test_that("forced streaming is recorded on the model", {
+  skip_on_cran()
   m <- suppressMessages(logitr(
     yogurt, "choice", "obsID", panelID = "id",
     pars = c("price", "feat", "brand"), randPars = c(feat = "n"),
@@ -40,6 +42,7 @@ test_that("forced streaming is recorded on the model", {
 })
 
 test_that("streaming matches the fast path: preference space, panel", {
+  skip_on_cran()
   expect_stream_matches(
     data = yogurt, outcome = "choice", obsID = "obsID", panelID = "id",
     pars = c("price", "feat", "brand"), randPars = c(feat = "n"),
@@ -48,6 +51,7 @@ test_that("streaming matches the fast path: preference space, panel", {
 })
 
 test_that("streaming matches the fast path: log-normal and censored-normal", {
+  skip_on_cran()
   expect_stream_matches(
     data = yogurt, outcome = "choice", obsID = "obsID", panelID = "id",
     pars = c("price", "feat", "brand"), randPars = c(feat = "ln"),
@@ -61,6 +65,7 @@ test_that("streaming matches the fast path: log-normal and censored-normal", {
 })
 
 test_that("streaming matches the fast path: correlated heterogeneity", {
+  skip_on_cran()
   expect_stream_matches(
     data = yogurt, outcome = "choice", obsID = "obsID", panelID = "id",
     pars = c("price", "feat", "brand"), randPars = c(feat = "n", price = "n"),
@@ -69,6 +74,7 @@ test_that("streaming matches the fast path: correlated heterogeneity", {
 })
 
 test_that("streaming matches the fast path: WTP space", {
+  skip_on_cran()
   expect_stream_matches(
     data = yogurt, outcome = "choice", obsID = "obsID", panelID = "id",
     pars = c("feat", "brand"), scalePar = "price", randPars = c(feat = "n"),
@@ -77,6 +83,7 @@ test_that("streaming matches the fast path: WTP space", {
 })
 
 test_that("getBatchPlan streams only when needed", {
+  skip_on_cran()
   # Small model: keep the fast (stored-partials) path
   expect_false(getBatchPlan(NULL, list(pars = 6, rowX = 7000, draws = 50))$stream)
   # Large model: auto-stream with a bounded batch size
@@ -92,6 +99,7 @@ test_that("getBatchPlan streams only when needed", {
 })
 
 test_that("a message is emitted when streaming engages", {
+  skip_on_cran()
   expect_message(
     logitr(
       yogurt, "choice", "obsID", panelID = "id",
@@ -103,6 +111,7 @@ test_that("a message is emitted when streaming engages", {
 })
 
 test_that("numDrawsBatch is validated", {
+  skip_on_cran()
   expect_error(
     logitr(yogurt, "choice", "obsID", pars = c("price", "feat"),
            randPars = c(feat = "n"), numDrawsBatch = -1),

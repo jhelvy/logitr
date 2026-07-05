@@ -25,7 +25,7 @@ logitr(
   scaleInputs = TRUE,
   standardDraws = NULL,
   drawType = "sobol",
-  numDraws = 50,
+  numDraws = 500,
   numDrawsBatch = NULL,
   numCores = NULL,
   numThreads = NULL,
@@ -131,16 +131,22 @@ controlled by \code{set.seed()}. For models with more than 5 random parameters,
 correlated in higher dimensions.}
 
 \item{numDraws}{The number of draws to use for MXL models for the
-maximum simulated likelihood. Defaults to \code{50}.}
+maximum simulated likelihood. Defaults to \code{500}. Draw counts that are too
+low (e.g. the 40-50 draws that many packages default to) produce noticeably
+unstable simulated log-likelihoods, especially in models with many random
+parameters; the compiled backend makes larger draw counts cheap enough to
+be the default.}
 
 \item{numDrawsBatch}{The number of draws to process at a time when evaluating
-the simulated log-likelihood of MXL models. Batching (or "streaming") the
-draws keeps peak memory bounded by the batch size rather than by \code{numDraws},
-which is what makes large draw counts feasible. Defaults to \code{NULL}, in which
-case logitr automatically streams only when the draws would otherwise exceed
-an internal memory budget (so typical models are unaffected). Set to an
-integer to force a specific batch size, or to a value \verb{>= numDraws} to
-disable streaming. Only used for MXL models.}
+the simulated log-likelihood of MXL models with \code{backend = "cpu"}. Batching
+(or "streaming") the draws keeps peak memory bounded by the batch size
+rather than by \code{numDraws}, which is what makes large draw counts feasible on
+the R backend. Defaults to \code{NULL}, in which case logitr automatically
+streams only when the draws would otherwise exceed an internal memory budget
+(so typical models are unaffected). Set to an integer to force a specific
+batch size, or to a value \verb{>= numDraws} to disable streaming. Only used by
+the \code{"cpu"} backend for MXL models; the default \code{"cpp"} backend is
+memory-flat in the number of draws and ignores this argument.}
 
 \item{numCores}{The number of cores to use for parallel processing of the
 multistart. Set to \code{1} to serially run the multistart. Defaults to \code{NULL},
@@ -151,9 +157,9 @@ Max cores allowed is capped at \code{parallel::detectCores()}.}
 the MXL simulated log-likelihood with \code{backend = "cpp"}. The draws are
 processed in parallel across threads. Defaults to \code{NULL}, in which case a
 single thread is used when running a parallel multistart
-(\code{numMultiStarts > 1}, to avoid oversubscribing cores), otherwise all
-available cores are used. Set to \code{1} to disable threading. Only used by
-the \code{"cpp"} backend.
+(\code{numMultiStarts > 1}, to avoid oversubscribing cores), otherwise all but
+one of the available cores are used. Set to \code{1} to disable threading. Only
+used by the \code{"cpp"} backend.
 Note that threading uses a parallel reduction, so results are not
 bit-identical across runs (they differ at the level of floating-point
 rounding, far below the optimization tolerance). Set \code{numThreads = 1} (or
@@ -301,7 +307,8 @@ mxl_pref <- logitr(
   obsID    = "obsID",
   panelID  = "id",
   pars     = c("price", "feat", "brand"),
-  randPars = c(feat = "n")
+  randPars = c(feat = "n"),
+  numDraws = 50 # fewer draws than the default to keep the example fast
 )
 }
 \keyword{logit}

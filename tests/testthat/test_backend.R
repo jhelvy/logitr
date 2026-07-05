@@ -29,6 +29,7 @@ test_that('MNL uses the R path, so default and "cpu" are identical', {
 })
 
 test_that('MXL default ("cpp") matches "cpu" to tolerance', {
+  skip_on_cran()
   args <- list(
     data = yogurt, outcome = "choice", obsID = "obsID", panelID = "id",
     pars = c("price", "feat", "brand"), randPars = c(feat = "n"),

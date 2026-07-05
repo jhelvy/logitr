@@ -170,11 +170,12 @@ List mxl_negll_grad_pref_cpp(
 // coefficients (gamma / omega). Spec-driven so it handles uncorrelated and
 // correlated heterogeneity uniformly (chol = diagonal of sds or lower-triangular
 // Cholesky). Each gradient slot is classified by useQ/facIdx/mulLambda:
-//   * lambda mean       -> useQ, facIdx = -1 (uses lamMeanFac), no lambda
-//   * lambda sd / off-d -> useQ, facIdx = 0  (fac of lambda),   no lambda
-//   * omega (gamma)     -> seg,  facIdx = beta index,           * lambda
-// This mirrors getMxlV_wtp / mxlNegGradLL_wtp (lambda-mean partial = V/lambda
-// via segQ; omega partials * lambda; lambda partials scaled by the lambda mean).
+//   * lambda (mean, sd, off-d) -> useQ, facIdx = 0 (fac of lambda), no lambda
+//   * omega (gamma)            -> seg,  facIdx = beta index,        * lambda
+// fac of lambda is d(lambda)/d(raw) per draw: 1 for normal/fixed, lambda for
+// log-normal, and the censoring indicator 1{raw > 0} for censored-normal.
+// This mirrors getMxlV_wtp / mxlNegGradLL_wtp (lambda partials use q via segQ;
+// omega partials are multiplied by the per-draw lambda).
 // ============================================================================
 
 // WTP-space analogue of PrefWorker: accumulates pHat and G over a range of
@@ -257,7 +258,6 @@ struct WtpWorker : public RcppParallel::Worker {
         for (int k = 0; k < nAttr; ++k) s[k] += X(i, k) * e;
         segQ[o] += q[i] * e;
       }
-      double lamMeanFac = (lambdaRandom && lambdaLn) ? lambda : 1.0;
       if (!panel) {
         for (int o = 0; o < nObs; ++o) {
           pHat[o] += logit[o];
@@ -265,7 +265,7 @@ struct WtpWorker : public RcppParallel::Worker {
           const double* s = &seg[static_cast<size_t>(o) * nAttr];
           double* g = &G[static_cast<size_t>(o) * nPars];
           for (int i = 0; i < nPars; ++i) {
-            double m = facIdx[i] < 0 ? lamMeanFac : fac[facIdx[i]];
+            double m = fac[facIdx[i]];
             if (mulLambda[i]) m *= lambda;
             double dm = dcol[i] < 0 ? 1.0 : draws(r, dcol[i]);
             double sv = useQ[i] ? segQ[o] : s[xcolX[i]];
@@ -282,7 +282,7 @@ struct WtpWorker : public RcppParallel::Worker {
           const double* s = &seg[static_cast<size_t>(o) * nAttr];
           double* g = &G[static_cast<size_t>(p) * nPars];
           for (int i = 0; i < nPars; ++i) {
-            double m = facIdx[i] < 0 ? lamMeanFac : fac[facIdx[i]];
+            double m = fac[facIdx[i]];
             if (mulLambda[i]) m *= lambda;
             double dm = dcol[i] < 0 ? 1.0 : draws(r, dcol[i]);
             double sv = useQ[i] ? segQ[o] : s[xcolX[i]];

@@ -1,23 +1,49 @@
 # ============================================================================
-# Benchmark: estimation speed of a preference-space mixed logit model across R
-# packages (logitr, mixl, mlogit, gmnl, apollo), used to generate the exported
-# `runtimes` data frame.
+# Benchmarks for the exported `runtimes`, `runtimes_draws`, and `loglik_draws`
+# data frames, all estimating the same preference-space mixed logit model on
+# the yogurt data:
 #
-# This is a single self-contained script, run locally from the package root
-# with `Rscript data-raw/runtimes.R`. It writes data-raw/runtimes.csv and
-# regenerates data/runtimes.rda. The shipped results are specific to the
+#   1. HEAD-TO-HEAD (`runtimes`): estimation speed across R packages
+#      (logitr, mixl, mlogit, gmnl, apollo) at several draw counts, with the
+#      parallel-capable packages (logitr, mixl, apollo) run at several core
+#      counts.
+#
+#   2. LARGE-DRAW SCALING (`runtimes_draws`): logitr ONLY, showing how
+#      full-fit estimation time scales as the draws grow to 10,000 for each
+#      of the three backends: cpu (native R, single-threaded), cpp (1 core),
+#      and cpp (all cores). The point: logitr reaches draw counts the other
+#      packages cannot, and the compiled + multithreaded backend is why.
+#
+#   3. LOGLIK STABILITY (`loglik_draws`): the "what the speed buys you"
+#      experiment. The model is estimated 10 times at each draw count using
+#      MLHS draws (randomized, seed-controlled) with a different seed each
+#      time, every run starting from the same converged reference solution.
+#      The across-seed spread in the converged log-likelihood at a given draw
+#      count IS the simulation error, which shrinks as the draws grow. (The
+#      default Sobol draws are deterministic -- one realization -- so they
+#      cannot reveal the spread.) Starting every run from the same converged
+#      reference point is essential: from an all-zeros start, some
+#      (drawCount, seed) combinations diverge to a degenerate local optimum
+#      (logLik around -1300 instead of -725), and that optimization failure
+#      would masquerade as simulation error.
+#
+# This is a single self-contained script, run from the package root with
+#     Rscript data-raw/runtimes.R
+# It writes data-raw/{runtimes,runtimes_draws,loglik_draws}.csv (plus the
+# machine-info .rds files) and regenerates the corresponding data/*.rda files
+# at the end. It always runs the FULL benchmark; if you want a shorter run,
+# edit the options block below. The shipped results are specific to the
 # machine they were produced on (a 10-core Apple M-series Mac); rerunning on
-# different hardware will give different absolute times (and different core
+# different hardware gives different absolute times (and different core
 # counts in the multi-core rows), though the relative comparison holds.
 #
 # INSTALL FIRST (run once):
 #     install.packages(c("mlogit", "gmnl", "apollo", "mixl", "fastDummies",
 #                        "dplyr", "tidyr", "tibble", "readr"))
 #     # and install this package itself (the local dev version, compiled with
-#     # full optimization -- do not benchmark under devtools::load_all()):
+#     # full optimization -- do not benchmark under devtools::load_all(),
+#     # which compiles -O0 and makes the cpp backend look slow):
 #     #     R CMD INSTALL --preclean .
-#
-# For a fast smoke test, set QUICK <- TRUE in the options block near the top.
 #
 # OPENMP ON MACOS (needed for mixl's multi-core rows): Apple's clang ships
 # without OpenMP, so mixl silently runs single-threaded regardless of
@@ -44,12 +70,8 @@ suppressPackageStartupMessages({
 set.seed(1234)
 
 # ---- Options (edit these) --------------------------------------------------
-# QUICK = TRUE runs a fast smoke test: only the first draw count below, and
-# results are printed but not saved. Set to FALSE for the full benchmark.
-QUICK <- FALSE
-
-# Draw counts to benchmark.
-numDraws <- c(50, 400, 800, 1200, 1600, 2000)
+# Draw counts for the head-to-head benchmark (part 1).
+numDraws <- c(50, 500, 1000, 1500)
 
 # Core counts to benchmark for the packages that can run in parallel (logitr,
 # mixl, apollo). Defaults to 1, half, and all available cores -- e.g. c(1, 2, 4)
@@ -57,11 +79,17 @@ numDraws <- c(50, 400, 800, 1200, 1600, 2000)
 # directly (e.g. coreCounts <- c(1, 2, 4)) if you want specific counts.
 maxCores <- parallel::detectCores()
 coreCounts <- sort(unique(c(1, maxCores %/% 2, maxCores)))
-# ---- (end of options) ------------------------------------------------------
 
-if (QUICK) {
-  numDraws <- numDraws[1]
-}
+# Draw counts for the logitr-only scaling benchmark (part 2). The cpu line at
+# 10,000 draws is genuinely slow (that is the point of the figure); expect the
+# full sweep to take a while.
+numDrawsScaling <- c(100, 500, 1000, 2500, 5000, 10000)
+
+# Draw counts and number of seeds per draw count for the log-likelihood
+# stability experiment (part 3).
+numDrawsLogLik <- c(50, 100, 250, 500, 1000, 5000)
+numSeeds <- 10
+# ---- (end of options) ------------------------------------------------------
 
 # ---- Record versions + machine info ---------------------------------------
 benchPkgs <- c("logitr", "mixl", "mlogit", "gmnl", "apollo")
@@ -73,6 +101,14 @@ benchmark_info <- list(
   cores = maxCores,
   versions = versions
 )
+benchmark_info_draws <- list(
+  date = as.character(Sys.Date()),
+  r_version = R.version.string,
+  platform = R.version$platform,
+  cores = maxCores,
+  logitr_version = versions[["logitr"]]
+)
+loglik_draws_info <- benchmark_info_draws
 cat("Benchmark environment:\n")
 str(benchmark_info)
 
@@ -88,8 +124,6 @@ start_pars <- c(
   sd_brandweight = 0.1,
   sd_brandyoplait = 0.1
 )
-# Use half of the yogurt data to keep the slower packages tractable
-yogurt <- subset(logitr::yogurt, logitr::yogurt$id <= 50)
 
 ## logitr
 yogurt <- fastDummies::dummy_cols(yogurt, "brand")
@@ -225,7 +259,7 @@ apollo_probabilities <- function(
   return(P)
 }
 
-# ---- Timing helpers + record collector -------------------------------------
+# ---- Timing helpers ---------------------------------------------------------
 # timed_quiet() suppresses the (verbose) model output. NOTE apollo is timed with
 # timed_loud() instead, because its bgw optimizer conflicts with
 # suppressMessages()/suppressWarnings().
@@ -239,6 +273,27 @@ timed_loud <- function(expr) {
   force(expr)
   as.numeric(difftime(Sys.time(), start, units = "sec"))
 }
+
+fit_logitr <- function(nd, backend, numThreads, ...) {
+  logitr(
+    data = data_logitr,
+    outcome = "choice",
+    obsID = "obsID",
+    panelID = "id",
+    pars = c("price", "feat", "brand"),
+    randPars = c(feat = "n", brand = "n"),
+    startVals = start_pars,
+    numDraws = nd,
+    backend = backend,
+    numThreads = numThreads,
+    ...
+  )
+}
+
+# ============================================================================
+# Part 1: Head-to-head across packages (`runtimes`)
+# ============================================================================
+
 records <- list()
 record <- function(label, version, nd, time) {
   records[[length(records) + 1]] <<-
@@ -267,7 +322,6 @@ run_model <- function(label, version, nd, expr, loud = FALSE) {
   record(label, version, nd, t)
 }
 
-# ---- Estimate every model at every draw count ------------------------------
 for (nd in numDraws) {
   cat("\n== Estimating models with", nd, "draws ==\n")
 
@@ -277,18 +331,7 @@ for (nd in numDraws) {
       sprintf("logitr (%d cores)", nc),
       versions["logitr"],
       nd,
-      logitr(
-        data = data_logitr,
-        outcome = "choice",
-        obsID = "obsID",
-        panelID = "id",
-        pars = c("price", "feat", "brand"),
-        randPars = c(feat = "n", brand = "n"),
-        startVals = start_pars,
-        numDraws = nd,
-        backend = "cpp",
-        numThreads = nc
-      )
+      fit_logitr(nd, backend = "cpp", numThreads = nc)
     )
   }
 
@@ -407,29 +450,127 @@ for (nd in numDraws) {
   }
 }
 
-# ---- Assemble, save, and export --------------------------------------------
 runtimes <- tibble::as_tibble(do.call(rbind, records))
 runtimes <- runtimes %>% mutate(package = as.factor(package))
 
-cat("\nResults:\n")
+cat("\nHead-to-head results:\n")
 print(as.data.frame(runtimes))
 
-if (QUICK) {
-  cat("\nQUICK smoke run complete (results not saved).\n")
-} else {
-  # Write the CSV next to the other data-raw files if we are in the package,
-  # otherwise into the current working directory.
-  out_dir <- if (dir.exists("data-raw")) "data-raw" else "."
-  readr::write_csv(runtimes, file.path(out_dir, "runtimes.csv"))
-  saveRDS(benchmark_info, file.path(out_dir, "benchmark_info.rds"))
-  cat("\nSaved", file.path(out_dir, "runtimes.csv"), "\n")
+# ============================================================================
+# Part 2: Large-draw scaling, logitr only (`runtimes_draws`)
+# ============================================================================
 
-  # Regenerate the shipped data/runtimes.rda when run from inside the
-  # package (a DESCRIPTION file is present).
-  if (file.exists("DESCRIPTION")) {
-    usethis::use_data(runtimes, overwrite = TRUE)
-    cat("Saved data/runtimes.rda\n")
+records2 <- list()
+record2 <- function(config, nd, time) {
+  records2[[length(records2) + 1]] <<-
+    data.frame(
+      config = config,
+      time_sec = time,
+      numDraws = nd,
+      stringsAsFactors = FALSE
+    )
+}
+
+cppLabel <- sprintf("cpp (%d cores)", maxCores)
+for (nd in numDrawsScaling) {
+  cat("\n== ", nd, " draws ==\n", sep = "")
+
+  # cpu: native R path (single-threaded)
+  t <- timed_quiet(fit_logitr(nd, backend = "cpu", numThreads = 1))
+  record2("cpu", nd, t)
+  cat(sprintf("  cpu            : %8.2f s\n", t))
+
+  # cpp, single thread
+  t <- timed_quiet(fit_logitr(nd, backend = "cpp", numThreads = 1))
+  record2("cpp (1 core)", nd, t)
+  cat(sprintf("  cpp (1 core)   : %8.2f s\n", t))
+
+  # cpp, all cores
+  t <- timed_quiet(fit_logitr(nd, backend = "cpp", numThreads = maxCores))
+  record2(cppLabel, nd, t)
+  cat(sprintf("  %-14s : %8.2f s\n", cppLabel, t))
+}
+
+runtimes_draws <- tibble::as_tibble(do.call(rbind, records2))
+runtimes_draws$config <- factor(
+  runtimes_draws$config,
+  levels = c("cpu", "cpp (1 core)", cppLabel)
+)
+
+cat("\nLarge-draw scaling results:\n")
+print(as.data.frame(runtimes_draws))
+
+# ============================================================================
+# Part 3: Log-likelihood stability across seeds (`loglik_draws`)
+# ============================================================================
+
+# Every run in the sweep starts from the same good starting point, obtained
+# from a converged high-draw reference fit (see the header for why this is
+# essential).
+cat("\nFitting reference model for starting values...\n")
+ref <- suppressWarnings(suppressMessages(logitr(
+  data = data_logitr,
+  outcome = "choice",
+  obsID = "obsID",
+  panelID = "id",
+  pars = c("price", "feat", "brand"),
+  randPars = c(feat = "n", brand = "n"),
+  numMultiStarts = 10,
+  numDraws = 5000
+)))
+ref_start_pars <- stats::coef(ref)
+cat("Reference logLik:", ref$logLik, "\n")
+
+records3 <- list()
+for (nd in numDrawsLogLik) {
+  for (seed in seq_len(numSeeds)) {
+    set.seed(seed)
+    start <- Sys.time()
+    m <- suppressWarnings(suppressMessages(logitr(
+      data = data_logitr,
+      outcome = "choice",
+      obsID = "obsID",
+      panelID = "id",
+      pars = c("price", "feat", "brand"),
+      randPars = c(feat = "n", brand = "n"),
+      startVals = ref_start_pars,
+      drawType = "mlhs",
+      numDraws = nd
+    )))
+    t <- as.numeric(difftime(Sys.time(), start, units = "sec"))
+    records3[[length(records3) + 1]] <- data.frame(
+      numDraws = nd,
+      seed = seed,
+      logLik = as.numeric(m$logLik),
+      time_sec = t
+    )
+    cat(sprintf(
+      "numDraws = %5d, seed = %2d: logLik = %10.2f  (%6.2f s)\n",
+      nd,
+      seed,
+      m$logLik,
+      t
+    ))
   }
 }
-cat("\nMachine / versions (for the benchmark vignette):\n")
+
+loglik_draws <- tibble::as_tibble(do.call(rbind, records3))
+
+# ============================================================================
+# Save everything: CSVs + machine info, then regenerate the data/*.rda files
+# ============================================================================
+
+readr::write_csv(runtimes, "data-raw/runtimes.csv")
+readr::write_csv(runtimes_draws, "data-raw/runtimes_draws.csv")
+readr::write_csv(loglik_draws, "data-raw/loglik_draws.csv")
+saveRDS(benchmark_info, "data-raw/benchmark_info.rds")
+saveRDS(benchmark_info_draws, "data-raw/benchmark_info_draws.rds")
+saveRDS(loglik_draws_info, "data-raw/loglik_draws_info.rds")
+
+usethis::use_data(runtimes, overwrite = TRUE)
+usethis::use_data(runtimes_draws, overwrite = TRUE)
+usethis::use_data(loglik_draws, overwrite = TRUE)
+
+cat("\nDone. Saved the CSVs in data-raw/ and regenerated the data/*.rda files.\n")
+cat("Machine / versions (for the benchmark vignette):\n")
 str(benchmark_info)

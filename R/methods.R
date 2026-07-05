@@ -348,9 +348,15 @@ getCovarianceRobust <- function(object) {
   parSetup <- object$parSetup
   modelInputs <- list(
     logitFuncs = setLogitFunctions(object$modelSpace),
+    # Always use the "cpu" eval functions here, regardless of the backend the
+    # model was estimated with: getClusterModelInputs() subsets the data
+    # without re-indexing obsID / panelID or updating n$obs, which the R path
+    # tolerates (rowsum() groups by value) but the C++ kernel does not (it
+    # requires 1-based sequential IDs and sizes its buffers from nObs/nPanel,
+    # so per-cluster subsets read/write out of bounds). The per-cluster
+    # partials the cpu gradient needs are rebuilt in getClusterModelInputs().
     evalFuncs = setEvalFunctions(
-      object$modelType, inputs$useAnalyticGrad,
-      if (is.null(inputs$backend)) "cpu" else inputs$backend),
+      object$modelType, inputs$useAnalyticGrad, "cpu"),
     inputs = inputs,
     modelType = object$modelType,
     modelSpace = object$modelSpace,

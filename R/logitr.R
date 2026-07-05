@@ -77,26 +77,32 @@
 #' `"sobol"` or `"mlhs"` are recommended over `"halton"`, which becomes
 #' correlated in higher dimensions.
 #' @param numDraws The number of draws to use for MXL models for the
-#' maximum simulated likelihood. Defaults to `50`.
+#' maximum simulated likelihood. Defaults to `500`. Draw counts that are too
+#' low (e.g. the 40-50 draws that many packages default to) produce noticeably
+#' unstable simulated log-likelihoods, especially in models with many random
+#' parameters; the compiled backend makes larger draw counts cheap enough to
+#' be the default.
 #' @param numThreads The number of threads to use for parallel evaluation of
 #' the MXL simulated log-likelihood with `backend = "cpp"`. The draws are
 #' processed in parallel across threads. Defaults to `NULL`, in which case a
 #' single thread is used when running a parallel multistart
-#' (`numMultiStarts > 1`, to avoid oversubscribing cores), otherwise all
-#' available cores are used. Set to `1` to disable threading. Only used by
-#' the `"cpp"` backend.
+#' (`numMultiStarts > 1`, to avoid oversubscribing cores), otherwise all but
+#' one of the available cores are used. Set to `1` to disable threading. Only
+#' used by the `"cpp"` backend.
 #' Note that threading uses a parallel reduction, so results are not
 #' bit-identical across runs (they differ at the level of floating-point
 #' rounding, far below the optimization tolerance). Set `numThreads = 1` (or
 #' `backend = "cpu"`) if you need exactly reproducible results.
 #' @param numDrawsBatch The number of draws to process at a time when evaluating
-#' the simulated log-likelihood of MXL models. Batching (or "streaming") the
-#' draws keeps peak memory bounded by the batch size rather than by `numDraws`,
-#' which is what makes large draw counts feasible. Defaults to `NULL`, in which
-#' case logitr automatically streams only when the draws would otherwise exceed
-#' an internal memory budget (so typical models are unaffected). Set to an
-#' integer to force a specific batch size, or to a value `>= numDraws` to
-#' disable streaming. Only used for MXL models.
+#' the simulated log-likelihood of MXL models with `backend = "cpu"`. Batching
+#' (or "streaming") the draws keeps peak memory bounded by the batch size
+#' rather than by `numDraws`, which is what makes large draw counts feasible on
+#' the R backend. Defaults to `NULL`, in which case logitr automatically
+#' streams only when the draws would otherwise exceed an internal memory budget
+#' (so typical models are unaffected). Set to an integer to force a specific
+#' batch size, or to a value `>= numDraws` to disable streaming. Only used by
+#' the `"cpu"` backend for MXL models; the default `"cpp"` backend is
+#' memory-flat in the number of draws and ignores this argument.
 #' @param numCores The number of cores to use for parallel processing of the
 #' multistart. Set to `1` to serially run the multistart. Defaults to `NULL`,
 #' in which case the number of cores is set to `parallel::detectCores() - 1`.
@@ -223,7 +229,8 @@
 #'   obsID    = "obsID",
 #'   panelID  = "id",
 #'   pars     = c("price", "feat", "brand"),
-#'   randPars = c(feat = "n")
+#'   randPars = c(feat = "n"),
+#'   numDraws = 50 # fewer draws than the default to keep the example fast
 #' )
 logitr <- function(
   data,
@@ -246,7 +253,7 @@ logitr <- function(
   scaleInputs     = TRUE,
   standardDraws   = NULL,
   drawType        = 'sobol',
-  numDraws        = 50,
+  numDraws        = 500,
   numDrawsBatch   = NULL,
   numCores        = NULL,
   numThreads      = NULL,

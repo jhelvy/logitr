@@ -23,16 +23,19 @@ runMultistart <- function(mi) {
   # platforms (no forking, so no Windows special case).
   printMultistartHeader(
     mi$inputs$startVals, numMultiStarts, numCores, mi$inputs$numThreads)
-  mirai::daemons(min(numCores, numMultiStarts))
-  on.exit(mirai::daemons(0), add = TRUE)
+  # Use a dedicated compute profile so logitr's daemons never collide with (or
+  # tear down) any daemons the user has set up on the default profile
+  mirai::daemons(min(numCores, numMultiStarts), .compute = "logitr")
+  on.exit(mirai::daemons(0, .compute = "logitr"), add = TRUE)
   # Load logitr on each daemon and set its draw-loop thread count (usually 1 for
   # a parallel multistart; > 1 only if the user explicitly nests via numThreads)
   mirai::everywhere(
     { library(logitr); RcppParallel::setThreadOptions(numThreads = nThreads) },
-    .args = list(nThreads = as.integer(mi$inputs$numThreads))
+    .args = list(nThreads = as.integer(mi$inputs$numThreads)),
+    .compute = "logitr"
   )
   result <- suppressMessages(suppressWarnings(
-    mirai::mirai_map(miList, runModel)[]
+    mirai::mirai_map(miList, runModel, .compute = "logitr")[]
   ))
   return(result)
 }

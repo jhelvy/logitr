@@ -8,8 +8,7 @@ library(mlogit)
 
 yogurt_raw <- read_csv(here::here("data-raw", "yogurt_raw.csv"))
 cars_china <- read_csv(here::here('data-raw', 'cars_china.csv'))
-cars_us    <- read_csv(here::here('data-raw', 'cars_us.csv'))
-runtimes   <- read_csv(here::here('data-raw', 'runtimes.csv'))
+cars_us <- read_csv(here::here('data-raw', 'cars_us.csv'))
 
 # Yogurt data ----
 
@@ -82,19 +81,22 @@ apolloModeChoiceData <- apollo::apollo_modeChoiceData %>%
   select(-service_0) %>%
   # Rename service variables
   rename(
-      service_no_frills = service_1,
-      service_wifi = service_2,
-      service_food = service_3) %>%
+    service_no_frills = service_1,
+    service_wifi = service_2,
+    service_food = service_3
+  ) %>%
   # Make mode-specific time variables
   mutate(
-      time_car = time*mode_car,
-      time_bus = time*mode_bus,
-      time_air = time*mode_air,
-      time_rail = time*mode_rail) %>%
+    time_car = time * mode_car,
+    time_bus = time * mode_bus,
+    time_air = time * mode_air,
+    time_rail = time * mode_rail
+  ) %>%
   # Create obsID and altID variables
   mutate(
-      obsID = rep(seq(n() / 4), each = 4),
-      altID = rep(seq(1, 4), times = 14*500)) %>%
+    obsID = rep(seq(n() / 4), each = 4),
+    altID = rep(seq(1, 4), times = 14 * 500)
+  ) %>%
   # Define dummy-coded choice column
   mutate(choice = ifelse(choice == altID, 1, 0)) %>%
   # Drop rows where alternative wasn't available
@@ -107,8 +109,15 @@ apolloModeChoiceData <- apollo::apollo_modeChoiceData %>%
   select(-RP, -SP, -RP_journey, -av) %>%
   # Reorder columns
   select(
-    ID, obsID, altID, qID = SP_task, choice,
-    mode:time_rail, female:income, everything())
+    ID,
+    obsID,
+    altID,
+    qID = SP_task,
+    choice,
+    mode:time_rail,
+    female:income,
+    everything()
+  )
 
 # Save the dataset
 usethis::use_data(apolloModeChoiceData, overwrite = TRUE)
@@ -117,17 +126,18 @@ usethis::use_data(apolloModeChoiceData, overwrite = TRUE)
 
 data("Electricity")
 electricity <- data.frame(mlogit.data(
-    Electricity, id.var = "id", choice = "choice",
-    varying = 3:26, shape = "wide", sep = "")) %>%
-    rename(obsID = chid) %>%
-    select(-idx) %>%
-    mutate(choice = ifelse(choice, 1, 0)) %>%
-    # Reorder columns
-    select(id, obsID, choice, everything())
+  Electricity,
+  id.var = "id",
+  choice = "choice",
+  varying = 3:26,
+  shape = "wide",
+  sep = ""
+)) %>%
+  rename(obsID = chid) %>%
+  select(-idx) %>%
+  mutate(choice = ifelse(choice, 1, 0)) %>%
+  # Reorder columns
+  select(id, obsID, choice, everything())
 
 # Save the dataset
 usethis::use_data(electricity, overwrite = TRUE)
-
-# runtimes ----
-
-usethis::use_data(runtimes, overwrite = TRUE)
