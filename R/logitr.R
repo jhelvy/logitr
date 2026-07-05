@@ -264,8 +264,8 @@ logitr <- function(
     print_level = 0,
     xtol_rel    = 1.0e-6,
     xtol_abs    = 1.0e-6,
-    ftol_rel    = 1.0e-6,
-    ftol_abs    = 1.0e-6,
+    ftol_rel    = 1.0e-10,
+    ftol_abs    = 1.0e-10,
     maxeval     = 1000,
     algorithm   = "NLOPT_LD_LBFGS"
   ),
@@ -422,10 +422,16 @@ appendModelInfo <- function(model, mi) {
   # Get coefficients (re-scale if needed)
   coefficients <- getCoefficients(model, mi, fail)
   # For uncorrelated MXL models, report standard deviations as positive (their
-  # sign is not identified). Done before computing the gradient / hessian so
-  # that those (and hence the vcov and standard errors) stay consistent with
-  # the reported coefficients.
-  coefficients <- absSdCoefficients(coefficients, mi, fail)
+  # sign is not identified). The corresponding standard draw columns (and
+  # stored partials) are flipped along with the coefficients, which makes the
+  # sign change an exact relabeling of the converged model -- see
+  # absSdCoefficients() for why this matters. Done before computing the
+  # gradient / hessian so that those (and hence the vcov and standard errors)
+  # stay consistent with the reported coefficients.
+  flipped <- absSdCoefficients(coefficients, mi, fail)
+  coefficients <- flipped$coefficients
+  mi <- flipped$mi
+  model$standardDraws <- mi$standardDraws
   model$coefficients <- coefficients
   # Make unscaled version of model inputs to compute gradient and hessian
   mi_unscaled <- mi
@@ -443,16 +449,43 @@ appendModelInfo <- function(model, mi) {
 # uncorrelated mixed logit model: the mixing distributions are symmetric in the
 # random draws, so a distribution with sd = s and sd = -s are identical (same
 # likelihood, same predictions). Only the magnitude is meaningful, so report the
-# absolute value to avoid confusing negative standard deviations. This is not
-# applied to correlated models, where the parameters are elements of a Cholesky
-# factor whose signs jointly determine the covariance matrix.
+# absolute value to avoid confusing negative standard deviations.
+#
+# CRITICAL: that symmetry is exact for the true integral but NOT for the
+# simulated log-likelihood -- a finite draw set is not sign-symmetric, so
+# LL(mean, -s) and LL(mean, s) with the SAME draws can differ by several
+# log-likelihood units (the same order as seed-to-seed simulation noise).
+# Flipping only the coefficient would move the reported point off the converged
+# optimum, producing non-zero gradients, an indefinite hessian, and NaN
+# standard errors. Instead, the flip is done as an exact relabeling:
+# (mean, -s, draws) == (mean, +s, -draws) draw-for-draw, so the corresponding
+# standard draw columns (and the stored partials built from them) are negated
+# along with the coefficient. The relabeled draws are stored on the model, so
+# the logLik, gradient, hessian, standard errors, and predictions all remain
+# exactly those of the converged solution.
+#
+# Not applied to correlated models, where the parameters are elements of a
+# Cholesky factor whose signs jointly determine the covariance matrix.
 absSdCoefficients <- function(coefficients, mi, fail) {
   if (fail || mi$modelType != "mxl" || isTRUE(mi$inputs$correlation)) {
-    return(coefficients)
+    return(list(coefficients = coefficients, mi = mi))
   }
   sdIDs <- mi$parIDs$sdDiag
-  coefficients[sdIDs] <- abs(coefficients[sdIDs])
-  return(coefficients)
+  flip <- which(coefficients[sdIDs] < 0)
+  if (length(flip) > 0) {
+    coefficients[sdIDs[flip]] <- -coefficients[sdIDs[flip]]
+    vars <- mi$parIDs$r[flip]
+    mi$standardDraws[, vars] <- -mi$standardDraws[, vars]
+    for (id in sdIDs[flip]) {
+      if (!is.null(mi$partials)) {
+        mi$partials[[id]] <- -mi$partials[[id]]
+      }
+      if (!is.null(mi$partials_unscaled)) {
+        mi$partials_unscaled[[id]] <- -mi$partials_unscaled[[id]]
+      }
+    }
+  }
+  return(list(coefficients = coefficients, mi = mi))
 }
 
 getCoefficients <- function(model, mi, fail) {
