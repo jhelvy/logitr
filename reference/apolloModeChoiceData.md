@@ -14,33 +14,33 @@ data(apolloModeChoiceData)
 
 ## Format
 
-|                     |                                                                        |
-|---------------------|------------------------------------------------------------------------|
-| Variable            | Description                                                            |
-| `ID`                | individual identifiers                                                 |
-| `obsID`             | identifier for unique choice observation                               |
-| `altID`             | alternative in each choice observation                                 |
-| `qID`               | Numeric. Consecutive ID of SP choice tasks.                            |
-| `choice`            | dummy code for choice (1 or 0)                                         |
-| `mode`              | Character describing mode: "air", "rail", "car", "bus"                 |
-| `time`              | Travel time in minutes.                                                |
-| `cost`              | cost (in GBP) of trip.                                                 |
-| `access`            | Access time in minutes.                                                |
-| `service`           | Numeric. Additional services: 1 for no-frills, 2 for wifi, 3 for food. |
-| `mode_air`          | Dummy coefficient for "air" mode.                                      |
-| `mode_bus`          | Dummy coefficient for "bus" mode.                                      |
-| `mode_car`          | Dummy coefficient for "car" mode.                                      |
-| `mode_rail`         | Dummy coefficient for "rail" mode.                                     |
-| `service_no_frills` | Dummy coefficient for "no-frills" additional service.                  |
-| `service_wifi`      | Dummy coefficient for "wifi" additional service.                       |
-| `service_food`      | Dummy coefficient for "food" additional service.                       |
-| `time_car`          | Travel time (in minutes) for car trip.                                 |
-| `time_bus`          | Travel time (in minutes) for bus trip.                                 |
-| `time_air`          | Travel time (in minutes) for air trip.                                 |
-| `time_rail`         | Travel time (in minutes) for rail trip.                                |
-| `female`            | Numeric. Sex of individual. 1 for female, 0 for male.                  |
-| `business`          | Numeric. Purpose of the trip. 1 for business, 0 for other.             |
-| `income`            | Numeric. Income (in GBP per annum) of the individual.                  |
+|  |  |
+|----|----|
+| Variable | Description |
+| `ID` | individual identifiers |
+| `obsID` | identifier for unique choice observation |
+| `altID` | alternative in each choice observation |
+| `qID` | Numeric. Consecutive ID of SP choice tasks. |
+| `choice` | dummy code for choice (1 or 0) |
+| `mode` | Character describing mode: "air", "rail", "car", "bus" |
+| `time` | Travel time in minutes. |
+| `cost` | cost (in GBP) of trip. |
+| `access` | Access time in minutes. |
+| `service` | Numeric. Additional services: 1 for no-frills, 2 for wifi, 3 for food. |
+| `mode_air` | Dummy coefficient for "air" mode. |
+| `mode_bus` | Dummy coefficient for "bus" mode. |
+| `mode_car` | Dummy coefficient for "car" mode. |
+| `mode_rail` | Dummy coefficient for "rail" mode. |
+| `service_no_frills` | Dummy coefficient for "no-frills" additional service. |
+| `service_wifi` | Dummy coefficient for "wifi" additional service. |
+| `service_food` | Dummy coefficient for "food" additional service. |
+| `time_car` | Travel time (in minutes) for car trip. |
+| `time_bus` | Travel time (in minutes) for bus trip. |
+| `time_air` | Travel time (in minutes) for air trip. |
+| `time_rail` | Travel time (in minutes) for rail trip. |
+| `female` | Numeric. Sex of individual. 1 for female, 0 for male. |
+| `business` | Numeric. Purpose of the trip. 1 for business, 0 for other. |
+| `income` | Numeric. Income (in GBP per annum) of the individual. |
 
 ## Source
 

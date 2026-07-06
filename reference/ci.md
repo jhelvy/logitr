@@ -44,9 +44,9 @@ coef_draws <- as.data.frame(MASS::mvrnorm(10^4, coefs, covariance))
 # Compute a confidence interval
 ci(coef_draws, level = 0.95)
 #>                    mean      lower      upper
-#> price        -0.3667998 -0.4132753 -0.3201336
-#> feat          0.4895380  0.2535630  0.7233272
-#> brandhiland  -3.7151127 -3.9958466 -3.4308442
-#> brandweight  -0.6414189 -0.7465211 -0.5361054
-#> brandyoplait  0.7355918  0.5771616  0.8900335
+#> price        -0.3668163 -0.4133064 -0.3201620
+#> feat          0.4895479  0.2535552  0.7233242
+#> brandhiland  -3.7151683 -3.9959753 -3.4309621
+#> brandweight  -0.6414737 -0.7465685 -0.5361505
+#> brandyoplait  0.7355967  0.5772076  0.8900850
 ```

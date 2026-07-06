@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Estimating Weighted Logit Models">
 </head>
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">logitr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,7 @@
     <li><a class="dropdown-item" href="../articles/data_formatting.html">Data Formatting and Encoding</a></li>
     <li><a class="dropdown-item" href="../articles/mnl_models.html">Estimating Multinomial Logit Models</a></li>
     <li><a class="dropdown-item" href="../articles/mxl_models.html">Estimating Mixed Logit Models</a></li>
+    <li><a class="dropdown-item" href="../articles/backends.html">Faster Estimation: Backends, Threads, and Large Draws</a></li>
     <li><a class="dropdown-item" href="../articles/interactions.html">Estimating Models with Interactions</a></li>
     <li><a class="dropdown-item" href="../articles/mnl_models_weighted.html">Estimating Weighted Logit Models</a></li>
     <li><a class="dropdown-item" href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a></li>
@@ -180,7 +181,7 @@ represented as follows:</p>
 <p>In this example, we’ll estimate two versions of the following utility
 model in the WTP space: one without weights and one with weights.
 Notation is taken from Helveston et al. <span class="citation">(2015)</span>:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><msub><mi>u</mi><mi>j</mi></msub><mo>=</mo><mi>λ</mi><mo stretchy="false" form="prefix">(</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><msub><mi>ω</mi><mn>1</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">h</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>2</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mn mathvariant="normal">10</mn></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>3</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mn mathvariant="normal">20</mn></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>4</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mn mathvariant="normal">40</mn></mrow></msubsup><mo>+</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><msub><mi>ω</mi><mn>5</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mn mathvariant="normal">75</mn></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>6</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mn mathvariant="normal">100</mn></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>7</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mn mathvariant="normal">150</mn></mrow></msubsup><mo>+</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><msub><mi>ω</mi><mn>8</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mi mathvariant="normal">F</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>9</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mi mathvariant="normal">F</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>10</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">o</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">C</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">t</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>11</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">T</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi></mrow></msubsup><mo>+</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><msub><mi>ω</mi><mn>12</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>13</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">j</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">e</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>14</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">e</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>15</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">k</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi></mrow></msubsup><mo>−</mo><msub><mi>p</mi><mi>j</mi></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo stretchy="false" form="postfix">)</mo><mo>+</mo><msub><mi>ε</mi><mi>j</mi></msub></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{equation}
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><msub><mi>u</mi><mi>j</mi></msub><mo>=</mo><mi>λ</mi><mo stretchy="false" form="prefix">(</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><msub><mi>ω</mi><mn>1</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">h</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>2</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mn mathvariant="normal">10</mn></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>3</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mn mathvariant="normal">20</mn></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>4</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mn mathvariant="normal">40</mn></mrow></msubsup><mo>+</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><msub><mi>ω</mi><mn>5</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mn mathvariant="normal">75</mn></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>6</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mn mathvariant="normal">100</mn></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>7</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mn mathvariant="normal">150</mn></mrow></msubsup><mo>+</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><msub><mi>ω</mi><mn>8</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mi mathvariant="normal">F</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>9</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mi mathvariant="normal">F</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>10</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">o</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">C</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">t</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>11</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">T</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi></mrow></msubsup><mo>+</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><msub><mi>ω</mi><mn>12</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>13</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">j</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">e</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>14</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">e</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>15</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">k</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi></mrow></msubsup><mo>−</mo><msub><mi>p</mi><mi>j</mi></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo stretchy="false" form="postfix">)</mo><mo>+</mo><msub><mi>ε</mi><mi>j</mi></msub></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{equation}
 \begin{split}
 &amp;u_{j} = \lambda (\\
 &amp;\omega_1 x_{j}^{\mathrm{hev}} +
@@ -235,9 +236,9 @@ it will also be <code>TRUE</code> in the weighted model:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mnl_wtp_unweighted</span><span class="op">)</span></span>
 <span><span class="co">#&gt; =================================================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model estimated on: Fri Dec 19 21:44:13 2025 </span></span>
+<span><span class="co">#&gt; Model estimated on: Mon Jul 06 10:20:33 2026 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Using logitr version: 1.1.3 </span></span>
+<span><span class="co">#&gt; Using logitr version: 1.2.0 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; logitr(data = cars_us, outcome = "choice", obsID = "obsnum", </span></span>
@@ -252,16 +253,16 @@ it will also be <code>TRUE</code> in the weighted model:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Summary Of Multistart Runs:</span></span>
 <span><span class="co">#&gt;    Log Likelihood Iterations Exit Status</span></span>
-<span><span class="co">#&gt; 1       -4616.952         26           3</span></span>
-<span><span class="co">#&gt; 2       -4616.952         32           3</span></span>
-<span><span class="co">#&gt; 3       -4616.952         35           3</span></span>
-<span><span class="co">#&gt; 4       -4616.952         31           3</span></span>
-<span><span class="co">#&gt; 5       -4616.952         34           3</span></span>
-<span><span class="co">#&gt; 6       -4616.952         42           3</span></span>
-<span><span class="co">#&gt; 7       -4616.952         37           3</span></span>
-<span><span class="co">#&gt; 8       -4616.952         33           3</span></span>
-<span><span class="co">#&gt; 9       -4616.952         37           3</span></span>
-<span><span class="co">#&gt; 10      -4616.952         31           3</span></span>
+<span><span class="co">#&gt; 1       -4616.952         30           3</span></span>
+<span><span class="co">#&gt; 2       -4616.952         37           3</span></span>
+<span><span class="co">#&gt; 3       -4616.952         38           3</span></span>
+<span><span class="co">#&gt; 4       -4616.952         33           3</span></span>
+<span><span class="co">#&gt; 5       -4616.952         37           3</span></span>
+<span><span class="co">#&gt; 6       -4616.952         47           3</span></span>
+<span><span class="co">#&gt; 7       -4616.952         43           3</span></span>
+<span><span class="co">#&gt; 8       -4616.952         38           3</span></span>
+<span><span class="co">#&gt; 9       -4616.952         44           3</span></span>
+<span><span class="co">#&gt; 10      -4616.952         36           3</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Use statusCodes() to view the meaning of each status code</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -269,9 +270,9 @@ it will also be <code>TRUE</code> in the weighted model:</p>
 <span><span class="co">#&gt;                                  </span></span>
 <span><span class="co">#&gt; Model Type:     Multinomial Logit</span></span>
 <span><span class="co">#&gt; Model Space:   Willingness-to-Pay</span></span>
-<span><span class="co">#&gt; Model Run:                4 of 10</span></span>
-<span><span class="co">#&gt; Iterations:                    31</span></span>
-<span><span class="co">#&gt; Elapsed Time:         0h:0m:0.39s</span></span>
+<span><span class="co">#&gt; Model Run:                7 of 10</span></span>
+<span><span class="co">#&gt; Iterations:                    43</span></span>
+<span><span class="co">#&gt; Elapsed Time:         0h:0m:0.21s</span></span>
 <span><span class="co">#&gt; Algorithm:         NLOPT_LD_LBFGS</span></span>
 <span><span class="co">#&gt; Weights Used?:              FALSE</span></span>
 <span><span class="co">#&gt; Cluster ID:                obsnum</span></span>
@@ -279,28 +280,28 @@ it will also be <code>TRUE</code> in the weighted model:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Coefficients: </span></span>
 <span><span class="co">#&gt;                   Estimate  Std. Error  z-value  Pr(&gt;|z|)    </span></span>
-<span><span class="co">#&gt; scalePar         0.0738774   0.0021929  33.6897 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; hev              0.8067157   0.9990727   0.8075 0.4193989    </span></span>
-<span><span class="co">#&gt; phev10           1.1661239   1.0615105   1.0986 0.2719638    </span></span>
-<span><span class="co">#&gt; phev20           1.6479612   1.0617569   1.5521 0.1206364    </span></span>
-<span><span class="co">#&gt; phev40           2.5799061   1.0499398   2.4572 0.0140027 *  </span></span>
-<span><span class="co">#&gt; bev75          -16.0466139   1.2541622 -12.7947 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; bev100         -13.0036334   1.2388778 -10.4963 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; bev150          -9.5739892   1.1642037  -8.2236 2.220e-16 ***</span></span>
-<span><span class="co">#&gt; american         2.3440498   0.7979799   2.9375 0.0033089 ** </span></span>
-<span><span class="co">#&gt; japanese        -0.3747159   0.7998412  -0.4685 0.6394358    </span></span>
-<span><span class="co">#&gt; chinese        -10.2689884   0.8859572 -11.5908 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; skorean         -6.0310531   0.8514411  -7.0833 1.407e-12 ***</span></span>
-<span><span class="co">#&gt; phevFastcharge   2.8788982   0.8028866   3.5857 0.0003362 ***</span></span>
-<span><span class="co">#&gt; bevFastcharge    2.9189842   0.9181490   3.1792 0.0014768 ** </span></span>
-<span><span class="co">#&gt; opCost          -1.6360751   0.0686328 -23.8381 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; accelTime       -1.6970516   0.1638115 -10.3598 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; scalePar         0.0738776   0.0021929  33.6898 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; hev              0.8068383   0.9990699   0.8076 0.4193270    </span></span>
+<span><span class="co">#&gt; phev10           1.1660579   1.0615084   1.0985 0.2719899    </span></span>
+<span><span class="co">#&gt; phev20           1.6478767   1.0617545   1.5520 0.1206546    </span></span>
+<span><span class="co">#&gt; phev40           2.5798021   1.0499375   2.4571 0.0140063 *  </span></span>
+<span><span class="co">#&gt; bev75          -16.0465591   1.2541584 -12.7947 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; bev100         -13.0036932   1.2388776 -10.4963 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; bev150          -9.5739135   1.1641998  -8.2236 2.220e-16 ***</span></span>
+<span><span class="co">#&gt; american         2.3440841   0.7979780   2.9375 0.0033084 ** </span></span>
+<span><span class="co">#&gt; japanese        -0.3746762   0.7998393  -0.4684 0.6394705    </span></span>
+<span><span class="co">#&gt; chinese        -10.2689079   0.8859536 -11.5908 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; skorean         -6.0310407   0.8514392  -7.0833 1.407e-12 ***</span></span>
+<span><span class="co">#&gt; phevFastcharge   2.8790888   0.8028861   3.5859 0.0003359 ***</span></span>
+<span><span class="co">#&gt; bevFastcharge    2.9190768   0.9181469   3.1793 0.0014762 ** </span></span>
+<span><span class="co">#&gt; opCost          -1.6360677   0.0686324 -23.8381 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; accelTime       -1.6970474   0.1638110 -10.3598 &lt; 2.2e-16 ***</span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
 <span><span class="co">#&gt;                                      </span></span>
-<span><span class="co">#&gt; Log-Likelihood:         -4616.9517792</span></span>
+<span><span class="co">#&gt; Log-Likelihood:         -4616.9517791</span></span>
 <span><span class="co">#&gt; Null Log-Likelihood:    -6328.0067827</span></span>
-<span><span class="co">#&gt; AIC:                     9265.9035584</span></span>
+<span><span class="co">#&gt; AIC:                     9265.9035583</span></span>
 <span><span class="co">#&gt; BIC:                     9372.4426000</span></span>
 <span><span class="co">#&gt; McFadden R2:                0.2703940</span></span>
 <span><span class="co">#&gt; Adj McFadden R2:            0.2678655</span></span>
@@ -338,9 +339,9 @@ example, the weights used in the <code>weights</code> column range from
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mnl_wtp_weighted</span><span class="op">)</span></span>
 <span><span class="co">#&gt; =================================================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model estimated on: Fri Dec 19 21:44:17 2025 </span></span>
+<span><span class="co">#&gt; Model estimated on: Mon Jul 06 10:20:36 2026 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Using logitr version: 1.1.3 </span></span>
+<span><span class="co">#&gt; Using logitr version: 1.2.0 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; logitr(data = cars_us, outcome = "choice", obsID = "obsnum", </span></span>
@@ -355,16 +356,16 @@ example, the weights used in the <code>weights</code> column range from
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Summary Of Multistart Runs:</span></span>
 <span><span class="co">#&gt;    Log Likelihood Iterations Exit Status</span></span>
-<span><span class="co">#&gt; 1       -3425.633         19           3</span></span>
-<span><span class="co">#&gt; 2       -3425.630         35           3</span></span>
-<span><span class="co">#&gt; 3       -3425.630         32           3</span></span>
-<span><span class="co">#&gt; 4       -3425.630         36           3</span></span>
-<span><span class="co">#&gt; 5       -3425.630         30           3</span></span>
-<span><span class="co">#&gt; 6       -3425.630         36           3</span></span>
-<span><span class="co">#&gt; 7       -3425.630         38           3</span></span>
-<span><span class="co">#&gt; 8       -3425.630         32           3</span></span>
-<span><span class="co">#&gt; 9       -3425.630         36           3</span></span>
-<span><span class="co">#&gt; 10      -3425.630         32           3</span></span>
+<span><span class="co">#&gt; 1        -3425.63         27           3</span></span>
+<span><span class="co">#&gt; 2        -3425.63         40           3</span></span>
+<span><span class="co">#&gt; 3        -3425.63         37           3</span></span>
+<span><span class="co">#&gt; 4        -3425.63         35           3</span></span>
+<span><span class="co">#&gt; 5        -3425.63         40           3</span></span>
+<span><span class="co">#&gt; 6        -3425.63         32           3</span></span>
+<span><span class="co">#&gt; 7        -3425.63         37           3</span></span>
+<span><span class="co">#&gt; 8        -3425.63         41           3</span></span>
+<span><span class="co">#&gt; 9        -3425.63         36           3</span></span>
+<span><span class="co">#&gt; 10       -3425.63         41           3</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Use statusCodes() to view the meaning of each status code</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -372,38 +373,38 @@ example, the weights used in the <code>weights</code> column range from
 <span><span class="co">#&gt;                                  </span></span>
 <span><span class="co">#&gt; Model Type:     Multinomial Logit</span></span>
 <span><span class="co">#&gt; Model Space:   Willingness-to-Pay</span></span>
-<span><span class="co">#&gt; Model Run:                8 of 10</span></span>
-<span><span class="co">#&gt; Iterations:                    32</span></span>
-<span><span class="co">#&gt; Elapsed Time:         0h:0m:0.36s</span></span>
+<span><span class="co">#&gt; Model Run:                4 of 10</span></span>
+<span><span class="co">#&gt; Iterations:                    35</span></span>
+<span><span class="co">#&gt; Elapsed Time:         0h:0m:0.19s</span></span>
 <span><span class="co">#&gt; Algorithm:         NLOPT_LD_LBFGS</span></span>
 <span><span class="co">#&gt; Weights Used?:               TRUE</span></span>
 <span><span class="co">#&gt; Cluster ID:                obsnum</span></span>
 <span><span class="co">#&gt; Robust?                      TRUE</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Coefficients: </span></span>
-<span><span class="co">#&gt;                   Estimate  Std. Error z-value  Pr(&gt;|z|)    </span></span>
-<span><span class="co">#&gt; scalePar         0.0522816   0.0040689 12.8490 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; hev             -1.1767755   2.9132608 -0.4039 0.6862586    </span></span>
-<span><span class="co">#&gt; phev10           0.0259001   3.1279545  0.0083 0.9933934    </span></span>
-<span><span class="co">#&gt; phev20           1.6936471   3.0996513  0.5464 0.5847915    </span></span>
-<span><span class="co">#&gt; phev40           2.6493078   2.9851129  0.8875 0.3748061    </span></span>
-<span><span class="co">#&gt; bev75          -20.1364665   3.6670723 -5.4912 3.993e-08 ***</span></span>
-<span><span class="co">#&gt; bev100         -19.4956474   3.6254343 -5.3775 7.554e-08 ***</span></span>
-<span><span class="co">#&gt; bev150         -13.6901824   3.4925299 -3.9198 8.861e-05 ***</span></span>
-<span><span class="co">#&gt; american         8.1856838   2.4051540  3.4034 0.0006655 ***</span></span>
-<span><span class="co">#&gt; japanese         0.9329586   2.3602742  0.3953 0.6926396    </span></span>
-<span><span class="co">#&gt; chinese        -19.0092581   2.8541735 -6.6602 2.735e-11 ***</span></span>
-<span><span class="co">#&gt; skorean         -9.5128579   2.5235142 -3.7697 0.0001635 ***</span></span>
-<span><span class="co">#&gt; phevFastcharge   3.9425031   2.3623349  1.6689 0.0951370 .  </span></span>
-<span><span class="co">#&gt; bevFastcharge    3.3425219   2.8085873  1.1901 0.2340040    </span></span>
-<span><span class="co">#&gt; opCost          -1.5975391   0.1948443 -8.1991 2.220e-16 ***</span></span>
-<span><span class="co">#&gt; accelTime       -1.1716178   0.4834534 -2.4234 0.0153745 *  </span></span>
+<span><span class="co">#&gt;                  Estimate Std. Error z-value  Pr(&gt;|z|)    </span></span>
+<span><span class="co">#&gt; scalePar         0.052281   0.004069 12.8485 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; hev             -1.176208   2.913308 -0.4037  0.686407    </span></span>
+<span><span class="co">#&gt; phev10           0.027225   3.128004  0.0087  0.993056    </span></span>
+<span><span class="co">#&gt; phev20           1.694666   3.099700  0.5467  0.584572    </span></span>
+<span><span class="co">#&gt; phev40           2.649552   2.985163  0.8876  0.374770    </span></span>
+<span><span class="co">#&gt; bev75          -20.136491   3.667164 -5.4910 3.996e-08 ***</span></span>
+<span><span class="co">#&gt; bev100         -19.496439   3.625584 -5.3775 7.554e-08 ***</span></span>
+<span><span class="co">#&gt; bev150         -13.691135   3.492686 -3.9199 8.857e-05 ***</span></span>
+<span><span class="co">#&gt; american         8.187709   2.405291  3.4040  0.000664 ***</span></span>
+<span><span class="co">#&gt; japanese         0.934266   2.360347  0.3958  0.692240    </span></span>
+<span><span class="co">#&gt; chinese        -19.007600   2.854081 -6.6598 2.742e-11 ***</span></span>
+<span><span class="co">#&gt; skorean         -9.510321   2.523429 -3.7688  0.000164 ***</span></span>
+<span><span class="co">#&gt; phevFastcharge   3.943902   2.362412  1.6694  0.095030 .  </span></span>
+<span><span class="co">#&gt; bevFastcharge    3.342681   2.808675  1.1901  0.233996    </span></span>
+<span><span class="co">#&gt; opCost          -1.597548   0.194850 -8.1989 2.220e-16 ***</span></span>
+<span><span class="co">#&gt; accelTime       -1.171821   0.483469 -2.4238  0.015360 *  </span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
 <span><span class="co">#&gt;                                      </span></span>
-<span><span class="co">#&gt; Log-Likelihood:         -3425.6302899</span></span>
+<span><span class="co">#&gt; Log-Likelihood:         -3425.6302845</span></span>
 <span><span class="co">#&gt; Null Log-Likelihood:    -4360.5909275</span></span>
-<span><span class="co">#&gt; AIC:                     6883.2605798</span></span>
+<span><span class="co">#&gt; AIC:                     6883.2605689</span></span>
 <span><span class="co">#&gt; BIC:                     6989.7997000</span></span>
 <span><span class="co">#&gt; McFadden R2:                0.2144115</span></span>
 <span><span class="co">#&gt; Adj McFadden R2:            0.2107422</span></span>
@@ -422,23 +423,23 @@ of each individual choice in the weighted model:</p>
 <span>  Unweighted <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mnl_wtp_unweighted</span><span class="op">)</span>,</span>
 <span>  Weighted   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mnl_wtp_weighted</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;                 Unweighted     Weighted</span></span>
-<span><span class="co">#&gt; scalePar         0.0738774   0.05228164</span></span>
-<span><span class="co">#&gt; hev              0.8067157  -1.17677549</span></span>
-<span><span class="co">#&gt; phev10           1.1661239   0.02590006</span></span>
-<span><span class="co">#&gt; phev20           1.6479612   1.69364709</span></span>
-<span><span class="co">#&gt; phev40           2.5799061   2.64930778</span></span>
-<span><span class="co">#&gt; bev75          -16.0466139 -20.13646650</span></span>
-<span><span class="co">#&gt; bev100         -13.0036334 -19.49564743</span></span>
-<span><span class="co">#&gt; bev150          -9.5739892 -13.69018245</span></span>
-<span><span class="co">#&gt; american         2.3440498   8.18568382</span></span>
-<span><span class="co">#&gt; japanese        -0.3747159   0.93295864</span></span>
-<span><span class="co">#&gt; chinese        -10.2689884 -19.00925808</span></span>
-<span><span class="co">#&gt; skorean         -6.0310531  -9.51285786</span></span>
-<span><span class="co">#&gt; phevFastcharge   2.8788982   3.94250307</span></span>
-<span><span class="co">#&gt; bevFastcharge    2.9189842   3.34252186</span></span>
-<span><span class="co">#&gt; opCost          -1.6360751  -1.59753905</span></span>
-<span><span class="co">#&gt; accelTime       -1.6970516  -1.17161781</span></span></code></pre></div>
+<span><span class="co">#&gt;                  Unweighted     Weighted</span></span>
+<span><span class="co">#&gt; scalePar         0.07387763   0.05228073</span></span>
+<span><span class="co">#&gt; hev              0.80683832  -1.17620775</span></span>
+<span><span class="co">#&gt; phev10           1.16605795   0.02722490</span></span>
+<span><span class="co">#&gt; phev20           1.64787665   1.69466611</span></span>
+<span><span class="co">#&gt; phev40           2.57980206   2.64955183</span></span>
+<span><span class="co">#&gt; bev75          -16.04655907 -20.13649110</span></span>
+<span><span class="co">#&gt; bev100         -13.00369324 -19.49643889</span></span>
+<span><span class="co">#&gt; bev150          -9.57391351 -13.69113497</span></span>
+<span><span class="co">#&gt; american         2.34408413   8.18770943</span></span>
+<span><span class="co">#&gt; japanese        -0.37467619   0.93426585</span></span>
+<span><span class="co">#&gt; chinese        -10.26890786 -19.00759982</span></span>
+<span><span class="co">#&gt; skorean         -6.03104065  -9.51032141</span></span>
+<span><span class="co">#&gt; phevFastcharge   2.87908878   3.94390242</span></span>
+<span><span class="co">#&gt; bevFastcharge    2.91907681   3.34268056</span></span>
+<span><span class="co">#&gt; opCost          -1.63606769  -1.59754825</span></span>
+<span><span class="co">#&gt; accelTime       -1.69704741  -1.17182092</span></span></code></pre></div>
 <p>Here is a comparison of the log-likelihood for the weighted and
 unweighted models:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -452,7 +453,7 @@ unweighted models:</p>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Helveston2015" class="csl-entry">
 Helveston, John Paul, Yimin Liu, Eleanor Mcdonnell Feit, Erica R. H.
 Fuchs, Erica Klampfl, and Jeremy J. Michalek. 2015. <span>“<span class="nocase">Will Subsidies Drive Electric Vehicle Adoption? Measuring

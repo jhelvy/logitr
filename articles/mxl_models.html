@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Estimating Mixed Logit Models">
 </head>
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">logitr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,7 @@
     <li><a class="dropdown-item" href="../articles/data_formatting.html">Data Formatting and Encoding</a></li>
     <li><a class="dropdown-item" href="../articles/mnl_models.html">Estimating Multinomial Logit Models</a></li>
     <li><a class="dropdown-item" href="../articles/mxl_models.html">Estimating Mixed Logit Models</a></li>
+    <li><a class="dropdown-item" href="../articles/backends.html">Faster Estimation: Backends, Threads, and Large Draws</a></li>
     <li><a class="dropdown-item" href="../articles/interactions.html">Estimating Models with Interactions</a></li>
     <li><a class="dropdown-item" href="../articles/mnl_models_weighted.html">Estimating Weighted Logit Models</a></li>
     <li><a class="dropdown-item" href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a></li>
@@ -226,9 +227,9 @@ implemented in the example below by setting
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mxl_pref</span><span class="op">)</span></span>
 <span><span class="co">#&gt; =================================================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model estimated on: Wed Sep 27 08:37:32 2023 </span></span>
+<span><span class="co">#&gt; Model estimated on: Sun Jul 05 18:08:57 2026 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Using logitr version: 1.1.1 </span></span>
+<span><span class="co">#&gt; Using logitr version: 1.2.0 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span></span>
@@ -241,16 +242,16 @@ implemented in the example below by setting
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Summary Of Multistart Runs:</span></span>
 <span><span class="co">#&gt;    Log Likelihood Iterations Exit Status</span></span>
-<span><span class="co">#&gt; 1       -1266.550         34           3</span></span>
-<span><span class="co">#&gt; 2       -1300.751         64           3</span></span>
-<span><span class="co">#&gt; 3       -1260.216         35           3</span></span>
-<span><span class="co">#&gt; 4       -1261.216         43           3</span></span>
-<span><span class="co">#&gt; 5       -1269.066         40           3</span></span>
-<span><span class="co">#&gt; 6       -1239.294         56           3</span></span>
-<span><span class="co">#&gt; 7       -1343.221         59           3</span></span>
-<span><span class="co">#&gt; 8       -1260.006         55           3</span></span>
-<span><span class="co">#&gt; 9       -1273.143         52           3</span></span>
-<span><span class="co">#&gt; 10      -1304.384         59           3</span></span>
+<span><span class="co">#&gt; 1       -1248.046         67           3</span></span>
+<span><span class="co">#&gt; 2       -1243.548         71           3</span></span>
+<span><span class="co">#&gt; 3       -1255.239         83           3</span></span>
+<span><span class="co">#&gt; 4       -1244.538         77           3</span></span>
+<span><span class="co">#&gt; 5       -1243.951         51           3</span></span>
+<span><span class="co">#&gt; 6       -1258.800        100           3</span></span>
+<span><span class="co">#&gt; 7       -1247.718         64           3</span></span>
+<span><span class="co">#&gt; 8       -1248.251         45           3</span></span>
+<span><span class="co">#&gt; 9       -1264.001         90           3</span></span>
+<span><span class="co">#&gt; 10      -1248.046         81           3</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Use statusCodes() to view the meaning of each status code</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -258,9 +259,9 @@ implemented in the example below by setting
 <span><span class="co">#&gt;                              </span></span>
 <span><span class="co">#&gt; Model Type:       Mixed Logit</span></span>
 <span><span class="co">#&gt; Model Space:       Preference</span></span>
-<span><span class="co">#&gt; Model Run:            6 of 10</span></span>
-<span><span class="co">#&gt; Iterations:                56</span></span>
-<span><span class="co">#&gt; Elapsed Time:        0h:0m:1s</span></span>
+<span><span class="co">#&gt; Model Run:            2 of 10</span></span>
+<span><span class="co">#&gt; Iterations:                71</span></span>
+<span><span class="co">#&gt; Elapsed Time:        0h:0m:4s</span></span>
 <span><span class="co">#&gt; Algorithm:     NLOPT_LD_LBFGS</span></span>
 <span><span class="co">#&gt; Weights Used?:          FALSE</span></span>
 <span><span class="co">#&gt; Panel ID:                  id</span></span>
@@ -268,32 +269,32 @@ implemented in the example below by setting
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Coefficients: </span></span>
 <span><span class="co">#&gt;                  Estimate Std. Error  z-value  Pr(&gt;|z|)    </span></span>
-<span><span class="co">#&gt; price           -0.448338   0.039987 -11.2120 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; feat             0.776990   0.193521   4.0150 5.944e-05 ***</span></span>
-<span><span class="co">#&gt; brandhiland     -6.367360   0.520828 -12.2255 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandweight     -3.668683   0.307207 -11.9421 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandyoplait     1.122492   0.203483   5.5164 3.460e-08 ***</span></span>
-<span><span class="co">#&gt; sd_feat          0.567495   0.225004   2.5222   0.01166 *  </span></span>
-<span><span class="co">#&gt; sd_brandhiland  -3.181844   0.371697  -8.5603 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; sd_brandweight   4.097130   0.232495  17.6225 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; sd_brandyoplait  3.261281   0.219902  14.8306 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; price           -0.457776   0.040953 -11.1782 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; feat             0.929193   0.238074   3.9030 9.502e-05 ***</span></span>
+<span><span class="co">#&gt; brandhiland     -5.383503   0.443125 -12.1490 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandweight     -3.815535   0.413157  -9.2351 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandyoplait     0.761100   0.294605   2.5835  0.009781 ** </span></span>
+<span><span class="co">#&gt; sd_feat          1.273684   0.307993   4.1354 3.543e-05 ***</span></span>
+<span><span class="co">#&gt; sd_brandhiland   2.616389   0.342591   7.6371 2.220e-14 ***</span></span>
+<span><span class="co">#&gt; sd_brandweight   4.202638   0.340843  12.3301 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; sd_brandyoplait  3.831498   0.348782  10.9854 &lt; 2.2e-16 ***</span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
 <span><span class="co">#&gt;                                      </span></span>
-<span><span class="co">#&gt; Log-Likelihood:         -1239.2944250</span></span>
+<span><span class="co">#&gt; Log-Likelihood:         -1243.5483019</span></span>
 <span><span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span></span>
-<span><span class="co">#&gt; AIC:                     2496.5888500</span></span>
-<span><span class="co">#&gt; BIC:                     2548.6828000</span></span>
-<span><span class="co">#&gt; McFadden R2:                0.6293690</span></span>
-<span><span class="co">#&gt; Adj McFadden R2:            0.6266774</span></span>
+<span><span class="co">#&gt; AIC:                     2505.0966038</span></span>
+<span><span class="co">#&gt; BIC:                     2557.1905000</span></span>
+<span><span class="co">#&gt; McFadden R2:                0.6280968</span></span>
+<span><span class="co">#&gt; Adj McFadden R2:            0.6254052</span></span>
 <span><span class="co">#&gt; Number of Observations:  2412.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Summary of 10k Draws for Random Coefficients: </span></span>
-<span><span class="co">#&gt;              Min.    1st Qu.     Median       Mean    3rd Qu. Max.</span></span>
-<span><span class="co">#&gt; feat         -Inf  0.3938347  0.7765564  0.7761956  1.1591475  Inf</span></span>
-<span><span class="co">#&gt; brandhiland  -Inf -8.5118796 -6.3663393 -6.3644101 -4.2201174  Inf</span></span>
-<span><span class="co">#&gt; brandweight  -Inf -6.4342648 -3.6720435 -3.6750045 -0.9090452  Inf</span></span>
-<span><span class="co">#&gt; brandyoplait -Inf -1.0817673  1.1169084  1.1141118  3.3162383  Inf</span></span></code></pre></div>
+<span><span class="co">#&gt;              Min.     1st Qu.     Median       Mean    3rd Qu. Max.</span></span>
+<span><span class="co">#&gt; feat         -Inf  0.06924067  0.9282196  0.9274097  1.7869054  Inf</span></span>
+<span><span class="co">#&gt; brandhiland  -Inf -7.14915261 -5.3843423 -5.3859286 -3.6200924  Inf</span></span>
+<span><span class="co">#&gt; brandweight  -Inf -6.65233541 -3.8189820 -3.8220192 -0.9848315  Inf</span></span>
+<span><span class="co">#&gt; brandyoplait -Inf -1.82856130  0.7545405  0.7512548  3.3384107  Inf</span></span></code></pre></div>
 <p>The above summary table prints summaries of the estimated
 coefficients as well as a summary table of the distribution of 10,000
 population draws for each normally-distributed model coefficient. The
@@ -306,16 +307,16 @@ deviation coefficients.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wtp_mxl_pref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wtp.html">wtp</a></span><span class="op">(</span><span class="va">mxl_pref</span>, scalePar <span class="op">=</span>  <span class="st">"price"</span><span class="op">)</span></span>
 <span><span class="va">wtp_mxl_pref</span></span>
-<span><span class="co">#&gt;                   Estimate Std. Error  z-value  Pr(&gt;|z|)    </span></span>
-<span><span class="co">#&gt; scalePar          0.448338   0.039906  11.2347 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; feat              1.733046   0.500457   3.4629 0.0005343 ***</span></span>
-<span><span class="co">#&gt; brandhiland     -14.202148   1.388968 -10.2250 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandweight      -8.182853   0.979963  -8.3502 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandyoplait      2.503674   0.411267   6.0877 1.145e-09 ***</span></span>
-<span><span class="co">#&gt; sd_feat           1.265776   0.505747   2.5028 0.0123220 *  </span></span>
-<span><span class="co">#&gt; sd_brandhiland   -7.096979   0.958253  -7.4062 1.299e-13 ***</span></span>
-<span><span class="co">#&gt; sd_brandweight    9.138487   0.947665   9.6432 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; sd_brandyoplait   7.274160   0.771684   9.4263 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt;                   Estimate Std. Error z-value  Pr(&gt;|z|)    </span></span>
+<span><span class="co">#&gt; scalePar          0.457776   0.041033 11.1563 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; feat              2.029800   0.588843  3.4471 0.0005666 ***</span></span>
+<span><span class="co">#&gt; brandhiland     -11.760136   1.236924 -9.5076 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandweight      -8.334946   1.182873 -7.0464 1.837e-12 ***</span></span>
+<span><span class="co">#&gt; brandyoplait      1.662606   0.636660  2.6115 0.0090159 ** </span></span>
+<span><span class="co">#&gt; sd_feat           2.782332   0.718542  3.8722 0.0001079 ***</span></span>
+<span><span class="co">#&gt; sd_brandhiland    5.715440   0.893710  6.3952 1.604e-10 ***</span></span>
+<span><span class="co">#&gt; sd_brandweight    9.180564   1.133131  8.1019 4.441e-16 ***</span></span>
+<span><span class="co">#&gt; sd_brandyoplait   8.369817   0.991508  8.4415 &lt; 2.2e-16 ***</span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre></div>
 </div>
@@ -324,7 +325,7 @@ deviation coefficients.</p>
 </h2>
 <p>This example will estimate the following mixed logit model in the WTP
 space:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mi>j</mi></msub><mo>=</mo><mi>λ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>ω</mi><mn>1</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">F</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">t</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>2</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">H</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>3</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">W</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">t</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>4</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">Y</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">t</mi></mrow></msubsup><mo>−</mo><msub><mi>p</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>ε</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">\begin{equation}
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mi>j</mi></msub><mo>=</mo><mi>λ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>ω</mi><mn>1</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">F</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">t</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>2</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">H</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>3</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">W</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">t</mi></mrow></msubsup><mo>+</mo><msub><mi>ω</mi><mn>4</mn></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mi mathvariant="normal">Y</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">t</mi></mrow></msubsup><mo>−</mo><msub><mi>p</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><msub><mi>ε</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">\begin{equation}
     u_{j} =
         \lambda (
         \omega_1 x_{j}^{\mathrm{Feat}} +
@@ -376,9 +377,9 @@ the preference space model:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mxl_wtp</span><span class="op">)</span></span>
 <span><span class="co">#&gt; =================================================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model estimated on: Wed Sep 27 08:37:40 2023 </span></span>
+<span><span class="co">#&gt; Model estimated on: Sun Jul 05 18:09:24 2026 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Using logitr version: 1.1.1 </span></span>
+<span><span class="co">#&gt; Using logitr version: 1.2.0 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("feat", </span></span>
@@ -392,16 +393,16 @@ the preference space model:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Summary Of Multistart Runs:</span></span>
 <span><span class="co">#&gt;    Log Likelihood Iterations Exit Status</span></span>
-<span><span class="co">#&gt; 1       -1239.294        110           3</span></span>
-<span><span class="co">#&gt; 2       -1252.536         76           3</span></span>
-<span><span class="co">#&gt; 3       -1258.974         87           3</span></span>
-<span><span class="co">#&gt; 4       -1342.088        110           4</span></span>
-<span><span class="co">#&gt; 5       -1250.922        111           3</span></span>
-<span><span class="co">#&gt; 6       -1266.990         66           3</span></span>
-<span><span class="co">#&gt; 7       -1268.352         81           3</span></span>
-<span><span class="co">#&gt; 8       -1239.294         76           3</span></span>
-<span><span class="co">#&gt; 9       -1258.974         60           3</span></span>
-<span><span class="co">#&gt; 10      -1239.294         51           3</span></span>
+<span><span class="co">#&gt; 1       -1246.833        110           3</span></span>
+<span><span class="co">#&gt; 2       -1244.825         99           3</span></span>
+<span><span class="co">#&gt; 3       -1244.825        120           3</span></span>
+<span><span class="co">#&gt; 4       -1334.249        125           4</span></span>
+<span><span class="co">#&gt; 5       -1249.908         77           3</span></span>
+<span><span class="co">#&gt; 6       -1241.157         98           3</span></span>
+<span><span class="co">#&gt; 7       -1263.064         69           3</span></span>
+<span><span class="co">#&gt; 8       -1246.285         72           3</span></span>
+<span><span class="co">#&gt; 9       -1244.804         62           4</span></span>
+<span><span class="co">#&gt; 10      -1249.378         58           4</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Use statusCodes() to view the meaning of each status code</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -409,57 +410,57 @@ the preference space model:</p>
 <span><span class="co">#&gt;                                  </span></span>
 <span><span class="co">#&gt; Model Type:           Mixed Logit</span></span>
 <span><span class="co">#&gt; Model Space:   Willingness-to-Pay</span></span>
-<span><span class="co">#&gt; Model Run:                8 of 10</span></span>
-<span><span class="co">#&gt; Iterations:                    76</span></span>
-<span><span class="co">#&gt; Elapsed Time:            0h:0m:2s</span></span>
+<span><span class="co">#&gt; Model Run:                6 of 10</span></span>
+<span><span class="co">#&gt; Iterations:                    98</span></span>
+<span><span class="co">#&gt; Elapsed Time:            0h:0m:6s</span></span>
 <span><span class="co">#&gt; Algorithm:         NLOPT_LD_LBFGS</span></span>
 <span><span class="co">#&gt; Weights Used?:              FALSE</span></span>
 <span><span class="co">#&gt; Panel ID:                      id</span></span>
 <span><span class="co">#&gt; Robust?                     FALSE</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Coefficients: </span></span>
-<span><span class="co">#&gt;                   Estimate Std. Error  z-value  Pr(&gt;|z|)    </span></span>
-<span><span class="co">#&gt; scalePar          0.448664   0.040011  11.2136 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; feat              1.731594   0.491861   3.5205 0.0004307 ***</span></span>
-<span><span class="co">#&gt; brandhiland     -14.223131   1.365740 -10.4142 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandweight      -8.170605   0.955887  -8.5477 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandyoplait      2.504170   0.407198   6.1498 7.760e-10 ***</span></span>
-<span><span class="co">#&gt; sd_feat           1.266643   0.497394   2.5466 0.0108791 *  </span></span>
-<span><span class="co">#&gt; sd_brandhiland   -7.114238   0.944440  -7.5328 4.974e-14 ***</span></span>
-<span><span class="co">#&gt; sd_brandweight    9.129315   0.923604   9.8845 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; sd_brandyoplait   7.269364   0.752767   9.6569 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt;                   Estimate Std. Error z-value  Pr(&gt;|z|)    </span></span>
+<span><span class="co">#&gt; scalePar          0.464716   0.040661 11.4292 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; feat              2.079322   0.571312  3.6396 0.0002731 ***</span></span>
+<span><span class="co">#&gt; brandhiland     -11.946512   1.327983 -8.9960 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandweight      -5.391393   0.983317 -5.4829 4.185e-08 ***</span></span>
+<span><span class="co">#&gt; brandyoplait      1.367973   0.599257  2.2828 0.0224433 *  </span></span>
+<span><span class="co">#&gt; sd_feat           2.262513   0.738698  3.0628 0.0021925 ** </span></span>
+<span><span class="co">#&gt; sd_brandhiland    6.434834   1.040557  6.1840 6.249e-10 ***</span></span>
+<span><span class="co">#&gt; sd_brandweight    9.015792   1.047257  8.6090 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; sd_brandyoplait   7.573298   0.848558  8.9249 &lt; 2.2e-16 ***</span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
 <span><span class="co">#&gt;                                      </span></span>
-<span><span class="co">#&gt; Log-Likelihood:         -1239.2939753</span></span>
+<span><span class="co">#&gt; Log-Likelihood:         -1241.1567812</span></span>
 <span><span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span></span>
-<span><span class="co">#&gt; AIC:                     2496.5879505</span></span>
-<span><span class="co">#&gt; BIC:                     2548.6819000</span></span>
-<span><span class="co">#&gt; McFadden R2:                0.6293691</span></span>
-<span><span class="co">#&gt; Adj McFadden R2:            0.6266775</span></span>
+<span><span class="co">#&gt; AIC:                     2500.3135624</span></span>
+<span><span class="co">#&gt; BIC:                     2552.4075000</span></span>
+<span><span class="co">#&gt; McFadden R2:                0.6288120</span></span>
+<span><span class="co">#&gt; Adj McFadden R2:            0.6261204</span></span>
 <span><span class="co">#&gt; Number of Observations:  2412.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Summary of 10k Draws for Random Coefficients: </span></span>
-<span><span class="co">#&gt;              Min.     1st Qu.     Median       Mean   3rd Qu. Max.</span></span>
-<span><span class="co">#&gt; feat         -Inf   0.8763949   1.730626   1.729820  2.584565  Inf</span></span>
-<span><span class="co">#&gt; brandhiland  -Inf -19.0180303 -14.220849 -14.216535 -9.422143  Inf</span></span>
-<span><span class="co">#&gt; brandweight  -Inf -14.3329366  -8.178094  -8.184692 -2.021520  Inf</span></span>
-<span><span class="co">#&gt; brandyoplait -Inf  -2.4091027   2.491724   2.485490  7.394009  Inf</span></span></code></pre></div>
+<span><span class="co">#&gt;              Min.     1st Qu.     Median       Mean    3rd Qu. Max.</span></span>
+<span><span class="co">#&gt; feat         -Inf   0.5517428   2.077593   2.076155  3.6029233  Inf</span></span>
+<span><span class="co">#&gt; brandhiland  -Inf -16.2890100 -11.948576 -11.952478 -7.6095213  Inf</span></span>
+<span><span class="co">#&gt; brandweight  -Inf -11.4770963  -5.398789  -5.405305  0.6812284  Inf</span></span>
+<span><span class="co">#&gt; brandyoplait -Inf  -3.7507247   1.355007   1.348513  6.4622575  Inf</span></span></code></pre></div>
 <p>If you want to compare the WTP from the two different model spaces,
 use the <code><a href="../reference/wtpCompare.html">wtpCompare()</a></code> function:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/wtpCompare.html">wtpCompare</a></span><span class="op">(</span><span class="va">mxl_pref</span>, <span class="va">mxl_wtp</span>, scalePar <span class="op">=</span> <span class="st">'price'</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                          pref           wtp  difference</span></span>
-<span><span class="co">#&gt; scalePar            0.4483378     0.4486637  0.00032586</span></span>
-<span><span class="co">#&gt; feat                1.7330459     1.7315938 -0.00145218</span></span>
-<span><span class="co">#&gt; brandhiland       -14.2021477   -14.2231313 -0.02098355</span></span>
-<span><span class="co">#&gt; brandweight        -8.1828533    -8.1706054  0.01224797</span></span>
-<span><span class="co">#&gt; brandyoplait        2.5036744     2.5041696  0.00049521</span></span>
-<span><span class="co">#&gt; sd_feat             1.2657757     1.2666434  0.00086772</span></span>
-<span><span class="co">#&gt; sd_brandhiland     -7.0969786    -7.1142376 -0.01725899</span></span>
-<span><span class="co">#&gt; sd_brandweight      9.1384874     9.1293151 -0.00917230</span></span>
-<span><span class="co">#&gt; sd_brandyoplait     7.2741604     7.2693641 -0.00479629</span></span>
-<span><span class="co">#&gt; logLik          -1239.2944250 -1239.2939753  0.00044974</span></span></code></pre></div>
+<span><span class="co">#&gt; scalePar            0.4577756     0.4647159  0.00694028</span></span>
+<span><span class="co">#&gt; feat                2.0298000     2.0793223  0.04952227</span></span>
+<span><span class="co">#&gt; brandhiland       -11.7601355   -11.9465118 -0.18637631</span></span>
+<span><span class="co">#&gt; brandweight        -8.3349459    -5.3913935  2.94355241</span></span>
+<span><span class="co">#&gt; brandyoplait        1.6626055     1.3679729 -0.29463267</span></span>
+<span><span class="co">#&gt; sd_feat             2.7823319     2.2625130 -0.51981897</span></span>
+<span><span class="co">#&gt; sd_brandhiland      5.7154403     6.4348345  0.71939421</span></span>
+<span><span class="co">#&gt; sd_brandweight      9.1805643     9.0157924 -0.16477188</span></span>
+<span><span class="co">#&gt; sd_brandyoplait     8.3698173     7.5732983 -0.79651898</span></span>
+<span><span class="co">#&gt; logLik          -1243.5483019 -1241.1567812  2.39152071</span></span></code></pre></div>
 <p>Note that the WTP will not necessarily be the same between preference
 space and WTP space MXL models. This is because the distributional
 assumptions in MXL models imply different distributions on WTP depending
@@ -494,9 +495,9 @@ with correlated heterogeneity:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mxl_pref_cor</span><span class="op">)</span></span>
 <span><span class="co">#&gt; =================================================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model estimated on: Wed Sep 27 08:38:25 2023 </span></span>
+<span><span class="co">#&gt; Model estimated on: Sun Jul 05 18:09:53 2026 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Using logitr version: 1.1.1 </span></span>
+<span><span class="co">#&gt; Using logitr version: 1.2.0 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span></span>
@@ -510,16 +511,16 @@ with correlated heterogeneity:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Summary Of Multistart Runs:</span></span>
 <span><span class="co">#&gt;    Log Likelihood Iterations Exit Status</span></span>
-<span><span class="co">#&gt; 1       -1249.587         47           3</span></span>
-<span><span class="co">#&gt; 2       -1254.922         52           3</span></span>
-<span><span class="co">#&gt; 3       -1237.322         50           3</span></span>
-<span><span class="co">#&gt; 4       -1279.337         59           3</span></span>
-<span><span class="co">#&gt; 5       -1232.389        127           3</span></span>
-<span><span class="co">#&gt; 6       -1237.453         63           3</span></span>
-<span><span class="co">#&gt; 7       -1237.589         59           3</span></span>
-<span><span class="co">#&gt; 8       -1249.725         61           3</span></span>
-<span><span class="co">#&gt; 9       -1254.679         95           3</span></span>
-<span><span class="co">#&gt; 10      -1240.966         67           3</span></span>
+<span><span class="co">#&gt; 1       -1227.864        197           3</span></span>
+<span><span class="co">#&gt; 2       -1227.964        121           3</span></span>
+<span><span class="co">#&gt; 3       -1238.288         94           3</span></span>
+<span><span class="co">#&gt; 4       -1227.964         73           3</span></span>
+<span><span class="co">#&gt; 5       -1231.202        213           3</span></span>
+<span><span class="co">#&gt; 6       -1232.829         84           3</span></span>
+<span><span class="co">#&gt; 7       -1229.124        150           3</span></span>
+<span><span class="co">#&gt; 8       -1232.829        110           3</span></span>
+<span><span class="co">#&gt; 9       -1231.500        191           3</span></span>
+<span><span class="co">#&gt; 10      -2843.772          5          -1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Use statusCodes() to view the meaning of each status code</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -527,53 +528,53 @@ with correlated heterogeneity:</p>
 <span><span class="co">#&gt;                              </span></span>
 <span><span class="co">#&gt; Model Type:       Mixed Logit</span></span>
 <span><span class="co">#&gt; Model Space:       Preference</span></span>
-<span><span class="co">#&gt; Model Run:            5 of 10</span></span>
-<span><span class="co">#&gt; Iterations:               127</span></span>
-<span><span class="co">#&gt; Elapsed Time:        0h:0m:4s</span></span>
+<span><span class="co">#&gt; Model Run:            1 of 10</span></span>
+<span><span class="co">#&gt; Iterations:               197</span></span>
+<span><span class="co">#&gt; Elapsed Time:       0h:0m:12s</span></span>
 <span><span class="co">#&gt; Algorithm:     NLOPT_LD_LBFGS</span></span>
 <span><span class="co">#&gt; Weights Used?:          FALSE</span></span>
 <span><span class="co">#&gt; Panel ID:                  id</span></span>
 <span><span class="co">#&gt; Robust?                 FALSE</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Coefficients: </span></span>
-<span><span class="co">#&gt;                               Estimate Std. Error  z-value  Pr(&gt;|z|)    </span></span>
-<span><span class="co">#&gt; price                        -0.446859   0.038377 -11.6440 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; feat                          0.713972   0.229704   3.1082  0.001882 ** </span></span>
-<span><span class="co">#&gt; brandhiland                  -4.169377   0.443153  -9.4084 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandweight                  -2.066697   0.413684  -4.9958 5.858e-07 ***</span></span>
-<span><span class="co">#&gt; brandyoplait                  1.922103   0.204530   9.3977 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; sd_feat_feat                 -0.178998   0.265060  -0.6753  0.499478    </span></span>
-<span><span class="co">#&gt; sd_feat_brandhiland          -0.147720   0.214734  -0.6879  0.491502    </span></span>
-<span><span class="co">#&gt; sd_feat_brandweight           0.286440   0.211904   1.3517  0.176457    </span></span>
-<span><span class="co">#&gt; sd_feat_brandyoplait         -0.193657   0.285656  -0.6779  0.497810    </span></span>
-<span><span class="co">#&gt; sd_brandhiland_brandhiland   -1.575305   0.230179  -6.8438 7.710e-12 ***</span></span>
-<span><span class="co">#&gt; sd_brandhiland_brandweight    0.195483   0.281263   0.6950  0.487043    </span></span>
-<span><span class="co">#&gt; sd_brandhiland_brandyoplait   1.049736   0.313859   3.3446  0.000824 ***</span></span>
-<span><span class="co">#&gt; sd_brandweight_brandweight    3.765293   0.372558  10.1066 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; sd_brandweight_brandyoplait   2.231668   0.282024   7.9130 2.442e-15 ***</span></span>
-<span><span class="co">#&gt; sd_brandyoplait_brandyoplait  3.383901   0.279962  12.0870 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt;                              Estimate Std. Error  z-value  Pr(&gt;|z|)    </span></span>
+<span><span class="co">#&gt; price                        -0.45460    0.04113 -11.0529 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; feat                          0.78333    0.25250   3.1023  0.001921 ** </span></span>
+<span><span class="co">#&gt; brandhiland                  -4.40630    0.55458  -7.9453 1.998e-15 ***</span></span>
+<span><span class="co">#&gt; brandweight                  -2.44482    0.40938  -5.9720 2.343e-09 ***</span></span>
+<span><span class="co">#&gt; brandyoplait                  1.05303    0.32318   3.2584  0.001121 ** </span></span>
+<span><span class="co">#&gt; sd_feat_feat                 -0.82442    0.39246  -2.1007  0.035670 *  </span></span>
+<span><span class="co">#&gt; sd_feat_brandhiland           0.17173    0.26924   0.6379  0.523570    </span></span>
+<span><span class="co">#&gt; sd_feat_brandweight           0.33876    0.28152   1.2033  0.228853    </span></span>
+<span><span class="co">#&gt; sd_feat_brandyoplait          0.31532    0.42992   0.7334  0.463287    </span></span>
+<span><span class="co">#&gt; sd_brandhiland_brandhiland    2.09825    0.41020   5.1152 3.134e-07 ***</span></span>
+<span><span class="co">#&gt; sd_brandhiland_brandweight    0.58195    0.47574   1.2232  0.221236    </span></span>
+<span><span class="co">#&gt; sd_brandhiland_brandyoplait   1.43149    0.46535   3.0762  0.002097 ** </span></span>
+<span><span class="co">#&gt; sd_brandweight_brandweight    3.67902    0.39489   9.3167 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; sd_brandweight_brandyoplait   2.60251    0.34367   7.5727 3.664e-14 ***</span></span>
+<span><span class="co">#&gt; sd_brandyoplait_brandyoplait  3.74815    0.33568  11.1659 &lt; 2.2e-16 ***</span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
 <span><span class="co">#&gt;                                      </span></span>
-<span><span class="co">#&gt; Log-Likelihood:         -1232.3887491</span></span>
+<span><span class="co">#&gt; Log-Likelihood:         -1227.8641286</span></span>
 <span><span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span></span>
-<span><span class="co">#&gt; AIC:                     2494.7774983</span></span>
-<span><span class="co">#&gt; BIC:                     2581.6007000</span></span>
-<span><span class="co">#&gt; McFadden R2:                0.6314343</span></span>
-<span><span class="co">#&gt; Adj McFadden R2:            0.6269483</span></span>
+<span><span class="co">#&gt; AIC:                     2485.7282572</span></span>
+<span><span class="co">#&gt; BIC:                     2572.5514000</span></span>
+<span><span class="co">#&gt; McFadden R2:                0.6327874</span></span>
+<span><span class="co">#&gt; Adj McFadden R2:            0.6283014</span></span>
 <span><span class="co">#&gt; Number of Observations:  2412.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Summary of 10k Draws for Random Coefficients: </span></span>
-<span><span class="co">#&gt;              Min.    1st Qu.     Median       Mean    3rd Qu. Max.</span></span>
-<span><span class="co">#&gt; feat         -Inf  0.4329790  0.7138166  0.7144151  0.9944701  Inf</span></span>
-<span><span class="co">#&gt; brandhiland  -Inf -5.4575869 -4.1609015 -4.1709150 -2.8929016  Inf</span></span>
-<span><span class="co">#&gt; brandweight  -Inf -5.0015992 -2.0555055 -2.0782411  0.8907911  Inf</span></span>
-<span><span class="co">#&gt; brandyoplait -Inf -0.3650334  1.9163092  1.9134074  4.1983305  Inf</span></span></code></pre></div>
+<span><span class="co">#&gt;              Min.    1st Qu.    Median       Mean    3rd Qu. Max.</span></span>
+<span><span class="co">#&gt; feat         -Inf  0.1333079  0.789591  0.7829895  1.4336861  Inf</span></span>
+<span><span class="co">#&gt; brandhiland  -Inf -6.1735514 -4.400532 -4.4128234 -2.6565848  Inf</span></span>
+<span><span class="co">#&gt; brandweight  -Inf -5.4889374 -2.468849 -2.4571845  0.5893883  Inf</span></span>
+<span><span class="co">#&gt; brandyoplait -Inf -1.4803021  1.046608  1.0433935  3.5742692  Inf</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Jain1994" class="csl-entry">
 Jain, Dipak C, Naufel J Vilcassim, and Pradeep K Chintagunta. 1994.
 <span>“A Random-Coefficients Logit Brand-Choice Model Applied to Panel
@@ -582,7 +583,7 @@ Data.”</span> <em>Journal of Business &amp; Economic Statistics</em> 12
 </div>
 <div id="ref-McFadden2000" class="csl-entry">
 McFadden, Daniel, and Kenneth E. Train. 2000. <span>“<span class="nocase">Mixed MNL models for discrete response</span>.”</span>
-<em>J. Appl. Econom.</em> 15 (5): 447–70. <a href="https://doi.org/10.1002/1099-1255(200009/10)15:5&lt;447::AID-JAE570&gt;3.0.CO;2-1" class="external-link">https://doi.org/10.1002/1099-1255(200009/10)15:5&lt;447::AID-JAE570&gt;3.0.CO;2-1</a>.
+<em>J. Appl. Econom.</em> 15 (5): 447–70. <a href="https://doi.org/10.1002/1099-1255(200009/10)15:5%3C447::AID-JAE570%3E3.0.CO;2-1" class="external-link">https://doi.org/10.1002/1099-1255(200009/10)15:5&lt;447::AID-JAE570&gt;3.0.CO;2-1</a>.
 </div>
 <div id="ref-Sonnier2007" class="csl-entry">
 Sonnier, Garrett, Andrew Ainslie, and Thomas Otter. 2007. <span>“<span class="nocase">Heterogeneity distributions of willingness-to-pay in
@@ -591,8 +592,8 @@ choice models</span>.”</span> <em>Quant. Mark. Econ.</em> 5 (3): 313–31.
 </div>
 <div id="ref-Train2005" class="csl-entry">
 Train, Kenneth E., and Melvyn Weeks. 2005. <span>“<span class="nocase">Discrete Choice Models in Preference and
-Willingness-to-Pay Space</span>.”</span> In <em>Appl. Simul. Methods
-Environ. Resour. Econ.</em>, 1–16.
+Willingness-to-Pay Space</span>.”</span> Chap. 1 in <em>Appl. Simul.
+Methods Environ. Resour. Econ.</em>
 </div>
 </div>
 </div>

@@ -9,6 +9,7 @@ function separated by the `*` symbol. For example, let’s say we want to
 interact `price` with `feat` in the following model:
 
 ``` r
+
 library("logitr")
 
 model <- logitr(
@@ -22,6 +23,7 @@ model <- logitr(
 To do so, I could add `"price*feat"` to the `pars` vector:
 
 ``` r
+
 model_price_feat <- logitr(
   data    = yogurt,
   outcome = 'choice',
@@ -33,12 +35,13 @@ model_price_feat <- logitr(
 The model now has an estimated coefficient for the `price*feat` effect:
 
 ``` r
+
 summary(model_price_feat)
 #> =================================================
 #> 
-#> Model estimated on: Fri Dec 19 21:44:08 2025 
+#> Model estimated on: Mon Jul 06 10:20:28 2026 
 #> 
-#> Using logitr version: 1.1.3 
+#> Using logitr version: 1.2.0 
 #> 
 #> Call:
 #> logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", 
@@ -53,29 +56,29 @@ summary(model_price_feat)
 #> Model Type:    Multinomial Logit
 #> Model Space:          Preference
 #> Model Run:                1 of 1
-#> Iterations:                   19
-#> Elapsed Time:        0h:0m:0.02s
+#> Iterations:                   28
+#> Elapsed Time:        0h:0m:0.03s
 #> Algorithm:        NLOPT_LD_LBFGS
 #> Weights Used?:             FALSE
 #> Robust?                    FALSE
 #> 
 #> Model Coefficients: 
 #>               Estimate Std. Error  z-value  Pr(>|z|)    
-#> price        -0.356909   0.024696 -14.4522 < 2.2e-16 ***
-#> feat          1.155206   0.378237   3.0542  0.002257 ** 
-#> brandhiland  -3.724702   0.146520 -25.4212 < 2.2e-16 ***
-#> brandweight  -0.640221   0.054543 -11.7380 < 2.2e-16 ***
-#> brandyoplait  0.724315   0.080317   9.0182 < 2.2e-16 ***
-#> price:feat   -0.086381   0.047275  -1.8272  0.067672 .  
+#> price        -0.358469   0.024733 -14.4936 < 2.2e-16 ***
+#> feat          1.090155   0.378956   2.8767  0.004018 ** 
+#> brandhiland  -3.725143   0.146424 -25.4407 < 2.2e-16 ***
+#> brandweight  -0.640131   0.054541 -11.7368 < 2.2e-16 ***
+#> brandyoplait  0.727363   0.080410   9.0457 < 2.2e-16 ***
+#> price:feat   -0.078128   0.047287  -1.6522  0.098491 .  
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #>                                      
-#> Log-Likelihood:         -2655.5403770
+#> Log-Likelihood:         -2655.5245489
 #> Null Log-Likelihood:    -3343.7419990
-#> AIC:                     5323.0807540
-#> BIC:                     5357.8100000
-#> McFadden R2:                0.2058178
-#> Adj McFadden R2:            0.2040234
+#> AIC:                     5323.0490978
+#> BIC:                     5357.7784000
+#> McFadden R2:                0.2058225
+#> Adj McFadden R2:            0.2040281
 #> Number of Observations:  2412.0000000
 ```
 
@@ -91,6 +94,7 @@ will require three new interactions - one for each level of the `brand`
 variable except the first reference level:
 
 ``` r
+
 model_price_brand <- logitr(
   data    = yogurt,
   outcome = 'choice',
@@ -103,12 +107,13 @@ The model now has three estimated coefficients for the `price*brand`
 effect:
 
 ``` r
+
 summary(model_price_brand)
 #> =================================================
 #> 
-#> Model estimated on: Fri Dec 19 21:44:09 2025 
+#> Model estimated on: Mon Jul 06 10:20:28 2026 
 #> 
-#> Using logitr version: 1.1.3 
+#> Using logitr version: 1.2.0 
 #> 
 #> Call:
 #> logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", 
@@ -123,7 +128,7 @@ summary(model_price_brand)
 #> Model Type:    Multinomial Logit
 #> Model Space:          Preference
 #> Model Run:                1 of 1
-#> Iterations:                   42
+#> Iterations:                   47
 #> Elapsed Time:        0h:0m:0.05s
 #> Algorithm:        NLOPT_LD_LBFGS
 #> Weights Used?:             FALSE
@@ -131,23 +136,23 @@ summary(model_price_brand)
 #> 
 #> Model Coefficients: 
 #>                     Estimate Std. Error z-value  Pr(>|z|)    
-#> price              -0.389813   0.045256 -8.6135 < 2.2e-16 ***
-#> feat                0.422188   0.122588  3.4440 0.0005732 ***
-#> brandhiland        -1.692896   0.623122 -2.7168 0.0065917 ** 
-#> brandweight        -2.226187   0.561605 -3.9640 7.371e-05 ***
-#> brandyoplait        0.441559   0.450562  0.9800 0.3270779    
-#> price:brandhiland  -0.434214   0.115521 -3.7587 0.0001708 ***
-#> price:brandweight   0.199624   0.069825  2.8589 0.0042512 ** 
-#> price:brandyoplait  0.033040   0.050385  0.6558 0.5119777    
+#> price              -0.389508   0.045247 -8.6086 < 2.2e-16 ***
+#> feat                0.421869   0.122578  3.4416 0.0005782 ***
+#> brandhiland        -1.691734   0.623149 -2.7148 0.0066313 ** 
+#> brandweight        -2.228264   0.561636 -3.9675 7.265e-05 ***
+#> brandyoplait        0.438708   0.450425  0.9740 0.3300636    
+#> price:brandhiland  -0.434287   0.115531 -3.7590 0.0001706 ***
+#> price:brandweight   0.199893   0.069829  2.8626 0.0042019 ** 
+#> price:brandyoplait  0.033236   0.050372  0.6598 0.5093835    
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #>                                      
-#> Log-Likelihood:         -2643.2048908
+#> Log-Likelihood:         -2643.2046773
 #> Null Log-Likelihood:    -3343.7419990
-#> AIC:                     5302.4097816
-#> BIC:                     5348.7155000
-#> McFadden R2:                0.2095069
-#> Adj McFadden R2:            0.2071144
+#> AIC:                     5302.4093546
+#> BIC:                     5348.7150000
+#> McFadden R2:                0.2095070
+#> Adj McFadden R2:            0.2071145
 #> Number of Observations:  2412.0000000
 ```
 
@@ -174,6 +179,7 @@ I’ll define these groups arbitrarily based on whether or not the `obsID`
 is even or odd:
 
 ``` r
+
 # Create group A dummies
 yogurt$groupA <- ifelse(yogurt$obsID %% 2 == 0, 1, 0)
 ```
@@ -183,6 +189,7 @@ in the model by first manually creating a `price_groupA` interaction
 variable and then including it in `pars`:
 
 ``` r
+
 # Create dummy coefficients for group interaction with price
 yogurt$price_groupA <- yogurt$price*yogurt$groupA
 
@@ -198,12 +205,13 @@ The model now has attribute coefficients for `price`, `feat`, and
 `brand` as well as an interaction between the `group` and `price`:
 
 ``` r
+
 summary(model_price_group)
 #> =================================================
 #> 
-#> Model estimated on: Fri Dec 19 21:44:09 2025 
+#> Model estimated on: Mon Jul 06 10:20:29 2026 
 #> 
-#> Using logitr version: 1.1.3 
+#> Using logitr version: 1.2.0 
 #> 
 #> Call:
 #> logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", 
@@ -218,7 +226,7 @@ summary(model_price_group)
 #> Model Type:    Multinomial Logit
 #> Model Space:          Preference
 #> Model Run:                1 of 1
-#> Iterations:                   26
+#> Iterations:                   28
 #> Elapsed Time:        0h:0m:0.03s
 #> Algorithm:        NLOPT_LD_LBFGS
 #> Weights Used?:             FALSE
@@ -226,18 +234,18 @@ summary(model_price_group)
 #> 
 #> Model Coefficients: 
 #>                Estimate Std. Error  z-value  Pr(>|z|)    
-#> price        -0.3680634  0.0273911 -13.4373 < 2.2e-16 ***
-#> feat          0.4915271  0.1200725   4.0936 4.248e-05 ***
-#> brandhiland  -3.7155231  0.1454216 -25.5500 < 2.2e-16 ***
-#> brandweight  -0.6411384  0.0544999 -11.7640 < 2.2e-16 ***
-#> brandyoplait  0.7345568  0.0806444   9.1086 < 2.2e-16 ***
-#> price_groupA  0.0030007  0.0254484   0.1179    0.9061    
+#> price        -0.3680606  0.0273909 -13.4373 < 2.2e-16 ***
+#> feat          0.4915364  0.1200722   4.0937 4.246e-05 ***
+#> brandhiland  -3.7154892  0.1454204 -25.5500 < 2.2e-16 ***
+#> brandweight  -0.6411357  0.0544998 -11.7640 < 2.2e-16 ***
+#> brandyoplait  0.7345308  0.0806438   9.1083 < 2.2e-16 ***
+#> price_groupA  0.0030067  0.0254483   0.1182    0.9059    
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #>                                      
-#> Log-Likelihood:         -2656.8808982
+#> Log-Likelihood:         -2656.8808981
 #> Null Log-Likelihood:    -3343.7419990
-#> AIC:                     5325.7617965
+#> AIC:                     5325.7617963
 #> BIC:                     5360.4911000
 #> McFadden R2:                0.2054169
 #> Adj McFadden R2:            0.2036225
@@ -253,6 +261,7 @@ across the population. The example below illustrates this cases, where a
 modeled as normally distributed by setting `randPars = c(feat = "n")`:
 
 ``` r
+
 model_price_feat_mxl <- logitr(
   data    = yogurt,
   outcome = 'choice',
@@ -267,12 +276,13 @@ difference in the `feat_mu` parameter and price; that is, it an
 interaction in the *mean* `feat` parameter and `price`:
 
 ``` r
+
 summary(model_price_feat_mxl)
 #> =================================================
 #> 
-#> Model estimated on: Fri Dec 19 21:44:10 2025 
+#> Model estimated on: Mon Jul 06 10:20:29 2026 
 #> 
-#> Using logitr version: 1.1.3 
+#> Using logitr version: 1.2.0 
 #> 
 #> Call:
 #> logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", 
@@ -287,7 +297,7 @@ summary(model_price_feat_mxl)
 #> Model Type:       Mixed Logit
 #> Model Space:       Preference
 #> Model Run:             1 of 1
-#> Iterations:                34
+#> Iterations:                41
 #> Elapsed Time:        0h:0m:1s
 #> Algorithm:     NLOPT_LD_LBFGS
 #> Weights Used?:          FALSE
@@ -295,25 +305,25 @@ summary(model_price_feat_mxl)
 #> 
 #> Model Coefficients: 
 #>               Estimate Std. Error  z-value  Pr(>|z|)    
-#> price        -0.388123   0.027026 -14.3612 < 2.2e-16 ***
-#> feat          0.829004   0.552278   1.5011    0.1333    
-#> brandhiland  -3.991559   0.165894 -24.0609 < 2.2e-16 ***
-#> brandweight  -0.662086   0.055779 -11.8698 < 2.2e-16 ***
-#> brandyoplait  0.787718   0.086232   9.1348 < 2.2e-16 ***
-#> price:feat   -0.076733   0.071069  -1.0797    0.2803    
-#> sd_feat      -2.341507   0.493413  -4.7455  2.08e-06 ***
+#> price        -0.387921   0.027020 -14.3570 < 2.2e-16 ***
+#> feat          0.925402   0.551395   1.6783   0.09329 .  
+#> brandhiland  -3.990058   0.165873 -24.0549 < 2.2e-16 ***
+#> brandweight  -0.662270   0.055784 -11.8721 < 2.2e-16 ***
+#> brandyoplait  0.787062   0.086223   9.1282 < 2.2e-16 ***
+#> price:feat   -0.077777   0.070896  -1.0971   0.27262    
+#> sd_feat       2.263118   0.499054   4.5348 5.765e-06 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #>                                      
-#> Log-Likelihood:         -2645.2196929
+#> Log-Likelihood:         -2645.3108884
 #> Null Log-Likelihood:    -3343.7419990
-#> AIC:                     5304.4393858
-#> BIC:                     5344.9569000
-#> McFadden R2:                0.2089044
-#> Adj McFadden R2:            0.2068109
+#> AIC:                     5304.6217768
+#> BIC:                     5345.1393000
+#> McFadden R2:                0.2088771
+#> Adj McFadden R2:            0.2067836
 #> Number of Observations:  2412.0000000
 #> 
 #> Summary of 10k Draws for Random Coefficients: 
 #>      Min.   1st Qu.    Median      Mean  3rd Qu. Max.
-#> feat -Inf -0.747793 0.8307929 0.8322819 2.409918  Inf
+#> feat -Inf -0.602586 0.9236728 0.9222336 2.449411  Inf
 ```

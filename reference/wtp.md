@@ -50,11 +50,11 @@ mnl_pref <- logitr(
 # Compute the WTP implied from the preference space model
 wtp(mnl_pref, scalePar = "price")
 #>                Estimate Std. Error  z-value  Pr(>|z|)    
-#> scalePar       0.366555   0.024344  15.0571 < 2.2e-16 ***
-#> feat           1.340699   0.358195   3.7429 0.0001819 ***
-#> brandhiland  -10.136219   0.585266 -17.3190 < 2.2e-16 ***
-#> brandweight   -1.749094   0.181627  -9.6301 < 2.2e-16 ***
-#> brandyoplait   2.003848   0.143165  13.9968 < 2.2e-16 ***
+#> scalePar       0.366584   0.024345  15.0582 < 2.2e-16 ***
+#> feat           1.340574   0.358184   3.7427 0.0001821 ***
+#> brandhiland  -10.135727   0.585196 -17.3202 < 2.2e-16 ***
+#> brandweight   -1.749077   0.181612  -9.6308 < 2.2e-16 ***
+#> brandyoplait   2.003825   0.143157  13.9973 < 2.2e-16 ***
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 ```

@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Summarizing Results">
 </head>
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">logitr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,7 @@
     <li><a class="dropdown-item" href="../articles/data_formatting.html">Data Formatting and Encoding</a></li>
     <li><a class="dropdown-item" href="../articles/mnl_models.html">Estimating Multinomial Logit Models</a></li>
     <li><a class="dropdown-item" href="../articles/mxl_models.html">Estimating Mixed Logit Models</a></li>
+    <li><a class="dropdown-item" href="../articles/backends.html">Faster Estimation: Backends, Threads, and Large Draws</a></li>
     <li><a class="dropdown-item" href="../articles/interactions.html">Estimating Models with Interactions</a></li>
     <li><a class="dropdown-item" href="../articles/mnl_models_weighted.html">Estimating Weighted Logit Models</a></li>
     <li><a class="dropdown-item" href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a></li>
@@ -98,9 +99,9 @@ is the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link"
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="co">#&gt; =================================================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model estimated on: Fri Dec 19 21:44:35 2025 </span></span>
+<span><span class="co">#&gt; Model estimated on: Mon Jul 06 10:20:56 2026 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Using logitr version: 1.1.3 </span></span>
+<span><span class="co">#&gt; Using logitr version: 1.2.0 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", </span></span>
@@ -115,7 +116,7 @@ is the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link"
 <span><span class="co">#&gt; Model Type:    Multinomial Logit</span></span>
 <span><span class="co">#&gt; Model Space:          Preference</span></span>
 <span><span class="co">#&gt; Model Run:                1 of 1</span></span>
-<span><span class="co">#&gt; Iterations:                   21</span></span>
+<span><span class="co">#&gt; Iterations:                   24</span></span>
 <span><span class="co">#&gt; Elapsed Time:        0h:0m:0.03s</span></span>
 <span><span class="co">#&gt; Algorithm:        NLOPT_LD_LBFGS</span></span>
 <span><span class="co">#&gt; Weights Used?:             FALSE</span></span>
@@ -123,17 +124,17 @@ is the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link"
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Coefficients: </span></span>
 <span><span class="co">#&gt;               Estimate Std. Error  z-value  Pr(&gt;|z|)    </span></span>
-<span><span class="co">#&gt; price        -0.366555   0.024365 -15.0441 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; feat          0.491439   0.120062   4.0932 4.254e-05 ***</span></span>
-<span><span class="co">#&gt; brandhiland  -3.715477   0.145417 -25.5506 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandweight  -0.641138   0.054498 -11.7645 &lt; 2.2e-16 ***</span></span>
-<span><span class="co">#&gt; brandyoplait  0.734519   0.080642   9.1084 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; price        -0.366584   0.024366 -15.0449 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; feat          0.491434   0.120063   4.0931 4.256e-05 ***</span></span>
+<span><span class="co">#&gt; brandhiland  -3.715600   0.145419 -25.5510 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandweight  -0.641184   0.054498 -11.7652 &lt; 2.2e-16 ***</span></span>
+<span><span class="co">#&gt; brandyoplait  0.734571   0.080644   9.1088 &lt; 2.2e-16 ***</span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
 <span><span class="co">#&gt;                                      </span></span>
-<span><span class="co">#&gt; Log-Likelihood:         -2656.8878790</span></span>
+<span><span class="co">#&gt; Log-Likelihood:         -2656.8878779</span></span>
 <span><span class="co">#&gt; Null Log-Likelihood:    -3343.7419990</span></span>
-<span><span class="co">#&gt; AIC:                     5323.7757580</span></span>
+<span><span class="co">#&gt; AIC:                     5323.7757559</span></span>
 <span><span class="co">#&gt; BIC:                     5352.7168000</span></span>
 <span><span class="co">#&gt; McFadden R2:                0.2054148</span></span>
 <span><span class="co">#&gt; Adj McFadden R2:            0.2039195</span></span>
@@ -147,11 +148,11 @@ number of observations, etc.</p>
 <code class="sourceCode R"><span><span class="va">coefs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">coefs</span></span>
 <span><span class="co">#&gt;                Estimate Std. Error    z-value     Pr(&gt;|z|)</span></span>
-<span><span class="co">#&gt; price        -0.3665546 0.02436526 -15.044150 0.000000e+00</span></span>
-<span><span class="co">#&gt; feat          0.4914392 0.12006175   4.093221 4.254226e-05</span></span>
-<span><span class="co">#&gt; brandhiland  -3.7154773 0.14541671 -25.550553 0.000000e+00</span></span>
-<span><span class="co">#&gt; brandweight  -0.6411384 0.05449794 -11.764450 0.000000e+00</span></span>
-<span><span class="co">#&gt; brandyoplait  0.7345195 0.08064229   9.108366 0.000000e+00</span></span></code></pre></div>
+<span><span class="co">#&gt; price        -0.3665845 0.02436607 -15.044877 0.000000e+00</span></span>
+<span><span class="co">#&gt; feat          0.4914335 0.12006301   4.093130 4.255887e-05</span></span>
+<span><span class="co">#&gt; brandhiland  -3.7156002 0.14541901 -25.550994 0.000000e+00</span></span>
+<span><span class="co">#&gt; brandweight  -0.6411843 0.05449827 -11.765222 0.000000e+00</span></span>
+<span><span class="co">#&gt; brandyoplait  0.7345712 0.08064420   9.108792 0.000000e+00</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="the-broom-package">The {broom} package<a class="anchor" aria-label="anchor" href="#the-broom-package"></a>
 </h3>
@@ -166,7 +167,7 @@ frame is to use the <code><a href="https://generics.r-lib.org/reference/tidy.htm
 <span><span class="co">#&gt;   term         estimate std.error statistic   p.value</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> price          -<span style="color: #BB0000;">0.367</span>    0.024<span style="text-decoration: underline;">4</span>    -<span style="color: #BB0000;">15.0</span>  0        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> feat            0.491    0.120       4.09 0.000<span style="text-decoration: underline;">042</span>5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> feat            0.491    0.120       4.09 0.000<span style="text-decoration: underline;">042</span>6</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> brandhiland    -<span style="color: #BB0000;">3.72</span>     0.145     -<span style="color: #BB0000;">25.6</span>  0        </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> brandweight    -<span style="color: #BB0000;">0.641</span>    0.054<span style="text-decoration: underline;">5</span>    -<span style="color: #BB0000;">11.8</span>  0        </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> brandyoplait    0.735    0.080<span style="text-decoration: underline;">6</span>      9.11 0</span></span></code></pre></div>
@@ -183,7 +184,7 @@ frame:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> brandhiland    -<span style="color: #BB0000;">3.72</span>     0.145     -<span style="color: #BB0000;">25.6</span>  0           -<span style="color: #BB0000;">4.00</span>     -<span style="color: #BB0000;">3.43</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> brandweight    -<span style="color: #BB0000;">0.641</span>    0.054<span style="text-decoration: underline;">5</span>    -<span style="color: #BB0000;">11.8</span>  0           -<span style="color: #BB0000;">0.748</span>    -<span style="color: #BB0000;">0.534</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> brandyoplait    0.735    0.080<span style="text-decoration: underline;">6</span>      9.11 0            0.577     0.892</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> feat            0.491    0.120       4.09 0.000<span style="text-decoration: underline;">042</span>5    0.256     0.726</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> feat            0.491    0.120       4.09 0.000<span style="text-decoration: underline;">042</span>6    0.256     0.726</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> price          -<span style="color: #BB0000;">0.367</span>    0.024<span style="text-decoration: underline;">4</span>    -<span style="color: #BB0000;">15.0</span>  0           -<span style="color: #BB0000;">0.415</span>    -<span style="color: #BB0000;">0.319</span></span></span></code></pre></div>
 </div>
 </div>
@@ -196,12 +197,12 @@ as:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        price         feat  brandhiland  brandweight brandyoplait </span></span>
-<span><span class="co">#&gt;   -0.3665546    0.4914392   -3.7154773   -0.6411384    0.7345195</span></span></code></pre></div>
+<span><span class="co">#&gt;   -0.3665845    0.4914335   -3.7156002   -0.6411843    0.7345712</span></span></code></pre></div>
 <p><strong>The estimated standard errors</strong></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/se.html">se</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        price         feat  brandhiland  brandweight brandyoplait </span></span>
-<span><span class="co">#&gt;   0.02436526   0.12006175   0.14541671   0.05449794   0.08064229</span></span></code></pre></div>
+<span><span class="co">#&gt;   0.02436607   0.12006301   0.14541901   0.05449827   0.08064420</span></span></code></pre></div>
 <p><strong>The log-likelihood</strong></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/logLik.html" class="external-link">logLik</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
@@ -210,17 +211,17 @@ as:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                      price          feat  brandhiland  brandweight</span></span>
-<span><span class="co">#&gt; price         0.0005936657  5.729619e-04  0.001851795 1.249988e-04</span></span>
-<span><span class="co">#&gt; feat          0.0005729619  1.441482e-02  0.000855011 5.092011e-06</span></span>
-<span><span class="co">#&gt; brandhiland   0.0018517954  8.550110e-04  0.021146019 1.490080e-03</span></span>
-<span><span class="co">#&gt; brandweight   0.0001249988  5.092011e-06  0.001490080 2.970026e-03</span></span>
-<span><span class="co">#&gt; brandyoplait -0.0015377721 -1.821331e-03 -0.003681036 7.779427e-04</span></span>
+<span><span class="co">#&gt; price         0.0005937052  5.729952e-04  0.001851939 1.250115e-04</span></span>
+<span><span class="co">#&gt; feat          0.0005729952  1.441513e-02  0.000855045 5.089889e-06</span></span>
+<span><span class="co">#&gt; brandhiland   0.0018519389  8.550450e-04  0.021146688 1.490115e-03</span></span>
+<span><span class="co">#&gt; brandweight   0.0001250115  5.089889e-06  0.001490115 2.970062e-03</span></span>
+<span><span class="co">#&gt; brandyoplait -0.0015378788 -1.821441e-03 -0.003681430 7.778988e-04</span></span>
 <span><span class="co">#&gt;               brandyoplait</span></span>
-<span><span class="co">#&gt; price        -0.0015377721</span></span>
-<span><span class="co">#&gt; feat         -0.0018213311</span></span>
-<span><span class="co">#&gt; brandhiland  -0.0036810363</span></span>
-<span><span class="co">#&gt; brandweight   0.0007779427</span></span>
-<span><span class="co">#&gt; brandyoplait  0.0065031782</span></span></code></pre></div>
+<span><span class="co">#&gt; price        -0.0015378788</span></span>
+<span><span class="co">#&gt; feat         -0.0018214411</span></span>
+<span><span class="co">#&gt; brandhiland  -0.0036814298</span></span>
+<span><span class="co">#&gt; brandweight   0.0007778988</span></span>
+<span><span class="co">#&gt; brandyoplait  0.0065034869</span></span></code></pre></div>
 <p>You can also view a summary of statistics about the model using the
 <code><a href="https://generics.r-lib.org/reference/glance.html" class="external-link">glance()</a></code> function from the <a href="https://broom.tidymodels.org/index.html" class="external-link">{broom}</a> package:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -1812,7 +1813,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
 <td headers="estimate_1" class="gt_row gt_center">0.73</td>
 <td headers="conf.low_1" class="gt_row gt_center">0.57, 0.89</td>
 <td headers="p.value_1" class="gt_row gt_center">&lt;0.001</td>
-<td headers="estimate_2" class="gt_row gt_center">0.72</td>
+<td headers="estimate_2" class="gt_row gt_center">0.73</td>
 <td headers="conf.low_2" class="gt_row gt_center">0.57, 0.88</td>
 <td headers="p.value_2" class="gt_row gt_center">&lt;0.001</td>
 </tr>
@@ -1821,9 +1822,9 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
 <td headers="estimate_1" class="gt_row gt_center">0.49</td>
 <td headers="conf.low_1" class="gt_row gt_center">0.25, 0.73</td>
 <td headers="p.value_1" class="gt_row gt_center">&lt;0.001</td>
-<td headers="estimate_2" class="gt_row gt_center">1.2</td>
-<td headers="conf.low_2" class="gt_row gt_center">0.42, 1.9</td>
-<td headers="p.value_2" class="gt_row gt_center">0.002</td>
+<td headers="estimate_2" class="gt_row gt_center">1.1</td>
+<td headers="conf.low_2" class="gt_row gt_center">0.36, 1.8</td>
+<td headers="p.value_2" class="gt_row gt_center">0.004</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">price</td>
@@ -1831,7 +1832,7 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
 <td headers="conf.low_1" class="gt_row gt_center">-0.41, -0.32</td>
 <td headers="p.value_1" class="gt_row gt_center">&lt;0.001</td>
 <td headers="estimate_2" class="gt_row gt_center">-0.36</td>
-<td headers="conf.low_2" class="gt_row gt_center">-0.40, -0.31</td>
+<td headers="conf.low_2" class="gt_row gt_center">-0.41, -0.31</td>
 <td headers="p.value_2" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
@@ -1839,9 +1840,9 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
 <td headers="estimate_1" class="gt_row gt_center"><br></td>
 <td headers="conf.low_1" class="gt_row gt_center"><br></td>
 <td headers="p.value_1" class="gt_row gt_center"><br></td>
-<td headers="estimate_2" class="gt_row gt_center">-0.09</td>
-<td headers="conf.low_2" class="gt_row gt_center">-0.18, 0.01</td>
-<td headers="p.value_2" class="gt_row gt_center">0.068</td>
+<td headers="estimate_2" class="gt_row gt_center">-0.08</td>
+<td headers="conf.low_2" class="gt_row gt_center">-0.17, 0.01</td>
+<td headers="p.value_2" class="gt_row gt_center">0.10</td>
 </tr>
 </tbody>
 <tfoot><tr class="gt_sourcenotes">
@@ -1853,8 +1854,8 @@ ways. For example, once you’ve created a table <code>x</code>,</p>
 <div class="section level3">
 <h3 id="the-texreg-package">The {texreg} package<a class="anchor" aria-label="anchor" href="#the-texreg-package"></a>
 </h3>
-<p>Another option for obtaining a formatted table is to use the <a href="https://github.com/leifeld/texreg" class="external-link">{texreg}</a> package. This is
-particularly useful for obtaining tables formatted for use in <a href="https://www.latex-project.org/" class="external-link">LaTeX</a>.</p>
+<p>Another option for obtaining a formatted table is to use the <a href="https://github.com/leifeld-lab/texreg" class="external-link">{texreg}</a> package. This
+is particularly useful for obtaining tables formatted for use in <a href="https://www.latex-project.org/" class="external-link">LaTeX</a>.</p>
 <p>For example, you can print a summary to the screen using
 <code><a href="https://rdrr.io/pkg/texreg/man/screenreg.html" class="external-link">screenreg()</a></code>:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -1943,21 +1944,21 @@ particularly useful for obtaining tables formatted for use in <a href="https://w
 <span><span class="co">#&gt; ------------------------------------------</span></span>
 <span><span class="co">#&gt; price              -0.37 ***     -0.36 ***</span></span>
 <span><span class="co">#&gt;                    (0.02)        (0.02)   </span></span>
-<span><span class="co">#&gt; feat                0.49 ***      1.16 ***</span></span>
+<span><span class="co">#&gt; feat                0.49 ***      1.09 ***</span></span>
 <span><span class="co">#&gt;                    (0.12)        (0.38)   </span></span>
-<span><span class="co">#&gt; brandhiland        -3.72 ***     -3.72 ***</span></span>
+<span><span class="co">#&gt; brandhiland        -3.72 ***     -3.73 ***</span></span>
 <span><span class="co">#&gt;                    (0.15)        (0.15)   </span></span>
 <span><span class="co">#&gt; brandweight        -0.64 ***     -0.64 ***</span></span>
 <span><span class="co">#&gt;                    (0.05)        (0.05)   </span></span>
-<span><span class="co">#&gt; brandyoplait        0.73 ***      0.72 ***</span></span>
+<span><span class="co">#&gt; brandyoplait        0.73 ***      0.73 ***</span></span>
 <span><span class="co">#&gt;                    (0.08)        (0.08)   </span></span>
-<span><span class="co">#&gt; price:feat                       -0.09 *  </span></span>
+<span><span class="co">#&gt; price:feat                       -0.08 *  </span></span>
 <span><span class="co">#&gt;                                  (0.05)   </span></span>
 <span><span class="co">#&gt; ------------------------------------------</span></span>
 <span><span class="co">#&gt; Num. obs.        2412          2412       </span></span>
-<span><span class="co">#&gt; Log Likelihood  -2656.89      -2655.54    </span></span>
-<span><span class="co">#&gt; AIC              5323.78       5323.08    </span></span>
-<span><span class="co">#&gt; BIC              5352.72       5357.81    </span></span>
+<span><span class="co">#&gt; Log Likelihood  -2656.89      -2655.52    </span></span>
+<span><span class="co">#&gt; AIC              5323.78       5323.05    </span></span>
+<span><span class="co">#&gt; BIC              5352.72       5357.78    </span></span>
 <span><span class="co">#&gt; ==========================================</span></span>
 <span><span class="co">#&gt; *** p &lt; 0.01; ** p &lt; 0.05; * p &lt; 0.1</span></span></code></pre></div>
 </div>

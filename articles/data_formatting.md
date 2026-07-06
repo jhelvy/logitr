@@ -27,6 +27,7 @@ the `obsID` column, and the columns `price`, `feat`, and `brand` can be
 used as model covariates:
 
 ``` r
+
 library("logitr")
 
 head(yogurt)
@@ -66,6 +67,7 @@ be modified using the [`factor()`](https://rdrr.io/r/base/factor.html)
 function:
 
 ``` r
+
 yogurt2 <- yogurt
 
 brands <- c("weight", "hiland", "yoplait", "dannon")
@@ -81,12 +83,14 @@ example, in the code below, I create dummy-coded columns for the `brand`
 variable and then use those variables as covariates in a model:
 
 ``` r
+
 yogurt2 <- fastDummies::dummy_cols(yogurt2, "brand")
 ```
 
 The `yogurt2` data frame now has new dummy-coded columns for brand:
 
 ``` r
+
 head(yogurt2)
 #> # A tibble: 6 × 11
 #>      id obsID   alt choice price  feat brand   brand_weight brand_hiland
@@ -103,6 +107,7 @@ head(yogurt2)
 Now I can use those columns as covariates:
 
 ``` r
+
 mnl_pref_dummies <- logitr(
   data    = yogurt2,
   outcome = 'choice',
@@ -115,9 +120,9 @@ mnl_pref_dummies <- logitr(
 summary(mnl_pref_dummies)
 #> =================================================
 #> 
-#> Model estimated on: Fri Dec 19 21:44:05 2025 
+#> Model estimated on: Mon Jul 06 10:20:25 2026 
 #> 
-#> Using logitr version: 1.1.3 
+#> Using logitr version: 1.2.0 
 #> 
 #> Call:
 #> logitr(data = yogurt2, outcome = "choice", obsID = "obsID", pars = c("price", 
@@ -132,25 +137,25 @@ summary(mnl_pref_dummies)
 #> Model Type:    Multinomial Logit
 #> Model Space:          Preference
 #> Model Run:                1 of 1
-#> Iterations:                   18
+#> Iterations:                   21
 #> Elapsed Time:        0h:0m:0.03s
 #> Algorithm:        NLOPT_LD_LBFGS
 #> Weights Used?:             FALSE
 #> Robust?                    FALSE
 #> 
 #> Model Coefficients: 
-#>                Estimate Std. Error z-value  Pr(>|z|)    
-#> price         -0.366581   0.024366 -15.045 < 2.2e-16 ***
-#> feat           0.491412   0.120063   4.093 4.259e-05 ***
-#> brand_yoplait  4.450197   0.187118  23.783 < 2.2e-16 ***
-#> brand_dannon   3.715575   0.145419  25.551 < 2.2e-16 ***
-#> brand_weight   3.074399   0.145384  21.147 < 2.2e-16 ***
+#>                Estimate Std. Error  z-value  Pr(>|z|)    
+#> price         -0.366584   0.024366 -15.0449 < 2.2e-16 ***
+#> feat           0.491433   0.120063   4.0931 4.256e-05 ***
+#> brand_yoplait  4.450171   0.187118  23.7827 < 2.2e-16 ***
+#> brand_dannon   3.715600   0.145419  25.5510 < 2.2e-16 ***
+#> brand_weight   3.074416   0.145384  21.1469 < 2.2e-16 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #>                                      
-#> Log-Likelihood:         -2656.8878788
+#> Log-Likelihood:         -2656.8878779
 #> Null Log-Likelihood:    -3343.7419990
-#> AIC:                     5323.7757575
+#> AIC:                     5323.7757559
 #> BIC:                     5352.7168000
 #> McFadden R2:                0.2054148
 #> Adj McFadden R2:            0.2039195
@@ -171,6 +176,7 @@ attempt to estimate a model.
 At a minimum, you should validate the `outcome` and `obsID` columns:
 
 ``` r
+
 validation <- validate_data(
   data = yogurt,
   outcome = "choice",
@@ -207,6 +213,7 @@ You can also validate specific parameters to check for missing values or
 other issues:
 
 ``` r
+
 validation <- validate_data(
   data = yogurt,
   outcome = "choice",
@@ -246,6 +253,7 @@ validation
 For panel data, you can validate the panel structure:
 
 ``` r
+
 validation <- validate_data(
   data = yogurt,
   outcome = "choice",
@@ -304,6 +312,7 @@ function checks for several common formatting errors:
 Here’s an example of detecting an error:
 
 ``` r
+
 # Create problematic data with multiple choices in one observation
 bad_data <- yogurt
 bad_data$choice[1:2] <- 1

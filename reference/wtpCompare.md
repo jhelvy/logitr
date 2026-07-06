@@ -76,10 +76,10 @@ mnl_wtp <- logitr(
 # Compare the WTP between the two spaces
 wtpCompare(mnl_pref, mnl_wtp, scalePar = "price")
 #>                       pref           wtp  difference
-#> scalePar         0.3665546     0.3665214 -0.00003318
-#> feat             1.3406987     1.3414660  0.00076735
-#> brandhiland    -10.1362190   -10.1370357 -0.00081666
-#> brandweight     -1.7490940    -1.7499898 -0.00089581
-#> brandyoplait     2.0038476     2.0038255 -0.00002216
-#> logLik       -2656.8878790 -2656.8878960 -0.00001696
+#> scalePar         0.3665845     0.3665845 -0.00000001
+#> feat             1.3405737     1.3405738  0.00000008
+#> brandhiland    -10.1357272   -10.1357276 -0.00000035
+#> brandweight     -1.7490765    -1.7490767 -0.00000013
+#> brandyoplait     2.0038253     2.0038251 -0.00000017
+#> logLik       -2656.8878779 -2656.8878779  0.00000000
 ```

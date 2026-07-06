@@ -2,6 +2,7 @@
 <url><loc>https://jhelvy.github.io/logitr/404.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/LICENSE-text.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/LICENSE.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/articles/backends.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/articles/basic_usage.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/articles/benchmark.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/articles/convergence.html</loc></url>
@@ -30,7 +31,9 @@
 <url><loc>https://jhelvy.github.io/logitr/reference/glance.logitr.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/reference/index.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/reference/logit_probs.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/logitr-package.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/reference/logitr.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/loglik_draws.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/reference/miscmethods.logitr.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/reference/model.frame.logitr.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/reference/model.matrix.logitr.html</loc></url>
@@ -41,6 +44,7 @@
 <url><loc>https://jhelvy.github.io/logitr/reference/reexports.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/reference/residuals.logitr.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/reference/runtimes.html</loc></url>
+<url><loc>https://jhelvy.github.io/logitr/reference/runtimes_draws.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/reference/se.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/reference/se.logitr.html</loc></url>
 <url><loc>https://jhelvy.github.io/logitr/reference/simulateShares.html</loc></url>

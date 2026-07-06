@@ -32,13 +32,16 @@ logitr(
   useAnalyticGrad = TRUE,
   scaleInputs = TRUE,
   standardDraws = NULL,
-  drawType = "halton",
-  numDraws = 50,
+  drawType = "sobol",
+  numDraws = 500,
+  numDrawsBatch = NULL,
   numCores = NULL,
+  numThreads = NULL,
   vcov = FALSE,
   predict = TRUE,
-  options = list(print_level = 0, xtol_rel = 1e-06, xtol_abs = 1e-06, ftol_rel = 1e-06,
-    ftol_abs = 1e-06, maxeval = 1000, algorithm = "NLOPT_LD_LBFGS"),
+  backend = "cpp",
+  options = list(print_level = 0, xtol_rel = 1e-06, xtol_abs = 1e-06, ftol_rel = 1e-10,
+    ftol_abs = 1e-10, maxeval = 1000, algorithm = "NLOPT_LD_LBFGS"),
   price,
   randPrice,
   choice,
@@ -170,13 +173,36 @@ logitr(
 
 - drawType:
 
-  Specify the draw type as a character: `"halton"` (the default) or
-  `"sobol"` (recommended for models with more than 5 random parameters).
+  Specify the draw type as a character: `"sobol"` (the default),
+  `"halton"`, or `"mlhs"` (Modified Latin Hypercube Sampling). Sobol and
+  Halton draws are deterministic; MLHS draws are randomized and so are
+  controlled by [`set.seed()`](https://rdrr.io/r/base/Random.html). For
+  models with more than 5 random parameters, `"sobol"` or `"mlhs"` are
+  recommended over `"halton"`, which becomes correlated in higher
+  dimensions.
 
 - numDraws:
 
-  The number of Halton draws to use for MXL models for the maximum
-  simulated likelihood. Defaults to `50`.
+  The number of draws to use for MXL models for the maximum simulated
+  likelihood. Defaults to `500`. Draw counts that are too low (e.g. the
+  40-50 draws that many packages default to) produce noticeably unstable
+  simulated log-likelihoods, especially in models with many random
+  parameters; the compiled backend makes larger draw counts cheap enough
+  to be the default.
+
+- numDrawsBatch:
+
+  The number of draws to process at a time when evaluating the simulated
+  log-likelihood of MXL models with `backend = "cpu"`. Batching (or
+  "streaming") the draws keeps peak memory bounded by the batch size
+  rather than by `numDraws`, which is what makes large draw counts
+  feasible on the R backend. Defaults to `NULL`, in which case logitr
+  automatically streams only when the draws would otherwise exceed an
+  internal memory budget (so typical models are unaffected). Set to an
+  integer to force a specific batch size, or to a value `>= numDraws` to
+  disable streaming. Only used by the `"cpu"` backend for MXL models;
+  the default `"cpp"` backend is memory-flat in the number of draws and
+  ignores this argument.
 
 - numCores:
 
@@ -185,6 +211,20 @@ logitr(
   which case the number of cores is set to
   `parallel::detectCores() - 1`. Max cores allowed is capped at
   [`parallel::detectCores()`](https://rdrr.io/r/parallel/detectCores.html).
+
+- numThreads:
+
+  The number of threads to use for parallel evaluation of the MXL
+  simulated log-likelihood with `backend = "cpp"`. The draws are
+  processed in parallel across threads. Defaults to `NULL`, in which
+  case a single thread is used when running a parallel multistart
+  (`numMultiStarts > 1`, to avoid oversubscribing cores), otherwise all
+  but one of the available cores are used. Set to `1` to disable
+  threading. Only used by the `"cpp"` backend. Note that threading uses
+  a parallel reduction, so results are not bit-identical across runs
+  (they differ at the level of floating-point rounding, far below the
+  optimization tolerance). Set `numThreads = 1` (or `backend = "cpu"`)
+  if you need exactly reproducible results.
 
 - vcov:
 
@@ -196,6 +236,20 @@ logitr(
 
   If `FALSE`, predicted probabilities, fitted values, and residuals are
   not included in the returned object. Defaults to `TRUE`.
+
+- backend:
+
+  The computational backend used to evaluate the log-likelihood and
+  gradient during estimation. For mixed logit (MXL) models the default
+  is `"cpp"`, a compiled C++ implementation that is typically about 4
+  times faster (and faster still with multiple threads, see
+  `numThreads`) while producing the same results as the native R backend
+  to floating-point precision. Set `backend = "cpu"` to use logitr's
+  native R implementation instead (for example if you want exactly
+  bit-reproducible results, since the `"cpp"` backend's threaded
+  reduction is not bit-identical across runs). Multinomial logit (MNL)
+  models always use the R implementation regardless of this argument, as
+  they are already fast.
 
 - options:
 
@@ -257,38 +311,38 @@ logitr(
 
 The function returns a list object containing the following objects.
 
-|                     |                                                                                                                                                                                                   |
-|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Value               | Description                                                                                                                                                                                       |
-| `coefficients`      | The model coefficients at convergence.                                                                                                                                                            |
-| `logLik`            | The log-likelihood value at convergence.                                                                                                                                                          |
-| `nullLogLik`        | The null log-likelihood value (if all coefficients are 0).                                                                                                                                        |
-| `gradient`          | The gradient of the log-likelihood at convergence.                                                                                                                                                |
-| `hessian`           | The hessian of the log-likelihood at convergence.                                                                                                                                                 |
-| `probabilities`     | Predicted probabilities. Not returned if `predict = FALSE`.                                                                                                                                       |
-| `fitted.values`     | Fitted values. Not returned if `predict = FALSE`.                                                                                                                                                 |
-| `residuals`         | Residuals. Not returned if `predict = FALSE`.                                                                                                                                                     |
-| `startVals`         | The starting values used.                                                                                                                                                                         |
-| `multistartNumber`  | The multistart run number for this model.                                                                                                                                                         |
-| `multistartSummary` | A summary of the log-likelihood values for each multistart run (if more than one multistart was used).                                                                                            |
-| `time`              | The user, system, and elapsed time to run the optimization.                                                                                                                                       |
-| `iterations`        | The number of iterations until convergence.                                                                                                                                                       |
-| `message`           | A more informative message with the status of the optimization result.                                                                                                                            |
-| `status`            | An integer value with the status of the optimization (positive values are successes). Use [`statusCodes()`](https://jhelvy.github.io/logitr/reference/statusCodes.md) for a detailed description. |
-| `call`              | The matched call to `logitr()`.                                                                                                                                                                   |
-| `inputs`            | A list of the original inputs to `logitr()`.                                                                                                                                                      |
-| `data`              | A list of the original data provided to `logitr()` broken up into components used during model estimation.                                                                                        |
-| `numObs`            | The number of observations.                                                                                                                                                                       |
-| `numParams`         | The number of model parameters.                                                                                                                                                                   |
-| `freq`              | The frequency counts of each alternative.                                                                                                                                                         |
-| `modelType`         | The model type, `'mnl'` for multinomial logit or `'mxl'` for mixed logit.                                                                                                                         |
-| `weightsUsed`       | `TRUE` or `FALSE` for whether weights were used in the model.                                                                                                                                     |
-| `numClusters`       | The number of clusters.                                                                                                                                                                           |
-| `parSetup`          | A summary of the distributional assumptions on each model parameter (`"f"`="fixed", `"n"`="normal distribution", `"ln"`="log-normal distribution").                                               |
-| `parIDs`            | A list identifying the indices of each parameter in `coefficients` by a variety of types.                                                                                                         |
-| `scaleFactors`      | A vector of the scaling factors used to scale each coefficient during estimation.                                                                                                                 |
-| `standardDraws`     | The draws used during maximum simulated likelihood (for MXL models).                                                                                                                              |
-| `options`           | A list of options for controlling the `nloptr()` optimization. Run [`nloptr::nloptr.print.options()`](https://astamm.github.io/nloptr/reference/nloptr.print.options.html) for details.           |
+|  |  |
+|----|----|
+| Value | Description |
+| `coefficients` | The model coefficients at convergence. |
+| `logLik` | The log-likelihood value at convergence. |
+| `nullLogLik` | The null log-likelihood value (if all coefficients are 0). |
+| `gradient` | The gradient of the log-likelihood at convergence. |
+| `hessian` | The hessian of the log-likelihood at convergence. |
+| `probabilities` | Predicted probabilities. Not returned if `predict = FALSE`. |
+| `fitted.values` | Fitted values. Not returned if `predict = FALSE`. |
+| `residuals` | Residuals. Not returned if `predict = FALSE`. |
+| `startVals` | The starting values used. |
+| `multistartNumber` | The multistart run number for this model. |
+| `multistartSummary` | A summary of the log-likelihood values for each multistart run (if more than one multistart was used). |
+| `time` | The user, system, and elapsed time to run the optimization. |
+| `iterations` | The number of iterations until convergence. |
+| `message` | A more informative message with the status of the optimization result. |
+| `status` | An integer value with the status of the optimization (positive values are successes). Use [`statusCodes()`](https://jhelvy.github.io/logitr/reference/statusCodes.md) for a detailed description. |
+| `call` | The matched call to `logitr()`. |
+| `inputs` | A list of the original inputs to `logitr()`. |
+| `data` | A list of the original data provided to `logitr()` broken up into components used during model estimation. |
+| `numObs` | The number of observations. |
+| `numParams` | The number of model parameters. |
+| `freq` | The frequency counts of each alternative. |
+| `modelType` | The model type, `'mnl'` for multinomial logit or `'mxl'` for mixed logit. |
+| `weightsUsed` | `TRUE` or `FALSE` for whether weights were used in the model. |
+| `numClusters` | The number of clusters. |
+| `parSetup` | A summary of the distributional assumptions on each model parameter (`"f"`="fixed", `"n"`="normal distribution", `"ln"`="log-normal distribution"). |
+| `parIDs` | A list identifying the indices of each parameter in `coefficients` by a variety of types. |
+| `scaleFactors` | A vector of the scaling factors used to scale each coefficient during estimation. |
+| `standardDraws` | The draws used during maximum simulated likelihood (for MXL models). |
+| `options` | A list of options for controlling the `nloptr()` optimization. Run [`nloptr::nloptr.print.options()`](https://astamm.github.io/nloptr/reference/nloptr.print.options.html) for details. |
 
 ## Details
 
@@ -299,16 +353,16 @@ other options can be included. Run
 [`nloptr::nloptr.print.options()`](https://astamm.github.io/nloptr/reference/nloptr.print.options.html)
 for more details.
 
-|               |                                                                                |                    |
-|---------------|--------------------------------------------------------------------------------|--------------------|
-| Argument      | Description                                                                    | Default            |
-| `xtol_rel`    | The relative `x` tolerance for the `nloptr` optimization loop.                 | `1.0e-6`           |
-| `xtol_abs`    | The absolute `x` tolerance for the `nloptr` optimization loop.                 | `1.0e-6`           |
-| `ftol_rel`    | The relative `f` tolerance for the `nloptr` optimization loop.                 | `1.0e-6`           |
-| `ftol_abs`    | The absolute `f` tolerance for the `nloptr` optimization loop.                 | `1.0e-6`           |
-| `maxeval`     | The maximum number of function evaluations for the `nloptr` optimization loop. | `1000`             |
-| `algorithm`   | The optimization algorithm that `nloptr` uses.                                 | `"NLOPT_LD_LBFGS"` |
-| `print_level` | The print level of the `nloptr` optimization loop.                             | `0`                |
+|  |  |  |
+|----|----|----|
+| Argument | Description | Default |
+| `xtol_rel` | The relative `x` tolerance for the `nloptr` optimization loop. | `1.0e-6` |
+| `xtol_abs` | The absolute `x` tolerance for the `nloptr` optimization loop. | `1.0e-6` |
+| `ftol_rel` | The relative `f` tolerance for the `nloptr` optimization loop. | `1.0e-6` |
+| `ftol_abs` | The absolute `f` tolerance for the `nloptr` optimization loop. | `1.0e-6` |
+| `maxeval` | The maximum number of function evaluations for the `nloptr` optimization loop. | `1000` |
+| `algorithm` | The optimization algorithm that `nloptr` uses. | `"NLOPT_LD_LBFGS"` |
+| `print_level` | The print level of the `nloptr` optimization loop. | `0` |
 
 ## Examples
 
@@ -337,9 +391,10 @@ mnl_wtp <- logitr(
   scalePar       = "price",
   numMultiStarts = 5
 )
-#> Running multistart...
+#> Running multistart in parallel...
 #>   Random starting point iterations: 5
 #>   Number of cores: 3
+#>   Note: the cores run the multistart iterations in parallel; each model is estimated on a single core.
 #> Done!
 
 # Estimate a MXL model in the Preference space with "feat"
@@ -351,7 +406,8 @@ mxl_pref <- logitr(
   obsID    = "obsID",
   panelID  = "id",
   pars     = c("price", "feat", "brand"),
-  randPars = c(feat = "n")
+  randPars = c(feat = "n"),
+  numDraws = 50 # fewer draws than the default to keep the example fast
 )
 #> Running model...
 #> Done!

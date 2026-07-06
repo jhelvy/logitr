@@ -33,6 +33,7 @@ consistently converge to a solution.
 First load the required packages:
 
 ``` r
+
 library(logitr)
 library(mlogit)
 library(gmnl)
@@ -48,6 +49,7 @@ Now set the starting parameters for each package as well as the number
 of draws to use for the simulated log-likelihood:
 
 ``` r
+
 numDraws_wtp <- 50
 start_wtp <- c(
     scalePar        = 1,
@@ -65,6 +67,7 @@ start_wtp <- c(
 Take only half of the yogurt data to speed things up:
 
 ``` r
+
 yogurt <- subset(logitr::yogurt, logitr::yogurt$id <= 50)
 ```
 
@@ -79,6 +82,7 @@ provided here.
 Convert the yogurt data for into the format required for {gmnl}
 
 ``` r
+
 data_gmnl <- mlogit.data(
     data     = yogurt,
     shape    = "long",
@@ -94,6 +98,7 @@ data_gmnl <- mlogit.data(
 Format the `yogurt` data to a “wide” format for {apollo}
 
 ``` r
+
 yogurt_price <- yogurt %>%
     select(id, obsID, price, brand) %>%
     mutate(price = -1*price) %>%
@@ -133,6 +138,7 @@ data_apollo <- yogurt_price %>%
 Define the {apollo} probabilities function
 
 ``` r
+
 apollo_probabilities_wtp <- function(
   apollo_beta, apollo_inputs, functionality = "estimate"
 ) {
@@ -180,6 +186,7 @@ apollo_probabilities_wtp <- function(
 Define random parameters function
 
 ``` r
+
 apollo_randCoeff <- function(apollo_beta, apollo_inputs) {
     randcoeff <- list()
     randcoeff[['b_feat']] <- feat + d_feat * sd_feat
@@ -193,6 +200,7 @@ apollo_randCoeff <- function(apollo_beta, apollo_inputs) {
 Main control settings for {apollo}
 
 ``` r
+
 apollo_control_wtp <- list(
     modelName       = "MXL_WTP_space",
     modelDescr      = "MXL model on yogurt choice SP data, in WTP space",
@@ -232,6 +240,7 @@ apollo_inputs_wtp <- apollo_validateInputs(
 Format the `yogurt` data to a “wide” format for {mixl}
 
 ``` r
+
 data_mixl <- data_apollo # Uses the same "wide" format as {apollo}
 data_mixl$ID <- data_mixl$id
 data_mixl$CHOICE <- data_mixl$choice
@@ -240,6 +249,7 @@ data_mixl$CHOICE <- data_mixl$choice
 Define the {mixl} utility function
 
 ``` r
+
 mixl_wtp <- "
     feat_RND = @feat + draw_1 * @sd_feat;
     brandhiland_RND = @brandhiland + draw_2 * @sd_brandhiland;
@@ -265,6 +275,7 @@ package either fail to converge or converge to only a local minimum.
 {logitr} converges, even without running a multi-start:
 
 ``` r
+
 model_logitr <- logitr(
     data      = yogurt,
     outcome   = 'choice',
@@ -341,6 +352,7 @@ Including a 10-run multi-start helps build confidence in the solution
 reached:
 
 ``` r
+
 model_logitr <- logitr(
     data      = yogurt,
     outcome   = 'choice',
@@ -434,6 +446,7 @@ summary(model_logitr)
 First attempt using same starting points as {logitr}
 
 ``` r
+
 model_mixl <- estimate(
     mixl_spec_wtp, start_wtp,
     data_mixl, availabilities,
@@ -444,12 +457,14 @@ model_mixl <- estimate(
 {mixl} converges to a local minimum:
 
 ``` r
+
 c(logLik(model_logitr), logLik(model_mixl))
 ```
 
     #> [1]  -718.0862 -1544.8531
 
 ``` r
+
 cbind(coef(model_logitr), coef(model_mixl))
 ```
 
@@ -467,6 +482,7 @@ cbind(coef(model_logitr), coef(model_mixl))
 Second attempt using {logitr} solution as starting points
 
 ``` r
+
 model_mixl <- estimate(
     mixl_spec_wtp, coef(model_logitr),
     data_mixl, availabilities,
@@ -478,12 +494,14 @@ Again, {mixl} converges to a local minimum (though it’s closer than the
 previous solution):
 
 ``` r
+
 c(logLik(model_logitr), logLik(model_mixl))
 ```
 
     #> [1] -718.0862 -761.5228
 
 ``` r
+
 cbind(coef(model_logitr), coef(model_mixl))
 ```
 
@@ -505,6 +523,7 @@ additional starting parameters must be added as the {gmnl} approach to
 estimating WTP is a slightly different model.
 
 ``` r
+
 model_gmnl <- gmnl(
     data = data_gmnl,
     formula = choice ~ price + feat + brand | 0 | 0 | 0 | 1,
@@ -524,12 +543,14 @@ model_gmnl <- gmnl(
 {gmnl} converges to a local minimum:
 
 ``` r
+
 c(logLik(model_logitr), logLik(model_gmnl))
 ```
 
     #> [1]  -718.0862 -1710.6872
 
 ``` r
+
 cbind(coef(model_logitr), coef(model_gmnl))
 ```
 
@@ -548,6 +569,7 @@ cbind(coef(model_logitr), coef(model_gmnl))
 Second attempt using {logitr} solution as starting points:
 
 ``` r
+
 model_gmnl <- gmnl(
     data = data_gmnl,
     formula = choice ~ price + feat + brand | 0 | 0 | 0 | 1,
@@ -567,12 +589,14 @@ model_gmnl <- gmnl(
 Again, {gmnl} converges to a local minimum:
 
 ``` r
+
 c(logLik(model_logitr), logLik(model_gmnl))
 ```
 
     #> [1] -718.0862 -944.3339
 
 ``` r
+
 cbind(coef(model_logitr), coef(model_gmnl))
 ```
 
@@ -593,6 +617,7 @@ cbind(coef(model_logitr), coef(model_gmnl))
 First attempt using same starting points as {logitr}:
 
 ``` r
+
 model_apollo <- apollo_estimate(
     apollo_beta          = start_wtp,
     apollo_fixed         = NULL,
@@ -605,6 +630,7 @@ model_apollo <- apollo_estimate(
 {apollo} fails to converge and just returns the starting coefficients:
 
 ``` r
+
 c(logLik(model_logitr), model_apollo$LLout)
 ```
 
@@ -612,6 +638,7 @@ c(logLik(model_logitr), model_apollo$LLout)
     #>  -718.0862 -2928.4048 
 
 ``` r
+
 cbind(coef(model_logitr), coef(model_apollo))
 ```
 
@@ -629,6 +656,7 @@ cbind(coef(model_logitr), coef(model_apollo))
 Second attempt using {logitr} solution as starting points:
 
 ``` r
+
 model_apollo <- apollo_estimate(
     apollo_beta          = coef(model_logitr),
     apollo_fixed         = NULL,
@@ -641,6 +669,7 @@ model_apollo <- apollo_estimate(
 This time {apollo} converges to a local minimum:
 
 ``` r
+
 c(logLik(model_logitr), model_apollo$LLout)
 ```
 
@@ -648,6 +677,7 @@ c(logLik(model_logitr), model_apollo$LLout)
     #> -718.0862 -769.7493 
 
 ``` r
+
 cbind(coef(model_logitr), model_apollo$betaStop)
 ```
 

@@ -17,16 +17,16 @@ data(yogurt)
 
 ## Format
 
-|          |                                                                                       |
-|----------|---------------------------------------------------------------------------------------|
-| Variable | Description                                                                           |
-| `id`     | individual identifiers                                                                |
-| `obsID`  | identifier for unique choice observation                                              |
-| `alt`    | alternative in each choice observation                                                |
-| `choice` | dummy code for choice (1 or 0)                                                        |
-| `price`  | price of yogurt                                                                       |
-| `feat`   | dummy for whether a newspaper advertisement was shown to the customer (`1` or `0`)    |
-| `brand`  | yogurt brand: `"yoplait"`, `"dannon"`, `"hiland"`, or `"weight"` (for weight watcher) |
+|  |  |
+|----|----|
+| Variable | Description |
+| `id` | individual identifiers |
+| `obsID` | identifier for unique choice observation |
+| `alt` | alternative in each choice observation |
+| `choice` | dummy code for choice (1 or 0) |
+| `price` | price of yogurt |
+| `feat` | dummy for whether a newspaper advertisement was shown to the customer (`1` or `0`) |
+| `brand` | yogurt brand: `"yoplait"`, `"dannon"`, `"hiland"`, or `"weight"` (for weight watcher) |
 
 ## Source
 

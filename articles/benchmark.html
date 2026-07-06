@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Benchmarking estimation speed against other packages">
 </head>
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">logitr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,7 @@
     <li><a class="dropdown-item" href="../articles/data_formatting.html">Data Formatting and Encoding</a></li>
     <li><a class="dropdown-item" href="../articles/mnl_models.html">Estimating Multinomial Logit Models</a></li>
     <li><a class="dropdown-item" href="../articles/mxl_models.html">Estimating Mixed Logit Models</a></li>
+    <li><a class="dropdown-item" href="../articles/backends.html">Faster Estimation: Backends, Threads, and Large Draws</a></li>
     <li><a class="dropdown-item" href="../articles/interactions.html">Estimating Models with Interactions</a></li>
     <li><a class="dropdown-item" href="../articles/mnl_models_weighted.html">Estimating Weighted Logit Models</a></li>
     <li><a class="dropdown-item" href="../articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a></li>
@@ -80,7 +81,7 @@
 
     
     
-<p>{logitr} is faster than most other packages with similar
+<p>{logitr} is considerably faster than other packages with similar
 functionality. To demonstrate this, a benchmark was conducted by
 estimating the same preference space mixed logit model using the
 following R packages:</p>
@@ -91,40 +92,108 @@ following R packages:</p>
 <li>{gmnl}</li>
 <li>{apollo}</li>
 </ul>
-<p>The benchmark can be viewed at this Google Colab notebook:</p>
-<p><a href="https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing" class="external-link uri">https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing</a></p>
+<p>Because {logitr} estimates mixed logit models using a compiled,
+multithreaded backend, its speed also depends on the number of cores
+available. To make the comparison fair, every package is benchmarked
+single-threaded, and every package that can use multiple cores
+({logitr}, {apollo}, and {mixl}) is <em>also</em> benchmarked at higher
+core counts, denoted in parentheses, e.g. <code>logitr (1 cores)</code>
+versus <code>logitr (10 cores)</code>. One caveat for {mixl}: it
+multithreads via OpenMP, which the default macOS toolchain (Apple clang)
+does not provide, so enabling it on a Mac requires a one-time toolchain
+setup (documented in the header of the benchmark script).</p>
+<p>The benchmark script is at <a href="https://github.com/jhelvy/logitr/blob/master/data-raw/runtimes.R" class="external-link"><code>data-raw/runtimes.R</code></a>
+in the package repository. The <code>runtimes</code> data frame records
+the version of each package used; the results shipped with the package
+were produced locally on a 10-core Apple M-series Mac using these
+versions:</p>
+<table class="table">
+<thead><tr>
+<th style="text-align:left;">
+package
+</th>
+<th style="text-align:left;">
+version
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+logitr
+</td>
+<td style="text-align:left;">
+1.2.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mixl
+</td>
+<td style="text-align:left;">
+1.3.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mlogit
+</td>
+<td style="text-align:left;">
+2.0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+gmnl
+</td>
+<td style="text-align:left;">
+1.1.3.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+apollo
+</td>
+<td style="text-align:left;">
+0.3.7
+</td>
+</tr>
+</tbody>
+</table>
 <p>Benchmarks will always vary for every run of a benchmarking code,
-even when run on the same machine due to variations in background
-processes. Thus, if you run this code yourself on a different machine,
-your results may vary, though the overall order and trends in terms of
-each package’s relative speed should be similar to those from the Colab
-notebook.</p>
+even on the same machine, due to variations in background processes and
+the number of cores available. So if you run this code yourself, your
+results may vary, though the overall order and trends in each package’s
+relative speed should be similar. These particular results are specific
+to the machine they were run on – a 10-core Apple M-series Mac – so the
+multi-core rows reflect that core count, and the exact package versions
+used are recorded in the <code>version</code> column of the
+<code>runtimes</code> data frame.</p>
 <div class="section level2">
 <h2 id="comparing-run-times">Comparing run times<a class="anchor" aria-label="anchor" href="#comparing-run-times"></a>
 </h2>
-<p>The {logitr} package includes a <code>runtimes</code> data frame that
-is exported from the <a href="https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing" class="external-link">Google
-Colab</a> notebook used to conduct the benchmark. The tables below
-summarize the run times for each package and how many times slower they
-are relative to {logitr}.</p>
+<p>The {logitr} package includes a <code>runtimes</code> data frame with
+the benchmark results. The tables below summarize the run times (in
+seconds) for each package and how many times slower each is relative to
+single-threaded {logitr} (<code>logitr (1 cores)</code>), which is used
+as the reference point for a fair, hardware-independent comparison.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr" class="external-link">logitr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/" class="external-link">kableExtra</a></span><span class="op">)</span> <span class="co"># For tables</span></span>
 <span></span>
-<span><span class="va">numDraws</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">runtimes</span><span class="op">$</span><span class="va">numDraws</span><span class="op">)</span></span>
-<span><span class="va">logitr_time</span> <span class="op">&lt;-</span> <span class="va">runtimes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">package</span> <span class="op">==</span> <span class="st">"logitr"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">times</span> <span class="op">&lt;-</span> <span class="va">runtimes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">version</span><span class="op">)</span></span>
+<span><span class="va">logitr_time</span> <span class="op">&lt;-</span> <span class="va">times</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">package</span> <span class="op">==</span> <span class="st">"logitr (1 cores)"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>time_logitr <span class="op">=</span> <span class="va">time_sec</span><span class="op">)</span></span>
-<span><span class="va">time_compare</span> <span class="op">&lt;-</span> <span class="va">runtimes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">time_compare</span> <span class="op">&lt;-</span> <span class="va">times</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">logitr_time</span>, <span class="op">-</span><span class="va">package</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"numDraws"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">time_sec</span><span class="op">/</span> <span class="va">time_logitr</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">time_logitr</span><span class="op">)</span></span>
-<span><span class="co"># Compare raw times</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">time_sec</span> <span class="op">/</span> <span class="va">time_logitr</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> </span>
+<span><span class="co"># Compare raw times (seconds)</span></span>
 <span><span class="va">time_compare</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">mult</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">numDraws</span>, values_from <span class="op">=</span> <span class="va">time_sec</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">package</span>, <span class="va">numDraws</span>, <span class="va">time_sec</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>time_sec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">time_sec</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">numDraws</span>, values_from <span class="op">=</span> <span class="va">time_sec</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kbl.html" class="external-link">kbl</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr>
@@ -135,422 +204,761 @@ package
 50
 </th>
 <th style="text-align:right;">
-200
-</th>
-<th style="text-align:right;">
-400
-</th>
-<th style="text-align:right;">
-600
-</th>
-<th style="text-align:right;">
-800
+500
 </th>
 <th style="text-align:right;">
 1000
+</th>
+<th style="text-align:right;">
+1500
 </th>
 </tr></thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-logitr
+logitr (1 cores)
 </td>
 <td style="text-align:right;">
-2.752860
-</td>
-<td style="text-align:right;">
-8.930408
-</td>
-<td style="text-align:right;">
-13.72697
-</td>
-<td style="text-align:right;">
-24.13735
-</td>
-<td style="text-align:right;">
-33.47056
-</td>
-<td style="text-align:right;">
-39.22012
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mixl (1 core)
-</td>
-<td style="text-align:right;">
-10.640267
-</td>
-<td style="text-align:right;">
-49.667703
-</td>
-<td style="text-align:right;">
-80.22922
-</td>
-<td style="text-align:right;">
-158.23673
-</td>
-<td style="text-align:right;">
-229.17401
-</td>
-<td style="text-align:right;">
-271.35824
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mixl (2 cores)
-</td>
-<td style="text-align:right;">
-8.928487
-</td>
-<td style="text-align:right;">
-41.577738
-</td>
-<td style="text-align:right;">
-66.05436
-</td>
-<td style="text-align:right;">
-129.84954
-</td>
-<td style="text-align:right;">
-184.54557
-</td>
-<td style="text-align:right;">
-230.91617
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mlogit
-</td>
-<td style="text-align:right;">
-11.926502
-</td>
-<td style="text-align:right;">
-19.901097
-</td>
-<td style="text-align:right;">
-87.58429
-</td>
-<td style="text-align:right;">
-60.38106
-</td>
-<td style="text-align:right;">
-100.63138
-</td>
-<td style="text-align:right;">
-98.41650
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-gmnl
-</td>
-<td style="text-align:right;">
-10.553787
-</td>
-<td style="text-align:right;">
-31.379011
-</td>
-<td style="text-align:right;">
-69.74575
-</td>
-<td style="text-align:right;">
-121.93843
-</td>
-<td style="text-align:right;">
-99.23701
-</td>
-<td style="text-align:right;">
-141.36727
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-apollo (1 core)
-</td>
-<td style="text-align:right;">
-17.287605
-</td>
-<td style="text-align:right;">
-44.118732
-</td>
-<td style="text-align:right;">
-84.29395
-</td>
-<td style="text-align:right;">
-129.33302
-</td>
-<td style="text-align:right;">
-164.37400
-</td>
-<td style="text-align:right;">
-198.21812
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-apollo (2 cores)
-</td>
-<td style="text-align:right;">
-21.911355
-</td>
-<td style="text-align:right;">
-53.223971
-</td>
-<td style="text-align:right;">
-82.69647
-</td>
-<td style="text-align:right;">
-120.27101
-</td>
-<td style="text-align:right;">
-163.80518
-</td>
-<td style="text-align:right;">
-196.84896
-</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Compare how many times slower compared to logitr</span></span>
-<span><span class="va">time_compare</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">time_sec</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">numDraws</span>, values_from <span class="op">=</span> <span class="va">mult</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kbl.html" class="external-link">kbl</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<thead><tr>
-<th style="text-align:left;">
-package
-</th>
-<th style="text-align:right;">
-50
-</th>
-<th style="text-align:right;">
-200
-</th>
-<th style="text-align:right;">
-400
-</th>
-<th style="text-align:right;">
-600
-</th>
-<th style="text-align:right;">
-800
-</th>
-<th style="text-align:right;">
-1000
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-logitr
-</td>
-<td style="text-align:right;">
-1.0
-</td>
-<td style="text-align:right;">
-1.0
-</td>
-<td style="text-align:right;">
-1.0
-</td>
-<td style="text-align:right;">
-1.0
-</td>
-<td style="text-align:right;">
-1.0
-</td>
-<td style="text-align:right;">
-1.0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mixl (1 core)
-</td>
-<td style="text-align:right;">
-3.9
-</td>
-<td style="text-align:right;">
-5.6
-</td>
-<td style="text-align:right;">
-5.8
-</td>
-<td style="text-align:right;">
-6.6
-</td>
-<td style="text-align:right;">
-6.8
-</td>
-<td style="text-align:right;">
-6.9
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mixl (2 cores)
-</td>
-<td style="text-align:right;">
-3.2
-</td>
-<td style="text-align:right;">
-4.7
-</td>
-<td style="text-align:right;">
-4.8
-</td>
-<td style="text-align:right;">
-5.4
-</td>
-<td style="text-align:right;">
-5.5
-</td>
-<td style="text-align:right;">
-5.9
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mlogit
-</td>
-<td style="text-align:right;">
-4.3
-</td>
-<td style="text-align:right;">
-2.2
-</td>
-<td style="text-align:right;">
-6.4
-</td>
-<td style="text-align:right;">
-2.5
-</td>
-<td style="text-align:right;">
-3.0
-</td>
-<td style="text-align:right;">
-2.5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-gmnl
-</td>
-<td style="text-align:right;">
-3.8
-</td>
-<td style="text-align:right;">
-3.5
-</td>
-<td style="text-align:right;">
-5.1
-</td>
-<td style="text-align:right;">
-5.1
-</td>
-<td style="text-align:right;">
-3.0
-</td>
-<td style="text-align:right;">
-3.6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-apollo (1 core)
+0.5
 </td>
 <td style="text-align:right;">
 6.3
 </td>
 <td style="text-align:right;">
-4.9
+12.1
 </td>
 <td style="text-align:right;">
-6.1
-</td>
-<td style="text-align:right;">
-5.4
-</td>
-<td style="text-align:right;">
-4.9
-</td>
-<td style="text-align:right;">
-5.1
+15.5
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-apollo (2 cores)
+logitr (5 cores)
 </td>
 <td style="text-align:right;">
-8.0
+0.2
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+3.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+logitr (10 cores)
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mixl (1 cores)
 </td>
 <td style="text-align:right;">
 6.0
 </td>
 <td style="text-align:right;">
+56.1
+</td>
+<td style="text-align:right;">
+123.2
+</td>
+<td style="text-align:right;">
+180.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mixl (5 cores)
+</td>
+<td style="text-align:right;">
+1.7
+</td>
+<td style="text-align:right;">
+14.0
+</td>
+<td style="text-align:right;">
+36.5
+</td>
+<td style="text-align:right;">
+45.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mixl (10 cores)
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+19.6
+</td>
+<td style="text-align:right;">
+45.4
+</td>
+<td style="text-align:right;">
+56.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mlogit
+</td>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+33.8
+</td>
+<td style="text-align:right;">
+64.6
+</td>
+<td style="text-align:right;">
+88.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+gmnl
+</td>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+43.9
+</td>
+<td style="text-align:right;">
+77.5
+</td>
+<td style="text-align:right;">
+123.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+apollo (1 cores)
+</td>
+<td style="text-align:right;">
 6.0
 </td>
 <td style="text-align:right;">
-5.0
+13.1
 </td>
 <td style="text-align:right;">
-4.9
+114.9
 </td>
 <td style="text-align:right;">
-5.0
+161.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+apollo (5 cores)
+</td>
+<td style="text-align:right;">
+9.8
+</td>
+<td style="text-align:right;">
+13.8
+</td>
+<td style="text-align:right;">
+73.2
+</td>
+<td style="text-align:right;">
+97.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+apollo (10 cores)
+</td>
+<td style="text-align:right;">
+12.3
+</td>
+<td style="text-align:right;">
+17.6
+</td>
+<td style="text-align:right;">
+68.2
+</td>
+<td style="text-align:right;">
+94.9
 </td>
 </tr>
 </tbody>
 </table>
-<p>The code below plots the relative run times from the Colab
-notebook.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggrepel.slowkow.com/" class="external-link">ggrepel</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">plotColors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">brewer.pal</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span>, name <span class="op">=</span> <span class="st">"Set1"</span><span class="op">)</span>, <span class="st">"gold"</span><span class="op">)</span></span>
-<span><span class="va">benchmark</span> <span class="op">&lt;-</span> <span class="va">runtimes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">numDraws</span>, y <span class="op">=</span> <span class="va">time_sec</span>, color <span class="op">=</span> <span class="va">package</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggrepel.slowkow.com/reference/geom_text_repel.html" class="external-link">geom_text_repel</a></span><span class="op">(</span></span>
-<span>        data <span class="op">=</span> <span class="va">.</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">numDraws</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">numDraws</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="va">package</span><span class="op">)</span>,</span>
-<span>        hjust <span class="op">=</span> <span class="fl">0</span>, nudge_x <span class="op">=</span> <span class="fl">40</span>, direction <span class="op">=</span> <span class="st">"y"</span>,</span>
-<span>        size <span class="op">=</span> <span class="fl">4.5</span>, segment.size <span class="op">=</span> <span class="fl">0</span></span>
-<span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span></span>
-<span>        limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1200</span><span class="op">)</span>,</span>
-<span>        breaks <span class="op">=</span> <span class="va">numDraws</span>,</span>
-<span>        labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">300</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">300</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">plotColors</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span></span>
-<span>        point <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>override.aes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>label <span class="op">=</span> <span class="st">""</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>        color <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>override.aes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>label <span class="op">=</span> <span class="st">""</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">18</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
-<span>        panel.grid.minor <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        panel.grid.major.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        legend.position <span class="op">=</span> <span class="st">"none"</span>,</span>
-<span>        axis.line.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        axis.ticks.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
-<span>        x <span class="op">=</span> <span class="st">"Number of random draws"</span>,</span>
-<span>        y <span class="op">=</span> <span class="st">"Computation time (seconds)"</span></span>
-<span>    <span class="op">)</span></span>
-<span></span>
-<span><span class="va">benchmark</span></span></code></pre></div>
-<p><img src="benchmark.png"><!-- --></p>
+<p>Now compare how many times slower each is relative to single-threaded
+{logitr} (<code>logitr (1 cores)</code>), the fair, hardware-independent
+reference point:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">time_compare</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">package</span>, <span class="va">numDraws</span>, <span class="va">mult</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">numDraws</span>, values_from <span class="op">=</span> <span class="va">mult</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kbl.html" class="external-link">kbl</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<thead><tr>
+<th style="text-align:left;">
+package
+</th>
+<th style="text-align:right;">
+50
+</th>
+<th style="text-align:right;">
+500
+</th>
+<th style="text-align:right;">
+1000
+</th>
+<th style="text-align:right;">
+1500
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+logitr (1 cores)
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+logitr (5 cores)
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+logitr (10 cores)
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mixl (1 cores)
+</td>
+<td style="text-align:right;">
+11.3
+</td>
+<td style="text-align:right;">
+8.8
+</td>
+<td style="text-align:right;">
+10.2
+</td>
+<td style="text-align:right;">
+11.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mixl (5 cores)
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mixl (10 cores)
+</td>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+3.7
+</td>
+<td style="text-align:right;">
+3.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mlogit
+</td>
+<td style="text-align:right;">
+9.0
+</td>
+<td style="text-align:right;">
+5.3
+</td>
+<td style="text-align:right;">
+5.3
+</td>
+<td style="text-align:right;">
+5.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+gmnl
+</td>
+<td style="text-align:right;">
+12.0
+</td>
+<td style="text-align:right;">
+6.9
+</td>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+8.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+apollo (1 cores)
+</td>
+<td style="text-align:right;">
+11.1
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:right;">
+9.5
+</td>
+<td style="text-align:right;">
+10.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+apollo (5 cores)
+</td>
+<td style="text-align:right;">
+18.3
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+6.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+apollo (10 cores)
+</td>
+<td style="text-align:right;">
+23.0
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+6.1
+</td>
+</tr>
+</tbody>
+</table>
+<p>The figure below visualizes the run times. All of the figures in this
+article are generated by the <a href="https://github.com/jhelvy/logitr/blob/master/data-raw/figures.R" class="external-link"><code>data-raw/figures.R</code></a>
+script in the package repository.</p>
+<p><img src="benchmark.png" class="r-plt" alt="" width="100%"></p>
+<p>Note that the estimation times reflect both the cost per iteration
+(which grows with the number of draws) <em>and</em> the number of
+iterations each package’s optimizer takes to converge, which can itself
+vary with the number of draws. This is why some packages – particularly
+{apollo} – show run times that are not strictly increasing in the number
+of draws. The overall comparison is robust to this: {logitr} is
+dramatically faster across every draw count, and its advantage grows
+with more draws and more cores.</p>
 </div>
-  </main>
+<div class="section level2">
+<h2 id="scaling-to-large-draw-counts">Scaling to large draw counts<a class="anchor" aria-label="anchor" href="#scaling-to-large-draw-counts"></a>
+</h2>
+<p>The comparison above stops at 1,500 draws because that is roughly
+where the other packages become impractically slow. {logitr}, by
+contrast, scales comfortably to 10,000 draws, which can be useful when
+many random parameters demand a large simulation sample for a stable
+simulated log-likelihood. The figure below isolates {logitr} and shows
+how its full-fit estimation time grows with the number of draws for each
+of its three backends:</p>
+<ul>
+<li>
+<code>cpu</code> – the native R path (memory-safe,
+single-threaded),</li>
+<li>
+<code>cpp (1 core)</code> – the compiled backend on a single core,
+and</li>
+<li>
+<code>cpp (10 cores)</code> – the compiled backend on all 10
+cores.</li>
+</ul>
+<p>These results are stored in the <code>runtimes_draws</code> data
+frame and generated by the same <a href="https://github.com/jhelvy/logitr/blob/master/data-raw/runtimes.R" class="external-link"><code>data-raw/runtimes.R</code></a>
+script, run on the same 10-core Apple M-series machine as the
+cross-package benchmark above.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">runtimes_draws</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>time_sec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">time_sec</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">numDraws</span>, values_from <span class="op">=</span> <span class="va">time_sec</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kbl.html" class="external-link">kbl</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<thead><tr>
+<th style="text-align:left;">
+config
+</th>
+<th style="text-align:right;">
+100
+</th>
+<th style="text-align:right;">
+500
+</th>
+<th style="text-align:right;">
+1000
+</th>
+<th style="text-align:right;">
+2500
+</th>
+<th style="text-align:right;">
+5000
+</th>
+<th style="text-align:right;">
+10000
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+cpu
+</td>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+28.7
+</td>
+<td style="text-align:right;">
+57.0
+</td>
+<td style="text-align:right;">
+184.0
+</td>
+<td style="text-align:right;">
+245.3
+</td>
+<td style="text-align:right;">
+502.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cpp (1 core)
+</td>
+<td style="text-align:right;">
+1.1
+</td>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+12.0
+</td>
+<td style="text-align:right;">
+29.2
+</td>
+<td style="text-align:right;">
+58.3
+</td>
+<td style="text-align:right;">
+111.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cpp (10 cores)
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:right;">
+1.1
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+4.3
+</td>
+<td style="text-align:right;">
+7.8
+</td>
+<td style="text-align:right;">
+17.8
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="benchmark_draws.png" class="r-plt" alt="" width="100%"></p>
+<p>The compiled backend is several times faster than the native R path
+at every draw count, and adding cores multiplies that advantage further
+– so even at 10,000 draws, a model that is essentially out of reach for
+the other packages estimates in a fraction of the time.</p>
+</div>
+<div class="section level2">
+<h2 id="what-the-speed-buys-you-a-stable-log-likelihood">What the speed buys you: a stable log-likelihood<a class="anchor" aria-label="anchor" href="#what-the-speed-buys-you-a-stable-log-likelihood"></a>
+</h2>
+<p>Speed is not the end goal – it is what makes <em>enough draws</em>
+affordable. The mixed logit log-likelihood is approximated by
+simulation, so any estimate carries simulation error that shrinks as the
+number of draws grows. Historical defaults are small: {mlogit} and
+{gmnl} default to 40 draws, Stata’s <code>mixlogit</code> to 50, and
+{logitr} itself defaulted to 50 prior to version 1.2.0. Those defaults
+date from when estimation was slow enough that more draws felt like a
+luxury, but they leave enough simulation noise in the log-likelihood to
+matter.</p>
+<p>To make that noise visible, the same mixed logit model used in the
+benchmarks above was estimated repeatedly at increasing draw counts. At
+each draw count the model was estimated 10 times using randomized MLHS
+draws with a different seed each time, with every run starting from the
+same converged reference solution – so at a given draw count, the
+across-seed spread in the converged log-likelihood reflects simulation
+error: the noise in the simulated log-likelihood shifts the converged
+value, and at low draw counts it can distort the surface enough that
+some runs converge to different local optima entirely. The results ship
+with the package in the <code>loglik_draws</code> data frame, generated
+by the same <a href="https://github.com/jhelvy/logitr/blob/master/data-raw/runtimes.R" class="external-link"><code>data-raw/runtimes.R</code></a>
+script (run on the same 10-core machine as above).</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">loglik_summary</span> <span class="op">&lt;-</span> <span class="va">loglik_draws</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">numDraws</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span></span>
+<span>        min <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">logLik</span><span class="op">)</span>,</span>
+<span>        max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">logLik</span><span class="op">)</span>,</span>
+<span>        range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">logLik</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">logLik</span><span class="op">)</span>,</span>
+<span>        sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">logLik</span><span class="op">)</span>,</span>
+<span>        median_time_sec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">time_sec</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="va">min</span><span class="op">:</span><span class="va">median_time_sec</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kbl.html" class="external-link">kbl</a></span><span class="op">(</span><span class="va">loglik_summary</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<thead><tr>
+<th style="text-align:right;">
+numDraws
+</th>
+<th style="text-align:right;">
+min
+</th>
+<th style="text-align:right;">
+max
+</th>
+<th style="text-align:right;">
+range
+</th>
+<th style="text-align:right;">
+sd
+</th>
+<th style="text-align:right;">
+median_time_sec
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-1336.6
+</td>
+<td style="text-align:right;">
+-1247.8
+</td>
+<td style="text-align:right;">
+88.8
+</td>
+<td style="text-align:right;">
+26.3
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-1286.0
+</td>
+<td style="text-align:right;">
+-1245.1
+</td>
+<td style="text-align:right;">
+40.9
+</td>
+<td style="text-align:right;">
+12.5
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+250
+</td>
+<td style="text-align:right;">
+-1259.1
+</td>
+<td style="text-align:right;">
+-1233.4
+</td>
+<td style="text-align:right;">
+25.6
+</td>
+<td style="text-align:right;">
+6.8
+</td>
+<td style="text-align:right;">
+0.5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:right;">
+-1268.3
+</td>
+<td style="text-align:right;">
+-1241.4
+</td>
+<td style="text-align:right;">
+26.9
+</td>
+<td style="text-align:right;">
+9.0
+</td>
+<td style="text-align:right;">
+0.7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:right;">
+-1250.8
+</td>
+<td style="text-align:right;">
+-1243.0
+</td>
+<td style="text-align:right;">
+7.8
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+1.1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5000
+</td>
+<td style="text-align:right;">
+-1248.1
+</td>
+<td style="text-align:right;">
+-1244.1
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+4.2
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="benchmark_loglik.png" class="r-plt" alt="" width="100%"></p>
+<p>At 50 draws the converged log-likelihood ranges over about 89 units
+across seeds – easily enough to flip a likelihood-based model comparison
+– while at 500 draws the spread is roughly 3.3 times smaller and keeps
+narrowing from there. (The narrowing is not perfectly monotonic – with
+few draws, an occasional run wanders to a different local optimum, which
+is itself a symptom of the simulation noise, but the trend is
+unmistakable.) And because of the compiled backend, those 500 draws cost
+only about 0.7 seconds on this model. This is why {logitr} defaults to
+<code>numDraws = 500</code>: at these speeds there is no longer a good
+reason to accept the simulation noise of a 40-50 draw default.</p>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

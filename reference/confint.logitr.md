@@ -52,9 +52,9 @@ mnl_pref <- logitr(
 # Compute a confidence interval
 confint(mnl_pref)
 #>                   2.5 %     97.5 %
-#> price        -0.4147499 -0.3183283
-#> feat          0.2525613  0.7276423
-#> brandhiland  -4.0019537 -3.4235527
-#> brandweight  -0.7465253 -0.5360062
-#> brandyoplait  0.5782960  0.8956858
+#> price        -0.4147937 -0.3183578
+#> feat          0.2525532  0.7273734
+#> brandhiland  -4.0020828 -3.4236696
+#> brandweight  -0.7463170 -0.5360524
+#> brandyoplait  0.5780011  0.8957437
 ```

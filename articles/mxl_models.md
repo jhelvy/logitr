@@ -49,24 +49,35 @@ of 34%, 40%, 23% and 3%, respectively.
 In the utility models described below, the data variables are
 represented as follows:
 
-| Symbol            | Variable                                                                          |
-|-------------------|-----------------------------------------------------------------------------------|
-| $p$               | The price in US dollars.                                                          |
-| $x_{j}^{Feat}$    | Dummy variable for whether the newspaper advertisement was shown to the customer. |
-| $x_{j}^{Hiland}$  | Dummy variable for the “Highland” brand.                                          |
-| $x_{j}^{Weight}$  | Dummy variable for the “Weight Watchers” brand.                                   |
-| $x_{j}^{Yoplait}$ | Dummy variable for the “Yoplait” brand.                                           |
+| Symbol | Variable |
+|----|----|
+| $`p`$ | The price in US dollars. |
+| $`x_{j}^{\mathrm{Feat}}`$ | Dummy variable for whether the newspaper advertisement was shown to the customer. |
+| $`x_{j}^{\mathrm{Hiland}}`$ | Dummy variable for the “Highland” brand. |
+| $`x_{j}^{\mathrm{Weight}}`$ | Dummy variable for the “Weight Watchers” brand. |
+| $`x_{j}^{\mathrm{Yoplait}}`$ | Dummy variable for the “Yoplait” brand. |
 
 ## Preference space model
 
 This example will estimate the following mixed logit model in the
 preference space:
 
-$$u_{j} = \alpha p_{j} + \beta_{1}x_{j}^{Feat} + \beta_{2}x_{j}^{Hiland} + \beta_{3}x_{j}^{Weight} + \beta_{4}x_{j}^{Yoplait} + \varepsilon_{j}$$
+``` math
+\begin{equation}
+    u_{j} =
+        \alpha p_{j} +
+        \beta_1 x_{j}^{\mathrm{Feat}} +
+        \beta_2 x_{j}^{\mathrm{Hiland}} +
+        \beta_3 x_{j}^{\mathrm{Weight}} +
+        \beta_4 x_{j}^{\mathrm{Yoplait}}  +
+        \varepsilon_{j}
+\label{eq:mnlPrefExample}
+\end{equation}
+```
 
-where the parameters $\alpha$, $\beta_{1}$, $\beta_{2}$, $\beta_{3}$,
-and $\beta_{4}$ have units of utility. In the example below, we will
-model $\beta_{1}$, $\beta_{2}$, $\beta_{3}$, and $\beta_{4}$ as
+where the parameters $`\alpha`$, $`\beta_1`$, $`\beta_2`$, $`\beta_3`$,
+and $`\beta_4`$ have units of utility. In the example below, we will
+model $`\beta_1`$, $`\beta_2`$, $`\beta_3`$, and $`\beta_4`$ as
 **normally distributed** across the population. As a result, the model
 will estimate a mean and standard deviation for each of these
 coefficients.
@@ -84,6 +95,7 @@ search for mixed logit models as they are non-convex. This is
 implemented in the example below by setting `numMultiStarts = 10`:
 
 ``` r
+
 library("logitr")
 
 set.seed(456)
@@ -102,12 +114,13 @@ mxl_pref <- logitr(
 Print a summary of the results:
 
 ``` r
+
 summary(mxl_pref)
 #> =================================================
 #> 
-#> Model estimated on: Wed Sep 27 08:37:32 2023 
+#> Model estimated on: Sun Jul 05 18:08:57 2026 
 #> 
-#> Using logitr version: 1.1.1 
+#> Using logitr version: 1.2.0 
 #> 
 #> Call:
 #> logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", 
@@ -120,16 +133,16 @@ summary(mxl_pref)
 #> 
 #> Summary Of Multistart Runs:
 #>    Log Likelihood Iterations Exit Status
-#> 1       -1266.550         34           3
-#> 2       -1300.751         64           3
-#> 3       -1260.216         35           3
-#> 4       -1261.216         43           3
-#> 5       -1269.066         40           3
-#> 6       -1239.294         56           3
-#> 7       -1343.221         59           3
-#> 8       -1260.006         55           3
-#> 9       -1273.143         52           3
-#> 10      -1304.384         59           3
+#> 1       -1248.046         67           3
+#> 2       -1243.548         71           3
+#> 3       -1255.239         83           3
+#> 4       -1244.538         77           3
+#> 5       -1243.951         51           3
+#> 6       -1258.800        100           3
+#> 7       -1247.718         64           3
+#> 8       -1248.251         45           3
+#> 9       -1264.001         90           3
+#> 10      -1248.046         81           3
 #> 
 #> Use statusCodes() to view the meaning of each status code
 #> 
@@ -137,9 +150,9 @@ summary(mxl_pref)
 #>                              
 #> Model Type:       Mixed Logit
 #> Model Space:       Preference
-#> Model Run:            6 of 10
-#> Iterations:                56
-#> Elapsed Time:        0h:0m:1s
+#> Model Run:            2 of 10
+#> Iterations:                71
+#> Elapsed Time:        0h:0m:4s
 #> Algorithm:     NLOPT_LD_LBFGS
 #> Weights Used?:          FALSE
 #> Panel ID:                  id
@@ -147,32 +160,32 @@ summary(mxl_pref)
 #> 
 #> Model Coefficients: 
 #>                  Estimate Std. Error  z-value  Pr(>|z|)    
-#> price           -0.448338   0.039987 -11.2120 < 2.2e-16 ***
-#> feat             0.776990   0.193521   4.0150 5.944e-05 ***
-#> brandhiland     -6.367360   0.520828 -12.2255 < 2.2e-16 ***
-#> brandweight     -3.668683   0.307207 -11.9421 < 2.2e-16 ***
-#> brandyoplait     1.122492   0.203483   5.5164 3.460e-08 ***
-#> sd_feat          0.567495   0.225004   2.5222   0.01166 *  
-#> sd_brandhiland  -3.181844   0.371697  -8.5603 < 2.2e-16 ***
-#> sd_brandweight   4.097130   0.232495  17.6225 < 2.2e-16 ***
-#> sd_brandyoplait  3.261281   0.219902  14.8306 < 2.2e-16 ***
+#> price           -0.457776   0.040953 -11.1782 < 2.2e-16 ***
+#> feat             0.929193   0.238074   3.9030 9.502e-05 ***
+#> brandhiland     -5.383503   0.443125 -12.1490 < 2.2e-16 ***
+#> brandweight     -3.815535   0.413157  -9.2351 < 2.2e-16 ***
+#> brandyoplait     0.761100   0.294605   2.5835  0.009781 ** 
+#> sd_feat          1.273684   0.307993   4.1354 3.543e-05 ***
+#> sd_brandhiland   2.616389   0.342591   7.6371 2.220e-14 ***
+#> sd_brandweight   4.202638   0.340843  12.3301 < 2.2e-16 ***
+#> sd_brandyoplait  3.831498   0.348782  10.9854 < 2.2e-16 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #>                                      
-#> Log-Likelihood:         -1239.2944250
+#> Log-Likelihood:         -1243.5483019
 #> Null Log-Likelihood:    -3343.7419990
-#> AIC:                     2496.5888500
-#> BIC:                     2548.6828000
-#> McFadden R2:                0.6293690
-#> Adj McFadden R2:            0.6266774
+#> AIC:                     2505.0966038
+#> BIC:                     2557.1905000
+#> McFadden R2:                0.6280968
+#> Adj McFadden R2:            0.6254052
 #> Number of Observations:  2412.0000000
 #> 
 #> Summary of 10k Draws for Random Coefficients: 
-#>              Min.    1st Qu.     Median       Mean    3rd Qu. Max.
-#> feat         -Inf  0.3938347  0.7765564  0.7761956  1.1591475  Inf
-#> brandhiland  -Inf -8.5118796 -6.3663393 -6.3644101 -4.2201174  Inf
-#> brandweight  -Inf -6.4342648 -3.6720435 -3.6750045 -0.9090452  Inf
-#> brandyoplait -Inf -1.0817673  1.1169084  1.1141118  3.3162383  Inf
+#>              Min.     1st Qu.     Median       Mean    3rd Qu. Max.
+#> feat         -Inf  0.06924067  0.9282196  0.9274097  1.7869054  Inf
+#> brandhiland  -Inf -7.14915261 -5.3843423 -5.3859286 -3.6200924  Inf
+#> brandweight  -Inf -6.65233541 -3.8189820 -3.8220192 -0.9848315  Inf
+#> brandyoplait -Inf -1.82856130  0.7545405  0.7512548  3.3384107  Inf
 ```
 
 The above summary table prints summaries of the estimated coefficients
@@ -186,18 +199,19 @@ have small and insignificant standard deviation coefficients.
 Compute the WTP implied from the preference space model:
 
 ``` r
+
 wtp_mxl_pref <- wtp(mxl_pref, scalePar =  "price")
 wtp_mxl_pref
-#>                   Estimate Std. Error  z-value  Pr(>|z|)    
-#> scalePar          0.448338   0.039906  11.2347 < 2.2e-16 ***
-#> feat              1.733046   0.500457   3.4629 0.0005343 ***
-#> brandhiland     -14.202148   1.388968 -10.2250 < 2.2e-16 ***
-#> brandweight      -8.182853   0.979963  -8.3502 < 2.2e-16 ***
-#> brandyoplait      2.503674   0.411267   6.0877 1.145e-09 ***
-#> sd_feat           1.265776   0.505747   2.5028 0.0123220 *  
-#> sd_brandhiland   -7.096979   0.958253  -7.4062 1.299e-13 ***
-#> sd_brandweight    9.138487   0.947665   9.6432 < 2.2e-16 ***
-#> sd_brandyoplait   7.274160   0.771684   9.4263 < 2.2e-16 ***
+#>                   Estimate Std. Error z-value  Pr(>|z|)    
+#> scalePar          0.457776   0.041033 11.1563 < 2.2e-16 ***
+#> feat              2.029800   0.588843  3.4471 0.0005666 ***
+#> brandhiland     -11.760136   1.236924 -9.5076 < 2.2e-16 ***
+#> brandweight      -8.334946   1.182873 -7.0464 1.837e-12 ***
+#> brandyoplait      1.662606   0.636660  2.6115 0.0090159 ** 
+#> sd_feat           2.782332   0.718542  3.8722 0.0001079 ***
+#> sd_brandhiland    5.715440   0.893710  6.3952 1.604e-10 ***
+#> sd_brandweight    9.180564   1.133131  8.1019 4.441e-16 ***
+#> sd_brandyoplait   8.369817   0.991508  8.4415 < 2.2e-16 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -207,16 +221,28 @@ wtp_mxl_pref
 This example will estimate the following mixed logit model in the WTP
 space:
 
-$$u_{j} = \lambda\left( \omega_{1}x_{j}^{Feat} + \omega_{2}x_{j}^{Hiland} + \omega_{3}x_{j}^{Weight} + \omega_{4}x_{j}^{Yoplait} - p_{j} \right) + \varepsilon_{j}$$
+``` math
+\begin{equation}
+    u_{j} =
+        \lambda (
+        \omega_1 x_{j}^{\mathrm{Feat}} +
+        \omega_2 x_{j}^{\mathrm{Hiland}} +
+        \omega_3 x_{j}^{\mathrm{Weight}} +
+        \omega_4 x_{j}^{\mathrm{Yoplait}} -
+        p_{j})  +
+        \varepsilon_{j}
+\label{eq:mnlWtpExample}
+\end{equation}
+```
 
-where the parameters $\omega_{1}$, $\omega_{2}$, $\omega_{3}$, and
-$\omega_{4}$ have units of dollars and $\lambda$ is the scale parameter.
-In the example below, we will model $\omega_{1}$, $\omega_{2}$,
-$\omega_{3}$, and $\omega_{4}$ as normally distributed across the
-population. Note that this is a slightly different assumption than in
-the preference space model. In the WTP space, we are assuming that the
-WTP for these features is normally-distributed (as opposed to the
-preference space model where the utility coefficients are assumed to
+where the parameters $`\omega_1`$, $`\omega_2`$, $`\omega_3`$, and
+$`\omega_4`$ have units of dollars and $`\lambda`$ is the scale
+parameter. In the example below, we will model $`\omega_1`$,
+$`\omega_2`$, $`\omega_3`$, and $`\omega_4`$ as normally distributed
+across the population. Note that this is a slightly different assumption
+than in the preference space model. In the WTP space, we are assuming
+that the WTP for these features is normally-distributed (as opposed to
+the preference space model where the utility coefficients are assumed to
 follow a normal distribution).
 
 In the example below, we also use a 10-iteration multistart. We also set
@@ -224,6 +250,7 @@ the starting values for the first iteration to the computed WTP from the
 preference space model:
 
 ``` r
+
 set.seed(6789)
 
 mxl_wtp <- logitr(
@@ -242,12 +269,13 @@ mxl_wtp <- logitr(
 Print a summary of the results:
 
 ``` r
+
 summary(mxl_wtp)
 #> =================================================
 #> 
-#> Model estimated on: Wed Sep 27 08:37:40 2023 
+#> Model estimated on: Sun Jul 05 18:09:24 2026 
 #> 
-#> Using logitr version: 1.1.1 
+#> Using logitr version: 1.2.0 
 #> 
 #> Call:
 #> logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("feat", 
@@ -261,16 +289,16 @@ summary(mxl_wtp)
 #> 
 #> Summary Of Multistart Runs:
 #>    Log Likelihood Iterations Exit Status
-#> 1       -1239.294        110           3
-#> 2       -1252.536         76           3
-#> 3       -1258.974         87           3
-#> 4       -1342.088        110           4
-#> 5       -1250.922        111           3
-#> 6       -1266.990         66           3
-#> 7       -1268.352         81           3
-#> 8       -1239.294         76           3
-#> 9       -1258.974         60           3
-#> 10      -1239.294         51           3
+#> 1       -1246.833        110           3
+#> 2       -1244.825         99           3
+#> 3       -1244.825        120           3
+#> 4       -1334.249        125           4
+#> 5       -1249.908         77           3
+#> 6       -1241.157         98           3
+#> 7       -1263.064         69           3
+#> 8       -1246.285         72           3
+#> 9       -1244.804         62           4
+#> 10      -1249.378         58           4
 #> 
 #> Use statusCodes() to view the meaning of each status code
 #> 
@@ -278,42 +306,42 @@ summary(mxl_wtp)
 #>                                  
 #> Model Type:           Mixed Logit
 #> Model Space:   Willingness-to-Pay
-#> Model Run:                8 of 10
-#> Iterations:                    76
-#> Elapsed Time:            0h:0m:2s
+#> Model Run:                6 of 10
+#> Iterations:                    98
+#> Elapsed Time:            0h:0m:6s
 #> Algorithm:         NLOPT_LD_LBFGS
 #> Weights Used?:              FALSE
 #> Panel ID:                      id
 #> Robust?                     FALSE
 #> 
 #> Model Coefficients: 
-#>                   Estimate Std. Error  z-value  Pr(>|z|)    
-#> scalePar          0.448664   0.040011  11.2136 < 2.2e-16 ***
-#> feat              1.731594   0.491861   3.5205 0.0004307 ***
-#> brandhiland     -14.223131   1.365740 -10.4142 < 2.2e-16 ***
-#> brandweight      -8.170605   0.955887  -8.5477 < 2.2e-16 ***
-#> brandyoplait      2.504170   0.407198   6.1498 7.760e-10 ***
-#> sd_feat           1.266643   0.497394   2.5466 0.0108791 *  
-#> sd_brandhiland   -7.114238   0.944440  -7.5328 4.974e-14 ***
-#> sd_brandweight    9.129315   0.923604   9.8845 < 2.2e-16 ***
-#> sd_brandyoplait   7.269364   0.752767   9.6569 < 2.2e-16 ***
+#>                   Estimate Std. Error z-value  Pr(>|z|)    
+#> scalePar          0.464716   0.040661 11.4292 < 2.2e-16 ***
+#> feat              2.079322   0.571312  3.6396 0.0002731 ***
+#> brandhiland     -11.946512   1.327983 -8.9960 < 2.2e-16 ***
+#> brandweight      -5.391393   0.983317 -5.4829 4.185e-08 ***
+#> brandyoplait      1.367973   0.599257  2.2828 0.0224433 *  
+#> sd_feat           2.262513   0.738698  3.0628 0.0021925 ** 
+#> sd_brandhiland    6.434834   1.040557  6.1840 6.249e-10 ***
+#> sd_brandweight    9.015792   1.047257  8.6090 < 2.2e-16 ***
+#> sd_brandyoplait   7.573298   0.848558  8.9249 < 2.2e-16 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #>                                      
-#> Log-Likelihood:         -1239.2939753
+#> Log-Likelihood:         -1241.1567812
 #> Null Log-Likelihood:    -3343.7419990
-#> AIC:                     2496.5879505
-#> BIC:                     2548.6819000
-#> McFadden R2:                0.6293691
-#> Adj McFadden R2:            0.6266775
+#> AIC:                     2500.3135624
+#> BIC:                     2552.4075000
+#> McFadden R2:                0.6288120
+#> Adj McFadden R2:            0.6261204
 #> Number of Observations:  2412.0000000
 #> 
 #> Summary of 10k Draws for Random Coefficients: 
-#>              Min.     1st Qu.     Median       Mean   3rd Qu. Max.
-#> feat         -Inf   0.8763949   1.730626   1.729820  2.584565  Inf
-#> brandhiland  -Inf -19.0180303 -14.220849 -14.216535 -9.422143  Inf
-#> brandweight  -Inf -14.3329366  -8.178094  -8.184692 -2.021520  Inf
-#> brandyoplait -Inf  -2.4091027   2.491724   2.485490  7.394009  Inf
+#>              Min.     1st Qu.     Median       Mean    3rd Qu. Max.
+#> feat         -Inf   0.5517428   2.077593   2.076155  3.6029233  Inf
+#> brandhiland  -Inf -16.2890100 -11.948576 -11.952478 -7.6095213  Inf
+#> brandweight  -Inf -11.4770963  -5.398789  -5.405305  0.6812284  Inf
+#> brandyoplait -Inf  -3.7507247   1.355007   1.348513  6.4622575  Inf
 ```
 
 If you want to compare the WTP from the two different model spaces, use
@@ -322,18 +350,19 @@ the
 function:
 
 ``` r
+
 wtpCompare(mxl_pref, mxl_wtp, scalePar = 'price')
 #>                          pref           wtp  difference
-#> scalePar            0.4483378     0.4486637  0.00032586
-#> feat                1.7330459     1.7315938 -0.00145218
-#> brandhiland       -14.2021477   -14.2231313 -0.02098355
-#> brandweight        -8.1828533    -8.1706054  0.01224797
-#> brandyoplait        2.5036744     2.5041696  0.00049521
-#> sd_feat             1.2657757     1.2666434  0.00086772
-#> sd_brandhiland     -7.0969786    -7.1142376 -0.01725899
-#> sd_brandweight      9.1384874     9.1293151 -0.00917230
-#> sd_brandyoplait     7.2741604     7.2693641 -0.00479629
-#> logLik          -1239.2944250 -1239.2939753  0.00044974
+#> scalePar            0.4577756     0.4647159  0.00694028
+#> feat                2.0298000     2.0793223  0.04952227
+#> brandhiland       -11.7601355   -11.9465118 -0.18637631
+#> brandweight        -8.3349459    -5.3913935  2.94355241
+#> brandyoplait        1.6626055     1.3679729 -0.29463267
+#> sd_feat             2.7823319     2.2625130 -0.51981897
+#> sd_brandhiland      5.7154403     6.4348345  0.71939421
+#> sd_brandweight      9.1805643     9.0157924 -0.16477188
+#> sd_brandyoplait     8.3698173     7.5732983 -0.79651898
+#> logLik          -1243.5483019 -1241.1567812  2.39152071
 ```
 
 Note that the WTP will not necessarily be the same between preference
@@ -351,6 +380,7 @@ WTP). The example below shows the results for the same mixed logit model
 in the preference space as above but now with correlated heterogeneity:
 
 ``` r
+
 library("logitr")
 
 set.seed(456)
@@ -370,12 +400,13 @@ mxl_pref_cor <- logitr(
 Print a summary of the results:
 
 ``` r
+
 summary(mxl_pref_cor)
 #> =================================================
 #> 
-#> Model estimated on: Wed Sep 27 08:38:25 2023 
+#> Model estimated on: Sun Jul 05 18:09:53 2026 
 #> 
-#> Using logitr version: 1.1.1 
+#> Using logitr version: 1.2.0 
 #> 
 #> Call:
 #> logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", 
@@ -389,16 +420,16 @@ summary(mxl_pref_cor)
 #> 
 #> Summary Of Multistart Runs:
 #>    Log Likelihood Iterations Exit Status
-#> 1       -1249.587         47           3
-#> 2       -1254.922         52           3
-#> 3       -1237.322         50           3
-#> 4       -1279.337         59           3
-#> 5       -1232.389        127           3
-#> 6       -1237.453         63           3
-#> 7       -1237.589         59           3
-#> 8       -1249.725         61           3
-#> 9       -1254.679         95           3
-#> 10      -1240.966         67           3
+#> 1       -1227.864        197           3
+#> 2       -1227.964        121           3
+#> 3       -1238.288         94           3
+#> 4       -1227.964         73           3
+#> 5       -1231.202        213           3
+#> 6       -1232.829         84           3
+#> 7       -1229.124        150           3
+#> 8       -1232.829        110           3
+#> 9       -1231.500        191           3
+#> 10      -2843.772          5          -1
 #> 
 #> Use statusCodes() to view the meaning of each status code
 #> 
@@ -406,48 +437,48 @@ summary(mxl_pref_cor)
 #>                              
 #> Model Type:       Mixed Logit
 #> Model Space:       Preference
-#> Model Run:            5 of 10
-#> Iterations:               127
-#> Elapsed Time:        0h:0m:4s
+#> Model Run:            1 of 10
+#> Iterations:               197
+#> Elapsed Time:       0h:0m:12s
 #> Algorithm:     NLOPT_LD_LBFGS
 #> Weights Used?:          FALSE
 #> Panel ID:                  id
 #> Robust?                 FALSE
 #> 
 #> Model Coefficients: 
-#>                               Estimate Std. Error  z-value  Pr(>|z|)    
-#> price                        -0.446859   0.038377 -11.6440 < 2.2e-16 ***
-#> feat                          0.713972   0.229704   3.1082  0.001882 ** 
-#> brandhiland                  -4.169377   0.443153  -9.4084 < 2.2e-16 ***
-#> brandweight                  -2.066697   0.413684  -4.9958 5.858e-07 ***
-#> brandyoplait                  1.922103   0.204530   9.3977 < 2.2e-16 ***
-#> sd_feat_feat                 -0.178998   0.265060  -0.6753  0.499478    
-#> sd_feat_brandhiland          -0.147720   0.214734  -0.6879  0.491502    
-#> sd_feat_brandweight           0.286440   0.211904   1.3517  0.176457    
-#> sd_feat_brandyoplait         -0.193657   0.285656  -0.6779  0.497810    
-#> sd_brandhiland_brandhiland   -1.575305   0.230179  -6.8438 7.710e-12 ***
-#> sd_brandhiland_brandweight    0.195483   0.281263   0.6950  0.487043    
-#> sd_brandhiland_brandyoplait   1.049736   0.313859   3.3446  0.000824 ***
-#> sd_brandweight_brandweight    3.765293   0.372558  10.1066 < 2.2e-16 ***
-#> sd_brandweight_brandyoplait   2.231668   0.282024   7.9130 2.442e-15 ***
-#> sd_brandyoplait_brandyoplait  3.383901   0.279962  12.0870 < 2.2e-16 ***
+#>                              Estimate Std. Error  z-value  Pr(>|z|)    
+#> price                        -0.45460    0.04113 -11.0529 < 2.2e-16 ***
+#> feat                          0.78333    0.25250   3.1023  0.001921 ** 
+#> brandhiland                  -4.40630    0.55458  -7.9453 1.998e-15 ***
+#> brandweight                  -2.44482    0.40938  -5.9720 2.343e-09 ***
+#> brandyoplait                  1.05303    0.32318   3.2584  0.001121 ** 
+#> sd_feat_feat                 -0.82442    0.39246  -2.1007  0.035670 *  
+#> sd_feat_brandhiland           0.17173    0.26924   0.6379  0.523570    
+#> sd_feat_brandweight           0.33876    0.28152   1.2033  0.228853    
+#> sd_feat_brandyoplait          0.31532    0.42992   0.7334  0.463287    
+#> sd_brandhiland_brandhiland    2.09825    0.41020   5.1152 3.134e-07 ***
+#> sd_brandhiland_brandweight    0.58195    0.47574   1.2232  0.221236    
+#> sd_brandhiland_brandyoplait   1.43149    0.46535   3.0762  0.002097 ** 
+#> sd_brandweight_brandweight    3.67902    0.39489   9.3167 < 2.2e-16 ***
+#> sd_brandweight_brandyoplait   2.60251    0.34367   7.5727 3.664e-14 ***
+#> sd_brandyoplait_brandyoplait  3.74815    0.33568  11.1659 < 2.2e-16 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #>                                      
-#> Log-Likelihood:         -1232.3887491
+#> Log-Likelihood:         -1227.8641286
 #> Null Log-Likelihood:    -3343.7419990
-#> AIC:                     2494.7774983
-#> BIC:                     2581.6007000
-#> McFadden R2:                0.6314343
-#> Adj McFadden R2:            0.6269483
+#> AIC:                     2485.7282572
+#> BIC:                     2572.5514000
+#> McFadden R2:                0.6327874
+#> Adj McFadden R2:            0.6283014
 #> Number of Observations:  2412.0000000
 #> 
 #> Summary of 10k Draws for Random Coefficients: 
-#>              Min.    1st Qu.     Median       Mean    3rd Qu. Max.
-#> feat         -Inf  0.4329790  0.7138166  0.7144151  0.9944701  Inf
-#> brandhiland  -Inf -5.4575869 -4.1609015 -4.1709150 -2.8929016  Inf
-#> brandweight  -Inf -5.0015992 -2.0555055 -2.0782411  0.8907911  Inf
-#> brandyoplait -Inf -0.3650334  1.9163092  1.9134074  4.1983305  Inf
+#>              Min.    1st Qu.    Median       Mean    3rd Qu. Max.
+#> feat         -Inf  0.1333079  0.789591  0.7829895  1.4336861  Inf
+#> brandhiland  -Inf -6.1735514 -4.400532 -4.4128234 -2.6565848  Inf
+#> brandweight  -Inf -5.4889374 -2.468849 -2.4571845  0.5893883  Inf
+#> brandyoplait -Inf -1.4803021  1.046608  1.0433935  3.5742692  Inf
 ```
 
 ## References
@@ -465,5 +496,5 @@ distributions of willingness-to-pay in choice models.” *Quant. Mark.
 Econ.* 5 (3): 313–31. <https://doi.org/10.1007/s11129-007-9024-6>.
 
 Train, Kenneth E., and Melvyn Weeks. 2005. “Discrete Choice Models in
-Preference and Willingness-to-Pay Space.” In *Appl. Simul. Methods
-Environ. Resour. Econ.*, 1–16.
+Preference and Willingness-to-Pay Space.” Chap. 1 in *Appl. Simul.
+Methods Environ. Resour. Econ.*

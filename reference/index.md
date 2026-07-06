@@ -112,6 +112,11 @@ Descriptions of data included with this package
   mlogit package)
 - [`runtimes`](https://jhelvy.github.io/logitr/reference/runtimes.md) :
   Data frame of run times for logitr benchmark
+- [`runtimes_draws`](https://jhelvy.github.io/logitr/reference/runtimes_draws.md)
+  : Data frame of logitr run times as the number of draws grows
+- [`loglik_draws`](https://jhelvy.github.io/logitr/reference/loglik_draws.md)
+  : Data frame of mixed logit log-likelihoods as the number of draws
+  grows
 
 ## Other Helpers
 

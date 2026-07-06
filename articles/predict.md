@@ -26,6 +26,7 @@ In the example below, a preference space MNL model is estimated
 estimate the model:
 
 ``` r
+
 library("logitr")
 
 mnl_pref <- logitr(
@@ -38,12 +39,12 @@ mnl_pref <- logitr(
 probs <- predict(mnl_pref)
 head(probs)
 #>   obsID predicted_prob
-#> 1     1     0.41802407
-#> 2     1     0.02118240
-#> 3     1     0.23691737
-#> 4     1     0.32387615
-#> 5     2     0.26643822
-#> 6     2     0.02255486
+#> 1     1     0.41803252
+#> 2     1     0.02118149
+#> 3     1     0.23691269
+#> 4     1     0.32387330
+#> 5     2     0.26643413
+#> 6     2     0.02255403
 ```
 
 The [`predict()`](https://rdrr.io/r/stats/predict.html) method returns a
@@ -52,15 +53,16 @@ probabilities. The original data can also be returned in the data frame
 by setting `returnData = TRUE`:
 
 ``` r
+
 probs <- predict(mnl_pref, returnData = TRUE)
 head(probs)
 #>   obsID predicted_prob price feat brandhiland brandweight brandyoplait choice
-#> 1     1     0.41802407   8.1    0           0           0            0      0
-#> 2     1     0.02118240   6.1    0           1           0            0      0
-#> 3     1     0.23691737   7.9    0           0           1            0      1
-#> 4     1     0.32387615  10.8    0           0           0            1      0
-#> 5     2     0.26643822   9.8    0           0           0            0      1
-#> 6     2     0.02255486   6.4    0           1           0            0      0
+#> 1     1     0.41803252   8.1    0           0           0            0      0
+#> 2     1     0.02118149   6.1    0           1           0            0      0
+#> 3     1     0.23691269   7.9    0           0           1            0      1
+#> 4     1     0.32387330  10.8    0           0           0            1      0
+#> 5     2     0.26643413   9.8    0           0           0            0      1
+#> 6     2     0.02255403   6.4    0           1           0            0      0
 ```
 
 To make predictions for a new set of alternatives, use the `newdata`
@@ -68,6 +70,7 @@ argument. The example below makes predictions for just two of the choice
 observations from the `yogurt` dataset:
 
 ``` r
+
 data <- subset(
   yogurt, obsID %in% c(42, 13),
   select = c('obsID', 'alt', 'price', 'feat', 'brand'))
@@ -80,14 +83,14 @@ probs_mnl_pref <- predict(
 
 probs_mnl_pref
 #>     obsID predicted_prob
-#> 49     13     0.43685145
-#> 50     13     0.03312986
-#> 51     13     0.19155548
-#> 52     13     0.33846321
-#> 165    42     0.60764778
-#> 166    42     0.02602007
-#> 167    42     0.17803313
-#> 168    42     0.18829902
+#> 49     13     0.43686128
+#> 50     13     0.03312961
+#> 51     13     0.19154812
+#> 52     13     0.33846099
+#> 165    42     0.60767175
+#> 166    42     0.02601791
+#> 167    42     0.17802345
+#> 168    42     0.18828690
 ```
 
 Upper and lower bounds of a confidence interval for predicted
@@ -98,6 +101,7 @@ bootstrapping method (Krinsky and Robb 1986). For example, a 95% CI is
 obtained with the following:
 
 ``` r
+
 probs_mnl_pref <- predict(
   mnl_pref,
   newdata = data,
@@ -108,14 +112,14 @@ probs_mnl_pref <- predict(
 
 probs_mnl_pref
 #>     obsID predicted_prob predicted_prob_lower predicted_prob_upper
-#> 49     13     0.43685145           0.41531882           0.45781528
-#> 50     13     0.03312986           0.02641062           0.04145166
-#> 51     13     0.19155548           0.17631579           0.20767134
-#> 52     13     0.33846321           0.31843584           0.35880858
-#> 165    42     0.60764778           0.57215830           0.64005061
-#> 166    42     0.02602007           0.01839510           0.03687359
-#> 167    42     0.17803313           0.16214868           0.19488167
-#> 168    42     0.18829902           0.16837249           0.20967085
+#> 49     13     0.43686128           0.41532842           0.45782538
+#> 50     13     0.03312961           0.02641044           0.04145146
+#> 51     13     0.19154812           0.17630881           0.20766367
+#> 52     13     0.33846099           0.31843344           0.35880672
+#> 165    42     0.60767175           0.57218170           0.64007455
+#> 166    42     0.02601791           0.01839350           0.03687070
+#> 167    42     0.17802345           0.16213904           0.19487185
+#> 168    42     0.18828690           0.16836057           0.20965772
 ```
 
 ### WTP space models
@@ -126,6 +130,7 @@ probabilities for the same `data` data frame as in the previous
 examples:
 
 ``` r
+
 mnl_wtp <- logitr(
   data     = yogurt,
   outcome  = 'choice',
@@ -144,14 +149,14 @@ probs_mnl_wtp <- predict(
 
 probs_mnl_wtp
 #>     obsID predicted_prob predicted_prob_lower predicted_prob_upper
-#> 49     13     0.43686141           0.41551327           0.45747039
-#> 50     13     0.03312947           0.02641714           0.04231684
-#> 51     13     0.19154829           0.17587927           0.20730602
-#> 52     13     0.33846083           0.31857077           0.35854611
-#> 165    42     0.60767120           0.57326014           0.63983775
-#> 166    42     0.02601800           0.01853595           0.03664343
-#> 167    42     0.17802364           0.16178241           0.19419803
-#> 168    42     0.18828717           0.16779266           0.20839887
+#> 49     13     0.43686128           0.41551314           0.45747027
+#> 50     13     0.03312961           0.02641727           0.04231699
+#> 51     13     0.19154812           0.17587911           0.20730584
+#> 52     13     0.33846099           0.31857092           0.35854627
+#> 165    42     0.60767175           0.57326079           0.63983823
+#> 166    42     0.02601791           0.01853589           0.03664329
+#> 167    42     0.17802345           0.16178223           0.19419782
+#> 168    42     0.18828690           0.16779606           0.20839858
 ```
 
 Here is a bar chart comparing the predicted probabilities from the
@@ -159,6 +164,7 @@ preference space and WTP space models. Since both models are equivalent
 except in different spaces, the predicted probabilities are identical:
 
 ``` r
+
 library("ggplot2")
 
 probs <- rbind(probs_mnl_pref, probs_mnl_wtp)
@@ -188,6 +194,7 @@ set to `TRUE` so that the predicted outcomes can be compared to the
 actual choices made:
 
 ``` r
+
 outcomes_pref <- predict(
     mnl_pref, 
     type = "outcome", 
@@ -198,8 +205,8 @@ head(outcomes_pref)
 #>   obsID predicted_outcome price feat brandhiland brandweight brandyoplait
 #> 1     1                 0   8.1    0           0           0            0
 #> 2     1                 0   6.1    0           1           0            0
-#> 3     1                 1   7.9    0           0           1            0
-#> 4     1                 0  10.8    0           0           0            1
+#> 3     1                 0   7.9    0           0           1            0
+#> 4     1                 1  10.8    0           0           0            1
 #> 5     2                 1   9.8    0           0           0            0
 #> 6     2                 0   6.4    0           1           0            0
 #>   choice
@@ -222,7 +229,7 @@ head(outcomes_wtp)
 #> 2     1                 0    0           1           0            0      6.1
 #> 3     1                 0    0           0           1            0      7.9
 #> 4     1                 0    0           0           0            1     10.8
-#> 5     2                 1    0           0           0            0      9.8
+#> 5     2                 0    0           0           0            0      9.8
 #> 6     2                 0    0           1           0            0      6.4
 #>   choice
 #> 1      0
@@ -237,21 +244,22 @@ The accuracy of each model can be computed by dividing the number of
 correctly predicted choices by the total number of choices:
 
 ``` r
+
 chosen_pref <- subset(outcomes_pref, choice == 1)
 chosen_pref$correct <- chosen_pref$choice == chosen_pref$predicted_outcome
 accuracy_pref <- sum(chosen_pref$correct) / nrow(chosen_pref)
 accuracy_pref
-#> [1] 0.3909619
+#> [1] 0.3793532
 
 chosen_wtp <- subset(outcomes_wtp, choice == 1)
 chosen_wtp$correct <- chosen_wtp$choice == chosen_wtp$predicted_outcome
 accuracy_wtp <- sum(chosen_wtp$correct) / nrow(chosen_wtp)
 accuracy_wtp
-#> [1] 0.356136
+#> [1] 0.3727197
 ```
 
 These results show that both models correctly predicted choice for
-approximately 39% of the observations in the `yogurt` data frame, which
+approximately 38% of the observations in the `yogurt` data frame, which
 is significantly better than random (25%).
 
 ## References

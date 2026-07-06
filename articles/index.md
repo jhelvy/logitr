@@ -2,6 +2,8 @@
 
 ### All vignettes
 
+- [Faster Estimation: Backends, Threads, and Large
+  Draws](https://jhelvy.github.io/logitr/articles/backends.md):
 - [Basic
   Usage](https://jhelvy.github.io/logitr/articles/basic_usage.md):
 - [Benchmarking estimation speed against other

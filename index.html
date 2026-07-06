@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="favicon.ico">
 <link rel="manifest" href="site.webmanifest">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Random utility logit models with preference and willingness to pay space parameterizations">
 <meta name="description" content='logitr estimates multinomial (MNL) and mixed logit (MXL) models in R. Models can be estimated using "Preference" space or "Willingness-to-pay" (WTP) space utility parameterizations.'>
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">logitr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,6 +48,7 @@
     <li><a class="dropdown-item" href="articles/data_formatting.html">Data Formatting and Encoding</a></li>
     <li><a class="dropdown-item" href="articles/mnl_models.html">Estimating Multinomial Logit Models</a></li>
     <li><a class="dropdown-item" href="articles/mxl_models.html">Estimating Mixed Logit Models</a></li>
+    <li><a class="dropdown-item" href="articles/backends.html">Faster Estimation: Backends, Threads, and Large Draws</a></li>
     <li><a class="dropdown-item" href="articles/interactions.html">Estimating Models with Interactions</a></li>
     <li><a class="dropdown-item" href="articles/mnl_models_weighted.html">Estimating Weighted Logit Models</a></li>
     <li><a class="dropdown-item" href="articles/predict.html">Predicting Probabilities and Outcomes with Estimated Models</a></li>
@@ -89,8 +90,17 @@
 <li>Functions for computing WTP from preference space models.</li>
 <li>Functions for predicting expected probabilities and outcomes for sets of alternatives based on an estimated model.</li>
 <li>A parallelized multistart optimization loop that uses different random starting points in each iteration to search for different local minima (useful for non-convex problems like MXL models or models with WTP space parameterizations).</li>
+<li>A compiled C++ backend (default for MXL models) with multithreaded evaluation of the simulated log-likelihood for a substantial speed boost over the native R implementation.</li>
+<li>Draw-batched streaming to bound peak memory usage for MXL models with large numbers of draws.</li>
 </ul>
 <p>Mixed logit models are estimated using maximum simulated likelihood based on the algorithms in Kenneth Train’s book <a href="https://eml.berkeley.edu/books/choice2.html" class="external-link"><em>Discrete Choice Methods with Simulation, 2nd Edition (New York: Cambridge University Press, 2009)</em></a>.</p>
+<div class="section level2">
+<h2 id="logitr-is-fast">logitr is fast!<a class="anchor" aria-label="anchor" href="#logitr-is-fast"></a>
+</h2>
+<p><strong>logitr</strong> includes a compiled C++ backend for mixed logit models with multithreaded evaluation, making it dramatically faster than other logit packages in R:</p>
+<p><img src="articles/benchmark.png" alt="" width="100%"></p>
+<p>See the <a href="https://jhelvy.github.io/logitr/articles/benchmark.html">benchmarks</a> article for details.</p>
+</div>
 <div class="section level2">
 <h2 id="basic-usage">Basic Usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
 </h2>
@@ -111,6 +121,16 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"jhelvy/logitr"</span><span class="op">)</span></span></code></pre></div>
+<p>Because {logitr} includes compiled C++ code, installing the development version from GitHub builds from source and therefore requires a C++ compiler toolchain:</p>
+<ul>
+<li>
+<strong>Windows</strong>: install <a href="https://cran.r-project.org/bin/windows/Rtools/" class="external-link">Rtools</a> (matched to your R version).</li>
+<li>
+<strong>macOS</strong>: install the Xcode Command Line Tools by running <code>xcode-select --install</code> in a terminal.</li>
+<li>
+<strong>Linux</strong>: a compiler is normally already present (e.g. <code>r-base-dev</code> / <code>build-essential</code>).</li>
+</ul>
+<p>You can check whether your system is ready to build packages with <code><a href="https://pkgbuild.r-lib.org/reference/has_build_tools.html" class="external-link">pkgbuild::check_build_tools()</a></code>. Installing the released version from CRAN (above) does <strong>not</strong> require a compiler, since CRAN provides pre-built binaries for Windows and macOS.</p>
 <p>Load the library with:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhelvy/logitr" class="external-link">logitr</a></span><span class="op">)</span></span></code></pre></div>

@@ -57,7 +57,7 @@ tidy(mnl_pref)
 #>   term         estimate std.error statistic   p.value
 #>   <chr>           <dbl>     <dbl>     <dbl>     <dbl>
 #> 1 price          -0.367    0.0244    -15.0  0        
-#> 2 feat            0.491    0.120       4.09 0.0000425
+#> 2 feat            0.491    0.120       4.09 0.0000426
 #> 3 brandhiland    -3.72     0.145     -25.6  0        
 #> 4 brandweight    -0.641    0.0545    -11.8  0        
 #> 5 brandyoplait    0.735    0.0806      9.11 0        
@@ -69,7 +69,7 @@ tidy(mnl_pref, conf.int = TRUE)
 #>   <chr>           <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl>
 #> 1 brandhiland    -3.72     0.145     -25.6  0           -4.00     -3.43 
 #> 2 brandweight    -0.641    0.0545    -11.8  0           -0.749    -0.534
-#> 3 brandyoplait    0.735    0.0806      9.11 0            0.578     0.891
-#> 4 feat            0.491    0.120       4.09 0.0000425    0.261     0.725
+#> 3 brandyoplait    0.735    0.0806      9.11 0            0.577     0.891
+#> 4 feat            0.491    0.120       4.09 0.0000426    0.260     0.725
 #> 5 price          -0.367    0.0244    -15.0  0           -0.414    -0.319
 ```
