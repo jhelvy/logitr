@@ -39,7 +39,7 @@ The model now has an estimated coefficient for the `price*feat` effect:
 summary(model_price_feat)
 #> =================================================
 #> 
-#> Model estimated on: Mon Jul 06 10:20:28 2026 
+#> Model estimated on: Mon Jul 06 10:54:04 2026 
 #> 
 #> Using logitr version: 1.2.0 
 #> 
@@ -111,7 +111,7 @@ effect:
 summary(model_price_brand)
 #> =================================================
 #> 
-#> Model estimated on: Mon Jul 06 10:20:28 2026 
+#> Model estimated on: Mon Jul 06 10:54:04 2026 
 #> 
 #> Using logitr version: 1.2.0 
 #> 
@@ -209,7 +209,7 @@ The model now has attribute coefficients for `price`, `feat`, and
 summary(model_price_group)
 #> =================================================
 #> 
-#> Model estimated on: Mon Jul 06 10:20:29 2026 
+#> Model estimated on: Mon Jul 06 10:54:05 2026 
 #> 
 #> Using logitr version: 1.2.0 
 #> 
@@ -280,7 +280,7 @@ interaction in the *mean* `feat` parameter and `price`:
 summary(model_price_feat_mxl)
 #> =================================================
 #> 
-#> Model estimated on: Mon Jul 06 10:20:29 2026 
+#> Model estimated on: Mon Jul 06 10:54:05 2026 
 #> 
 #> Using logitr version: 1.2.0 
 #> 

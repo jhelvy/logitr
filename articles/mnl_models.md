@@ -73,7 +73,7 @@ Print a summary of the results:
 summary(mnl_pref)
 #> =================================================
 #> 
-#> Model estimated on: Mon Jul 06 10:20:41 2026 
+#> Model estimated on: Mon Jul 06 10:54:17 2026 
 #> 
 #> Using logitr version: 1.2.0 
 #> 
@@ -190,7 +190,7 @@ Print a summary of the results:
 summary(mnl_wtp)
 #> =================================================
 #> 
-#> Model estimated on: Mon Jul 06 10:20:42 2026 
+#> Model estimated on: Mon Jul 06 10:54:18 2026 
 #> 
 #> Using logitr version: 1.2.0 
 #> 
@@ -224,7 +224,7 @@ summary(mnl_wtp)
 #> Model Space:   Willingness-to-Pay
 #> Model Run:                3 of 10
 #> Iterations:                    40
-#> Elapsed Time:         0h:0m:0.13s
+#> Elapsed Time:         0h:0m:0.09s
 #> Algorithm:         NLOPT_LD_LBFGS
 #> Weights Used?:              FALSE
 #> Robust?                     FALSE

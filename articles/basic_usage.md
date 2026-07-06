@@ -197,7 +197,7 @@ print a summary of the results from an estimated model, e.g.
 summary(mnl_pref)
 #> =================================================
 #> 
-#> Model estimated on: Mon Jul 06 10:20:04 2026 
+#> Model estimated on: Mon Jul 06 10:53:40 2026 
 #> 
 #> Using logitr version: 1.2.0 
 #> 
