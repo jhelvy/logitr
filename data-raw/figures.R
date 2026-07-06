@@ -108,7 +108,6 @@ benchmark <- runtimes %>%
   )
 
 ggsave("vignettes/benchmark.png", benchmark, width = 9, height = 5.5, dpi = 300)
-cat("Saved vignettes/benchmark.png\n")
 
 # ---- Figure 2: logitr-only large-draw scaling (benchmark_draws.png) --------
 
@@ -150,12 +149,16 @@ ggsave(
   height = 5.5,
   dpi = 300
 )
-cat("Saved vignettes/benchmark_draws.png\n")
 
 # ---- Figure 3: logLik stability across seeds (benchmark_loglik.png) --------
 
 loglik_plot <- loglik_draws %>%
   ggplot(aes(x = numDraws, y = logLik)) +
+  geom_vline(
+    xintercept = c(50, 500),
+    linetype = 'dashed',
+    color = 'gray'
+  ) +
   geom_point(color = "#4DAF4A", alpha = 0.6, size = 1.8) +
   stat_summary(fun = mean, geom = "line", color = "#4DAF4A") +
   scale_x_log10(
@@ -164,20 +167,40 @@ loglik_plot <- loglik_draws %>%
   ) +
   annotate(
     "curve",
-    x = 1400,
-    y = -741.5,
-    xend = 530,
-    yend = -735,
-    curvature = -0.25,
+    x = 800,
+    y = -1335,
+    xend = 520,
+    yend = -1345,
+    curvature = -0.3,
     linewidth = 0.4,
     color = "grey30",
     arrow = arrow(length = unit(0.02, "npc"))
   ) +
   annotate(
     "text",
-    x = 2400,
-    y = -742,
+    x = 850,
+    y = -1330,
     label = "logitr's new default\n(numDraws = 500)",
+    size = 4.5,
+    color = "grey30",
+    lineheight = 0.95
+  ) +
+  annotate(
+    "curve",
+    x = 80,
+    y = -1335,
+    xend = 52,
+    yend = -1345,
+    curvature = -0.3,
+    linewidth = 0.4,
+    color = "grey30",
+    arrow = arrow(length = unit(0.02, "npc"))
+  ) +
+  annotate(
+    "text",
+    x = 83,
+    y = -1330,
+    label = "logitr's old default\n(numDraws = 50)",
     size = 4.5,
     color = "grey30",
     lineheight = 0.95
@@ -196,4 +219,3 @@ ggsave(
   height = 5.5,
   dpi = 300
 )
-cat("Saved vignettes/benchmark_loglik.png\n")

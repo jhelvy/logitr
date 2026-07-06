@@ -54,7 +54,7 @@ model <- logitr(
 The `"cpp"` backend supports all mixed logit model types: preference and
 willingness-to-pay (WTP) space, uncorrelated and correlated heterogeneity, and
 normal (`"n"`), log-normal (`"ln"`), and censored-normal (`"cn"`) parameter
-distributions. It is typically about 3-4 times faster than the native R
+distributions. It is typically about 4 times faster than the native R
 implementation.
 
 To use the native R implementation instead, set `backend = "cpu"`. It returns

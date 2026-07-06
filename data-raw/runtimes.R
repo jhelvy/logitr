@@ -504,6 +504,8 @@ print(as.data.frame(runtimes_draws))
 # Part 3: Log-likelihood stability across seeds (`loglik_draws`)
 # ============================================================================
 
+set.seed(5678)
+
 # Every run in the sweep starts from the same good starting point, obtained
 # from a converged high-draw reference fit (see the header for why this is
 # essential).
@@ -571,6 +573,8 @@ usethis::use_data(runtimes, overwrite = TRUE)
 usethis::use_data(runtimes_draws, overwrite = TRUE)
 usethis::use_data(loglik_draws, overwrite = TRUE)
 
-cat("\nDone. Saved the CSVs in data-raw/ and regenerated the data/*.rda files.\n")
+cat(
+  "\nDone. Saved the CSVs in data-raw/ and regenerated the data/*.rda files.\n"
+)
 cat("Machine / versions (for the benchmark vignette):\n")
 str(benchmark_info)

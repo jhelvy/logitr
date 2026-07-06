@@ -116,7 +116,7 @@
 #' Run `nloptr::nloptr.print.options()` for details.
 #' @param backend The computational backend used to evaluate the log-likelihood
 #' and gradient during estimation. For mixed logit (MXL) models the default is
-#' `"cpp"`, a compiled C++ implementation that is typically 3-4 times faster
+#' `"cpp"`, a compiled C++ implementation that is typically about 4 times faster
 #' (and faster still with multiple threads, see `numThreads`) while producing
 #' the same results as the native R backend to floating-point precision. Set
 #' `backend = "cpu"` to use logitr's native R implementation instead (for
