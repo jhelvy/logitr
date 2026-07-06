@@ -1,0 +1,174 @@
+---
+title: "Faster Estimation: Backends, Threads, and Large Draws"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Faster Estimation: Backends, Threads, and Large Draws}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+library(logitr)
+```
+
+Mixed logit (MXL) models are estimated with maximum simulated likelihood,
+which repeatedly evaluates the log-likelihood over a set of random draws. For
+models with many random parameters or many draws, this can be slow.
+
+**By default, mixed logit models are estimated with a fast compiled, multi-
+threaded backend, so you do not need to do anything to get good performance.**
+This vignette explains what that backend is and the arguments that control it:
+
+- `backend`: the compiled C++ backend (`"cpp"`, the default for MXL) versus the
+  native R implementation (`"cpu"`).
+- `numThreads`: how many CPU cores to use for the parallel evaluation.
+- `numDrawsBatch`: streaming the draws in batches to bound memory for very large
+  draw counts.
+
+These change only *how* the log-likelihood is computed, not *what* is computed:
+all options give the same estimates to floating-point precision.
+
+## The compiled backend (`backend`)
+
+For mixed logit models, `logitr()` uses `backend = "cpp"` by default: a compiled
+C++ implementation of the log-likelihood and its analytic gradient. You do not
+need to do anything to get it — the model below already uses it:
+
+```{r, eval=FALSE}
+model <- logitr(
+  data     = yogurt,
+  outcome  = "choice",
+  obsID    = "obsID",
+  panelID  = "id",
+  pars     = c("price", "feat", "brand"),
+  randPars = c(feat = "n")
+)
+```
+
+The `"cpp"` backend supports all mixed logit model types: preference and
+willingness-to-pay (WTP) space, uncorrelated and correlated heterogeneity, and
+normal (`"n"`), log-normal (`"ln"`), and censored-normal (`"cn"`) parameter
+distributions. It is typically about 4 times faster than the native R
+implementation.
+
+To use the native R implementation instead, set `backend = "cpu"`. It returns
+the same coefficients, standard errors, and log-likelihood as `"cpp"` to
+floating-point precision. The main reason to choose it is exact
+bit-reproducibility (see the section on `numThreads` below). Multinomial logit
+(MNL) models always use the R implementation, since they are already fast.
+
+Because it includes compiled code, installing the development version of
+{logitr} from source requires a C++ compiler (see the installation
+instructions). Installing the released version from CRAN does not, since CRAN
+provides pre-built binaries.
+
+## Multithreading (`numThreads`)
+
+The `"cpp"` backend processes the random draws in parallel across CPU cores.
+Since the draws are independent, this is an exact parallelization that scales
+well with the number of cores. You can control the number of threads directly:
+
+```{r, eval=FALSE}
+model <- logitr(
+  data       = yogurt,
+  outcome    = "choice",
+  obsID      = "obsID",
+  panelID    = "id",
+  pars       = c("price", "feat", "brand"),
+  randPars   = c(feat = "n"),
+  numDraws   = 500,
+  numThreads = 4
+)
+```
+
+By default (`numThreads = NULL`), all but one of the available cores are used,
+*except* when running a parallel multistart (`numMultiStarts > 1`): in that case a single
+thread is used per model so that the cores go to the multistart instead of
+being oversubscribed by nested parallelism. Set `numThreads = 1` to disable
+threading entirely.
+
+Because threading uses a parallel reduction, the summation happens in a
+non-deterministic order, so results are **not bit-identical across runs** —
+they differ only at the level of floating-point rounding (around 1e-12), far
+below the optimization tolerance. If you need exactly reproducible results,
+set `numThreads = 1` (or `backend = "cpu"`).
+
+The table below shows the speedup for evaluating the mixed logit log-likelihood
+and gradient once, for a panel model with random parameters, as the number of
+draws grows. Speedups are relative to the native R backend, measured on a
+10-core machine (using 9 threads for the multithreaded column). Notice that the
+multithreaded speedup grows with the number of draws, because larger draw counts
+give the threads more work to distribute.
+
+| Draws  | `cpu` | `cpp` (1 thread) | `cpp` (multithreaded) |
+|-------:|:-----:|:----------------:|:---------------------:|
+| 100    | 1x    | ~4x              | ~21x                  |
+| 500    | 1x    | ~4x              | ~27x                  |
+| 2,000  | 1x    | ~4x              | ~27x                  |
+| 10,000 | 1x    | ~4x              | ~33x                  |
+
+You can reproduce a version of this comparison on your own machine with the
+`bench/perf_compare.R` script in the package's GitHub repository.
+
+## Large draw counts (`numDrawsBatch`)
+
+The compiled `"cpp"` backend (the default) is memory-flat in the number of
+draws, so it handles very large draw counts without any special settings. The
+`numDrawsBatch` argument is only relevant when you use the native R backend
+(`backend = "cpu"`), which by default stores intermediate quantities for every
+draw at once, so its memory grows with `numDraws`. For very large draw counts
+that can exhaust memory. Setting `numDrawsBatch` streams the draws in batches,
+keeping peak memory bounded by the batch size rather than the total number of
+draws:
+
+```{r, eval=FALSE}
+model <- logitr(
+  data          = yogurt,
+  outcome       = "choice",
+  obsID         = "obsID",
+  panelID       = "id",
+  pars          = c("price", "feat", "brand"),
+  randPars      = c(feat = "n"),
+  numDraws      = 10000,
+  numDrawsBatch = 500,
+  backend       = "cpu"
+)
+```
+
+By default (`numDrawsBatch = NULL`), the `"cpu"` backend streams automatically
+only when the draws would otherwise exceed an internal memory budget, so typical
+models are unaffected and use the faster non-streaming path.
+
+## What about GPUs?
+
+logitr does not provide a GPU backend. For the models and dataset sizes typical
+of choice modeling, the compiled, multithreaded CPU backend is already very
+fast, and benchmarking shows that a GPU offers little benefit for this kind of
+computation (the log-likelihood is dominated by a "skinny" matrix
+multiplication and irregular segment sums, which are memory-bound rather than
+compute-bound) — and on integrated GPUs it can even be slower than the CPU. A
+GPU only tends to help on a dedicated NVIDIA GPU with a very large dataset.
+
+If you specifically need GPU-accelerated mixed logit estimation for very large
+problems, the Python package
+[xlogit](https://xlogit.readthedocs.io/) is purpose-built for it and supports
+CUDA GPUs directly.
+
+## Summary
+
+- **Most users need to do nothing.** Mixed logit models already use the compiled
+  `"cpp"` backend across all but one of the available cores by default, and it
+  handles large draw counts without running out of memory.
+- Use very large draw counts (e.g. 10,000+) freely — the `"cpp"` backend is
+  memory-flat in the number of draws, and the multithreaded speedup is largest
+  in exactly this regime.
+- Set `numThreads = 1` (or `backend = "cpu"`) if you need exactly reproducible,
+  bit-identical results, at the cost of some speed.
+- Use `backend = "cpu"` if you want the native R implementation for any reason
+  (for example, to compare against the compiled backend).

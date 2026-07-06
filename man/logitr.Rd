@@ -24,13 +24,16 @@ logitr(
   useAnalyticGrad = TRUE,
   scaleInputs = TRUE,
   standardDraws = NULL,
-  drawType = "halton",
-  numDraws = 50,
+  drawType = "sobol",
+  numDraws = 500,
+  numDrawsBatch = NULL,
   numCores = NULL,
+  numThreads = NULL,
   vcov = FALSE,
   predict = TRUE,
-  options = list(print_level = 0, xtol_rel = 1e-06, xtol_abs = 1e-06, ftol_rel = 1e-06,
-    ftol_abs = 1e-06, maxeval = 1000, algorithm = "NLOPT_LD_LBFGS"),
+  backend = "cpp",
+  options = list(print_level = 0, xtol_rel = 1e-06, xtol_abs = 1e-06, ftol_rel = 1e-10,
+    ftol_abs = 1e-10, maxeval = 1000, algorithm = "NLOPT_LD_LBFGS"),
   price,
   randPrice,
   choice,
@@ -120,17 +123,47 @@ generated during each call to \code{logitr} (the same draws are used during each
 multistart iteration). The user can override those draws by providing a
 matrix of standard normal draws if desired. Defaults to \code{NULL}.}
 
-\item{drawType}{Specify the draw type as a character: \code{"halton"}
-(the default) or \code{"sobol"} (recommended for models with more than 5
-random parameters).}
+\item{drawType}{Specify the draw type as a character: \code{"sobol"} (the
+default), \code{"halton"}, or \code{"mlhs"} (Modified Latin Hypercube Sampling). Sobol
+and Halton draws are deterministic; MLHS draws are randomized and so are
+controlled by \code{set.seed()}. For models with more than 5 random parameters,
+\code{"sobol"} or \code{"mlhs"} are recommended over \code{"halton"}, which becomes
+correlated in higher dimensions.}
 
-\item{numDraws}{The number of Halton draws to use for MXL models for the
-maximum simulated likelihood. Defaults to \code{50}.}
+\item{numDraws}{The number of draws to use for MXL models for the
+maximum simulated likelihood. Defaults to \code{500}. Draw counts that are too
+low (e.g. the 40-50 draws that many packages default to) produce noticeably
+unstable simulated log-likelihoods, especially in models with many random
+parameters; the compiled backend makes larger draw counts cheap enough to
+be the default.}
+
+\item{numDrawsBatch}{The number of draws to process at a time when evaluating
+the simulated log-likelihood of MXL models with \code{backend = "cpu"}. Batching
+(or "streaming") the draws keeps peak memory bounded by the batch size
+rather than by \code{numDraws}, which is what makes large draw counts feasible on
+the R backend. Defaults to \code{NULL}, in which case logitr automatically
+streams only when the draws would otherwise exceed an internal memory budget
+(so typical models are unaffected). Set to an integer to force a specific
+batch size, or to a value \verb{>= numDraws} to disable streaming. Only used by
+the \code{"cpu"} backend for MXL models; the default \code{"cpp"} backend is
+memory-flat in the number of draws and ignores this argument.}
 
 \item{numCores}{The number of cores to use for parallel processing of the
 multistart. Set to \code{1} to serially run the multistart. Defaults to \code{NULL},
 in which case the number of cores is set to \code{parallel::detectCores() - 1}.
 Max cores allowed is capped at \code{parallel::detectCores()}.}
+
+\item{numThreads}{The number of threads to use for parallel evaluation of
+the MXL simulated log-likelihood with \code{backend = "cpp"}. The draws are
+processed in parallel across threads. Defaults to \code{NULL}, in which case a
+single thread is used when running a parallel multistart
+(\code{numMultiStarts > 1}, to avoid oversubscribing cores), otherwise all but
+one of the available cores are used. Set to \code{1} to disable threading. Only
+used by the \code{"cpp"} backend.
+Note that threading uses a parallel reduction, so results are not
+bit-identical across runs (they differ at the level of floating-point
+rounding, far below the optimization tolerance). Set \code{numThreads = 1} (or
+\code{backend = "cpu"}) if you need exactly reproducible results.}
 
 \item{vcov}{Set to \code{TRUE} to evaluate and include the variance-covariance
 matrix and coefficient standard errors in the returned object.
@@ -138,6 +171,17 @@ Defaults to \code{FALSE}.}
 
 \item{predict}{If \code{FALSE}, predicted probabilities, fitted values, and
 residuals are not included in the returned object. Defaults to \code{TRUE}.}
+
+\item{backend}{The computational backend used to evaluate the log-likelihood
+and gradient during estimation. For mixed logit (MXL) models the default is
+\code{"cpp"}, a compiled C++ implementation that is typically about 4 times faster
+(and faster still with multiple threads, see \code{numThreads}) while producing
+the same results as the native R backend to floating-point precision. Set
+\code{backend = "cpu"} to use logitr's native R implementation instead (for
+example if you want exactly bit-reproducible results, since the \code{"cpp"}
+backend's threaded reduction is not bit-identical across runs). Multinomial
+logit (MNL) models always use the R implementation regardless of this
+argument, as they are already fast.}
 
 \item{options}{A list of options for controlling the \code{nloptr()} optimization.
 Run \code{nloptr::nloptr.print.options()} for details.}
@@ -263,7 +307,8 @@ mxl_pref <- logitr(
   obsID    = "obsID",
   panelID  = "id",
   pars     = c("price", "feat", "brand"),
-  randPars = c(feat = "n")
+  randPars = c(feat = "n"),
+  numDraws = 50 # fewer draws than the default to keep the example fast
 )
 }
 \keyword{logit}

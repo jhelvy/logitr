@@ -33,11 +33,28 @@ The latest version includes support for:
   starting points in each iteration to search for different local minima
   (useful for non-convex problems like MXL models or models with WTP
   space parameterizations).
+- A compiled C++ backend (default for MXL models) with multithreaded
+  evaluation of the simulated log-likelihood for a substantial speed
+  boost over the native R implementation.
+- Draw-batched streaming to bound peak memory usage for MXL models with
+  large numbers of draws.
 
 Mixed logit models are estimated using maximum simulated likelihood
 based on the algorithms in Kenneth Train’s book [*Discrete Choice
 Methods with Simulation, 2nd Edition (New York: Cambridge University
 Press, 2009)*](https://eml.berkeley.edu/books/choice2.html).
+
+## logitr is fast!
+
+**logitr** includes a compiled C++ backend for mixed logit models with
+multithreaded evaluation, making it dramatically faster than other logit
+packages in R:
+
+<img src="vignettes/benchmark.png" alt="" width="100%" />
+
+See the
+[benchmarks](https://jhelvy.github.io/logitr/articles/benchmark.html)
+article for details.
 
 ## Basic Usage
 
@@ -65,6 +82,23 @@ or you can install the development version of {logitr} from
 # install.packages("remotes")
 remotes::install_github("jhelvy/logitr")
 ```
+
+Because {logitr} includes compiled C++ code, installing the development
+version from GitHub builds from source and therefore requires a C++
+compiler toolchain:
+
+- **Windows**: install
+  [Rtools](https://cran.r-project.org/bin/windows/Rtools/) (matched to
+  your R version).
+- **macOS**: install the Xcode Command Line Tools by running
+  `xcode-select --install` in a terminal.
+- **Linux**: a compiler is normally already present (e.g. `r-base-dev` /
+  `build-essential`).
+
+You can check whether your system is ready to build packages with
+`pkgbuild::check_build_tools()`. Installing the released version from
+CRAN (above) does **not** require a compiler, since CRAN provides
+pre-built binaries for Windows and macOS.
 
 Load the library with:
 

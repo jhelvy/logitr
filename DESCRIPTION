@@ -1,6 +1,6 @@
 Package: logitr
 Title: Logit Models w/Preference & WTP Space Utility Parameterizations
-Version: 1.1.3
+Version: 1.2.0
 Authors@R: c(
     person(given   = "John",
            family  = "Helveston",
@@ -42,10 +42,17 @@ Suggests:
 Imports:
     generics,
     MASS,
+    mirai,
     nloptr,
     parallel,
     randtoolbox,
+    Rcpp,
+    RcppParallel,
     stats,
     tibble
-URL: https://github.com/jhelvy/logitr
+LinkingTo:
+    Rcpp,
+    RcppParallel
+SystemRequirements: GNU make
+URL: https://github.com/jhelvy/logitr, https://jhelvy.github.io/logitr/
 BugReports: https://github.com/jhelvy/logitr/issues

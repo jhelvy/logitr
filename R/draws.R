@@ -31,13 +31,30 @@ makeBetaDraws <- function(pars, parIDs, n, standardDraws, correlation) {
 
 getStandardDraws <- function(parIDs, numDraws, drawType) {
   numBetas <- length(parIDs$f) + length(parIDs$r)
-  if (drawType == 'sobol') {
-    draws <- as.matrix(randtoolbox::sobol(numDraws, numBetas, normal = TRUE))
-  } else {
-    draws <- as.matrix(randtoolbox::halton(numDraws, numBetas, normal = TRUE))
-  }
+  draws <- switch(drawType,
+    halton = as.matrix(randtoolbox::halton(numDraws, numBetas, normal = TRUE)),
+    mlhs   = makeMlhsDraws(numDraws, numBetas),
+    # default (including "sobol")
+    as.matrix(randtoolbox::sobol(numDraws, numBetas, normal = TRUE))
+  )
   draws[, parIDs$f] <- 0 * draws[, parIDs$f]
   return(draws)
+}
+
+# Modified Latin Hypercube Sampling (Hess, Train & Polak, 2006). For each
+# dimension, a single stratified, randomly-shifted sequence is drawn and then
+# independently shuffled. The independent shuffles decorrelate the dimensions,
+# which gives good coverage with far fewer draws than Halton in higher
+# dimensions. Unlike Halton and Sobol draws, MLHS draws are randomized, so they
+# are controlled by set.seed() for reproducibility.
+makeMlhsDraws <- function(numDraws, numBetas) {
+  draws <- matrix(0, nrow = numDraws, ncol = numBetas)
+  for (k in seq_len(numBetas)) {
+    shift <- stats::runif(1)
+    points <- ((seq_len(numDraws) - 1) + shift) / numDraws
+    draws[, k] <- sample(points)
+  }
+  return(stats::qnorm(draws))
 }
 
 getUncertaintyDraws <- function(model, numDraws) {

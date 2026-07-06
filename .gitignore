@@ -9,3 +9,11 @@ doc
 Meta
 .idea
 CLAUDE.md
+
+# Benchmark harness outputs (regenerable; keep the scripts, drop the results)
+bench/results/
+
+# Compiled objects (keep src/*.cpp and RcppExports; drop build artifacts)
+src/*.o
+src/*.so
+src/*.dll

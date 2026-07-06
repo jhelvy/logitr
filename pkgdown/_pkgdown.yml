@@ -36,6 +36,8 @@ navbar:
           href: articles/mnl_models.html
         - text: "Estimating Mixed Logit Models"
           href: articles/mxl_models.html
+        - text: "Faster Estimation: Backends, Threads, and Large Draws"
+          href: articles/backends.html
         - text: "Estimating Models with Interactions"
           href: articles/interactions.html
         - text: "Estimating Weighted Logit Models"
@@ -101,6 +103,8 @@ reference:
   - apolloModeChoiceData
   - electricity
   - runtimes
+  - runtimes_draws
+  - loglik_draws
 - title: "Other Helpers"
   desc: "Other helper functions."
   contents:

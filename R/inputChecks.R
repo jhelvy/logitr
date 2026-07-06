@@ -37,10 +37,13 @@ runInputChecks <- function(data, inputs) {
   }
   missingInData(c(parsInt, parsNoInt), "pars", dataColumnNames)
 
-  # Make sure the drawType is either 'halton' or 'sobol'
-  if (! inputs$drawType %in% c('halton', 'sobol')) {
-    stop("drawType must be either 'halton' or 'sobol'")
+  # Make sure the drawType is one of the supported types
+  if (! inputs$drawType %in% c('sobol', 'halton', 'mlhs')) {
+    stop("drawType must be one of 'sobol', 'halton', or 'mlhs'")
   }
+
+  # Make sure the backend is supported
+  checkBackend(inputs$backend)
 
   # Make sure the number of multistarts and numDraws are positive
   if (inputs$numMultiStarts < 1) {
@@ -48,6 +51,12 @@ runInputChecks <- function(data, inputs) {
   }
   if (inputs$numDraws < 1) {
     stop('"numDraws" must be a positive integer')
+  }
+  if (!is.null(inputs$numDrawsBatch)) {
+    if (!is.numeric(inputs$numDrawsBatch) ||
+        length(inputs$numDrawsBatch) != 1 || inputs$numDrawsBatch < 1) {
+      stop('"numDrawsBatch" must be NULL or a single positive integer')
+    }
   }
 
   # If using correlation, make sure that there are at least 2 random pars
@@ -72,6 +81,32 @@ missingInData <- function(vals, var, dataColumnNames) {
       )
     }
   }
+}
+
+# Backends that are recognized by name. `supported` are usable now; others are
+# reserved names that give an informative "not yet available" error so the API
+# is stable as new backends land.
+backendsSupported <- c("cpu", "cpp")
+backendsReserved  <- c("rust", "torch", "xlogit")
+
+checkBackend <- function(backend) {
+  if (is.null(backend) || length(backend) != 1 || !is.character(backend)) {
+    stop('"backend" must be a single character string (currently "cpu")')
+  }
+  if (backend %in% backendsSupported) {
+    return(backend)
+  }
+  if (backend %in% backendsReserved) {
+    stop(
+      'The "', backend, '" backend is not yet available in this version of ',
+      'logitr. Currently supported backends: ',
+      paste(backendsSupported, collapse = ", "), "."
+    )
+  }
+  stop(
+    'Unknown backend "', backend, '". Currently supported backends: ',
+    paste(backendsSupported, collapse = ", "), "."
+  )
 }
 
 # Need to check if the user-provided list of options omits any of these

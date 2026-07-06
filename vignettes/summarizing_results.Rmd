@@ -162,7 +162,7 @@ tbl_merge(
 
 ## The {texreg} package
 
-Another option for obtaining a formatted table is to use the [{texreg}](https://github.com/leifeld/texreg) package. This is particularly useful for obtaining tables formatted for use in [LaTeX](https://www.latex-project.org/).
+Another option for obtaining a formatted table is to use the [{texreg}](https://github.com/leifeld-lab/texreg) package. This is particularly useful for obtaining tables formatted for use in [LaTeX](https://www.latex-project.org/).
 
 For example, you can print a summary to the screen using `screenreg()`:
 

@@ -3,6 +3,10 @@
 # ============================================================================
 
 runMultistart <- function(mi) {
+  # Dummy assignment to silence the R CMD check "no visible binding" note.
+  # The real nThreads is bound on each mirai daemon via .args below; this
+  # NULL is never used.
+  nThreads <- NULL
   numMultiStarts <- mi$n$multiStarts
   miList <- makeModelInputsList(mi, numMultiStarts)
   numCores <- mi$n$cores
@@ -11,27 +15,43 @@ runMultistart <- function(mi) {
     message("Running model...")
     return(lapply(miList, runModel))
   }
-  # If there is a multi-start, print the number of iterations and cores
-  printMultistartHeader(mi$inputs$startVals, numMultiStarts, numCores)
-  if (Sys.info()[['sysname']] == 'Windows') {
-    cl <- parallel::makeCluster(numCores, "PSOCK")
-    result <- suppressMessages(suppressWarnings(
-      parallel::parLapply(cl = cl, miList, runModel)
-    ))
-    parallel::stopCluster(cl)
-  } else {
-    result <- suppressMessages(suppressWarnings(
-      parallel::mclapply(miList, runModel, mc.cores = numCores)
-    ))
-  }
+  # Run the multistart iterations in parallel across cores. Each individual
+  # model is estimated single-threaded (numThreads is set to 1 for a parallel
+  # multistart), since it is more efficient to spend the cores running many
+  # models at once than to speed up each model with threads. mirai runs the
+  # iterations in separate persistent processes, which behaves the same across
+  # platforms (no forking, so no Windows special case).
+  printMultistartHeader(
+    mi$inputs$startVals, numMultiStarts, numCores, mi$inputs$numThreads)
+  # Use a dedicated compute profile so logitr's daemons never collide with (or
+  # tear down) any daemons the user has set up on the default profile
+  mirai::daemons(min(numCores, numMultiStarts), .compute = "logitr")
+  on.exit(mirai::daemons(0, .compute = "logitr"), add = TRUE)
+  # Load logitr on each daemon and set its draw-loop thread count (usually 1 for
+  # a parallel multistart; > 1 only if the user explicitly nests via numThreads)
+  mirai::everywhere(
+    { library(logitr); RcppParallel::setThreadOptions(numThreads = nThreads) },
+    .args = list(nThreads = as.integer(mi$inputs$numThreads)),
+    .compute = "logitr"
+  )
+  result <- suppressMessages(suppressWarnings(
+    mirai::mirai_map(miList, runModel, .compute = "logitr")[]
+  ))
   return(result)
 }
 
-printMultistartHeader <- function(startVals, numMultiStarts, numCores) {
+printMultistartHeader <- function(startVals, numMultiStarts, numCores, numThreads) {
+  perModel <- if (is.null(numThreads) || numThreads <= 1) {
+    "each model is estimated on a single core"
+  } else {
+    paste0("each model is estimated using ", numThreads, " threads")
+  }
   message(
-    "Running multistart...\n",
+    "Running multistart in parallel...\n",
     "  Random starting point iterations: ", numMultiStarts, "\n",
-    "  Number of cores: ", numCores
+    "  Number of cores: ", numCores, "\n",
+    "  Note: the cores run the multistart iterations in parallel; ",
+    perModel, "."
   )
   if (!is.null(startVals)) {
     message("  NOTE: Using user-provided starting values for first iteration")
@@ -169,6 +189,7 @@ makeModelTemplate <- function(mi) {
     scaleFactors      = mi$scaleFactors,
     standardDraws     = mi$standardDraws,
     drawType          = mi$drawType,
+    batchPlan         = mi$batchPlan,
     options           = mi$options
   ),
   class = "logitr"

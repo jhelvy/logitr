@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-{logitr} is faster than most other packages with similar functionality. To demonstrate this, a benchmark was conducted by estimating the same preference space mixed logit model using the following R packages:
+{logitr} is considerably faster than other packages with similar functionality. To demonstrate this, a benchmark was conducted by estimating the same preference space mixed logit model using the following R packages:
 
 - {logitr}
 - {mixl}
@@ -27,15 +27,26 @@ knitr::opts_chunk$set(
 - {gmnl}
 - {apollo}
 
-The benchmark can be viewed at this Google Colab notebook:
+Because {logitr} estimates mixed logit models using a compiled, multithreaded backend, its speed also depends on the number of cores available. To make the comparison fair, every package is benchmarked single-threaded, and every package that can use multiple cores ({logitr}, {apollo}, and {mixl}) is *also* benchmarked at higher core counts, denoted in parentheses, e.g. `logitr (1 cores)` versus `logitr (10 cores)`. One caveat for {mixl}: it multithreads via OpenMP, which the default macOS toolchain (Apple clang) does not provide, so enabling it on a Mac requires a one-time toolchain setup (documented in the header of the benchmark script).
 
-https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing
+The benchmark script is at [`data-raw/runtimes.R`](https://github.com/jhelvy/logitr/blob/master/data-raw/runtimes.R) in the package repository. The `runtimes` data frame records the version of each package used; the results shipped with the package were produced locally on a 10-core Apple M-series Mac using these versions:
 
-Benchmarks will always vary for every run of a benchmarking code, even when run on the same machine due to variations in background processes. Thus, if you run this code yourself on a different machine, your results may vary, though the overall order and trends in terms of each package's relative speed should be similar to those from the Colab notebook.
+```{r, echo = FALSE}
+library(logitr)
+library(dplyr)
+
+# runtimes <- readr::read_csv(file.path('data-raw', 'runtimes.csv'))
+runtimes %>%
+    mutate(pkg = sub(" .*", "", package)) %>%
+    distinct(pkg, version) %>%
+    kableExtra::kbl(col.names = c("package", "version"))
+```
+
+Benchmarks will always vary for every run of a benchmarking code, even on the same machine, due to variations in background processes and the number of cores available. So if you run this code yourself, your results may vary, though the overall order and trends in each package's relative speed should be similar. These particular results are specific to the machine they were run on -- a 10-core Apple M-series Mac -- so the multi-core rows reflect that core count, and the exact package versions used are recorded in the `version` column of the `runtimes` data frame.
 
 ## Comparing run times 
 
-The {logitr} package includes a `runtimes` data frame that is exported from the [Google Colab](https://colab.research.google.com/drive/1vYlBdJd4xCV43UwJ33XXpO3Ys8xWkuxx?usp=sharing) notebook used to conduct the benchmark. The tables below summarize the run times for each package and how many times slower they are relative to {logitr}.
+The {logitr} package includes a `runtimes` data frame with the benchmark results. The tables below summarize the run times (in seconds) for each package and how many times slower each is relative to single-threaded {logitr} (`logitr (1 cores)`), which is used as the reference point for a fair, hardware-independent comparison.
 
 ```{r}
 library(logitr)
@@ -43,72 +54,84 @@ library(dplyr)
 library(tidyr)
 library(kableExtra) # For tables
 
-numDraws <- unique(runtimes$numDraws)
-logitr_time <- runtimes %>%
-    filter(package == "logitr") %>%
+times <- runtimes %>% select(-version)
+logitr_time <- times %>%
+    filter(package == "logitr (1 cores)") %>%
     rename(time_logitr = time_sec)
-time_compare <- runtimes %>%
+time_compare <- times %>%
     left_join(select(logitr_time, -package), by = "numDraws") %>%
-    mutate(mult = round(time_sec/ time_logitr, 1)) %>%
-    select(-time_logitr)
-# Compare raw times
+    mutate(mult = round(time_sec / time_logitr, 1)) 
+# Compare raw times (seconds)
 time_compare %>%
-    select(-mult) %>%
-    pivot_wider(names_from = numDraws, values_from = time_sec) %>% 
-    kbl()
-# Compare how many times slower compared to logitr
-time_compare %>%
-    select(-time_sec) %>%
-    pivot_wider(names_from = numDraws, values_from = mult) %>% 
+    select(package, numDraws, time_sec) %>%
+    mutate(time_sec = round(time_sec, 1)) %>%
+    pivot_wider(names_from = numDraws, values_from = time_sec) %>%
     kbl()
 ```
 
-The code below plots the relative run times from the Colab notebook.
+Now compare how many times slower each is relative to single-threaded {logitr} (`logitr (1 cores)`), the fair, hardware-independent reference point:
 
-```{r, eval=FALSE}
-library(ggplot2)
-library(ggrepel)
-
-plotColors <- c("black", RColorBrewer::brewer.pal(n = 5, name = "Set1"), "gold")
-benchmark <- runtimes %>% 
-    ggplot(aes(x = numDraws, y = time_sec, color = package)) +
-    geom_line() +
-    geom_point() +
-    geom_text_repel(
-        data = . %>% filter(numDraws == max(numDraws)),
-        aes(label = package),
-        hjust = 0, nudge_x = 40, direction = "y",
-        size = 4.5, segment.size = 0
-    ) +
-    scale_x_continuous(
-        limits = c(0, 1200),
-        breaks = numDraws,
-        labels = scales::comma) +
-    scale_y_continuous(limits = c(0, 300), breaks = seq(0, 300, 100)) +
-    scale_color_manual(values = plotColors) +
-    guides(
-        point = guide_legend(override.aes = list(label = "")),
-        color = guide_legend(override.aes = list(label = ""))) +
-    theme_bw(base_size = 18) +
-    theme(
-        panel.grid.minor = element_blank(),
-        panel.grid.major.x = element_blank(),
-        legend.position = "none",
-        axis.line.x = element_blank(),
-        axis.ticks.x = element_blank()
-    ) +
-    labs(
-        x = "Number of random draws",
-        y = "Computation time (seconds)"
-    )
-
-benchmark
+```{r}
+time_compare %>%
+    select(package, numDraws, mult) %>%
+    pivot_wider(names_from = numDraws, values_from = mult) %>%
+    kbl()
 ```
 
-```{r, eval=FALSE, echo=FALSE}
-ggsave('benchmark.png', benchmark, width = 8.5, height = 6)
-```
+The figure below visualizes the run times. All of the figures in this article are generated by the [`data-raw/figures.R`](https://github.com/jhelvy/logitr/blob/master/data-raw/figures.R) script in the package repository.
 
-```{r probabilities, echo=FALSE}
+```{r benchmark-figure, echo=FALSE, out.width="100%"}
 knitr::include_graphics('benchmark.png')
 ```
+
+Note that the estimation times reflect both the cost per iteration (which grows with the number of draws) *and* the number of iterations each package's optimizer takes to converge, which can itself vary with the number of draws. This is why some packages -- particularly {apollo} -- show run times that are not strictly increasing in the number of draws. The overall comparison is robust to this: {logitr} is dramatically faster across every draw count, and its advantage grows with more draws and more cores.
+
+## Scaling to large draw counts
+
+The comparison above stops at 1,500 draws because that is roughly where the other packages become impractically slow. {logitr}, by contrast, scales comfortably to 10,000 draws, which can be useful when many random parameters demand a large simulation sample for a stable simulated log-likelihood. The figure below isolates {logitr} and shows how its full-fit estimation time grows with the number of draws for each of its three backends:
+
+- `cpu` -- the native R path (memory-safe, single-threaded),
+- `cpp (1 core)` -- the compiled backend on a single core, and
+- `cpp (10 cores)` -- the compiled backend on all 10 cores.
+
+These results are stored in the `runtimes_draws` data frame and generated by the same [`data-raw/runtimes.R`](https://github.com/jhelvy/logitr/blob/master/data-raw/runtimes.R) script, run on the same 10-core Apple M-series machine as the cross-package benchmark above.
+
+```{r}
+runtimes_draws %>%
+    mutate(time_sec = round(time_sec, 1)) %>%
+    pivot_wider(names_from = numDraws, values_from = time_sec) %>%
+    kbl()
+```
+
+```{r benchmark-draws-figure, echo=FALSE, out.width="100%"}
+knitr::include_graphics('benchmark_draws.png')
+```
+
+The compiled backend is several times faster than the native R path at every draw count, and adding cores multiplies that advantage further -- so even at 10,000 draws, a model that is essentially out of reach for the other packages estimates in a fraction of the time.
+
+## What the speed buys you: a stable log-likelihood
+
+Speed is not the end goal -- it is what makes *enough draws* affordable. The mixed logit log-likelihood is approximated by simulation, so any estimate carries simulation error that shrinks as the number of draws grows. Historical defaults are small: {mlogit} and {gmnl} default to 40 draws, Stata's `mixlogit` to 50, and {logitr} itself defaulted to 50 prior to version 1.2.0. Those defaults date from when estimation was slow enough that more draws felt like a luxury, but they leave enough simulation noise in the log-likelihood to matter.
+
+To make that noise visible, the same mixed logit model used in the benchmarks above was estimated repeatedly at increasing draw counts. At each draw count the model was estimated 10 times using randomized MLHS draws with a different seed each time, with every run starting from the same converged reference solution -- so at a given draw count, the across-seed spread in the converged log-likelihood reflects simulation error: the noise in the simulated log-likelihood shifts the converged value, and at low draw counts it can distort the surface enough that some runs converge to different local optima entirely. The results ship with the package in the `loglik_draws` data frame, generated by the same [`data-raw/runtimes.R`](https://github.com/jhelvy/logitr/blob/master/data-raw/runtimes.R) script (run on the same 10-core machine as above).
+
+```{r}
+loglik_summary <- loglik_draws %>%
+    group_by(numDraws) %>%
+    summarise(
+        min = min(logLik),
+        max = max(logLik),
+        range = max(logLik) - min(logLik),
+        sd = sd(logLik),
+        median_time_sec = median(time_sec)
+    ) %>%
+    mutate(across(min:median_time_sec, \(x) round(x, 1)))
+
+kbl(loglik_summary)
+```
+
+```{r benchmark-loglik-figure, echo=FALSE, out.width="100%"}
+knitr::include_graphics('benchmark_loglik.png')
+```
+
+At 50 draws the converged log-likelihood ranges over about `r round(loglik_summary$range[loglik_summary$numDraws == 50])` units across seeds -- easily enough to flip a likelihood-based model comparison -- while at 500 draws the spread is roughly `r round(loglik_summary$range[loglik_summary$numDraws == 50] / loglik_summary$range[loglik_summary$numDraws == 500], 1)` times smaller and keeps narrowing from there. (The narrowing is not perfectly monotonic -- with few draws, an occasional run wanders to a different local optimum, which is itself a symptom of the simulation noise, but the trend is unmistakable.) And because of the compiled backend, those 500 draws cost only about `r loglik_summary$median_time_sec[loglik_summary$numDraws == 500]` seconds on this model. This is why {logitr} defaults to `numDraws = 500`: at these speeds there is no longer a good reason to accept the simulation noise of a 40-50 draw default.

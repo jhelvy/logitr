@@ -14,7 +14,7 @@ library(dplyr)
 library(tidyr)
 
 # Set number of cores to use
-numCores <- 2
+numCores <- 10
 
 # Mixed logit vignette
 
@@ -22,11 +22,11 @@ numCores <- 2
 set.seed(456)
 
 mxl_pref <- logitr(
-  data     = yogurt,
-  outcome  = 'choice',
-  obsID    = 'obsID',
-  panelID  = 'id',
-  pars     = c('price', 'feat', 'brand'),
+  data = yogurt,
+  outcome = 'choice',
+  obsID = 'obsID',
+  panelID = 'id',
+  pars = c('price', 'feat', 'brand'),
   randPars = c(feat = 'n', brand = 'n'),
   numMultiStarts = 10,
   numCores = numCores
@@ -39,13 +39,13 @@ wtp_mxl_pref <- wtp(mxl_pref, "price")
 set.seed(6789)
 
 mxl_wtp <- logitr(
-  data       = yogurt,
-  outcome    = 'choice',
-  obsID      = 'obsID',
-  panelID    = 'id',
-  pars       = c('feat', 'brand'),
-  scalePar   = 'price',
-  randPars   = c(feat = 'n', brand = 'n'),
+  data = yogurt,
+  outcome = 'choice',
+  obsID = 'obsID',
+  panelID = 'id',
+  pars = c('feat', 'brand'),
+  scalePar = 'price',
+  randPars = c(feat = 'n', brand = 'n'),
   numMultiStarts = 10,
   startVals = wtp_mxl_pref$Estimate,
   numCores = numCores
@@ -58,11 +58,11 @@ wtpCompare(mxl_pref, mxl_wtp, "price")
 set.seed(456)
 
 mxl_pref_cor <- logitr(
-  data     = yogurt,
-  outcome  = 'choice',
-  obsID    = 'obsID',
-  panelID  = 'id',
-  pars     = c('price', 'feat', 'brand'),
+  data = yogurt,
+  outcome = 'choice',
+  obsID = 'obsID',
+  panelID = 'id',
+  pars = c('price', 'feat', 'brand'),
   randPars = c(feat = 'n', brand = 'n'),
   numMultiStarts = 10,
   correlation = TRUE,
@@ -388,7 +388,7 @@ mxl_pref_cor <- logitr(
 
 # Save results from all estimated models ----
 saveRDS(mxl_pref, here::here('inst', 'extdata', 'mxl_pref.Rds'))
-saveRDS(mxl_wtp,  here::here('inst', 'extdata', 'mxl_wtp.Rds'))
+saveRDS(mxl_wtp, here::here('inst', 'extdata', 'mxl_wtp.Rds'))
 saveRDS(mxl_pref_cor, here::here('inst', 'extdata', 'mxl_pref_cor.Rds'))
 # saveRDS(model_logitr, here::here('inst', 'extdata', 'model_logitr.Rds'))
 # saveRDS(model_logitr10, here::here('inst', 'extdata', 'model_logitr10.Rds'))

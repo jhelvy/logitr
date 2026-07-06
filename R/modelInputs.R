@@ -8,7 +8,8 @@ getModelInputs <- function(
     data, outcome, obsID, pars , randPars, scalePar, randScale,
     weights, panelID, clusterID, robust, startValBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
-    numDraws, numCores, vcov, predict, correlation, call, options
+    numDraws, numCores, vcov, predict, correlation, call, options,
+    backend = "cpp", numDrawsBatch = NULL, numThreads = NULL
 ) {
 
   # Keep original input arguments
@@ -33,7 +34,10 @@ getModelInputs <- function(
     numCores        = numCores,
     vcov            = vcov,
     predict         = predict,
-    correlation     = correlation
+    correlation     = correlation,
+    backend         = backend,
+    numDrawsBatch   = numDrawsBatch,
+    numThreads      = setNumThreads(numThreads, numMultiStarts)
   )
 
   # Check for valid inputs and options
@@ -170,21 +174,44 @@ getModelInputs <- function(
     standardDraws = standardDraws,
     drawType      = drawType,
     panel         = panel,
+    backend       = backend,
     options       = options
   )
 
   # Add mixed logit inputs
   if (modelType == "mxl") {
     modelInputs$standardDraws <- makeMxlDraws(modelInputs)
-    modelInputs$partials <- makePartials(modelInputs, data_diff)
-    # Need unscaled version of partials for computing hessian
-    modelInputs$partials_unscaled <- makePartials(
-      modelInputs, data_diff_unscaled)
+    if (backend == "cpp") {
+      # The compiled kernel is self-contained and memory-flat: it needs neither
+      # the stored partials nor the R streaming setup. Set the active thread
+      # count for the parallel draw loop.
+      cppSupported(modelSpace, correlation)
+      RcppParallel::setThreadOptions(numThreads = inputs$numThreads)
+    } else {
+      # Decide whether to stream draws in batches (bounded memory) or use the
+      # stored-partials fast path. Streaming keeps peak memory ~ batchSize
+      # rather than numDraws, which is what enables large draw counts.
+      modelInputs$batchPlan <- getBatchPlan(numDrawsBatch, n)
+      if (modelInputs$batchPlan$stream) {
+        # Streaming: form partial slices on the fly from a compact spec, so the
+        # full (potentially enormous) partials matrices are never materialized.
+        modelInputs$partialSpec <- buildPartialSpec(modelInputs)
+        notifyStreaming(modelInputs$batchPlan, n)
+      } else {
+        modelInputs$partials <- makePartials(modelInputs, data_diff)
+        # Need unscaled version of partials for computing hessian
+        modelInputs$partials_unscaled <- makePartials(
+          modelInputs, data_diff_unscaled)
+      }
+    }
   }
 
   # Set logit and eval functions
   modelInputs$logitFuncs <- setLogitFunctions(modelSpace)
-  modelInputs$evalFuncs <- setEvalFunctions(modelType, useAnalyticGrad)
+  modelInputs$evalFuncs <- setEvalFunctions(modelType, useAnalyticGrad, backend)
+  if (modelType == "mxl" && isTRUE(modelInputs$batchPlan$stream)) {
+    modelInputs$evalFuncs <- setEvalFunctions_batched(useAnalyticGrad)
+  }
 
   return(modelInputs)
 }
@@ -271,7 +298,8 @@ makeClusterID <- function(data, inputs, obsID, panelID) {
     if (inputs$clusterID == inputs$obsID) {
         return(obsID)
     }
-    if (inputs$clusterID == inputs$panelID) {
+    # panelID is NULL when clustering without panel data
+    if (!is.null(inputs$panelID) && inputs$clusterID == inputs$panelID) {
         return(panelID)
     }
     clusterID <- as.vector(as.matrix(data[inputs$clusterID]))
@@ -310,6 +338,25 @@ setNumCores <- function(numCores) {
     return(maxCores)
   }
   return(numCores)
+}
+
+# Number of threads for the cpp backend's parallel draw loop. When NULL, use a
+# single thread if a parallel multistart is running (to avoid oversubscribing
+# cores with nested parallelism), otherwise use all available cores.
+setNumThreads <- function(numThreads, numMultiStarts) {
+  chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
+  cranLimited <- nzchar(chk) && (chk != "false")
+  if (is.null(numThreads)) {
+    if (numMultiStarts > 1) return(1L)
+    if (cranLimited) return(2L)
+    return(as.integer(max(1, parallel::detectCores() - 1)))
+  }
+  if (!is.numeric(numThreads) || numThreads < 1) {
+    warning("Invalid value for numThreads...setting numThreads to 1")
+    return(1L)
+  }
+  if (cranLimited) return(min(2L, as.integer(numThreads)))
+  as.integer(numThreads)
 }
 
 defineScalePar <- function(data, inputs, modelSpace) {
@@ -528,13 +575,14 @@ makeDiffData <- function(data, modelType) {
 }
 
 makeMxlDraws <- function(modelInputs) {
-  # Message about using Sobol draws with large number of random parameters
+  # Message about draw type with a large number of random parameters
   if (length(modelInputs$parIDs$r) > 5) {
     if (modelInputs$drawType == 'halton') {
       message(
-        "Since your model has 5 or more random parameters, it is ",
-        "recommended that you use Sobol instead of Halton draws. ",
-        "You can implement this by setting drawType = 'sobol'. \n\n",
+        "Since your model has more than 5 random parameters, Halton draws ",
+        "can become correlated in higher dimensions. Consider using the ",
+        "default Sobol draws (drawType = 'sobol') or MLHS draws ",
+        "(drawType = 'mlhs') instead. \n\n",
         "It is also recommended that you use at least 200 draws, which ",
         "can be implemented by setting numDraws = 200")
     }
@@ -609,7 +657,20 @@ setLogitFunctions <- function(modelSpace) {
   return(logitFuncs)
 }
 
-setEvalFunctions <- function(modelType, useAnalyticGrad) {
+# Dispatch point for computational backends. Each backend returns a list of
+# eval functions with the signature `fn(pars, mi)` used by the optimizer in
+# runModel(). The "cpu" backend is logitr's native R implementation; other
+# backends (e.g. a compiled/GPU kernel) can plug in here without changing the
+# rest of the estimation machinery.
+setEvalFunctions <- function(modelType, useAnalyticGrad, backend = "cpu") {
+  backend <- checkBackend(backend)
+  switch(backend,
+    cpu = setEvalFunctions_cpu(modelType, useAnalyticGrad),
+    cpp = setEvalFunctions_cpp(modelType, useAnalyticGrad)
+  )
+}
+
+setEvalFunctions_cpu <- function(modelType, useAnalyticGrad) {
   evalFuncs <- list(
     objective = mnlNegLLAndGradLL,
     negLL     = getMnlNegLL,

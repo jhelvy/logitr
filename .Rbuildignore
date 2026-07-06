@@ -20,3 +20,5 @@ data-raw
 ^CRAN-SUBMISSION$
 ^CLAUDE.md$
 ^.claude$
+^\.claude$
+^bench$

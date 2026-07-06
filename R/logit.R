@@ -283,6 +283,10 @@ mxlNegGradLL_wtp <- function(
   # Now adjust the partials for the lambda and omega parameters
   lambdaDraws <- repmat(matrix(betaDraws[,1], nrow = 1), n$rowX, 1)
   partial_lambda_mean <- VDraws / lambdaDraws
+  # For a censored-normal lambda, V / lambda is 0 / 0 = NaN on draws where
+  # lambda censors to zero. The correct partial there is q * 1{raw > 0} = 0
+  # (the censoring indicator is zero exactly where lambda is zero).
+  partial_lambda_mean[!is.finite(partial_lambda_mean)] <- 0
   partials[[1]] <- partial_lambda_mean
   if (!is.null(randScale)) {
     lambda_sdID <- parIDs$lambdaIDs[2]
@@ -301,6 +305,9 @@ mxlNegGradLL_wtp <- function(
   if (!is.null(randScale)) {
     for (id in parIDs$lambdaOffDiag) {
       partials[[id]] <- partials[[id]] / lambdaDraws * partial_lambda_mean
+      # 0 / 0 = NaN where a censored-normal lambda is zero; the correct
+      # partial there is 0 (see partial_lambda_mean above)
+      partials[[id]][!is.finite(partials[[id]])] <- 0
     }
   }
   # Now compute the gradient

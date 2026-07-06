@@ -70,11 +70,39 @@
 #' generated during each call to `logitr` (the same draws are used during each
 #' multistart iteration). The user can override those draws by providing a
 #' matrix of standard normal draws if desired. Defaults to `NULL`.
-#' @param drawType Specify the draw type as a character: `"halton"`
-#' (the default) or `"sobol"` (recommended for models with more than 5
-#' random parameters).
-#' @param numDraws The number of Halton draws to use for MXL models for the
-#' maximum simulated likelihood. Defaults to `50`.
+#' @param drawType Specify the draw type as a character: `"sobol"` (the
+#' default), `"halton"`, or `"mlhs"` (Modified Latin Hypercube Sampling). Sobol
+#' and Halton draws are deterministic; MLHS draws are randomized and so are
+#' controlled by `set.seed()`. For models with more than 5 random parameters,
+#' `"sobol"` or `"mlhs"` are recommended over `"halton"`, which becomes
+#' correlated in higher dimensions.
+#' @param numDraws The number of draws to use for MXL models for the
+#' maximum simulated likelihood. Defaults to `500`. Draw counts that are too
+#' low (e.g. the 40-50 draws that many packages default to) produce noticeably
+#' unstable simulated log-likelihoods, especially in models with many random
+#' parameters; the compiled backend makes larger draw counts cheap enough to
+#' be the default.
+#' @param numThreads The number of threads to use for parallel evaluation of
+#' the MXL simulated log-likelihood with `backend = "cpp"`. The draws are
+#' processed in parallel across threads. Defaults to `NULL`, in which case a
+#' single thread is used when running a parallel multistart
+#' (`numMultiStarts > 1`, to avoid oversubscribing cores), otherwise all but
+#' one of the available cores are used. Set to `1` to disable threading. Only
+#' used by the `"cpp"` backend.
+#' Note that threading uses a parallel reduction, so results are not
+#' bit-identical across runs (they differ at the level of floating-point
+#' rounding, far below the optimization tolerance). Set `numThreads = 1` (or
+#' `backend = "cpu"`) if you need exactly reproducible results.
+#' @param numDrawsBatch The number of draws to process at a time when evaluating
+#' the simulated log-likelihood of MXL models with `backend = "cpu"`. Batching
+#' (or "streaming") the draws keeps peak memory bounded by the batch size
+#' rather than by `numDraws`, which is what makes large draw counts feasible on
+#' the R backend. Defaults to `NULL`, in which case logitr automatically
+#' streams only when the draws would otherwise exceed an internal memory budget
+#' (so typical models are unaffected). Set to an integer to force a specific
+#' batch size, or to a value `>= numDraws` to disable streaming. Only used by
+#' the `"cpu"` backend for MXL models; the default `"cpp"` backend is
+#' memory-flat in the number of draws and ignores this argument.
 #' @param numCores The number of cores to use for parallel processing of the
 #' multistart. Set to `1` to serially run the multistart. Defaults to `NULL`,
 #' in which case the number of cores is set to `parallel::detectCores() - 1`.
@@ -86,6 +114,16 @@
 #' residuals are not included in the returned object. Defaults to `TRUE`.
 #' @param options A list of options for controlling the `nloptr()` optimization.
 #' Run `nloptr::nloptr.print.options()` for details.
+#' @param backend The computational backend used to evaluate the log-likelihood
+#' and gradient during estimation. For mixed logit (MXL) models the default is
+#' `"cpp"`, a compiled C++ implementation that is typically about 4 times faster
+#' (and faster still with multiple threads, see `numThreads`) while producing
+#' the same results as the native R backend to floating-point precision. Set
+#' `backend = "cpu"` to use logitr's native R implementation instead (for
+#' example if you want exactly bit-reproducible results, since the `"cpp"`
+#' backend's threaded reduction is not bit-identical across runs). Multinomial
+#' logit (MNL) models always use the R implementation regardless of this
+#' argument, as they are already fast.
 #' @param price No longer used as of v0.7.0 - if provided, this is passed
 #' to the `scalePar` argument and a warning is displayed.
 #' @param randPrice No longer used as of v0.7.0 - if provided, this is passed
@@ -191,7 +229,8 @@
 #'   obsID    = "obsID",
 #'   panelID  = "id",
 #'   pars     = c("price", "feat", "brand"),
-#'   randPars = c(feat = "n")
+#'   randPars = c(feat = "n"),
+#'   numDraws = 50 # fewer draws than the default to keep the example fast
 #' )
 logitr <- function(
   data,
@@ -213,17 +252,20 @@ logitr <- function(
   useAnalyticGrad = TRUE,
   scaleInputs     = TRUE,
   standardDraws   = NULL,
-  drawType        = 'halton',
-  numDraws        = 50,
+  drawType        = 'sobol',
+  numDraws        = 500,
+  numDrawsBatch   = NULL,
   numCores        = NULL,
+  numThreads      = NULL,
   vcov            = FALSE,
   predict         = TRUE,
+  backend         = "cpp",
   options         = list(
     print_level = 0,
     xtol_rel    = 1.0e-6,
     xtol_abs    = 1.0e-6,
-    ftol_rel    = 1.0e-6,
-    ftol_abs    = 1.0e-6,
+    ftol_rel    = 1.0e-10,
+    ftol_abs    = 1.0e-10,
     maxeval     = 1000,
     algorithm   = "NLOPT_LD_LBFGS"
   ),
@@ -320,7 +362,8 @@ logitr <- function(
     data, outcome, obsID, pars, randPars, scalePar, randScale,
     weights, panelID, clusterID, robust, startValBounds, startVals,
     numMultiStarts, useAnalyticGrad, scaleInputs, standardDraws, drawType,
-    numDraws, numCores, vcov, predict, correlation, call, options
+    numDraws, numCores, vcov, predict, correlation, call, options, backend,
+    numDrawsBatch, numThreads
   )
 
   allModels <- runMultistart(modelInputs)
@@ -378,17 +421,71 @@ appendModelInfo <- function(model, mi) {
   model$data <- mi$data
   # Get coefficients (re-scale if needed)
   coefficients <- getCoefficients(model, mi, fail)
+  # For uncorrelated MXL models, report standard deviations as positive (their
+  # sign is not identified). The corresponding standard draw columns (and
+  # stored partials) are flipped along with the coefficients, which makes the
+  # sign change an exact relabeling of the converged model -- see
+  # absSdCoefficients() for why this matters. Done before computing the
+  # gradient / hessian so that those (and hence the vcov and standard errors)
+  # stay consistent with the reported coefficients.
+  flipped <- absSdCoefficients(coefficients, mi, fail)
+  coefficients <- flipped$coefficients
+  mi <- flipped$mi
+  model$standardDraws <- mi$standardDraws
   model$coefficients <- coefficients
   # Make unscaled version of model inputs to compute gradient and hessian
   mi_unscaled <- mi
   mi_unscaled$data_diff <- mi$data_diff_unscaled
-  if (mi$modelType == 'mxl') {
+  if (mi$modelType == 'mxl' && !is.null(mi$partials_unscaled)) {
     mi_unscaled$partials <- mi$partials_unscaled
   }
   model$gradient <- getGradient(coefficients, mi_unscaled, fail)
   model$hessian  <- getHessian(coefficients, mi_unscaled, fail)
   model$nullLogLik <- getNullLogLik(coefficients, mi_unscaled, fail)
   return(model)
+}
+
+# The sign of a standard deviation parameter is not identified in an
+# uncorrelated mixed logit model: the mixing distributions are symmetric in the
+# random draws, so a distribution with sd = s and sd = -s are identical (same
+# likelihood, same predictions). Only the magnitude is meaningful, so report the
+# absolute value to avoid confusing negative standard deviations.
+#
+# CRITICAL: that symmetry is exact for the true integral but NOT for the
+# simulated log-likelihood -- a finite draw set is not sign-symmetric, so
+# LL(mean, -s) and LL(mean, s) with the SAME draws can differ by several
+# log-likelihood units (the same order as seed-to-seed simulation noise).
+# Flipping only the coefficient would move the reported point off the converged
+# optimum, producing non-zero gradients, an indefinite hessian, and NaN
+# standard errors. Instead, the flip is done as an exact relabeling:
+# (mean, -s, draws) == (mean, +s, -draws) draw-for-draw, so the corresponding
+# standard draw columns (and the stored partials built from them) are negated
+# along with the coefficient. The relabeled draws are stored on the model, so
+# the logLik, gradient, hessian, standard errors, and predictions all remain
+# exactly those of the converged solution.
+#
+# Not applied to correlated models, where the parameters are elements of a
+# Cholesky factor whose signs jointly determine the covariance matrix.
+absSdCoefficients <- function(coefficients, mi, fail) {
+  if (fail || mi$modelType != "mxl" || isTRUE(mi$inputs$correlation)) {
+    return(list(coefficients = coefficients, mi = mi))
+  }
+  sdIDs <- mi$parIDs$sdDiag
+  flip <- which(coefficients[sdIDs] < 0)
+  if (length(flip) > 0) {
+    coefficients[sdIDs[flip]] <- -coefficients[sdIDs[flip]]
+    vars <- mi$parIDs$r[flip]
+    mi$standardDraws[, vars] <- -mi$standardDraws[, vars]
+    for (id in sdIDs[flip]) {
+      if (!is.null(mi$partials)) {
+        mi$partials[[id]] <- -mi$partials[[id]]
+      }
+      if (!is.null(mi$partials_unscaled)) {
+        mi$partials_unscaled[[id]] <- -mi$partials_unscaled[[id]]
+      }
+    }
+  }
+  return(list(coefficients = coefficients, mi = mi))
 }
 
 getCoefficients <- function(model, mi, fail) {
