@@ -8,7 +8,7 @@
 }
 \arguments{
 \item{object}{is an object of class \code{logitr} (a model estimated using
-the 'logitr()` function).}
+the \code{logitr()} function).}
 
 \item{probs}{Predicted probabilities for an object of class \code{logitr} to use
 in computing fitted values Defaults to \code{NULL}.}

@@ -7,10 +7,28 @@
 #' summary.logitr print.logitr print.summary.logitr
 #' @param x is an object of class `logitr`.
 #' @param object is an object of class `logitr` (a model estimated using
-#' the 'logitr()` function).
+#' the `logitr()` function).
 #' @param digits the number of digits for printing, defaults to `3`.
 #' @param width the width of the printing.
 #' @param ... further arguments.
+#'
+#' @return
+#' `logLik()` returns an object of class `logLik` containing the log-likelihood
+#' of the model at the estimated parameters.
+#'
+#' `terms()` returns the `terms` object of the model formula.
+#'
+#' `coef()` returns a named numeric vector of the estimated model coefficients,
+#' and `coef()` on a `summary.logitr` object returns the coefficient table as a
+#' matrix with columns for the estimate, standard error, z-value, and p-value.
+#'
+#' `summary()` returns an object of class `summary.logitr`.
+#'
+#' `model.frame()` returns a data frame with the variables used to fit the
+#' model.
+#'
+#' The `print()` methods are called for their side effect of printing to the
+#' console and invisibly return their `x` argument.
 #'
 #' @rdname miscmethods.logitr
 #' @export
@@ -295,8 +313,10 @@ getExitMessage <- function(x) {
 #' Extract standard errors
 #'
 #' @param object is an object of class `logitr` (a model estimated using
-#' the 'logitr()` function).
+#' the `logitr()` function).
 #' @param ... further arguments.
+#' @return A named numeric vector of the standard errors of the estimated
+#' model coefficients.
 #' @export
 se <- function(object, ...) {
   UseMethod("se")
@@ -305,8 +325,10 @@ se <- function(object, ...) {
 #' Extract standard errors
 #'
 #' @param object is an object of class `logitr` (a model estimated using
-#' the 'logitr()` function).
+#' the `logitr()` function).
 #' @param ... further arguments.
+#' @return A named numeric vector of the standard errors of the estimated
+#' model coefficients.
 #' @export
 se.logitr <- function(object, ...) {
   return(sqrt(diag(stats::vcov(object))))
@@ -317,8 +339,10 @@ se.logitr <- function(object, ...) {
 #' Returns the variance-covariance matrix of the main parameters of a fitted
 #' model object.
 #' @param object is an object of class `logitr` (a model estimated using
-#' the 'logitr()` function).
+#' the `logitr()` function).
 #' @param ... further arguments.
+#' @return A numeric matrix of the estimated variance-covariance matrix of the
+#' model coefficients, with one row and one column per coefficient.
 #' @export
 vcov.logitr <- function(object, ...) {
   if (!is.null(object$vcov)) {
@@ -430,7 +454,7 @@ print.logitr_wtp <- function(
 #' @keywords logitr fitted fitted.values
 #'
 #' @param object is an object of class `logitr` (a model estimated using
-#' the 'logitr()` function).
+#' the `logitr()` function).
 #' @param probs Predicted probabilities for an object of class `logitr` to use
 #' in computing fitted values Defaults to `NULL`.
 #' @param ... further arguments.
@@ -467,7 +491,7 @@ fitted.logitr <- function(object, probs = NULL, ...) {
 #' @keywords logitr residuals resid
 #'
 #' @param object is an object of class `logitr` (a model estimated using
-#' the 'logitr()` function).
+#' the `logitr()` function).
 #' @param fitted Fitted values for an object of class `logitr` to use in
 #' computing residuals. Defaults to `NULL`.
 #' @param ... further arguments.
@@ -506,7 +530,7 @@ residuals.logitr <- function(object, fitted = NULL, ...) {
 #' @keywords logitr confint
 #'
 #' @param object is an object of class `logitr` (a model estimated using
-#' the 'logitr()` function).
+#' the `logitr()` function).
 #' @param parm A specification of which parameters are to be given confidence
 #' intervals, either a vector of numbers or a vector of names.
 #' If missing, all parameters are considered.

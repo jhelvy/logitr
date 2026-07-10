@@ -8,7 +8,7 @@
 }
 \arguments{
 \item{object}{is an object of class \code{logitr} (a model estimated using
-the 'logitr()` function).}
+the \code{logitr()} function).}
 
 \item{scalePar}{The name of the column that identifies the scale variable,
 which is typically "price" for WTP space models, but could be any

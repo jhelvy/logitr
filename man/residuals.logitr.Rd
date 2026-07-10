@@ -8,7 +8,7 @@
 }
 \arguments{
 \item{object}{is an object of class \code{logitr} (a model estimated using
-the 'logitr()` function).}
+the \code{logitr()} function).}
 
 \item{fitted}{Fitted values for an object of class \code{logitr} to use in
 computing residuals. Defaults to \code{NULL}.}

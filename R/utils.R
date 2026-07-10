@@ -53,7 +53,7 @@ fquantile <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE) {
 #' is only useful for multinomial logit models and is not appropriate for mixed
 #' logit models.
 #' @param object is an object of class `logitr` (a model estimated using
-#' the 'logitr()` function).
+#' the `logitr()` function).
 #' @param coef_draws A data frame of coefficients draws.
 #' @param newdata A data frame of sets of alternatives for which to compute
 #' logit probabilities. Each row is an alternative.
@@ -62,6 +62,10 @@ fquantile <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE) {
 #' are all one choice scenario.
 #' @param level The sensitivity of the computed confidence interval (CI).
 #' Defaults to `level = 0.95`, reflecting a 95% CI.
+#' @return A data frame with one row for each alternative in `newdata` and the
+#' columns `mean`, `lower`, and `upper`, reflecting the mean and the lower and
+#' upper bounds of the confidence interval on that alternative's logit
+#' probability.
 #' @export
 #' @examples
 #' library(logitr)
@@ -126,6 +130,9 @@ logit_probs <- function(
 #' @param df A data frame of draws with all numeric columns.
 #' @param level The sensitivity of the computed confidence interval (CI).
 #' Defaults to `level = 0.95`, reflecting a 95% CI.
+#' @return A data frame with one row for each column in `df` and the columns
+#' `mean`, `lower`, and `upper`, reflecting the mean and the lower and upper
+#' bounds of the confidence interval for each of those columns.
 #' @export
 #' @examples
 #' library(logitr)

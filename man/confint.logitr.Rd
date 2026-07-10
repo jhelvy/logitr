@@ -8,7 +8,7 @@
 }
 \arguments{
 \item{object}{is an object of class \code{logitr} (a model estimated using
-the 'logitr()` function).}
+the \code{logitr()} function).}
 
 \item{parm}{A specification of which parameters are to be given confidence
 intervals, either a vector of numbers or a vector of names.

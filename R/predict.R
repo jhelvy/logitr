@@ -10,7 +10,7 @@
 #' @keywords logitr probabilities predict
 #'
 #' @param object is an object of class `logitr` (a model estimated using
-#' the 'logitr()` function).
+#' the `logitr()` function).
 #' @param newdata a `data.frame`. Each row is an alternative and each column an
 #' attribute corresponding to parameter names in the estimated model. Defaults
 #' to `NULL`, in which case predictions are made on the original data used to

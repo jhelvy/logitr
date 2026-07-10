@@ -8,7 +8,7 @@
 #' @keywords logitr wtp
 #'
 #' @param object is an object of class `logitr` (a model estimated using
-#' the 'logitr()` function).
+#' the `logitr()` function).
 #' @param scalePar The name of the column that identifies the scale variable,
 #' which is typically "price" for WTP space models, but could be any
 #' continuous variable, such as "time".
@@ -44,7 +44,7 @@ wtp <- function(object, scalePar) {
 #' @keywords logitr wtp
 #'
 #' @param object is an object of class `logitr` (a model estimated using
-#' the 'logitr()` function).
+#' the `logitr()` function).
 #' @param scalePar The name of the column that identifies the scale variable,
 #' which is typically "price" for WTP space models, but could be any
 #' continuous variable, such as "time".

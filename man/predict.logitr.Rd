@@ -23,7 +23,7 @@
 }
 \arguments{
 \item{object}{is an object of class \code{logitr} (a model estimated using
-the 'logitr()` function).}
+the \code{logitr()} function).}
 
 \item{newdata}{a \code{data.frame}. Each row is an alternative and each column an
 attribute corresponding to parameter names in the estimated model. Defaults

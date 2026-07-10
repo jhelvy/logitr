@@ -385,7 +385,7 @@ getParSetup <- function(pars, scalePar, randPars, randScale) {
     }
   }
   names(parSetup) <- pars
-  if (is.null(scalePar) == F) {
+  if (!is.null(scalePar)) {
     if (is.null(randScale)) {
       randScale <- "f"
     }

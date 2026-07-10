@@ -8,9 +8,13 @@
 }
 \arguments{
 \item{object}{is an object of class \code{logitr} (a model estimated using
-the 'logitr()` function).}
+the \code{logitr()} function).}
 
 \item{...}{further arguments.}
+}
+\value{
+A numeric matrix of the estimated variance-covariance matrix of the
+model coefficients, with one row and one column per coefficient.
 }
 \description{
 Returns the variance-covariance matrix of the main parameters of a fitted

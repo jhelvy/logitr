@@ -48,7 +48,7 @@
 }
 \arguments{
 \item{object}{is an object of class \code{logitr} (a model estimated using
-the 'logitr()` function).}
+the \code{logitr()} function).}
 
 \item{...}{further arguments.}
 
@@ -57,6 +57,24 @@ the 'logitr()` function).}
 \item{digits}{the number of digits for printing, defaults to \code{3}.}
 
 \item{width}{the width of the printing.}
+}
+\value{
+\code{logLik()} returns an object of class \code{logLik} containing the log-likelihood
+of the model at the estimated parameters.
+
+\code{terms()} returns the \code{terms} object of the model formula.
+
+\code{coef()} returns a named numeric vector of the estimated model coefficients,
+and \code{coef()} on a \code{summary.logitr} object returns the coefficient table as a
+matrix with columns for the estimate, standard error, z-value, and p-value.
+
+\code{summary()} returns an object of class \code{summary.logitr}.
+
+\code{model.frame()} returns a data frame with the variables used to fit the
+model.
+
+The \code{print()} methods are called for their side effect of printing to the
+console and invisibly return their \code{x} argument.
 }
 \description{
 Miscellaneous methods for \code{logitr} class objects.

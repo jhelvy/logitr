@@ -8,9 +8,13 @@
 }
 \arguments{
 \item{object}{is an object of class \code{logitr} (a model estimated using
-the 'logitr()` function).}
+the \code{logitr()} function).}
 
 \item{...}{further arguments.}
+}
+\value{
+A named numeric vector of the standard errors of the estimated
+model coefficients.
 }
 \description{
 Extract standard errors

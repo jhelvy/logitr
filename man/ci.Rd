@@ -12,6 +12,11 @@ ci(df, level = 0.95)
 \item{level}{The sensitivity of the computed confidence interval (CI).
 Defaults to \code{level = 0.95}, reflecting a 95\% CI.}
 }
+\value{
+A data frame with one row for each column in \code{df} and the columns
+\code{mean}, \code{lower}, and \code{upper}, reflecting the mean and the lower and upper
+bounds of the confidence interval for each of those columns.
+}
 \description{
 Returns a data frame with the columns 'mean', 'lower', and 'upper'
 reflecting the mean and lower and upper bounds of a confidence
