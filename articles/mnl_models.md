@@ -73,7 +73,7 @@ Print a summary of the results:
 summary(mnl_pref)
 #> =================================================
 #> 
-#> Model estimated on: Mon Jul 06 10:54:17 2026 
+#> Model estimated on: Fri Jul 10 17:56:32 2026 
 #> 
 #> Using logitr version: 1.2.0 
 #> 
@@ -91,7 +91,7 @@ summary(mnl_pref)
 #> Model Space:          Preference
 #> Model Run:                1 of 1
 #> Iterations:                   24
-#> Elapsed Time:        0h:0m:0.04s
+#> Elapsed Time:        0h:0m:0.03s
 #> Algorithm:        NLOPT_LD_LBFGS
 #> Weights Used?:             FALSE
 #> Robust?                    FALSE
@@ -190,7 +190,7 @@ Print a summary of the results:
 summary(mnl_wtp)
 #> =================================================
 #> 
-#> Model estimated on: Mon Jul 06 10:54:18 2026 
+#> Model estimated on: Fri Jul 10 17:56:33 2026 
 #> 
 #> Using logitr version: 1.2.0 
 #> 
@@ -205,7 +205,7 @@ summary(mnl_wtp)
 #> 
 #> Summary Of Multistart Runs:
 #>    Log Likelihood Iterations Exit Status
-#> 1       -2656.888         89           3
+#> 1       -2656.888         90           3
 #> 2       -2805.308         82           4
 #> 3       -2656.888         40           4
 #> 4       -2656.888         39           4
@@ -218,13 +218,13 @@ summary(mnl_wtp)
 #> 
 #> Use statusCodes() to view the meaning of each status code
 #> 
-#> Exit Status: 4, Optimization stopped because xtol_rel or xtol_abs was reached.
+#> Exit Status: 3, Optimization stopped because ftol_rel or ftol_abs was reached.
 #>                                  
 #> Model Type:     Multinomial Logit
 #> Model Space:   Willingness-to-Pay
-#> Model Run:                3 of 10
-#> Iterations:                    40
-#> Elapsed Time:         0h:0m:0.09s
+#> Model Run:                1 of 10
+#> Iterations:                    90
+#> Elapsed Time:         0h:0m:0.11s
 #> Algorithm:         NLOPT_LD_LBFGS
 #> Weights Used?:              FALSE
 #> Robust?                     FALSE
@@ -254,7 +254,7 @@ View the estimated model coefficients:
 
 coef(mnl_wtp)
 #>     scalePar         feat  brandhiland  brandweight brandyoplait 
-#>    0.3665845    1.3405737  -10.1357274   -1.7490766    2.0038252
+#>    0.3665845    1.3405736  -10.1357273   -1.7490766    2.0038253
 ```
 
 ## Compare WTP from both models
@@ -278,10 +278,10 @@ function:
 wtpCompare(mnl_pref, mnl_wtp, scalePar = 'price')
 #>                       pref           wtp  difference
 #> scalePar         0.3665845     0.3665845 -0.00000001
-#> feat             1.3405737     1.3405737 -0.00000008
-#> brandhiland    -10.1357272   -10.1357274 -0.00000014
-#> brandweight     -1.7490765    -1.7490766 -0.00000002
-#> brandyoplait     2.0038253     2.0038252 -0.00000005
+#> feat             1.3405737     1.3405736 -0.00000014
+#> brandhiland    -10.1357272   -10.1357273 -0.00000009
+#> brandweight     -1.7490765    -1.7490766 -0.00000003
+#> brandyoplait     2.0038253     2.0038253  0.00000000
 #> logLik       -2656.8878779 -2656.8878779  0.00000000
 ```
 

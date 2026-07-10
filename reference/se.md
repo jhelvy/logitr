@@ -13,8 +13,14 @@ se(object, ...)
 - object:
 
   is an object of class `logitr` (a model estimated using the
-  'logitr()\` function).
+  [`logitr()`](https://jhelvy.github.io/logitr/reference/logitr.md)
+  function).
 
 - ...:
 
   further arguments.
+
+## Value
+
+A named numeric vector of the standard errors of the estimated model
+coefficients.

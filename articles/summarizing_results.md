@@ -19,7 +19,7 @@ model <- logitr(
 summary(model)
 #> =================================================
 #> 
-#> Model estimated on: Mon Jul 06 10:54:32 2026 
+#> Model estimated on: Fri Jul 10 17:56:44 2026 
 #> 
 #> Using logitr version: 1.2.0 
 #> 

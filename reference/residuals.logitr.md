@@ -14,7 +14,8 @@ residuals(object, fitted = NULL, ...)
 - object:
 
   is an object of class `logitr` (a model estimated using the
-  'logitr()\` function).
+  [`logitr()`](https://jhelvy.github.io/logitr/reference/logitr.md)
+  function).
 
 - fitted:
 

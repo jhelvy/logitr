@@ -23,7 +23,8 @@ logit_probs(object, coef_draws, newdata, obsID = NULL, level = 0.95)
 - object:
 
   is an object of class `logitr` (a model estimated using the
-  'logitr()\` function).
+  [`logitr()`](https://jhelvy.github.io/logitr/reference/logitr.md)
+  function).
 
 - coef_draws:
 
@@ -44,6 +45,13 @@ logit_probs(object, coef_draws, newdata, obsID = NULL, level = 0.95)
 
   The sensitivity of the computed confidence interval (CI). Defaults to
   `level = 0.95`, reflecting a 95% CI.
+
+## Value
+
+A data frame with one row for each alternative in `newdata` and the
+columns `mean`, `lower`, and `upper`, reflecting the mean and the lower
+and upper bounds of the confidence interval on that alternative's logit
+probability.
 
 ## Examples
 

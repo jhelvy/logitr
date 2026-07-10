@@ -21,6 +21,12 @@ ci(df, level = 0.95)
   The sensitivity of the computed confidence interval (CI). Defaults to
   `level = 0.95`, reflecting a 95% CI.
 
+## Value
+
+A data frame with one row for each column in `df` and the columns
+`mean`, `lower`, and `upper`, reflecting the mean and the lower and
+upper bounds of the confidence interval for each of those columns.
+
 ## Examples
 
 ``` r

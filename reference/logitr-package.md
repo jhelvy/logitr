@@ -1,7 +1,7 @@
 # logitr: Logit Models w/Preference & WTP Space Utility Parameterizations
 
-Fast estimation of multinomial (MNL) and mixed logit (MXL) models in R.
-Models can be estimated using "Preference" space or "Willingness-to-pay"
+Fast estimation of multinomial logit (MNL) and mixed logit (MXL) models.
+Models can be estimated using preference space or willingness-to-pay
 (WTP) space utility parameterizations. Weighted models can also be
 estimated. An option is available to run a parallelized multistart
 optimization loop with random starting points in each iteration, which

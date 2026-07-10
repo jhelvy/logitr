@@ -103,7 +103,7 @@
 
 <dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
 <dd><p>is an object of class <code>logitr</code> (a model estimated using
-the 'logitr()` function).</p></dd>
+the <code><a href="logitr.html">logitr()</a></code> function).</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -122,6 +122,20 @@ the 'logitr()` function).</p></dd>
 <dd><p>the width of the printing.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p><code><a href="https://rdrr.io/r/stats/logLik.html" class="external-link">logLik()</a></code> returns an object of class <code>logLik</code> containing the log-likelihood
+of the model at the estimated parameters.</p>
+<p><code><a href="https://rdrr.io/r/stats/terms.html" class="external-link">terms()</a></code> returns the <code>terms</code> object of the model formula.</p>
+<p><code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> returns a named numeric vector of the estimated model coefficients,
+and <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> on a <code>summary.logitr</code> object returns the coefficient table as a
+matrix with columns for the estimate, standard error, z-value, and p-value.</p>
+<p><code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> returns an object of class <code>summary.logitr</code>.</p>
+<p><code><a href="https://rdrr.io/r/stats/model.frame.html" class="external-link">model.frame()</a></code> returns a data frame with the variables used to fit the
+model.</p>
+<p>The <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> methods are called for their side effect of printing to the
+console and invisibly return their <code>x</code> argument.</p>
+    </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
@@ -132,7 +146,7 @@ the 'logitr()` function).</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

@@ -120,7 +120,7 @@ mnl_pref_dummies <- logitr(
 summary(mnl_pref_dummies)
 #> =================================================
 #> 
-#> Model estimated on: Mon Jul 06 10:54:00 2026 
+#> Model estimated on: Fri Jul 10 17:56:17 2026 
 #> 
 #> Using logitr version: 1.2.0 
 #> 
@@ -138,7 +138,7 @@ summary(mnl_pref_dummies)
 #> Model Space:          Preference
 #> Model Run:                1 of 1
 #> Iterations:                   21
-#> Elapsed Time:        0h:0m:0.03s
+#> Elapsed Time:        0h:0m:0.02s
 #> Algorithm:        NLOPT_LD_LBFGS
 #> Weights Used?:             FALSE
 #> Robust?                    FALSE

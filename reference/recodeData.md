@@ -52,7 +52,7 @@ result <- recodeData(
 
 result$formula
 #> ~price + feat + brand + price * brand
-#> <environment: 0x562440ab6a28>
+#> <environment: 0x5632c5f3b1e0>
 result$pars
 #> [1] "price"              "feat"               "brandhiland"       
 #> [4] "brandweight"        "brandyoplait"       "price:brandhiland" 

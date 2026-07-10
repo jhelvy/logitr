@@ -197,7 +197,7 @@ print a summary of the results from an estimated model, e.g.
 summary(mnl_pref)
 #> =================================================
 #> 
-#> Model estimated on: Mon Jul 06 10:53:40 2026 
+#> Model estimated on: Fri Jul 10 17:55:57 2026 
 #> 
 #> Using logitr version: 1.2.0 
 #> 
@@ -215,7 +215,7 @@ summary(mnl_pref)
 #> Model Space:          Preference
 #> Model Run:                1 of 1
 #> Iterations:                   24
-#> Elapsed Time:        0h:0m:0.04s
+#> Elapsed Time:        0h:0m:0.03s
 #> Algorithm:        NLOPT_LD_LBFGS
 #> Weights Used?:             FALSE
 #> Robust?                    FALSE

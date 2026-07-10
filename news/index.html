@@ -49,6 +49,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="logitr-development-version">logitr (development version)<a class="anchor" aria-label="anchor" href="#logitr-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.2.0" id="logitr-120">logitr 1.2.0<a class="anchor" aria-label="anchor" href="#logitr-120"></a></h2><p class="text-muted">CRAN release: 2026-07-06</p>
 <ul><li>
 <strong>Breaking change</strong>: the default <code>numDraws</code> for mixed logit models increased from <code>50</code> to <code>500</code>. Draw counts in the tens (the historical convention: {mlogit} and {gmnl} default to 40, Stata’s <code>mixlogit</code> to 50) produce noticeably unstable simulated log-likelihoods, especially with many random parameters – large enough to change model-selection decisions. With the compiled backend the extra cost is a very low overhead on typical models, so a statistically sound default is now affordable. Models estimated with the default will produce (better, but) different results than under previous versions; set <code>numDraws = 50</code> explicitly to reproduce old results.</li>
 <li>The parallelized multistart now uses the {mirai} package instead of <code><a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply()</a></code>/PSOCK clusters, which gives consistent behavior across platforms (no separate Windows code path). Behavior is otherwise unchanged: the cores are used to run the multistart iterations in parallel, and each model is estimated single-threaded (benchmarking shows this is more efficient than using threads to speed up individual models). The message printed at the start of a multistart now says so. Advanced users can nest the two forms of parallelism by explicitly setting <code>numThreads</code> alongside a multistart. logitr runs its daemons on a dedicated {mirai} compute profile, so it will not interfere with (or tear down) any daemons you have set up yourself.</li>
@@ -392,7 +395,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

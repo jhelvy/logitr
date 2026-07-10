@@ -2,6 +2,10 @@
 
 ## logitr (development version)
 
+## logitr 1.2.0
+
+CRAN release: 2026-07-06
+
 - **Breaking change**: the default `numDraws` for mixed logit models
   increased from `50` to `500`. Draw counts in the tens (the historical
   convention: {mlogit} and {gmnl} default to 40, Stata’s `mixlogit`

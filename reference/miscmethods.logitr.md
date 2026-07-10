@@ -53,7 +53,8 @@ print(x, ...)
 - object:
 
   is an object of class `logitr` (a model estimated using the
-  'logitr()\` function).
+  [`logitr()`](https://jhelvy.github.io/logitr/reference/logitr.md)
+  function).
 
 - ...:
 
@@ -70,3 +71,28 @@ print(x, ...)
 - width:
 
   the width of the printing.
+
+## Value
+
+[`logLik()`](https://rdrr.io/r/stats/logLik.html) returns an object of
+class `logLik` containing the log-likelihood of the model at the
+estimated parameters.
+
+[`terms()`](https://rdrr.io/r/stats/terms.html) returns the `terms`
+object of the model formula.
+
+[`coef()`](https://rdrr.io/r/stats/coef.html) returns a named numeric
+vector of the estimated model coefficients, and
+[`coef()`](https://rdrr.io/r/stats/coef.html) on a `summary.logitr`
+object returns the coefficient table as a matrix with columns for the
+estimate, standard error, z-value, and p-value.
+
+[`summary()`](https://rdrr.io/r/base/summary.html) returns an object of
+class `summary.logitr`.
+
+[`model.frame()`](https://rdrr.io/r/stats/model.frame.html) returns a
+data frame with the variables used to fit the model.
+
+The [`print()`](https://rdrr.io/r/base/print.html) methods are called
+for their side effect of printing to the console and invisibly return
+their `x` argument.
