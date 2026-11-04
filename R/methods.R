@@ -412,11 +412,9 @@ getCovarianceRobust <- function(object) {
 }
 
 getClusterModelInputs <- function(indices, mi, i) {
-  X <- mi$data_diff$X[indices, ]
-  # Cast to matrix in cases where there is 1 independent variable
-  if (length(indices) == 1) {
-    X <- matrix(X, nrow = 1)
-  }
+  # drop = FALSE keeps X a matrix when the cluster is a single row (a
+  # respondent with one choice question) or the model has one variable
+  X <- mi$data_diff$X[indices, , drop = FALSE]
   mi$data_diff$X <- X
   mi$data_diff$scalePar <- mi$data_diff$scalePar[indices]
   obsID <- mi$data_diff$obsID[indices]

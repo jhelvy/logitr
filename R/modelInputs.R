@@ -612,7 +612,10 @@ makePartials <- function(mi, data) {
   draws <- cbind(
     matrix(1, ncol = n$vars, nrow = n$draws), mi$standardDraws)
   for (i in seq_len(2*n$vars)) {
-    X_temp <- X2[,rep(i, n$draws)]
+    # drop = FALSE is required: the robust vcov computation calls this on
+    # single-cluster subsets of the data, and a cluster can be a single row
+    # (a respondent who answered just one choice question)
+    X_temp <- X2[, rep(i, n$draws), drop = FALSE]
     draws_temp <- repmat(matrix(draws[, i], nrow = 1), nrow(X_temp), 1)
     partials[[i]] <- X_temp*draws_temp
   }
@@ -620,13 +623,13 @@ makePartials <- function(mi, data) {
   if (! mi$inputs$correlation) {
     return(partials[c(1:n$vars, sdIDs)])
   }
-  draws <- mi$standardDraws[,mi$parIDs$r]
-  X <- X2[,sdIDs]
+  draws <- mi$standardDraws[, mi$parIDs$r, drop = FALSE]
+  X <- X2[, sdIDs, drop = FALSE]
   IDs <- as.data.frame(utils::combn(seq(length(sdIDs)), 2))
   partialOffDiags <- list()
   for (i in 1:ncol(IDs)) {
     id <- IDs[,i]
-    X_temp <- X[,rep(id[1], n$draws)]
+    X_temp <- X[, rep(id[1], n$draws), drop = FALSE]
     draws_temp <- repmat(matrix(draws[, id[2]], nrow = 1), nrow(X_temp), 1)
     partialOffDiags[[i]] <- X_temp*draws_temp
   }
