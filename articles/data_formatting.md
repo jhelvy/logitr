@@ -120,9 +120,9 @@ mnl_pref_dummies <- logitr(
 summary(mnl_pref_dummies)
 #> =================================================
 #> 
-#> Model estimated on: Fri Jul 10 17:56:17 2026 
+#> Model estimated on: Wed Nov 04 13:47:18 2026 
 #> 
-#> Using logitr version: 1.2.0 
+#> Using logitr version: 1.2.1 
 #> 
 #> Call:
 #> logitr(data = yogurt2, outcome = "choice", obsID = "obsID", pars = c("price", 

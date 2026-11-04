@@ -19,9 +19,9 @@ model <- logitr(
 summary(model)
 #> =================================================
 #> 
-#> Model estimated on: Fri Jul 10 17:56:44 2026 
+#> Model estimated on: Wed Nov 04 13:47:46 2026 
 #> 
-#> Using logitr version: 1.2.0 
+#> Using logitr version: 1.2.1 
 #> 
 #> Call:
 #> logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", 
@@ -37,7 +37,7 @@ summary(model)
 #> Model Space:          Preference
 #> Model Run:                1 of 1
 #> Iterations:                   24
-#> Elapsed Time:        0h:0m:0.03s
+#> Elapsed Time:        0h:0m:0.02s
 #> Algorithm:        NLOPT_LD_LBFGS
 #> Weights Used?:             FALSE
 #> Robust?                    FALSE

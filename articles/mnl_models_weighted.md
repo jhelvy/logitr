@@ -104,9 +104,9 @@ Print a summary of the results:
 summary(mnl_wtp_unweighted)
 #> =================================================
 #> 
-#> Model estimated on: Fri Jul 10 17:56:25 2026 
+#> Model estimated on: Wed Nov 04 13:47:26 2026 
 #> 
-#> Using logitr version: 1.2.0 
+#> Using logitr version: 1.2.1 
 #> 
 #> Call:
 #> logitr(data = cars_us, outcome = "choice", obsID = "obsnum", 
@@ -140,7 +140,7 @@ summary(mnl_wtp_unweighted)
 #> Model Space:   Willingness-to-Pay
 #> Model Run:                7 of 10
 #> Iterations:                    43
-#> Elapsed Time:         0h:0m:0.24s
+#> Elapsed Time:         0h:0m:0.12s
 #> Algorithm:         NLOPT_LD_LBFGS
 #> Weights Used?:              FALSE
 #> Cluster ID:                obsnum
@@ -214,9 +214,9 @@ Print a summary of the results:
 summary(mnl_wtp_weighted)
 #> =================================================
 #> 
-#> Model estimated on: Fri Jul 10 17:56:28 2026 
+#> Model estimated on: Wed Nov 04 13:47:29 2026 
 #> 
-#> Using logitr version: 1.2.0 
+#> Using logitr version: 1.2.1 
 #> 
 #> Call:
 #> logitr(data = cars_us, outcome = "choice", obsID = "obsnum", 
@@ -250,7 +250,7 @@ summary(mnl_wtp_weighted)
 #> Model Space:   Willingness-to-Pay
 #> Model Run:                4 of 10
 #> Iterations:                    35
-#> Elapsed Time:         0h:0m:0.19s
+#> Elapsed Time:         0h:0m:0.11s
 #> Algorithm:         NLOPT_LD_LBFGS
 #> Weights Used?:               TRUE
 #> Cluster ID:                obsnum

@@ -1,6 +1,16 @@
 # Changelog
 
-## logitr (development version)
+## logitr 1.2.1
+
+- Fixed an error in [`vcov()`](https://rdrr.io/r/stats/vcov.html) and
+  [`summary()`](https://rdrr.io/r/base/summary.html) for clustered or
+  weighted mixed logit models (using `clusterID` or `weights`, both of
+  which imply `robust = TRUE`) when a respondent in a panel answered
+  only one choice question, or when the model had a single parameter. In
+  both cases a matrix subset dropped to a vector while building the
+  per-cluster score contributions, producing
+  `Error in matrix(...) : invalid 'nrow' value (too large or NA)`.
+  Coefficient estimates were unaffected.
 
 ## logitr 1.2.0
 

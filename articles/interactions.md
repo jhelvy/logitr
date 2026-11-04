@@ -39,9 +39,9 @@ The model now has an estimated coefficient for the `price*feat` effect:
 summary(model_price_feat)
 #> =================================================
 #> 
-#> Model estimated on: Fri Jul 10 17:56:20 2026 
+#> Model estimated on: Wed Nov 04 13:47:21 2026 
 #> 
-#> Using logitr version: 1.2.0 
+#> Using logitr version: 1.2.1 
 #> 
 #> Call:
 #> logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", 
@@ -111,9 +111,9 @@ effect:
 summary(model_price_brand)
 #> =================================================
 #> 
-#> Model estimated on: Fri Jul 10 17:56:20 2026 
+#> Model estimated on: Wed Nov 04 13:47:21 2026 
 #> 
-#> Using logitr version: 1.2.0 
+#> Using logitr version: 1.2.1 
 #> 
 #> Call:
 #> logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", 
@@ -129,7 +129,7 @@ summary(model_price_brand)
 #> Model Space:          Preference
 #> Model Run:                1 of 1
 #> Iterations:                   47
-#> Elapsed Time:        0h:0m:0.04s
+#> Elapsed Time:        0h:0m:0.03s
 #> Algorithm:        NLOPT_LD_LBFGS
 #> Weights Used?:             FALSE
 #> Robust?                    FALSE
@@ -209,9 +209,9 @@ The model now has attribute coefficients for `price`, `feat`, and
 summary(model_price_group)
 #> =================================================
 #> 
-#> Model estimated on: Fri Jul 10 17:56:21 2026 
+#> Model estimated on: Wed Nov 04 13:47:22 2026 
 #> 
-#> Using logitr version: 1.2.0 
+#> Using logitr version: 1.2.1 
 #> 
 #> Call:
 #> logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", 
@@ -280,9 +280,9 @@ interaction in the *mean* `feat` parameter and `price`:
 summary(model_price_feat_mxl)
 #> =================================================
 #> 
-#> Model estimated on: Fri Jul 10 17:56:21 2026 
+#> Model estimated on: Wed Nov 04 13:47:22 2026 
 #> 
-#> Using logitr version: 1.2.0 
+#> Using logitr version: 1.2.1 
 #> 
 #> Call:
 #> logitr(data = yogurt, outcome = "choice", obsID = "obsID", pars = c("price", 
